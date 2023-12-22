@@ -16,7 +16,7 @@ import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
@@ -56,17 +56,9 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private routerStore: RouterStore,
-        private entitiesService: EntitiesService,
-        private acknowledgeService: AcknowledgeService,
-        private userService: UserService,
-        private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private alertMessageService: AlertMessageService,
-        private logger: OpfabLoggerService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -93,19 +85,19 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
 
     }
 
     ngOnChanges(): void {
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
-        this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-            this.userService.getCurrentUserWithPerimeters(),
+        this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
+            UserService.getCurrentUserWithPerimeters(),
             this.card,
-            this.processService.getProcess(this.card.process)
+            ProcessesService.getProcess(this.card.process)
         );
         this.setAcknowledgeButtonVisibility();
 
@@ -113,10 +105,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged ? false
-            : this.isAcknowledgmentAllowed() && this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
+            : this.isAcknowledgmentAllowed() && RouterStore.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
-            : this.isCancelAcknowledgmentAllowed() &&  this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
+            : this.isCancelAcknowledgmentAllowed() &&  RouterStore.getCurrentPageType() !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {
@@ -157,7 +149,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         const entitiesAcks = this.computeAcknowledgedEntities();
 
-        this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+        AcknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
@@ -165,7 +157,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
             } else {
-                this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
+                logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
             }
         });
@@ -174,7 +166,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     private computeAcknowledgedEntities() : string[] {
         const entitiesAcks = [];
         if (!this.isReadOnlyUser) {
-            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
+            const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard)
                     // this avoids to display entities used only for grouping
@@ -189,19 +181,19 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public cancelAcknowledgement() {
         this.ackOrUnackInProgress = true;
-        this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
+        AcknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
                 this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
             } else {
-                this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
+                logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
             }
         });

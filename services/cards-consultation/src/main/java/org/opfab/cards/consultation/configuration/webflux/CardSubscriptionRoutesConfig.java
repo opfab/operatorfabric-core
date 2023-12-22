@@ -22,13 +22,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-@Slf4j
 @Configuration
 public class CardSubscriptionRoutesConfig implements UserExtractor  {
 

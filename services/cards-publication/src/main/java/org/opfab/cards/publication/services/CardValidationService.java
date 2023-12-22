@@ -60,34 +60,15 @@ public class CardValidationService {
             throw new ConstraintViolationException(
                     "The initialParentCardUid " + c.getInitialParentCardUid() + " is not the uid of any card", null);
 
-        if (c.getPublisher() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no publisher", null);
-
-        if (c.getProcess() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no process", null);
-
-        if (c.getProcessVersion() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no processVersion",
-                    null);
-
-        if (c.getState() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no state", null);
-
-        if (c.getProcessInstanceId() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no processInstanceId",
-                    null);
-
-        if (c.getSeverity() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no severity", null);
-
-        if (c.getTitle() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no title", null);
-
-        if (c.getSummary() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no summary", null);
-
-        if (c.getStartDate() == null)
-            throw new ConstraintViolationException("Impossible to publish card because there is no startDate", null);
+        checkNotNull(c.getPublisher(), "publisher");
+        checkNotNull(c.getProcess(), "process");
+        checkNotNull(c.getProcessVersion(), "processVersion");
+        checkNotNull(c.getState(), "state");
+        checkNotNull(c.getProcessInstanceId(), "processInstanceId");
+        checkNotNull(c.getSeverity(), "severity");
+        checkNotNull(c.getTitle(), "title");
+        checkNotNull(c.getSummary(), "summary");
+        checkNotNull(c.getStartDate(), "startDate");
 
         if (!checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
@@ -123,6 +104,12 @@ public class CardValidationService {
         if (!checkForbiddenChars(c))
             throw new ConstraintViolationException(
                     "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
+    }
+
+    private void checkNotNull(Object field, String fieldName) throws ConstraintViolationException {
+        if (field == null) {
+            throw new ConstraintViolationException(String.format("Impossible to publish card because there is no %s", fieldName), null);
+        }
     }
 
     boolean checkIsCardIdExisting(String cardId) {

@@ -49,7 +49,9 @@ opfab.multiSelect = {
             noOptionsText: this.noOptionsText,
             noSearchResultsText: this.noSearchResultsText,
             search: config.search,
-            hideClearButton: config.multiple !== undefined ? !config.multiple : false
+            hideClearButton: config.multiple !== undefined ? !config.multiple : false,
+            allowNewOption: config.allowNewOption !== undefined ? config.allowNewOption : false,
+            autoSelectFirstOption: config.autoSelectFirstOption !== undefined ? config.autoSelectFirstOption : false
         });
         return multiSelect;
     }
@@ -71,6 +73,7 @@ opfab.utils = {
     },
 
     getTranslation: function (key, param) {}
+
 };
 
 opfab.businessconfig = {
@@ -138,3 +141,125 @@ opfab.currentUserCard = {
     setInitialSeverity: function (initialSeverity) {},
     setInitialStartDate: function (startDate) {}
 };
+
+
+opfab.richTextEditor = {
+
+    showRichMessage(element) {
+        const delta = element.innerHTML;
+        element.innerHTML = this.getHtml(delta);
+        element.classList.add('ql-editor');
+    },
+ 
+    getHtml: function (delta) {
+        const container = document.createElement("div");
+        const quill = new Quill(container,  {sanitize: true});
+        quill.setContents(this.getJson(delta));
+        const html = quill.root.innerHTML;
+        container.remove();
+        return html;
+    },
+
+    getJson: function (input) {
+        if (input) {
+            const element = document.createElement('textarea');
+            element.innerHTML = input.trim();
+            // escape line breaks for json parsing
+            let decoded = element.childNodes[0].nodeValue.replace(/\n/g, "\\n");
+            element.remove();
+            return JSON.parse(decoded);
+        }
+        return null;
+
+    }
+
+};
+
+
+
+class QuillEditor extends HTMLElement {
+
+    emptyRexp = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/gm;
+
+    constructor() {
+        super();
+        this.init();
+
+        const toolbarOptions = [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'color': [] }],
+            ['bold', 'italic', 'underline', 'link'],
+            [{ 'align': [] }],
+            [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            ['clean']
+        ];
+
+        this.quill = new Quill(this, {
+            modules: {
+                toolbar: toolbarOptions
+            },
+            theme: 'snow',
+            sanitize: true
+        });
+
+    }
+
+    init() {
+
+        const Link = Quill.import('formats/link');
+
+        class CustomLinkSanitizer extends Link {
+            static sanitize(url) {
+
+              const sanitizedUrl = super.sanitize(url)
+          
+              // Not whitelisted URL based on protocol so, let's return `blank`
+              if (!sanitizedUrl || sanitizedUrl === 'about:blank') return sanitizedUrl
+          
+              const hasWhitelistedProtocol = this.PROTOCOL_WHITELIST.some(function(protocol) {
+                return sanitizedUrl.startsWith(protocol)
+              })
+          
+              if (hasWhitelistedProtocol) return sanitizedUrl
+          
+              return `https://${sanitizedUrl}`
+            }
+          }
+          
+          Quill.register(CustomLinkSanitizer, true);
+    }
+
+    setContents(value) {
+        this.quill.setContents(opfab.richTextEditor.getJson(value));
+    }
+
+    getContents() {
+        return JSON.stringify(this.quill.getContents());
+    }
+
+    getHtml() {
+        return this.quill.root.innerHTML;
+    }
+
+    isEmpty() {
+        return this.emptyRexp.test(this.quill.root.innerHTML);
+    }
+
+    // Lifecycle method: called when the element is added to the DOM
+    connectedCallback() {
+        const textEditor = this.firstChild;
+        const pNode = textEditor.firstChild;
+        const childNode = pNode.firstChild;
+
+        if (childNode?.nodeValue && childNode.nodeValue.length > 0)
+            this.setContents(childNode.nodeValue);
+
+    }
+
+}
+
+  // Define the custom element
+  customElements.define('opfab-richtext-editor', QuillEditor);
+
+

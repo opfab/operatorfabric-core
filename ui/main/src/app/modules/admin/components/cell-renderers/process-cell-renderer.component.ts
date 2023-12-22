@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ArrayCellRendererComponent} from './array-cell-renderer.component';
 import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
     selector: 'of-process-cell-renderer',
-    templateUrl: './array-cell-renderer.component.html'
+    templateUrl: './array-cell-renderer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProcessCellRendererComponent extends ArrayCellRendererComponent {
     /** Defining components extending ArrayCellComponent proved necessary rather than using generics or passing the type as a

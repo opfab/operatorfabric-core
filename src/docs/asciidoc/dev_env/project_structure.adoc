@@ -13,7 +13,9 @@ build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
 * link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
-* link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
+* link:https://github.com/opfab/operatorfabric-core/tree/master/node-services[node-services]: contains the node microservices that make up
+OperatorFabric
+* link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the java microservices that make up
 OperatorFabric
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/cards-consultation[cards-consultation
 (cards-consultation-service)]: Card consultation service

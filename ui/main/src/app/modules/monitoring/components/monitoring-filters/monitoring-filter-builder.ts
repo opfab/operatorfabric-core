@@ -10,8 +10,8 @@
 import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class MonitoringFilterBuilder {
     private typeOfStatesFilter: Filter;
     private processFilter: Filter;
 
-    constructor(private filterService: FilterService, private processesService: ProcessesService) {}
+    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
 
     public setProcessList(processesId: string[]) {
         if (processesId.length > 0) {
@@ -46,7 +46,7 @@ export class MonitoringFilterBuilder {
 
     public setTypeOfStates(typeOfStates: any) {
         if (typeOfStates.length > 0) {
-            const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
+            const typeOfStatesPerProcessAndState = ProcessesService.getTypeOfStatesPerProcessAndState();
             this.typeOfStatesFilter = this.getTypeOfStateFilter(true, {
                 typeOfStates: typeOfStates,
                 mapOfTypeOfStates: typeOfStatesPerProcessAndState
@@ -72,7 +72,7 @@ export class MonitoringFilterBuilder {
     }
 
     public getFilters(): Array<Filter> {
-        const timelineFilter = this.filterService.getBusinessDateFilter();
+        const timelineFilter = this.lightCardsFeedFilterService.getBusinessDateFilter();
         return [timelineFilter, this.processFilter, this.typeOfStatesFilter];
     }
 }

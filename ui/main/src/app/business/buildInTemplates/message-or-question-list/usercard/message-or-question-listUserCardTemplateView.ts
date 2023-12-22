@@ -37,16 +37,18 @@ export class MessageOrQuestionListUserCardTemplateView {
             }
         }
 
-        let title = this.selectedMessage.title.trim();
-        let id = this.selectedMessage.id;
-        let question = this.selectedMessage.question;
-        let severity = 'INFORMATION'
+        const title = this.selectedMessage.title.trim();
+        const id = this.selectedMessage.id;
+        const question = this.selectedMessage.question;
+        let severity = 'INFORMATION';
+        let entitiesAllowedToRespond;
+
         if (this.selectedMessage.question) {
-            severity = 'ACTION'
+            severity = 'ACTION';
+            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
+        } else {
+            entitiesAllowedToRespond = [];
         }
-
-        let entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
-
 
         const card = {
 		title : {key : "message_or_question_list.title", parameters : {"messageTitle" : title} },
@@ -72,6 +74,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         this.messageOrQuestionList = await opfab.businessconfig.businessData.get(businessDataName);
 
         opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
+        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(this.messageOrQuestionList.possibleRecipients);
         const titlesOptions = [];
 
         this.messageOrQuestionList.messagesList.forEach( (message) => {
@@ -93,8 +96,9 @@ export class MessageOrQuestionListUserCardTemplateView {
         return this.selectedMessage;
     }
 
-    public setRecipients(selectedRecipients) {
+    public setRecipients(selectedRecipients, selectedRecipientsForInformation) {
         opfab.currentUserCard.setSelectedRecipients(selectedRecipients);
+        opfab.currentUserCard.setSelectedRecipientsForInformation(selectedRecipientsForInformation);
     }
     
 

@@ -7,222 +7,600 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest'
-
-import GetResponse from '../src/common/server-side/getResponse';
+import 'jest';
 import logger from '../src/common/server-side/logger';
-import CardsReminderOpfabServicesInterface from '../src/domain/server-side/cardsReminderOpfabServicesInterface';
-import RemindDatabaseService from '../src/domain/server-side/remindDatabaseService';
 import ReminderService from '../src/domain/application/reminderService';
 import {RRuleReminderService} from '../src/domain/application/rruleReminderService';
-import {Day, Frequency} from '../src/domain/model/light-card.model';
-import {HourAndMinutes, RRule, Recurrence, TimeSpan} from '../src/domain/model/card.model';
+import {HourAndMinutes, RRule, Recurrence, TimeSpan, Day, Frequency} from '../src/domain/model/card.model';
 import CardsReminderControl from '../src/domain/application/cardsReminderControl';
+import {CardOperation, CardOperationType} from '../src/domain/model/card-operation.model';
+import {RemindDatabaseServiceStub} from './remindDataBaseServiceStub';
+import {OpfabServicesInterfaceStub} from './opfabServicesInterfaceStub';
 
 
-let cards: Array<any> = new Array();
 
-class OpfabServicesInterfaceStub extends CardsReminderOpfabServicesInterface {
+let rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
+let remindDatabaseServiceStub = new RemindDatabaseServiceStub();
 
-    sentReminders: Array<any> = new Array();
-  
-    public async sendCardReminder(cardId: string) {
-        this.sentReminders.push(cardId);
-        return new GetResponse(null, true);
-    }
-
-}
-
-class RemindDatabaseServiceStub extends RemindDatabaseService {
-
-    reminders: Array<any> = new Array();
+let reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseServiceStub);
+let rruleReminderService = new RRuleReminderService()
+    .setLogger(logger)
+    .setDatabaseService(rruleRemindDatabaseServiceStub);
 
 
-    public async getItemsToRemindNow(): Promise<any[]> {
-        let toRemind = this.reminders.filter( reminder => !reminder.hasBeenRemind && reminder.timeForReminding <= new Date().valueOf() );
-        return Promise.resolve(toRemind);
-    }
+let opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(reminderService,rruleReminderService,remindDatabaseServiceStub);
 
-    public async getAllCardsToRemind(): Promise<any[]> {
-        let toRemind = cards.filter( card => card.secondsBeforeTimeSpanForReminder && (!card.endDate || card.endDate >= new Date().valueOf()));
-        return Promise.resolve(toRemind);
-    }    
-
-    public getReminder(id: string) {
-        const res = this.reminders.find( reminder => reminder.cardId === id);
-        return Promise.resolve(res);
-    }
-
-    public persistReminder(reminder: any) {
-        this.reminders.push(reminder);
-    }
-
-    public removeReminder(id: string) {
-        const toRemove = this.reminders.findIndex( reminder => reminder.cardId === id);
-        this.reminders.splice(toRemove, 1);
-    }
-
-    public getCardByUid(uid: string) {
-        let card =  cards.find(card => card.uid === uid);
-        card._id = card.id;
-        return Promise.resolve(card);
-    }
-
-    public clearReminders() {
-        this.reminders = new Array();
-    }
-    
-} 
-
-describe('Cards reminder', function () {
-
-
-    let opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
-    let rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
-    let remindDatabaseServiceStub = new RemindDatabaseServiceStub();
-
-    let reminderService = new ReminderService()
-        .setLogger(logger)
-        .setDatabaseService(remindDatabaseServiceStub);
-
-    let rruleReminderService = new RRuleReminderService()
-        .setLogger(logger)
-        .setDatabaseService(rruleRemindDatabaseServiceStub);
-
-    let cardsReminderControl = new CardsReminderControl()
+let cardsReminderControl = new CardsReminderControl()
     .setOpfabServicesInterface(opfabServicesInterfaceStub)
     .setRruleReminderService(rruleReminderService)
-    .setReminderService(reminderService);
+    .setReminderService(reminderService)
+    .setRemindDatabaseService(remindDatabaseServiceStub)
+    .setLogger(logger);
 
-    let rRule = new RRule(
-        Frequency.DAILY,
-        1,
-        1,
-        Day.MO,
-        [Day.MO, Day.TU, Day.WE, Day.TH, Day.FR, Day.SA, Day.SU],
-        [1,2,3,4,5,6,7,8,9,10,11,12],
-        [12],
-        [23],
-        [],
-        [],
-        "Europe/Paris",
-        15
-    );
 
-    let recurrence =  new Recurrence ( new HourAndMinutes(12, 23), 
-        [1,2,3,4,5,6,7],
-        "Europe/Paris",
-        15,
-        [0,1,2,3,4,5,6,7,8,9,10,11]
-    );
+function setCurrentTime(dateTime: string) {
+    jest.setSystemTime(new Date(dateTime));
+}
 
-    
+async function checkNoReminderIsSent() {
+    await cardsReminderControl.checkCardsReminder();
+    expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(0);
+    expect(opfabServicesInterfaceStub.sentReminders).toEqual([]);
+}
+
+async function checkOneReminderIsSent(cardUid: string = 'uid1') {
+    await cardsReminderControl.checkCardsReminder();
+    expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(1);
+    expect(opfabServicesInterfaceStub.sentReminders).toEqual([cardUid]);
+    opfabServicesInterfaceStub.clean();
+}
+
+async function checkRemindersAreSent(uids: string[]) {
+    await cardsReminderControl.checkCardsReminder();
+    expect(opfabServicesInterfaceStub.sentReminders).toEqual(uids);
+    opfabServicesInterfaceStub.clean();
+}
+
+async function sendCard(card) {
+    remindDatabaseServiceStub.addCard(card);
+
+    const cardOperation = {
+        number: 1,
+        publicationDate: 1,
+        card: card,
+        type: CardOperationType.ADD
+    };
+
+    const message = {
+        content: JSON.stringify(cardOperation)
+    };
+    await reminderService.onMessage(message);
+    await rruleReminderService.onMessage(message);
+}
+
+describe('Cards reminder with rrule structure', function () {
+    function getTestCard(): any {
+        const startDate = new Date('2017-01-01 01:00').valueOf();
+        const rRule = new RRule(
+            Frequency.DAILY,
+            1,
+            1,
+            Day.MO,
+            [Day.MO, Day.TU, Day.WE, Day.TH, Day.FR, Day.SA, Day.SU],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            [12],
+            [23],
+            [],
+            [],
+            'Europe/Paris'
+        );
+        rRule.byhour = [2];
+        rRule.byminute = [10];
+
+        return {
+            uid: 'uid1',
+            id: 'id1',
+            secondsBeforeTimeSpanForReminder: 300,
+            rRule: rRule,
+            startDate: startDate
+        };
+    }
+
     beforeEach(() => {
-        opfabServicesInterfaceStub.sentReminders = new Array();
-        cards = new Array();
-        
-        const now = new Date();
-        rRule.byhour = [now.getHours()]
-        rRule.byminute = [now.getMinutes()+1]
-        
-        recurrence.hoursAndMinutes = new HourAndMinutes(now.getHours(), now.getMinutes()+1);
+        opfabServicesInterfaceStub.clean();
+        rruleRemindDatabaseServiceStub.clean();
+
+        jest.useFakeTimers();
+        setCurrentTime('2017-01-01 01:00');
+    });
+
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
+    it('GIVEN a card was sent  WHEN current date (02:04) < remind date - secondsBeforeTimeSpanForReminder (02:05) THEN no remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 02:04');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN current date (02:06) > remind date - secondsBeforeTimeSpanForReminder (02:05) THEN remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN current date (02:11) > remind date - secondsBeforeTimeSpanForReminder with secondsBeforeTimeSpanForReminder = 0  (02:10) THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = 0;
+        await sendCard(card);
+        setCurrentTime('2017-01-01 02:11');
+        await checkOneReminderIsSent();
     });
 
 
-    it('Should send reminder once when card has secondsBeforeTimeSpanForReminder set and no endDate', async function() {
-        const startDate = Date.now() - 300 * 1000;
+    it('GIVEN a card was sent WHEN current date (02:06) > remind date +  (02:05) THEN no remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
 
-        const card_with_rrule = {uid: "0001", id:"defaultProcess.process1" , secondsBeforeTimeSpanForReminder: 300, rRule: rRule, startDate: startDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
-        
+    it('GIVEN two cards were sent WHEN current date is after reminds date THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        await sendCard(card1);
+        await sendCard(card2);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
+
+    it('GIVEN reminder service was reset WHEN current date is after reminds date of two cards THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        rruleRemindDatabaseServiceStub.addCard(card1);
+        rruleRemindDatabaseServiceStub.addCard(card2);
+        await cardsReminderControl.resetReminderDatabase();
+
+        setCurrentTime('2017-01-01 02:04');
+        await checkNoReminderIsSent();
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
+
+    it('GIVEN a card was sent WHEN remind date > card endDate THEN no remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 01:20').valueOf();
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind date < card endDate THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 02:20').valueOf();
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind is every day THEN remind is sent the first day and the second day', async function () {
+        await sendCard(getTestCard());
+
+        // First remind
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+
+        // No new remind one hour later
+        setCurrentTime('2017-01-01 03:06');
+        await checkNoReminderIsSent();
+
+        // Second remind the day after
+        setCurrentTime('2017-01-02 02:06');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN second remind date is after end date THEN only one remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-02 01:00').valueOf();
+        await sendCard(card);
+
+        // First remind
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+
+        // No remind 1 minutes later
+        setCurrentTime('2017-01-01 02:07');
+        await checkNoReminderIsSent();
+
+        // No remind the day after
+        setCurrentTime('2017-01-02 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was send WHEN a new card version is sent THEN reminder is updated', async function () {
+        await sendCard(getTestCard());
+
+        setCurrentTime('2017-01-01 02:00');
+        await checkNoReminderIsSent();
+
+        const updatedCard = getTestCard();
+        updatedCard.startDate = new Date('2017-01-02 01:00').valueOf();
+        updatedCard.uid = '0002';
+        await sendCard(updatedCard);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+
+        setCurrentTime('2017-01-02 02:06');
+        await checkOneReminderIsSent('0002');
+    });
+
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is not set THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = null;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is set to a negative number THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = -1;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card WHEN card is deleted THEN reminder is removed', async function () {
+        await sendCard(getTestCard());
+        expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(1);
+
+        const cardOperation = {
+            card: getTestCard(),
+            type: CardOperationType.DELETE
+        };
+        const message = {
+            content: JSON.stringify(cardOperation)
+        };
+        await rruleReminderService.onMessage(message);
+        expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(0);
+    });
+
+    it('GIVEN a card is to be reminded WHEN card is not existing in database THEN reminder is removed', async function () {
+        await sendCard(getTestCard());
+        expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(1);
+        rruleRemindDatabaseServiceStub.cleanCards();
+
+        setCurrentTime('2017-01-01 02:06');
+        await cardsReminderControl.checkCardsReminder();
+        expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(0);
+    });
+
+    it('GIVEN a card  WHEN card has invalid freq value  THEN no reminder is save', async function () {
+        const card = getTestCard();
+        card.rRule.freq = undefined;
+        await sendCard(card);
+        expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(0);
+    });
+});
+
+describe('Cards reminder with recurrence structure', function () {
+    function getTestCard(): any {
+        const startDate = new Date('2017-01-01 01:00').valueOf();
+
+        let recurrence = new Recurrence(
+            new HourAndMinutes(2, 10),
+            [1, 2, 3, 4, 5, 6, 7],
+            'Europe/Paris',
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        );
+
         let timespans = [new TimeSpan(startDate, null, recurrence)];
 
-        const card_with_recurrence = {uid: "0002", id:"defaultProcess.process2" , secondsBeforeTimeSpanForReminder: 300, timeSpans: timespans, startDate: startDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
+        return {
+            uid: 'uid1',
+            id: 'id1',
+            secondsBeforeTimeSpanForReminder: 300,
+            timeSpans: timespans,
+            startDate: startDate
+        };
+    }
 
-        cards = [card_with_rrule, card_with_recurrence];
+    beforeEach(() => {
+        opfabServicesInterfaceStub.clean();
+        remindDatabaseServiceStub.clean();
 
-        cardsReminderControl.resetReminderDatabase();
-        await new Promise(resolve => setTimeout(resolve, 1));
+        jest.useFakeTimers();
+        setCurrentTime('2017-01-01 01:00');
+    });
 
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
+    afterAll(() => {
+        jest.useRealTimers();
+    });
 
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(2);
-        expect(opfabServicesInterfaceStub.sentReminders).toEqual(["0002","0001"]);
-        
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(2);
+    it('GIVEN a card was sent WHEN current date (02:04) < remind date - secondsBeforeTimeSpanForReminder (02:05) THEN no remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 02:04');
+        await checkNoReminderIsSent();
+    });
 
-    })
-
-    it('Should send reminder once when card has secondsBeforeTimeSpanForReminder set and endDate after current time', async function() {
-        const startDate = Date.now() - 300 * 1000;
-        const endDate = Date.now() + 300 * 1000;
-        
-        const card_with_rrule = {uid: "0003", id:"defaultProcess.process3" , secondsBeforeTimeSpanForReminder: 300, rRule: rRule, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
-
-        let timespans = [new TimeSpan(startDate, endDate, recurrence)];
-
-        const card_with_recurrence = {uid: "0004", id:"defaultProcess.process4" , secondsBeforeTimeSpanForReminder: 300, timeSpans: timespans, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
-
-        cards = [card_with_rrule, card_with_recurrence];
-        
-        cardsReminderControl.resetReminderDatabase();
-        await new Promise(resolve => setTimeout(resolve, 1));
-
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
-
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(2);
-        expect(opfabServicesInterfaceStub.sentReminders).toEqual(["0004","0003"]);
-        
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(2);
-
-    })
-
-    
-    it('Should not send reminder when card has secondsBeforeTimeSpanForReminder set and endDate before current time', async function() {
-        const startDate = Date.now() - 300 * 1000;
-        const endDate = Date.now() - 60 * 1000;
-
-        const card_with_rrule  = {uid: "0001", id:"defaultProcess.process1" , secondsBeforeTimeSpanForReminder: 300, rRule: rRule, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
-
-        let timespans = [new TimeSpan(startDate, endDate, recurrence)];
-
-        const card_with_recurrence = {uid: "0001", id:"defaultProcess.process1" , secondsBeforeTimeSpanForReminder: 300, timeSpans: timespans, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
-
-        cards = [card_with_rrule, card_with_recurrence];
-        cardsReminderControl.resetReminderDatabase();
-        await new Promise(resolve => setTimeout(resolve, 1));
-
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
-
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(0);
-
-    })
+    it('GIVEN a card was sent WHEN current date (02:06) > remind date - secondsBeforeTimeSpanForReminder (02:05) THEN remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
 
 
-    it('Should not send reminder when secondsBeforeTimeSpanForReminder is not set', async function() {
-        const startDate = Date.now() - 300 * 1000;
-        const endDate = Date.now() + 300 * 1000;
+    it('GIVEN a card was sent WHEN current date (02:11) > remind date - secondsBeforeTimeSpanForReminder , with secondsBeforeTimeSpanForReminder = 0 (02:10) THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = 0;
+        await sendCard(card);
+        setCurrentTime('2017-01-01 02:11');
+        await checkOneReminderIsSent();
+    });
 
-        const card_with_rrule = {uid: "0001", id:"defaultProcess.process1" , rRule: rRule, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
+    it('GIVEN two cards were sent WHEN current date is after reminds date THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        await sendCard(card1);
+        await sendCard(card2);
 
-        let timespans = [new TimeSpan(startDate, endDate, recurrence)];
+        setCurrentTime('2017-01-01 02:06');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
 
-        const card_with_recurrence = {uid: "0001", id:"defaultProcess.process1" , timeSpans: timespans, startDate: startDate, endDate: endDate, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
+    it('GIVEN reminder service was reset WHEN current date is after reminds date of two cards THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        rruleRemindDatabaseServiceStub.addCard(card1);
+        rruleRemindDatabaseServiceStub.addCard(card2);
+        await cardsReminderControl.resetReminderDatabase();
 
-        cards = [card_with_rrule, card_with_recurrence];
-        cardsReminderControl.resetReminderDatabase();
-        await new Promise(resolve => setTimeout(resolve, 1));
+        setCurrentTime('2017-01-01 02:04');
+        await checkNoReminderIsSent();
 
-        cardsReminderControl.checkCardsReminder();
-        await new Promise(resolve => setTimeout(resolve, 1));
+        setCurrentTime('2017-01-01 02:06');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
 
-        expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(0);
-    })
+    it('GIVEN a card was sent WHEN remind date > card endDate THEN no remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 01:20').valueOf();
+        await sendCard(card);
 
-})
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind date < card endDate THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 02:20').valueOf();
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind is every day THEN remind is sent the first day and the second day', async function () {
+        await sendCard(getTestCard());
+
+        // First remind
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+
+        // No new remind one hour later
+        setCurrentTime('2017-01-01 03:06');
+        await checkNoReminderIsSent();
+
+        // Second remind the day after
+        setCurrentTime('2017-01-02 02:06');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN second remind date is after end date THEN only one remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-02 01:00').valueOf();
+        await sendCard(card);
+
+        // First remind
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+
+        // No remind 1 minutes later
+        setCurrentTime('2017-01-01 02:07');
+        await checkNoReminderIsSent();
+
+        // No remind the day after
+        setCurrentTime('2017-01-02 02:06');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was send WHEN a new card version is sent THEN reminder is updated', async function () {
+        await sendCard(getTestCard());
+
+        setCurrentTime('2017-01-01 02:00');
+        await checkNoReminderIsSent();
+
+        const card = getTestCard();
+        card.uid = '0002';
+        card.timeSpans[0].start = new Date('2017-01-02 01:00').valueOf();
+
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+
+        setCurrentTime('2017-01-02 02:06');
+        await checkOneReminderIsSent('0002');
+    });
+
+    it('GIVEN a card WHEN card is deleted THEN reminder is removed', async function () {
+        await sendCard(getTestCard());
+        expect(remindDatabaseServiceStub.getNbReminder()).toBe(1);
+
+        const cardOperation: CardOperation = {
+            card: getTestCard(),
+            type: CardOperationType.DELETE
+        };
+        const message = {
+            content: JSON.stringify(cardOperation)
+        };
+        await reminderService.onMessage(message);
+        expect(remindDatabaseServiceStub.getNbReminder()).toBe(0);
+    });
+
+    it('GIVEN a card is to be reminded WHEN card is not existing in database THEN reminder is removed', async function () {
+        await sendCard(getTestCard());
+        expect(remindDatabaseServiceStub.getNbReminder()).toBe(1);
+        remindDatabaseServiceStub.cleanCards();
+
+        setCurrentTime('2017-01-01 02:06');
+        await cardsReminderControl.checkCardsReminder();
+        expect(remindDatabaseServiceStub.getNbReminder()).toBe(0);
+    });
+
+    it('GIVEN a card WHEN card has no timezone value  THEN reminder proceed with default value', async function () {
+        const card = getTestCard();
+        card.timeSpans[0].recurrence.timeZone = undefined;
+        await sendCard(card);
+        setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
+});
+
+describe('Cards reminder with timespans and no recurrence', function () {
+    function getTestCard(): any {
+        const startDate = new Date('2017-01-01 02:00').valueOf();
+        const timespans = [new TimeSpan(startDate, null)];
+        return {
+            uid: 'uid1',
+            id: 'id1',
+            secondsBeforeTimeSpanForReminder: 300,
+            timeSpans: timespans,
+            startDate: startDate
+        };
+    }
+
+    beforeEach(() => {
+        opfabServicesInterfaceStub.clean();
+        remindDatabaseServiceStub.clean();
+        jest.useFakeTimers();
+        setCurrentTime('2017-01-01 01:00');
+    });
+
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
+    it('GIVEN a card was sent WHEN  current date (01:30) < timeSpan startDate - secondsBeforeTimeSpanForReminder (01:55)  THEN no remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 01:30');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN  current date (01:56) > timeSpan startDate - secondsBeforeTimeSpanForReminder (01:55)  THEN remind is sent', async function () {
+        await sendCard(getTestCard());
+        setCurrentTime('2017-01-01 01:56');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN two cards were sent WHEN current date is after reminds date THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        await sendCard(card1);
+        await sendCard(card2);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
+
+    it('GIVEN reminder service was reset WHEN current date is after reminds date of two cards THEN two reminds are sent', async function () {
+        const card1 = getTestCard();
+        const card2 = getTestCard();
+        card2.id = 'id2';
+        card2.uid = 'uid2';
+        remindDatabaseServiceStub.addCard(card1);
+        remindDatabaseServiceStub.addCard(card2);
+        await cardsReminderControl.resetReminderDatabase();
+
+        setCurrentTime('2017-01-01 01:30');
+        await checkNoReminderIsSent();
+
+        setCurrentTime('2017-01-01 01:56');
+        await checkRemindersAreSent(['uid1', 'uid2']);
+    });
+
+    it('GIVEN a card was sent WHEN remind date > card endDate THEN no remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 01:20').valueOf();
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 01:56');
+        await checkNoReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind date < card endDate THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.endDate = new Date('2017-01-01 02:20').valueOf();
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 01:56');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN remind is every day THEN remind is sent the first day and the second day', async function () {
+        const span1 = new Date('2017-01-01 02:00').valueOf();
+        const span2 = new Date('2017-01-02 05:00').valueOf();
+        const card = getTestCard();
+        const timespans = [new TimeSpan(span1, null), new TimeSpan(span2, null)];
+        card.timeSpans = timespans;
+        await sendCard(card);
+
+        // First remind
+        setCurrentTime('2017-01-01 02:00');
+        await checkOneReminderIsSent();
+
+        // No new remind one hour later
+        setCurrentTime('2017-01-01 03:06');
+        await checkNoReminderIsSent();
+
+        // Second remind the day after
+        setCurrentTime('2017-01-02 04:58');
+        await checkOneReminderIsSent();
+    });
+
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is not set THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = null;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:01');
+        await checkNoReminderIsSent();
+    });
+
+
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is set to a negative number THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = -1;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:01');
+        await checkNoReminderIsSent();
+    });
+});

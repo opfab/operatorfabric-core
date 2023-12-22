@@ -189,6 +189,7 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         cardTemplate.publisherType ? cardTemplate.publisherType : null,
         cardTemplate.representative ? cardTemplate.representative : null,
         cardTemplate.representativeType ? cardTemplate.representativeType : null,
+        cardTemplate.tags ? cardTemplate.tags : null,
         cardTemplate.wktGeometry ? cardTemplate.wktGeometry : null,
         cardTemplate.wktProjection ? cardTemplate.wktProjection : null,
         cardTemplate.secondsBeforeTimeSpanForReminder ? cardTemplate.secondsBeforeTimeSpanForReminder : null,

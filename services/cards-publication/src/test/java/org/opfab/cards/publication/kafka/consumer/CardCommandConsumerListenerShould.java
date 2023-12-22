@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,14 +19,12 @@ import org.opfab.cards.publication.kafka.command.CommandHandler;
 import org.opfab.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.opfab.cards.publication.kafka.command.DeleteCardCommandHandler;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.*;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = "test")
 class CardCommandConsumerListenerShould {
 
     @Test

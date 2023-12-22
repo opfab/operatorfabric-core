@@ -8,6 +8,7 @@ dependencies {
     implementation cloud.starterFeign
     implementation boot.starterSecurity
     implementation boot.starterValidation
+
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

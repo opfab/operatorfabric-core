@@ -24,7 +24,7 @@ import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
 import {ConfigService} from 'app/business/services/config.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {MapService} from 'app/business/services/map.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -49,20 +49,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private configService: ConfigService,
-        private logger: OpfabLoggerService,
         private mapService: MapService,
         private translate: TranslateService,
-        private globalStyleService: GlobalStyleService,
-        private router: Router,
-        private dateTimeFormatterService: DateTimeFormatterService
+        private router: Router
     ) {}
 
     ngOnInit() {
         self = this;
 
-        if (this.configService.getConfigValue('feed.geomap.enableMap', false)) {
-            const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
+        if (ConfigService.getConfigValue('feed.geomap.enableMap', false)) {
+            const enableGraph = ConfigService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
                 .getFilteredAndSearchedLightCards()
@@ -90,11 +86,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.globalStyleService.getStyleChange().subscribe((style) => {
-            this.updateMapColors(style);
-            this.addGeoJSONLayer(style);
-            this.map.render();
-        });
+        GlobalStyleService.getStyleChange()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((style) => {
+                this.updateMapColors(style);
+                this.addGeoJSONLayer(style);
+                this.map.render();
+            });
     }
 
     private updateMapColors(style) {
@@ -105,7 +103,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }
             this.map.on('postcompose', () => {
-                document.querySelector('canvas').style.filter = filter;
+                if (document.querySelector('canvas')) {
+                    document.querySelector('canvas').style.filter = filter;
+                }
             });
             this.map.updateSize();
         }
@@ -144,10 +144,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private zoomToLocation(lightCardId: string) {
-        const zoomLevelWhenZoomToLocation = this.configService.getConfigValue(
-            'feed.geomap.zoomLevelWhenZoomToLocation',
-            14
-        );
+        const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue('feed.geomap.zoomLevelWhenZoomToLocation', 14);
         if (this.vectorLayer.getSource().getFeatures().length > 0) {
             const features = this.vectorLayer.getSource().getFeatures();
             features.forEach((feature) => {
@@ -170,9 +167,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             collapsible: true
         });
 
-        const longitude = this.configService.getConfigValue('feed.geomap.initialLongitude', 0);
-        const latitude = this.configService.getConfigValue('feed.geomap.initialLatitude', 0);
-        const zoom = this.configService.getConfigValue('feed.geomap.initialZoom', 1);
+        const longitude = ConfigService.getConfigValue('feed.geomap.initialLongitude', 0);
+        const latitude = ConfigService.getConfigValue('feed.geomap.initialLatitude', 0);
+        const zoom = ConfigService.getConfigValue('feed.geomap.initialZoom', 1);
 
         this.map = new OpenLayersMap({
             view: new View({
@@ -184,10 +181,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             controls: defaultControls({attribution: false}).extend([attribution])
         });
 
-        const bgUrl = this.configService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
-        const bgTileSize = this.configService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
+        const bgUrl = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
+        const bgTileSize = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
         if (bgUrl && bgTileSize) {
-            const bgCrossOrigin = this.configService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
+            const bgCrossOrigin = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
             this.map.addLayer(
                 new TileLayer({
                     source: new XYZ({
@@ -227,7 +224,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private addGeoJSONLayer(style) {
         if (this.map) {
-            const geojsonUrl = this.configService.getConfigValue('feed.geomap.layer.geojson.url', null);
+            const geojsonUrl = ConfigService.getConfigValue('feed.geomap.layer.geojson.url', null);
             if (geojsonUrl) {
                 let colorStroke = 'rgba(0, 0, 0, 0.6)';
                 let colorFill = 'rgba(0, 0, 0, 0.05)';
@@ -263,7 +260,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     displayCardDetailsOnButton(lightCard: LightCard): string {
-        const publishDate = this.dateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+        const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
         return `${publishDate} : ${lightCard.titleTranslated}`;
     }
 
@@ -281,12 +278,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         const featureArray = [];
         this.map.removeLayer(this.vectorLayer);
 
-        const maxZoom = this.configService.getConfigValue('feed.geomap.maxZoom', 11);
-        const zoomDuration = this.configService.getConfigValue('feed.geomap.zoomDuration', 500);
-        const defaultDataProjection = this.configService.getConfigValue(
-            'feed.geomap.defaultDataProjection',
-            'EPSG:4326'
-        );
+        const maxZoom = ConfigService.getConfigValue('feed.geomap.maxZoom', 11);
+        const zoomDuration = ConfigService.getConfigValue('feed.geomap.zoomDuration', 500);
+        const defaultDataProjection = ConfigService.getConfigValue('feed.geomap.defaultDataProjection', 'EPSG:4326');
 
         lightCards
             .filter((lightCard) => lightCard.wktGeometry)
@@ -300,7 +294,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                     feature.set('lightCard', lightCard, true);
                     featureArray.push(feature);
                 } catch (e) {
-                    this.logger.error(
+                    logger.error(
                         `Unable to parse wktGeometry: ${e} for cardId [${lightCard.id}] and process [${lightCard.process}]`
                     );
                 }

@@ -49,18 +49,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     isReadOnlyUser: boolean;
 
     constructor(
-        private userPermissionsService: UserPermissionsService,
-        private userService: UserService,
         private modalService: NgbModal,
-        private cardService: CardService,
-        private alertMessageService: AlertMessageService,
-        private router: Router,
-        private routerStore: RouterStore
-    ) {}
+        private router: Router
+    ) {
+    }
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
     }
 
     private setButtonsVisibility() {
@@ -77,19 +73,19 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         this.showCreateCopyButton =
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
-            this.userService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
+            UserService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(
-            this.userService.getCurrentUserWithPerimeters(),
+        return UserPermissionsService.doesTheUserHavePermissionToEditCard(
+            UserService.getCurrentUserWithPerimeters(),
             this.card
         );
     }
 
     private doesTheUserHavePermissionToDeleteCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(
-            this.userService.getCurrentUserWithPerimeters(),
+        return UserPermissionsService.doesTheUserHavePermissionToDeleteCard(
+            UserService.getCurrentUserWithPerimeters(),
             this.card
         );
     }
@@ -126,16 +122,18 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
-            this.routerStore.getCurrentPageType() !== PageType.MONITORING &&
-            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD) {
+        if (
+            RouterStore.getCurrentPageType() !== PageType.CALENDAR &&
+            RouterStore.getCurrentPageType() !== PageType.MONITORING &&
+            RouterStore.getCurrentPageType() !== PageType.DASHBOARD
+        ) {
             this.editModal.result.then(
                 () => {
-                     // If modal is closed
-                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    // If modal is closed
+                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
-                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
                 }
             );
         }
@@ -153,7 +151,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
         if (this.deleteConfirmationModal) this.deleteConfirmationModal.close();
-        this.cardService.deleteCard(this.card).subscribe((resp) => {
+        CardService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {
                 this.closeDetails();
@@ -167,12 +165,11 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     ngOnDestroy() {
-        if (this.deleteConfirmationModal)
-            this.deleteConfirmationModal.dismiss();
+        if (this.deleteConfirmationModal) this.deleteConfirmationModal.dismiss();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

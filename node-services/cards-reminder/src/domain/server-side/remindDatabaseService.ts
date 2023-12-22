@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
 
@@ -68,11 +67,11 @@ export default class RemindDatabaseService {
     public async getItemsToRemindNow(): Promise<any[]> {
         return this.mongoDB
             .collection(this.remindersCollection)
-            .find({hasBeenRemind: false, timeForReminding: {$lte: new Date().valueOf()}})
+            .find({timeForReminding: {$lte: new Date().valueOf()}})
             .toArray();
     }
 
-    public async getAllCardsToRemind(): Promise<any[]> {
+    public async getAllCardsWithReminder(): Promise<any[]> {
         return this.mongoDB
             .collection('cards')
             .find({
@@ -81,6 +80,15 @@ export default class RemindDatabaseService {
                     {$or: [{endDate: {$exists: false}}, {endDate: {$gte: new Date()}}]}
                 ]
             })
+            .project({
+                id: '$_id',
+                uid: 1,
+                startDate: 1,
+                endDate: 1,
+                secondsBeforeTimeSpanForReminder: 1,
+                timeSpans:1,
+                rRule:1
+            })
             .toArray();
     }
 
@@ -88,19 +96,59 @@ export default class RemindDatabaseService {
         return this.mongoDB.collection(this.remindersCollection).findOne({cardId: id});
     }
 
-    public persistReminder(reminder: any) {
-        this.mongoDB.collection(this.remindersCollection).insertOne(reminder);
+    public async persistReminder(reminder: any): Promise<void> {
+        try {
+            reminder._id = reminder.cardId; // we have a unique entry per card
+            await this.mongoDB.collection(this.remindersCollection).insertOne(reminder);
+        } catch (error) {
+            this.logger.error('Mongo error in insert reminder' + error);
+        }
+        return Promise.resolve();
     }
 
-    public removeReminder(id: string) {
-        this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id});
+    public async updateReminder(updatedReminder: any): Promise<void> {
+        try {
+            await this.mongoDB
+                .collection(this.remindersCollection)
+                .updateOne({cardId: updatedReminder.cardId}, {$set: updatedReminder});
+        } catch (error) {
+            this.logger.error('Mongo error in update reminder' + error);
+        }
+        return Promise.resolve();
     }
 
-    public getCardByUid(uid: string) {
-        return this.mongoDB.collection('cards').findOne({uid: uid});
+    public async removeReminder(id: string): Promise<void> {
+        try {
+            await this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id});
+        } catch (error) {
+            this.logger.error('Mongo error in remove reminder' + error);
+        }
+        return Promise.resolve();
     }
 
-    public clearReminders() {
-        this.mongoDB.collection(this.remindersCollection).deleteMany({});
+    public async getCardByUid(uid: string) {
+        return this.mongoDB.collection('cards').findOne(
+            {uid: uid},
+            {
+                projection: {
+                    id: '$_id',
+                    uid: 1,
+                    startDate: 1,
+                    endDate: 1,
+                    secondsBeforeTimeSpanForReminder: 1,
+                    timeSpans:1,
+                    rRule:1
+
+                }
+            }
+        );
+    }
+
+    public async clearReminders() {
+        try {
+            await this.mongoDB.collection(this.remindersCollection).deleteMany({});
+        } catch (error) {
+            this.logger.error('Mongo error in clear reminders' + error);
+        }
     }
 }

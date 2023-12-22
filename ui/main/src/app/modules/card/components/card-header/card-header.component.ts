@@ -39,16 +39,14 @@ export class CardHeaderComponent implements OnChanges {
     public listVisibleEntitiesToRespond = [];
     public listDropdownEntitiesToRespond = [];
 
-    constructor(private businessconfigService: ProcessesService, private entitiesService: EntitiesService) {}
-
     ngOnChanges(): void {
         this.computeExpireLabelAndIcon();
         this.computeEntitiesForHeader();
     }
 
     private computeExpireLabelAndIcon() {
-        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
-            const state = process.states.get((this.card.state));
+        ProcessesService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
+            const state = process.states.get(this.card.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;
@@ -62,17 +60,22 @@ export class CardHeaderComponent implements OnChanges {
 
     private computeEntitiesForHeader() {
         let entityIdsForHeader = this.card.entitiesRequiredToRespond;
-        if (!entityIdsForHeader || entityIdsForHeader.length === 0)  entityIdsForHeader = this.card.entitiesAllowedToRespond;
+        if (!entityIdsForHeader || entityIdsForHeader.length === 0)
+            entityIdsForHeader = this.card.entitiesAllowedToRespond;
         entityIdsForHeader = this.getEntityIdsAllowedToSendCards(entityIdsForHeader);
         this.setEntitiesForCardHeader(entityIdsForHeader);
     }
 
     private getEntityIdsAllowedToSendCards(entityIds) {
         if (!entityIds) return [];
-        const entities = this.entitiesService.getEntitiesFromIds(entityIds);
-        return this.entitiesService
+        const entities = EntitiesService.getEntitiesFromIds(entityIds);
+        const processDefinition = ProcessesService.getProcess(this.card.process);
+        const emittingEntityAllowedToRespond = processDefinition.states.get(this.card.state).response?.emittingEntityAllowedToRespond || false ;
+        const entitiesIdAllowedToRespond = EntitiesService
             .resolveEntitiesAllowedToSendCards(entities)
-            .map((entity) => entity.id);
+            .map((entity) => entity.id)
+            .filter((x) => x !== this.card.publisher || emittingEntityAllowedToRespond);
+        return entitiesIdAllowedToRespond;
     }
 
     private setEntitiesForCardHeader(entities) {
@@ -84,7 +87,7 @@ export class CardHeaderComponent implements OnChanges {
     private getEntitiesForCardHeaderFromEntityIds(entities: string[]) {
         const entityHeader = new Array<EntityForCardHeader>();
         entities.forEach((entity) => {
-            const entityName = this.entitiesService.getEntityName(entity);
+            const entityName = EntitiesService.getEntityName(entity);
             if (entityName) {
                 entityHeader.push({
                     id: entity,

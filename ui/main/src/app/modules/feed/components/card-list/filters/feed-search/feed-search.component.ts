@@ -9,9 +9,9 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {SearchService} from 'app/business/services/lightcards/search-service';
 import {FormControl} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-feed-search',
@@ -25,15 +25,15 @@ export class FeedSearchComponent implements OnInit {
     placeholder : string;
 
     constructor(
-        private searchService: SearchService,
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private translateService: TranslateService
     ) {}
 
     ngOnInit() {
         this.placeholder = this.translateService.instant('feed.searchPlaceholderText');
-        this.searchService.getSearchTerm("");
+        this.lightCardsFeedFilterService.setSearchTermForTextFilter("");
         this.searchControl.valueChanges.subscribe(searchTerm => {
-            this.searchService.getSearchTerm(searchTerm);
+            this.lightCardsFeedFilterService.setSearchTermForTextFilter(searchTerm);
         })
     }
 }

@@ -11,7 +11,6 @@
 
 package org.opfab.cards.publication.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
@@ -56,6 +55,7 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private String process;
     
+    @Indexed
     private String processInstanceId;
     
     @Indexed

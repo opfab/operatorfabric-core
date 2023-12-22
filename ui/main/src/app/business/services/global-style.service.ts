@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserPreferencesService} from './users/user-preference.service';
 import {ConfigService} from 'app/business/services/config.service';
@@ -15,9 +14,6 @@ import {MenuService} from 'app/business/services/menu.service';
 
 declare const opfabStyle: any;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class GlobalStyleService {
     public static DAY = 'DAY';
     public static NIGHT = 'NIGHT';
@@ -26,64 +22,60 @@ export class GlobalStyleService {
 
     private static styleChangeEvent: BehaviorSubject<string>;
 
-    constructor(
-        private userPreferences: UserPreferencesService,
-        private configService: ConfigService,
-        private menuService: MenuService,) {
+    public static init() {
         opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
-
+        GlobalStyleService.setStyle('NIGHT');
     }
 
-    public loadUserStyle() {
-        const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
+    public static loadUserStyle() {
+        const visibleCoreMenus = MenuService.computeVisibleCoreMenusForCurrentUser();
         const nightDayMode = visibleCoreMenus.includes('nightdaymode');
 
-        const settings = this.configService.getConfigValue('settings');
+        const settings = ConfigService.getConfigValue('settings');
         if (!nightDayMode) {
             if (settings?.styleWhenNightDayModeDesactivated) {
-                this.setStyle(settings.styleWhenNightDayModeDesactivated);
+                GlobalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
             }
         } else {
-            this.loadNightModeFromUserPreferences();
+            GlobalStyleService.loadNightModeFromUserPreferences();
         }
     }
 
-    public getStyle(): string {
+    public static getStyle(): string {
         return GlobalStyleService.style;
     }
 
-    public setStyle(style: string) {
+    public static setStyle(style: string) {
         GlobalStyleService.style = style;
         opfabStyle.setCss(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_STYLE : opfabStyle.DAY_STYLE);
-        this.styleChanged();
+        GlobalStyleService.styleChanged();
     }
 
-    private loadNightModeFromUserPreferences() {
-        const nightMode = this.userPreferences.getPreference('opfab.nightMode');
+    private static loadNightModeFromUserPreferences() {
+        const nightMode = UserPreferencesService.getPreference('opfab.nightMode');
         if (nightMode !== null && nightMode === 'false') {
-            this.setStyle(GlobalStyleService.DAY);
+            GlobalStyleService.setStyle(GlobalStyleService.DAY);
         } else {
-            this.setStyle(GlobalStyleService.NIGHT);
+            GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
         }
     }
 
-    public switchToNightMode() {
-        this.setStyle(GlobalStyleService.NIGHT);
-        this.userPreferences.setPreference('opfab.nightMode', 'true');
+    public static switchToNightMode() {
+        GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
+        UserPreferencesService.setPreference('opfab.nightMode', 'true');
     }
 
-    public switchToDayMode() {
-        this.setStyle(GlobalStyleService.DAY);
-        this.userPreferences.setPreference('opfab.nightMode', 'false');
+    public static switchToDayMode() {
+        GlobalStyleService.setStyle(GlobalStyleService.DAY);
+        UserPreferencesService.setPreference('opfab.nightMode', 'false');
     }
 
-    public getStyleChange(): Observable<string> {
+    public static getStyleChange(): Observable<string> {
         return GlobalStyleService.styleChangeEvent.asObservable();
     }
 
-    private styleChanged() {
+    private static styleChanged() {
         GlobalStyleService.styleChangeEvent.next(GlobalStyleService.style);
     }
-
 }

@@ -9,19 +9,16 @@
 
 import {ProcessesService} from './processes.service';
 import {Process} from '@ofModel/processes.model';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 
 describe('Processes Services', () => {
-    let processesService: ProcessesService;
+
     let processServerMock: ProcessServerMock;
-    let configServerMock: ConfigServerMock;
 
     beforeEach(() => {
         processServerMock = new ProcessServerMock();
-        configServerMock = new ConfigServerMock();
-        processesService = new ProcessesService(null, processServerMock, configServerMock);
+        ProcessesService.setProcessServer(processServerMock);
     });
 
 
@@ -30,7 +27,7 @@ describe('Processes Services', () => {
             const processDefinition = new Process('testPublisher', '0', 'businessconfig.label');
             const serverResponse = new ServerResponse<Process>(processDefinition, null, null);
             processServerMock.setResponseForProcessDefinition(serverResponse);
-            processesService
+            ProcessesService
                 .queryProcess('testPublisher', '0')
                 .subscribe((result) => expect(result).toEqual(processDefinition));
         });
@@ -38,7 +35,7 @@ describe('Processes Services', () => {
         it('GIVEN a non-existing process WHEN query the process THEN null is returned', () => {
             const serverResponse = new ServerResponse<Process>(null, ServerResponseStatus.NOT_FOUND, null);
             processServerMock.setResponseForProcessDefinition(serverResponse);
-            processesService
+            ProcessesService
                 .queryProcess('testPublisher', '0')
                 .subscribe((result) => expect(result).toEqual(null));
         });

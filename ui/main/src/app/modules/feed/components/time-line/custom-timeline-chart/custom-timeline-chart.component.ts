@@ -13,7 +13,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    HostListener,
     Inject,
     Input,
     NgZone,
@@ -40,6 +39,7 @@ import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUt
 import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {DurationInputArg2} from 'moment';
 
 @Component({
     selector: 'of-custom-timeline-chart',
@@ -239,21 +239,36 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             this.widthChange.emit(true);
         }
     }
-
     setupXAxis(): void {
         this.setXTicksValue();
         this.xTicksOne = [];
         this.xTicksTwo = [];
+
         switch (this.domainId) {
             case 'TR':
-                this.xTicks.forEach((tick) => {
-                    if (tick.minute() === 0 || tick.minute() === 30) this.xTicksOne.push(tick);
-                    else this.xTicksTwo.push(tick);
-                });
+                this.processTicksForTR();
                 break;
             case 'J':
             case 'M':
             case 'Y':
+                this.processTicksForJMY();
+                break;
+            case '7D':
+            case 'W':
+                this.processTicksFor7DW();
+                break;
+            default:
+        }
+    }
+
+    private processTicksForTR(): void {
+        this.xTicks.forEach((tick) => {
+            if (tick.minute() === 0 || tick.minute() === 30) this.xTicksOne.push(tick);
+            else this.xTicksTwo.push(tick);
+        });
+    }
+
+    private processTicksForJMY(): void {
                 for (let i = 0; i < this.xTicks.length; i++) {
                     if (i % 2 === 0) {
                         this.xTicksOne.push(this.xTicks[i]);
@@ -261,45 +276,54 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                         this.xTicksTwo.push(this.xTicks[i]);
                     }
                 }
-                break;
-            case '7D':
-            case 'W':
+    }
+
+    private processTicksFor7DW(): void {
                 this.xTicks.forEach((tick) => {
                     if (tick.hour() === 0 || tick.hour() === 8 || tick.hour() === 16) this.xTicksOne.push(tick);
                     else this.xTicksTwo.push(tick);
                 });
-                break;
-            default:
-        }
     }
-
     setXTicksValue(): void {
         const startDomain = moment(this.xDomainForTimeLineGridDisplay[0]);
-        this.xTicks = [];
-        this.xTicks.push(startDomain);
-        const nextTick = moment(startDomain);
+        this.xTicks = [startDomain];
+        let nextTick = moment(startDomain);
         const tickSize = this.getTickSize();
 
         while (nextTick.valueOf() < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
-            // we need to make half month tick when Y domain
-            if (this.domainId === 'Y') {
+            nextTick =
+                this.domainId === 'Y' ? this.addHalfMonthOrMonth(nextTick) : this.addTickSize(nextTick, tickSize);
+            this.xTicks.push(moment(nextTick));
+        }
+    }
+
+    private addHalfMonthOrMonth(nextTick: moment.Moment): moment.Moment {
                 if (nextTick.isSame(moment(nextTick).startOf('month'))) {
-                    nextTick.add(15, 'day');
+            return nextTick.add(15, 'day');
                 } else {
-                    nextTick.add(1, 'month').startOf('month');
+            return nextTick.add(1, 'month').startOf('month');
+        }
                 }
-            } else {
-                nextTick.add(tickSize.amount, tickSize.unit);
+
+    private addTickSize(nextTick: moment.Moment, tickSize: {amount: number; unit: DurationInputArg2}): moment.Moment {
+        nextTick = nextTick.add(tickSize.amount, tickSize.unit);
                 if (this.domainId === '7D' || this.domainId === 'W') {
+            nextTick = this.adjustForDaylightSaving(nextTick);
+        }
+        return nextTick;
+    }
+
+    private adjustForDaylightSaving(nextTick: moment.Moment): moment.Moment {
                     // OC-1205 : Deal with winter/summer time changes
                     // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
                     // if hour is 3, we are switching from summer to winter time, we add 1 hour to keep  ticks  to 04 / 08 / 12 ...
-                    if (nextTick.hour() === 5) nextTick.subtract(1, 'hour');
-                    if (nextTick.hour() === 3) nextTick.add(1, 'hour');
+        if (nextTick.hour() === 5) {
+            return nextTick.subtract(1, 'hour');
                 }
-            }
-            this.xTicks.push(moment(nextTick));
+        if (nextTick.hour() === 3) {
+            return nextTick.add(1, 'hour');
         }
+        return nextTick;
     }
 
     initDataPipe(): void {
@@ -613,11 +637,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (this.openPopover) {
             this.openPopover.close();
         }
+        clearTimeout(this.popoverTimeOut);
         this.openPopover = p;
         this.currentCircleHovered = myCircle;
     }
 
-    @HostListener('mouseleave') onMouseLeave() {
+    onMouseLeave() {
         if (this.openPopover) {
             this.popoverTimeOut = setTimeout(() => {
                 this.openPopover.close();
@@ -625,7 +650,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
     }
 
-    @HostListener('mouseenter') onMouseEnter() {
+    onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
     }
 
@@ -653,36 +678,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     };
 
     getTickSize() {
-        switch (this.domainId) {
-            // need to explicit format for moment : https://stackoverflow.com/questions/41768864/moment-add-only-works-with-literal-values
-            case 'TR':
-                const amountTR: moment.DurationInputArg1 = 15;
-                const unitTR: moment.DurationInputArg2 = 'minute';
-                return {amount: amountTR, unit: unitTR};
-
-            case 'J':
-                const amountJ: moment.DurationInputArg1 = 30;
-                const unitJ: moment.DurationInputArg2 = 'minute';
-                return {amount: amountJ, unit: unitJ};
-
-            case '7D':
-                const amount7D: moment.DurationInputArg1 = 4;
-                const unit7D: moment.DurationInputArg2 = 'hour';
-                return {amount: amount7D, unit: unit7D};
-
-            case 'W':
-                const amountW: moment.DurationInputArg1 = 4;
-                const unitW: moment.DurationInputArg2 = 'hour';
-                return {amount: amountW, unit: unitW};
-
-            case 'M':
-                const amountM: moment.DurationInputArg1 = 1;
-                const unitM: moment.DurationInputArg2 = 'day';
-                return {amount: amountM, unit: unitM};
-
-            default:
-                return;
-        }
+        const tickSizeMap = {
+            'TR': {amount: 15 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
+            'J': {amount: 30 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
+            '7D': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
+            'W': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
+            'M': {amount: 1 as moment.DurationInputArg1, unit: 'day' as moment.DurationInputArg2}
+        };
+        return tickSizeMap[this.domainId];
     }
 
     /**

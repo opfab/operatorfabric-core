@@ -7,55 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Day, Frequency, PublisherType, Severity} from './light-card.model';
-import {I18n} from './i18n.model';
-
 export class Card {
     constructor(
-        readonly uid: string,
-        readonly id: string,
-        readonly publisher: string,
-        readonly processVersion: string,
-        readonly publishDate: number,
+        public uid: string,
+        public id: string,
         public startDate: number,
-        readonly endDate: number,
-        readonly expirationDate: number,
-        readonly severity: Severity,
-        public hasBeenAcknowledged: boolean = false,
-        readonly hasBeenRead: boolean = false,
-        readonly hasChildCardFromCurrentUserEntity: boolean = false,
-        readonly process?: string,
-        readonly processInstanceId?: string,
-        readonly state?: string,
-        readonly lttd?: number,
-        readonly title?: I18n,
-        readonly summary?: I18n,
-        readonly titleTranslated?: string,
-        readonly summaryTranslated?: string,
-        readonly data?: any,
-        readonly userRecipients?: string[],
-        readonly groupRecipients?: string[],
-        readonly entityRecipients?: string[],
-        readonly entityRecipientsForInformation?: string[],
-        readonly externalRecipients?: string[],
-        readonly entitiesAllowedToRespond?: string[],
-        readonly entitiesRequiredToRespond?: string[],
-        readonly entitiesAllowedToEdit?: string[],
-        readonly parentCardId?: string,
-        readonly initialParentCardUid?: string,
-        readonly keepChildCards?: boolean,
-        readonly publisherType?: PublisherType | string,
-        readonly representative?: string,
-        readonly representativeType?: PublisherType | string,
-        readonly wktGeometry?: string,
-        readonly wktProjection?: string,
+        public endDate?: number,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
-        readonly entitiesAcks?: string[],
-        readonly deletionDate?: number,
-        public rRule?: RRule,
-        readonly _id?: string,
-
+        public rRule?: RRule
     ) {}
 }
 
@@ -68,7 +28,6 @@ export class Recurrence {
         public hoursAndMinutes: HourAndMinutes,
         public daysOfWeek?: number[],
         public timeZone?: string,
-        public durationInMinutes?: number,
         public months?: number[]
     ) {}
 }
@@ -89,8 +48,26 @@ export class RRule {
         public byminute?: number[],
         public bysetpos?: number[],
         public bymonthday?: number[],
-        public tzid?: string,
-        public durationInMinutes?: number
+        public tzid?: string
     ) {}
 }
 
+export enum Frequency {
+    YEARLY = 'YEARLY',
+    MONTHLY = 'MONTHLY',
+    WEEKLY = 'WEEKLY',
+    DAILY = 'DAILY',
+    HOURLY = 'HOURLY',
+    MINUTELY = 'MINUTELY',
+    SECONDLY = 'SECONDLY'
+}
+
+export enum Day {
+    MO = 'MO',
+    TU = 'TU',
+    WE = 'WE',
+    TH = 'TH',
+    FR = 'FR',
+    SA = 'SA',
+    SU = 'SU'
+}

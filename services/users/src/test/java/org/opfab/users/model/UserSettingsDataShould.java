@@ -10,99 +10,67 @@
 
 package org.opfab.users.model;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 class UserSettingsDataShould {
 
-
-
-    @Test
-    void patch(){
-        UserSettingsData userData = UserSettingsData.builder()
-                .login("test-login")
-                .locale("fr")
-                .playSoundForAlarm(true)
-                .playSoundForAction(false)
-                .systemNotificationAlarm(true)
-                .systemNotificationAction(false)
-                //Not setting Compliant and Information to test patch on empty
-                .playSoundOnExternalDevice(true)
-                .replayEnabled(true)
-                .replayInterval(123)
-                .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
-                .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
-                .build();
-        UserSettingsData patched = userData.patch(UserSettingsData.builder().build().clearProcessesStatesNotNotified());
-
-
-        patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().isEqualTo(userData);
-
-        patched = userData.patch(UserSettingsData.builder().build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("description").isEqualTo(userData);
-
-        patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("locale").isEqualTo(userData);
-        assertThat(patched.getLocale()).isEqualTo("patched-locale");
-
-        patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForAlarm").isEqualTo(userData);
-        assertThat(patched.getPlaySoundForAlarm()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().playSoundForAction(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForAction").isEqualTo(userData);
-        assertThat(patched.getPlaySoundForAction()).isTrue();
-
-        patched = userData.patch(UserSettingsData.builder().playSoundForCompliant(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForCompliant").isEqualTo(userData);
-        assertThat(patched.getPlaySoundForCompliant()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForInformation").isEqualTo(userData);
-        assertThat(patched.getPlaySoundForInformation()).isTrue();
-
-        patched = userData.patch(UserSettingsData.builder().systemNotificationAlarm(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationAlarm").isEqualTo(userData);
-        assertThat(patched.getSystemNotificationAlarm()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().systemNotificationAction(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationAction").isEqualTo(userData);
-        assertThat(patched.getSystemNotificationAction()).isTrue();
-
-        patched = userData.patch(UserSettingsData.builder().systemNotificationCompliant(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationCompliant").isEqualTo(userData);
-        assertThat(patched.getSystemNotificationCompliant()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().systemNotificationInformation(true).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationInformation").isEqualTo(userData);
-        assertThat(patched.getSystemNotificationInformation()).isTrue();
-
-        patched = userData.patch(UserSettingsData.builder().playSoundOnExternalDevice(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundOnExternalDevice").isEqualTo(userData);
-        assertThat(patched.getPlaySoundOnExternalDevice()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().replayEnabled(false).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("replayEnabled").isEqualTo(userData);
-        assertThat(patched.getReplayEnabled()).isFalse();
-
-        patched = userData.patch(UserSettingsData.builder().replayInterval(456).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("replayInterval").isEqualTo(userData);
-        assertThat(patched.getReplayInterval()).isEqualTo(456);
-
-        Map<String, List<String>> newProcessesStatesNotNotified = new HashMap<String, List<String>>();
+    static Stream<Arguments> providePatchCases() {
+        Map<String, List<String>> newProcessesStatesNotNotified = new HashMap<>();
         newProcessesStatesNotNotified.put("processC", Arrays.asList("state5", "state6"));
-        patched = userData.patch(UserSettingsData.builder().processesStatesNotNotified(newProcessesStatesNotNotified).build());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("processesStatesNotNotified").isEqualTo(userData);
-        assertThat(patched.getProcessesStatesNotNotified()).hasSize(1).contains(entry("processC", Arrays.asList("state5", "state6")));
 
         List<String> newEntitiesDisconnected = new ArrayList<>(Arrays.asList("ENTITY3_FR", "ENTITY4_FR"));
-        patched = userData.patch(UserSettingsData.builder().entitiesDisconnected(newEntitiesDisconnected).build().clearProcessesStatesNotNotified());
-        assertThat(patched).usingRecursiveComparison().ignoringFields("entitiesDisconnected").isEqualTo(userData);
-        assertThat(patched.getEntitiesDisconnected()).hasSize(2).containsExactly("ENTITY3_FR", "ENTITY4_FR");
+
+        return Stream.of(
+            Arguments.of(UserSettingsData.builder().login("new-login").build(), "description"),
+            Arguments.of(UserSettingsData.builder().locale("patched-locale").build(), "locale"),
+            Arguments.of(UserSettingsData.builder().playSoundForAlarm(false).build(), "playSoundForAlarm"),
+            Arguments.of(UserSettingsData.builder().playSoundForAction(true).build(), "playSoundForAction"),
+            Arguments.of(UserSettingsData.builder().playSoundForCompliant(false).build(), "playSoundForCompliant"),
+            Arguments.of(UserSettingsData.builder().playSoundForInformation(true).build(), "playSoundForInformation"),
+            Arguments.of(UserSettingsData.builder().systemNotificationAlarm(false).build(), "systemNotificationAlarm"),
+            Arguments.of(UserSettingsData.builder().systemNotificationAction(true).build(), "systemNotificationAction"),
+            Arguments.of(UserSettingsData.builder().systemNotificationCompliant(false).build(), "systemNotificationCompliant"),
+            Arguments.of(UserSettingsData.builder().systemNotificationInformation(true).build(), "systemNotificationInformation"),
+            Arguments.of(UserSettingsData.builder().playSoundOnExternalDevice(false).build(), "playSoundOnExternalDevice"),
+            Arguments.of(UserSettingsData.builder().replayEnabled(false).build(), "replayEnabled"),
+            Arguments.of(UserSettingsData.builder().replayInterval(456).build(), "replayInterval"),
+            Arguments.of(UserSettingsData.builder().processesStatesNotNotified(newProcessesStatesNotNotified).build(), "processesStatesNotNotified"),
+            Arguments.of(UserSettingsData.builder().entitiesDisconnected(newEntitiesDisconnected).build(), "entitiesDisconnected")
+        );
+    }
+
+    @ParameterizedTest(name = " Patch {1}")
+    @MethodSource("providePatchCases")
+    void patch(UserSettingsData patchData, String ignoredField) {
+        UserSettingsData userData = createUserSettingsData();
+        UserSettingsData patched = userData.patch(patchData.clearProcessesStatesNotNotified());
+        assertThat(patched).usingRecursiveComparison().ignoringFields(ignoredField).isEqualTo(userData);
+    }
+
+    private UserSettingsData createUserSettingsData() {
+        return UserSettingsData.builder()
+            .login("test-login")
+            .locale("fr")
+            .playSoundForAlarm(true)
+            .playSoundForAction(false)
+            .systemNotificationAlarm(true)
+            .systemNotificationAction(false)
+            .playSoundOnExternalDevice(true)
+            .replayEnabled(true)
+            .replayInterval(123)
+            .processStatesNotNotified("processA", Arrays.asList("state1", "state2"))
+            .processStatesNotNotified("processB", Arrays.asList("state3", "state4"))
+            .build();
     }
 }

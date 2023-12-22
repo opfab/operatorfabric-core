@@ -7,20 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-array-cell-renderer',
-    templateUrl: 'array-cell-renderer.component.html'
+    templateUrl: 'array-cell-renderer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArrayCellRendererComponent implements ICellRendererAngularComp {
     protected itemType: AdminItemType;
     private mapping: any[];
-    private cachedCrudService: CachedCrudService;
+    private crudService: CrudService;
 
     constructor(protected dataHandlingService: SharingService) {}
 
@@ -33,8 +35,8 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
         this._nameValues = value;;
 
         if (this.itemType) {
-            this.cachedCrudService = this.dataHandlingService.resolveCachedCrudServiceDependingOnType(this.itemType);
-            this.mapping = this.cachedCrudService.getCachedValues();
+            this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.itemType);
+            this.mapping = this.crudService.getCachedValues();
 
             if (this.mapping && value) {
                 this._nameValues = value
@@ -53,7 +55,7 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                     })
                     .sort()
                     .join(', ');
-            } else console.log('Admin table: id/name mapping was undefined for ' + this.itemType);
+            } else LoggerService.warn('Admin table: id/name mapping was undefined for ' + this.itemType);
         }
 
     }

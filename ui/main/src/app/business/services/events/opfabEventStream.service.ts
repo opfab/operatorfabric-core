@@ -7,87 +7,78 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class OpfabEventStreamService {
-    public initSubscription = new Subject<void>();
 
-    private startOfAlreadyLoadedPeriod: number;
-    private endOfAlreadyLoadedPeriod: number;
+    private static opfabEventStreamServer: OpfabEventStreamServer
 
-    private receivedDisconnectedSubject = new Subject<boolean>();
-    private reloadRequest = new Subject<void>();
-    private businessConfigChange = new Subject<void>();
-    private userConfigChange = new Subject<void>();
-    private businessDataChange = new Subject<void>();
+    public static initSubscription = new Subject<void>();
 
-    private eventStreamClosed = false;
+    private static startOfAlreadyLoadedPeriod: number;
+    private static endOfAlreadyLoadedPeriod: number;
 
-    constructor(
-        private opfabEventStreamServer: OpfabEventStreamServer,
-        private filterService: FilterService,
-        private logger: OpfabLoggerService
-    ) {}
+    private static receivedDisconnectedSubject = new Subject<boolean>();
+    private static reloadRequest = new Subject<void>();
+    private static businessConfigChange = new Subject<void>();
+    private static userConfigChange = new Subject<void>();
+    private static businessDataChange = new Subject<void>();
 
-    public initEventStream() {
-        this.opfabEventStreamServer.initStream();
-        this.listenForFilterChange();
+    private static eventStreamClosed = false;
+
+
+
+    public static setEventStreamServer(opfabEventStreamServer: OpfabEventStreamServer) {
+        OpfabEventStreamService.opfabEventStreamServer = opfabEventStreamServer;
     }
 
-    private listenForFilterChange() {
-        this.filterService.getBusinessDateFilterChanges().subscribe((filter) => {
-            this.setSubscriptionDates(filter.status.start, filter.status.end);
-        });
+    public static initEventStream() {
+        OpfabEventStreamService.opfabEventStreamServer.initStream();
     }
 
-    public closeEventStream() {
-        if (!this.eventStreamClosed) {
-            this.logger.info('EventStreamService - Closing event stream', LogOption.LOCAL_AND_REMOTE);
-            this.opfabEventStreamServer.closeStream();
-            this.eventStreamClosed = true;
+    public static closeEventStream() {
+        if (OpfabEventStreamService.opfabEventStreamServer && !OpfabEventStreamService.eventStreamClosed) {
+            logger.info('EventStreamService - Closing event stream', LogOption.LOCAL_AND_REMOTE);
+            OpfabEventStreamService.opfabEventStreamServer.closeStream();
+            OpfabEventStreamService.eventStreamClosed = true;
         }
-    }
+    } 
 
-    public getCardOperationStream(): Observable<CardOperation> {
-        return this.opfabEventStreamServer.getEvents().pipe(
+    public static getCardOperationStream(): Observable<CardOperation> {
+        return OpfabEventStreamService.opfabEventStreamServer.getEvents().pipe(
             map((event) => {
                 switch (event.data) {
                     case 'RELOAD':
-                        this.logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
-                        this.reloadRequest.next();
+                        logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
+                        OpfabEventStreamService.reloadRequest.next();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
-                        this.businessConfigChange.next();
-                        this.logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
+                        OpfabEventStreamService.businessConfigChange.next();
+                        logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
-                        this.userConfigChange.next();
-                        this.logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
+                        OpfabEventStreamService.userConfigChange.next();
+                        logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
                         break;
                     case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
-                        this.logger.info(
+                        logger.info(
                             'EventStreamService - Disconnecting user because a new connection is being opened for this account'
                         );
-                        this.closeEventStream();
-                        this.receivedDisconnectedSubject.next(true);
+                        OpfabEventStreamService.closeEventStream();
+                        OpfabEventStreamService.receivedDisconnectedSubject.next(true);
                         break;
                     case 'BUSINESS_DATA_CHANGE':
-                        this.businessDataChange.next();
+                        OpfabEventStreamService.businessDataChange.next();
                         break;
                     default:
                         let cardOperation;
                         try {
                             cardOperation = JSON.parse(event.data, CardOperation.convertTypeIntoEnum);
                         } catch (error) {
-                            this.logger.warn('EventStreamService - Impossible to parse server message ' + error);
+                            logger.warn('EventStreamService - Impossible to parse server message ' + error);
                         }
                         return cardOperation;
                 }
@@ -97,65 +88,65 @@ export class OpfabEventStreamService {
         );
     }
 
-    public resetAlreadyLoadingPeriod() {
-        this.startOfAlreadyLoadedPeriod = null;
+    public static resetAlreadyLoadingPeriod() {
+        OpfabEventStreamService.startOfAlreadyLoadedPeriod = null;
     }
 
-    private setSubscriptionDates(start: number, end: number) {
-        this.logger.info(
+    public static setSubscriptionDates(start: number, end: number) {
+        logger.info(
             'EventStreamService - Set subscription date' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );
-        if (!this.startOfAlreadyLoadedPeriod) {
+        if (!OpfabEventStreamService.startOfAlreadyLoadedPeriod) {
             // First loading , no card loaded yet
-            this.askCardsForPeriod(start, end);
+            OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (start < this.startOfAlreadyLoadedPeriod && end > this.endOfAlreadyLoadedPeriod) {
-            this.askCardsForPeriod(start, end);
+        if (start < OpfabEventStreamService.startOfAlreadyLoadedPeriod && end > OpfabEventStreamService.endOfAlreadyLoadedPeriod) {
+            OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (start < this.startOfAlreadyLoadedPeriod) {
-            this.askCardsForPeriod(start, this.startOfAlreadyLoadedPeriod);
+        if (start < OpfabEventStreamService.startOfAlreadyLoadedPeriod) {
+            OpfabEventStreamService.askCardsForPeriod(start, OpfabEventStreamService.startOfAlreadyLoadedPeriod);
             return;
         }
-        if (end > this.endOfAlreadyLoadedPeriod) {
-            this.askCardsForPeriod(this.endOfAlreadyLoadedPeriod, end);
+        if (end > OpfabEventStreamService.endOfAlreadyLoadedPeriod) {
+            OpfabEventStreamService.askCardsForPeriod(OpfabEventStreamService.endOfAlreadyLoadedPeriod, end);
             return;
         }
-        this.logger.info('EventStreamService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
+        logger.info('EventStreamService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
     }
 
-    private askCardsForPeriod(start: number, end: number) {
-        this.logger.info(
+    private static askCardsForPeriod(start: number, end: number) {
+        logger.info(
             'EventStreamService - Need to load card for period ' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );
-        this.opfabEventStreamServer.setBusinessPeriod(start, end).subscribe(() => {
-            if (!this.startOfAlreadyLoadedPeriod || start < this.startOfAlreadyLoadedPeriod)
-                this.startOfAlreadyLoadedPeriod = start;
-            if (!this.endOfAlreadyLoadedPeriod || end > this.endOfAlreadyLoadedPeriod)
-                this.endOfAlreadyLoadedPeriod = end;
+        OpfabEventStreamService.opfabEventStreamServer.setBusinessPeriod(start, end).subscribe(() => {
+            if (!OpfabEventStreamService.startOfAlreadyLoadedPeriod || start < OpfabEventStreamService.startOfAlreadyLoadedPeriod)
+                OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
+            if (!OpfabEventStreamService.endOfAlreadyLoadedPeriod || end > OpfabEventStreamService.endOfAlreadyLoadedPeriod)
+                OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
         });
     }
 
-    getReceivedDisconnectUser(): Observable<boolean> {
-        return this.receivedDisconnectedSubject.asObservable();
+    static getReceivedDisconnectUser(): Observable<boolean> {
+        return OpfabEventStreamService.receivedDisconnectedSubject.asObservable();
     }
 
-    getReloadRequests(): Observable<void> {
-        return this.reloadRequest.asObservable();
+    static getReloadRequests(): Observable<void> {
+        return OpfabEventStreamService.reloadRequest.asObservable();
     }
 
-    getBusinessConfigChangeRequests(): Observable<void> {
-        return this.businessConfigChange.asObservable();
+    static getBusinessConfigChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.businessConfigChange.asObservable();
     }
 
-    getBusinessDataChanges(): Observable<void> {
-        return this.businessDataChange.asObservable();
+    static getBusinessDataChanges(): Observable<void> {
+        return OpfabEventStreamService.businessDataChange.asObservable();
     }
 
-    getUserConfigChangeRequests(): Observable<void> {
-        return this.userConfigChange.asObservable();
+    static getUserConfigChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.userConfigChange.asObservable();
     }
 }

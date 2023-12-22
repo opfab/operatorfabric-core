@@ -27,6 +27,7 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -78,16 +79,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ]);
 
     constructor(
-        readonly dateTimeFormatter: DateTimeFormatterService,
         private translationService: TranslationService,
         private modalService: NgbModal,
-        private processesService: ProcessesService,
-        private cardService: CardService,
-        private entitiesService: EntitiesService,
-        private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
-        this.monitoringConfig = processesService.getMonitoringConfig();
+        this.monitoringConfig = ConfigService.getMonitoringConfig();
 
         this.timeColumnName = this.translateColumn('shared.result.time');
         this.titleColumnName = this.translateColumn('shared.result.title');
@@ -173,7 +169,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             columnDefs: this.columnDefs,
             rowHeight: 45,
             popupParent: document.querySelector('body'),
-            rowClass: 'opfab-monitoring-ag-grid-row',
+            rowClass: 'opfab-monitoring-ag-grid-row'
         };
         this.rowData$ = this.rowDataSubject.asObservable();
     }
@@ -237,18 +233,16 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     refreshData(): void {
         if (this.result) {
-
             this.displayedResults = this.result;
             this.rowData = [];
             this.displayedResults.forEach((line) => {
                 const entitiesNamesResponses = [];
-                const entitiesResponses =
-                    line.requiredResponses?.length
-                        ? line.requiredResponses
-                        : line.allowedOrRequiredResponses;
+                const entitiesResponses = line.requiredResponses?.length
+                    ? line.requiredResponses
+                    : line.allowedOrRequiredResponses;
 
                 entitiesResponses.forEach((entityId) => {
-                    entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+                    entitiesNamesResponses.push(EntitiesService.getEntityName(entityId));
                 });
 
                 this.rowData.push({
@@ -272,11 +266,10 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             });
         }
         this.rowDataSubject.next(this.rowData);
-
     }
 
-    getFormattedDateTime(epochDate: number):string {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(epochDate);
+    getFormattedDateTime(epochDate: number): string {
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(epochDate);
     }
 
     getResponses(cardId: string, entities: string[]) {
@@ -295,7 +288,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         const entityNames = [];
         if (entitiesIds)
             entitiesIds.forEach((entityId) => {
-                entityNames.push(this.entitiesService.getEntityName(entityId));
+                entityNames.push(EntitiesService.getEntityName(entityId));
             });
         return entityNames;
     }
@@ -362,12 +355,10 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
-                this.cardService
-                    .loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId)
-                    .subscribe((card) => {
-                        this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
-                        this.processMonitoringForExport(++lineNumber);
-                    });
+                CardService.loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId).subscribe((card) => {
+                    this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
+                    this.processMonitoringForExport(++lineNumber);
+                });
             }
         } else {
             this.exportInProgress = false;
@@ -378,9 +369,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     cardPreprocessingBeforeExport(card: any): any {
         card.card.processGroup = this.translateValue(
-            this.processesService.findProcessGroupLabelForProcess(card.card.process)
+            ProcessesService.findProcessGroupLabelForProcess(card.card.process)
         );
-        const process: Process = this.processesService.getProcess(card.card.process);
+        const process: Process = ProcessesService.getProcess(card.card.process);
         if (process) {
             card.card.processName = process.name;
             const state = process.states.get(card.card.state);
@@ -392,22 +383,20 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
-                    childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
+                    childCard.publisherName = EntitiesService.getEntityName(childCard.publisher);
                 else childCard.publisherName = childCard.publisher;
             });
         }
         return card;
     }
 
-    translateValue(key: string, interpolateParams?: Map<string,string>): any {
+    translateValue(key: string, interpolateParams?: Map<string, string>): any {
         return this.translationService.getTranslation(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
     }
 
-    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        if (!key) return '';
-        return this.translationService.getTranslation(key,interpolateParams);
+    translateColumn(key: string, interpolateParams?: Map<string, string>): any {
+        return this.translationService.getTranslation(key, interpolateParams);
     }
-
 
     ngOnDestroy() {
         if (this.modalRef) {
@@ -421,7 +410,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -430,9 +419,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 }
-
-

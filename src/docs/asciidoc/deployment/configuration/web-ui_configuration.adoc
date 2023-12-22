@@ -118,12 +118,14 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
-|settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are sent to the back and write in the log file of the cards-consultation service
+|settings.remoteLoggingEnabled|false|no| If set to true, some logs from the UI are sent to the back and write in the log file of the cards-consultation service
 
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
 "language" : if present, language field will not be displayed +
 "remoteLoggingEnabled" : if present, the checkbox to activate remote logging will not be displayed +
-"sounds" : if present, the checkboxes for sound notifications will not be displayed
+"sounds" : if present, the checkboxes for sound notifications won't be displayed +
+"systemNotifications" : if present, the checkboxes for systemNotifications won't be displayed +
+"sendCardsByEmail"  : if present, the email options won't be displayed 
 
 |about
 a|none
@@ -136,7 +138,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 [source, json]
 ----
 "about": {
-    "keycloack": {
+    "keycloak": {
       "name": "Keycloak",
       "rank": 1,
       "version": "6.0.1"
@@ -175,7 +177,7 @@ Replace the following invalid settings config
   "settings.replayEnabled": true,
   "settings": {
     "about": {
-      "keycloack": {
+      "keycloak": {
         "name": "Keycloak",
         "rank": 2,
         "version": "6.0.1"
@@ -195,7 +197,7 @@ By this valid one :
     "replayInterval": 10,
     "replayEnabled": true,
     "about": {
-      "keycloack": {
+      "keycloak": {
         "name": "Keycloak",
         "rank": 2,
         "version": "6.0.1"

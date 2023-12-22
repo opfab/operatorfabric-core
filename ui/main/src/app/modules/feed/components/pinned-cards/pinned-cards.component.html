@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,14 +16,14 @@
 
         </div>
     </div>
-    <span id="of-pinned-cards-popover" *ngIf="pinnedCards.length >  maxVisiblePinnedCards" container="body" #p1="ngbPopover" [ngbPopover]="hiddenCardsTemplate" triggers="mouseenter:mouseleave" closeDelay="5000" popoverClass="opfab-popover">...</span>
+    <span id="of-pinned-cards-popover" *ngIf="areThereTooManyCardsForWindow()" container="body" #p1="ngbPopover" [ngbPopover]="hiddenCardsTemplate" triggers="mouseenter:mouseleave" closeDelay="5000" popoverClass="opfab-popover">...</span>
 </div>
 <ng-template #hiddenCardsTemplate>
     <div class="opfab-pinned-card opfab-hidden-pinned-card" *ngFor="let pinned of hiddenPinnedCards">
         <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)">{{pinned.titleTranslated}}</span>
         <em class="fas fa-thumbtack" style="padding-left: 4px;"></em>
     </div>
-    <div *ngIf="pinnedCards.length > (maxVisiblePinnedCards + maxHiddenPinnedCards)" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
+    <div *ngIf="areThereTooManyHiddenCards()" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
         ... {{pinnedCards.length - maxVisiblePinnedCards - maxHiddenPinnedCards}} <span translate> feed.moreCards </span>
     </div>
 

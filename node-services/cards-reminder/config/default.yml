@@ -1,5 +1,10 @@
 
 operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
   rabbitmq:
     host: "localhost"
     port: 5672
@@ -18,7 +23,7 @@ operatorfabric:
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
-    logLevel: "info"
+    logLevel: "error" #set to error to avoid being polluted by logs in the CI/CD during unit tests
   cardsReminder:
     adminPort : 2107
     activeOnStartup : true

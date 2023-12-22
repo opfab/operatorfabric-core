@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
@@ -53,7 +53,8 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 @Component({
     selector: 'of-archives-logging-filters',
     templateUrl: './archives-logging-filters.component.html',
-    styleUrls: ['./archives-logging-filters.component.scss']
+    styleUrls: ['./archives-logging-filters.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
@@ -61,10 +62,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
+    @Input() displayPublishDateFilter = true;
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
     hasCurrentUserRightsToViewAllArchivedCards: boolean;
+    hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -125,21 +128,24 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
-        private configService: ConfigService,
-        private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
-        private userPreferences: UserPreferencesService,
-        private userService: UserService,
-        private alertMessageService: AlertMessageService
+        private changeDetector: ChangeDetectorRef
     ) {
-        this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
+        this.hasCurrentUserRightsToViewAllArchivedCards = UserService.isCurrentUserAdmin() ||
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
-        const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.hasCurrentUserRightsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
+        this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters = !this.hasCurrentUserRightsToViewAllArchivedCards &&
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS]);
+
+        const seeOnlyCardsForWhichUserIsRecipientInStorage = UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') ?? true;
+
+        this.isAdminModeChecked = (this.hasCurrentUserRightsToViewAllArchivedCards ||
+                this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
+            seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
     }
 
     ngOnInit() {
-        this.processesGroups = this.processesService.getProcessGroups();
+        this.processesGroups = ProcessesService.getProcessGroups();
         this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
         this.visibleProcessesId = this.visibleProcesses.map((element) => element.value);
 
@@ -169,19 +175,19 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
         this.statesMultiSelectOptionsPerProcesses =
             this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.hideChildStates
             );
 
         this.processesWithoutProcessGroupMultiSelectOptions =
             this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.visibleProcessesId
             );
 
         this.processMultiSelectOptionsPerProcessGroups =
             this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.visibleProcessesId
             );
 
@@ -208,9 +214,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     toggleAdminMode() {
         this.isAdminModeChecked = !this.isAdminModeChecked;
-        this.userPreferences.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
+        UserPreferencesService.setPreference('opfab.seeOnlyCardsForWhichUserIsRecipient', String(!this.isAdminModeChecked));
         this.loadValuesForFilters();
-        this.resetForm();
     }
 
     transformFiltersListToMap = (filters: any): void => {
@@ -284,6 +289,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                         this.addProcessesDropdownList(this.processMultiSelectOptionsPerProcessGroups.get(processGroup));
                 });
             } else this.processMultiSelectOptionsWhenSelectedProcessGroup = this.processMultiSelectOptions;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -298,6 +304,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                     }
                 });
             }
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -319,7 +326,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     setDefaultPublishDateFilter() {
-        const defaultPublishDateInterval = this.configService.getConfigValue('archive.filters.publishDate.days', 10);
+        const defaultPublishDateInterval = ConfigService.getConfigValue('archive.filters.publishDate.days', 10);
 
         const min = moment(Date.now());
         min.subtract(defaultPublishDateInterval, 'day');
@@ -368,6 +375,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         } else {
             this.activeMaxDate = null;
         }
+        this.changeDetector.markForCheck();
     }
 
     onDateTimeChange() {
@@ -428,7 +436,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     private isDateWellFormatted(dateFieldName: string): boolean {
         const dateControl = this.parentForm.get(dateFieldName);
         const dateValue = this.extractTime(dateControl);
-        const isFieldEmpty = dateControl.value.date == null;
+        const isFieldEmpty = dateControl.value?.date == null;
 
         return isFieldEmpty || !isNaN(dateValue);
     }
@@ -454,7 +462,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     private areDatesInCorrectOrder() {

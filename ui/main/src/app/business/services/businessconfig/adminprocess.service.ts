@@ -7,65 +7,57 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class AdminProcessesService extends CachedCrudService{
-    
-    private processes: Process[];
-    constructor(
-        private adminprocessServer: AdminProcessServer,
-        protected alertMessageService: AlertMessageService,
-        protected loggerService: OpfabLoggerService
-    ) {
-        super(loggerService, alertMessageService);
+
+export class AdminProcessesService {
+    private static processes: Process[];
+    private static adminprocessServer: AdminProcessServer;
+
+    public static setAdminProcessServer(adminprocessServer: AdminProcessServer) {
+        AdminProcessesService.adminprocessServer = adminprocessServer;
     }
 
-    public getCachedValues():  Array<Process> {
+    public static getCachedValues(): Array<Process> {
         return this.getAllProcesses();
     }
-    private getAllProcesses(): Process[]{
+    private static getAllProcesses(): Process[] {
         return this.processes;
     }
 
-    public getAll(): Observable<any[]> {
+    public static getAll(): Observable<any[]> {
         return this.queryAllProcesses();
     }
-    private queryAllProcesses(): Observable<Process[]> {
+    private static queryAllProcesses(): Observable<Process[]> {
         return this.adminprocessServer.queryAllProcesses().pipe(
             map((adminprocessResponse) => {
-                if (adminprocessResponse.status === ServerResponseStatus.OK){
+                if (adminprocessResponse.status === ServerResponseStatus.OK) {
                     return adminprocessResponse.data;
                 } else {
-                    this.handleServerResponseError(adminprocessResponse);
+                    ErrorService.handleServerResponseError(adminprocessResponse);
                     return [];
-                }
-            })
-        );  
-    }
-
-    update(data: any): Observable<any> {
-        return null;
-    }
-
-    public deleteById(id: string) {
-        return this.adminprocessServer.deleteById(id).pipe(
-            map((adminprocessResponse) => {
-                if (adminprocessResponse.status !== ServerResponseStatus.OK){
-                    this.handleServerResponseError(adminprocessResponse);
                 }
             })
         );
     }
 
+    public static update(data: any): Observable<any> {
+        return null;
+    }
+
+    public static deleteById(id: string) {
+        return AdminProcessesService.adminprocessServer.deleteById(id).pipe(
+            map((adminprocessResponse) => {
+                if (adminprocessResponse.status !== ServerResponseStatus.OK) {
+                    ErrorService.handleServerResponseError(adminprocessResponse);
+                }
+            })
+        );
+    }
 }

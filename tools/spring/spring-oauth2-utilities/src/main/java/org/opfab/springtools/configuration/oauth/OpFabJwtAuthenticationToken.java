@@ -26,6 +26,9 @@ import java.util.Collection;
  *
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
+
+     private static final long serialVersionUID = 1L;
+     
     @Getter
      private  final transient Object  principal;
     /**

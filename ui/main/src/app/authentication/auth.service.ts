@@ -11,13 +11,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
-import {GuidService} from 'app/business/services/guid.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
 import {AuthHandler} from './auth-handler';
@@ -31,6 +27,7 @@ import {PasswordAuthenticationHandler} from './password-authentication-handler';
     providedIn: 'root'
 })
 export class AuthService {
+
     private mode: AuthenticationMode = AuthenticationMode.NONE;
     private rejectLoginMessage = new Subject<Message>();
     private login: string;
@@ -38,52 +35,40 @@ export class AuthService {
     private authHandler: AuthHandler;
 
     constructor(
-        private configService: ConfigService,
-        private currentUserStore: CurrentUserStore,
-        private opfabEventStreamService: OpfabEventStreamService,
-        private logger: OpfabLoggerService,
-        private soundNotificationService: SoundNotificationService,
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
-        private httpClient: HttpClient,
-        private guidService: GuidService,
-        private userService: UserService
-    ) {}
+        private httpClient: HttpClient
+    ) {
+    }
 
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');
-        this.currentUserStore.setToken(localStorage.getItem('token'));
-        this.mode = this.configService
+        CurrentUserStore.setToken(localStorage.getItem('token'));
+        this.mode = ConfigService
             .getConfigValue('security.oauth2.flow.mode', 'password')
             .toLowerCase() as AuthenticationMode;
-        this.logger.info(`Auth mode set to ${this.mode}`);
-        if (this.mode !== AuthenticationMode.NONE) this.currentUserStore.setAuthenticationUsesToken();
+        logger.info(`Auth mode set to ${this.mode}`);
+        if (this.mode !== AuthenticationMode.NONE) CurrentUserStore.setAuthenticationUsesToken();
         switch (this.mode) {
             case AuthenticationMode.PASSWORD:
-                this.authHandler = new PasswordAuthenticationHandler(this.configService, this.httpClient, this.logger);
+                this.authHandler = new PasswordAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.CODE:
-                this.authHandler = new CodeAuthenticationHandler(this.configService, this.httpClient, this.logger);
+                this.authHandler = new CodeAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.NONE:
                 this.authHandler = new NoneAuthenticationHandler(
-                    this.configService,
-                    this.httpClient,
-                    this.logger,
-                    this.userService
+                    this.httpClient
                 );
                 break;
             case AuthenticationMode.IMPLICIT:
                 this.authHandler = new ImplicitAuthenticationHandler(
-                    this.configService,
                     this.httpClient,
-                    this.logger,
-                    this.oauthServiceForImplicitMode,
-                    this.currentUserStore
+                    this.oauthServiceForImplicitMode
                 );
                 break;
             default:
-                this.logger.error('No valid authentication mode');
+                logger.error('No valid authentication mode');
                 return;
         }
         this.startAuthentication();
@@ -92,24 +77,23 @@ export class AuthService {
     private startAuthentication() {
         this.authHandler.getUserAuthenticated().subscribe((user) => {
             if (user !== null) {
-                user.clientId = this.guidService.getCurrentGuid();
                 this.login = user.login;
                 this.saveUserInStorage(user);
-                this.currentUserStore.setToken(user.token);
+                CurrentUserStore.setToken(user.token);
             }
-            this.currentUserStore.setCurrentUserAuthenticationValid(this.login);
+            CurrentUserStore.setCurrentUserAuthenticationValid(this.login);
             this.authHandler.regularCheckIfTokenExpireSoon();
             this.authHandler.regularCheckIfTokenIsExpired();
             this.redirectToCurrentLocation();
         });
         this.authHandler.getTokenWillSoonExpire().subscribe(() => {
-            this.currentUserStore.setSessionWillSoonExpire();
+            CurrentUserStore.setSessionWillSoonExpire();
         });
         this.authHandler.getTokenExpired().subscribe(() => {
-            this.currentUserStore.setSessionExpired();
+            CurrentUserStore.setSessionExpired();
         });
         this.authHandler.getRejectAuthentication().subscribe((message) => {
-            this.logger.error('Authentication reject ' + JSON.stringify(message));
+            logger.error('Authentication reject ' + JSON.stringify(message));
             this.rejectLogin(message);
         });
         this.authHandler.initializeAuthentication();
@@ -119,7 +103,6 @@ export class AuthService {
         localStorage.setItem('identifier', user.login);
         localStorage.setItem('token', user.token);
         localStorage.setItem('expirationDate', user.expirationDate?.getTime().toString());
-        localStorage.setItem('clientId', user.clientId.toString());
     }
 
     private redirectToCurrentLocation(): void {
@@ -128,7 +111,6 @@ export class AuthService {
             const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
             this.router.navigate([decodeURI(lastDestination)]);
     }
-    
 
     public rejectLogin(message: Message) {
         this.removeUserFromStorage();
@@ -141,20 +123,17 @@ export class AuthService {
         localStorage.removeItem('identifier');
         localStorage.removeItem('token');
         localStorage.removeItem('expirationDate');
-        localStorage.removeItem('clientId');
     }
 
     public logout() {
-        this.logger.info('Logout');
-        this.soundNotificationService.stopService();
-        this.opfabEventStreamService.closeEventStream();
+        logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
-        window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
+        window.location.href = ConfigService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 
     private goBackToLoginPage() {
-        this.logger.info('Go back to login page');
+        logger.info('Go back to login page');
         this.removeUserFromStorage();
         this.redirectToCurrentLocation();
     }

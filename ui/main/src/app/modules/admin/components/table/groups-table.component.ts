@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
@@ -17,7 +17,8 @@ import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 @Component({
     templateUrl: 'admin-table.directive.html',
     selector: 'of-groups-table',
-    styleUrls: ['admin-table.directive.scss']
+    styleUrls: ['admin-table.directive.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;

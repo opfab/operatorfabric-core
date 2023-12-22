@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil, tap} from 'rxjs/operators';
@@ -32,7 +32,8 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 @Component({
     selector: 'of-archives',
     templateUrl: './archives.component.html',
-    styleUrls: ['./archives.component.scss']
+    styleUrls: ['./archives.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArchivesComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -86,16 +87,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private processesService: ProcessesService,
-        private entitiesService: EntitiesService,
-        private configService: ConfigService,
-        private dateTimeFormatter: DateTimeFormatterService,
-        private cardService: CardService,
         private translationService: TranslationService,
-        private userPreferences: UserPreferencesService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
             if (!itemName) itemName = process.id;
             this.listOfProcesses.push({
@@ -107,21 +103,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference(
+        const isCollapsibleUpdatesActivatedInStorage = UserPreferencesService.getPreference(
             'opfab.archives.isCollapsibleUpdatesActivated'
         );
         this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
 
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
-        this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
-        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
+        this.size = ConfigService.getConfigValue('archive.filters.page.size', 10);
+        this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
+        this.tags = ConfigService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
     }
 
     toggleCollapsibleUpdates() {
         this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
-        this.userPreferences.setPreference(
+        UserPreferencesService.setPreference(
             'opfab.archives.isCollapsibleUpdatesActivated',
             String(this.isCollapsibleUpdatesActivated)
         );
@@ -146,42 +142,52 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     private getResults(page_number: number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
+        this.changeDetector.markForCheck();
 
         const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
         const filter = this.getFilter(page_number, Number(this.size), this.filtersTemplate.filters, this.isCollapsibleUpdatesActivated);
 
-        this.cardService
+        CardService
         .fetchFilteredArchivedCards(filter)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
             next: (page: Page<LightCard>) => {
-                this.resultsNumber = page.totalElements;
-                this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
-                this.firstQueryHasBeenDone = true;
-                this.hasResult = page.content.length > 0;
-                this.results = page.content;
+                if (page) {
+                    this.resultsNumber = page.totalElements;
+                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
+                    this.firstQueryHasBeenDone = true;
+                    this.hasResult = page.content.length > 0;
+                    this.results = page.content;
 
-                if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                    const requestID = new Date().valueOf();
-                    this.lastRequestID = requestID;
-                    this.loadUpdatesByCardId(requestID, isAdminModeChecked);
-                } else {
-                    this.loadingInProgress = false;
-                    this.updatesByCardId = [];
-                    this.results.forEach((lightCard) => {
-                        this.updatesByCardId.push({
-                            mostRecent: lightCard,
-                            cardHistories: [],
-                            displayHistory: false,
-                            tooManyRows: false
+                    if (this.isCollapsibleUpdatesActivated && this.hasResult) {
+                        const requestID = new Date().valueOf();
+                        this.lastRequestID = requestID;
+                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
+                    } else {
+                        this.loadingInProgress = false;
+                        this.changeDetector.markForCheck();
+                        this.updatesByCardId = [];
+                        this.results.forEach((lightCard) => {
+                            this.updatesByCardId.push({
+                                mostRecent: lightCard,
+                                cardHistories: [],
+                                displayHistory: false,
+                                tooManyRows: false
+                            });
                         });
-                    });
+                    }
+                } else {
+                    this.firstQueryHasBeenDone = false;
+                    this.loadingInProgress = false;
+                    this.changeDetector.markForCheck();
+                    this.technicalError = true;
                 }
             },
             error: () => {
                 this.firstQueryHasBeenDone = false;
                 this.loadingInProgress = false;
+                this.changeDetector.markForCheck();
                 this.technicalError = true;
             }
         });
@@ -220,6 +226,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
             this.loadingInProgress = false;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -239,7 +246,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const filter = this.getFilter(0, 1 + this.historySize , filters, false);
 
 
-        return this.cardService.fetchFilteredArchivedCards(filter).pipe(
+        return CardService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
@@ -279,7 +286,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     // EXPORT TO EXCEL
@@ -294,7 +301,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -314,25 +321,25 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
                                 [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(
-                                    this.processesService.findProcessGroupLabelForProcess(card.process)
+                                    ProcessesService.findProcessGroupLabelForProcess(card.process)
                                 ),
                                 [processColumnName]: this.getProcessName(card.process)
                             });
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
                                 [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
@@ -350,7 +357,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        if (!key) return '';
         return this.translationService.getTranslation(key,interpolateParams);
     }
 
@@ -358,16 +364,20 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.cardLoadingInProgress = true;
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
-        this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
-            this.selectedCard = card.card;
-            this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
-            this.selectedChildCards = card.childCards;
+        CardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+            if (card) {
 
-            const options: NgbModalOptions = {
-                size: 'fullscreen'
-            };
-            if (this.modalRef) this.modalRef.close();
-            this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+                this.selectedCard = card.card;
+                this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
+                this.selectedChildCards = card.childCards;
+
+                const options: NgbModalOptions = {
+                    size: 'fullscreen'
+                };
+                if (this.modalRef) this.modalRef.close();
+                this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+            }
+
             this.cardLoadingInProgress = false;
             this.cardLoadingIsTakingMoreThanOneSecond = false;
         });
@@ -389,11 +399,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedDate(date: number): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     getFormattedTime(date: number): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     getEntityRecipientsNames(entityRecipients: string[], maxLength?: number): string[] {
@@ -401,7 +411,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             let entityRecipientsNames = [];
 
             entityRecipients.forEach((entityId) => {
-                entityRecipientsNames.push(this.entitiesService.getEntityName(entityId));
+                entityRecipientsNames.push(EntitiesService.getEntityName(entityId));
             });
 
             if (maxLength && entityRecipientsNames.length > maxLength) {
@@ -414,8 +424,16 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getProcessName(processId: string): string {
-        const process = this.processesService.getProcess(processId);
+        const process = ProcessesService.getProcess(processId);
         return process?.name ?? processId;
+    }
+
+    getEntityName(name:string) {
+        return EntitiesService.getEntityName(name);
+    }
+
+    findProcessGroupLabelForProcess(process: string) {
+        return ProcessesService.findProcessGroupLabelForProcess(process)
     }
 
     ngOnDestroy() {

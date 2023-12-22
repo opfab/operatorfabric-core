@@ -24,9 +24,8 @@ export class OpfabAPIService {
     public templateInterface: any;
     public userCardTemplateInterface: any;
 
+
     constructor(
-        private entityService: EntitiesService,
-        private businessDataService: BusinessDataService,
         private translationService: TranslationService
     ) {
         this.initCurrentCard();
@@ -42,6 +41,7 @@ export class OpfabAPIService {
             isUserMemberOfAnEntityRequiredToRespond: false,
             entitiesAllowedToRespond: [],
             entityUsedForUserResponse: null,
+            entitiesUsableForUserResponse: [],
             displayContext: '',
             isResponseLocked: false,
             displayLoadingSpinner: function () {},
@@ -122,7 +122,7 @@ export class OpfabAPIService {
     public initAPI() {
         const self = this;
         opfab.businessconfig.businessData.get = async function (resourceName) {
-            const resource = await self.businessDataService.getBusinessData(resourceName);
+            const resource = await BusinessDataService.getBusinessData(resourceName);
             return resource;
         };
 
@@ -160,19 +160,18 @@ export class OpfabAPIService {
     }
 
     private initUserApi() {
-        const self = this;
         opfab.users.entities.getEntityName = function (entityId: string) {
-            return self.entityService.getEntityName(entityId);
+            return EntitiesService.getEntityName(entityId);
         };
         opfab.users.entities.getEntity = function (entityId: string) {
-            const entity = self.entityService.getEntity(entityId);
+            const entity = EntitiesService.getEntity(entityId);
             if (entity) return {...entity};
             else return undefined;
         };
 
         opfab.users.entities.getAllEntities = function () {
             const entities = [];
-            self.entityService.getEntities().forEach((entity) => entities.push({...entity}));
+            EntitiesService.getEntities().forEach((entity) => entities.push({...entity}));
             return entities;
         };
         // prevent unwanted modifications from templates code
@@ -204,7 +203,13 @@ export class OpfabAPIService {
             return self.currentCard.entitiesAllowedToRespond;
         };
         opfab.currentCard.getEntityUsedForUserResponse = function () {
+            console.warn(new Date().toISOString(),
+                ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
+            );
             return self.currentCard.entityUsedForUserResponse;
+        };
+        opfab.currentCard.getEntitiesUsableForUserResponse = function () {
+            return self.currentCard.entitiesUsableForUserResponse;
         };
 
         opfab.currentCard.hideLoadingSpinner = function () {

@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -35,8 +33,6 @@ import reactor.core.publisher.Mono;
         CardSubscriptionService.class, MessageToSubscriptionsRoutesConfig.class, CardOperationsController.class,
         UserServiceCacheTestApplication.class,  }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles(profiles = { "native", "test" })
-@Slf4j
 class MessageToSubscriptionsRoutesShould {
 
     @Autowired

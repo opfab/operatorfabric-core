@@ -13,8 +13,8 @@ import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -22,6 +22,7 @@ import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-lo
     styleUrls: ['./timeline-buttons.component.scss']
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
+
     private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     public hideTimeLine = false;
@@ -45,16 +46,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     private isDestroyed = false;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
-        private userPreferences: UserPreferencesService,
-        private configService: ConfigService,
-        private filterService: FilterService,
-        private opfabLogger: OpfabLoggerService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {}
 
     ngOnInit() {
         this.loadDomainConfiguration();
-        const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
+        const hideTimeLineInStorage = UserPreferencesService.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = hideTimeLineInStorage === 'true';
         this.setInitialDomain();
         this.shiftTimeLineIfNecessary();
@@ -87,7 +84,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = this.configService.getConfigValue('feed.timeline.domains', [
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', [
             'TR',
             'J',
             '7D',
@@ -107,7 +104,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
-        const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
+        const savedDomain = UserPreferencesService.getPreference('opfab.timeLine.domain');
 
         if (savedDomain) {
             const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
@@ -130,14 +127,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
-            this.opfabLogger.info('Set timeline domain to ' + conf.domainId, LogOption.REMOTE);
+            logger.info('Set timeline domain to ' + conf.domainId, LogOption.REMOTE);
         }
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
 
         this.setDefaultStartAndEndDomain();
-        this.userPreferences.setPreference('opfab.timeLine.domain', this.currentDomainId);
+        UserPreferencesService.setPreference('opfab.timeLine.domain', this.currentDomainId);
     }
 
     selectZoomButton(buttonTitle) {
@@ -210,14 +207,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
              * to a locale with monday as first day of week
              */
-            let startOfWeek = moment(startDomain)
+            const startOfWeek = moment(startDomain)
                 .add(2, 'day')
                 .startOf('week')
                 .minutes(0)
                 .second(0)
                 .millisecond(0)
                 .valueOf();
-            let endOfWeek = moment(startDomain)
+            const endOfWeek = moment(startDomain)
                 .add(2, 'day')
                 .startOf('week')
                 .minutes(0)
@@ -237,7 +234,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: startDomain,
             end: endDomain,
             domainId: this.currentDomainId
@@ -249,19 +246,19 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         const date = moment(value);
         switch (this.currentDomainId) {
             case 'TR':
-                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
             case 'J':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case '7D':
-                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
             case 'W':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case 'M':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case 'Y':
                 return date.format('yyyy');
             default:
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
         }
     }
 
@@ -279,11 +276,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.followClockTick = false;
 
         if (moveForward) {
-            this.opfabLogger.info('Move domain forward', LogOption.REMOTE);
+            logger.info('Move domain forward', LogOption.REMOTE);
             startDomain = this.goForward(startDomain.add(this.overlap, 'milliseconds'));
             endDomain = this.goForward(endDomain);
         } else {
-            this.opfabLogger.info('Move domain backward', LogOption.REMOTE);
+            logger.info('Move domain backward', LogOption.REMOTE);
             startDomain = this.goBackward(startDomain.add(this.overlap, 'milliseconds'));
             endDomain = this.goBackward(endDomain);
         }
@@ -327,7 +324,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
-        this.userPreferences.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
+        UserPreferencesService.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
     }
 
     /**
@@ -358,12 +355,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     lockTimeline(): void {
-        this.opfabLogger.info('Lock timeline', LogOption.REMOTE);
+        logger.info('Lock timeline', LogOption.REMOTE);
         this.followClockTick = false;
     }
 
     unlockTimeline(): void {
-        this.opfabLogger.info('Unlock timeline', LogOption.REMOTE);
+        logger.info('Unlock timeline', LogOption.REMOTE);
         this.followClockTick = true;
 
         // Restore default domain when the user unlocks the timeline

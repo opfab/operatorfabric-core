@@ -7,32 +7,26 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {catchError, filter, map, switchMap} from 'rxjs';
 import {CardService} from './card.service';
 import {SelectedCardService} from './selectedCard.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class SelectedCardLoaderService {
-    constructor(private selectedCardService: SelectedCardService, private cardService: CardService) {
+    public static init() {
         this.loadCardWhenUserSelectCard();
     }
 
-    private loadCardWhenUserSelectCard() {
-        this.selectedCardService
-            .getSelectCardIdChanges()
+    private static loadCardWhenUserSelectCard() {
+        SelectedCardService.getSelectCardIdChanges()
             .pipe(
                 filter((id) => id !== null),
-                switchMap((id) => this.cardService.loadCard(id)),
-                map((cardData) =>
-                    this.selectedCardService.setSelectedCardWithChildren(cardData.card, cardData.childCards)
-                ),
+                switchMap((id) => CardService.loadCard(id)),
+                map((cardData) => SelectedCardService.setSelectedCardWithChildren(cardData.card, cardData.childCards)),
                 catchError((err, caught) => {
-                    this.selectedCardService.setSelectedCardId(null);
-                    this.selectedCardService.setSelectedCardWithChildren(null, null);
-                    this.selectedCardService.setSelectedCardNotFound();
+                    SelectedCardService.setSelectedCardId(null);
+                    SelectedCardService.setSelectedCardWithChildren(null, null);
+                    SelectedCardService.setSelectedCardNotFound();
                     return caught;
                 })
             )

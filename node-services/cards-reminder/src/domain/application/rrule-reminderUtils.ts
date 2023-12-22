@@ -7,66 +7,44 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '../model/card.model';
+import {Card, Frequency as OpfabFrequency} from '../model/card.model';
 import {Frequency, Weekday, RRule} from 'rrule';
-import {Frequency as OpfabFrequency} from "../model/light-card.model";
 
-const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
+    let nextTime = -1;
     if (!startingDate) {
         startingDate = new Date().valueOf();
     }
-
-    if (card.timeSpans?.length >0) {
-        let nextTime = -1;
-        card.timeSpans.forEach((timeSpan) => {
-            const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, card, startingDate);
-            if (timeForRepeating !== -1) {
-                if (nextTime === -1 || timeForRepeating < nextTime) nextTime = timeForRepeating;
-            }
-        });
-        return nextTime;
-    } else if (startingDate > card.startDate) {
-        return getNextDateTimeFromRRule(startingDate, card);
+    if (card.timeSpans?.length > 0) nextTime = -1;
+    else if (startingDate > card.startDate) {
+        nextTime = getNextDateTimeFromRRule(startingDate, card);
     } else {
-        return getNextDateTimeFromRRule(card.startDate, card);
+        nextTime = getNextDateTimeFromRRule(card.startDate, card);
     }
-}
-
-function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, card: Card, startingDate: number): number {
-    if (timeSpan) {
-        if (!timeSpan.recurrence) {
-            if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
-                return -1;
-            } else {
-                return timeSpan.start;
-            }
-        } else if (startingDate > timeSpan.start) {
-            return getNextDateTimeFromRRule(startingDate, card);
-        } else {
-            return getNextDateTimeFromRRule(timeSpan.start, card);
-        }
-    }
-    return -1;
+    if (!!card.endDate && nextTime > card.endDate) nextTime = -1;
+    return nextTime;
 }
 
 export function getNextDateTimeFromRRule(startingDate: number, card: Card): number {
-    if (card?.rRule?.freq) {
-
-        const byhourSorted = card.rRule.byhour ? card.rRule.byhour : null;
+    if (card.rRule?.freq) {
+        const byhourSorted = card.rRule.byhour;
         if (byhourSorted) {
-            byhourSorted.sort(function (a, b) {return a - b;});
+            byhourSorted.sort(function (a, b) {
+                return a - b;
+            });
         }
-        const byminuteSorted = card.rRule.byminute ? card.rRule.byminute : null;
+        const byminuteSorted = card.rRule.byminute;
         if (byminuteSorted) {
-            byminuteSorted.sort(function (a, b) {return a - b;});
+            byminuteSorted.sort(function (a, b) {
+                return a - b;
+            });
         }
 
         const byweekdayForRRule = [];
         if (card.rRule.byweekday) {
-            card.rRule.byweekday.forEach(weekday => {
+            card.rRule.byweekday.forEach((weekday) => {
                 byweekdayForRRule.push(Weekday.fromStr(weekday));
             });
         }
@@ -89,15 +67,22 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
 
         // Workaround I've found to have the right hour for dtstart. Otherwise, it is transformed in UTC time and so the result is not the good one
         // Maybe a bug of rrule.js...
-        rule = RRule.fromString(rule.toString() +
-                                ';DTSTART;TZID=' + tzid + ':' +
-                                dateObjectToYYYYMMDDTHHmmss(new Date(startingDate + NB_MILLISECONDS_IN_ONE_MINUTE)));
+        rule = RRule.fromString(
+            rule.toString() +
+                ';DTSTART;TZID=' +
+                tzid +
+                ':' +
+                dateObjectToYYYYMMDDTHHmmss(new Date(startingDate + NB_MILLISECONDS_IN_ONE_MINUTE))
+        );
 
-        const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1})[0];
+        const nextDateTimeFromRRule = rule.all(function (date, i) {
+            return i < 1;
+        })[0];
 
         // It is necessary to do this addition to have the right hour, maybe a bug of rrule.js here too...
-        return (nextDateTimeFromRRule.valueOf() +
-                nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE);
+        return (
+            nextDateTimeFromRRule.valueOf() + nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE
+        );
     }
     return -1;
 }
@@ -107,16 +92,16 @@ function convertOpfabFrequencyToRRuleFrequency(opfabFrequency: OpfabFrequency): 
 }
 
 function dateObjectToYYYYMMDDTHHmmss(date: Date): string {
-    if (date) {
-        return '' + date.getFullYear() +
-            pad(date.getMonth() + 1) +
-            pad(date.getDate()) +
-            'T' +
-            pad(date.getHours()) +
-            pad(date.getMinutes()) +
-            pad(date.getSeconds());
-    }
-    return null;
+    return (
+        '' +
+        date.getFullYear() +
+        pad(date.getMonth() + 1) +
+        pad(date.getDate()) +
+        'T' +
+        pad(date.getHours()) +
+        pad(date.getMinutes()) +
+        pad(date.getSeconds())
+    );
 }
 
 function pad(number): string {

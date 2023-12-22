@@ -10,18 +10,12 @@
 import {Entity} from '@ofModel/entity.model';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -29,64 +23,47 @@ import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
 
 describe('ActivityAreaView', () => {
-    let userService: UserService;
     let userServerMock: UserServerMock;
-    let entitiesService: EntitiesService;
     let entitiesServerMock: EntitiesServerMock;
     let settingsService: SettingsService;
     let settingsServerMock: SettingsServerMock;
     let user: User;
     let lightCardsStoreService: LightCardsStoreService;
     let activityAreaView: ActivityAreaView;
-    let opfabLoggerService: OpfabLoggerService;
 
     beforeEach(() => {
         jasmine.clock().uninstall();
-        mockOpfabLoggerService();
         mockUserService();
         mockEntitiesService();
         mockSettingsService();
         mockLightCardStoreService();
     });
 
-    function mockOpfabLoggerService() {
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(new ConfigServerMock()), null)
-        );
-    }
-
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        UserService.setUserServer(userServerMock);
     }
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock, null);
+        EntitiesService.setEntitiesServer(entitiesServerMock);
         const entities: Entity[] = new Array();
         entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', true, [], []));
         entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', true, [], []));
         entities.push(new Entity('ENTITY_NOT_ALLOWED_TO_SEND_CARD', 'ENTITY3', '', false, [], []));
         entitiesServerMock.setEntities(entities);
-        entitiesService.loadAllEntitiesData().subscribe();
+        EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
     }
 
     function mockSettingsService() {
         settingsServerMock = new SettingsServerMock();
-        const currentUserStore = new CurrentUserStore();
-        currentUserStore.setCurrentUserAuthenticationValid('currentUser');
-        settingsService = new SettingsService(settingsServerMock, opfabLoggerService, currentUserStore);
+        CurrentUserStore.setCurrentUserAuthenticationValid('currentUser');
+        settingsService = new SettingsService(settingsServerMock);
     }
 
     function mockLightCardStoreService() {
-        lightCardsStoreService = new LightCardsStoreService(
-            userService,
-            new OpfabEventStreamService(new OpfabEventStreamServerMock(), null, opfabLoggerService),
-            null,
-            opfabLoggerService,
-            null
-        );
+        lightCardsStoreService = new LightCardsStoreService();
     }
 
     afterEach(() => {
@@ -102,11 +79,11 @@ describe('ActivityAreaView', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await firstValueFrom(userService.loadUserWithPerimetersData());
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
     }
 
     function initActivityAreaView() {
-        activityAreaView = new ActivityAreaView(userService, entitiesService, settingsService, lightCardsStoreService);
+        activityAreaView = new ActivityAreaView(settingsService, lightCardsStoreService);
     }
 
     it('GIVEN a user  WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {
@@ -288,7 +265,7 @@ describe('ActivityAreaView', () => {
         );
         const saved = await firstValueFrom(activityAreaView.saveActivityArea());
         expect(saved).toBeTruthy();
-        expect(userService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
+        expect(UserService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {

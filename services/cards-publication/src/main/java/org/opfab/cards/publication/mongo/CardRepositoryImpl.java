@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     static final String END_DATE = "endDate";
     static final String USERS_ACKS = "usersAcks";
+    static final String ENTITIES_ACKS = "entitiesAcks";
     static final String USERS_READS = "usersReads";
 
     public CardRepositoryImpl(MongoTemplate template) {
@@ -105,7 +107,7 @@ public class CardRepositoryImpl implements CardRepository {
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
         Update update = new Update().addToSet(USERS_ACKS, user.getLogin());
         update.addToSet(
-                "entitiesAcks",
+                ENTITIES_ACKS,
                 BasicDBObjectBuilder.start("$each", entitiesAcks).get());
         update.set("lastAckDate", Instant.now());
 
@@ -175,8 +177,8 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().unset(USERS_ACKS).unset(USERS_READS).set("publishDate", Instant.now()), CardPublicationData.class);
-        log.debug("removed {} occurrence of userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+                new Update().unset(USERS_ACKS).unset(USERS_READS).set(ENTITIES_ACKS,new LinkedList<String>()).set("publishDate", Instant.now()), CardPublicationData.class);
+        log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }

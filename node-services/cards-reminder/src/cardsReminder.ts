@@ -8,47 +8,56 @@
  */
 
 import express from 'express';
+import {expressjwt, GetVerificationKey} from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
 import logger from './common/server-side/logger';
 
-import AuthenticationService from './common/client-side/authenticationService'
 import ReminderService from './domain/application/reminderService';
 import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
-import CardsReminderService from './domain/client-side/cardsRemiderService';
+import CardsReminderService from './domain/client-side/cardsReminderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
-import AuthorizationService from './common/client-side/authorizationService';
+import AuthorizationService from './common/server-side/authorizationService';
 
 const app = express();
-app.disable("x-powered-by");
+app.disable('x-powered-by');
 
 app.use(bodyParser.json());
 
-app.use(express.static("public"));
-const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
+// Token verification activated except for heathcheck request
+const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
+app.use(
+    /\/((?!healthcheck).)*/,
+    expressjwt({
+        secret: jwksRsa.expressJwtSecret({
+            cache: true,
+            rateLimit: true,
+            jwksRequestsPerMinute: 5,
+            jwksUri: jwksUri
+        }) as GetVerificationKey,
+        algorithms: ['RS256']
+    })
+);
 
+app.use(express.static('public'));
+const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
 
 const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup');
 
-const authenticationService = new AuthenticationService()
+const remindDatabaseService = new RemindDatabaseService()
+    .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
+    .setRemindersCollection('reminders')
     .setLogger(logger);
 
-const remindDatabaseService = new RemindDatabaseService()
-    .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
-    .setRemindersCollection(ReminderService.REMINDERS_COLLECTION)
-    .setLogger(logger)
-
-
-const reminderService = new ReminderService()
-    .setLogger(logger)
-    .setDatabaseService(remindDatabaseService);
+const reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseService);
 
 const rRuleRemindDatabaseService = new RemindDatabaseService()
-    .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
-    .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION)
-    .setLogger(logger)
+    .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
+    .setRemindersCollection('rrule_reminders')
+    .setLogger(logger);
 
 const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
@@ -60,67 +69,65 @@ const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
     .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
-    .setAuthenticationService(authenticationService)
     .setLogger(logger)
-    .setEventBusConfiguration(config.get("operatorfabric.rabbitmq"))
+    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .addListener(rruleReminderService)
     .addListener(reminderService);
 
 const authorizationService = new AuthorizationService()
-    .setAuthenticationService(authenticationService)
     .setOpfabServicesInterface(opfabServicesInterface)
     .setLogger(logger);
 
-const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, config.get('operatorfabric.cardsReminder.checkPeriodInSeconds'), logger);
-
+const cardsReminderService = new CardsReminderService(
+    opfabServicesInterface,
+    rruleReminderService,
+    reminderService,
+    remindDatabaseService,
+    config.get('operatorfabric.cardsReminder.checkPeriodInSeconds'),
+    logger
+);
 
 app.get('/status', (req, res) => {
-
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
-        else 
-            res.send(cardsReminderService.isActive());
-    })
-        
+    authorizationService.isAdminUser(req).then((isAdmin) => {
+        if (!isAdmin) res.status(403).send();
+        else res.send(cardsReminderService.isActive());
+    });
 });
 
 app.get('/start', (req, res) => {
-
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
+    authorizationService.isAdminUser(req).then((isAdmin) => {
+        if (!isAdmin) res.status(403).send();
         else {
             cardsReminderService.start();
             res.send('Start service');
         }
-    })
+    });
 });
 
 app.get('/stop', (req, res) => {
-
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
+    authorizationService.isAdminUser(req).then((isAdmin) => {
+        if (!isAdmin) res.status(403).send();
         else {
             logger.info('Stop card reminder service asked');
             cardsReminderService.stop();
             res.send('Stop service');
         }
-    })
+    });
 });
 
 app.get('/reset', (req, res) => {
-
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
+    authorizationService.isAdminUser(req).then((isAdmin) => {
+        if (!isAdmin) res.status(403).send();
         else {
             logger.info('Reset card reminder service asked');
             cardsReminderService.reset();
             res.send('Reset service');
         }
-    })
+    });
+});
+
+app.get('/healthcheck', (req, res) => {
+    res.send();
 });
 
 app.listen(adminPort, () => {
@@ -132,9 +139,9 @@ opfabServicesInterface.startListener();
 async function start() {
     await remindDatabaseService.connectToMongoDB();
     await rRuleRemindDatabaseService.connectToMongoDB();
-if (activeOnStartUp) {
-    cardsReminderService.start();
-}
-logger.info('Application started');
+    if (activeOnStartUp) {
+        cardsReminderService.start();
+    }
+    logger.info('Application started');
 }
 start();

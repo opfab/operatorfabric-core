@@ -12,7 +12,7 @@ operatorfabric:
   internalAccount:
     login: opfab
   logConfig:
-    logFolder: logs/
+    logFolder: /var/log/opfab/
     logFile: "opfab.%DATE%.log"
     logLevel: info
   cardsExternalDiffusion:

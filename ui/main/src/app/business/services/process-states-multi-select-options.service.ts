@@ -20,14 +20,12 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 })
 export class ProcessStatesMultiSelectOptionsService {
     constructor(
-        private processesService: ProcessesService,
-        private userService: UserService,
         private translate: TranslateService
     ) {}
 
-    getStatesMultiSelectOptionsPerProcess(isAdminMode: boolean, hideChildStates: boolean): any[] {
+    getStatesMultiSelectOptionsPerProcess(isAdminModeAndUserHasRightToSeeAllStates: boolean, hideChildStates: boolean): any[] {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
-        this.processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
             stateOptions.options = [];
             process.states.forEach((state, stateid) => {
@@ -37,7 +35,7 @@ export class ProcessStatesMultiSelectOptionsService {
                         state.isOnlyAChildState,
                         process.id,
                         stateid,
-                        isAdminMode
+                        isAdminModeAndUserHasRightToSeeAllStates
                     )
                 ) {
                     stateOptions.options.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
@@ -53,35 +51,35 @@ export class ProcessStatesMultiSelectOptionsService {
         isOnlyAChildState: boolean,
         processId: string,
         stateId: string,
-        isAdminMode: boolean
+        isAdminModeAndUserHasRightToSeeAllStates: boolean
     ): boolean {
         return (
             !(hideChildStates && isOnlyAChildState) &&
-            (isAdminMode || this.userService.isReceiveRightsForProcessAndState(processId, stateId))
+            (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcessAndState(processId, stateId))
         );
     }
 
-    getProcessesWithoutProcessGroupMultiSelectOptions(isAdminMode: boolean, processesFilter?: string[]): any[] {
+    getProcessesWithoutProcessGroupMultiSelectOptions(isAdminModeAndUserHasRightToSeeAllStates: boolean, processesFilter?: string[]): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
-        this.processesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
-            if (isAdminMode || this.userService.isReceiveRightsForProcess(process.id))
+        ProcessesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
+            if (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcess(process.id))
                 processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
         });
         return processesWithoutProcessGroupMultiSelectOptions;
     }
 
     getProcessesMultiSelectOptionsPerProcessGroup(
-        isAdminMode: boolean,
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
         processesFilter?: string[]
     ): Map<string, any[]> {
         const processMultiSelectOptionsPerProcessGroups =
-            this.processesService.getProcessesPerProcessGroups(processesFilter);
+            ProcessesService.getProcessesPerProcessGroups(processesFilter);
 
         processMultiSelectOptionsPerProcessGroups.forEach((processList, processGroupId) => {
-            if (!isAdminMode) {
+            if (!isAdminModeAndUserHasRightToSeeAllStates) {
                 processList = processList.filter((processData) =>
-                    this.userService.isReceiveRightsForProcess(processData.value)
+                    UserService.isReceiveRightsForProcess(processData.value)
                 );
             }
 
@@ -101,7 +99,7 @@ export class ProcessStatesMultiSelectOptionsService {
         processMultiSelectOptionsPerProcessGroups: Map<string, any[]>
     ): any[] {
         const processGroupsMultiSelectOptions = [];
-        const processesGroups = this.processesService.getProcessGroups();
+        const processesGroups = ProcessesService.getProcessGroups();
 
         if (processesWithoutProcessGroupMultiSelectOptions.length > 0)
             processGroupsMultiSelectOptions.push(

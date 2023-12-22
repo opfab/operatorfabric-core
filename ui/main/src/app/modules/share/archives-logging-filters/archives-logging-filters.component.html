@@ -9,10 +9,7 @@
 <ng-template #noProcessStateToDisplay>
     <div id="opfab-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
     <div *ngIf="hasCurrentUserRightsToViewAllArchivedCards" style="display: flex; justify-content: center; padding-top: 10px">
-        <a id='opfab-admin-mode-link' class="opfab-link" (click)="toggleAdminMode()"><span translate>shared.goToAdminMode</span></a>
-        <div id="opfab-admin-mode-help" class="opfab-icon-help" placement="auto" [ngbPopover]="helpContent" style="margin-top: 5px"
-             container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover-unclickable">
-        </div>
+        <a id='opfab-see-all-cards-link' class="opfab-link" (click)="toggleAdminMode()"><span translate>shared.goToAdminMode</span></a>
     </div>
 </ng-template>
 
@@ -81,8 +78,8 @@
             </div>
 
 
-            <div class="opfab-vertical-bar"></div>
-            <div class="opfab-publish-date" [formGroup]="this.parentForm">
+            <div class="opfab-vertical-bar" *ngIf="displayPublishDateFilter"></div>
+            <div class="opfab-publish-date" [formGroup]="this.parentForm" *ngIf="displayPublishDateFilter">
                 <div>
                     <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
                     labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange()"></of-datetime-filter>
@@ -105,12 +102,10 @@
                 </div>
             </div>
             <div  class="opfab-buttons">
-                <label *ngIf="hasCurrentUserRightsToViewAllArchivedCards" id="opfab-archives-logging-admin-mode-checkbox" style="margin-left:10px" class="opfab-checkbox" translate>shared.adminMode
-                    <input type="checkbox" (click)="toggleAdminMode()" [checked]="isAdminModeChecked">
+                <label *ngIf="hasCurrentUserRightsToViewAllArchivedCards || hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters"
+                       id="opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox" style="margin-left:10px;max-width: 200px" class="opfab-checkbox" translate>shared.adminMode
+                    <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked">
                     <span class="opfab-checkbox-checkmark"></span>
-                    <div id="opfab-archives-logging-admin-help" class="opfab-icon-help" placement="auto" [ngbPopover]="helpContent"
-                         container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover-unclickable">
-                    </div>
                 </label>
                 <button id="opfab-archives-logging-btn-search" [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn opfab-btn-search-admin-mode' : 'opfab-btn'" (click)='query()' translate>button.search</button>
                 <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
@@ -119,7 +114,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #helpContent>
-    <span translate>shared.adminModeHelp</span>
-</ng-template>

@@ -40,11 +40,40 @@ include::configuration/configuration.adoc[leveloffset=+1]
 
 == Monitoring
 
-Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the four following services: user, businessconfig, cards-consultation, cards-publication. You can start a test prometheus instance via `config/monitoring/startPrometheus.sh` , the monitoring will be accessible on http://localhost:9090/
+Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :
+
+```
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+
+You can start a test prometheus instance via `config/monitoring/startPrometheus.sh` , the monitoring will be accessible on http://localhost:9090/
+
+
+It is also possible to monitor the health status of cards-external-diffusion, cards-reminder and supervisor services by making an HTTP GET request to the "/healthcheck" endpoint exposed by each service. The healthcheck endpoint will return a HTTP 200 status code if the service is up and running.
 
 == Logging Administration
 
-Operator Fabric includes the ability to view and configure the log levels at runtime through APIs. It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. These levels can be one of:
+
+=== Logging configuration 
+
+Log levels can be defined either globally in the YAML configuration file or individually for each service. You will find a commented configuration for each service within the directory config/docker.
+
+Services are designed to write logs to two primary destinations: standard output and log files within the Docker containers.
+
+If you want to save logs you can redirect the standard output to a file.
+
+Or you can also map the Docker directory /var/log/opfab to a location on the host machine for each business services, keeping logs outside of the container.
+
+For the web-ui service's logs are in the /var/log/nginx directory. You can map this directory to the host to preserve those logs.
+
+=== Runtime configuration 
+
+Operator Fabric includes the ability to view and configure the log levels at runtime through APIs for most of the business services (the service supervisor , cards-external-diffusion and cards-reminder does not provide this feature). It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. These levels can be one of:
 
 * TRACE
 * DEBUG
@@ -52,10 +81,7 @@ Operator Fabric includes the ability to view and configure the log levels at run
 * WARN
 * ERROR
 * FATAL
-* OFF
-* null
 
-null indicates that there is no explicit configuration.
 
 Querying and setting logging levels is restricted to administrators.
 
@@ -110,7 +136,8 @@ ifndef::single-page-doc[<</documentation/current/deployment/configuration/config
 This is to avoid potential overloading due to external apps stuck in a card sending loop.
 It can be disabled / enabled with
 ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>].
+It also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g. POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
 
 == Restricted operations (administration)
 

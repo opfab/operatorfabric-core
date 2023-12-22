@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -29,7 +29,8 @@ import {TranslationService} from 'app/business/services/translation/translation.
 @Component({
     selector: 'of-logging',
     templateUrl: './logging.component.html',
-    styleUrls: ['./logging.component.scss']
+    styleUrls: ['./logging.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -85,15 +86,11 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private processesService: ProcessesService,
-        private configService: ConfigService,
-        private dateTimeFormatter: DateTimeFormatterService,
-        private cardService: CardService,
         private translationService: TranslationService,
-        private entitiesService: EntitiesService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.logging) {
                 const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
@@ -114,8 +111,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
-        this.tags = this.configService.getConfigValue('logging.filters.tags.list');
+        this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
+        this.tags = ConfigService.getConfigValue('logging.filters.tags.list');
 
         this.results = [];
     }
@@ -134,13 +131,14 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     sendFilterQuery(page_number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
+        this.changeDetector.markForCheck();
 
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
 
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
@@ -150,7 +148,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
 
                     if (!this.firstQueryHasBeenDone) {
-                        this.firstQueryHasResults=page.content.length > 0;
+                        this.firstQueryHasResults = page.content.length > 0;
                         this.resultsNumber = page.totalElements;
                     }
 
@@ -162,11 +160,13 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.results = page.content;
                     this.totalElements= page.totalElements;
                     this.totalPages= page.totalPages;
+                    this.changeDetector.markForCheck();
                 },
                 error: () => {
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
                     this.technicalError = true;
+                    this.changeDetector.markForCheck();
                 }
             });
     }
@@ -190,14 +190,14 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
-        const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+        const sender = isThirdPartyPublisher ? card.publisher : EntitiesService.getEntityName(card.publisher);
 
         let representative = '';
         if (card.representativeType && card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
-                : this.entitiesService.getEntityName(card.representative);
+                : EntitiesService.getEntityName(card.representative);
         }
         card.sender = sender;
         card.representative = representative;
@@ -230,7 +230,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     displayTime(date) {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     exportToExcel(): void {
@@ -245,7 +245,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
 
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -264,14 +264,15 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
+                    // TO DO translation for old process should be done  , but loading local arrives too late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
                             [processGroupColumnName]: this.translateColumn(
-                                this.processesService.findProcessGroupLabelForProcess(card.process)
+                                ProcessesService.findProcessGroupLabelForProcess(card.process)
                             ),
                             [processColumnName]: card.processName,
                             [titleColumnName]: card.titleTranslated,
@@ -284,7 +285,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
                             [processColumnName]: card.processName,
@@ -302,7 +303,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        if (!key) return '';
         return this.translationService.getTranslation(key,interpolateParams);
     }
 

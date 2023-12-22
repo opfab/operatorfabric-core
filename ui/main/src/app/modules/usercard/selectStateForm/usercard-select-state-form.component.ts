@@ -87,9 +87,6 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     };
 
     constructor(
-        private processesService: ProcessesService,
-        private userService: UserService,
-        private entitiesService: EntitiesService,
         private translateService: TranslateService
     ) {}
 
@@ -99,8 +96,8 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             usercardProcess: new FormControl(''),
             usercardState: new FormControl('')
         });
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        this.processGroups = this.processesService.getProcessGroups();
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        this.processGroups = ProcessesService.getProcessGroups();
         this.loadAllProcessAndStateInUserPerimeter();
         this.changeStatesWhenSelectProcess();
         this.changeProcessesWhenSelectProcessGroup();
@@ -122,7 +119,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     loadAllProcessAndStateInUserPerimeter(): void {
-        this.processesDefinition = this.processesService.getAllProcesses();
+        this.processesDefinition = ProcessesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
         this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
             if (this.isUserAllowedToSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
@@ -178,7 +175,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     isUserAllowedToPublishCardForState(userCard: UserCard) {
         if (userCard.publisherList?.length > 0) {
             const configuredPublisherList = [];
-            this.entitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
+            EntitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
             return this.currentUserWithPerimeters.userData.entities.filter( entity => configuredPublisherList.includes(entity)).length > 0;
         }
         return true;

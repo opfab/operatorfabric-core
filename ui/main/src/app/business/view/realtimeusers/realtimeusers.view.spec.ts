@@ -8,9 +8,6 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
@@ -26,11 +23,8 @@ describe('Realtimeusers', () => {
     let clock: jasmine.Clock;
 
     let configServerMock: ConfigServerMock;
-    let opfabLoggerService: OpfabLoggerService;
     let userServerMock: UserServerMock;
-    let userService: UserService;
     let entitiesServerMock: EntitiesServerMock;
-    let entitiesService: EntitiesService;
 
     beforeEach(() => {
         mockLoggerService();
@@ -53,7 +47,7 @@ describe('Realtimeusers', () => {
         clock = jasmine.clock();
         clock.install();
 
-        view = new RealtimeUsersView(configServerMock, opfabLoggerService, userService, entitiesService);
+        view = new RealtimeUsersView(configServerMock);
         view.getPage().subscribe((realtimePage) => {
             page = realtimePage;
             view.setSelectedScreen('0');
@@ -70,20 +64,18 @@ describe('Realtimeusers', () => {
         configServerMock.setResponseForRealTimeScreenConfiguration(
             new ServerResponse(realtimeScreensTestConfig, ServerResponseStatus.OK, '')
         );
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
-        );
+
     }
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        UserService.setUserServer(userServerMock);
     }
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock, null);
-        entitiesService.loadAllEntitiesData().subscribe();
+        EntitiesService.setEntitiesServer(entitiesServerMock);
+        EntitiesService.loadAllEntitiesData().subscribe();
     }
 
     it('After view is initialized, screen options should be saved', () => {

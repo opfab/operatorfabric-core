@@ -8,12 +8,13 @@
  */
 
 import express from 'express';
+import {expressjwt, GetVerificationKey} from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
 import logger from './common/server-side/logger';
-import AuthenticationService from './common/client-side/authenticationService'
-import AuthorizationService from './common/client-side/authorizationService'
+import AuthorizationService from './common/server-side/authorizationService'
 import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
@@ -24,6 +25,21 @@ app.disable("x-powered-by");
 
 app.use(bodyParser.json());
 
+// Token verification activated except for heathcheck request 
+const jwksUri : string =  config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
+app.use(
+    /\/((?!healthcheck).)*/,
+    expressjwt({
+        secret: jwksRsa.expressJwtSecret({
+            cache: true,
+            rateLimit: true,
+            jwksRequestsPerMinute: 5,
+            jwksUri:jwksUri
+        }) as GetVerificationKey,
+        algorithms: [ 'RS256' ]
+    })
+);
+
 app.use(express.static("public"));
 const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
 
@@ -31,11 +47,6 @@ const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
 const activeOnStartUp = config.get('operatorfabric.cardsExternalDiffusion.activeOnStartup');
 
 const configService = new ConfigService(config.get('operatorfabric.cardsExternalDiffusion.defaultConfig'), 'config/serviceConfig.json', logger);
-
-
-
-const authenticationService = new AuthenticationService()
-    .setLogger(logger);
 
 
 const mailService = new SendMailService(config.get('operatorfabric.mail'));
@@ -47,7 +58,6 @@ const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface(
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
-    .setAuthenticationService(authenticationService)
     .setLogger(logger);
 
 opfabServicesInterface.loadUsersData().catch(error => 
@@ -57,7 +67,6 @@ opfabServicesInterface.loadUsersData().catch(error =>
 
 
 const authorizationService = new AuthorizationService()
-    .setAuthenticationService(authenticationService)
     .setOpfabServicesInterface(opfabServicesInterface)
     .setLogger(logger);
 
@@ -124,6 +133,10 @@ app.post('/config', (req, res) => {
             res.send(updated);
         }
     })
+});
+
+app.get('/healthcheck', (req, res) => {
+    res.send();
 });
 
 app.listen(adminPort, () => {

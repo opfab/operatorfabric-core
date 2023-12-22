@@ -1,12 +1,12 @@
 plugins {
-    id "com.github.node-gradle.node" version "7.0.0"
+    id "com.github.node-gradle.node" version "7.0.1"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
-    id "io.spring.dependency-management" version "1.1.3" apply false
-    id 'org.sonarqube' version '4.3.1.3277'
-    id "com.github.davidmc24.gradle.plugin.avro" version "1.8.0" apply false
+    id "io.spring.dependency-management" version "1.1.4" apply false
+    id 'org.sonarqube' version '4.4.1.3373'
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.9.1" apply false
     id "com.palantir.docker" version "0.35.0" apply false
     id "org.hidetake.swagger.generator" version "2.19.2" apply false
 }
@@ -34,6 +34,8 @@ ext {
             devTools                : "org.springframework.boot:spring-boot-devtools:$springBoot"
     ]
 
+
+
     spring = [
             securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:$springSecurity",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:$springSecurity",
@@ -43,7 +45,6 @@ ext {
     ]
 
     cloud = [
-            dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign:$springOpenFeign",
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
@@ -70,7 +71,7 @@ ext {
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             feignCore      : "io.github.openfeign:feign-core:$feign",
             feignOkhttp      : "io.github.openfeign:feign-okhttp:$feign",
-            guava          : "com.google.guava:guava:32.1.2-jre",
+            guava          : "com.google.guava:guava:32.1.3-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
@@ -80,10 +81,17 @@ ext {
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
+            commonsLang    : "org.apache.commons:commons-lang3:$apacheCommonsLang",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
-            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
-            //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
+
+//Transitive dependencies udpate needed for security reasons 
+            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.77",
+            snakeyaml       : "org.yaml:snakeyaml:2.2",
+            snappy          : "org.xerial.snappy:snappy-java:1.1.10.5"
+//End transitive dependencies
     ]
+
 
     generator = [
             swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
@@ -94,6 +102,10 @@ ext {
             https : ""
     ]
 }
+
+// override spring boot rabbitMQ version 
+// we do not use rabbitMQ via spring boot 
+ext['rabbit-amqp-client.version']="$rabbitMQ"
 ext.proxy.https =  System.env.https_proxy != null ? "$System.env.https_proxy" : ""
 
 sonar {

@@ -7,23 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-changepassword',
     templateUrl: './changepassword.component.html',
-    styleUrls: ['./changepassword.component.scss']
+    styleUrls: ['./changepassword.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangepasswordComponent implements OnInit {
     public changePasswordUrl: SafeUrl;
 
-    constructor(private configService: ConfigService, private sanitizer: DomSanitizer) {}
+    constructor(private sanitizer: DomSanitizer) {}
 
     ngOnInit() {
         this.changePasswordUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            this.configService.getConfigValue('security.changePasswordUrl')
+            ConfigService.getConfigValue('security.changePasswordUrl')
         );
     }
 }

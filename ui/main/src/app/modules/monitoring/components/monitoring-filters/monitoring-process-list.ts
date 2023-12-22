@@ -22,17 +22,17 @@ export class MonitoringProcessList {
     private processByProcessGroup: Map<string, Process[]> = new Map();
     private processGroups: Array<any>;
 
-    constructor(private processesService: ProcessesService, private userService: UserService) {
+    constructor() {
         this.loadVisibleProcessesForCurrentUser();
         this.loadProcessByProcessGroupMap();
         this.loadProcessGroups();
     }
 
     private loadVisibleProcessesForCurrentUser() {
-        this.processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (
                 process.uiVisibility?.monitoring &&
-                this.userService.isReceiveRightsForProcess(process.id)
+                UserService.isReceiveRightsForProcess(process.id)
             ) {
                 this.processList.push(process);
             }
@@ -47,7 +47,7 @@ export class MonitoringProcessList {
     }
 
     private getProcessGroupIdForProcess(processId): string {
-        const processGroup = this.processesService.findProcessGroupForProcess(processId);
+        const processGroup = ProcessesService.findProcessGroupForProcess(processId);
         if (processGroup) return processGroup.id;
         return DEFAULT_PROCESS_GROUP_ID;
     }
@@ -64,7 +64,7 @@ export class MonitoringProcessList {
         for (const processGroup of this.processByProcessGroup.keys()) {
             this.processGroups.push({
                 id: processGroup,
-                name: this.processesService.getProcessGroupName(processGroup)
+                name: ProcessesService.getProcessGroupName(processGroup)
             });
         }
     }

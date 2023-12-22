@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 4.0.0.RELEASE
+  version: 4.1.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -71,6 +71,7 @@ definitions:
       * ADMIN: Administrator permission
       * ADMIN_BUSINESS_PROCESS: Permission to administer bundles and processes
       * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
+      * VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS : Permission to access all archived cards which are in the perimeter of the user
       * VIEW_USER_ACTION_LOGS: Permission to view user action logs
       * VIEW_ALL_CARDS: Permission to query all published cards
       * READONLY: Permission to view card, no rights to send cards or respond to a card.
@@ -78,18 +79,10 @@ definitions:
       - ADMIN
       - ADMIN_BUSINESS_PROCESS
       - VIEW_ALL_ARCHIVED_CARDS
+      - VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS
       - VIEW_ALL_CARDS
       - VIEW_USER_ACTION_LOGS
       - READONLY
-  GroupTypeEnum:
-    type: string
-    description: |-
-      Different group types possible >
-      * ROLE: Used to define user role or profile
-      * PERMISSION: Used to define user permissions on processes
-    enum:
-      - ROLE
-      - PERMISSION
   Group:
     type: object
     properties:
@@ -98,8 +91,6 @@ definitions:
         description: Id must be minimum 2 characters and must only contain letters, _, - or digits.
       name:
         type: string
-      type:
-        $ref: '#/definitions/GroupTypeEnum'
       description:
         type: string
       perimeters:

@@ -13,10 +13,9 @@
 Configure the security concern throughout several files:
 
 * `nginx.conf` of the nginx server
-* `config/dev/common-dev.yml`  or `config/docker/common-docker.yml`, called common.yml in the following chapters
+* `config/docker/common.yml` the common configuration file for back services
 * `web-ui.json` served by the `web-ui` service;
 
-For each user it is possible to configure a list of authorized source ip addresses by setting the `authorizedIPAddresses` field in User object.
 
 == Authentication configuration 
 
@@ -70,6 +69,7 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 |===
 |name|default|mandatory?|Description 
 |operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificate used to verify the jwt signature
+|operatorfabric.security.jwt.loginClaim|sub|no| Jwt claim used for user login
 |===
 
 [NOTE]
@@ -90,7 +90,7 @@ spring:
 
 === Configuration file web-ui.json
 
-Nginx web server serves this file. OperatorFabric creates and uses a custom Docker image containing an Nginx server with a docker volume containing this file. The two docker-compose environments contain an example of it. The path in the image to it is `/usr/share/nginx/html/opfab/web-ui.json`. 
+Nginx web server serves this file. OperatorFabric creates and uses a custom Docker image containing an Nginx server with a docker volume containing this file. The  docker-compose.yml contains an example of it. The path in the image to it is `/usr/share/nginx/html/opfab/web-ui.json`. 
 
 For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
 There are several common properties:
@@ -98,14 +98,12 @@ There are several common properties:
 - `security.logout-url`: url used when a user is logged out of the UI;
 - `security.oauth2.flow.delegate-url`: url used to connect to the Authentication provider;
 - `security.oauth2.flow.mode`: technical way to be authenticated by the Autentication provider.
-
-
+- `security.oauth2.client-id` : the OAuth2 client ID
+- `security.jwt.login-claim` : the field in the token that will be used to identify your account (default value : sub)
 
 === OAuth2 PASSWORD or CODE Flows
 
-
-These two modes share the same way of declaring the delegate URL.
-`CODE` is the default mode of authentication for `deploy` docker-compose environment.
+These two modes share the same way of declaring the delegate URL. This has to be defined in web-ui.json by setting : 
 
 - `security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
@@ -117,7 +115,11 @@ These two modes share the same way of declaring the delegate URL.
 ----
 {
     "security": {
+      "jwt": {
+        "login-claim": "preferred_username"
+      },
       "oauth2": {
+        "client-id": "OAUTHCLIENTID",
         "flow": {
           "mode": "CODE",
           "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
@@ -136,7 +138,7 @@ Here, the `client-id` value is `opfab-client` which is define as client under th
 
 
 It had its own way of configuration.
-To enable IMPLICIT Flow authentication the following properties need to be set:
+To enable IMPLICIT Flow authentication the following properties need to be set in web-ui.json:
 
 - `security.oauth2.flow.mode` to `IMPLICIT`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
@@ -148,12 +150,16 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 ----
 {
   "security": {
+    "jwt": {
+        "login-claim": "preferred_username"
+      },
     "oauth2": {
+      "client-id": "OAUTHCLIENTID",
       "flow": {
         "mode": "IMPLICIT",
         "delegate-url": "http://localhost:89/auth/realms/dev"
       }
-    }
+    },
     "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
   }
 }
@@ -215,7 +221,7 @@ Settings that are not required are:
         "flow": {
           "mode": "NONE"
         }
-      }
+      },
       "logout-url":"http://my-secured-proxy/OAUTHTENANTID/oauth2/logout?client_id=OAUTHCLIENTID&post_logout_redirect_uri=https%3A%2F%2Flocalhost:2002%2Fui%2Fui/"
     }
  }
@@ -223,23 +229,23 @@ Settings that are not required are:
 
 == User creation
 
-Setting automated user creation==. Creation user requires a user id. Given name and family name are optional.
+If a user exists in the authentication system but not in Opfab, their profile will be automatically created upon their initial login. The user's name and family name will be extracted from the authentication token.
 
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as a user login or id
-|operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
-|operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
+|operatorfabric.security.jwt.givenNameClaim|given-name|no| Jwt claim to use to get the user's name
+|operatorfabric.security.jwt.familyName-claim|family-name|no| Jwt claim to used to get the user's family name
 |===
 
 [[jwt_mode]]
+
 == Alternative way to manage groups (and/or entities)
 
 By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database.
 Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token.
-The administrator of the authentication service has to set what claims define a group (and/or entity).
-In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
+
+To activate this option , you need to set some parameter in the common.yml file : 
   
 |===
 |name|default|mandatory?|Description
@@ -274,3 +280,7 @@ As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleB
 
 
 include::certificates.adoc[leveloffset=+1]
+
+== IP address control
+
+For each user it is possible to configure a list of authorized source ip addresses by setting the `authorizedIPAddresses` field in User object.

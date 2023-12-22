@@ -4,6 +4,7 @@
     "version": "1",
     "uiVisibility": {
         "monitoring": true,
+        "processMonitoring": true,
         "logging": true,
         "calendar": true
     },
@@ -52,6 +53,7 @@
                 "template": "usercard_message_or_question_list",
                 "startDateVisible": false,
                 "endDateVisible": false,
+                "recipientForInformationVisible" : true,
                 "severityVisible": false
             },
             "response": {

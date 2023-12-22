@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {SortService} from 'app/business/services/lightcards/sort.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-feed-sort',
@@ -24,13 +24,10 @@ export class FeedSortComponent implements OnInit, OnDestroy {
 
     private ngUnsubscribe$ = new Subject<void>();
     sortForm: FormGroup<{
-        sortControl: FormControl<string | null>
+        sortControl: FormControl<string | null>;
     }>;
 
-    constructor(
-        private userPreferences: UserPreferencesService,
-        private sortService: SortService
-    ) {}
+    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
 
     ngOnInit() {
         this.sortForm = this.createFormGroup();
@@ -50,18 +47,18 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     initSort() {
         const sortChoice = this.getInitialSort();
         this.sortForm.get('sortControl').setValue(sortChoice);
-        this.sortService.setSortBy(sortChoice);
+        this.lightCardsFeedFilterService.setSortBy(sortChoice);
 
         this.sortForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
-            this.userPreferences.setPreference('opfab.feed.sort.type', form.sortControl);
-            this.sortService.setSortBy(form.sortControl);
+            UserPreferencesService.setPreference('opfab.feed.sort.type', form.sortControl);
+            this.lightCardsFeedFilterService.setSortBy(form.sortControl);
         });
     }
 
     private getInitialSort(): string {
         let sortedChoice = this.defaultSorting;
-        const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (sortedPreference)  sortedChoice = sortedPreference;
+        const sortedPreference = UserPreferencesService.getPreference('opfab.feed.sort.type');
+        if (sortedPreference) sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

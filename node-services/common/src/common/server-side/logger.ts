@@ -50,7 +50,7 @@ if (logConfiguration.logFile) {
 
 
 function prefixNewLinesToAvoidLogInjection(message:string):string {
-  return message.replace(/[\n\r]/g,'\n       ... ');
+  return message.replace(/[\n\r\b\v\f]/g,'\n       ... ');
 } 
 
 export default logger;

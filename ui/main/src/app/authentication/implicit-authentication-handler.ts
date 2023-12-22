@@ -9,21 +9,18 @@
 
 import {AuthConfig, EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {AuthenticatedUser} from './auth.model';
-import {ConfigService} from 'app/business/services/config.service';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
+
     constructor(
-        configService: ConfigService,
         httpClient: HttpClient,
-        logger: OpfabLoggerService,
-        private oauthService: OAuthService,
-        private currentUserStore: CurrentUserStore
+        private oauthService: OAuthService
+
     ) {
-        super(configService, httpClient, logger);
+        super(httpClient);
     }
 
     public async initializeAuthentication() {
@@ -73,7 +70,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
             const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate?.getTime().toString());
-            this.currentUserStore.setToken(token);
+            CurrentUserStore.setToken(token);
         }, 5000);
     }
 

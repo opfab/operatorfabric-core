@@ -11,15 +11,15 @@ import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpf
 
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from './rruleReminderService';
+import {Card} from '../model/card.model';
+import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderControl {
-
     private opfabServicesInterface: CardsReminderOpfabServicesInterface;
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
-
-    logger: any;
-
+    private remindDatabaseService: RemindDatabaseService;
+    private logger: any;
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -41,44 +41,41 @@ export default class CardsReminderControl {
         return this;
     }
 
-    public checkCardsReminder() {
-        this.reminderService.getCardsToRemindNow().then(reminders => 
-
-            reminders.forEach(card => {
-                this.opfabServicesInterface.sendCardReminder(card.uid).then( resp => {
-                    if (resp.isValid()) this.reminderService.setCardHasBeenRemind(card);
-                })
-            })
-        ).catch(error => {
-            this.logger.error("reminderService checkCardsReminder error " +error)
-        });
-
-        this.rruleReminderService.getCardsToRemindNow().then(rrulReminders =>
-            rrulReminders.forEach(card => {
-                this.opfabServicesInterface.sendCardReminder(card.uid).then( resp => {
-                        if (resp.isValid()) this.rruleReminderService.setCardHasBeenRemind(card);
-                    }
-                )
-            })
-        ).catch(error => {
-            this.logger.error("rruleReminderService checkCardsReminder error " +error)
-        });
+    public setRemindDatabaseService(remindDatabaseService: RemindDatabaseService): this {
+        this.remindDatabaseService = remindDatabaseService;
+        return this;
     }
 
-    public resetReminderDatabase() {
-        this.reminderService.clearReminders();
-        this.rruleReminderService.clearReminders();
+    public async checkCardsReminder(): Promise<boolean> {
+        const cards = await this.reminderService.getCardsToRemindNow();
+        for (const card of cards) {
+            this.logger.info(`ReminderControl - Send remind for card ${card.id} (uid=${card.uid})`);
+            await this.opfabServicesInterface.sendCardReminder(card.uid);
+        }
 
-        this.rruleReminderService.getAllCardsToRemind().then(cardsWithReminders => 
-
-            cardsWithReminders.forEach(card => {
-                this.reminderService.addCardReminder(card);
-                this.rruleReminderService.addCardReminder(card);
-            })
-        ).catch(error => {
-            this.logger.error("resetReminderDatabase error " +error)
-        });
-
+        const rruleCards = await this.rruleReminderService.getCardsToRemindNow();
+        for (const card of rruleCards) {
+            this.logger.info(`ReminderControl - Send remind for card ${card.id} (uid=${card.uid})`);
+            await this.opfabServicesInterface.sendCardReminder(card.uid);
+        }
+        return Promise.resolve(true);
     }
 
+    public async resetReminderDatabase(): Promise<boolean> {
+        try {
+            this.logger.debug('ReminderControl - Clear reminders');
+            await this.reminderService.clearReminders();
+            await this.rruleReminderService.clearReminders();
+            this.logger.debug('ReminderControl - Reminders cleared');
+            const cardsWithReminders: Card[] = await this.remindDatabaseService.getAllCardsWithReminder();
+            this.logger.debug('ReminderControl - Compute all reminders');
+            for (const card of cardsWithReminders) {
+                await this.reminderService.addCardReminder(card);
+                await this.rruleReminderService.addCardReminder(card);
+            }
+        } catch (error) {
+            this.logger.warn('resetReminder error ' + error);
+        }
+        return Promise.resolve(true);
+    }
 }

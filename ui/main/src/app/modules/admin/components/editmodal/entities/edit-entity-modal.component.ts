@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
@@ -24,7 +24,8 @@ import {Observable, of} from 'rxjs';
 @Component({
     selector: 'of-edit-entity-modal',
     templateUrl: './edit-entity-modal.component.html',
-    styleUrls: ['./edit-entity-modal.component.scss']
+    styleUrls: ['./edit-entity-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{
@@ -57,8 +58,7 @@ export class EditEntityModalComponent implements OnInit {
         private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
-        private entitiesService: EntitiesService,
-        private userService: UserService
+        private changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -93,8 +93,9 @@ export class EditEntityModalComponent implements OnInit {
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
 
-            this.userService.getAll().subscribe(users => {
+            UserService.getAll().subscribe(users => {
                 this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
+                this.changeDetector.markForCheck();
             });
         }
 
@@ -103,7 +104,7 @@ export class EditEntityModalComponent implements OnInit {
         });
 
         // Initialize value lists for Entities
-        this.entities = this.entitiesService.getEntities();
+        this.entities = EntitiesService.getEntities();
         this.entities.forEach((entity) => {
             const id = entity.id;
             if (!this.row || id !== this.row.id) {
@@ -136,7 +137,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
+        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length)
             return false;
         else return true;
     }
@@ -144,13 +145,13 @@ export class EditEntityModalComponent implements OnInit {
     uniqueEntityIdValidatorFn(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors> =>
         {
-            let err : ValidationErrors = {'uniqueEntityIdViolation': true};
+            const err : ValidationErrors = {'uniqueEntityIdViolation': true};
             return this.isUniqueEntityId(this.entityForm.controls["id"].value)? of(null) : of(err)
         }
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (entityName && EntitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
             return false;
         else return true;
     }
@@ -158,7 +159,7 @@ export class EditEntityModalComponent implements OnInit {
     uniqueEntityNameValidatorFn(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> =>
             {
-                let err : ValidationErrors = {'uniqueEntityNameViolation': true};
+                const err : ValidationErrors = {'uniqueEntityNameViolation': true};
                 return this.isUniqueEntityName(this.entityForm.controls["name"].value)? of(null) : of(err)
             }
     }

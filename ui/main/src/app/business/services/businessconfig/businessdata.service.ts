@@ -7,73 +7,68 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
+import {LogOption,LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
-import {CachedCrudService} from '../cached-crud-service';
+import {ErrorService} from '../error-service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class BusinessDataService extends CachedCrudService {
-    private _cachedResources = new Map<string, string>();
+export class BusinessDataService{
+    private static _cachedResources = new Map<string, string>();
+    private static businessDataServer: BusinessDataServer
 
-    constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
-        private businessDataServer: BusinessDataServer,
-        protected alertMessageService: AlertMessageService,
-        protected loggerService: OpfabLoggerService
-    ) {
-        super(loggerService, alertMessageService);
-        this.listenForBusinessDataUpdate();
+    public static setBusinessDataServer(businessDataServer: BusinessDataServer) {
+        BusinessDataService.businessDataServer = businessDataServer;
     }
 
-    listenForBusinessDataUpdate() {
-        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
-            this.loggerService.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
-            this.emptyCache();
+    public static init() {
+        BusinessDataService.listenForBusinessDataUpdate();
+    }
+
+    public static listenForBusinessDataUpdate() {
+        OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
+            logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+            BusinessDataService.emptyCache();
         });
     }
 
-    emptyCache() {
-        this._cachedResources.clear();
+    public static emptyCache() {
+        BusinessDataService._cachedResources.clear();
     }
 
-    public async getBusinessData(resourceName: string): Promise<any> {
-        if (this._cachedResources.has(resourceName)) {
-            return _.clone(this.getCachedValue(resourceName));
+    public static async getBusinessData(resourceName: string): Promise<any> {
+        if (BusinessDataService._cachedResources.has(resourceName)) {
+            return _.clone(BusinessDataService.getCachedValue(resourceName));
         }
-        const resource = await firstValueFrom(this.businessDataServer.getBusinessData(resourceName));
+        const resource = await firstValueFrom(BusinessDataService.businessDataServer.getBusinessData(resourceName));
         if (resource.status === ServerResponseStatus.OK) {
-            this.addResourceToCache(resourceName, resource.data);
+            BusinessDataService.addResourceToCache(resourceName, resource.data);
             return _.clone(resource.data);
         } else {
-            this.loggerService.info(`Could not find the resource. See : ${resource.statusMessage}`);
+            logger.info(`Could not find the resource. See : ${resource.statusMessage}`);
             return {};
         }
     }
 
-    getCachedValue(resourceName: string): string {
-        return this._cachedResources.get(resourceName);
+    public static getCachedValue(resourceName: string): string {
+        return BusinessDataService._cachedResources.get(resourceName);
     }
 
-    addResourceToCache(resourceName: string, resourceContent: string) {
-        this._cachedResources.set(resourceName, resourceContent);
+    public static addResourceToCache(resourceName: string, resourceContent: string) {
+        BusinessDataService._cachedResources.set(resourceName, resourceContent);
     }
 
-    getCachedValues(): any[] {
-        return Array.from(this._cachedResources.keys());
+    public static getCachedValues(): any[] {
+        return Array.from(BusinessDataService._cachedResources.keys());
     }
 
-    public getAll(): Observable<any[]> {
-        return this.queryAllBusinessData().pipe(
+    public static  getAll(): Observable<any[]> {
+        return BusinessDataService.queryAllBusinessData().pipe(
             map((data) => {
-                let businessDataList = [];
+                const businessDataList = [];
                 data.forEach((businessDataTitle) => {
                     businessDataList.push({name: businessDataTitle});
                 });
@@ -82,42 +77,42 @@ export class BusinessDataService extends CachedCrudService {
         );
     }
 
-    private queryAllBusinessData(): Observable<string[]> {
-        return this.businessDataServer.queryAllBusinessData().pipe(
+    private static queryAllBusinessData(): Observable<string[]> {
+        return BusinessDataService.businessDataServer.queryAllBusinessData().pipe(
             map((response) => {
                 if (response.status === ServerResponseStatus.OK) {
                     return response.data;
                 } else {
-                    this.handleServerResponseError(response);
+                    ErrorService.handleServerResponseError(response);
                     return [];
                 }
             })
         );
     }
 
-    update(data: any): Observable<any> {
+    public static  update(data: any): Observable<any> {
         return null;
     }
 
-    updateBusinessData(resourceName: string, data: FormData): Observable<any> {
-        return this.businessDataServer.updateBusinessData(resourceName, data).pipe(
+    public static  updateBusinessData(resourceName: string, data: FormData): Observable<any> {
+        return BusinessDataService.businessDataServer.updateBusinessData(resourceName, data).pipe(
             map((responseBusinessData) => {
                 if (responseBusinessData.status === ServerResponseStatus.OK) {
                     return responseBusinessData.data;
                 } else {
-                    this.handleServerResponseError(responseBusinessData);
+                    ErrorService.handleServerResponseError(responseBusinessData);
                     return null;
                 }
             })
         );
     }
 
-    public deleteById(id: string) {
-        return this.businessDataServer.deleteById(id).pipe(
+    public static deleteById(id: string) {
+        return BusinessDataService.businessDataServer.deleteById(id).pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    this.emptyCache();
-                    this.handleServerResponseError(response);
+                    BusinessDataService.emptyCache();
+                    ErrorService.handleServerResponseError(response);
                 }
             })
         );

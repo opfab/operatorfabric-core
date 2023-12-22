@@ -8,41 +8,46 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {GroupsService} from 'app/business/services/users/groups.service';
-import {UserService} from 'app/business/services/users/user.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
-import {AdminProcessesService} from 'app/business/services/businessconfig/adminprocess.service';
-import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {CrudProcessesService} from 'app/business/services/admin/crud-processes-service';
+import {CrudUserService} from 'app/business/services/admin/crud-user.service';
+import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
+import {CrudGroupsService} from 'app/business/services/admin/crud-groups.service';
+import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters.service';
+import {CrudBusinessDataService} from 'app/business/services/admin/crud-business-data.service';
+import {CrudSupervisedEntitiesService} from 'app/business/services/admin/crud-supervised-entities-service';
 
-/** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
- * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
- * This is normally doable by defining the providers for Angular's DI in the correct place, but then I couldn't get Angular to provide the
- * appropriate subclass of `CrudService` depending on the context (I tried making it generic, to no avail).
- * */
 
 @Injectable()
 export class SharingService implements OnDestroy {
     private readonly _paginationPageSize$: ReplaySubject<number>;
     private unsubscribe$: Subject<void> = new Subject<void>();
+    private crudUserService: CrudUserService;
+    private crudEntitiesService: CrudEntitiesService;
+    private crudGroupsService: CrudGroupsService;
+    private crudPerimetersService: CrudPerimetersService;
+    private crudProcessesService: CrudProcessesService;
+    private crudBusinessDataService: CrudBusinessDataService;
+    private supervisedEntitiesService: CrudSupervisedEntitiesService;
 
     constructor(
-        private entitiesService: EntitiesService,
-        private groupsService: GroupsService,
-        private userService: UserService,
-        private perimetersService: PerimetersService,
-        private businessDataService: BusinessDataService,
-        private adminprocessesService: AdminProcessesService
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
+        this.crudUserService = new CrudUserService();
+        this.crudEntitiesService = new CrudEntitiesService();
+        this.crudGroupsService = new CrudGroupsService();
+        this.crudPerimetersService = new CrudPerimetersService();
+        this.crudProcessesService = new CrudProcessesService();
+        this.crudBusinessDataService = new CrudBusinessDataService();
+        this.supervisedEntitiesService = new CrudSupervisedEntitiesService();
+
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
-        this.perimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
+        PerimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
     }
 
     /** This is a factory method returning the appropriate `CrudService` depending on the type passed as parameter.
@@ -50,38 +55,24 @@ export class SharingService implements OnDestroy {
     public resolveCrudServiceDependingOnType(adminItemType: AdminItemType): CrudService {
         switch (adminItemType) {
             case AdminItemType.ENTITY:
-                return this.entitiesService;
+                return this.crudEntitiesService;
             case AdminItemType.GROUP:
-                return this.groupsService;
+                return this.crudGroupsService;
             case AdminItemType.USER:
-                return this.userService;
+                return this.crudUserService;
             case AdminItemType.PERIMETER:
-                return this.perimetersService;
+                return this.crudPerimetersService;
             case AdminItemType.PROCESS:
-                return this.adminprocessesService;
+                return this.crudProcessesService;
             case AdminItemType.BUSINESSDATA:
-                return this.businessDataService;
+                return this.crudBusinessDataService;
+            case AdminItemType.SUPERVISED_ENTITY:
+                return this.supervisedEntitiesService;
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }
     }
 
-    /** This is a factory method returning the appropriate `CachedCrudService` depending on the type passed as parameter.
-     * */
-    public resolveCachedCrudServiceDependingOnType(adminItemType: AdminItemType): CachedCrudService {
-        switch (adminItemType) {
-            case AdminItemType.ENTITY:
-                return this.entitiesService;
-            case AdminItemType.GROUP:
-                return this.groupsService;
-            case AdminItemType.PERIMETER:
-                return this.perimetersService;
-            case AdminItemType.PROCESS:
-                return this.adminprocessesService;
-            default:
-                throw Error('No CachedCrudService associated with ' + adminItemType);
-        }
-    }
 
     get paginationPageSize$(): Observable<number> {
         return this._paginationPageSize$;
@@ -100,11 +91,13 @@ export class SharingService implements OnDestroy {
 /** This enum defines the type of the data managed by an admin table or renderer. When adding a type to this list, please make sure
  * to also add the corresponding handling to the methods above.
  * */
+
 export enum AdminItemType {
     USER = 'user',
     ENTITY = 'entity',
     GROUP = 'group',
     PERIMETER = 'perimeter',
     PROCESS = 'process',
-    BUSINESSDATA = 'businessData'
+    BUSINESSDATA = 'businessData',
+    SUPERVISED_ENTITY = "supervisedEntity"
 }

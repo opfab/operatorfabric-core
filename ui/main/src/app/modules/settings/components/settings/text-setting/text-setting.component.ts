@@ -10,10 +10,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-text-setting',
@@ -25,12 +22,9 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
     @Input() text: string;
 
     constructor(
-        protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected currentUserStore: CurrentUserStore,
-        protected logger: OpfabLoggerService
+        protected settingsService: SettingsService
     ) {
-        super(configService, settingsService,currentUserStore,logger);
+        super(settingsService);
     }
 
     initFormGroup() {

@@ -6,21 +6,20 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+import SupervisorDatabaseService from '../server-side/supervisorDatabaseService';
 import ConfigDTO from './configDTO';
 const fs = require('fs');
 
-
-
 export default class ConfigService {
 
+    supervisorDatabaseService: SupervisorDatabaseService;
     supervisorConfig: ConfigDTO;
     configFilePath: string | null;
     logger: any;
 
-    constructor(defaulConfig: any, configFilePath: string | null, logger: any) {
+    constructor(supervisorDatabaseService: SupervisorDatabaseService, defaulConfig: any, configFilePath: string | null, logger: any) {
 
-
-
+        this.supervisorDatabaseService = supervisorDatabaseService;
         this.configFilePath = configFilePath;
         this.logger = logger;
 
@@ -46,6 +45,55 @@ export default class ConfigService {
             this.logger.error(err)
           }
 
+    }
+
+    public async synchronizeWithMongoDb() {
+      try {
+          const entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
+          this.logger.debug("Supervised entities from mongodb " + JSON.stringify(entitiesToSupervise));
+
+          if (entitiesToSupervise.length > 0) {
+              this.supervisorConfig.entitiesToSupervise = entitiesToSupervise;
+              this.save();
+          } else {
+            await this.initMongoDbFromConfigFile();
+            // Need to reset with values from mongo to be consistent with objects type (objects from mongo contain _id field)
+            this.supervisorConfig.entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
+          }
+
+        } catch(error) {
+          this.logger.error("Error synchronizing with database " + error);
+        }
+        return this.supervisorConfig;
+    }
+
+    private async initMongoDbFromConfigFile() {
+      for (const entityToSupervise of this.supervisorConfig.entitiesToSupervise) {
+        this.logger.debug("Add supervised entity " + JSON.stringify(entityToSupervise));
+        await this.supervisorDatabaseService.saveSupervisedEntity(entityToSupervise);
+      }
+    }
+    
+
+    public async saveSupervisedEntity(supervisedEntity: any) {
+      await this.supervisorDatabaseService.saveSupervisedEntity(supervisedEntity);
+
+      const index = this.supervisorConfig.entitiesToSupervise.findIndex(entity => entity.entityId === supervisedEntity.entityId);
+      if (index >= 0) {
+        this.supervisorConfig.entitiesToSupervise.splice(index);
+      }
+      this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
+      this.save();
+    }
+
+    public async deleteSupervisedEntity(entityId: any) {
+        await this.supervisorDatabaseService.deleteSupervisedEntity(entityId);
+
+        const index = this.supervisorConfig.entitiesToSupervise.findIndex(entity => entity.entityId === entityId.entityId);
+        if (index >= 0) {
+            this.supervisorConfig.entitiesToSupervise.splice(index);
+        }
+        this.save();
     }
 
     private loadFromFile() {

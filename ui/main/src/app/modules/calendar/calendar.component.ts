@@ -18,7 +18,6 @@ import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -27,6 +26,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-calendar',
@@ -36,13 +36,10 @@ import {SelectedCardService} from 'app/business/services/card/selectedCard.servi
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private modalService: NgbModal,
-        processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
-        private configService: ConfigService,
-        private selectedCardService: SelectedCardService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
     }
@@ -109,7 +106,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private setLocale() {
-        this.configService.getConfigValueAsObservable('settings.locale')
+        ConfigService.getConfigValueAsObservable('settings.locale')
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((locale) => this.calendarComponent.getApi().setOption('locale', locale));
     }
@@ -231,7 +228,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info.event.id);
+        SelectedCardService.setSelectedCardId(info.event.id);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -240,12 +237,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 
     datesRangeChange(dateInfo) {
-        this.filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: dateInfo.view.activeStart.getTime(),
             end: dateInfo.view.activeEnd.getTime()
         });

@@ -25,7 +25,7 @@ import {
 import {UserService} from 'app/business/services/users/user.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {AcknowledgeService} from "../acknowledge.service";
 
@@ -48,6 +48,7 @@ import {AcknowledgeService} from "../acknowledge.service";
     providedIn: 'root'
 })
 export class LightCardsStoreService {
+
     private lightCards = new Map();
     private childCards = new Map();
     private lightCardsEvents = new Subject<Map<any, any>>();
@@ -67,11 +68,6 @@ export class LightCardsStoreService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
 
     constructor(
-        private userService: UserService,
-        private opfabEventStreamService: OpfabEventStreamService,
-        private selectedCardService: SelectedCardService,
-        private logger: OpfabLoggerService,
-        private acknowledgeService: AcknowledgeService
     ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
@@ -147,11 +143,11 @@ export class LightCardsStoreService {
     }
 
     initStore() {
-        this.opfabEventStreamService.getCardOperationStream().subscribe({
+        OpfabEventStreamService.getCardOperationStream().subscribe({
             next: (operation) => {
                 switch (operation.type) {
                     case CardOperationType.ADD:
-                        this.logger.info(
+                        logger.info(
                             'LightCardStore - Receive card to add id=' +
                                 operation.card.id +
                                 ' with date=' +
@@ -159,18 +155,18 @@ export class LightCardsStoreService {
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.addOrUpdateLightCard(operation.card);
-                        if (operation.card.id === this.selectedCardService.getSelectedCardId())
-                            this.selectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
+                        if (operation.card.id === SelectedCardService.getSelectedCardId())
+                            SelectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
                         break;
                     case CardOperationType.DELETE:
-                        this.logger.info(
+                        logger.info(
                             `LightCardStore - Receive card to delete id=` + operation.cardId,
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.removeLightCard(operation.cardId);
                         break;
                     case CardOperationType.ACK:
-                        this.logger.info(
+                        logger.info(
                             'LightCardStore - Receive ack on card uid=' +
                                 operation.cardUid +
                                 ', id=' +
@@ -184,7 +180,7 @@ export class LightCardsStoreService {
                         });
                         break;
                     default:
-                        this.logger.info(
+                        logger.info(
                             `LightCardStore - Unknown operation ` + operation.type + ` for card id=` + operation.cardId,
                             LogOption.LOCAL_AND_REMOTE
                         );
@@ -222,7 +218,7 @@ export class LightCardsStoreService {
         } else {
             const oldCardVersion = this.lightCards.get(card.id);
             card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(oldCardVersion, card);
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.addOrUpdateParentLightCard(card);
         }
     }
@@ -239,7 +235,7 @@ export class LightCardsStoreService {
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
-        return this.userService
+        return UserService
             .getCurrentUserWithPerimeters()
             .userData.entities.some((entity) => entity === childCard.publisher);
     }
@@ -276,8 +272,8 @@ export class LightCardsStoreService {
     }
 
     private closeCardIfOpen(cardId) {
-        if (cardId === this.selectedCardService.getSelectedCardId()) {
-            this.selectedCardService.setCardDeleted(cardId);
+        if (cardId === SelectedCardService.getSelectedCardId()) {
+            SelectedCardService.setCardDeleted(cardId);
         }
     }
 
@@ -301,7 +297,7 @@ export class LightCardsStoreService {
     }
 
     private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
-        const userEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         return children.filter((c) => userEntities.includes(c.publisher));
     }
 
@@ -312,7 +308,7 @@ export class LightCardsStoreService {
             card.entitiesAcks = card.entitiesAcks
                 ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -351,7 +347,7 @@ export class LightCardsStoreService {
     }
 
     public removeAllLightCards() {
-        this.opfabEventStreamService.resetAlreadyLoadingPeriod();
+        OpfabEventStreamService.resetAlreadyLoadingPeriod();
         this.lightCards.clear();
         this.lightCardsEvents.next(this.lightCards);
     }
@@ -370,7 +366,7 @@ export class LightCardsStoreService {
             card.hasBeenAcknowledged = ack;
 
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -9,9 +9,7 @@
 
 = Monitoring
 
-NOTE: This feature is experimental 
-
-The monitoring screen is a realtime view of processes based on current cards received by the user (i.e the last version of cards visible by the user). It can be seen as an another view of the feed.
+The monitoring screen is a realtime view of processes based on current cards received by the user (i.e. the last version of cards visible by the user). It can be seen as another view of the feed.
 
 Not all the cards are visible, it depends on the business process they are part of. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the config.json file of its process.
 
@@ -24,10 +22,69 @@ In opfab git repository, you can find in directory https://github.com/opfab/oper
   
   - a script to load a monitoring configuration `loadMonitoringConfig.sh`
 
-  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to need to respond to a card question in process messageOrQuestionExample )
+  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to respond to a card question in process messageOrQuestionExample )
 
 
 A description of the structure of the configuration can be found in 
 ifdef::single-page-doc[link:../api/businessconfig/[the businessconfig api documentation]]
 ifndef::single-page-doc[link:/documentation/current/api/businessconfig/[the businessconfig api documentation]]
+
+
+= Process monitoring
+
+NOTE: This feature is experimental
+
+The process monitoring screen has the following similarities with the monitoring screen :
+
+- it is a realtime view of processes based on current cards received by the user
+(i.e. the last version of cards visible by the user)
+- not all the cards are visible, it depends on the business process they are part of. For a card to be visible on
+this screen, the parameter `uiVisibility.processMonitoring` must be set to `true` in the `config.json` file of its
+process.
+
+This screen provides the following features :
+
+- the columns displayed on this screen can be configured. To do that, you have to define the `processMonitoring` field
+in the `web-ui.json` configuration file. This object is a list of the fields you want to see in the array.
+- depending on the permissions of the groups to which the user is attached, he can also see the cards he is not the
+recipient of.
+
+Here is an example of processMonitoring configuration :
+```
+ "processMonitoring": [
+    {
+      "field": "startDate",
+      "type": "date",
+      "colName": "Start Date",
+      "size": "200"
+    },
+    {
+      "field": "titleTranslated",
+      "colName": "Title",
+      "size": "250"
+    },
+    {
+      "field": "data.message",
+      "colName": "My field",
+      "size": "700"
+    },
+    {
+      "field": "summaryTranslated",
+      "colName": "Summary",
+      "size": "250"
+    },
+    {
+      "field": "data.error",
+      "colName": "My second field",
+      "size": "100"
+    }
+  ]
+```
+
+Here is the description of the fields :
+
+- "field" : the name of the field in the card (or in the database) you want to display
+- "type" : if you want to display a date/time field, you must set this field to "date" for field formatting
+- "colName" : name of the column on the UI
+- "size" : size of the column on the UI, proportionally to each other
 

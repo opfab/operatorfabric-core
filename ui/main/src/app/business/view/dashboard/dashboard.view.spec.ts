@@ -8,14 +8,10 @@
  */
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
 import {UserService} from 'app/business/services/users/user.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Process, State} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -23,59 +19,36 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {getOneRandomLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {AcknowledgeService} from "../../services/acknowledge.service";
-import {UserPermissionsService} from "../../services/user-permissions.service";
-import {AlertMessageService} from "../../services/alert-message.service";
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
-    let userService: UserService;
-    let opfabLoggerService: OpfabLoggerService;
-    let processesService: ProcessesService;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
-    let configServerMock: ConfigServerMock;
     let lightCardsStoreService: LightCardsStoreService;
-    let filterService: FilterService;
+    let lightCardsFeedFilterService: LightCardsFeedFilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
-    let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
-        configServerMock = new ConfigServerMock();
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
-        );
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
-        processesService = new ProcessesService(null, processServerMock, configServerMock);
-        filterService = new FilterService(opfabLoggerService);
+        ProcessesService.setProcessServer(processServerMock);
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
-        const opfabEventStreamService = new OpfabEventStreamService(
-            opfabEventStreamServerMock,
-            null,
-            opfabLoggerService
-        );
 
-        const entitiesService = new EntitiesService(opfabLoggerService, null, new AlertMessageService());
-        const userPermissionService = new UserPermissionsService(entitiesService, processesService);
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
+        OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
 
-        lightCardsStoreService = new LightCardsStoreService(
-            userService,
-            opfabEventStreamService,
-            new SelectedCardService(),
-            opfabLoggerService,
-            acknowledgeService
+        lightCardsStoreService = new LightCardsStoreService();
+        lightCardsFeedFilterService = new LightCardsFeedFilterService(
+            lightCardsStoreService,
+            new GroupedCardsService()
         );
         lightCardsStoreService.initStore();
     });
@@ -106,8 +79,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcessesWithLatestVersion().subscribe();
-        await processesService.loadAllProcessesWithAllVersions().subscribe();
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
@@ -115,36 +88,36 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcessesWithLatestVersion().subscribe();
-        await processesService.loadAllProcessesWithAllVersions().subscribe();
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes).toHaveSize(0);
     });
 
     it('GIVEN a process list and user has no perimeters WHEN get dashboard THEN dashboard is empty', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(0);
     });
 
     it('GIVEN a process list WHEN get dashboard THEN dashboard contains processes', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
@@ -156,10 +129,10 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -175,7 +148,7 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
@@ -185,10 +158,10 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -198,7 +171,7 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN a process list and an action card in state1 WHEN get dashboard THEN dashboard contains 1 card in process 1 with 1 action circle ', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
@@ -210,10 +183,10 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -242,7 +215,7 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN a process list and a card in state1 WHEN add some cards of every severity THEN dashboard contains 4 circles in state 1', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
@@ -254,9 +227,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -289,9 +262,9 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(actionCard);
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
-        let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
+        const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(4);
 
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
@@ -314,7 +287,7 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN an acknowledged card WHEN cards get sent THEN dashboard does not contain the card', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         computedPerimeters.push(computedPerimeter1);
@@ -322,9 +295,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -333,16 +306,16 @@ describe('Dashboard', () => {
             hasBeenAcknowledged: true
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
-        let result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
         expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
     });
 
     it('GIVEN a card today WHEN date filter is set to the past THEN dashboard does not contain the card', async () => {
-        initProcesses();
+        await initProcesses();
         const computedPerimeters = new Array();
         const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
         computedPerimeters.push(computedPerimeter1);
@@ -350,9 +323,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -360,7 +333,7 @@ describe('Dashboard', () => {
             severity: Severity.INFORMATION
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
         let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(1);
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
@@ -368,7 +341,7 @@ describe('Dashboard', () => {
             Utilities.getSeverityColor(Severity.INFORMATION)
         );
 
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
 
         result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);

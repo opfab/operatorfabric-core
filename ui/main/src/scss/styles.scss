@@ -675,3 +675,59 @@ tag-input {
     background: var(--opfab-navbar-color-hover);
     mask: url(../assets/images/icons/help.svg);
 }
+
+// QUILLJS STYLE
+.ql-snow .ql-editor {
+    min-height: 100px;
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--opfab-text-color) !important;
+}
+
+.ql-snow .ql-picker {
+    color: var(--opfab-text-color) !important;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    z-index: 100 !important;
+}
+
+.ql-snow .ql-tooltip {
+    
+    z-index: 100 !important;
+}
+
+.ql-container.ql-snow {
+    border: 0px !important;
+}
+
+.ql-toolbar.ql-snow {
+    border: 1px solid var(--opfab-form-border-color) !important;
+    border-radius: 3px;
+}
+
+// END QUILLJS STYLE
+
+// QUILLJS TRANSLATION: quill.js labels are defined inside css.
+// Need to use variables to handle internationalization
+.ql-snow .ql-tooltip::before {
+    content: var(--opfab-richtext-link-visit) !important;
+}
+
+.ql-snow .ql-tooltip[data-mode=link]::before {
+    content: var(--opfab-richtext-link-enter) !important;
+}
+
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    content: var(--opfab-richtext-link-save) !important;
+}
+
+.ql-snow .ql-tooltip a.ql-action::after {
+    content: var(--opfab-richtext-link-edit) !important;
+}
+
+.ql-snow .ql-tooltip a.ql-remove::before {
+    content: var(--opfab-richtext-link-remove) !important;
+}
+// END QUILLJS TRANSLATION

@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {EditUserModalComponent} from '../editmodal/users/edit-user-modal.component';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
@@ -17,7 +17,8 @@ import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 @Component({
     templateUrl: 'admin-table.directive.html',
     selector: 'of-users-table',
-    styleUrls: ['admin-table.directive.scss']
+    styleUrls: ['admin-table.directive.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.USER;

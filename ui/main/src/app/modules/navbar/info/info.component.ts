@@ -28,38 +28,34 @@ export class InfoComponent implements OnInit {
     timeToDisplay: string;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
-        private userService: UserService,
-        private entitiesService: EntitiesService,
-        private configService: ConfigService,
         private applicationEventsService: ApplicationEventsService
     ) {}
 
     ngOnInit() {
         this.updateTime();
-        const firstName = this.userService.getCurrentUserWithPerimeters().userData.firstName;
-        const lastName = this.userService.getCurrentUserWithPerimeters().userData.lastName;
+        const firstName = UserService.getCurrentUserWithPerimeters().userData.firstName;
+        const lastName = UserService.getCurrentUserWithPerimeters().userData.lastName;
         if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
-        else this.userName = this.userService.getCurrentUserWithPerimeters().userData.login;
+        else this.userName = UserService.getCurrentUserWithPerimeters().userData.login;
 
-        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
+        if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
             this.applicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
         }
     }
 
     updateTime(): void {
-        this.timeToDisplay = this.dateTimeFormatter.getFormattedTimeFromEpochDate(new Date().valueOf());
+        this.timeToDisplay = DateTimeFormatterService.getFormattedTimeFromEpochDate(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
         }, 1000);
     }
 
     setUserEntitiesToDisplay() {
-        const user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        const user_entities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (user_entities) {
             this.userEntities = [];
-            const entities = this.entitiesService.getEntitiesFromIds(user_entities);
+            const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
                     // this avoids to display entities used only for grouping

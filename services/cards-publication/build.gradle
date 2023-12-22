@@ -3,6 +3,14 @@ dependencies {
     swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
+    implementation misc.commonsLang
+
+//Transitive dependencies udpate needed for security reasons 
+    implementation misc.guava
+    implementation misc.snappy
+    implementation cloud.avro
+//End transitive dependencies
+
     implementation spring.securityOauthResource, spring.securityOauthJose
 
     compileOnly boot.annotationConfiguration

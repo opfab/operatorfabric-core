@@ -48,12 +48,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     selectedCardId: string;
 
     constructor(
-        private processesService: ProcessesService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private entitiesService: EntitiesService,
-        private selectedCardService: SelectedCardService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             if (process.uiVisibility?.monitoring) {
                 this.mapOfProcesses.set(id, process);
@@ -67,9 +64,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             this.responseFilter$.asObservable(),
             this.lightCardsStoreService.getLightCards()
         ]).pipe(
-            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
+            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
-            // the filters are set   by the monitoring filter and by the time line
+            // the filters are set   by the monitoring filter and by the timeline
             // so it generates two events , we need to wait until every filter is set
             filter((results) => this.areFiltersCorrectlySet(results[0])),
             map((results) => {
@@ -93,9 +90,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, false).size > 0;
+        this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
 
-        this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
@@ -126,7 +123,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     private getEmitter(card: LightCard): string {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
-        const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+        const sender = isThirdPartyPublisher ? card.publisher : EntitiesService.getEntityName(card.publisher);
 
         let representative = '';
 
@@ -134,7 +131,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
-                : this.entitiesService.getEntityName(card.representative);
+                : EntitiesService.getEntityName(card.representative);
         }
         return !representative.length ? sender : sender + ' (' + representative + ')';
     }
@@ -150,19 +147,19 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 card.entitiesRequiredToRespond
             );
 
-        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
+        const entitiesAllowedOrRequiredToRespond = EntitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
 
-        return this.entitiesService
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         if (!card.entitiesRequiredToRespond) return [];
-        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
-        return this.entitiesService
+        const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
             .map((entity) => entity.id);
     }

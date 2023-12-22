@@ -8,7 +8,7 @@
  */
 
 import {Process} from '@ofModel/processes.model';
-import {Observable, Subject} from 'rxjs';
+import {Observable, catchError, forkJoin, of, take} from 'rxjs';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import { Severity } from '@ofModel/light-card.model';
@@ -63,33 +63,17 @@ export class Utilities {
 
     // Returns an observable that provides an array. Each item of the array represents either first value of Observable, or its error
     public static subscribeAndWaitForAllObservablesToEmitAnEvent(observables: Observable<any>[]): Observable<any[]> {
-        const final = new Subject<any[]>();
-        const flags = new Array(observables.length);
-        const result = new Array(observables.length);
-        let numberOfWaitedObservables = observables.length;
-        for (let i = 0; i < observables.length; i++) {
-            flags[i] = false;
-            observables[i].subscribe({
-                next: (res) => {
-                    if (flags[i] === false) {
-                        flags[i] = true;
-                        result[i] = res;
-                        numberOfWaitedObservables--;
-                        if (numberOfWaitedObservables < 1) final.next(result);
-                    }
-                },
-                error: (error) => {
-                    console.log("Error in observable = ", error);
-                    if (flags[i] === false) {
-                        flags[i] = true;
-                        result[i] = error;
-                        numberOfWaitedObservables--;
-                        if (numberOfWaitedObservables < 1) final.next(result);
-                    }
-                }
-            });
-        }
-        return final.asObservable();
+        return forkJoin(
+            observables.map((observable, i) =>
+                observable.pipe(
+                    take(1),
+                    catchError(error => {
+                        console.log("Error in observable = ", error);
+                        return of(error);
+                    })
+                )
+            )
+        );
     }
 
     public static convertNgbDateTimeToEpochDate(ngbDateTime: DateTimeNgb): number {

@@ -1,3 +1,13 @@
+/* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 package org.opfab.cards.publication.kafka.integration;
 
 import org.junit.jupiter.api.Test;
@@ -10,7 +20,6 @@ import org.opfab.cards.publication.kafka.card.CardCommandFactory;
 import org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer;
 import org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer;
 import org.opfab.cards.publication.model.*;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +29,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = "test")
 
 class KafkaSerializeDeserializeShould {
 

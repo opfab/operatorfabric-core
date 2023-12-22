@@ -39,7 +39,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -63,7 +62,6 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { UnitTestApplication.class })
-@ActiveProfiles(profiles = { "native", "test" })
 @Import({ RestTemplate.class })
 @Slf4j
 class CardProcessServiceShould {

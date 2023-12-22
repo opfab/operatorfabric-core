@@ -216,7 +216,7 @@ If you want to keep the old port 8080, you can change it via the server.port par
 
 == RabbitMQ
 
-In previous versions, it was necessary to start a RabbitMQ container referencing "rabbitmq:3-management." We now highly recommend that you update your configuration to utilize "lfeoperatorfabric/of-rabbitmq:4.0.0" instead. This adjustment ensures that you have a qualified version that is fully compatible with OpFab.
+In previous versions, it was necessary to start a RabbitMQ container referencing "rabbitmq:3-management." We now highly recommend that you update your configuration to utilize "lfeoperatorfabric/of-rabbitmq:4.0.0.RELEASE" instead. This adjustment ensures that you have a qualified version that is fully compatible with OpFab.
 
 When migrating your production environment you may be unable to start rabbitMQ with the following error in log :
 
@@ -310,7 +310,7 @@ concerned parameters (old name -> new name):
 - delayForDeleteExpiredCardsScheduling -> operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling
 - checkIfUserIsAlreadyConnected -> operatorfabric.checkIfUserIsAlreadyConnected
 - spring.data.mongodb.uri -->  operatorfabric.mongodb.uri
-- spring.rabbit.* --> operatorfabric.rabbit.*
+- spring.rabbitmq.* --> operatorfabric.rabbitmq.*
 - spring.security.oauth2.resourceserver.jwt.jwk-set-uri -->  operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri
 
 == Mongodb uri

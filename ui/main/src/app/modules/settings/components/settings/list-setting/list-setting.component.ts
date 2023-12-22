@@ -9,12 +9,9 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
-import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-list-setting',
@@ -28,13 +25,9 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
 
 
     constructor(
-        protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected currentUserStore: CurrentUserStore,
-        protected logger: OpfabLoggerService
-        
+        protected settingsService: SettingsService
     ) {
-        super(configService, settingsService,currentUserStore,logger);
+        super(settingsService);
     }
 
     ngOnInit() {
@@ -49,6 +42,7 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
         if (this.values) {
             for (const v of this.values) this.optionList.push({value: v, label: v});
         }
+        super.ignoreFirstUpdate = true;
         super.ngOnInit();
     }
 

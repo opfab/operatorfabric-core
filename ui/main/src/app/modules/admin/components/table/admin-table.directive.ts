@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -26,13 +26,14 @@ import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {saveAs} from 'file-saver-es';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 
 
 export class ActionColumn {
@@ -95,12 +96,9 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected confirmationDialogService: ConfirmationDialogService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
-        protected processesService: ProcessesService,
-        protected groupsService: GroupsService,
-        protected entitiesService: EntitiesService,
-        protected businessDataService: BusinessDataService
+        private changeDetector: ChangeDetectorRef
     ) {
-        this.processesDefinition = this.processesService.getAllProcesses();
+        this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this
@@ -112,7 +110,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
-                idCellRenderer: IdCellRendererComponent
+                idCellRenderer: IdCellRendererComponent,
+                entityNameCellRenderer: EntityNameCellRendererComponent
             },
             domLayout: 'autoHeight',
             rowHeight: 50,
@@ -174,8 +173,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         this.dataHandlingService.paginationPageSize$.pipe(takeUntil(this.unsubscribe$)).subscribe((pageSize) => {
             this.gridApi.paginationSetPageSize(pageSize);
         });
-        this.groupsDefinition = this.groupsService.getGroups();
-        this.entitiesDefinition = this.entitiesService.getEntities();
+        this.groupsDefinition = GroupsService.getGroups();
+        this.entitiesDefinition = EntitiesService.getEntities();
         this.refreshData();
     }
 
@@ -272,10 +271,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             this.openDeleteConfirmationDialog(params.data);
         }
         if (columnId === 'download') {
-            let fileName = params.data[this.idField];
-            this.businessDataService.getBusinessData(fileName).then(
+            const fileName = params.data[this.idField];
+            BusinessDataService.getBusinessData(fileName).then(
                 resource =>{
-                    let fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                    const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
                         type: 'application/json;charset=UTF-8'
                     });
                     saveAs(fileToSave, fileName);
@@ -344,7 +343,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     uploadFile(file: File, resourceName?: string) {
-        let read = new FileReader();
+        const read = new FileReader();
         const formData = new FormData();
         formData.append("file", file);
         read.readAsBinaryString(file);
@@ -355,11 +354,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         } 
 
         read.onload = (e) => {
-            this.businessDataService.updateBusinessData(fileName, formData).subscribe( () => {
+            BusinessDataService.updateBusinessData(fileName, formData).subscribe( () => {
                 this.refreshData();
             });
         }
-        
+
     }
 
     refreshData() {
@@ -370,6 +369,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             // previous page
             if (this.gridApi.paginationGetTotalPages() < this.page) this.page--;
             this.gridApi.paginationGoToPage(this.page - 1);
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -406,7 +406,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                                 ? this.translateService.instant(
                                       this.i18NPrefix + this.tableType + '.' + line.data[field.name]
                                   )
-                                : line.data[field.name];
+                                : this.getNameFromId(line.data[field.name], field.cellRendererName);
                 });
                 exportData.push(item);
             }
@@ -437,10 +437,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     private getNameFromId(id: string, renderer: string): string {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
-            if (cellRenderer.itemType)
-                return this.dataHandlingService
-                    .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
-                    .getNameFromId(id);
+            if (cellRenderer.itemType) {
+                     const found = this.dataHandlingService
+                    .resolveCrudServiceDependingOnType(cellRenderer.itemType)
+                    .getCachedValues().find(e => e.id === id);
+                    return found?.name ? found.name : id;
+            }
         }
         return id;
     }

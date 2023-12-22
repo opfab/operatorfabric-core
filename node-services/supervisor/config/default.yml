@@ -1,4 +1,12 @@
 operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+  mongodb:
+    database: "operator-fabric"
+    uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"
   servicesUrls:
     authToken: "http://127.0.0.1:2002/auth/token"
     users: "http://127.0.0.1:2103"
@@ -15,10 +23,10 @@ operatorfabric:
     defaultConfig:
       considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
       entitiesToSupervise:
-      - id: ENTITY1_FR
+      - entityId: ENTITY1_FR
         supervisors:
         - ENTITY2_FR
-      - id: ENTITY2_FR
+      - entityId: ENTITY2_FR
         supervisors:
         - ENTITY1_FR
       disconnectedCardTemplate:

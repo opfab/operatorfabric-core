@@ -20,29 +20,28 @@ import {CardForPublishing, Card, CardData, CardCreationReportData} from "@ofMode
 import {FieldToTranslate} from "@ofModel/field-to-translate.model";
 import {LightCard} from "@ofModel/light-card.model";
 import {Page} from "@ofModel/page.model";
-import {LightCardsStoreService} from "app/business/services/lightcards/lightcards-store.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularCardServer extends AngularServer implements CardServer {
-    cardsUrl: string;
-    archivesUrl: string;
-    cardsPubUrl: string;
-    userCardReadUrl: string;
-    userCardUrl: string;
+    private cardConsultationUrl: string;
+    private archivesUrl: string;
+    private cardPublicationUrl: string;
+    private userCardReadUrl: string;
+    private userCardUrl: string;
 
-    constructor(private httpClient: HttpClient, private lightCardsStoreService: LightCardsStoreService) {
+    constructor(private httpClient: HttpClient) {
         super();
-        this.cardsUrl = `${environment.url}/cards/cards`;
+        this.cardConsultationUrl = `${environment.url}/cards/cards`; 
         this.archivesUrl = `${environment.url}/cards/archives`;
-        this.cardsPubUrl = `${environment.url}/cardspub/cards`;
+        this.cardPublicationUrl = `${environment.url}/cardspub/cards`; 
         this.userCardReadUrl = `${environment.url}/cardspub/cards/userCardRead`;
         this.userCardUrl = `${environment.url}/cardspub/cards/userCard`;
     }
 
     loadCard(id: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`));
+        return this.processHttpResponse(this.httpClient.get<CardData>(`${this.cardConsultationUrl}/${id}`));
     }
 
     loadArchivedCard(id: string): Observable<ServerResponse<any>> {
@@ -53,8 +52,12 @@ export class AngularCardServer extends AngularServer implements CardServer {
         return this.processHttpResponse(this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}`, filter));
     }
 
+    fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.post<Page<any>>(`${this.cardConsultationUrl}`, filter));
+    }
+
     postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
-        return this.processHttpResponse(this.httpClient.post<CardCreationReportData>(`${this.cardsPubUrl}/userCard`, card));
+        return this.processHttpResponse(this.httpClient.post<CardCreationReportData>(`${this.cardPublicationUrl}/userCard`, card));
     }
 
     deleteCard(card: Card): Observable<ServerResponse<any>> {
@@ -70,9 +73,13 @@ export class AngularCardServer extends AngularServer implements CardServer {
     }
 
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post<FieldToTranslate>(`${this.cardsPubUrl}/translateCardField`, fieldToTranslate, {
+        return this.processHttpResponse(this.httpClient.post<FieldToTranslate>(`${this.cardPublicationUrl}/translateCardField`, fieldToTranslate, {
             observe: 'response'
         }));
+    }
+
+    fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>> {
+        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard)); 
     }
 
 }

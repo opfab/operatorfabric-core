@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   mongodb:
-    image: mongo:5.0.21-focal
+    image: mongo:5.0.22-focal
     ports:
       - "27017:27017"
     environment:
@@ -24,10 +24,11 @@ services:
 #    volumes:
 #      - "./rabbit-persistance:/var/lib/rabbitmq/mnesia/"
 
-
-#    Port closed for security reasons , be careful if you open it 
-#    ports:
-#      - "5672:5672"
+#    !!! WARNING !!!
+#    Port is to be closed for security reasons , be careful if you open it
+#    Port open here for dev only
+    ports:
+       - "5672:5672"
 #      - "15672:15672"
 
 #    If you open the port, you must change default user and password as follow
@@ -36,19 +37,22 @@ services:
 #    - RABBITMQ_DEFAULT_PASS=password
 
   keycloak:
-    image: quay.io/keycloak/keycloak:19.0.3-legacy
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled -Djboss.http.port=89
-# -Dkeycloak.profile.feature.upload_scripts=enabled is only used for tests with version 12 from keycloak
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:22.0
     environment:
-    - KEYCLOAK_USER=admin
-    - KEYCLOAK_PASSWORD=admin
-    - DB_VENDOR=H2
+      # Enable health and metrics support
+      - KC_HTTP_PORT=89
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_RELATIVE_PATH=/auth
     volumes:
-    - ../keycloak:/keycloak
+      - ../keycloak/export:/opt/keycloak/data/import
+    command:
+      - "-v start-dev --import-realm"
     ports:
-    - "89:89"
-#    Debug port closed for security reasons, be careful if you open it 
-#    - "90:9990"
+      - "89:89"
   mailhog:
     image: mailhog/mailhog:v1.0.1
     ports:
@@ -56,7 +60,7 @@ services:
       - 8025:8025
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-users-service:4.1.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -72,7 +76,7 @@ services:
     - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-businessconfig-service:4.1.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -88,7 +92,7 @@ services:
      - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-publication-service:4.1.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -104,7 +108,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-consultation-service:4.1.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -121,7 +125,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   web-ui:
     container_name: web-ui
-    image: "lfeoperatorfabric/of-web-ui:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-web-ui:4.1.0.RELEASE"
     ports:
     - "2002:80"
     depends_on:
@@ -134,7 +138,7 @@ services:
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
-    image: "lfeoperatorfabric/of-cards-external-diffusion-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-external-diffusion-service:4.1.0.RELEASE"
     depends_on:
       - cards-consultation
       - web-ui
@@ -150,7 +154,7 @@ services:
       - "./common.yml:/usr/app/config/common.yml"
   cards-reminder:
     container_name: cards-reminder
-    image: "lfeoperatorfabric/of-cards-reminder:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-reminder:4.1.0.RELEASE"
     depends_on:
       - cards-publication
       - users
@@ -165,7 +169,7 @@ services:
       - "./common.yml:/usr/app/config/common.yml"
   supervisor:
     container_name: supervisor
-    image: "lfeoperatorfabric/of-supervisor:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-supervisor:4.1.0.RELEASE"
     depends_on:
       - cards-publication
       - users
@@ -182,7 +186,7 @@ services:
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
-    image: "lfeoperatorfabric/of-external-devices-service:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-external-devices-service:4.1.0.RELEASE"
     depends_on:
       - mongodb
       - users
@@ -201,7 +205,7 @@ services:
 # External application example
   ext-app:
     container_name: external-app
-    image: "lfeoperatorfabric/of-external-app:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-external-app:4.1.0.RELEASE"
     ports:
       - "8090:8090"
     volumes:
@@ -211,7 +215,7 @@ services:
 # Dummy external devices using Modbus Protocol
   dummy-modbus-device_1:
     container_name: dummy-modbus-device_1
-    image: "lfeoperatorfabric/of-dummy-modbus-device:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.1.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4031:4030"
@@ -220,7 +224,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   dummy-modbus-device_2:
     container_name: dummy-modbus-device_2
-    image: "lfeoperatorfabric/of-dummy-modbus-device:4.0.0.RELEASE"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.1.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4032:4030"

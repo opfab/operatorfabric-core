@@ -15,16 +15,19 @@ export class MessageCardTemplate extends HTMLElement {
 
         let messageHeader = this.getAttribute('message-header');
         if (!messageHeader) messageHeader = opfab.utils.getTranslation("buildInTemplate.messageCard.message");
-        let message = opfab.currentCard.getCard()?.data?.message;
-        if (message) message = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(message));
+        let richMessage = opfab.currentCard.getCard()?.data?.richMessage;
 
         this.innerHTML= `
         <div style="font-size:28px"> ${messageHeader}  </div>
         <br/>
         <br/>
-        <div style="text-align: justify;font-size: 24px">
-        ${message} 
-        </div>        
+        <div id="richMessage" style="text-align: justify;font-size: 24px">
+        ${richMessage} 
+        </div>
+        <script>
+            opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
+        </script>
+
         `;
     }
 }

@@ -13,6 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-entities-cell-renderer',
@@ -22,12 +23,11 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
     entities: Entity[];
 
 
-    constructor(protected entitiesService: EntitiesService) {}
 
     private _nameValues: string;
 
     agInit(params: any): void {
-        this.entities = this.entitiesService.getCachedValues();
+        this.entities = EntitiesService.getCachedValues();
         // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
         if (this.entities) {
             const value = params.getValue();
@@ -47,7 +47,7 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
                     .join(', ');
             }
         } else {
-            console.log('User action log table: id/name mapping was undefined for entity');
+            LoggerService.warn('User action log table: id/name mapping was undefined for entity');
             this._nameValues = params.getValue();
         }
     }

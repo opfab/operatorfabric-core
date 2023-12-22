@@ -20,14 +20,11 @@ export class ProcessGroupCellRendererComponent implements ICellRendererAngularCo
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
 
-    constructor( private processesService: ProcessesService) {
-
-    }
 
     processGroupLabel: string;
 
     agInit(params: any): void {
-        this.processGroupLabel = this.processesService.findProcessGroupLabelForProcess(params.value);
+        this.processGroupLabel = ProcessesService.findProcessGroupLabelForProcess(params.value);
     }
 
     // noinspection JSUnusedLocalSymbols

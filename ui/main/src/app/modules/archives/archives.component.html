@@ -56,7 +56,7 @@
           </td>
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
           <td style="padding-left: 5px;min-width: 150px"> {{ displayTime(updates.mostRecent.publishDate) }} </td>
-          <td style ="min-width: 180px">{{ entitiesService.getEntityName(updates.mostRecent.publisher) }}</td>
+          <td style ="min-width: 180px">{{ getEntityName(updates.mostRecent.publisher) }}</td>
           <td style ="min-width: 180px"
           [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: updates.mostRecent.entityRecipients}"
           triggers="manual" (mouseenter)="updates.mostRecent.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
@@ -64,7 +64,7 @@
           </td>
           <td style ="min-width: 280px">{{ updates.mostRecent.titleTranslated | opfabTitleCase }}</td>
           <td style ="min-width: 280px">{{ updates.mostRecent.summaryTranslated }}</td>
-          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
           <td style ="min-width: 150px">{{ getProcessName(updates.mostRecent.process) }}</td>
         </tr>
 
@@ -75,7 +75,7 @@
             <td class="opfab-archive-sev opfab-archive-sev-{{historyCard.severity.toLowerCase()}}"></td>
             <td></td>
             <td style="padding-left: 30px"> {{ displayTime(historyCard.publishDate) }} </td>
-            <td style="padding-left: 30px">{{ entitiesService.getEntityName(historyCard.publisher) }}</td>
+            <td style="padding-left: 30px">{{ getEntityName(historyCard.publisher) }}</td>
             <td style="padding-left: 30px"
             [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: historyCard.entityRecipients}"
             triggers="manual" (mouseenter)="historyCard.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
@@ -83,7 +83,7 @@
             </td>
             <td style="padding-left: 30px"> {{ historyCard.titleTranslated | opfabTitleCase }}</td>
             <td style="padding-left: 30px"> {{ historyCard.summaryTranslated }}</td>
-            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
+            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(historyCard.process) }}</td>
             <td style="padding-left: 30px">{{ getProcessName(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">

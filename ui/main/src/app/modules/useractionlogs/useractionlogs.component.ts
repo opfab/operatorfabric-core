@@ -48,8 +48,8 @@ export class UserActionLogsComponent {
     defaultMinDate : {year: number; month: number; day: number} = null;
     isUserAllowed: boolean;
 
-    constructor(private userActionLogsServer: UserActionLogsServer, private userService: UserService) {
-        this.isUserAllowed = this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
+    constructor(private userActionLogsServer: UserActionLogsServer) {
+        this.isUserAllowed = UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
 
         this.setDefaultPublishDateFilter();
     }

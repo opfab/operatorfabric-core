@@ -7,15 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
-import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
@@ -32,14 +30,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public popoverTimeOut;
 
     constructor(
-        private processesService: ProcessesService,
-        private userService: UserService,
         private lightCardsStoreService: LightCardsStoreService,
-        private selectedCardService: SelectedCardService,
-        private filterService: FilterService,
-        private modalService: NgbModal
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
+        private modalService: NgbModal,
     ) {
-        this.dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        this.dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
     }
 
     ngOnInit(): void {
@@ -53,7 +48,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info);
+        this.openPopover?.close();
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -62,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 
@@ -70,24 +66,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (this.openPopover) {
             this.openPopover.close();
         }
+        clearTimeout(this.popoverTimeOut);
         this.openPopover = p;
         this.currentCircleHovered = myCircle;
     }
 
+    closePopover(timeUntilClosed): void {
+        this.popoverTimeOut = setTimeout(() => {
+            this.openPopover?.close();
+        }, timeUntilClosed);
+    }
+
     onCircleClick(circle) {
+        this.openPopover?.close();
         if (circle.numberOfCards == 1) {
             const cardId = circle.cards[0].id;
             this.selectCard(cardId);
         }
     }
 
-    @HostListener('mouseleave') onMouseLeave() {
-        this.popoverTimeOut = setTimeout(() => {
-            this.openPopover?.close();
-        }, 1000);
-    }
-
-    @HostListener('mouseenter') onMouseEnter() {
+    onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
     }
 }

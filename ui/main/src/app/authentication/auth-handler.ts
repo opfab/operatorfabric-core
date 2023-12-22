@@ -12,16 +12,16 @@ import {environment} from '@env/environment';
 import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {AuthenticatedUser} from './auth.model';
-import {Guid} from 'guid-typescript';
-import jwt_decode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import {Observable, of, Subject} from 'rxjs';
 
 export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
 export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
+
     protected checkTokenUrl = `${environment.url}/auth/check_token`;
     protected askTokenUrl = `${environment.url}/auth/token`;
 
@@ -35,11 +35,11 @@ export abstract class AuthHandler {
     protected delegateUrl: string;
     protected loginClaim: string;
 
-    constructor(configService: ConfigService, protected httpClient: HttpClient, protected logger: OpfabLoggerService) {
-        this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
-        this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
-        this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
-        this.loginClaim = configService.getConfigValue('security.jwt.login-claim', 'sub');
+    constructor( protected httpClient: HttpClient) {
+        this.secondsToCloseSession = ConfigService.getConfigValue('secondsToCloseSession', 60);
+        this.clientId = ConfigService.getConfigValue('security.oauth2.client-id', null);
+        this.delegateUrl = ConfigService.getConfigValue('security.oauth2.flow.delegate-url', null);
+        this.loginClaim = ConfigService.getConfigValue('security.jwt.login-claim', 'sub');
     }
 
     abstract initializeAuthentication();
@@ -95,9 +95,9 @@ export abstract class AuthHandler {
 
     private decodeToken(token: string): any {
         try {
-            return jwt_decode(token);
+            return jwtDecode(token);
         } catch (err) {
-            this.logger.error(" Error in token decoding " + err);
+            logger.error(" Error in token decoding " + err);
             return null;
         }
     }
@@ -120,7 +120,7 @@ export abstract class AuthHandler {
                 key = 'login.error.unexpected';
                 params['error'] = errorResponse.message;
         }
-        this.logger.error(message + ' - ' + JSON.stringify(errorResponse));
+        logger.error(message + ' - ' + JSON.stringify(errorResponse));
         this.rejectAuthentication.next(new Message(message, MessageLevel.ERROR, new I18n(key, params)));
     }
 
@@ -166,7 +166,6 @@ export class HttpAuthInfo {
     constructor(
         public access_token: string,
         public expires_in: number,
-        public clientId: Guid,
         public identifier?: string
     ) {}
 }

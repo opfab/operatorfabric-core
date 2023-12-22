@@ -21,8 +21,6 @@ import {ConfigService} from 'app/business/services/config.service';
 })
 export class HandlebarsService {
     constructor(
-        private businessconfig: ProcessesService,
-        private configService: ConfigService
     ) {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
@@ -48,7 +46,7 @@ export class HandlebarsService {
         HandlebarsService.registerPadStart();
         HandlebarsService.registerObjectContainsKey();
         HandlebarsService.registerFindObjectByProperty();
-        this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
+        ConfigService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
 
     private templateCache: Map<string,Function> = new Map();
@@ -278,7 +276,7 @@ export class HandlebarsService {
         if (template) {
             return of(template);
         }
-        return this.businessconfig.fetchHbsTemplate(process, version, name).pipe(
+        return ProcessesService.fetchHbsTemplate(process, version, name).pipe(
             map((s) => Handlebars.compile(s)),
             tap((t) => (this.templateCache[key] = t))
         );

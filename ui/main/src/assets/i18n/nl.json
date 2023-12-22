@@ -69,9 +69,8 @@
     "confirmSettings": "BEVESTIG INSTELLINGEN",
     "cardEmitter": "EMITTER",
     "entity": "ENTITEIT",
-    "goToAdminMode": "Ga naar administratie modus",
-    "adminMode": "Administratie modus",
-    "adminModeHelp": "Toon alle kaarten",
+    "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
+    "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
@@ -80,6 +79,27 @@
       "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
       "incorrectSubmission": "Onjuiste invoer",
       "technicalError" : "Technische fout"
+    },
+    "calendar": {
+      "monday":"Maandag",
+      "tuesday":"Dinsdag",
+      "wednesday":"Woensdag",
+      "thursday":"Donderdag",
+      "friday":"Vrijdag",
+      "saturday":"Zaterdag",
+      "sunday":"Zondag",
+      "january":"Januari",
+      "february":"Februari",
+      "march":"Maart",
+      "april":"April",
+      "may":"Mei",
+      "june":"Juni",
+      "july":"Juli",
+      "august":"Augustus",
+      "september":"September",
+      "october":"Oktober",
+      "november":"November",
+      "december":"December"
     }
   },
   "global":{
@@ -101,6 +121,7 @@
     "logging": "Logboek",
     "admin": "Administratie",
     "monitoring": "Bewaking",
+    "processmonitoring": "Monitoring processus",
     "logout": "Uitloggen",
     "changePassword": "Wachtwoord wijzigen",
     "settings": "Instellingen",
@@ -312,7 +333,7 @@
       "userHasNoEntityThatCanSendCard" : "U bent geen lid van een entiteit die kaarten kan versturen.",
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
-      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen.",
+      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
       "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
       "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
     },
@@ -346,7 +367,14 @@
         "impossibleToDeleteCard": "Om technische redenen is het niet mogelijk om de kaart te verwijderen"
       }
     },
-    "sendingCardInProgress": "Kaart wordt verzonden..."
+    "sendingCardInProgress": "Kaart wordt verzonden...",
+    "richTextEditor": {
+      "enterLink": "link invoeren",
+      "saveLink": "Opslaan",
+      "visitLink": "Link bezoeken",
+      "editLink": "Wijzigen",
+      "removeLink": "Verwijderen"
+    }
   },
   "response": {
     "btnValidate": "VALIDEER ANTWOORD",
@@ -435,6 +463,13 @@
         "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
 
       },
+      "supervisedEntity": {
+        "entityId": "ENTITEIT",
+        "supervisors": "SUPERVISORS",
+        "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
+        "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",
+        "allEntitiesSupervised": "Alle entiteiten staan al onder toezicht"
+      },
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
       "selectPerimeterText": "Selecteen een Perimeter",
@@ -484,7 +519,9 @@
       "groups": "Groepen Beheer",
       "entities": "Entiteiten Beheer",
       "perimeters": "Perimeters Beheer",
-      "processes": "Processen Beheer"
+      "processes": "Processen Beheer",
+      "businessData": "Zakelijke gegevens",
+      "supervisedEntities": "Entiteiten onder toezicht"
     }
   },
   "processGroup": {
@@ -607,7 +644,47 @@
     "questionUserCard": {
       "noQuestionError":"U moet een vraag opgeven",
       "textareaLabel":"VRAAG"
-    }, 
+    },
+    "taskCard": {
+      "taskToDo": "U heeft de volgende taak te doen",
+      "duration": "Duur",
+      "minutes": "minuten",
+      "at": "Op",
+      "first": "eerste",
+      "second": "tweede",
+      "third": "derde",
+      "fourth": "vierde",
+      "last": "laatste",
+      "the": "De",
+      "on": "op",
+      "firstDayOfTheMonth": "De eerste dag van de maand",
+      "lastDayOfTheMonth": "De laatste dag van de maand",
+      "dayOfTheMonth": "dag van de maand",
+      "in": "in"
+   },
+    "taskUserCard": {
+      "taskDescriptionLabel": "TAAKBESCHRIJVING",
+      "dailyFreq": "Dagelijkse frequentie",
+      "monthlyFreq": "Maandelijkse frequentie",
+      "Repeat": "HERHAAL ELKE",
+      "selectAll": "Alles selecteren",
+      "ordinalDay": "N-de dag",
+      "ordinalWeekDay": "N-de weekdag",
+      "dayNumber": "DAGNUMMER",
+      "firstDayOfTheMonth": "Eerste dag van de maand",
+      "lastDayOfTheMonth": "Laatste dag van de maand",
+      "dayOfTheMonth": "dag van de maand",
+      "occurrenceNumber": "NUMMER VAN VOORKOMEN",
+      "weekDay": "WEEKDAG",
+      "at": "OM",
+      "time": "TIJD",
+      "taskDuration": "TAAKDUUR (MINUTEN)",
+      "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK",
+      "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
+      "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
+      "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
+      "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven."
+    },
     "message-or-question-listCard": {
       "answers": "Antwoorden",
       "yes": "Ja",
@@ -621,7 +698,7 @@
       "titleLabel": "TITEL",
       "messageLabel": "BERICHT",
       "emptyMessage": "U kunt geen leeg bericht verzenden"
-    } 
+    }
 
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -36,6 +36,8 @@ include::karate.adoc[leveloffset=+2]
 
 include::cypress.adoc[leveloffset=+2]
 
+include::node-services.adoc[leveloffset=+2]
+
 include::misc.adoc[leveloffset=+1]
 
 include::troubleshooting.adoc[leveloffset=+1]
@@ -47,3 +49,7 @@ include::token.adoc[leveloffset=+1]
 include::kafka.adoc[leveloffset=+1]
 
 include::mailhog.adoc[leveloffset=+1]
+
+include::dependency.adoc[leveloffset=+1]
+
+

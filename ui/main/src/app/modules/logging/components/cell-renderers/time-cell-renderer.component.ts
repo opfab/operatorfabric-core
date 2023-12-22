@@ -20,13 +20,10 @@ export class TimeCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
 
-    constructor(readonly dateTimeFormatter: DateTimeFormatterService,) {
-    }
-
     timestamp: string;
 
     agInit(params: any): void {
-        this.timestamp = this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(params.value)
+        this.timestamp = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(params.value)
     }
 
 

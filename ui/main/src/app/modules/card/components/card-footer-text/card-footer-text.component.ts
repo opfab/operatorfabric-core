@@ -37,12 +37,9 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
-        private entitiesService: EntitiesService,
-        private dateTimeFormatterService: DateTimeFormatterService,
-        private userService: UserService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -67,21 +64,21 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     }
 
     public formatDate(date: number) {
-        return this.dateTimeFormatterService.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     public formatTime(date: number) {
-        return this.dateTimeFormatterService.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     private computeFromEntityOrRepresentative() {
         if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
+            this.fromEntityOrRepresentative = EntitiesService.getEntityName(this.card.publisher);
 
             if (this.card.representativeType && this.card.representative) {
                 const representative =
                     this.card.representativeType === 'ENTITY'
-                        ? this.entitiesService.getEntityName(this.card.representative)
+                        ? EntitiesService.getEntityName(this.card.representative)
                         : this.card.representative;
 
                 this.fromEntityOrRepresentative += ' (' + representative + ')';
@@ -94,12 +91,12 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
         if (this.card.entityRecipients && this.card.entityRecipients.length > 0) {
             // We compute the entities allowed to send cards to which the user is connected
             const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
-                this.entitiesService.isEntityAllowedToSendCard(entityId)
+                EntitiesService.isEntityAllowedToSendCard(entityId)
             );
 
             // We compute the entities recipients of the card, taking into account parent entities
-            const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = this.entitiesService
+            const entityRecipients = EntitiesService.getEntitiesFromIds(this.card.entityRecipients);
+            const entityRecipientsAllowedToSendCards = EntitiesService
                 .resolveEntitiesAllowedToSendCards(entityRecipients)
                 .map((entity) => entity.id);
 
@@ -107,7 +104,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
                 entityRecipientsAllowedToSendCards.includes(entityId)
             );
             userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                addressedTo.push({id: entityId, entityName: this.entitiesService.getEntityName(entityId), acknowledged: this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
+                addressedTo.push({id: entityId, entityName: EntitiesService.getEntityName(entityId), acknowledged: this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
             });
 
             addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
@@ -135,6 +132,6 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     }
 
     public getResponsePublisher(resp: Card) {
-        return this.entitiesService.getEntityName(resp.publisher);
+        return EntitiesService.getEntityName(resp.publisher);
     }
 }

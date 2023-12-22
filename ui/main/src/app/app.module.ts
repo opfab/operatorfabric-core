@@ -77,9 +77,12 @@ import {AngularSoundServer} from './server/angularSound.server';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {BusinessDataServer} from './business/server/businessData.server';
 import {AngularBusinessDataServer} from './server/angularBusinessData.server';
-import {TranslationService} from './business/services/translation/translation.service';
-import {AngularTranslationService} from '@ofServices/angularTranslationService';
 import {LoadingInProgress} from "./modules/core/application-loading/loading-in-progress/loading-in-progress";
+import {AngularTranslationService} from '@ofServices/angularTranslationService';
+import {TranslationService} from './business/services/translation/translation.service';
+import {ProcessmonitoringModule} from './modules/processmonitoring/processmonitoring.module';
+import {AngularSupervisedEntitiesServer} from './server/angularSupervisedEntities.server';
+import {SupervisedEntitiesServer} from './business/server/supervised-entities.server';
 
 @NgModule({
     imports: [
@@ -97,6 +100,7 @@ import {LoadingInProgress} from "./modules/core/application-loading/loading-in-p
         ArchivesModule,
         LoggingModule,
         MonitoringModule,
+        ProcessmonitoringModule,
         DashboardModule,
         NgbModalModule,
         AppRoutingModule,
@@ -135,6 +139,7 @@ import {LoadingInProgress} from "./modules/core/application-loading/loading-in-p
         },
         {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
         {provide: EntitiesServer, useClass: AngularEntitiesServer},
+        {provide: SupervisedEntitiesServer, useClass: AngularSupervisedEntitiesServer},
         {provide: PerimetersServer, useClass: AngularPerimetersServer},
         {provide: GroupsServer, useClass: AngularGroupsServer},
         {provide: UserServer, useClass: AngularUserServer},

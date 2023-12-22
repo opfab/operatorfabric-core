@@ -10,18 +10,17 @@ subprojects {
 
     /////// DEPENDENCIES
 
-    dependencyManagement {
-        imports {
-            mavenBom cloud.dependencies
-        }
-    }
-
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         implementation boot.actuator
         implementation misc.micrometer
         annotationProcessor misc.lombok
         implementation misc.lombok
+
+    //Transitive dependencies udpate needed for security reasons 
+        implementation misc.snakeyaml
+        implementation misc.bouncyCastle
+    //End transitive dependencies
 
         testAnnotationProcessor misc.lombok
         testCompileOnly misc.lombok
@@ -51,15 +50,6 @@ subprojects {
                 srcDir 'build/src/generated/resources'
             }
         }
-    }
-
-    /////// CONFIGURATION
-
-    // Boot
-
-    bootRun {
-        systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'dev, native'
-        systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: './src/main/resources/bootstrap-dev.yml'
     }
 
     // Tests

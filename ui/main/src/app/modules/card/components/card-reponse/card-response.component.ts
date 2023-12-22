@@ -26,7 +26,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 class FormResult {
     valid: boolean;
@@ -51,7 +51,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
     @Input() cardState: State;
     @Input() lttdExpiredIsTrue: boolean;
     @Input() isResponseLocked: boolean;
-    @Input() userEntityIdsPossibleForResponse;
 
     @Output() unlockAnswerEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -67,6 +66,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public sendingResponseInProgress: boolean;
 
     private entityChoiceModal: NgbModalRef;
+    private userEntitiesAllowedToRespond = [];
     private userEntityOptionsDropdownList = [];
     private userEntityIdToUseForResponse = '';
 
@@ -81,18 +81,11 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(
-        private cardService: CardService,
-        private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private userService: UserService,
-        private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService,
-        private alertMessageService: AlertMessageService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService,
+        private opfabAPIService: OpfabAPIService
 
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -104,15 +97,20 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(): void {
-        this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-            this.userService.getCurrentUserWithPerimeters(),
+        this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
+            UserService.getCurrentUserWithPerimeters(),
             this.card,
-            this.processService.getProcess(this.card.process)
+            ProcessesService.getProcess(this.card.process)
         );
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.userEntitiesAllowedToRespond = UserPermissionsService.getUserEntitiesAllowedToRespond(
+            UserService.getCurrentUserWithPerimeters(),
+            this.card,
+            ProcessesService.getProcess(this.card.process)
+        );
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = this.cardState.response && !this.isReadOnlyUser;
-        this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
+        this.userEntityIdToUseForResponse = this.userEntitiesAllowedToRespond[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();
     }
@@ -134,18 +132,19 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        if (this.userEntityIdsPossibleForResponse)
-            this.userEntityIdsPossibleForResponse.forEach((entityId) => {
-                const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
+        if(this.userEntitiesAllowedToRespond) {
+            this.userEntitiesAllowedToRespond.forEach((entityId) => {
+                const entity = EntitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
             });
+        }
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
     public processClickOnSendResponse() {
         const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
 
-        if (this.userEntityIdsPossibleForResponse.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
+        if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
     }
 
@@ -161,8 +160,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
-            if (!this.userEntityIdsPossibleForResponse.includes(publisherEntity)) {
-                this.logger.error("Response card publisher not allowed : " + publisherEntity);
+            if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
+                logger.error("Response card publisher not allowed : " + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }
@@ -189,7 +188,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 initialParentCardUid: this.card.uid
             };
             this.sendingResponseInProgress = true;
-            this.cardService.postCard(card).subscribe(
+            CardService.postCard(card).subscribe(
                 (resp) => {
                     this.sendingResponseInProgress = false;
                     if (resp.status !== ServerResponseStatus.OK) {
@@ -210,7 +209,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public submitEntitiesChoice() {

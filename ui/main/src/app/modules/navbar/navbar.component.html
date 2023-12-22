@@ -10,14 +10,7 @@
 
 <nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
   <a class="navbar-brand">
-    <div *ngIf="this.customLogo; else opFabLogo">
-      <of-custom-logo [base64]="customLogo"  [height]="height" [width]="width"></of-custom-logo>
-    </div>
-    <ng-template #opFabLogo>
-      <div class="brand-bg-light">
-        <of-icon icon="operator-fabric" sizeIcon='medium'></of-icon>
-      </div>
-    </ng-template>
+      <of-logo></of-logo>
   </a>
 
 <div class="navbar-toggler opfab-navbar" style="flex-grow: 1;border: 0; flex-basis: 0" id="opfab-navbarCollapsed" >
@@ -262,9 +255,7 @@
     </div>
     <div class="modal-body text-center" id="opfab-about-dialog-body">
       <a class="opfab-about-brand" style="margin-right: 0">
-        <div *ngIf="this.customLogo; else opFabLogo">
-          <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width"></of-custom-logo>
-        </div>
+          <of-logo></of-logo>
       </a>
       <div>
         <of-about> </of-about>

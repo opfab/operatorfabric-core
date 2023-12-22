@@ -16,6 +16,7 @@ import {EntitiesTableComponent} from './components/table/entities-table.componen
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {ProcessesTableComponent} from './components/table/processes-table.component';
 import {BusinessDataTableComponent} from './components/table/businessData-table.component';
+import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
 
 const defaultPath = 'users';
 
@@ -47,6 +48,10 @@ const routes: Routes = [
             {
                 path: 'businessData',
                 component: BusinessDataTableComponent
+            },
+            {
+                path: 'supervisedEntities',
+                component: SupervisedEntitiesTableComponent
             },
             {path: '**', redirectTo: defaultPath}
         ]

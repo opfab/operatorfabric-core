@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Card, CardCreationReportData, CardData, CardForPublishing, fromCardToLightCard} from '@ofModel/card.model';
 import {map} from 'rxjs/operators';
@@ -16,61 +14,71 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardServer} from '../../server/card.server';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 import {AcknowledgeService} from '../acknowledge.service';
+import {LightCard} from '@ofModel/light-card.model';
 
 
-@Injectable({
-    providedIn: 'root'
-})
 export class CardService {
+    private static cardServer: CardServer;
 
-    constructor(
-        private cardServer: CardServer,
-        private acknowledgeService: AcknowledgeService,
-    ) {
-
+    public static setCardServer(cardServer: CardServer) {
+        CardService.cardServer = cardServer;
     }
 
-    loadCard(id: string): Observable<CardData> {
-        return this.cardServer.loadCard(id).pipe(
+    public static loadCard(id: string): Observable<CardData> {
+        return CardService.cardServer.loadCard(id).pipe(
             map((cardResponse) => {
-
                 if (cardResponse.status === ServerResponseStatus.OK) {
-                        const cardData = cardResponse.data;
-                        cardData.card.hasBeenAcknowledged =
-                            this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
-                                fromCardToLightCard(cardData.card));
+                    const cardData = cardResponse.data;
+                    cardData.card.hasBeenAcknowledged =
+                        AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
+                            fromCardToLightCard(cardData.card)
+                        );
                     return cardData;
                 }
             })
         );
     }
 
-    loadArchivedCard(id: string): Observable<CardData> {
-        return this.cardServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
+    public static loadArchivedCard(id: string): Observable<CardData> {
+        return CardService.cardServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
     }
 
-    fetchFilteredArchivedCards(filter: CardsFilter) {
-        return this.cardServer.fetchFilteredArchivedCards(filter).pipe(map((serverResponse) => serverResponse.data));
+    public static fetchFilteredArchivedCards(filter: CardsFilter) {
+        return CardService.cardServer
+            .fetchFilteredArchivedCards(filter)
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
-    postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
-        return this.cardServer.postCard(card);
+    public static fetchFilteredCards(filter: CardsFilter) {
+        return CardService.cardServer.fetchFilteredCards(filter).pipe(map((serverResponse) => serverResponse.data));
     }
 
-    deleteCard(card: Card): Observable<ServerResponse<void>> {
-        return this.cardServer.deleteCard(card);
+    public static postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
+        return CardService.cardServer.postCard(card);
     }
 
-    postUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
-        return this.cardServer.postUserCardRead(cardUid);
+    public static deleteCard(card: Card): Observable<ServerResponse<void>> {
+        return CardService.cardServer.deleteCard(card);
     }
 
-    deleteUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
-        return this.cardServer.deleteUserCardRead(cardUid);
+    public static postUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
+        return CardService.cardServer.postUserCardRead(cardUid);
     }
 
-    postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
+    public static deleteUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
+        return CardService.cardServer.deleteUserCardRead(cardUid);
+    }
+
+    public static postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
         const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
-        return this.cardServer.postTranslateCardField(fieldToTranslate).pipe(map((serverResponse) => serverResponse.data));
+        return CardService.cardServer
+            .postTranslateCardField(fieldToTranslate)
+            .pipe(map((serverResponse) => serverResponse.data));
+    }
+
+    public static fetchConnectedRecipients(lightcard: LightCard): Observable<string[]> {
+        return CardService.cardServer
+            .fetchConnectedRecipients(lightcard)
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 }

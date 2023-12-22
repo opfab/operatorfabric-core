@@ -1,0 +1,98 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.0.0 to release 4.1.0
+
+
+== Optimizing Nginx Configuration for Latency Reduction
+
+An optimization has been introduced in the Nginx configuration to reduce latency. To implement this optimization in your `nginx.conf` you need to add in `location /cards/`  the directive `proxy_buffering off` 
+
+For example : 
+
+```
+  location /cards/ {
+    proxy_buffering off;
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-consultation:2104/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+```
+ 
+== Updating the file size limit
+The limit of maximum file size has been updated to 100 MB. To implement this limit in your `nginx.conf` you need to add in `location /businessconfig/`  the directive `client_max_body_size 100M;` 
+
+For example : 
+
+```
+  location /businessconfig {
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2100;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    client_max_body_size 100M;
+  }
+```
+
+== Nginx Configuration for entity supervision administration
+The new 'Supervised Entities' admin page requires interaction with the supervisor API via Nginx. To enable access to the supervisor API, please incorporate the following configuration into your `nginx.conf` file:
+
+```
+  location ~ "^/supervisor/(.*)" {
+    set $supervisor http://supervisor:2108;
+    proxy_set_header Host $http_host;
+    proxy_pass $supervisor/$1;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+```
+
+== Supervisor configuration change
+The configuration of 'supervisor.defaultConfig.entitiesToSupervise' parameter has changed. The supervised entity field `id` has been renamed to `entityId`. You should modify your configuration accordingly.
+
+For example:
+
+
+```
+  supervisor:
+    defaultConfig:
+      entitiesToSupervise:
+      - id: ENTITY1_FR
+        supervisors:
+        - ENTITY2_FR
+      - id: ENTITY2_FR
+        supervisors:
+        - ENTITY1_FR
+```
+
+should be changed to:
+
+```
+  supervisor:
+    defaultConfig:
+      entitiesToSupervise:
+      - entityId: ENTITY1_FR
+        supervisors:
+        - ENTITY2_FR
+      - entityId: ENTITY2_FR
+        supervisors:
+        - ENTITY1_FR
+```
+
+
+== Log directories in docker 
+
+For the services cards-reminder, supervisor, cards-external-diffusion the log directory in the docker is not anymore /usr/app/logs but /var/log/opfab. So if you map the log directory in your configuration , you need to change it. 
+
+
+== OpfabAPI
+
+The following method is deprecated and it is recommended you use the new method:
+
+|===
+|Deprecated method or attribute | New method
+
+|opfab.currentCard.getEntityUsedForUserResponse()
+|opfab.currentCard.getEntitiesUsableForUserResponse()

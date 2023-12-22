@@ -234,7 +234,7 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard sent to several entities
         opfab.navigateToUserCard();
-        cy.get('#message').type('Test message for entities acks');
+        cy.get('#message').find('div').eq(0).should('be.visible').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
         cy.get('#opfab-recipients').find('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
@@ -245,7 +245,7 @@ describe('Acknowledgment tests', function () {
         // We display the created card
         // And we check there are 13 entities names displayed in acknowledgements footer, and we check all the entities have orange color
         cy.get('of-light-card').eq(0).click();
-        cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received : Message received");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
         cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
@@ -293,7 +293,7 @@ describe('Acknowledgment tests', function () {
 
         // We check acknowledgements footer is displayed for operator4_fr (because he's member of ENTITY1_FR)
         cy.get('of-light-card').eq(0).click();
-        cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received : Message received");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
         cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
@@ -354,7 +354,7 @@ describe('Acknowledgment tests', function () {
 
         // We click again the card to display it
         cy.get('of-light-card').eq(0).click();
-        cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received : Message received");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
 
         // We check we have ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR now displayed in green, all other entities in orange
@@ -395,7 +395,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
-        // Footer should contain 'Addredd to' with 4 FR control centers each with ack icon
+        // Footer should contain 'Addressed to' with 4 FR control centers each with ack icon
         cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
         cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
         cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('exist')
@@ -423,7 +423,7 @@ describe('Acknowledgment tests', function () {
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 6);
         cy.get('of-light-card').eq(0).click();
-        cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received : Message received");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // Footer should contain 'Addredd to' with 3 FR control centers each with ack icon
@@ -458,7 +458,7 @@ describe('Acknowledgment tests', function () {
         // We display the previous card (acknowledged by operator4_fr)
         // And we check there are 13 entities names displayed in acknowledgements footer, 4 entities with green color and 9 with orange color
         cy.get('of-light-card').eq(0).click();
-        cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received : Message received");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
         cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
@@ -758,7 +758,7 @@ describe('Acknowledgment tests', function () {
         usercard.selectProcess('Message or question');
         usercard.selectState('Message');
         cy.waitDefaultTime();
-        cy.get('#usercard_message_input').type('Test message for ack footer');
+        cy.get('#usercard_message_input').find('div').eq(0).type('Test message for ack footer');
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
 

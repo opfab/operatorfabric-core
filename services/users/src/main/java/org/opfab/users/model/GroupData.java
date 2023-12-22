@@ -35,7 +35,6 @@ public class GroupData implements Group {
     @Id
     private String id;
     private String name;
-    private GroupTypeEnum type;
     private String description;
 
 
@@ -54,7 +53,6 @@ public class GroupData implements Group {
     public GroupData(GroupData groupData) {
         this.id = groupData.id;
         this.name = groupData.name;
-        this.type = groupData.type;
         this.description = groupData.description;
         if (groupData.perimeters == null) this.perimeters = new HashSet<>();
         else this.perimeters = new HashSet<>(groupData.perimeters);

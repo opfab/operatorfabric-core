@@ -1,4 +1,6 @@
 operatorfabric:
+  mongodb:
+    database: "operator-fabric"
   servicesUrls:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
@@ -7,7 +9,7 @@ operatorfabric:
   internalAccount:
     login: opfab
   logConfig:
-    logFolder: logs/
+    logFolder: /var/log/opfab/
     logFile: "opfab.%DATE%.log"
     logLevel: info
   supervisor:

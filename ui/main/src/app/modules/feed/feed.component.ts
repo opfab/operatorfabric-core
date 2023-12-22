@@ -30,30 +30,26 @@ export class FeedComponent implements OnInit,OnDestroy {
     maxNbOfCardsToDisplay = 100;
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
-    maxPinnedCards: number;
     filtersVisible = false;
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private configService: ConfigService,
-        private router: Router,
-        private user : UserService,
-        private selectedCardService : SelectedCardService
+        private router: Router
     ) {
-        this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
+        this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.configureExperimentalHallwayMode();
     }
 
     configureExperimentalHallwayMode() {
-        const usersInHallwayMode = this.configService.getConfigValue('settings.usersInHallwayMode',null);
-        if (usersInHallwayMode?.includes(this.user.getCurrentUserWithPerimeters().userData.login)) {
+        const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode',null);
+        if (usersInHallwayMode?.includes(UserService.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
             console.log("User in hallwayMode");
         }
     }
 
     ngOnInit() {
-        this.selection$ = this.selectedCardService.getSelectCardIdChanges();
+        this.selection$ = SelectedCardService.getSelectCardIdChanges();
 
         moment.updateLocale('en', {
             week: {
@@ -71,13 +67,9 @@ export class FeedComponent implements OnInit,OnDestroy {
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
-;
-
-        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
     }
 
     public enoughSpaceForTimeLine() {
-        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
         return window.innerWidth > 1000 && window.innerHeight > 700;
     }
 

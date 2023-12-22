@@ -12,32 +12,36 @@ import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
-import {FilterService} from './filter.service';
-import {SortService} from './sort.service';
+import {LightCardsFilter} from './lightcards-filter';
+import {LightCardsSorter} from './lightcards-sorter';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {SearchService} from './search-service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LightCardsTextFilter} from './lightcards-text-filter';
+import {Filter, FilterType} from '@ofModel/feed-filter.model';
+import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LightCardsFeedFilterService {
+
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
     private filteredAndSearchedLightCards = new ReplaySubject(1);
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
+    private lightCardFilter: LightCardsFilter;
+    private lightCardsSorter: LightCardsSorter;
+    private lightCardTextFilter: LightCardsTextFilter;
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
-        private sortService: SortService,
-        private searchService: SearchService,
-        private groupedCardsService: GroupedCardsService,
-        private configService: ConfigService,
-        private logger : OpfabLoggerService
+        private groupedCardsService: GroupedCardsService
     ) {
+        this.lightCardFilter = new LightCardsFilter();
+        this.lightCardsSorter = new LightCardsSorter();
+        this.lightCardTextFilter = new LightCardsTextFilter();
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredAndSearchedLightCards();
         this.computeFilteredLightCards();
@@ -45,7 +49,7 @@ export class LightCardsFeedFilterService {
     }
 
     private computeFilteredAndSortedLightCards() {
-        combineLatest([this.sortService.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
+        combineLatest([this.lightCardsSorter.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
             .pipe(
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
@@ -71,9 +75,10 @@ export class LightCardsFeedFilterService {
         return this.filteredAndSearchedLightCards.asObservable();
     }
 
+
     private computeFilteredLightCards() {
         combineLatest([
-            this.filterService.getFiltersChanges(),
+            this.lightCardFilter.getFiltersChanges(),
             this.lightCardsStoreService.getLightCards(),
             this.onlyBusinessFilterForTimeLine.asObservable()
         ])
@@ -84,16 +89,16 @@ export class LightCardsFeedFilterService {
                     const lightCards = results[1];
                     const onlyBusinessFitlerForTimeLine = results[2];
 
-                    this.logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
+                    logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
 
                     if (onlyBusinessFitlerForTimeLine) {
                         const cardFilteredByBusinessDate =
-                            this.filterService.filterLightCardsOnlyByBusinessDate(lightCards);
+                            this.lightCardFilter.filterLightCardsOnlyByBusinessDate(lightCards);
                         this.filteredLightCardsForTimeLine.next(cardFilteredByBusinessDate);
-                        return this.filterService.filterLightCardsWithoutBusinessDate(cardFilteredByBusinessDate);
+                        return this.lightCardFilter.filterLightCardsWithoutBusinessDate(cardFilteredByBusinessDate);
                     }
 
-                    const cardFilter = this.filterService.filterLightCards(lightCards);
+                    const cardFilter = this.lightCardFilter.filterLightCards(lightCards);
                     this.filteredLightCardsForTimeLine.next(cardFilter);
                     return cardFilter;
                 })
@@ -104,22 +109,22 @@ export class LightCardsFeedFilterService {
     }
 
     private computeFilteredAndSearchedLightCards() {
-        combineLatest([this.searchService.getSearchChanges(), this.getFilteredLightCards()])
+        combineLatest([this.lightCardTextFilter.getSearchChanges(), this.getFilteredLightCards()])
             .pipe(map((results) => {
-                return this.searchService.searchLightCards(results[1]);
+                return this.lightCardTextFilter.searchLightCards(results[1]);
             }))
             .subscribe((lightCards) => {
-                this.logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
+                logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
                 this.filteredAndSearchedLightCards.next(lightCards);
             });
     }
 
     private isGroupedCardsEnabled(): boolean {
-        return this.configService.getConfigValue('feed.enableGroupedCards', false);
+        return ConfigService.getConfigValue('feed.enableGroupedCards', false);
     }
 
     public isCardVisibleInFeed(card: LightCard) {
-        return this.searchService.searchLightCards(this.filterService.filterLightCards([card])).length > 0;
+        return this.lightCardTextFilter.searchLightCards(this.lightCardFilter.filterLightCards([card])).length > 0;
     }
 
     public getFilteredAndSortedLightCards(): Observable<any> {
@@ -128,5 +133,26 @@ export class LightCardsFeedFilterService {
 
     public setOnlyBusinessFilterForTimeLine(onlyBusinessFilterForTimeLine: boolean) {
         this.onlyBusinessFilterForTimeLine.next(onlyBusinessFilterForTimeLine);
+    }
+
+    public updateFilter(filterType: FilterType, active: boolean, status: any) {
+        if (filterType === FilterType.BUSINESSDATE_FILTER) OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
+        this.lightCardFilter.updateFilter(filterType,active,status);
+    }
+
+    public getBusinessDateFilter(): Filter {
+        return this.lightCardFilter.getBusinessDateFilter();
+    }
+
+    public getBusinessDateFilterChanges(): Observable<any> {
+        return this.lightCardFilter.getBusinessDateFilterChanges();
+    }
+
+    public setSortBy(sortBy: string) {
+        return this.lightCardsSorter.setSortBy(sortBy);
+    }
+
+    public setSearchTermForTextFilter(searchTerm:string) {
+        return this.lightCardTextFilter.setSearchTerm(searchTerm);
     }
 }

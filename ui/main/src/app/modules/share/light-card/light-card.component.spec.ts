@@ -20,12 +20,10 @@ import {I18nService} from 'app/business/services/translation/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {PipesModule} from '../pipes/pipes.module';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ProcessServer} from 'app/business/server/process.server';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
@@ -35,18 +33,22 @@ import {SoundServer} from 'app/business/server/sound.server';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
+import {ConfigService} from 'app/business/services/config.service';
+import {AngularTranslationService} from '@ofServices/angularTranslationService';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
     let injector: TestBed;
     let translateService: TranslateService;
-    let i18nService: I18nService;
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
         const myrout = {...routerSpy};
         myrout.routerState = {snapshot: {url: 'archives'}};
+        ConfigService.setConfigServer(new ConfigServerMock());
+        ProcessesService.setProcessServer(new ProcessServerMock());
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -66,12 +68,9 @@ describe('LightCardComponent', () => {
             declarations: [LightCardComponent],
             providers: [
                 {provide: Router, useValue: myrout},
-                ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
-                DateTimeFormatterService,
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
-                {provide: ProcessServer, useClass: ProcessServerMock},
                 {provide: RemoteLoggerServer, useValue: null},
                 {provide: OpfabEventStreamServer, use:null},
                 {provide: EntitiesServer, useValue: null},
@@ -87,8 +86,9 @@ describe('LightCardComponent', () => {
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');
-        i18nService = injector.get(I18nService);
-        i18nService.changeLocale('en');
+        I18nService.setTranslationService(new AngularTranslationService(translateService));
+        I18nService.changeLocale('en');
+        DateTimeFormatterService.init();
     }));
 
     beforeEach(() => {
@@ -102,14 +102,14 @@ describe('LightCardComponent', () => {
     });
 
     it('should handle timestamp in English', () => {
-        i18nService.changeLocale('en');
+        I18nService.changeLocale('en');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('06/25/2019 10:00 AM');
     });
 
     it('should handle timestamp in French', () => {
-        i18nService.changeLocale('fr');
+        I18nService.changeLocale('fr');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('25/06/2019 10:00');

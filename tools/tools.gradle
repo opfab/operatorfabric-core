@@ -7,17 +7,16 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: "io.spring.dependency-management"
 
-    dependencyManagement {
-        imports {
-            mavenBom cloud.dependencies
-        }
-    }
 
     dependencies {
         implementation misc.slf4j
         annotationProcessor misc.lombok
         implementation misc.lombok
-        // compileOnly misc.lombok
+
+        //Transitive dependencies udpate needed for security reasons 
+        implementation misc.snakeyaml
+        //End transitive dependencies
+
         testRuntimeOnly testing_deps.junit5Engine
         testImplementation testing_deps.junit5Api
         testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok

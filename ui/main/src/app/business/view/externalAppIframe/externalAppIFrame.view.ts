@@ -18,18 +18,13 @@ export class ExternalAppIFrameView {
     unsubscribe$: Subject<void> = new Subject<void>();
     private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
-    constructor(
-        private configService: ConfigService,
-        private routerStore: RouterStore,
-        private globalStyleService: GlobalStyleService
-    ) {
+    constructor() {
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }
 
     private listenForExternalAppRoute() {
-        this.routerStore
-            .getCurrentRouteEvent()
+        RouterStore.getCurrentRouteEvent()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((route) => {
                 if (route.startsWith('/businessconfigparty')) {
@@ -59,20 +54,19 @@ export class ExternalAppIFrameView {
         const deeplinkWithoutParams = deeplink?.split('?')[0];
         const deeplinkParams = deeplink?.split('?')[1];
 
-        this.configService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
+        ConfigService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
             let url = menuUrl;
             if (deeplinkWithoutParams) url += deeplinkWithoutParams;
             url = this.addParamsToUrl(url, menuEntryParams);
             url = this.addParamsToUrl(url, deeplinkParams);
             url = this.addOpfabThemeParamToUrl(url);
             this.urlSubject.next(url);
-            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId,menuEntryId);
+            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId, menuEntryId);
         });
     }
 
-
-    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId:string,menuEntryId:string) {
-        history.replaceState({},'',this.businessConfigUrl + "/" + menuId + "/" + menuEntryId + "/" );
+    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string, menuEntryId: string) {
+        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId + '/' + menuEntryId + '/');
     }
 
     private addParamsToUrl(url, params) {
@@ -85,14 +79,14 @@ export class ExternalAppIFrameView {
     }
 
     private addOpfabThemeParamToUrl(url: string): string {
-        return this.addParamsToUrl(url, 'opfab_theme=' + this.globalStyleService.getStyle());
+        return this.addParamsToUrl(url, 'opfab_theme=' + GlobalStyleService.getStyle());
     }
 
     private reloadIframeWhenGlobalStyleChange() {
-        this.globalStyleService
+        GlobalStyleService
             .getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.computeURL(this.routerStore.getCurrentRoute()));
+            .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));
     }
 
     public getExternalAppUrl(): Observable<string> {

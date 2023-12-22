@@ -8,5 +8,5 @@
  */
 
 export class Reminder  {
-    constructor(public cardId: string, public cardUid: string, public timeForReminding: number, public hasBeenRemind: boolean) {}
+    constructor(public cardId: string, public cardUid: string, public timeForReminding: number) {}
 };

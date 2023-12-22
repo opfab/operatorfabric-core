@@ -14,58 +14,72 @@ import {firstValueFrom} from 'rxjs';
 import {AboutView} from './about.view';
 import packageInfo from '../../../../../../package.json';
 
-
 describe('About view ', () => {
-
-    let configService: ConfigService;
     let configServerMock: ConfigServerMock;
-    const opfab = {name : 'OperatorFabric', version: packageInfo.opfabVersion , rank: 0};
+    const opfab = {name: 'OperatorFabric', version: packageInfo.opfabVersion, rank: 0};
 
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
-        configService = new ConfigService(configServerMock);
+        ConfigService.setConfigServer(configServerMock);
     });
+    function setupTest(applications: any) {
+        configServerMock.setResponseForWebUIConfiguration(
+            new ServerResponse({about: applications}, ServerResponseStatus.OK, null)
+        );
+        return firstValueFrom(ConfigService.loadWebUIConfiguration());
+    }
 
     it('GIVEN an application list in web-ui.json WHEN getting about array THEN get an applications list by rank ', async () => {
+        const applications = {
+            businessconfig: {name: 'businessconfig', version: 'businessconfig version', rank: 3},
+            second: {name: 'second', version: 'second version', rank: 2},
+            first: {name: 'first', version: 'first version', rank: 1}
+        };
 
-        const first = {name: 'first', version: 'first version', rank: 1};
-        const second = {name: 'second', version: 'second version', rank: 2};
-        const businessconfig = {name: 'businessconfig', version: 'businessconfig version', rank: 3};
-        const applications = {businessconfig: businessconfig, second: second, first: first};
+        await setupTest(applications);
 
-        configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
-
-        const aboutView = new AboutView(configService);
-
-        expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
+        const aboutView = new AboutView();
+        expect(aboutView.getAboutElements()).toEqual([
+            opfab,
+            applications.first,
+            applications.second,
+            applications.businessconfig
+        ]);
     });
-    it('GIVEN an application list with same ranks in web-ui.json WHEN getting about view THEN get applications list in declared order', async() => {
 
-        const first = {name: 'aaaa', version: 'v1', rank: 0};
-        const second = {name: 'bbbb', version: 'v2', rank: 0};
-        const businessconfig = {name: 'ccc', version: 'v3', rank: 0};
-        const applications = {first: first, second: second, businessconfig: businessconfig};
+    it('GIVEN an application list with same ranks in web-ui.json WHEN getting about view THEN get applications list in declared order', async () => {
+        const applications = {
+            first: {name: 'aaaa', version: 'v1', rank: 0},
+            second: {name: 'bbbb', version: 'v2', rank: 0},
+            businessconfig: {name: 'ccc', version: 'v3', rank: 0}
+        };
 
-        configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
-        const aboutView = new AboutView(configService);
+        await setupTest(applications);
 
-        expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
+        const aboutView = new AboutView();
+        expect(aboutView.getAboutElements()).toEqual([
+            opfab,
+            applications.first,
+            applications.second,
+            applications.businessconfig
+        ]);
     });
 
     it('GIVEN an application list with no rank in web-ui.json WHEN getting about view THEN get applications list in declared order ', async () => {
-        const first = {name: 'aaaa', version: 'v1'};
-        const second = {name: 'bbbb', version: 'v2'};
-        const businessconfig = {name: 'ccc', version: 'v3'};
-        const applications = {first: first, second: second, businessconfig: businessconfig};
+        const applications = {
+            first: {name: 'aaaa', version: 'v1'},
+            second: {name: 'bbbb', version: 'v2'},
+            businessconfig: {name: 'ccc', version: 'v3'}
+        };
 
-        configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
+        await setupTest(applications);
 
-        const aboutView = new AboutView(configService);
-
-        expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
+        const aboutView = new AboutView();
+        expect(aboutView.getAboutElements()).toEqual([
+            opfab,
+            applications.first,
+            applications.second,
+            applications.businessconfig
+        ]);
     });
-
 });

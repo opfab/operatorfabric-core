@@ -10,16 +10,16 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {GuidService} from 'app/business/services/guid.service';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {Observable, Subject} from 'rxjs';
 import packageInfo from '../../../package.json';
 import {AngularServer} from './angular.server';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import { ConfigService } from 'app/business/services/config.service';
+import {ConfigService} from 'app/business/services/config.service';
+import {Guid} from 'guid-typescript';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
@@ -40,29 +40,22 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private firstSubscriptionInitDone = false;
     private eventSource;
 
-    constructor(
-        private currentUserStore: CurrentUserStore,
-        guidService: GuidService,
-        private logger: OpfabLoggerService,
-        private configService: ConfigService,
-        private httpClient: HttpClient
-    ) {
+    constructor(private httpClient: HttpClient) {
         super();
-        const clientId = guidService.getCurrentGuidString();
-        this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
-        this.closeEventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}`;
-        this.heartbeatUrl = `${environment.url}/cards/cardSubscriptionHeartbeat?clientId=${clientId}`;
+        const subscriptionClientId = Guid.create().toString();
+        this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;
+        this.closeEventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${subscriptionClientId}`;
+        this.heartbeatUrl = `${environment.url}/cards/cardSubscriptionHeartbeat?clientId=${subscriptionClientId}`;
         this.isHeartbeatRunning = false;
     }
 
     public initStream() {
-
-        this.heartbeatSendingIntervalSeconds = this.configService.getConfigValue('heartbeatSendingInterval', 30);
+        this.heartbeatSendingIntervalSeconds = ConfigService.getConfigValue('heartbeatSendingInterval', 30);
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;
-        if (this.currentUserStore.doesAuthenticationUseToken()) {
-            securityHeader = {Authorization: `Bearer ${this.currentUserStore.getToken()}`}
+        if (CurrentUserStore.doesAuthenticationUseToken()) {
+            securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`};
         }
         this.eventSource = new EventSourcePolyfill(`${this.eventStreamUrl}&notification=true`, {
             headers: securityHeader
@@ -74,7 +67,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.eventSource.onmessage = (message) => {
             if (message.data === 'HEARTBEAT') {
                 this.lastheartbeatDate = new Date().valueOf();
-                this.logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
+                logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
             } else {
                 if (message.data === 'INIT') {
                     if (this.firstSubscriptionInitDone) {
@@ -107,7 +100,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
     private checkHeartBeatReceive() {
         this.heartbeatReceptionIntervalId = setInterval(() => {
-            this.logger.info(
+            logger.info(
                 'EventStreamServer - Last heart beat received ' +
                     (new Date().valueOf() - this.lastheartbeatDate) +
                     'ms ago',
@@ -120,17 +113,14 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.isHeartbeatRunning = true;
         this.heartbeatSendingIntervalId = setInterval(() => {
             this.httpClient.get(`${this.heartbeatUrl}`).subscribe();
-            this.logger.info(
-                'EventStreamServer - Heartbeat sent to the server',
-                LogOption.LOCAL_AND_REMOTE
-            );
-        }, this.heartbeatSendingIntervalSeconds*1000);
+            logger.info('EventStreamServer - Heartbeat sent to the server', LogOption.LOCAL_AND_REMOTE);
+        }, this.heartbeatSendingIntervalSeconds * 1000);
     }
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
         // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastheartbeatDate - AngularOpfabEventStreamServer.TWO_MINUTES;
-        this.logger.info(
+        logger.info(
             `EventStreamServer - Card subscription has been init again , recover any lost card from date ` +
                 new Date(dateForRecovering),
             LogOption.LOCAL_AND_REMOTE

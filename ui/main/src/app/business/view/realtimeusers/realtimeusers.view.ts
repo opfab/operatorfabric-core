@@ -9,7 +9,7 @@
 
 import {ConfigServer} from "app/business/server/config.server";
 import {ServerResponseStatus} from "app/business/server/serverResponse";
-import {OpfabLoggerService} from "app/business/services/logs/opfab-logger.service";
+import {LoggerService as logger} from "app/business/services/logs/logger.service";
 import {EntitiesService} from "app/business/services/users/entities.service";
 import {UserService} from "app/business/services/users/user.service";
 import {Observable, ReplaySubject} from "rxjs";
@@ -29,10 +29,7 @@ export class RealtimeUsersView {
     private pageLoaded = new ReplaySubject<RealtimePage>(1);
     private updateInterval;
 
-    constructor(private configServer: ConfigServer,
-                private logger: OpfabLoggerService,
-                private userService: UserService,
-                private entitiesService: EntitiesService,
+    constructor(private configServer: ConfigServer
     ) {
         this.init();
     }
@@ -69,7 +66,7 @@ export class RealtimeUsersView {
                                 // lines
                                 const line = new RealtimePageLine();
                                 line.entityId = configEntity;
-                                line.entityName = this.entitiesService.getEntityName(configEntity);
+                                line.entityName = EntitiesService.getEntityName(configEntity);
                                 line.connectedUsersCount = 0;
                                 line.connectedUsers = '';
                                 entityGroup.lines.push(line);
@@ -80,11 +77,11 @@ export class RealtimeUsersView {
                     });
                     this.realtimeScreens.push(screen);
                 });
-                this.logger.info('realTimeScreens config loaded');
+                logger.info('realTimeScreens config loaded');
                 this.updateConnectedUsers();
                 this.startUpdate(2000);
             } else {
-                this.logger.error('realTimeScreens config could not be loaded');
+                logger.error('realTimeScreens config could not be loaded');
             }
             this.pageLoaded.next(this.realtimePage);
             this.pageLoaded.complete();
@@ -92,7 +89,7 @@ export class RealtimeUsersView {
     }
 
     private updateConnectedUsers() {
-        this.userService.loadConnectedUsers().subscribe((connectedUsers) => {
+        UserService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
 
             connectedUsers.forEach((connectedUser) => {

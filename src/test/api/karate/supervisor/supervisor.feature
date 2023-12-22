@@ -12,6 +12,13 @@ Feature: Supervisor
 
 
 
+  Scenario: healthcheck API 
+
+    # Call healthcheck API without authentication
+    Given url 'http://localhost:2108/healthcheck'
+    When method get
+    Then status 200
+
 Scenario: start/stop/status API 
 
     # Call API as non admin user should fail

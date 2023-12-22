@@ -25,7 +25,8 @@
             "ENTITY1_IT",
             "ENTITY1_NL",
             "ENTITY1_EU"
-        ]
+        ],
+        "recipientsForInformation" : []
     },
     {
         "id": "Confirmation",
@@ -36,6 +37,10 @@
             "ENTITY1_FR",
             "ENTITY2_FR",
             "ENTITY4_FR"
+        ],
+        "recipientsForInformation" : [
+            "ENTITY1_IT",
+            "ENTITY1_NL"
         ]
     },
     {
@@ -50,7 +55,8 @@
             "ENTITY1_IT",
             "ENTITY1_NL",
             "ENTITY1_EU"
-        ]
+        ],
+        "recipientsForInformation" : []
     }]
 
 }
