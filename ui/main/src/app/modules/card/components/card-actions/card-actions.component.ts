@@ -21,6 +21,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-card-actions',
@@ -157,7 +158,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
                 this.closeDetails();
                 this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
             } else {
-                console.log('Impossible to delete card , error status from service : ', status);
+                LoggerService.error('Impossible to delete card , error status from service : ' + status);
                 this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
             }
             this.deleteInProgress = false;

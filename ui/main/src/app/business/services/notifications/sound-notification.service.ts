@@ -227,7 +227,7 @@ export class SoundNotificationService implements OnDestroy {
             // resets the replay timer.
             .pipe(this.processSignal(), takeUntil(this.ngUnsubscribe$))
             .subscribe((x) => {
-                console.log(new Date().toISOString(), ' Play sound');
+                logger.debug(' Play sound');
                 this.playSoundForSeverityEnabled(severity);
             });
     }
@@ -239,7 +239,7 @@ export class SoundNotificationService implements OnDestroy {
         )
             .pipe(this.processSignal(), takeUntil(this.ngUnsubscribe$))
             .subscribe((x) => {
-                console.log(new Date().toISOString(), ' Play sound for session end');
+                logger.debug(' Play sound for session end');
                 this.playSound(Severity.ALARM);
             });
     }
@@ -263,8 +263,7 @@ export class SoundNotificationService implements OnDestroy {
      * */
     private playSoundOnBrowser(sound: HTMLAudioElement) {
         sound.play().catch((error) => {
-            console.log(
-                new Date().toISOString(),
+            logger.warn(
                 `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`
             );
             /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */

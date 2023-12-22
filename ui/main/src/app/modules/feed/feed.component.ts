@@ -18,6 +18,7 @@ import {Router} from '@angular/router';
 import {UserService} from 'app/business/services/users/user.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-cards',
@@ -44,7 +45,7 @@ export class FeedComponent implements OnInit, OnDestroy {
         const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode', null);
         if (usersInHallwayMode?.includes(UserService.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
-            console.log('User in hallwayMode');
+            LoggerService.info('User in hallwayMode');
         }
     }
 

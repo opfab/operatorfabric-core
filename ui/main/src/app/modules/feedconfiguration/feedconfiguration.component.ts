@@ -20,6 +20,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
 import {ConfigService} from "../../business/services/config.service";
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -417,7 +418,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
                     if (msg?.includes('unable')) {
-                        console.log('Impossible to save settings, error message from service : ', msg);
+                        LoggerService.error('Impossible to save settings, error message from service : ' + msg);
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
