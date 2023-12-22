@@ -81,7 +81,6 @@ export class RealtimeUsersView {
             } else {
                 logger.error('realTimeScreens config could not be loaded');
             }
-            console.log(this.realtimePage)
             this.pageLoaded.next(this.realtimePage);
             this.pageLoaded.complete();
         });

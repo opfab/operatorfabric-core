@@ -105,12 +105,8 @@ export class LightCardsStore {
             ), // and if there is enough new cards
 
             tap((results) => {
-                console.log(
-                    new Date().toISOString(),
-                    'Cards flow in progress : ' +
-                        (results.size - this.numberOfCardProcessedByPreviousDebounce) +
-                        ' new cards  '
-                );
+                const newCardsCount = results.size - this.numberOfCardProcessedByPreviousDebounce;
+                logger.debug(`Cards flow in progress : ${newCardsCount} new cards`);
                 this.numberOfCardProcessedByPreviousDebounce = results.size;
             })
         );

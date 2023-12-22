@@ -14,6 +14,7 @@ import {CoreMenuConfig, Locale, CustomMenu, UIMenuFile} from '@ofModel/menu.mode
 import {ConfigServer} from '../server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponseStatus} from '../server/serverResponse';
+import {LoggerService} from './logs/logger.service';
 
 export class ConfigService {
     private static configServer: ConfigServer;
@@ -174,10 +175,10 @@ export class ConfigService {
                 const monitoringConfig = serverResponse.data;
                 if (monitoringConfig) {
                     ConfigService.monitoringConfig = monitoringConfig;
-                    console.log(new Date().toISOString(), 'Monitoring config loaded');
-                } else console.log(new Date().toISOString(), 'No monitoring config to load');
+                    LoggerService.info('Monitoring config loaded');
+                } else LoggerService.info('No monitoring config to load');
                 if (serverResponse.status !== ServerResponseStatus.OK)
-                    console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
+                    LoggerService.error('An error occurred when loading monitoringConfig');
                 return monitoringConfig;
             })
         );

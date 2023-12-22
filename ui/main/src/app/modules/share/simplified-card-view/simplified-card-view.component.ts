@@ -18,6 +18,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 
 
@@ -82,8 +83,8 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: (error) =>
-                    console.log(
-                        `something went wrong while trying to fetch process for ${this.card.process}` +
+                    LoggerService.error(
+                        `Something went wrong while trying to fetch process for ${this.card.process}` +
                             ` with ${this.card.processVersion} version, error = ${error}`
                     )
             });

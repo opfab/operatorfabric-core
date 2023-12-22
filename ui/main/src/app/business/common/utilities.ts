@@ -68,7 +68,6 @@ export class Utilities {
                 observable.pipe(
                     take(1),
                     catchError(error => {
-                        console.log("Error in observable = ", error);
                         return of(error);
                     })
                 )

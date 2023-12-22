@@ -21,6 +21,7 @@ import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {EntitiesService} from 'app/business/services/users/entities.service';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-usercard-select-state-form',
@@ -86,9 +87,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         search: true
     };
 
-    constructor(
-        private translateService: TranslateService
-    ) {}
+    constructor(private translateService: TranslateService) {}
 
     ngOnInit() {
         this.selectStateForm = new FormGroup({
@@ -157,17 +156,16 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     getStateFromProcessDefinition(process: Process, stateId: string): {value: string; label: string} {
         const stateFromProcessDefinition = process.states.get(stateId);
         if (stateFromProcessDefinition) {
-            if (stateFromProcessDefinition.userCard && this.isUserAllowedToPublishCardForState(stateFromProcessDefinition.userCard)) {
+            if (
+                stateFromProcessDefinition.userCard &&
+                this.isUserAllowedToPublishCardForState(stateFromProcessDefinition.userCard)
+            ) {
                 const label = stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
                 return {value: stateId, label: label};
             }
         } else
-            console.log(
-                'WARNING : state',
-                stateId,
-                'is present in perimeter for process',
-                process.id,
-                'but not in process definition'
+            LoggerService.warn(
+                `State ${stateId} is present in perimeter for process ${process.id} but not in process definition.`
             );
         return null;
     }
@@ -175,8 +173,12 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     isUserAllowedToPublishCardForState(userCard: UserCard) {
         if (userCard.publisherList?.length > 0) {
             const configuredPublisherList = [];
-            EntitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
-            return this.currentUserWithPerimeters.userData.entities.filter( entity => configuredPublisherList.includes(entity)).length > 0;
+            EntitiesService.resolveEntities(userCard.publisherList).forEach((e) => configuredPublisherList.push(e.id));
+            return (
+                this.currentUserWithPerimeters.userData.entities.filter((entity) =>
+                    configuredPublisherList.includes(entity)
+                ).length > 0
+            );
         }
         return true;
     }
@@ -249,8 +251,8 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                     const oldSelectedState = this.selectedState;
                     this.selectedState = this.stateOptions[0].value;
 
-                   // in case the state is the same as before , the selected value does not change for the selected component
-                   // so we need to send the event here instead of waiting for the event state change
+                    // in case the state is the same as before , the selected value does not change for the selected component
+                    // so we need to send the event here instead of waiting for the event state change
                     if (this.selectedState === oldSelectedState) {
                         this.stateChange.emit({
                             selectedProcessId: this.selectStateForm.get('usercardProcess').value,

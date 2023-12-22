@@ -20,7 +20,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-
+import {LoggerService} from '../logs/logger.service';
 
 export class ProcessesService {
     private static processServer: ProcessServer;
@@ -30,7 +30,6 @@ export class ProcessesService {
     private static processGroups = new Map<string, {name: string; processes: string[]}>();
 
     private static typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
-
 
     public static setProcessServer(processServer: ProcessServer) {
         this.processServer = processServer;
@@ -42,9 +41,9 @@ export class ProcessesService {
                 if (processesLoaded) {
                     ProcessesService.processesWithLatestVersionOnly = processesLoaded;
                     if (ProcessesService.processesWithLatestVersionOnly.length === 0) {
-                        console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                        LoggerService.warn('No processes configured');
                     } else {
-                        console.log(new Date().toISOString(), 'List of processes loaded');
+                        LoggerService.info('List of processes loaded');
                     }
                 }
             }),
@@ -61,19 +60,15 @@ export class ProcessesService {
                 if (processesLoaded) {
                     ProcessesService.processesWithAllVersions = processesLoaded;
                     if (ProcessesService.processesWithAllVersions.length === 0) {
-                        console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                        LoggerService.warn('No processes configured');
                     } else {
                         ProcessesService.loadAllProcessesWithAllVersionsInCache();
-                        console.log(new Date().toISOString(), 'List of all versions of processes loaded');
+                        LoggerService.info('List of all versions of processes loaded');
                     }
                 }
             }),
             catchError((error) => {
-                console.error(
-                    new Date().toISOString(),
-                    'An error occurred when loading all versions of processes',
-                    error
-                );
+                LoggerService.error('An error occurred when loading all versions of processes' + error);
                 return of(error);
             })
         );
@@ -94,10 +89,10 @@ export class ProcessesService {
                             });
                         });
                     }
-                    console.log(new Date().toISOString(), 'List of process groups loaded');
+                    LoggerService.info('List of process groups loaded');
                 }
                 if (response.status !== ServerResponseStatus.OK)
-                    console.error(new Date().toISOString(), 'An error occurred when loading processGroups');
+                    LoggerService.error('An error occurred when loading processGroups');
                 return '';
             })
         );
@@ -175,7 +170,7 @@ export class ProcessesService {
         return ProcessesService.processServer.getAllProcessesDefinition().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    console.error(new Date().toISOString(), 'An error occurred when loading processes configuration');
+                    LoggerService.error('An error occurred when loading processes configuration');
                     return new Array<Process>();
                 }
                 return response.data;
@@ -187,7 +182,7 @@ export class ProcessesService {
         return ProcessesService.processServer.getAllProcessesWithAllVersions().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    console.error(new Date().toISOString(), 'An error occurred when loading all versions of processes');
+                    LoggerService.error('An error occurred when loading all versions of processes');
                     return new Array<Process>();
                 }
                 return response.data;
@@ -209,11 +204,7 @@ export class ProcessesService {
             map((response) => {
                 if (response.status === ServerResponseStatus.OK && response.data)
                     ProcessesService.processesWithAllVersionsCache.set(key, response.data);
-                else
-                    console.log(
-                        new Date().toISOString(),
-                        `WARNING process ` + ` ${id} with version ${version} does not exist.`
-                    );
+                else LoggerService.warn(`Process ` + ` ${id} with version ${version} does not exist.`);
                 return response.data;
             })
         );

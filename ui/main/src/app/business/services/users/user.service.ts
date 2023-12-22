@@ -124,7 +124,7 @@ export class UserService {
                 next: (userWithPerimeters) => {
                     if (userWithPerimeters) {
                         UserService._userWithPerimeters = userWithPerimeters;
-                        console.log(new Date().toISOString(), 'User perimeter loaded');
+                        logger.info('User perimeter loaded');
                         UserService.loadUserRightsPerProcessAndState();
                     }
                 },
