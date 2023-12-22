@@ -147,7 +147,7 @@ export class AuthService {
     }
 
     public tryToLogin(username: string, password: string) {
-        console.log("Try to login");
+        logger.info("Try to login");
         this.authHandler.tryToLogin(username, password);
     }
 }

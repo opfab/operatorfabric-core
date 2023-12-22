@@ -14,6 +14,7 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 import {SupervisedEntity} from '@ofModel/supervised-entity.model';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {LoggerService} from '../logs/logger.service';
 
 
 export class SupervisedEntitiesService {
@@ -93,7 +94,7 @@ export class SupervisedEntitiesService {
                 next: (entities) => {
                     if (entities) {
                         SupervisedEntitiesService._entities = entities;
-                        console.log(new Date().toISOString(), 'List of entities loaded');
+                        LoggerService.info('List of entities loaded');
                     }
                 },
                 error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)

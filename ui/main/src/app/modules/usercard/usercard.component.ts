@@ -457,7 +457,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
-                        console.log(new Date().toISOString(), "Template loaded");
                         this.isLoadingCardTemplate = false;
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                         setTimeout(() => {

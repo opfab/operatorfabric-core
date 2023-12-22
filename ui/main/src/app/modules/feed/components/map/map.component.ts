@@ -362,7 +362,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             case 'Polygon':
                 return MapComponent.polygonStyle(severity, highlight);
             default:
-                console.log('ERROR: Unsupported geo type: ' + type);
+                logger.error('Unsupported geo type: ' + type);
         }
     }
 

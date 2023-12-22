@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {CrudService} from '../crud-service';
+import {CrudService} from './crud-service';
 import {BusinessDataService} from '../businessconfig/businessdata.service';
 
 export class CrudBusinessDataService extends CrudService {

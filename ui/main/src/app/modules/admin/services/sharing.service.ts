@@ -8,7 +8,7 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {CrudService} from 'app/business/services/crud-service';
+import {CrudService} from 'app/business/services/admin/crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';

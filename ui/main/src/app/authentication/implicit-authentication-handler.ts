@@ -12,6 +12,7 @@ import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
 
@@ -94,7 +95,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
                 this.tokenExpired.next(true);
                 break;
             case 'logout': {
-                console.log('Logout from implicit flow');
+                LoggerService.info('Logout from implicit flow');
                 break;
             }
         }

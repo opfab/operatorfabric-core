@@ -13,6 +13,7 @@ import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
+import {LoggerService} from '../logs/logger.service';
 
 
 export class PerimetersService  {
@@ -68,10 +69,10 @@ export class PerimetersService  {
                 next: (perimeters) => {
                     if (perimeters) {
                         PerimetersService._perimeters = perimeters;
-                        console.log(new Date().toISOString(), 'List of perimeters loaded');
+                        LoggerService.info('List of perimeters loaded');
                     }
                 },
-                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                error: (error) => LoggerService.error('An error occurred when loading perimeters', error)
             })
         );
     }

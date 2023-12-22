@@ -13,6 +13,7 @@ import {takeUntil, tap, map} from 'rxjs/operators';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
+import {LoggerService} from '../logs/logger.service';
 
 export class GroupsService {
     private static _groups: Group[];
@@ -66,10 +67,10 @@ export class GroupsService {
                 next: (groups) => {
                     if (groups) {
                         GroupsService._groups = groups;
-                        console.log(new Date().toISOString(), 'List of groups loaded');
+                        LoggerService.info('List of groups loaded');
                     }
                 },
-                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                error: (error) => LoggerService.error('an error occurred when loading groups' + error)
             })
         );
     }

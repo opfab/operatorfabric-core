@@ -15,6 +15,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {ConfigServer} from '../../server/config.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
+import {LoggerService} from '../logs/logger.service';
 
 declare const opfab: any;
 
@@ -23,7 +24,6 @@ export class I18nService {
     private static _locale: string;
     private static configServer: ConfigServer;
     private static translationService: TranslationService;
-
 
     public static setConfigServer(configServer: ConfigServer) {
         this.configServer = configServer;
@@ -34,9 +34,9 @@ export class I18nService {
     }
 
     public static initLocale() {
-        ConfigService
-            .getConfigValueAsObservable('settings.locale', 'en')
-            .subscribe((locale) => this.changeLocale(locale));
+        ConfigService.getConfigValueAsObservable('settings.locale', 'en').subscribe((locale) =>
+            this.changeLocale(locale)
+        );
     }
 
     public static changeLocale(locale: string) {
@@ -52,23 +52,40 @@ export class I18nService {
     }
 
     public static setTranslationForMultiSelectUsedInTemplates() {
-        opfab.multiSelect.searchPlaceholderText = this.translationService.getTranslation('multiSelect.searchPlaceholderText');
+        opfab.multiSelect.searchPlaceholderText = this.translationService.getTranslation(
+            'multiSelect.searchPlaceholderText'
+        );
         opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
         opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
-        opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation('multiSelect.noSearchResultsText');
+        opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation(
+            'multiSelect.noSearchResultsText'
+        );
     }
 
-    
     public static setTranslationForRichTextEditor() {
         const root = document.documentElement;
-        root.style.setProperty('--opfab-richtext-link-enter', "\"" + this.translationService.getTranslation("userCard.richTextEditor.enterLink") + "\"");
-        root.style.setProperty('--opfab-richtext-link-visit', "\"" + this.translationService.getTranslation("userCard.richTextEditor.visitLink") + "\"");
+        root.style.setProperty(
+            '--opfab-richtext-link-enter',
+            '"' + this.translationService.getTranslation('userCard.richTextEditor.enterLink') + '"'
+        );
+        root.style.setProperty(
+            '--opfab-richtext-link-visit',
+            '"' + this.translationService.getTranslation('userCard.richTextEditor.visitLink') + '"'
+        );
 
-        root.style.setProperty('--opfab-richtext-link-save', "\"" + this.translationService.getTranslation("userCard.richTextEditor.saveLink") + "\"");
-    
-        root.style.setProperty('--opfab-richtext-link-edit', "\"" + this.translationService.getTranslation("userCard.richTextEditor.editLink") + "\"");
-        root.style.setProperty('--opfab-richtext-link-remove', "\"" + this.translationService.getTranslation("userCard.richTextEditor.removeLink") + "\"");
+        root.style.setProperty(
+            '--opfab-richtext-link-save',
+            '"' + this.translationService.getTranslation('userCard.richTextEditor.saveLink') + '"'
+        );
 
+        root.style.setProperty(
+            '--opfab-richtext-link-edit',
+            '"' + this.translationService.getTranslation('userCard.richTextEditor.editLink') + '"'
+        );
+        root.style.setProperty(
+            '--opfab-richtext-link-remove',
+            '"' + this.translationService.getTranslation('userCard.richTextEditor.removeLink') + '"'
+        );
     }
 
     public static get locale() {
@@ -80,14 +97,11 @@ export class I18nService {
             tap({
                 next: (serverResponse) => {
                     if (serverResponse.status === ServerResponseStatus.OK) {
-                     this.translationService.setTranslation(locale, serverResponse.data, true)
+                        this.translationService.setTranslation(locale, serverResponse.data, true);
+                    } else {
+                        LoggerService.error(`Impossible to load locale ${I18nService.localUrl}${locale}.json`);
                     }
-                    else {
-                        console.log(
-                            new Date().toISOString(),
-                            `Error : impossible to load locale ${I18nService.localUrl}${locale}.json`
-                        )
-                    }},
+                }
             })
         );
     }

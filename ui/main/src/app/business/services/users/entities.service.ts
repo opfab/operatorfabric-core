@@ -92,10 +92,10 @@ export class EntitiesService{
                 next: (entities) => {
                     if (entities) {
                         EntitiesService._entities = entities;
-                        console.log(new Date().toISOString(), 'List of entities loaded');
+                        logger.info('List of entities loaded');
                     }
                 },
-                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                error: (error) => logger.error('An error occurred when loading entities' + error)
             })
         );
     }

@@ -10,7 +10,7 @@
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogLevel, LoggerService, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -96,9 +96,12 @@ export class ApplicationLoadingComponent implements OnInit {
         private externalDevicesServer: ExternalDevicesServer,
         private templateCssServer: TemplateCssServer,
         private settingsServer: SettingsServer
-    ) {}
+    ) {
+        LoggerService.setLogLevel(LogLevel.DEBUG);
+    }
 
     ngOnInit() {
+
         ServicesConfig.setServers({
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
