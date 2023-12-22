@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,11 +31,11 @@ describe ('Feed configuration tests',function () {
         // Default is "false" (i.e. visible) except for hideAckAllCardsFeature
 
         // Removing corresponding properties from the web-ui file
-        script.removePropertyInConf('feed.card.hideTimeFilter','web-ui');
-        script.removePropertyInConf('feed.card.hideResponseFilter','web-ui');
-        script.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
-        script.removePropertyInConf('feed.defaultSorting','web-ui');
-        script.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
+        script.removePropertyInConf('feed.card.hideTimeFilter');
+        script.removePropertyInConf('feed.card.hideResponseFilter');
+        script.removePropertyInConf('feed.defaultAcknowledgmentFilter');
+        script.removePropertyInConf('feed.defaultSorting');
+        script.removePropertyInConf('feed.card.hideAckAllCardsFeature');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -59,9 +59,9 @@ describe ('Feed configuration tests',function () {
     it('Buttons and filters visibility - Set property to true', function () {
 
         // Setting properties to true in file
-        script.setPropertyInConf('feed.card.hideTimeFilter','web-ui',true);
-        script.setPropertyInConf('feed.card.hideResponseFilter','web-ui',true);
-        script.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
+        script.setPropertyInConf('feed.card.hideTimeFilter',true);
+        script.setPropertyInConf('feed.card.hideResponseFilter',true);
+        script.setPropertyInConf('feed.card.hideAckAllCardsFeature',true);
 
         opfab.loginWithUser('operator1_fr');
 
@@ -80,9 +80,9 @@ describe ('Feed configuration tests',function () {
     it('Buttons and filters visibility - Set property to false', function () {
 
         // Setting properties to true in file
-        script.setPropertyInConf('feed.card.hideTimeFilter','web-ui',false);
-        script.setPropertyInConf('feed.card.hideResponseFilter','web-ui',false);
-        script.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
+        script.setPropertyInConf('feed.card.hideTimeFilter',false);
+        script.setPropertyInConf('feed.card.hideResponseFilter',false);
+        script.setPropertyInConf('feed.card.hideAckAllCardsFeature',false);
 
         opfab.loginWithUser('operator1_fr');
 
@@ -102,8 +102,8 @@ describe ('Feed configuration tests',function () {
     it('Sorting criteria and acknowledgment filter options - Configure initial value', function () {
 
         //Set corresponding properties from the web-ui file
-        script.setPropertyInConf('feed.defaultAcknowledgmentFilter','web-ui','\\"ack\\"');
-        script.setPropertyInConf('feed.defaultSorting','web-ui','\\"date\\"');
+        script.setPropertyInConf('feed.defaultAcknowledgmentFilter','\\"ack\\"');
+        script.setPropertyInConf('feed.defaultSorting','\\"date\\"');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -121,8 +121,8 @@ describe ('Feed configuration tests',function () {
     it('Sorting criteria and acknowledgment filter options - Check default behaviour', function () {
 
         // Removing corresponding properties from the web-ui file
-        script.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
-        script.removePropertyInConf('feed.defaultSorting','web-ui');
+        script.removePropertyInConf('feed.defaultAcknowledgmentFilter');
+        script.removePropertyInConf('feed.defaultSorting');
 
         opfab.loginWithUser('operator1_fr');
 

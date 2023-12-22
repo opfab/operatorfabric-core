@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,7 +62,7 @@ describe('Alert view ', () => {
         );
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
-        expect(alertView.getAlertPage().message).toEqual('{TranslationMock : key=messageKey;values=value}');
+        expect(alertView.getAlertPage().message).toEqual('Translation (en) of messageKey with values=value');
     });
 
     it('GIVEN a message WHEN message is DEBUG level THEN message background color is blue (#0070da) ', async () => {

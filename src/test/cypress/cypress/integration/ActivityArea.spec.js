@@ -95,7 +95,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',true);
 
         cy.visit('');
 
@@ -186,7 +186,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -146,7 +146,7 @@ describe('User action logs view ', () => {
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
-        expect(result.errorMessage).toEqual('{TranslationMock : key=shared.error.technicalError}');
+        expect(result.errorMessage).toEqual('Translation (en) of shared.error.technicalError');
     });
 
     it('GIVEN a search is performed WHEN no data THEN no result message is provide ', async () => {
@@ -158,7 +158,7 @@ describe('User action logs view ', () => {
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
-        expect(result.errorMessage).toEqual('{TranslationMock : key=shared.noResult}');
+        expect(result.errorMessage).toEqual('Translation (en) of shared.noResult');
     });
 
     it('GIVEN a search is performed WHEN end date before start date THEN error message is provide ', async () => {
@@ -169,7 +169,7 @@ describe('User action logs view ', () => {
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
-        expect(result.errorMessage).toEqual('{TranslationMock : key=shared.filters.toDateBeforeFromDate}');
+        expect(result.errorMessage).toEqual('Translation (en) of shared.filters.toDateBeforeFromDate');
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains entity names', async () => {
@@ -281,7 +281,7 @@ describe('User action logs view ', () => {
         const message = await firstValueFrom(alertSubject.asObservable());
 
         expect(card).toEqual(null);
-        expect(message.message).toEqual('{TranslationMock : key=feed.selectedCardDeleted}');
+        expect(message.message).toEqual('Translation (en) of feed.selectedCardDeleted');
         expect(message.level).toEqual(MessageLevel.ERROR);
     });
 });

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -124,7 +124,7 @@ export class OpfabAPIService {
             return resource;
         };
 
-        opfab.navigate.redirectToBusinessMenu = function (menuId, menuItemId, urlExtension) {
+        opfab.navigate.redirectToBusinessMenu = function (menuId,urlExtension) {
             const urlSplit = document.location.href.split('#');
             // WARNING : HACK
             //
@@ -140,9 +140,7 @@ export class OpfabAPIService {
                 urlSplit[0] +
                 '#/businessconfigparty/' +
                 encodeURIComponent(encodeURIComponent(menuId)) +
-                '/' +
-                encodeURIComponent(encodeURIComponent(menuItemId)) +
-                '/';
+                '/' ;
 
             if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
             document.location.href = newUrl;

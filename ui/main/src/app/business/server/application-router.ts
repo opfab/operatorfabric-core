@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
- .opfab-logo {
-	background-color: #f8f9fa;
-	padding: 5px;
-	border-radius: 5px;
+export abstract class ApplicationRouter {
+    abstract navigateTo(url: string);
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,22 +9,20 @@
 
 import {I18n} from './i18n.model';
 
-export class CustomMenu {
-    constructor(readonly id: string,
-                readonly label: string,
-                readonly entries: (MenuEntry | CoreMenuConfig)[]) {}
-}
-
 export class MenuEntry {
     linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
     showOnlyForGroups: string[];
 
     constructor(
-        readonly id: string,
-        readonly label: string,
-        readonly url: string,
+        public readonly id: string,
+        public readonly customMenuId: string,
+        public readonly opfabCoreMenuId : string,
+        public readonly label: string,
+        public readonly url: string,
+        public readonly visible: boolean,
+        public readonly entries: MenuEntry[],
         linkType?: MenuEntryLinkTypeEnum,
-        showOnlyForGroups?: string[]
+        showOnlyForGroups?: string[],
     ) {}
 }
 
@@ -40,14 +38,11 @@ export class Locale {
 
 export class UIMenuFile {
     constructor(
-        readonly navigationBar: (CoreMenuConfig | CustomMenu)[],
-        readonly topRightIconMenus: CoreMenuConfig[],
-        readonly topRightMenus: CoreMenuConfig[],
+        readonly navigationBar: MenuEntry[],
+        readonly topRightIconMenus: MenuEntry[],
+        readonly topRightMenus: MenuEntry[],
         readonly locales: Locale[],
+        readonly showDropdownMenuEvenIfOnlyOneEntry: boolean,
     ) {}
-}
-
-export class CoreMenuConfig {
-    constructor(readonly opfabCoreMenuId: string, readonly visible = true, readonly showOnlyForGroups?: string[]) {}
 }
 

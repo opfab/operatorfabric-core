@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ const templateGateway = {
             new Date().toISOString(),
             ' WARNING : Use of templateGateway.redirectToBusinessMenu is deprecated , you should use opfab.navigate.redirectToBusinessMenu instead'
         );
-        opfab.navigate.redirectToBusinessMenu(menuId, menuItemId, urlExtension);
+        opfab.navigate.redirectToBusinessMenu(menuItemId, urlExtension);
     },
 
     // True if user is allowed to respond to the current card :
