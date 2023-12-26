@@ -78,30 +78,35 @@ public class OAuth2GenericConfiguration {
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) throws IllegalArgumentException {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
-                userServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
-                CurrentUserWithPerimeters currentUserWithPerimeters = null;
-                try {
-                    currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
-                }
-                catch (IOException e) {
-                    log.error("Error getting user information", e);
-                    throw new IllegalArgumentException("Error getting user information", e);
-                }
-                catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                     log.error("Error getting user information (Interrupted Exception)", e);
-                    throw new IllegalArgumentException("Error getting user information (Interrupted Exception)", e);
-                }
+        userServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
+        CurrentUserWithPerimeters currentUserWithPerimeters;
+        try {
+            currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
+
+            if (currentUserWithPerimeters != null) {
                 User user = currentUserWithPerimeters.getUserData();
 
-                // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
-        		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
-                
-        		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(currentUserWithPerimeters.getPermissions());
-		
-		log.debug("user [{}] has these roles '{}' through the {} mode and entities {}",principalId,authorities,groupsProperties.getMode(),user.getEntities());
-        
-        return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
+                if (user != null) {
+                    // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+                    if (groupsProperties.getMode() == GroupsMode.JWT)
+                        user.setGroups(getGroupsList(jwt));
+
+                    List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(currentUserWithPerimeters.getPermissions());
+                    log.debug("user [{}] has these roles '{}' through the {} mode and entities {}", principalId, authorities, groupsProperties.getMode(), user.getEntities());
+                    return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
+                }
+            }
+        }
+        catch (IOException e) {
+            log.error("Error getting user information", e);
+            throw new IllegalArgumentException("Error getting user information", e);
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Error getting user information (Interrupted Exception)", e);
+            throw new IllegalArgumentException("Error getting user information (Interrupted Exception)", e);
+        }
+        return null;
     }
 
 	/**
