@@ -49,7 +49,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     public lightCardsToDisplay: LightCard[];
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private mapService: MapService, private translate: TranslateService, private router: Router) {
+    constructor(private translate: TranslateService, private router: Router) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 
@@ -69,12 +69,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                     }
                 });
             this.updateMapWhenGlobalStyleChange();
-            this.mapService.highlightCardEvent
+            MapService.highlightCardEvent
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(({lightCardId, highLight}) => {
                     this.highlightFeature(lightCardId, highLight);
                 });
-            this.mapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
+            MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
                 this.zoomToLocation(lightCardId);
             });
         }
