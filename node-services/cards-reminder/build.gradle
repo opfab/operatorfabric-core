@@ -72,3 +72,7 @@ build.dependsOn(runBuild)
 
 assemble.dependsOn(runBuild)
 tasks.dockerPrepare.dependsOn test
+
+tasks.named("dockerPrepare") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
