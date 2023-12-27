@@ -57,7 +57,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private soundNotificationService: SoundNotificationService,
-        private mapService: MapService,
         private translateService: TranslateService
     ) {}
 
@@ -161,7 +160,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     highlightOnMap(highlight: boolean) {
         if (this.isGeoMapEnabled) {
-            this.mapService.highlightOnMap(highlight, this.lightCard);
+            MapService.highlightOnMap(highlight, this.lightCard);
         }
     }
 
@@ -169,6 +168,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         this.soundNotificationService.clearOutstandingNotifications();
-        this.mapService.zoomToLocation(this.lightCard);
+        MapService.zoomToLocation(this.lightCard);
     }
 }

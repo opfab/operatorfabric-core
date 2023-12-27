@@ -7,22 +7,19 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class MapService {
-    highlightCardEvent = new EventEmitter<any>();
-    zoomToLocationEvent = new EventEmitter<string>();
+    static highlightCardEvent = new EventEmitter<any>();
+    static zoomToLocationEvent = new EventEmitter<string>();
 
-    highlightOnMap(highLight: boolean, lightCard: LightCard) {
+    static highlightOnMap(highLight: boolean, lightCard: LightCard) {
         const lightCardId = lightCard.id;
         this.highlightCardEvent.emit({lightCardId, highLight});
     }
 
-    zoomToLocation(lightCard: LightCard) {
+    static zoomToLocation(lightCard: LightCard) {
         this.zoomToLocationEvent.emit(lightCard.id);
     }
 }
