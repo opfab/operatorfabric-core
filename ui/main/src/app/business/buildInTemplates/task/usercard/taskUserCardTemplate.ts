@@ -30,7 +30,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         <br/>
         <div class="opfab-input">
             <label for="taskDescription"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskDescriptionLabel')}</label>
-            <input size="50" type="text" id="taskDescription" value='${this.view.getTaskDescription()}'> </input> 
+            <input size="50" type="text" id="taskDescription" value='${this.view.getTaskDescription()}'> 
         </div>
         <br/>
         
@@ -147,7 +147,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                         <td style="width: 90px">
                             <div class="opfab-input">
                                 <label> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.dayNumber")} </label>
-                                <input size="1" maxlength="2" type="number" id="nthDay" min="1" max="31">
+                                <input size="1" maxlength="2" type="number" id="nthDay" min="1" max="31" oninput="if (this.value > 31) this.value = '';">
                             </div>
                         </td>
                         <td style="font-size:13px"> &nbsp; ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.dayOfTheMonth")} </td>
@@ -304,9 +304,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
         if (freq === 'MONTHLY') {
             this.displayMonthlyFrequency();
-            if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForMonthlyFreq();
-        } else {
-            if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForDailyFreq();
+            if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
+                this.selectValuesInEditModeForMonthlyFreq();
+            }
+        } else if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
+            this.selectValuesInEditModeForDailyFreq();
         }
     }
 
@@ -326,9 +328,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const byweekday = this.view.getWeekDay();
         const bymonth = this.view.getMonth();
 
-        if (byweekday) this.checkWeekDay(byweekday);
+        if (byweekday) {
+            this.checkWeekDay(byweekday);
+        }
 
-        if (bymonth) this.checkMonthDaily(bymonth);
+        if (bymonth) {
+            this.checkMonthDaily(bymonth);
+        }
     }
    
     checkWeekDay(byweekday) {
@@ -455,9 +461,15 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             bymonth = this.fetchMonths();
 
             if ((<HTMLInputElement>document.getElementById("radioButtonNthDay")).checked === true) {
-                if ((<HTMLInputElement>document.getElementById("nthDay")).value)            bymonthday.push((<HTMLInputElement>document.getElementById("nthDay")).value);
-                if ((<HTMLInputElement>document.getElementById("firstDay")).checked === true) bymonthday.push("1");
-                if ((<HTMLInputElement>document.getElementById("lastDay")).checked === true)  bymonthday.push("-1");
+                if ((<HTMLInputElement>document.getElementById("nthDay")).value) {
+                    bymonthday.push((<HTMLInputElement>document.getElementById("nthDay")).value);
+                }
+                if ((<HTMLInputElement>document.getElementById("firstDay")).checked === true) {
+                    bymonthday.push("1");
+                }
+                if ((<HTMLInputElement>document.getElementById("lastDay")).checked === true) {
+                    bymonthday.push("-1");
+                }
 
                 if (bymonthday.length === 0) {
                     return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay')};
