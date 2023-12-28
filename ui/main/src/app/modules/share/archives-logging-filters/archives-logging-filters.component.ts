@@ -215,6 +215,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     toggleAdminMode() {
         this.isAdminModeChecked = !this.isAdminModeChecked;
         UserPreferencesService.setPreference('opfab.seeOnlyCardsForWhichUserIsRecipient', String(!this.isAdminModeChecked));
+        this.reset.emit(null);
         this.loadValuesForFilters();
     }
 
