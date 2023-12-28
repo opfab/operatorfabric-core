@@ -75,14 +75,12 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
                 dateObjectToYYYYMMDDTHHmmss(new Date(startingDate + NB_MILLISECONDS_IN_ONE_MINUTE))
         );
 
-        const nextDateTimeFromRRule = rule.all(function (date, i) {
-            return i < 1;
-        })[0];
+        const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1;})[0];
 
         // It is necessary to do this addition to have the right hour, maybe a bug of rrule.js here too...
-        return (
-            nextDateTimeFromRRule.valueOf() + nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE
-        );
+        if (nextDateTimeFromRRule) {
+            return (nextDateTimeFromRRule.valueOf() + nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE);
+        }
     }
     return -1;
 }
