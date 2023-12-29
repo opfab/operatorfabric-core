@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Card, Recurrence, TimeSpan} from '@ofModel/card.model';
-import {getOneRandomCard} from '@tests/helpers';
+import {getOneCard} from '@tests/helpers';
 import moment from 'moment-timezone';
 import {getNextTimeForRepeating} from './reminderUtils';
 
@@ -21,7 +21,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
     let recurrence4;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = getOneCard();
     });
 
     beforeEach(() => {
@@ -194,7 +194,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = getOneCard();
     });
 
     beforeEach(() => {
@@ -493,7 +493,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on months only  
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = getOneCard();
     });
 
     beforeEach(() => {
@@ -601,7 +601,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on days and mont
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = getOneCard();
     });
 
     beforeEach(() => {
@@ -812,7 +812,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = getOneCard();
     });
 
     beforeEach(() => {

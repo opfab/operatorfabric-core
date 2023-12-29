@@ -9,7 +9,7 @@
 
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {getSeveralRandomLightCards} from '@tests/helpers';
+import {getSeveralLightCards} from '@tests/helpers';
 import {LightCardsFilter} from '../../store/lightcards/lightcards-filter';
 
 describe('NewFilterService ', () => {
@@ -23,7 +23,7 @@ describe('NewFilterService ', () => {
     function getFourCards() {
         let cards: LightCard[] = new Array();
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: null,
                 publishDate: new Date().valueOf(),
@@ -34,7 +34,7 @@ describe('NewFilterService ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR,
@@ -45,7 +45,7 @@ describe('NewFilterService ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 2 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 2,
@@ -55,7 +55,7 @@ describe('NewFilterService ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 3 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 3,
@@ -70,7 +70,7 @@ describe('NewFilterService ', () => {
     function getSevenCards() {
         let cards = getFourCards();
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf() + 36 * ONE_HOUR,
                 endDate: new Date().valueOf() + 48 * ONE_HOUR,
                 publishDate: new Date().valueOf() + ONE_HOUR * 25,
@@ -80,7 +80,7 @@ describe('NewFilterService ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf() + 31 * ONE_HOUR,
                 endDate: new Date().valueOf() + 48 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 31,
@@ -90,7 +90,7 @@ describe('NewFilterService ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf() + 31 * ONE_HOUR,
                 endDate: new Date().valueOf() + 48 * ONE_HOUR,
                 publishDate: new Date().valueOf() + ONE_HOUR * 51,

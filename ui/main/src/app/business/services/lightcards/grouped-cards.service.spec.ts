@@ -9,13 +9,13 @@
  */
 
 import {Severity} from '@ofModel/light-card.model';
-import {getSeveralRandomLightCards} from '@tests/helpers';
+import {getSeveralLightCards} from '@tests/helpers';
 import {GroupedCardsService} from './grouped-cards.service';
 
 describe('GroupedCardFilterService ', () => {
 
     function getCardWithTag(tags: string[]) {
-        return getSeveralRandomLightCards(1, {
+        return getSeveralLightCards(1, {
             startDate: new Date().valueOf(),
             endDate: null,
             publishDate: new Date().valueOf(),
