@@ -8,7 +8,7 @@
  */
 
 
-import {getOneRandomCard} from '@tests/helpers';
+import {getOneCard} from '@tests/helpers';
 
 import {HandlebarsService} from './handlebars.service';
 import * as moment from 'moment';
@@ -36,7 +36,7 @@ describe('Handlebars Services', () => {
 
     describe('#executeTemplate', () => {
         const userContext = new UserContext('jdoe', 'token', 'John', 'Doe');
-        const card = getOneRandomCard({
+        const card = getOneCard({
             data: {
                 name: 'something',
                 numbers: [0, 1, 2, 3, 4, 5],

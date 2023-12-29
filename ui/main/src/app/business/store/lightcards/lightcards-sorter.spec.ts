@@ -8,7 +8,7 @@
  */
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {getSeveralRandomLightCards} from '@tests/helpers';
+import {getSeveralLightCards} from '@tests/helpers';
 import {LightCardsSorter} from './lightcards-sorter';
 
 describe('Lightcards sorter ', () => {
@@ -22,7 +22,7 @@ describe('Lightcards sorter ', () => {
     function getFourCard() {
         let cards: LightCard[] = new Array();
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: null,
                 publishDate: new Date().valueOf(),
@@ -33,7 +33,7 @@ describe('Lightcards sorter ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR,
@@ -44,7 +44,7 @@ describe('Lightcards sorter ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 2 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 3,
@@ -55,7 +55,7 @@ describe('Lightcards sorter ', () => {
             })
         );
         cards = cards.concat(
-            getSeveralRandomLightCards(1, {
+            getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 3 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 2,

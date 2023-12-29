@@ -10,7 +10,7 @@
 import moment from 'moment';
 import {Circles} from './circles';
 import {XAxis} from './xaxis';
-import {getOneRandomCard} from '@tests/helpers';
+import {getOneCard} from '@tests/helpers';
 import {Frequency} from '@ofModel/light-card.model';
 import {Recurrence, TimeSpan} from '@ofModel/card.model';
 
@@ -41,7 +41,7 @@ describe('Timeline Circles', () => {
     });
 
     it('set one circle with count=1 if one card ', () => {
-        const card = getOneRandomCard({
+        const card = getOneCard({
             startDate: moment(startDate).add(5, 'days').add(1, 'hours').valueOf(),
             severity: 'ACTION'
         });
@@ -54,7 +54,7 @@ describe('Timeline Circles', () => {
     });
 
     it('set one circle with severity information if  one card with unknown severity ', () => {
-        const card = getOneRandomCard({
+        const card = getOneCard({
             startDate: moment(startDate).add(5, 'days').add(1, 'hours').valueOf(),
             severity: 'DUMMY'
         });
@@ -67,7 +67,7 @@ describe('Timeline Circles', () => {
     });
 
     it('set no circle if one card is after time domain ', () => {
-        const card = getOneRandomCard({
+        const card = getOneCard({
             startDate: moment(endDate).add(1, 'hours').valueOf(),
             severity: 'ALARM'
         });
@@ -77,7 +77,7 @@ describe('Timeline Circles', () => {
     });
 
     it('set no circle if one card is before time domain ', () => {
-        const card = getOneRandomCard({
+        const card = getOneCard({
             startDate: moment().startOf('year').subtract(1, 'month').valueOf(),
             severity: 'ALARM'
         });
@@ -87,12 +87,12 @@ describe('Timeline Circles', () => {
     });
 
     it('set one circle with count=2 if two card in the same interval and same severity ', () => {
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM'
         });
 
-        const card2 = getOneRandomCard({
+        const card2 = getOneCard({
             startDate: moment(startDate).add(4, 'day').add(2, 'hour').valueOf(),
             severity: 'ALARM'
         });
@@ -103,11 +103,11 @@ describe('Timeline Circles', () => {
     });
 
     it('set two circles with count=1 if two card are not in the same interval but same severity ', () => {
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
             severity: 'COMPLIANT'
         });
-        const card2 = getOneRandomCard({
+        const card2 = getOneCard({
             startDate: moment(startDate).add(2, 'month').add(1, 'hour').valueOf(),
             severity: 'COMPLIANT'
         });
@@ -123,11 +123,11 @@ describe('Timeline Circles', () => {
     });
 
     it('set two circles with count=1 if two cards are in the same interval but not same severity ', () => {
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM'
         });
-        const card2 = getOneRandomCard({
+        const card2 = getOneCard({
             startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
             severity: 'INFORMATION'
         });
@@ -143,16 +143,16 @@ describe('Timeline Circles', () => {
     });
 
     it('set two circles with one count=1 and one count= 2 if three cards of same severity  and 2 in the same interval ', () => {
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM'
         });
-        const card2 = getOneRandomCard({
+        const card2 = getOneCard({
             startDate: moment(startDate).add(4, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM'
         });
 
-        const card3 = getOneRandomCard({
+        const card3 = getOneCard({
             startDate: moment(startDate).add(6, 'month').add(1, 'hour').valueOf(),
             severity: 'ALARM'
         });
@@ -167,21 +167,21 @@ describe('Timeline Circles', () => {
 
     it('set three cards in the same interval and same severity , there shoud be one circle with 3 summary  ', () => {
 
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             id : 'card1',
             startDate: moment(startDate).add(5, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title1'
         });
 
-        const card2 = getOneRandomCard({
+        const card2 = getOneCard({
             id : 'card2',
             startDate: moment(startDate).add(6, 'day').add(3, 'hour').valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title2'
         });
 
-        const card3 = getOneRandomCard({
+        const card3 = getOneCard({
             id : 'card3',
             startDate: moment(startDate).add(8, 'day').add(8, 'hour').valueOf(),
             severity: 'ALARM',
@@ -200,7 +200,7 @@ describe('Timeline Circles', () => {
     });
 
     it("1 rRule recurrence per month shall generate 12 circles on timeline in year mode", () => {
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             id : 'card1',
             startDate: moment(startDate).valueOf(),
             endDate: moment(endDate).valueOf(),
@@ -229,7 +229,7 @@ describe('Timeline Circles', () => {
         recurrence.months = [1,2,3,4,5];
         recurrence.durationInMinutes = 60;
 
-        const card1 = getOneRandomCard({
+        const card1 = getOneCard({
             id : 'card1',
             startDate: moment(startDate).valueOf(),
             endDate: moment(endDate).valueOf(),
@@ -245,7 +245,7 @@ describe('Timeline Circles', () => {
 
 
     it('set two circle with if one card with two timespans', () => {
-        const card = getOneRandomCard({
+        const card = getOneCard({
             startDate: moment(startDate).valueOf(),
             severity: 'ALARM',
             timeSpans: [new TimeSpan(startDate.valueOf(), endDate.valueOf(), null),

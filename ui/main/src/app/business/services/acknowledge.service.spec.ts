@@ -15,7 +15,7 @@ import {
     Response,
     State
 } from '@ofModel/processes.model';
-import {getOneRandomCard, getOneRandomProcess} from '@tests/helpers';
+import {getOneCard} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
@@ -64,13 +64,29 @@ describe('AcknowledgeService testing ', () => {
 
         EntitiesService.loadAllEntitiesData().subscribe();
 
-        card = getOneRandomCard({
+        card = getOneCard({
             process: 'testProcess',
             processVersion: '1',
             state: 'testState',
             entitiesAllowedToRespond: ['ENTITY1']
         });
     });
+
+    function getOneProcess(processTemplate?: any): Process {
+        processTemplate = processTemplate ?? {};
+        const states = new Map();
+
+        states.set(1, new State('template1', ['style1', 'style2']));
+        states.set(2, new State('template1', ['style1', 'style2']));
+
+        return new Process(
+            processTemplate.id ?? 'testId',
+            processTemplate.version ?? 'testVersion',
+            processTemplate.name ?? 'testName',
+            processTemplate.locales ?? undefined,
+            processTemplate.states ?? states
+        );
+    }
 
     function getTestProcesses(): Process[] {
         const state1 = new State();
@@ -143,7 +159,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('acknowledgmentAllowed of the state is not present , isAcknowledgmentAllowed() must return true (default value)', () => {
         statesList.set('testState', new State(null, null, null, null));
-        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
@@ -162,7 +178,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('state does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
         statesList.set('dummyState', new State(null, null, null, null));
-        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
@@ -173,7 +189,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('acknowledgmentAllowed of the state is Never, isAcknowledgmentAllowed() must return false', () => {
         statesList.set('testState', new State(null, null, null, AcknowledgmentAllowedEnum.NEVER));
-        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
 
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
@@ -185,7 +201,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('acknowledgmentAllowed of the state is Always, isAcknowledgmentAllowed() must return true', () => {
         statesList.set('testState', new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS));
-        const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+        const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
@@ -208,7 +224,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -237,7 +253,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -266,7 +282,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -295,7 +311,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
                 {
                     process: 'testProcess',
@@ -324,7 +340,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
                 {
                     process: 'testProcess',
@@ -353,7 +369,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
                 {
                     process: 'testProcess',
@@ -382,7 +398,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -415,7 +431,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -440,7 +456,7 @@ describe('AcknowledgeService testing ', () => {
             'lttd is not reached, isAcknowledgmentAllowed() must return false',
         () => {
             const lttdInTheFuture = new Date().valueOf() + 100000;
-            const cardWithLttd = getOneRandomCard({
+            const cardWithLttd = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'testState',
@@ -456,7 +472,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -477,7 +493,7 @@ describe('AcknowledgeService testing ', () => {
             'lttd is reached, isAcknowledgmentAllowed() must return true',
         () => {
             const lttdInThePast = new Date().valueOf() - 100000;
-            const cardWithLttd = getOneRandomCard({
+            const cardWithLttd = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'testState',
@@ -493,7 +509,7 @@ describe('AcknowledgeService testing ', () => {
                     AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
                 )
             );
-            const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+            const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
                 {
                     process: 'testProcess',
@@ -513,7 +529,7 @@ describe('AcknowledgeService testing ', () => {
        'no user has ack the card, no entity has ack the card, ' +
        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            const cardWithoutAcks = getOneRandomCard({
+            const cardWithoutAcks = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state1',
@@ -531,7 +547,7 @@ describe('AcknowledgeService testing ', () => {
        'user has ack the card, no other entity has ack the card, ' +
        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state1',
@@ -549,7 +565,7 @@ describe('AcknowledgeService testing ', () => {
        'other user (userMemberOfEntity2) has ack the card,' +
        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            const cardWithoutAcks = getOneRandomCard({
+            const cardWithoutAcks = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state1',
@@ -567,7 +583,7 @@ describe('AcknowledgeService testing ', () => {
        'other user member of ENTITY1 has ack the card,' +
        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            const cardWithoutAcks = getOneRandomCard({
+            const cardWithoutAcks = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state1',
@@ -586,7 +602,7 @@ describe('AcknowledgeService testing ', () => {
        'no user has ack the card, no entity has ack the card, ' +
        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            const cardWithoutAcks = getOneRandomCard({
+            const cardWithoutAcks = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -606,7 +622,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -626,7 +642,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -646,7 +662,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -666,7 +682,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -686,7 +702,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -707,7 +723,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -729,7 +745,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -751,7 +767,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -773,7 +789,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -795,7 +811,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -817,7 +833,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -839,7 +855,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -861,7 +877,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',
@@ -883,7 +899,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 publisher: 'ENTITY1',
                 publisherType: 'ENTITY',
                 process: 'testProcess',
@@ -906,7 +922,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 publisher: 'ENTITY1',
                 publisherType: 'ENTITY',
                 process: 'testProcess',
@@ -929,7 +945,7 @@ describe('AcknowledgeService testing ', () => {
         () => {
             userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeterAndReadonly(), ServerResponseStatus.OK, ""));
             UserService.loadUserWithPerimetersData().subscribe();
-            const cardWithAck = getOneRandomCard({
+            const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
                 state: 'state2',

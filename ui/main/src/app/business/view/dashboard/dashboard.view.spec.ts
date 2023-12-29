@@ -18,7 +18,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {getOneRandomLightCard} from '@tests/helpers';
+import {getOneLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
@@ -196,7 +196,7 @@ describe('Dashboard', () => {
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
         expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
 
-        const card = getOneRandomLightCard({
+        const card = getOneLightCard({
             process: 'process1',
             state: 'state1',
             severity: Severity.ACTION
@@ -230,30 +230,35 @@ describe('Dashboard', () => {
 
         dashboard = new Dashboard();
 
-        const infoCard = getOneRandomLightCard({
+        const infoCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
-            severity: Severity.INFORMATION
+            severity: Severity.INFORMATION,
+            id: 'infoCard'
         });
-        const infoCard2 = getOneRandomLightCard({
+        const infoCard2 = getOneLightCard({
             process: 'process1',
             state: 'state1',
-            severity: Severity.INFORMATION
+            severity: Severity.INFORMATION,
+            id: 'infoCard2'
         });
-        const compliantCard = getOneRandomLightCard({
+        const compliantCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
-            severity: Severity.COMPLIANT
+            severity: Severity.COMPLIANT,
+            id: 'compliantCard'
         });
-        const actionCard = getOneRandomLightCard({
+        const actionCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
-            severity: Severity.ACTION
+            severity: Severity.ACTION,
+            id: 'actionCard'
         });
-        const alarmCard = getOneRandomLightCard({
+        const alarmCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
-            severity: Severity.ALARM
+            severity: Severity.ALARM,
+            id: 'alarmCard'
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
         opfabEventStreamServerMock.sendLightCard(infoCard2);
@@ -298,7 +303,7 @@ describe('Dashboard', () => {
 
         dashboard = new Dashboard();
 
-        const infoCard = getOneRandomLightCard({
+        const infoCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
             severity: Severity.INFORMATION,
@@ -326,7 +331,7 @@ describe('Dashboard', () => {
 
         dashboard = new Dashboard();
 
-        const infoCard = getOneRandomLightCard({
+        const infoCard = getOneLightCard({
             process: 'process1',
             state: 'state1',
             severity: Severity.INFORMATION

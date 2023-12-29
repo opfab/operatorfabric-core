@@ -22,7 +22,7 @@ import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {getOneRandomLightCard} from '@tests/helpers';
+import {getOneLightCard} from '@tests/helpers';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
 
@@ -271,7 +271,7 @@ describe('ActivityAreaView', () => {
         const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
         OpfabStore.reset();
-        const card = getOneRandomLightCard({
+        const card = getOneLightCard({
             process: 'process1',
             state: 'state1',
             severity: Severity.ALARM
