@@ -246,7 +246,8 @@
       "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
       "loadingInProgress": "Kaart wordt geladen",
       "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
-      "expirationDate": "Vervaldatum"
+      "expirationDate": "Vervaldatum",
+      "seeGeolocation": "Zie geolocatie"
     },
     "acknowledgeAllCards": {
       "label": "Bevestig alle kaarten",

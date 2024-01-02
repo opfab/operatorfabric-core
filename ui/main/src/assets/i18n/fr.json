@@ -246,7 +246,8 @@
       "hasAResponseFromYourEntity" : "Votre entité a déjà répondu.",
       "loadingInProgress": "Chargement de cartes en cours",
       "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées",
-      "expirationDate": "Date d'expiration"
+      "expirationDate": "Date d'expiration",
+      "seeGeolocation": "Voir la géolocalisation"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
