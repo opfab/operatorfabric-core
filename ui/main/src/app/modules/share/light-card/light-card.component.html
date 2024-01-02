@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -51,8 +51,10 @@
                               triggers="mouseenter:mouseleave">
                             <em id="opfab-feed-light-card-group-icon" style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
-                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1">
-                               <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
+                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1"
+                              placement="right" [ngbPopover]="tipSeeGeolocation" popoverClass="opfab-popover-unclickable" container="body"
+                              triggers="mouseenter:mouseleave">
+                            <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
                         </span>
                     </div>
                 </div>
@@ -97,3 +99,7 @@
 <div *ngIf="open && groupedCardsVisible">
     <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
 </div>
+
+<ng-template #tipSeeGeolocation>
+    <span translate>feed.tips.seeGeolocation</span>
+</ng-template>
