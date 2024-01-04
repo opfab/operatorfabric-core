@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -84,8 +84,7 @@
 
         initUserCardTemplateGateway :function() {
             that = this;
-            // keep deprecated getSpecificCardInformation for testing 
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( ()  => {
 
                 const selectedValues = that.serviceSelect.getSelectedValues(); 
                 console.log("selected Value = ",selectedValues);
@@ -132,7 +131,7 @@
                     viewCardInCalendar: false
                 };
 
-            }
+            });
         }
     }
 
@@ -141,8 +140,8 @@
 
     // The two following lines are used for cypress test 
     // remove them if you use this template as example 
-    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess(); // keep deprecated version for testing
-    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState(); // keep deprecated version for testing
+    document.getElementById("hidden_process").value = opfab.currentUserCard.getProcessId();
+    document.getElementById("hidden_state").value = opfab.currentUserCard.getState();
 
 
 </script>

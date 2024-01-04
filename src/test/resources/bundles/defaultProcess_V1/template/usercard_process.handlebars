@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -72,8 +72,7 @@
             opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
                 const state = document.getElementById('state-select').value;
                 const status = document.getElementById('status-select').value;
-                // keep deprecated method for cypress test only
-                const selectedRecipients = usercardTemplateGateway.getSelectedEntityRecipients();
+                const selectedRecipients = opfab.currentUserCard.getSelectedEntityRecipients();
                 if ((selectedRecipients.includes('ENTITY1_FR') || selectedRecipients.includes('ENTITY3_FR')) &&  !selectedRecipients.includes('ENTITY1_EU')) 
                   selectedRecipients.push('ENTITY1_EU');
                 if ((selectedRecipients.includes('ENTITY2_FR') || selectedRecipients.includes('ENTITY4_FR')) &&  !selectedRecipients.includes('ENTITY2_EU')) 
