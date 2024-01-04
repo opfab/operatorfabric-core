@@ -500,8 +500,8 @@
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
       "businessData": {
-        "name": "DONNEES METIER",
-        "add": "AJOUTER UN FICHIER DE DONNEES METIER",
+        "name": "DONNÉES MÉTIER",
+        "add": "AJOUTER UN FICHIER DE DONNÉES MÉTIER",
         "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
 
       },
