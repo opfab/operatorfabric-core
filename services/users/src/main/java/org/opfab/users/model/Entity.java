@@ -11,13 +11,14 @@
 package org.opfab.users.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -26,27 +27,38 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-/**
- * Entity Model, documented at {@link Entity}
- * <p>
- * {@inheritDoc}
- */
+
 @Document(collection = "entity")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class EntityData implements Entity {
+@Validated
+public class Entity {
     @Id
+    @NotNull
     private String id;
     private String name;
     private String description;
     private Set<String> labels;
     private Set<String> parents;
+    @Valid
     private SortedSet<RolesEnum> roles;
-    
-    public EntityData(EntityData entityData) {
+
+
+    public Entity(@NotNull String id, String name, String description, Set<String> labels, Set<String> parents, @Valid SortedSet<RolesEnum> roles) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.labels = labels;
+        this.parents = parents;
+        this.roles = roles;
+    }
+
+    public Entity() {
+        this.labels = new HashSet<>();
+        this.parents = new HashSet<>();
+        this.roles = new TreeSet<>();
+    }
+
+    public Entity(Entity entityData) {
         this.id = entityData.id;
         this.name = entityData.name;
         this.description = entityData.description;
@@ -59,22 +71,38 @@ public class EntityData implements Entity {
     }
 
 
-    public EntityData(Entity entity) {
-        this();
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.description = entity.getDescription();
-        this.parents = entity.getParents().stream().collect(Collectors.toSet());
-        this.roles = entity.getRoles().stream().collect(Collectors.toCollection(TreeSet::new));
+    public String getId() {
+        return id;
     }
 
-    @Override
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
     public List<String> getLabels(){
         if (labels == null) return Collections.emptyList();
         return labels.stream().toList();
     }
 
-    @Override
+
     public void setLabels(List<String> labels){
         this.labels = Collections.emptySet();
         if(labels != null) {
@@ -83,13 +111,11 @@ public class EntityData implements Entity {
 
     }
 
-    @Override
     public List<String> getParents(){
         if (parents == null) return Collections.emptyList();
-        return parents.stream().collect(Collectors.toList());
+        return new ArrayList<>(parents); // to have a mutable list
     }
 
-    @Override
     public void setParents(List<String> parents){
         this.parents = Collections.emptySet();
         if(parents != null) {
@@ -98,13 +124,11 @@ public class EntityData implements Entity {
 
     }
 
-    @Override
     public List<RolesEnum> getRoles(){
         if (roles == null) return Collections.emptyList();
         return roles.stream().toList();
     }
 
-    @Override
     public void setRoles(List<RolesEnum> roles){
         this.roles = new TreeSet<>();
         if(roles != null) {

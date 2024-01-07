@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.opfab.users.model.Group;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.repositories.GroupRepository;
 
 public class CachedGroupRepositoryImpl implements GroupRepository {
@@ -30,20 +29,23 @@ public class CachedGroupRepositoryImpl implements GroupRepository {
 
     @Override
     public List<Group> findAll() {
-        return mongoGroupRepository.findAll().stream().map(Group.class::cast).toList();
+        return mongoGroupRepository.findAll();
     }
 
     @Override
     public Group insert(Group group) {
-        Group inserted = mongoGroupRepository.insert((GroupData) group);
-        cache.put(group.getId(), inserted);
-        return inserted;
+        if ( group != null ) {
+            Group inserted = mongoGroupRepository.insert(group);
+            cache.put(group.getId(), inserted);
+            return inserted;
+        }
+        return null;
 
     }
 
     @Override
     public Group save(Group group) {
-        Group saved = mongoGroupRepository.save((GroupData) group);
+        Group saved = mongoGroupRepository.save(group);
         cache.put(group.getId(), saved);
         return saved;
 
@@ -51,8 +53,7 @@ public class CachedGroupRepositoryImpl implements GroupRepository {
 
     public List<Group> saveAll(List<Group> groups) {
 
-        List<Group> saved = mongoGroupRepository.saveAll(groups.stream().map(GroupData.class::cast).toList()).stream()
-                .map(Group.class::cast).toList();
+        List<Group> saved = mongoGroupRepository.saveAll(groups);
         saved.forEach(group -> cache.put(group.getId(), group));
         return saved;
     }
@@ -64,7 +65,7 @@ public class CachedGroupRepositoryImpl implements GroupRepository {
         if (cached != null)
             return Optional.of(cached);
         else {
-            Optional<Group> found = mongoGroupRepository.findById(id).map(Group.class::cast);
+            Optional<Group> found = mongoGroupRepository.findById(id);
             if (found.isPresent())
                 cache.put(found.get().getId(), found.get());
             return found;
@@ -73,7 +74,7 @@ public class CachedGroupRepositoryImpl implements GroupRepository {
 
     @Override
     public void delete(Group group) {
-        mongoGroupRepository.delete((GroupData) group);
+        mongoGroupRepository.delete(group);
         cache.remove(group.getId());
 
     }
@@ -87,8 +88,7 @@ public class CachedGroupRepositoryImpl implements GroupRepository {
 
     @Override
     public List<Group> findByPerimetersContaining(String perimeterContains) {
-        return mongoGroupRepository.findByPerimetersContaining(perimeterContains).stream().map(Group.class::cast)
-                .toList();
+        return mongoGroupRepository.findByPerimetersContaining(perimeterContains);
     }
 
 }

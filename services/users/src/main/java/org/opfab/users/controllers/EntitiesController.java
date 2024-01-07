@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,8 @@ package org.opfab.users.controllers;
 
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
@@ -20,17 +20,25 @@ import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.EntitiesService;
 import org.opfab.users.services.NotificationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/entities")
-public class EntitiesController implements EntitiesApi {
-
+public class EntitiesController {
 
     private static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
 
@@ -38,23 +46,25 @@ public class EntitiesController implements EntitiesApi {
 
     public EntitiesController(EntityRepository entityRepository, UserRepository userRepository,
             EventBus eventBus) {
-        this.entitiesService = new EntitiesService(entityRepository, userRepository, new NotificationService(userRepository, eventBus));
+        this.entitiesService = new EntitiesService(entityRepository, userRepository,
+                new NotificationService(userRepository, eventBus));
     }
 
-    @Override
-    public List<Entity> fetchEntities(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @GetMapping(produces = { "application/json" })
+    public List<Entity> fetchEntities(HttpServletRequest request, HttpServletResponse response) {
         return entitiesService.fetchEntities();
     }
 
-    @Override
-    public Entity fetchEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+    @GetMapping(value = "/{id}", produces = { "application/json" })
+    public Entity fetchEntity(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
         OperationResult<Entity> operationResult = entitiesService.fetchEntity(id);
         if (!operationResult.isSuccess())
             throw createExceptionFromOperationResult(operationResult);
         return operationResult.getResult();
     }
 
-    private <S extends Object> Exception createExceptionFromOperationResult(OperationResult<S> operationResult) {
+    private <S extends Object> ApiErrorException createExceptionFromOperationResult(
+            OperationResult<S> operationResult) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         if (operationResult.getErrorType().equals(OperationResult.ErrorType.NOT_FOUND))
             status = HttpStatus.NOT_FOUND;
@@ -67,9 +77,11 @@ public class EntitiesController implements EntitiesApi {
                         .build());
     }
 
-    @Override
-    public Entity createEntity(HttpServletRequest request, HttpServletResponse response, Entity entity)
-            throws Exception {
+    @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
+    @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
+    public Entity createEntity(HttpServletRequest request, HttpServletResponse response,
+            @Valid @RequestBody Entity entity)
+            throws ApiErrorException {
 
         OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
         if (result.isSuccess()) {
@@ -82,9 +94,13 @@ public class EntitiesController implements EntitiesApi {
             throw createExceptionFromOperationResult(result);
     }
 
-    @Override
-    public Entity updateEntity(HttpServletRequest request, HttpServletResponse response, String id, Entity entity)
-            throws Exception {
+
+    @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
+    @PutMapping(value = "/{id}", produces = { "application/json" }, consumes = {
+            "application/json" })
+    public Entity updateEntity(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id,
+            @Valid @RequestBody Entity entity)
+            throws ApiErrorException {
         // id from entity body parameter should match id path parameter
         if (!entity.getId().equals(id)) {
             throw new ApiErrorException(
@@ -97,8 +113,8 @@ public class EntitiesController implements EntitiesApi {
         }
     }
 
-    @Override
-    public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+    @DeleteMapping(value = "/{id}", produces = { "application/json" })
+    public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
         OperationResult<String> result = entitiesService.deleteEntity(id);
         if (result.isSuccess())
             return null;
@@ -106,9 +122,10 @@ public class EntitiesController implements EntitiesApi {
             throw createExceptionFromOperationResult(result);
     }
 
-    @Override
-    public Void addEntityUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users)
-            throws Exception {
+    @PatchMapping(value = "/{id}/users", produces = { "application/json" }, consumes = {
+            "application/json" })
+    public Void addEntityUsers(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id,
+            @Valid @RequestBody List<String> users) {
         OperationResult<String> result = entitiesService.addEntityUsers(id, users);
         if (result.isSuccess())
             return null;
@@ -116,9 +133,10 @@ public class EntitiesController implements EntitiesApi {
             throw createExceptionFromOperationResult(result);
     }
 
-    @Override
-    public Void updateEntityUsers(HttpServletRequest request, HttpServletResponse response, String id,
-            List<String> users) throws Exception {
+    @PutMapping(value = "/{id}/users", produces = { "application/json" }, consumes = {
+            "application/json" })
+    public Void updateEntityUsers(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("id") String id, @Valid @RequestBody List<String> users) {
         OperationResult<String> result = entitiesService.updateEntityUsers(id, users);
         if (result.isSuccess())
             return null;
@@ -126,9 +144,9 @@ public class EntitiesController implements EntitiesApi {
             throw createExceptionFromOperationResult(result);
     }
 
-    @Override
-    public Void deleteEntityUsers(HttpServletRequest request, HttpServletResponse response, String entityId)
-            throws Exception {
+    @DeleteMapping(value = "/{id}/users", produces = { "application/json" })
+    public Void deleteEntityUsers(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("id") String entityId) {
 
         OperationResult<String> operationResult = entitiesService.deleteEntityUsers(entityId);
         if (!operationResult.isSuccess())
@@ -136,9 +154,9 @@ public class EntitiesController implements EntitiesApi {
         return null;
     }
 
-    @Override
-    public Void deleteEntityUser(HttpServletRequest request, HttpServletResponse response, String id, String login)
-            throws Exception {
+    @DeleteMapping(value = "/{id}/users/{login}", produces = { "application/json" })
+    public Void deleteEntityUser(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("id") String id, @PathVariable("login") String login) {
 
         OperationResult<String> operationResult = entitiesService.deleteEntityUser(id, login);
         if (!operationResult.isSuccess())

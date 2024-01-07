@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.repositories.PerimeterRepository;
 
 public class PerimeterRepositoryStub implements PerimeterRepository {
@@ -68,6 +67,6 @@ public class PerimeterRepositoryStub implements PerimeterRepository {
         // Use this method to create copy of a group to avoid 
     // test code modifying repository data directly (without calling repository methods)
     private Perimeter clonePerimeter(Perimeter group) {
-        return (new PerimeterData((PerimeterData) group)); 
+        return (new Perimeter(group)); 
     } 
 }

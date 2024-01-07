@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.StateRight;
@@ -140,7 +139,7 @@ public class PerimetersService {
 
         if (foundGroups != null) {
             for (Group group : foundGroups) {
-                ((GroupData) group).deletePerimeter(idPerimeter);
+                group.deletePerimeter(idPerimeter);
                 notificationService.publishUpdatedGroupMessage(group.getId());
             }
             groupRepository.saveAll(foundGroups);
@@ -156,7 +155,7 @@ public class PerimetersService {
         if (foundGroupsResult.isSuccess()) {
             List<Group> foundGroups = foundGroupsResult.getResult();
             for (Group group : foundGroups) {
-                ((GroupData) group).addPerimeter(perimeterId);
+                group.addPerimeter(perimeterId);
                 groupRepository.save(group);
                 notificationService.publishUpdatedGroupMessage(group.getId());
             }
@@ -188,7 +187,7 @@ public class PerimetersService {
             List<Group> formerlyBelongs = groupRepository.findByPerimetersContaining(perimeterId);
             formerlyBelongs.forEach(group -> {
                 if (!groups.contains(group.getId())) {
-                    ((GroupData) group).deletePerimeter(perimeterId);
+                    group.deletePerimeter(perimeterId);
                     groupRepository.save(group);
                     notificationService.publishUpdatedGroupMessage(group.getId());
                 }
@@ -222,7 +221,7 @@ public class PerimetersService {
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
         }
 
-        ((GroupData) foundGroup.get()).deletePerimeter(perimeterId);
+        foundGroup.get().deletePerimeter(perimeterId);
         groupRepository.save(foundGroup.get());
         notificationService.publishUpdatedGroupMessage(groupId);
 

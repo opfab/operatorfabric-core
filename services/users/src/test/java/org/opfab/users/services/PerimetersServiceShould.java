@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,14 +25,11 @@ import org.junit.jupiter.api.Test;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
-import org.opfab.users.model.StateRightData;
-import org.opfab.users.model.UserData;
+import org.opfab.users.model.User;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -59,17 +56,17 @@ public class PerimetersServiceShould {
     private void initPerimeterRepository() {
         perimeterRepositoryStub.deleteAll();
 
-        PerimeterData perimeter1 = new PerimeterData();
+        Perimeter perimeter1 = new Perimeter();
         perimeter1.setId("perimeter1");
         perimeter1.setProcess("processTest");
-        StateRight stateRight = new StateRightData();
+        StateRight stateRight = new StateRight();
         stateRight.setState("state1");
         stateRight.setRight(RightsEnum.RECEIVE);
         List<StateRight> stateRights = new ArrayList<>();
         stateRights.add(stateRight);
         perimeter1.setStateRights(stateRights);
 
-        PerimeterData perimeter2 = new PerimeterData();
+        Perimeter perimeter2 = new Perimeter();
         perimeter2.setId("perimeter2");
         perimeter2.setProcess("processTest");
         perimeterRepositoryStub.insert(perimeter1);
@@ -78,28 +75,25 @@ public class PerimetersServiceShould {
     }
 
     private void initGroupRepository() {
-        GroupData g1, g2, g3;
-        g1 = GroupData.builder()
-                .id("group1")
-                .name("Group 1")
-                .description("Group 1 description")
-                .build();
+        Group g1, g2, g3;
+        g1 = new Group("group1");
+        g1.setName("Group 1");
+        g1.setDescription("Group 1 description");
         List<String> p1 = new ArrayList<>(Arrays.asList("perimeter1", "perimeter2"));
         g1.setPerimeters(p1);
-        g2 = GroupData.builder()
-                .id("group2")
-                .name("Group 2")
-                .description("Group 2 description")
-                .build();
+
+        g2 = new Group("group2");
+        g2.setName("Group 2");
+        g2.setDescription("Group 2 description");
         List<String> p2 = new ArrayList<>(Arrays.asList("perimeter1"));
         g2.setPerimeters(p2);
-        g3 = GroupData.builder()
-                .id("group3")
-                .name("Group 3")
-                .description("Group 3 description")
-                .build();
+
+        g3 = new Group("group3");
+        g3.setName("Group 3");
+        g3.setDescription("Group 3 description");
         List<String> p3 = new ArrayList<>(Arrays.asList("perimeter2"));
         g3.setPerimeters(p3);
+
         groupRepositoryStub.insert(g1);
         groupRepositoryStub.insert(g2);
         groupRepositoryStub.insert(g3);
@@ -109,10 +103,10 @@ public class PerimetersServiceShould {
         userRepositoryStub.deleteAll();
         Set<String> groupForUser1 = new HashSet<>();
         groupForUser1.add("group1");
-        userRepositoryStub.insert(new UserData("user1", "test", null, null, null, groupForUser1, null));
+        userRepositoryStub.insert(new User("user1", "test", null, null, null, groupForUser1, null));
         Set<String> groupForUser2 = new HashSet<>();
         groupForUser2.add("group1");
-        userRepositoryStub.insert(new UserData("user2", "test", null, null, null, groupForUser2, null));
+        userRepositoryStub.insert(new User("user2", "test", null, null, null, groupForUser2, null));
 
     }
  
@@ -147,7 +141,7 @@ public class PerimetersServiceShould {
     class Create {
         @Test
         void GIVEN_An_Invalid_PerimeterId__WHEN_Creating_Perimeter_THEN_Return_Bad_Request() {
-            PerimeterData perimeter = new PerimeterData("invalid?id", "invalid id", null);
+            Perimeter perimeter = new Perimeter("invalid?id", "invalid id", null);
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -156,7 +150,7 @@ public class PerimetersServiceShould {
 
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Create_An_Already_Existing_Perimeter_THEN_Return_Bad_Request() {
-            PerimeterData perimeter = new PerimeterData("perimeter1", "processId", null);
+            Perimeter perimeter = new Perimeter("perimeter1", "processId", null);
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -165,9 +159,13 @@ public class PerimetersServiceShould {
 
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Create_Perimeter_With_One_State_THEN_Return_Created_Perimeter() {
-            Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("newPerimeter");
+            perimeter.setProcess("processId");
+            StateRight stateRight = new StateRight("state1", RightsEnum.RECEIVE, true);   
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight);
+            perimeter.setStateRights(stateRights);
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
@@ -178,11 +176,15 @@ public class PerimetersServiceShould {
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Create_Perimeter_With_Two_States_THEN_Return_Created_Perimeter() {
 
-            Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
-                    .stateRights(
-                            new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                                    new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("newPerimeter");
+            perimeter.setProcess("processId");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.RECEIVEANDWRITE, true);
+            StateRight stateRight2 = new StateRight("state2", RightsEnum.RECEIVEANDWRITE, true);
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
@@ -194,10 +196,15 @@ public class PerimetersServiceShould {
         @Test
         void GIVEN_A_Perimeter_With_2_States_And_Duplicate_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
 
-            Perimeter perimeter = PerimeterData.builder().id("INVALID").process("process2")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                            new StateRightData("state1", RightsEnum.RECEIVE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("INVALID");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.RECEIVEANDWRITE, true);
+            StateRight stateRight2 = new StateRight("state1", RightsEnum.RECEIVE, true);
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
@@ -208,11 +215,18 @@ public class PerimetersServiceShould {
         @Test
         void GIVEN_A_Perimeter_With_3_States_And_Duplicate_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
 
-            Perimeter perimeter = PerimeterData.builder().id("INVALID").process("process2")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                            new StateRightData("state1", RightsEnum.RECEIVE, true),
-                            new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("INVALID");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.RECEIVEANDWRITE, true);
+            StateRight stateRight2 = new StateRight("state2", RightsEnum.RECEIVE, true);
+            StateRight stateRight3 = new StateRight("state1", RightsEnum.RECEIVE, true);    
+
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            stateRights.add(stateRight3);
+            perimeter.setStateRights(stateRights);
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
@@ -226,7 +240,7 @@ public class PerimetersServiceShould {
     class Update {
         @Test
         void GIVEN_An_Invalid_PerimeterId__WHEN_Updating_Perimeter_THEN_Return_Bad_Request() {
-            PerimeterData perimeter = new PerimeterData("invalid?id", "invalid id", null);
+            Perimeter perimeter = new Perimeter("invalid?id", "invalid id", null);
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -235,7 +249,7 @@ public class PerimetersServiceShould {
 
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Update_An_Existing_Perimeter_THEN_Return_Success_And_Perimeter_Updated() {
-            PerimeterData perimeter = new PerimeterData("perimeter1", "process2", null);
+            Perimeter perimeter = new Perimeter("perimeter1", "process2", null);
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -245,9 +259,14 @@ public class PerimetersServiceShould {
 
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Update_Non_Exiting_Perimeter_With_One_State_THEN_Success_And_Perimeter_Is_Created() {
-            Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("newPerimeter");
+            perimeter.setProcess("processId");
+            StateRight stateRight = new StateRight("state1", RightsEnum.RECEIVE, true);
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight);
+            perimeter.setStateRights(stateRights);
+
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
@@ -258,11 +277,15 @@ public class PerimetersServiceShould {
         @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Update_Non_Existing_Perimeter_With_Two_States_THEN_Success_And_Perimeter_Is_Created() {
 
-            Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
-                    .stateRights(
-                            new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                                    new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("newPerimeter");
+            perimeter.setProcess("processId");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.RECEIVEANDWRITE, true);
+            StateRight stateRight2 = new StateRight("state2", RightsEnum.RECEIVEANDWRITE, true);
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
@@ -272,12 +295,17 @@ public class PerimetersServiceShould {
         }
 
         @Test
-        void GIVEN_A_Perimeter_With_2_States_And_Duplicate_State_WHEN_Update_Perimeter_THEN_Return_BAD_REQUEST_And_Perimter_Is_Not_Updated() {
+        void GIVEN_A_Perimeter_With_2_States_And_Duplicate_State_WHEN_Update_Perimeter_THEN_Return_BAD_REQUEST_And_Perimeter_Is_Not_Updated() {
 
-            Perimeter perimeter = PerimeterData.builder().id("perimeter1").process("newProcess")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                            new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true))))
-                    .build();
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("perimeter1");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.RECEIVEANDWRITE, true);
+            StateRight stateRight2 = new StateRight("state1", RightsEnum.RECEIVE, true);
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
@@ -346,7 +374,7 @@ public class PerimetersServiceShould {
             @Test
             void GIVEN_Existing_Groups_WHEN_Adding_Them_To_Perimeter_THEN_Succeed_And_Groups_Are_Updated() {
 
-                perimeterRepositoryStub.insert(new PerimeterData("testPerimeter", "myname", null));
+                perimeterRepositoryStub.insert(new Perimeter("testPerimeter", "myname", null));
 
                 ArrayList<String> groups = new ArrayList<>();
                 groups.add("group1");

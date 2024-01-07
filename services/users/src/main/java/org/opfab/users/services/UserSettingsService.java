@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,10 @@ import java.util.Set;
 
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.CurrentUserWithPerimetersData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.UserData;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserSettings;
-import org.opfab.users.model.UserSettingsData;
 import org.opfab.users.repositories.UserSettingsRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +44,7 @@ public class UserSettingsService {
     }
 
     public OperationResult<UserSettings> fetchUserSettings(String login) {
-        Optional<UserSettings> user = userSettingsRepository.findById(login).map(UserSettings.class::cast);
+        Optional<UserSettings> user = userSettingsRepository.findById(login);
         if (user.isPresent())
             return new OperationResult<>(user.get(), true, null, null);
         else
@@ -54,15 +52,16 @@ public class UserSettingsService {
                     String.format(USER_SETTINGS_NOT_FOUND_MSG, login));
     }
 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
     public OperationResult<UserSettings> patchUserSettings(String login, UserSettings userSettingsPatch) {
 
         UserSettings oldSettings = userSettingsRepository.findById(login)
-                .orElse(UserSettingsData.builder().login(login).build());
+                .orElse(this.getNewUserSettings(login));
         if (!checkFilteringNotificationIsAllowedForAllProcessesStates(login, userSettingsPatch))
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                     FILTERING_NOTIFICATION_NOT_ALLOWED);
 
-        UserSettings newSettings = ((UserSettingsData) oldSettings).patch(userSettingsPatch);
+        UserSettings newSettings = oldSettings.patch(userSettingsPatch);
         userSettingsRepository.save(newSettings);
 
         if ((userSettingsPatch.getProcessesStatesNotNotified() != null)
@@ -75,6 +74,14 @@ public class UserSettingsService {
         return new OperationResult<>(newSettings, true, null, null);
     }
 
+    private UserSettings getNewUserSettings(String login) {
+        UserSettings settings = new UserSettings();
+        settings.setLogin(login);
+        return settings;
+
+    }
+
+    @SuppressWarnings({"java:S2583","java:S3516"}) // false positive , it does not return always the same value as Sonar says
     private boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
         if ((userSettings.getProcessesStatesNotNotified() != null)
                 && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
@@ -84,9 +91,10 @@ public class UserSettingsService {
                 return true;
 
             Set<Perimeter> perimeterAsSet = Set.copyOf(perimeters);
-            UserData userData = UserData.builder().login("login").build();
-            CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder()
-                    .userData(userData).build();
+            User userData = new User();
+            userData.setLogin(login);
+            CurrentUserWithPerimeters userWithPerimetersData = new CurrentUserWithPerimeters();
+            userWithPerimetersData.setUserData(userData);
             userWithPerimetersData.computePerimeters(perimeterAsSet);
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed = computeProcessStatesWithFilteringNotificationNotAllowed(
                     userWithPerimetersData);
@@ -111,6 +119,7 @@ public class UserSettingsService {
         return processStatesWithFilteringNotificationNotAllowed;
     }
 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
     private boolean isFilteringNotificationAllowedForAllProcessesStates(
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
             Map<String, List<String>> processesStates) {
@@ -128,6 +137,7 @@ public class UserSettingsService {
         return true;
     }
 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
     private boolean isFilteringNotificationAllowedForAllProcessStates(
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
             String processId,
@@ -153,6 +163,7 @@ public class UserSettingsService {
         return true;
     }
 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
     public OperationResult<UserSettings> updateUserSettings(String login, UserSettings newSettings) {
         if (!checkFilteringNotificationIsAllowedForAllProcessesStates(login, newSettings))
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
