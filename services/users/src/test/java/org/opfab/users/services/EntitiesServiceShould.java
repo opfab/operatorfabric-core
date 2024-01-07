@@ -25,13 +25,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 import org.opfab.test.EventBusSpy;
-import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
-import org.opfab.users.model.EntityData;
+import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.RolesEnum;
 import org.opfab.users.model.User;
-import org.opfab.users.model.UserData;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
@@ -49,23 +47,23 @@ class EntitiesServiceShould {
         eventBusSpy = new EventBusSpy();
         NotificationService notificationService = new NotificationService(userRepositoryStub, eventBusSpy);
         entitiesService = new EntitiesService(entityRepositoryStub, userRepositoryStub, notificationService);
-        EntityData entity1 = new EntityData("entity1", "Entity 1", "Entity 1 Desc", null, null, null);
+        Entity entity1 = new Entity("entity1", "Entity 1", "Entity 1 Desc", null, null, null);
         entityRepositoryStub.save(entity1);
-        EntityData entity2 = new EntityData("entity2", "Entity 2", null, null, null, null);
+        Entity entity2 = new Entity("entity2", "Entity 2", null, null, null, null);
         entityRepositoryStub.save(entity2);
 
         Set<String> parent = new HashSet<>(Arrays.asList("entity1", "entity2"));
-        EntityData child1 = new EntityData("child1", "Entity child", null, null, parent, null);
+        Entity child1 = new Entity("child1", "Entity child", null, null, parent, null);
         entityRepositoryStub.save(child1);
         Set<String> parent2 = new HashSet<>(Arrays.asList("entity1"));
-        EntityData child2 = new EntityData("child2", "Entity child 2", null, null, parent2, null);
+        Entity child2 = new Entity("child2", "Entity child 2", null, null, parent2, null);
         entityRepositoryStub.save(child2);
 
         Set<String> entitiesForUser1 = new HashSet<>(Arrays.asList("entity1", "entity2"));
         Set<String> entitiesForUser2 = new HashSet<>(Arrays.asList("entity2"));
-        userRepositoryStub.insert(new UserData("user1", "test", null, null, entitiesForUser1, null, null));
-        userRepositoryStub.insert(new UserData("user2", "test", null, null, entitiesForUser2, null, null));
-        userRepositoryStub.insert(new UserData("user3", "test", null, null, null, null, null));
+        userRepositoryStub.insert(new User("user1", "test", null, null, entitiesForUser1, null, null));
+        userRepositoryStub.insert(new User("user2", "test", null, null, entitiesForUser2, null, null));
+        userRepositoryStub.insert(new User("user3", "test", null, null, null, null, null));
 
     }
 
@@ -101,7 +99,7 @@ class EntitiesServiceShould {
     class Create {
         @Test
         void GIVEN_An_Invalid_EntityId__WHEN_Creating_Entity_THEN_Return_Bad_Request() {
-            EntityData entity = new EntityData("invalid id", "invalid id", null, null, null, null);
+            Entity entity = new Entity("invalid id", "invalid id", null, null, null, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -111,7 +109,7 @@ class EntitiesServiceShould {
         void GIVEN_A_Valid_Entity_WHEN_Create_Entity_THEN_Return_Created_Entity() {
             SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
-            EntityData entity = new EntityData("newEntity", "name", "myDescription", null, null, roles);
+            Entity entity = new Entity("newEntity", "name", "myDescription", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isFalse();
@@ -124,9 +122,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Create_An_Already_Existing_Entity_THEN_Entity_Is_Updated() {
-            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
-
-            EntityData entity = new EntityData("entity1", "newEntityName", null, null, null, roles);
+            Entity entity = new Entity("entity1", "newEntityName", null, null, null, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -137,9 +133,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Update_Description_With_Same_Name_THEN_Entity_Is_Updated() {
-            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
-
-            EntityData entity = new EntityData("entity1", "Entity 1", "new description", null, null, roles);
+            Entity entity = new Entity("entity1", "Entity 1", "new description", null, null, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -154,7 +148,7 @@ class EntitiesServiceShould {
         void GIVEN_A_Entity_With_Entity_Cycle_WHEN_Create_Entity_THEN_Return_BAD_REQUEST() {
 
             Set<String> childAsParent = new HashSet<>(Arrays.asList("child1"));
-            EntityData group = new EntityData("entity1", "groupName", null, null, childAsParent, null);
+            Entity group = new Entity("entity1", "groupName", null, null, childAsParent, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -163,9 +157,7 @@ class EntitiesServiceShould {
         
         @Test
         void GIVEN_A_Valid_Entity_with_An_Already_Existing_Name_WHEN_Try_To_Create_Entity_THEN_Return_Bad_Request() {
-            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
-
-            EntityData entity = new EntityData("newEntity", "Entity 1", "myDescription", null, null, roles);
+            Entity entity = new Entity("newEntity", "Entity 1", "myDescription", null, null, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -175,9 +167,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Existing_Entity_WHEN_Try_To_Update_Entity_with_An_Already_Existing_Name_THEN_Return_Bad_Request() {
-            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
-
-            EntityData entity = new EntityData("entity2", "Entity 1", "myDescription", null, null, roles);
+            Entity entity = new Entity("entity2", "Entity 1", "myDescription", null, null, null);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);

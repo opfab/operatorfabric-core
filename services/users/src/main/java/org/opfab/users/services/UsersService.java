@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,7 +56,7 @@ public class UsersService {
     }
 
     public OperationResult<User> fetchUser(String userId) {
-        Optional<User> user = userRepository.findById(userId).map(User.class::cast);
+        Optional<User> user = userRepository.findById(userId);
         if (user.isPresent())
             return new OperationResult<>(user.get(), true, null, null);
         else
@@ -65,7 +65,7 @@ public class UsersService {
     }
 
     public Optional<User> fetchUserByLogin(String userId) {
-        return userRepository.findByLogin(userId).map(User.class::cast);
+        return userRepository.findByLogin(userId);
     }
 
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
@@ -92,10 +92,10 @@ public class UsersService {
     }
 
     private boolean isRemovingAdminUserFromAdminGroup(User user) {
-        boolean isAdminUser = user.getLogin().equals(ADMIN_LOGIN);
+        boolean isAdminUserData = user.getLogin().equals(ADMIN_LOGIN);
         boolean hasAdminGroup = user.getGroups().contains(ADMIN_GROUP_ID);
 
-        return isAdminUser && !hasAdminGroup;
+        return isAdminUserData && !hasAdminGroup;
     }
 
     public OperationResult<String> deleteUser(String login) {

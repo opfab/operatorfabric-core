@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,80 +7,113 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.map.MultiKeyMap;
+
+import jakarta.validation.Valid;
 
 import java.util.*;
 
-/**
- * CurrentUserWithPerimeters Model, documented at {@link CurrentUserWithPerimeters}
- *
- * {@inheritDoc}
- *
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters {
+import org.springframework.validation.annotation.Validated;
+
+@Validated
+public class CurrentUserWithPerimeters {
+
+    @Valid
     private User userData;
+    @Valid
     private Set<ComputedPerimeter> computedPerimeters;
+    @Valid
     private Map<String, List<String>> processesStatesNotNotified;
+    @Valid
     private Map<String, List<String>> processesStatesNotifiedByEmail;
 
     private Boolean sendCardsByEmail;
     private String email;
 
+    @Valid
     private Set<PermissionEnum> permissions;
 
-    @Override
-    public User getUserData(){return userData;}
+    public Map<String, List<String>> getProcessesStatesNotNotified() {
+        return processesStatesNotNotified;
+    }
 
-    @Override
-    public void setUserData(User userData){this.userData = userData;}
+    public void setProcessesStatesNotNotified(Map<String, List<String>> processesStatesNotNotified) {
+        this.processesStatesNotNotified = processesStatesNotNotified;
+    }
 
-    @Override
+    public Map<String, List<String>> getProcessesStatesNotifiedByEmail() {
+        return processesStatesNotifiedByEmail;
+    }
+
+    public void setProcessesStatesNotifiedByEmail(Map<String, List<String>> processesStatesNotifiedByEmail) {
+        this.processesStatesNotifiedByEmail = processesStatesNotifiedByEmail;
+    }
+
+    public Boolean getSendCardsByEmail() {
+        return sendCardsByEmail;
+    }
+
+    public void setSendCardsByEmail(Boolean sendCardsByEmail) {
+        this.sendCardsByEmail = sendCardsByEmail;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User getUserData() {
+        return userData;
+    }
+
+    public void setUserData(User userData) {
+        this.userData = userData;
+    }
+
     public void setComputedPerimeters(List<ComputedPerimeter> computedPerimeters) {
         this.computedPerimeters = new HashSet<>(computedPerimeters);
     }
 
-    @Override
     public List<ComputedPerimeter> getComputedPerimeters() {
-        if(computedPerimeters == null)
+        if (computedPerimeters == null)
             return Collections.emptyList();
         return new ArrayList<>(computedPerimeters);
     }
 
-    public void computePerimeters(Set<Perimeter> perimeters){
+    public void computePerimeters(Set<Perimeter> perimeters) {
         if (perimeters == null)
             return;
 
-        //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
+        // First, we build a MultiKeyMap with key is (process, state) and value is a
+        // list of rights
         MultiKeyMap<String, List<RightsEnum>> multimapOfRights = buildMultiKeyMapOfRights(perimeters);
 
-        //Then, we build a MultiKeyMap with key is (process, state) and value is a list of filteringNotificationAllowed
-        MultiKeyMap<String, List<Boolean>> multimapOfFilteringNotificationAllowed = buildMultiKeyMapOfFilteringNotificationAllowed(perimeters);
+        // Then, we build a MultiKeyMap with key is (process, state) and value is a list
+        // of filteringNotificationAllowed
+        MultiKeyMap<String, List<Boolean>> multimapOfFilteringNotificationAllowed = buildMultiKeyMapOfFilteringNotificationAllowed(
+                perimeters);
 
-        //Then, for each value in MultiKeyMap, we merge the rights in only one right
+        // Then, for each value in MultiKeyMap, we merge the rights in only one right
         multimapOfRights.forEach((processstate, listRights) -> {
             RightsEnum mergedRight = mergeRights(listRights);
 
-            multimapOfRights.put(processstate.getKey(0), processstate.getKey(1), new ArrayList<>(Arrays.asList(mergedRight)));
+            multimapOfRights.put(processstate.getKey(0), processstate.getKey(1),
+                    new ArrayList<>(Arrays.asList(mergedRight)));
         });
 
-        //Then, for each value in MultiKeyMap, we merge the filteringNotificationAllowed in only one boolean
+        // Then, for each value in MultiKeyMap, we merge the
+        // filteringNotificationAllowed in only one boolean
         multimapOfFilteringNotificationAllowed.forEach((processstate, listFilteringNotificationAllowed) -> {
-            Boolean mergedFilteringNotificationAllowed = mergeFilteringNotificationAllowed(listFilteringNotificationAllowed);
+            Boolean mergedFilteringNotificationAllowed = mergeFilteringNotificationAllowed(
+                    listFilteringNotificationAllowed);
 
             multimapOfFilteringNotificationAllowed.put(processstate.getKey(0), processstate.getKey(1),
-                                                       new ArrayList<>(Arrays.asList(mergedFilteringNotificationAllowed)));
+                    new ArrayList<>(Arrays.asList(mergedFilteringNotificationAllowed)));
         });
         makeComputedPerimeters(multimapOfRights, multimapOfFilteringNotificationAllowed);
     }
@@ -98,16 +131,17 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
                 if (currentList != null) {
                     currentList.add(stateRight.getRight());
                     multimapOfRights.put(perimeter.getProcess(), stateRight.getState(), currentList);
-                }
-                else
-                    multimapOfRights.put(perimeter.getProcess(), stateRight.getState(), new ArrayList<>(Arrays.asList(stateRight.getRight())));
+                } else
+                    multimapOfRights.put(perimeter.getProcess(), stateRight.getState(),
+                            new ArrayList<>(Arrays.asList(stateRight.getRight())));
             });
         });
 
         return multimapOfRights;
     }
 
-    private MultiKeyMap<String, List<Boolean>> buildMultiKeyMapOfFilteringNotificationAllowed(Set<Perimeter> perimeters) {
+    private MultiKeyMap<String, List<Boolean>> buildMultiKeyMapOfFilteringNotificationAllowed(
+            Set<Perimeter> perimeters) {
         MultiKeyMap<String, List<Boolean>> multimapOfFilteringNotificationAllowed = new MultiKeyMap<>();
 
         perimeters.forEach(perimeter -> {
@@ -115,13 +149,14 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
             List<StateRight> stateRights = perimeter.getStateRights();
 
             stateRights.forEach(stateRight -> {
-                List<Boolean> currentList = multimapOfFilteringNotificationAllowed.get(perimeter.getProcess(), stateRight.getState());
+                List<Boolean> currentList = multimapOfFilteringNotificationAllowed.get(perimeter.getProcess(),
+                        stateRight.getState());
 
                 if (currentList != null) {
                     currentList.add(stateRight.getFilteringNotificationAllowed());
-                    multimapOfFilteringNotificationAllowed.put(perimeter.getProcess(), stateRight.getState(), currentList);
-                }
-                else
+                    multimapOfFilteringNotificationAllowed.put(perimeter.getProcess(), stateRight.getState(),
+                            currentList);
+                } else
                     multimapOfFilteringNotificationAllowed.put(perimeter.getProcess(), stateRight.getState(),
                             new ArrayList<>(Arrays.asList(stateRight.getFilteringNotificationAllowed())));
             });
@@ -131,28 +166,27 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     }
 
     private void makeComputedPerimeters(MultiKeyMap<String, List<RightsEnum>> multimapWithOneRight,
-                                        MultiKeyMap<String, List<Boolean>> multimapWithOneFilteringNotificationAllowed){
+            MultiKeyMap<String, List<Boolean>> multimapWithOneFilteringNotificationAllowed) {
         if (multimapWithOneRight != null) {
             multimapWithOneRight.forEach((processstate, right) -> {
-                ComputedPerimeterData c = ComputedPerimeterData.builder()
-                                            .process(processstate.getKey(0))
-                                            .state(processstate.getKey(1))
-                                            .rights(right.get(0))
-                                            .filteringNotificationAllowed(multimapWithOneFilteringNotificationAllowed.get(processstate).get(0))
-                                            .build();
+                ComputedPerimeter c = new ComputedPerimeter();
+                c.setProcess(processstate.getKey(0));
+                c.setState(processstate.getKey(1));
+                c.setRights(right.get(0));
+                c.setFilteringNotificationAllowed(multimapWithOneFilteringNotificationAllowed.get(processstate).get(0));
                 addComputedPerimeters(c);
             });
         }
     }
 
-    public void addComputedPerimeters(ComputedPerimeter c){
-        if(null == computedPerimeters){
-            this.computedPerimeters=new HashSet<>();
+    public void addComputedPerimeters(ComputedPerimeter c) {
+        if (null == computedPerimeters) {
+            this.computedPerimeters = new HashSet<>();
         }
         computedPerimeters.add(c);
     }
 
-    public RightsEnum mergeRights(List<RightsEnum> rightsList){
+    public RightsEnum mergeRights(List<RightsEnum> rightsList) {
         if (rightsList == null || rightsList.isEmpty())
             return null;
 
@@ -160,7 +194,8 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
             return rightsList.get(0);
 
         int size = rightsList.size();
-        if (rightsList.get(size - 2) == RightsEnum.RECEIVEANDWRITE || rightsList.get(size - 1) == RightsEnum.RECEIVEANDWRITE)
+        if (rightsList.get(size - 2) == RightsEnum.RECEIVEANDWRITE
+                || rightsList.get(size - 1) == RightsEnum.RECEIVEANDWRITE)
             return RightsEnum.RECEIVEANDWRITE;
 
         if (rightsList.get(size - 2) == rightsList.get(size - 1)) {
@@ -179,14 +214,12 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         return Boolean.TRUE;
     }
 
-    @Override
     public List<PermissionEnum> getPermissions() {
         if (permissions == null)
             return Collections.emptyList();
         return new ArrayList<>(permissions);
     }
 
-    @Override
     public void setPermissions(List<PermissionEnum> permissions) {
         this.permissions = new HashSet<>(permissions);
     }

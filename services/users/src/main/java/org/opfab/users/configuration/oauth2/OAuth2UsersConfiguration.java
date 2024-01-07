@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@ package org.opfab.users.configuration.oauth2;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
@@ -19,7 +18,6 @@ import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.User;
-import org.opfab.users.model.UserData;
 import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +78,9 @@ public class OAuth2UsersConfiguration {
             public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
             
-                Optional<UserData> optionalUser = userRepository.findById(principalId);
+                Optional<User> optionalUser = userRepository.findById(principalId);
 
-                UserData user;
+                User user;
                 if (optionalUser.isPresent()) {
                     user = optionalUser.get();
                 } else {
@@ -112,11 +110,12 @@ public class OAuth2UsersConfiguration {
              * @param jwt jwt
              * @return UserData
              */
-            private UserData createUserDataVirtualFromJwt(Jwt jwt) {
+            private User createUserDataVirtualFromJwt(Jwt jwt) {
                 String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim());
 
-                if (principalId != null)
-                    principalId = principalId.toLowerCase();
+                if (principalId == null) return null;
+                
+                principalId = principalId.toLowerCase();
 
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
@@ -125,7 +124,7 @@ public class OAuth2UsersConfiguration {
                 if (givenName == null && familyName == null)
                     familyName = name;
 
-                return new UserData(principalId, givenName, familyName, null, null, null, null);
+                return new User(principalId, givenName, familyName, null, null, null, null);
             }
 
             /**

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,9 +36,9 @@ import java.util.List;
 public class UsersProperties {
 
 
-    private List<UserData> users = new ArrayList<>();
-    private List<GroupData> groups = new ArrayList<>();
-    private List<EntityData> entities = new ArrayList<>();
-    private List<PerimeterData> perimeters = new ArrayList<>();
-    private List<UserSettingsData> userSettings = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
+    private List<Entity> entities = new ArrayList<>();
+    private List<Perimeter> perimeters = new ArrayList<>();
+    private List<UserSettings> userSettings = new ArrayList<>();
 }

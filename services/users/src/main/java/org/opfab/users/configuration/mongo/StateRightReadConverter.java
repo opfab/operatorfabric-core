@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,24 +13,24 @@ package org.opfab.users.configuration.mongo;
 import org.bson.Document;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
-import org.opfab.users.model.StateRightData;
 import org.springframework.core.convert.converter.Converter;
 
 
 /**
  *
  * <p>Spring converter registered in mongo conversions</p>
- * <p>Converts {@link Document} to {@link StateRight} using {@link StateRightData} builder.</p>
+ * <p>Converts {@link Document} to {@link StateRight} using {@link StateRight} builder.</p>
  *
  */
 public class StateRightReadConverter implements Converter<Document, StateRight> {
     @Override
     public StateRight convert(Document source) {
 
-        StateRightData.StateRightDataBuilder builder = StateRightData.builder()
-                                                          .state(source.getString("state"))
-                                                          .right(RightsEnum.fromValue(source.getString("right")))
-                                                          .filteringNotificationAllowed(source.getBoolean("filteringNotificationAllowed"));
-        return builder.build();
+        StateRight stateRight = new StateRight();
+
+        stateRight.setState(source.getString("state"));
+        stateRight.setRight(RightsEnum.fromValue(source.getString("right")));
+        stateRight.setFilteringNotificationAllowed(source.getBoolean("filteringNotificationAllowed"));
+        return stateRight;
     }
 }

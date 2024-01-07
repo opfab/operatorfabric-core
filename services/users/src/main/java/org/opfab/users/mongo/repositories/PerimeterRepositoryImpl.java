@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.repositories.PerimeterRepository;
 
 public class PerimeterRepositoryImpl implements PerimeterRepository {
@@ -27,34 +26,32 @@ public class PerimeterRepositoryImpl implements PerimeterRepository {
 
     @Override
     public List<Perimeter> saveAll(List<Perimeter> perimeters) {
-        return mongoPerimeterRepository.saveAll(perimeters.stream().map(PerimeterData.class::cast).toList()).stream()
-        .map(Perimeter.class::cast).toList();
-
+        return mongoPerimeterRepository.saveAll(perimeters);
     }
 
     @Override
     public List<Perimeter> findAll(){
-        return mongoPerimeterRepository.findAll().stream().map(Perimeter.class::cast).toList();
+        return mongoPerimeterRepository.findAll();
     }
 
     @Override
     public Perimeter insert(Perimeter perimeter){
-        return mongoPerimeterRepository.insert((PerimeterData) perimeter);
+        return mongoPerimeterRepository.insert(perimeter);
     }
 
     @Override
     public Perimeter save(Perimeter perimeter){
-        return mongoPerimeterRepository.save((PerimeterData) perimeter);
+        return mongoPerimeterRepository.save(perimeter);
     }
 
     @Override
     public Optional<Perimeter> findById(String id){
-        return mongoPerimeterRepository.findById(id).map(Perimeter.class::cast);
+        return mongoPerimeterRepository.findById(id);
     }
 
     @Override
     public void delete(Perimeter perimeter){
-        mongoPerimeterRepository.delete((PerimeterData) perimeter);
+        mongoPerimeterRepository.delete(perimeter);
     }
 
     @Override

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.User;
-import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.utils.EntityCycleDetector;
@@ -101,7 +100,7 @@ public class EntitiesService {
         List<User> foundUsers = userRepository.findByEntitiesContaining(idEntity);
         if (foundUsers != null && !foundUsers.isEmpty()) {
             for (User userData : foundUsers) {
-                ((UserData) userData).deleteEntity(idEntity);
+                userData.deleteEntity(idEntity);
                 userRepository.save(userData);
                 notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
@@ -130,7 +129,7 @@ public class EntitiesService {
         if (foundUsersResult.isSuccess()) {
             List<User> foundUsers = foundUsersResult.getResult();
             for (User userData : foundUsers) {
-                ((UserData) userData).addEntity(entityId);
+                userData.addEntity(entityId);
                 userRepository.save(userData);
                 notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
@@ -162,7 +161,7 @@ public class EntitiesService {
             List<User> currentUsersInEntity = userRepository.findByEntitiesContaining(entityId);
             currentUsersInEntity.forEach(currentUser -> {
                 if (!newUsersInEntity.contains(currentUser.getLogin())) {
-                    ((UserData) currentUser).deleteEntity(entityId);
+                    currentUser.deleteEntity(entityId);
                     userRepository.save(currentUser);
                     notificationService.publishUpdatedUserMessage(currentUser.getLogin());
                 }
@@ -194,7 +193,7 @@ public class EntitiesService {
                     String.format(USER_NOT_FOUND_MSG, login));
         }
 
-        ((UserData) foundUser.get()).deleteEntity(entityId);
+        foundUser.get().deleteEntity(entityId);
         userRepository.save(foundUser.get());
         notificationService.publishUpdatedUserMessage(foundUser.get().getLogin());
 
