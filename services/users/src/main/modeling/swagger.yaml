@@ -125,8 +125,6 @@ definitions:
         type: array
         items:
           type: string
-      entityAllowedToSendCard:
-        type: boolean
       parents:
         type: array
         items:

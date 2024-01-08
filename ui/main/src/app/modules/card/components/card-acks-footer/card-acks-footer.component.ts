@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import { RolesEnum } from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-card-acks-footer',
@@ -67,13 +68,13 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
         entityRecipientsToAck.forEach((entityRecipient) => {
             const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.entityAllowedToSendCard) {
+            if (entity.roles.includes(RolesEnum.CARD_SENDER)) {
                 resolved.add(entityRecipient);
             }
 
             EntitiesService
                 .resolveChildEntities(entityRecipient)
-                .filter((child) => child.entityAllowedToSendCard)
+                .filter((child) => child.roles.includes(RolesEnum.CARD_SENDER))
                 .forEach((child) => resolved.add(child.id));
         });
 

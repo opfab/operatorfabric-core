@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -165,9 +165,11 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type('entity description');
 
-        cy.get('#opfab-entity-allowed-to-send-card').check({force: true});
-
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+
+        cy.get('#opfab-roles').click();
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-roles').click();
 
         cy.get('#opfab-parents').click();
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
@@ -203,8 +205,12 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type(' updated');
 
-        cy.get('#opfab-entity-allowed-to-send-card').should('be.checked');
-        cy.get('#opfab-entity-allowed-to-send-card').uncheck({force: true});
+        cy.get('#opfab-roles').click();
+        // Deselect old parents
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(2).click({force: true});
+        // Select new parent
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-roles').click();
 
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
