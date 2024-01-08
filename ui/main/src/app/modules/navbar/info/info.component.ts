@@ -14,6 +14,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
+import { RolesEnum } from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-info',
@@ -58,7 +59,7 @@ export class InfoComponent implements OnInit {
             this.userEntities = [];
             const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
-                if (entity.entityAllowedToSendCard) {
+                if (entity.roles.includes(RolesEnum.CARD_SENDER)) {
                     // this avoids to display entities used only for grouping
                     this.userEntities.push(entity.name);
                 }

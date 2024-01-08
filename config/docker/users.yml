@@ -114,11 +114,9 @@ operatorfabric.users.default:
      name: French Control Centers
      description: French Control Centers
      roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
-     entityAllowedToSendCard: false
    - id: EUROPEAN_SUPERVISION_CENTERS
      name: European Supervision Centers
      description: European Supervision Centers
-     entityAllowedToSendCard: false
      roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
    - id: IT_SUPERVISOR_ENTITY
      name: IT SUPERVISION CENTER
@@ -143,7 +141,6 @@ operatorfabric.users.default:
    - id: ENTITY_IT
      name: Italian Control Centers
      description: Italian Control Centers
-     entityAllowedToSendCard: false
      roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
    - id: ENTITY1_NL
      name: Control Center NL North
@@ -158,7 +155,6 @@ operatorfabric.users.default:
    - id: ENTITY_NL
      name: Dutch Control Centers
      description: Dutch Control Centers
-     entityAllowedToSendCard: false
      roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
    - id: ENTITY1_EU
      name: North Europe Control Center

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {RouterStore,PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import { RolesEnum } from '@ofModel/roles.model';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -167,7 +168,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.isReadOnlyUser) {
             const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
             entities.forEach((entity) => {
-                if (entity.entityAllowedToSendCard)
+                if (entity.roles.includes(RolesEnum.CARD_SENDER))
                     // this avoids to display entities used only for grouping
                     entitiesAcks.push(entity.id);
             });

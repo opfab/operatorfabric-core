@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {LoggerService as logger} from '../logs/logger.service';
 import {ErrorService} from '../error-service';
+import { RolesEnum } from '@ofModel/roles.model';
 
 
 export class EntitiesService{
@@ -126,7 +127,7 @@ export class EntitiesService{
 
     public static isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = EntitiesService._entities.find((entity) => entity.id === idEntity);
-        return found?.entityAllowedToSendCard;
+        return found?.roles.includes(RolesEnum.CARD_SENDER);
     }
 
     /** Given a list of entities that might contain parent entities, EntitiesService method returns the list of entities
@@ -135,7 +136,7 @@ export class EntitiesService{
     public static resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
         const allowed = new Set<Entity>();
         selected.forEach((entity) => {
-            if (entity.entityAllowedToSendCard) {
+            if (entity.roles.includes(RolesEnum.CARD_SENDER)) {
                 allowed.add(entity);
             } else {
                 const children = EntitiesService._entities.filter((child) => child.parents?.includes(entity.id));

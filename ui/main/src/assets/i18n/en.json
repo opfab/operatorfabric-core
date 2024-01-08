@@ -460,7 +460,6 @@
         "description": "DESCRIPTION",
         "labels": "LABELS",
         "users": "USERS",
-        "entityAllowedToSendCard": "CARD SENDING ALLOWED",
         "confirmDelete": "Do you really want to delete entity",
         "add": "ADD NEW ENTITY",
         "true": "YES",
