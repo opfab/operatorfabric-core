@@ -8,7 +8,7 @@
  */
 
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
+import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -165,6 +165,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
                         OpfabStore.getLightCardStore().setLightCardAcknowledgment(lightCard.id, true);
+                        this.handleChildCardsUserAcknowledgement(lightCard.id, entitiesAcks);
                     } else {
                         throw new Error(
                             'the remote acknowledgement endpoint returned an error status(' + resp.status + ')'
@@ -175,6 +176,17 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 console.error(err);
                 this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
             }
+        }
+    }
+
+    private handleChildCardsUserAcknowledgement(cardId, entitiesAcks) {
+        const childCards = OpfabStore.getLightCardStore().getChildCards(cardId);
+        if (childCards) {
+            childCards.forEach(child => {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
+                    AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
+                }
+            })
         }
     }
 

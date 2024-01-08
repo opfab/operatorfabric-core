@@ -92,7 +92,9 @@
                 return {
                     valid: true,
                     publisher : publisher,
-                    responseCardData: responseCardData
+                    responseCardData: responseCardData,
+                    actions: ['PROPAGATE_READ_ACK_TO_PARENT_CARD']
+
                 };
 
             });

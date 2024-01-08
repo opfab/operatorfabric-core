@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 package org.opfab.cards.consultation.configuration.mongo;
 
 import org.bson.Document;
+import org.opfab.cards.consultation.model.CardActionEnum;
 import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
@@ -90,6 +91,15 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         Document rRuleDoc = (Document) source.get("rRule");
         if (rRuleDoc != null)
             builder.rRule(rRuleConverter.convert(rRuleDoc));
+
+        List<CardActionEnum> actionsEnumList = new ArrayList<>();
+        List<String> actionsStringList = source.getList("actions", String.class);
+        if (actionsStringList != null) {
+            for (String actionString : actionsStringList) {
+                actionsEnumList.add(CardActionEnum.valueOf(actionString));
+            }
+        }
+        builder.actions(actionsEnumList);
 
         return builder.build();
     }

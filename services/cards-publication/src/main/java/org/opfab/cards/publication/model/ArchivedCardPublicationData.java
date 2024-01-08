@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -127,6 +127,8 @@ public class ArchivedCardPublicationData implements Card {
 
     private RRule rRule;
 
+    private List<CardActionEnum> actions;
+
     public Instant getDeletionDate() {
         return this.deletionDate;
     }
@@ -177,6 +179,9 @@ public class ArchivedCardPublicationData implements Card {
         this.toNotify = card.getToNotify();
 
         this.rRule = card.getRRule();
+
+        this.actions =ObjectUtils.getNotNullOrDefault(card.getActions(), null, ArrayList::new);
+
     }
 
 }
