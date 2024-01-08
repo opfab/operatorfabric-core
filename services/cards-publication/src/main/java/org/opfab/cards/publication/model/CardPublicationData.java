@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -169,6 +169,8 @@ public class CardPublicationData implements Card {
     @Indexed
     private Instant lastAckDate;
 
+    private List<CardActionEnum> actions;
+
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = process + "." + processInstanceId;
@@ -211,7 +213,9 @@ public class CardPublicationData implements Card {
                 .userRecipients(this.getUserRecipients())
                 .groupRecipients(this.getGroupRecipients())
                 .entityRecipients(this.getEntityRecipients())
-                .entityRecipientsForInformation(this.getEntityRecipientsForInformation());
+                .entityRecipientsForInformation(this.getEntityRecipientsForInformation())
+                .actions(this.getActions());
+
 
         if (this.getTimeSpans() != null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));

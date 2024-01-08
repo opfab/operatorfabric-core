@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from '@ofModel/light-card.model';
+import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {
     catchError,
     debounceTime,
@@ -28,6 +28,7 @@ import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {AcknowledgeService} from '../../services/acknowledge.service';
+
 
 /**
  *
@@ -233,18 +234,67 @@ export class LightCardsStore {
                 oldCardVersion,
                 card
             );
-            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledged(card);
+            card.hasBeenRead = this.isLightCardHasBeenRead(card);
             this.addOrUpdateParentLightCard(card);
         }
+    }
+
+    public isLightCardHasBeenAcknowledged(card) {
+        let hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+        const children = this.getChildCards(card.id);
+        if (hasBeenAcknowledged && children) {         
+            for (let child of children) {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(child)) {
+                    hasBeenAcknowledged = false;
+                    break;
+                }
+            } 
+        }
+        return hasBeenAcknowledged;
+    }
+
+    public isLightCardHasBeenRead(card) {
+        let hasBeenRead = card.hasBeenRead;
+        const children = this.getChildCards(card.id);
+        if (hasBeenRead && children) {         
+            for (let child of children) {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
+                    hasBeenRead = false;
+                    break;
+                }
+            } 
+        }
+        return hasBeenRead;
     }
 
     private addChildCard(card: LightCard) {
         if (card.parentCardId) {
             const children = this.childCards.get(card.parentCardId);
             if (children) {
+                const childIndex = children.findIndex(child => child.id === card.id);
+                if (childIndex >= 0) children.splice(childIndex);
                 children.push(card);
             } else {
                 this.childCards.set(card.parentCardId, [card]);
+            }
+
+            this.unreadAndUnackParentCardIfNeeded(card);
+            
+        }
+    }
+
+    private unreadAndUnackParentCardIfNeeded(card: LightCard) {
+        if (card.parentCardId) {
+            const parent = this.lightCards.get(card.parentCardId);
+
+            if (parent && card.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
+                if (parent.hasBeenRead && !card.hasBeenRead) {
+                    this.setLightCardRead(parent.id, false);
+                }
+                if (parent.hasBeenAcknowledged && !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card)) {
+                    this.setLightCardAcknowledgment(parent.id, false);
+                }
             }
         }
     }

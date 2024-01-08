@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Day, Frequency, LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
+import {CardAction, Day, Frequency, LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -54,7 +54,8 @@ export class Card {
         public timeSpans?: TimeSpan[],
         readonly entitiesAcks?: string[],
         readonly deletionDate?: number,
-        public rRule?: RRule
+        public rRule?: RRule,
+        public actions?: CardAction[]
     ) {}
 }
 
@@ -92,7 +93,8 @@ export class CardForPublishing {
         readonly wktProjection?: string,
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[],
-        readonly rRule?: RRule
+        readonly rRule?: RRule,
+        public actions?: CardAction[]
     ) {}
 }
 

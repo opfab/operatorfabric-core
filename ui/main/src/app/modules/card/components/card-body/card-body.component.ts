@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,6 +40,7 @@ import {Router} from '@angular/router';
 import {Utilities} from '../../../../business/common/utilities';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {CardAction} from '@ofModel/light-card.model';
 
 @Component({
     selector: 'of-card-body',
@@ -170,7 +171,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
-            if (changes.card) OpfabAPIService.currentCard.card = this.card;
+            if (changes.card) {
+                this.computeCardHasBeenRead();
+                OpfabAPIService.currentCard.card = this.card;
+            }
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
@@ -185,6 +189,12 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.computeShowDetailCardHeader();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
             this.markAsReadIfNecessary();
+        }
+    }
+
+    private computeCardHasBeenRead() {
+        this.card = {...this.card,
+            hasBeenRead: OpfabStore.getLightCardStore().isLightCardHasBeenRead(this.card)
         }
     }
 
@@ -245,6 +255,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private markAsReadIfNecessary() {
+
         if (this.card.hasBeenRead === false) {
             // we do not set now the card as read in the store, as we want to keep
             // the card as unread in the feed
@@ -260,7 +271,16 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             CardService.postUserCardRead(this.card.uid).subscribe();
+            
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
+
+        if (this.childCards) {
+            this.childCards.forEach(child => {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
+                    CardService.postUserCardRead(child.uid).subscribe();
+                }
+            })
+        }
     }
 
     private updateLastReadCardStatusOnFeedIfNeeded() {

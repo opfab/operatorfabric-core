@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, 
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card, CardForPublishing} from '@ofModel/card.model';
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -34,6 +34,7 @@ class FormResult {
     responseCardData: any;
     publisher?: string
     responseState?: string;
+    actions?: CardAction[];
 }
 
 const enum ResponseI18nKeys {
@@ -186,7 +187,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 summary: this.card.summary,
                 data: responseData.responseCardData,
                 parentCardId: this.card.id,
-                initialParentCardUid: this.card.uid
+                initialParentCardUid: this.card.uid,
+                actions: responseData.actions
             };
             this.sendingResponseInProgress = true;
             CardService.postCard(card).subscribe(

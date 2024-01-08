@@ -241,6 +241,14 @@ definitions:
         type: integer
       minutes:
         type: integer
+  CardActionEnum:
+    type: string
+    description: |-
+      Defines the action to be executed on card reception >
+      * PROPAGATE_READ_ACK_TO_PARENT_CARD
+    enum:
+      - PROPAGATE_READ_ACK_TO_PARENT_CARD
+    example: PROPAGATE_READ_ACK_TO_PARENT_CARD
   Card:
     type: object
     description: >-
@@ -410,6 +418,10 @@ definitions:
       toNotify:
         type: boolean
         description: Is false if the card must not be displayed in the feed and in monitoring screen
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/CardActionEnum'
     required:
       - publisher
       - process

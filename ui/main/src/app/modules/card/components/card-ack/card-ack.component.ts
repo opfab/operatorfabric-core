@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -19,12 +19,13 @@ import {LogOption, LoggerService as logger} from 'app/business/services/logs/log
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {Subject, takeUntil} from 'rxjs';
+import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {RouterStore,PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import { RolesEnum } from '@ofModel/roles.model';
+import {CardAction} from '@ofModel/light-card.model';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -72,6 +73,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                     this.addAckFromSubscription(receivedAck.entitiesAcks);
                 }
             });
+            this.integrateChildCardsInRealTime();
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
@@ -91,7 +93,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: SimpleChanges): void {
         this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
@@ -99,8 +101,44 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             this.card,
             ProcessesService.getProcess(this.card.process)
         );
-        this.setAcknowledgeButtonVisibility();
+        if (changes.card) {
+            this.card.hasBeenAcknowledged = OpfabStore.getLightCardStore().isLightCardHasBeenAcknowledged(this.card);
 
+            this.setAcknowledgeButtonVisibility();
+        }
+
+    }
+
+    private integrateChildCardsInRealTime() {
+        OpfabStore.getLightCardStore()
+            .getNewLightChildCards()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map((lastCardLoaded) => {
+                    this.updateAcknowledgeButtonVisibilityIfCardsIsChildOfCurrentCard(lastCardLoaded);
+                })
+            )
+            .subscribe();
+
+        OpfabStore.getLightCardStore()
+            .getDeletedChildCardsIds()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map((lastCardDeleted) => {
+                    this.updateAcknowledgeButtonVisibilityIfCardsIsChildOfCurrentCard(lastCardDeleted);
+                })
+            )
+            .subscribe();
+    }
+
+    private updateAcknowledgeButtonVisibilityIfCardsIsChildOfCurrentCard(childCard) {
+        if (
+            childCard?.parentCardId === this.card.id &&
+            childCard.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)
+        ) {
+           this.card.hasBeenAcknowledged = OpfabStore.getLightCardStore().isLightCardHasBeenAcknowledged(this.card);
+           this.setAcknowledgeButtonVisibility();
+        }
     }
 
     private setAcknowledgeButtonVisibility() {
@@ -155,6 +193,17 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 OpfabStore.getLightCardStore().setLightCardAcknowledgment(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
+
+                const childCards = OpfabStore.getLightCardStore().getChildCards(this.card.id);
+                if (childCards) {
+                    childCards.forEach(child => {
+                        if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
+                            AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
+                            child.hasBeenAcknowledged = true;
+                        }
+                    })
+                }
+
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
             } else {
                 logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
@@ -198,7 +247,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             }
         });
     }
-
 
     ngOnDestroy() {
         this.unsubscribe$.next();

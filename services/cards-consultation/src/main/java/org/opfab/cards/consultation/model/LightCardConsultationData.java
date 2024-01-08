@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -105,6 +105,10 @@ public class LightCardConsultationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private RRule rRule;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<CardActionEnum> actions;
+
+
     /**
      * @return timespans, may return null
      */
@@ -174,6 +178,9 @@ public class LightCardConsultationData implements LightCard {
             builder.groupRecipients(other.getGroupRecipients());
         if (other.getUserRecipients() != null && !other.getUserRecipients().isEmpty()) {
             builder.userRecipients(other.getUserRecipients());            
+        }
+        if (other.getActions() != null && !other.getActions().isEmpty()) {
+            builder.actions(other.getActions());            
         }
         return builder.build();
 
