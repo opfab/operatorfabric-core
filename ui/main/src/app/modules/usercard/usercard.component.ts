@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {SystemNotificationService} from '../../business/services/notifications/system-notification.service';
 import {Observable} from 'rxjs';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import { RolesEnum } from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-usercard',
@@ -332,7 +333,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         allowedUserEntities.forEach((userEntityId) => {
             const entity = EntitiesService.getEntities().find((e) => e.id === userEntityId);
-            if (entity.entityAllowedToSendCard) entitiesList.push({value: entity.id, label: entity.name});
+            if (entity.roles.includes(RolesEnum.CARD_SENDER)) entitiesList.push({value: entity.id, label: entity.name});
         });
         return entitiesList;
     }
