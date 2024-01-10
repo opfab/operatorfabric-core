@@ -1,0 +1,5 @@
+version: '2.1'
+services:
+  migration-entity-roles:
+    container_name: migration-entity-roles
+    image: "lfeoperatorfabric/migration-entity-roles:latest"
