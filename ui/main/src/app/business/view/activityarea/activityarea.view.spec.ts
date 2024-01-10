@@ -27,7 +27,7 @@ import {Severity} from '@ofModel/light-card.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RolesEnum} from '@ofModel/roles.model';
 
-fdescribe('ActivityAreaView', () => {
+describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
     let entitiesServerMock: EntitiesServerMock;
     let settingsServerMock: SettingsServerMock;
