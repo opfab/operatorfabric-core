@@ -152,6 +152,7 @@ src/test/cypress/cypress/videos
 # migration-opfab3
 src/tooling/migration-opfab3/node_modules
 src/tooling/migration-rrule-recurrence/node_modules
+src/tooling/migration-entity-roles/node_modules
 
 # Node modules 
 node-services/*/node_modules

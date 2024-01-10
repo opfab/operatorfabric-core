@@ -70,3 +70,13 @@ Now entities shouldn't be grouped in the configuration file anymore. Instead ent
 
 
 With this parent entity 1 and parent entity 2 need to be declared and the name of the parent entities will be the name of the groups. 
+
+
+== Updating the entity roles in the database
+
+In this release the "roles" attribute has been added to the entity object. It defines the utility of an entity. It absorbs and broaden the logic of the attribute "entityAllowedToSendCard" which becomes deprecated.
+To update the entities in your mongo database, you can execute the following script located in `OF_HOME/src/tooling/migration-entity-roles` : 
+
+`./launchMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
+
+This script will assign the roles "ACTIVITY_AREA", "CARD_RECEIVER" and "CARD_SENDER" to all the entities that have "entityAllowedToSendCard = true" and the role "CARD_RECEIVER" to the others. Please refer to the documentation to see the other possible roles and their effect.
