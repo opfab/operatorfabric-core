@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -166,6 +166,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 return;
             }
 
+            const entityRecipients = [...this.card.entityRecipients];
+            this.addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients);
+
             const card: CardForPublishing = {
                 publisher: publisherEntity,
                 publisherType: 'ENTITY',
@@ -177,7 +180,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 endDate: this.card.endDate,
                 expirationDate: this.card.expirationDate,
                 severity: Severity.INFORMATION,
-                entityRecipients: this.card.entityRecipients,
+                entityRecipients: entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
                 externalRecipients: this.cardState.response.externalRecipients,
@@ -205,6 +208,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
             responseData.errorMsg && responseData.errorMsg !== ''
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
+        }
+    }
+
+    private addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients: Array<string>) {
+        if ((this.card.publisherType === 'ENTITY') && (!entityRecipients?.includes(this.card.publisher))) {
+            entityRecipients.push(this.card.publisher);
         }
     }
 
