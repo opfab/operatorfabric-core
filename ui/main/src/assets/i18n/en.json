@@ -467,6 +467,7 @@
         "addLabel": "Add label",
         "roles": "ROLES",
         "roleValues": {
+          "ACTIVITY_AREA": "Activity Area",
           "ACTIVITY_AREA_GROUP": "Activity Area Group",
           "CARD_SENDER": "Card Sender",
           "CARD_RECEIVER": "Card Receiver"

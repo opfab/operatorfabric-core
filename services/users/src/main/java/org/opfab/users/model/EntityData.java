@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +44,7 @@ public class EntityData implements Entity {
     private String description;
     private Set<String> labels;
     private Set<String> parents;
-    private Set<RolesEnum> roles;
+    private SortedSet<RolesEnum> roles;
     
     public EntityData(EntityData entityData) {
         this.id = entityData.id;
@@ -52,8 +54,8 @@ public class EntityData implements Entity {
         else this.labels = new HashSet<>(entityData.labels);
         if (entityData.parents==null) this.parents = new HashSet<>();
         else this.parents = new HashSet<>(entityData.parents);
-        if (entityData.roles==null) this.roles = new HashSet<>();
-        else this.roles = new HashSet<>(entityData.roles);
+        if (entityData.roles==null) this.roles = new TreeSet<>();
+        else this.roles = new TreeSet<>(entityData.roles);
     }
 
 
@@ -63,7 +65,7 @@ public class EntityData implements Entity {
         this.name = entity.getName();
         this.description = entity.getDescription();
         this.parents = entity.getParents().stream().collect(Collectors.toSet());
-        this.roles = entity.getRoles().stream().collect(Collectors.toSet());
+        this.roles = entity.getRoles().stream().collect(Collectors.toCollection(TreeSet::new));
     }
 
     @Override
@@ -104,9 +106,9 @@ public class EntityData implements Entity {
 
     @Override
     public void setRoles(List<RolesEnum> roles){
-        this.roles = Collections.emptySet();
+        this.roles = new TreeSet<>();
         if(roles != null) {
-            this.roles = roles.stream().collect(Collectors.toSet());
+            this.roles = roles.stream().collect(Collectors.toCollection(TreeSet::new));
         }
 
     }

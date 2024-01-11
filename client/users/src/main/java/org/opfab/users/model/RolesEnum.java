@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@
  import com.fasterxml.jackson.annotation.JsonValue;
  
  public enum RolesEnum {
+     ACTIVITY_AREA("ACTIVITY_AREA"),
      ACTIVITY_AREA_GROUP("ACTIVITY_AREA_GROUP"),
      CARD_SENDER("CARD_SENDER"),
      CARD_RECEIVER("CARD_RECEIVER");

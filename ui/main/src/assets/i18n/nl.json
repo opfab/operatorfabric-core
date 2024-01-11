@@ -467,6 +467,7 @@
         "addLabel": "Voeg label toe",
         "roles": "ROLLEN",
         "roleValues": {
+          "ACTIVITY_AREA": "Activiteitengebied",
           "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
           "CARD_SENDER": "Kaartverzender",
           "CARD_RECEIVER": "Kaartontvanger"
