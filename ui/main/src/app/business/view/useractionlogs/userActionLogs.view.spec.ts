@@ -29,6 +29,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
+import { RolesEnum } from '@ofModel/roles.model';
 
 
 describe('User action logs view ', () => {
@@ -58,9 +59,9 @@ describe('User action logs view ', () => {
     async function initEntityService() {
         entityServerMock = new EntitiesServerMock();
         entityServerMock.setEntities([
-            new Entity('entity1', 'ENTITY1 NAME', null, null, true, null, null),
-            new Entity('entity2', 'ENTITY2 NAME', null, null, true, null, null),
-            new Entity('entity3', 'ENTITY3 NAME', null, null, true, null, null)
+            new Entity('entity1', 'ENTITY1 NAME', null, [RolesEnum.CARD_SENDER], null, null),
+            new Entity('entity2', 'ENTITY2 NAME', null, [RolesEnum.CARD_SENDER], null, null),
+            new Entity('entity3', 'ENTITY3 NAME', null, [RolesEnum.CARD_SENDER], null, null)
         ]);
         EntitiesService.setEntitiesServer(entityServerMock);
         await firstValueFrom(EntitiesService.loadAllEntitiesData());

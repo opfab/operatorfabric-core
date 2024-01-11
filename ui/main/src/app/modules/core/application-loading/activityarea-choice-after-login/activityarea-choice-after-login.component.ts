@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@
 
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import { RolesEnum } from '@ofModel/roles.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
@@ -37,7 +38,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
         const login = UserService.getCurrentUserWithPerimeters().userData.login;
         UserService.getUser(login).subscribe((currentUser) => {
             const entities = EntitiesService.getEntitiesFromIds(currentUser.entities);
-            if (entities.filter((entity) => entity.entityAllowedToSendCard).length > 1)
+            if (entities.filter((entity) => entity.roles.includes(RolesEnum.CARD_SENDER)).length > 1)
                 this.modalRef = this.modalService.open(this.activityAreaPopupRef, {
                     centered: true,
                     backdrop: 'static',

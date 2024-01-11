@@ -25,7 +25,6 @@ Entity object contains the following fields :
 - 'id' : id of the entity
 - 'name' : name of the entity
 - 'description' : description of the entity
-- 'entityAllowedToSendCard' : boolean indicating whether the entity is allowed to send cards or not
 - 'parents' : list of parent entities
 - 'labels' : list of labels associated to the entity
 

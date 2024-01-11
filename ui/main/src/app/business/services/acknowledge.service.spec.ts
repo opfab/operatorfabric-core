@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ import {Entity} from '@ofModel/entity.model';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {ProcessesService} from './businessconfig/processes.service';
 import { PermissionEnum } from '@ofModel/permission.model';
+import { RolesEnum } from '@ofModel/roles.model';
 
 describe('AcknowledgeService testing ', () => {
 
@@ -56,10 +57,10 @@ describe('AcknowledgeService testing ', () => {
         UserService.loadUserWithPerimetersData().subscribe();
 
         const mockEntitiesServer = new EntitiesServerMock();
-        mockEntitiesServer.setEntities([new Entity("ENTITY1", "ENTITY 1", "", [], true, null, null),
-                                        new Entity("ENTITY2", "ENTITY 2", "", [], true, null, null),
-                                        new Entity("ENTITY3", "ENTITY 3", "", [], true, null, null),
-                                        new Entity("ENTITY_FR", "ENTITY FR", "", [], true, null, null)]);
+        mockEntitiesServer.setEntities([new Entity("ENTITY1", "ENTITY 1", "", [RolesEnum.CARD_SENDER], null, null),
+                                        new Entity("ENTITY2", "ENTITY 2", "", [RolesEnum.CARD_SENDER], null, null),
+                                        new Entity("ENTITY3", "ENTITY 3", "", [RolesEnum.CARD_SENDER], null, null),
+                                        new Entity("ENTITY_FR", "ENTITY FR", "", [RolesEnum.CARD_SENDER], null, null)]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
 
         EntitiesService.loadAllEntitiesData().subscribe();

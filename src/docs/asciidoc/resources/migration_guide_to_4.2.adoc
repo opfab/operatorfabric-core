@@ -70,5 +70,3 @@ Now entities shouldn't be grouped in the configuration file anymore. Instead ent
 
 
 With this parent entity 1 and parent entity 2 need to be declared and the name of the parent entities will be the name of the groups. 
-
-With this parent entity 1 and parent entity 2 need to be declared and the name of the parent entities will be the name of the group. 

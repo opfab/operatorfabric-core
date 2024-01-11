@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -87,7 +87,6 @@ function loadData() {
       responses += '<br>entity[' + i + ']:' + 'id=' + entity.id + ',';
       responses += 'name=' + entity.name + ',';
       responses += 'description=' + entity.description + ',';
-      responses += 'entityAllowedToSendCard=' + entity.entityAllowedToSendCard + ',';
       responses += 'parents=' + entity.parents + ',';
       responses += 'labels=' + entity.labels;
       }
@@ -98,7 +97,7 @@ function loadData() {
   responses += templateGateway.getEntity('ENTITY1_FR').id + ',';
   responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
   responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
-  responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').roles+ ',';
   responses += templateGateway.getEntity('ENTITY1_FR').parents+ ',';
   responses += templateGateway.getEntity('ENTITY1_FR').labels;
   responses += '</span></div>';

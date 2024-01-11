@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,6 @@ export class EditEntityModalComponent implements OnInit {
         name: FormControl<string | null>,
         description: FormControl<string | null>,
         roles: FormControl<[] | null>,
-        entityAllowedToSendCard: FormControl<boolean | null>,
         labels: FormControl<[] | null>,
         parents: FormControl<[] | null>
     }>;
@@ -94,7 +93,6 @@ export class EditEntityModalComponent implements OnInit {
             ),
             description: new FormControl(''),
             roles: new FormControl([]),
-            entityAllowedToSendCard: new FormControl<boolean | null>(false),
             labels: new FormControl([]),
             parents: new FormControl([])
         });
@@ -191,7 +189,6 @@ export class EditEntityModalComponent implements OnInit {
         this.name.setValue((this.name.value).trim());
         this.description.setValue((this.description.value).trim());
         this.roles.setValue((this.roles.value));
-        this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value);
     }
 
     get id() {
@@ -208,10 +205,6 @@ export class EditEntityModalComponent implements OnInit {
 
     get roles() {
         return this.entityForm.get('roles');
-    }
-
-    get entityAllowedToSendCard() {
-        return this.entityForm.get('entityAllowedToSendCard');
     }
 
     get labels() {

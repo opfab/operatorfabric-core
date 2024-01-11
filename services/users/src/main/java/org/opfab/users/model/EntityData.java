@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,20 +41,15 @@ public class EntityData implements Entity {
     private String name;
     private String description;
     private Set<String> labels;
-
-    @Builder.Default
-    private Boolean entityAllowedToSendCard = true;
-
     private Set<String> parents;
     private Set<RolesEnum> roles;
-
+    
     public EntityData(EntityData entityData) {
         this.id = entityData.id;
         this.name = entityData.name;
         this.description = entityData.description;
         if (entityData.labels==null) this.labels = new HashSet<>();
         else this.labels = new HashSet<>(entityData.labels);
-        this.entityAllowedToSendCard =   entityData.entityAllowedToSendCard;
         if (entityData.parents==null) this.parents = new HashSet<>();
         else this.parents = new HashSet<>(entityData.parents);
         if (entityData.roles==null) this.roles = new HashSet<>();
@@ -67,7 +62,6 @@ public class EntityData implements Entity {
         this.id = entity.getId();
         this.name = entity.getName();
         this.description = entity.getDescription();
-        this.entityAllowedToSendCard = entity.getEntityAllowedToSendCard();
         this.parents = entity.getParents().stream().collect(Collectors.toSet());
         this.roles = entity.getRoles().stream().collect(Collectors.toSet());
     }

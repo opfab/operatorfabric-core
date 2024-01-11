@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import {Entity} from '@ofModel/entity.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import { RolesEnum } from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-usercard-recipients-form',
@@ -85,8 +86,11 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.recipientsOptions = [];
         EntitiesService
             .getEntities()
-            .forEach((entity) =>
-                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            .forEach((entity) => {
+                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+                }
+            }
             );
     }
 
@@ -94,8 +98,11 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.recipientsForInformationOptions = [];
         EntitiesService
             .getEntities()
-            .forEach((entity) =>
+            .forEach((entity) => {
+                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
                 this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+                }
+            }
             );
     }
 
@@ -103,8 +110,10 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.recipientsOptions = [];
         EntitiesService
             .resolveEntities(recipients)
-            .forEach((entity) =>
-                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            .forEach((entity) => {
+                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
+            }  
             );
     }
 
@@ -112,8 +121,10 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.recipientsForInformationOptions = [];
         EntitiesService
             .resolveEntities(recipientsForInformation)
-            .forEach((entity) =>
-                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            .forEach((entity) => {
+                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                    this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
+            }  
             );
     }
 

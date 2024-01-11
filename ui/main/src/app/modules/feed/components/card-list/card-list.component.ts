@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,7 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import { RolesEnum } from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-card-list',
@@ -157,7 +158,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 const entitiesAcks = [];
                 const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
                 entities.forEach((entity) => {
-                    if (entity.entityAllowedToSendCard)
+                    if (entity.roles.includes(RolesEnum.CARD_SENDER))
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
