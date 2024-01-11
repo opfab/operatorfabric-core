@@ -633,7 +633,11 @@ describe('AdmininstrationPages', () => {
     describe('Check export files', function () {
 
 
-        beforeEach('Clean export directory', function () {
+        before('Clean export directory', function () {
+            script.cleanDownloadsDir();
+        });
+
+        afterEach('Clean export directory', function () {
             script.cleanDownloadsDir();
         });
 
