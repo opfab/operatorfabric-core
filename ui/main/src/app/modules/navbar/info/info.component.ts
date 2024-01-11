@@ -59,7 +59,7 @@ export class InfoComponent implements OnInit {
             this.userEntities = [];
             const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_SENDER)) {
+                if (entity.roles.includes(RolesEnum.ACTIVITY_AREA)) {
                     // this avoids to display entities used only for grouping
                     this.userEntities.push(entity.name);
                 }

@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -107,7 +109,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Create_Entity_THEN_Return_Created_Entity() {
-            Set<RolesEnum> roles = new HashSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
             EntityData entity = new EntityData("newEntity", "name", "myDescription", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
@@ -122,7 +124,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Create_An_Already_Existing_Entity_THEN_Entity_Is_Updated() {
-            Set<RolesEnum> roles = new HashSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
             EntityData entity = new EntityData("entity1", "newEntityName", null, null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
@@ -135,7 +137,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Update_Description_With_Same_Name_THEN_Entity_Is_Updated() {
-            Set<RolesEnum> roles = new HashSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
             EntityData entity = new EntityData("entity1", "Entity 1", "new description", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
@@ -161,7 +163,7 @@ class EntitiesServiceShould {
         
         @Test
         void GIVEN_A_Valid_Entity_with_An_Already_Existing_Name_WHEN_Try_To_Create_Entity_THEN_Return_Bad_Request() {
-            Set<RolesEnum> roles = new HashSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
             EntityData entity = new EntityData("newEntity", "Entity 1", "myDescription", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
@@ -173,7 +175,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Existing_Entity_WHEN_Try_To_Update_Entity_with_An_Already_Existing_Name_THEN_Return_Bad_Request() {
-            Set<RolesEnum> roles = new HashSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
 
             EntityData entity = new EntityData("entity2", "Entity 1", "myDescription", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);

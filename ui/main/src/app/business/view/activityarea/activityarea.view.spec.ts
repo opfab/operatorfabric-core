@@ -51,11 +51,11 @@ describe('ActivityAreaView', () => {
         EntitiesService.setEntitiesServer(entitiesServerMock);
         const entities: Entity[] = new Array();
         entities.push(new Entity('CLUSTERING_ENTITY', 'CLUSTERING_ENTITY_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.ACTIVITY_AREA_GROUP], [], []));
-        entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', [RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY_NOT_ALLOWED_TO_SEND_CARD', 'ENTITY3_NAME', '', [], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY_WITH_NO_CLUSTERING_PARENT', 'ENTITY4_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY1']));
-        entities.push(new Entity('ENTITY_WITH_NO_PARENT', 'ENTITY5_NAME', '', [RolesEnum.CARD_SENDER], [], null));
+        entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
+        entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
+        entities.push(new Entity('ENTITY_WITH_NO_ACTIVITY_AREA_ROLE', 'ENTITY3_NAME', '', [RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
+        entities.push(new Entity('ENTITY_WITH_NO_CLUSTERING_PARENT', 'ENTITY4_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['ENTITY1']));
+        entities.push(new Entity('ENTITY_WITH_NO_PARENT', 'ENTITY5_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], null));
         entitiesServerMock.setEntities(entities);
         EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
@@ -134,8 +134,8 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityName).toEqual('ENTITY2_NAME');
     });
 
-    it('GIVEN a user WHEN one entity is not allowed to send card THEN activityAreaView does not contains the entity', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2', 'ENTITY_NOT_ALLOWED_TO_SEND_CARD'], []);
+    it('GIVEN a user WHEN one entity does not have the ACTIVITY_AREA role THEN activityAreaView does not contains the entity', async () => {
+        mockUserConfig(['ENTITY1', 'ENTITY2', 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE'], []);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);

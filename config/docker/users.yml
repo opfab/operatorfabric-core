@@ -94,76 +94,76 @@ operatorfabric.users.default:
      description: Control Center FR North
      parents : ["ENTITY_FR"]
      labels: ["FR1 label"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY2_FR
      name: Control Center FR South
      description: Control Center FR South
      parents : ["ENTITY_FR"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY3_FR
      name: Control Center FR East
      description: Control Center FR East
      parents : ["ENTITY_FR"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY4_FR
      name: Control Center FR West
      description: Control Center FR West
      parents : ["ENTITY_FR"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY_FR
      name: French Control Centers
      description: French Control Centers
-     roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
+     roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
    - id: EUROPEAN_SUPERVISION_CENTERS
      name: European Supervision Centers
      description: European Supervision Centers
-     roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
+     roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
    - id: IT_SUPERVISOR_ENTITY
      name: IT SUPERVISION CENTER
      description: IT SUPERVISION CENTER
      parents : ["EUROPEAN_SUPERVISION_CENTERS"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY1_IT
      name: Control Center IT North
      description: Control Center IT North
      parents : ["ENTITY_IT"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY2_IT
      name: Control Center IT Center
      description: Control Center IT Center
      parents : ["ENTITY_IT"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY3_IT
      name: Control Center IT South
      description: Control Center IT South
      parents : ["ENTITY_IT"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY_IT
      name: Italian Control Centers
      description: Italian Control Centers
-     roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
+     roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
    - id: ENTITY1_NL
      name: Control Center NL North
      description: Control Center NL North
      parents : ["ENTITY_NL"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY2_NL
      name: Control Center NL South
      description: Control Center NL South
      parents : ["ENTITY_NL"]
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY_NL
      name: Dutch Control Centers
      description: Dutch Control Centers
-     roles: ["CARD_RECEIVER", "ACTIVITY_AREA_GROUP"]
+     roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
    - id: ENTITY1_EU
      name: North Europe Control Center
      description: North Europe Control Center
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
    - id: ENTITY2_EU
      name: South Europe Control Center
      description: South Europe Control Center
-     roles: ["CARD_SENDER", "CARD_RECEIVER"]
+     roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
   user-settings:
     - login: operator3_fr
       description: Da Operator Rulez

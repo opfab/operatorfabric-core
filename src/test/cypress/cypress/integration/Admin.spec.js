@@ -168,7 +168,7 @@ describe('AdmininstrationPages', () => {
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
 
         cy.get('#opfab-roles').click();
-        cy.get('#opfab-roles').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
         cy.get('#opfab-roles').click();
 
         cy.get('#opfab-parents').click();
@@ -207,7 +207,7 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-roles').click();
         // Deselect old parents
-        cy.get('#opfab-roles').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
         // Select new parent
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-roles').click();
