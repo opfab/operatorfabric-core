@@ -1,6 +1,6 @@
 {
     "taskAdvanced": {
-        "title": "Task Advanced",
+        "title": "Task Advanced - {{taskTitle}}",
         "summary": "There is something to do"
     }
 }

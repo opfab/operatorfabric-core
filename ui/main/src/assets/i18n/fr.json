@@ -708,6 +708,7 @@
       "in": "en"
    },
     "taskUserCard": {
+      "taskTitleLabel": "TITRE DE LA TÂCHE",
       "taskDescriptionLabel": "DESCRIPTION DE LA TÂCHE",
       "dailyFreq": "Répétition quotidienne",
       "monthlyFreq": "Répétition mensuelle",

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,23 @@ declare const opfab;
 export class TaskCardTemplateView {
     showInputField: Function;
 
+    public getTaskTitle() {
+        let taskTitle = opfab.currentCard.getCard()?.data?.taskTitle;
+        if (taskTitle) {
+            taskTitle = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(taskTitle));
+        } else {
+            taskTitle = '';
+        }
+        return taskTitle;
+    }
+
     public getTaskDescription() {
         let taskDescription = opfab.currentCard.getCard()?.data?.taskDescription;
-        if (taskDescription) taskDescription = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(taskDescription));
-        else taskDescription = '';
+        if (taskDescription) {
+            taskDescription = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(taskDescription));
+        } else {
+            taskDescription = '';
+        }
         return taskDescription;
     }
 

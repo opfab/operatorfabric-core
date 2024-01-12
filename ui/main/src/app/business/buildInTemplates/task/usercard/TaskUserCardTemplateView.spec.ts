@@ -1,4 +1,4 @@
-// /* Copyright (c) 2023, RTE (http://www.rte-france.com)
+// /* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
 //  * See AUTHORS.txt
 //  * This Source Code Form is subject to the terms of the Mozilla Public
 //  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,17 @@ describe('Question UserCard template', () => {
         initOpfabApiMock();
     });
 
+    it('GIVEN a user WHEN create card THEN task title is empty', () => {
+        const view = new TaskCardTemplateView();
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'CREATE';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {taskTitle: 'My task Title'}};
+        };
+        expect(view.getTaskTitle()).toEqual('');
+    });
+
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
@@ -30,7 +41,8 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a user WHEN create card with data THEN card is provided with data', () => {
         const view = new TaskCardTemplateView();
-        let taskDescription = "My task Description"; 
+        let taskTitle = "My task Title";
+        let taskDescription = "My task Description";
         let freq = 'DAILY';
         let durationInMinutes = "15";
         let minutesForReminder = "5";
@@ -39,8 +51,9 @@ describe('Question UserCard template', () => {
         let bysetpos =[];
         let bymonthday =[];
         let time = "15:15";
-        const specficCardInformation = view.getSpecificCardInformation(taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time)
+        const specficCardInformation = view.getSpecificCardInformation(taskTitle, taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time)
         expect(specficCardInformation.valid).toEqual(true);
+        expect(specficCardInformation.card.data.taskTitle).toEqual("My task Title");
         expect(specficCardInformation.card.data.taskDescription).toEqual("My task Description");
         expect(specficCardInformation.card.data.freq).toEqual('DAILY');
         expect(specficCardInformation.card.data.durationInMinutes).toEqual("15");
@@ -60,6 +73,7 @@ describe('Question UserCard template', () => {
         };
         opfab.currentCard.getCard = function () {
             return {data: {
+                taskTitle: "My task Title",
                 taskDescription: "My task Description",
                 freq: 'DAILY',
                 byhour: ["15"],
@@ -73,6 +87,7 @@ describe('Question UserCard template', () => {
                 }
             }
         }
+        expect(view.getTaskTitle()).toEqual("My task Title");
         expect(view.getTaskDescription()).toEqual("My task Description");
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');
@@ -91,6 +106,7 @@ describe('Question UserCard template', () => {
         };
         opfab.currentCard.getCard = function () {
             return {data: {
+                taskTitle: "My task Title",
                 taskDescription: "My task Description",
                 freq: 'DAILY',
                 byhour: ["15"],
@@ -104,6 +120,7 @@ describe('Question UserCard template', () => {
                 }
             }
         }
+        expect(view.getTaskTitle()).toEqual("My task Title");
         expect(view.getTaskDescription()).toEqual("My task Description");
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');

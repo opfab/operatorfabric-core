@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,6 +79,7 @@ describe('Task Advanced', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
+      cy.get('#taskTitle').invoke('val', 'Task title');
       cy.get('#taskDescription').invoke('val', 'Test task for daily frequency');
 
       // we unselect Tuesday, Thursday, Saturday, Sunday
@@ -105,7 +106,7 @@ describe('Task Advanced', function () {
 
       // We check the content of the card
       feed.openFirstCard();
-      feed.checkSelectedCardHasTitle("Task Advanced");
+      feed.checkSelectedCardHasTitle("Task Advanced - Task title");
       feed.checkSelectedCardHasSummary("There is something to do");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Test task for daily frequency");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Duration: 20 minutes");
@@ -148,6 +149,7 @@ describe('Task Advanced', function () {
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
+      cy.get('#taskTitle').invoke('val', 'Task title');
       cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth day)');
 
       // by default, all months are selected, so we unselect all months
@@ -171,7 +173,7 @@ describe('Task Advanced', function () {
 
       // We check the content of the card
       feed.openFirstCard();
-      feed.checkSelectedCardHasTitle("Task Advanced");
+      feed.checkSelectedCardHasTitle("Task Advanced - Task title");
       feed.checkSelectedCardHasSummary("There is something to do");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Test task for monthly frequency (Nth day)");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Duration: 5 minutes");
@@ -216,6 +218,7 @@ describe('Task Advanced', function () {
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
+      cy.get('#taskTitle').invoke('val', 'Task title');
       cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth weekday)');
 
       // by default, all months are selected, so we unselect all months
@@ -238,7 +241,7 @@ describe('Task Advanced', function () {
 
       // We check the content of the card
       feed.openFirstCard();
-      feed.checkSelectedCardHasTitle("Task Advanced");
+      feed.checkSelectedCardHasTitle("Task Advanced - Task title");
       feed.checkSelectedCardHasSummary("There is something to do");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Test task for monthly frequency (Nth weekday)");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Duration: 7 minutes");
