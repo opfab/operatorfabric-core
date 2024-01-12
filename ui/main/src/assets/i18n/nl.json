@@ -708,7 +708,8 @@
       "in": "in"
    },
     "taskUserCard": {
-      "taskDescriptionLabel": "TAAKBESCHRIJVING",
+      "taskTitleLabel": "TAAK TITEL",
+      "taskDescriptionLabel": "TAAK BESCHRIJVING",
       "dailyFreq": "Dagelijkse frequentie",
       "monthlyFreq": "Maandelijkse frequentie",
       "Repeat": "HERHAAL ELKE",

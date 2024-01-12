@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ describe('Question UserCard template', () => {
         opfab.currentCard.getCard = function () {
             return {
                 data: {
+                    taskTitle: 'My task Title',
                     taskDescription: 'My task Description',
                     byhour: ["5"],
                     byminute: ["15"],
@@ -30,6 +31,7 @@ describe('Question UserCard template', () => {
                 }
             };
         };
+        expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getByHour()).toEqual('05');
         expect(view.getByMinute()).toEqual('15');

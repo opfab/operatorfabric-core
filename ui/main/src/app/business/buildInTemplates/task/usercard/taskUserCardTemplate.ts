@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         super();
         this.view = new TaskCardTemplateView();
         this.innerHTML = `
+        <br/>
+        <div class="opfab-input">
+            <label for="taskTitle"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskTitleLabel')}</label>
+            <input size="50" type="text" id="taskTitle" value='${this.view.getTaskTitle()}'> 
+        </div>
         <br/>
         <div class="opfab-input">
             <label for="taskDescription"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskDescriptionLabel')}</label>
@@ -446,6 +451,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const time = (<HTMLInputElement>document.getElementById('time')).value;
         const durationInMinutes =  (<HTMLInputElement>document.getElementById('durationInMinutes')).value;
         const minutesForReminder =  (<HTMLInputElement>document.getElementById('minutesForReminder')).value;
+        const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;
         const taskDescription = (<HTMLInputElement>document.getElementById('taskDescription')).value;
 
         let that = this;
@@ -504,7 +510,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             }
         }
 
-        return this.view.getSpecificCardInformation(taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time);
+        return this.view.getSpecificCardInformation(taskTitle, taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time);
     }
 
     fetchMonths() {
