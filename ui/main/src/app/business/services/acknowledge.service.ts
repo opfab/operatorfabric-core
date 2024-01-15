@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,16 +38,28 @@ export class AcknowledgeService {
         return AcknowledgeService.acknowledgeServer.deleteUserAcknowledgement(cardUid);
     }
 
-    public static  isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {
+    public static isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {
+
         if (!processDefinition) return true;
         const state = processDefinition.states.get(card.state);
 
-        if (state) {
-            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER) return false;
-            if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS) return true;
-            return !UserPermissionsService.isUserEnabledToRespond(user, card, processDefinition);
-        }
-        return true;
+        if (!state?.acknowledgmentAllowed) return true;
+
+        const isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
+            user,
+            card,
+            processDefinition
+        );
+
+        return (
+            state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
+            (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
+                (UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) || !isUserEnabledToRespond || (isUserEnabledToRespond && AcknowledgeService.isLttdExpired(card))))
+        );
+    }
+
+    private static isLttdExpired(card): boolean {
+        return card.lttd != null && card.lttd - new Date().getTime() <= 0;
     }
 
     public static isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightCard: LightCard): boolean {
