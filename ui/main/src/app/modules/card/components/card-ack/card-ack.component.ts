@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
+import {ConsideredAcknowledgedForUserWhenEnum, Process, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
@@ -26,6 +26,7 @@ import {RouterStore,PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import { RolesEnum } from '@ofModel/roles.model';
 import {CardAction} from '@ofModel/light-card.model';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -56,6 +57,9 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
     isReadOnlyUser: any;
+
+    cardProcess: Process;
+    currentUserWithPerimeters: UserWithPerimeters;
 
     constructor(
     ) {
@@ -94,6 +98,8 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        this.cardProcess = ProcessesService.getProcess(this.card.process);
         this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
@@ -143,25 +149,15 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged ? false
-            : this.isAcknowledgmentAllowed() && RouterStore.getCurrentPageType() !== PageType.CALENDAR;
+            : AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, this.card, this.cardProcess) && RouterStore.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
             : this.isCancelAcknowledgmentAllowed() &&  RouterStore.getCurrentPageType() !== PageType.CALENDAR;
-    }
-
-    private isAcknowledgmentAllowed(): boolean {
-        if (!this.cardState.acknowledgmentAllowed) return true;
-
-        return (
-            this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
-            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
-                (this.isReadOnlyUser || !this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
-        );
-    }
+        }
 
     private isCancelAcknowledgmentAllowed(): boolean {
         return (!this.card.hasBeenAcknowledged || !this.cardState.cancelAcknowledgmentAllowed) ? false
-            : this.isAcknowledgmentAllowed();
+            : AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, this.card, this.cardProcess);
     }
 
     private isCardAcknowledgedAtEntityLevel() {
