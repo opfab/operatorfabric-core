@@ -1,0 +1,30 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+# Load testing with Gatling
+
+Load tests using Gatling are written in java.
+All test java sources are in src/test/gatling/src/java
+
+
+IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to edit the tests classes  and replace localhost with the address of your running instance.
+
+
+## Run a test
+
+To launch a specific test, launch:
+
+....
+$OF_HOME/gradlew clean  gatlingRun-<TestClassName>
+....
+
+The result will be available in the `src/test/gatling/build/reports/gatling/` folder.
+
+
+
+
