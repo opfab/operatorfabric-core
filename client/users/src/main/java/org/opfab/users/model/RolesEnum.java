@@ -16,8 +16,8 @@
  public enum RolesEnum {
      ACTIVITY_AREA("ACTIVITY_AREA"),
      ACTIVITY_AREA_GROUP("ACTIVITY_AREA_GROUP"),
-     CARD_SENDER("CARD_SENDER"),
-     CARD_RECEIVER("CARD_RECEIVER");
+     CARD_RECEIVER("CARD_RECEIVER"),
+     CARD_SENDER("CARD_SENDER");
  
      private String value;
  
