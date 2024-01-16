@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,8 +34,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
         const currentDate = new Date(); 
 
-        // There are 36 grey bubbles on the dashboard because there are 36 empty states in testconf
-        cy.get('of-dashboard').find("ellipse").should('have.length',36)
+        // There are 35 grey bubbles on the dashboard because there are 35 empty states in testconf
+        cy.get('of-dashboard').find("ellipse").should('have.length', 35)
 
         // Send 1 card and check the bubble
         script.sendCard('cypress/feed/customEvent.json');
@@ -60,9 +60,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         script.sendCard('cypress/feed/futureEvent.json');
 
         // There are 36 bubbles on the dashboard (35 states with 1 grey bubble and 1 state with 2 bubbles)
-        cy.get('of-dashboard').find("ellipse").should('have.length',37)
-        checkNthCircleContains("kitchenSink",1,"2");
-        checkNthCircleContains("kitchenSink",0,"1");
+        cy.get('of-dashboard').find("ellipse").should('have.length', 36)
+        checkNthCircleContains("kitchenSink", 1, "2");
+        checkNthCircleContains("kitchenSink", 0, "1");
 
         // Clicking on a circle with several cards should not display a card
         clickNthCircle("kitchenSink",1);
@@ -75,8 +75,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // When the time line is set to next year, there should only be grey bubbles
         setTimeLineDomain('Y')
         moveLeft()
-        cy.get('of-dashboard').find("ellipse").should('have.length',36)
-        checkNthCircleContains("kitchenSink",0,"0");
+        cy.get('of-dashboard').find("ellipse").should('have.length', 35)
+        checkNthCircleContains("kitchenSink", 0, "0");
 
     });
 });
