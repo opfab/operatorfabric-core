@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1379,6 +1379,7 @@ describe('User Card ', function () {
 
       cy.waitDefaultTime();
       cy.get('#opfab-sev-information').check(); // we set severity different from default value
+      cy.get('#usercard_message_title').type('Test title for copy card feature');
       cy.get('#usercard_message_input').find('div').eq(0).type('Test for copy card feature');
 
       usercard.selectEmitter('Control Center FR West');
@@ -1398,6 +1399,7 @@ describe('User Card ', function () {
       usercard.checkSelectedProcessIs('Message or question');
       usercard.checkSelectedStateIs('Message');
       usercard.checkSelectedSeverityIs('INFORMATION');
+      cy.get('#usercard_message_title').should('have.value', 'Test title for copy card feature');
       cy.get('#usercard_message_input').should('contain.text', 'Test for copy card feature');
       usercard.checkNumberOfRecipientsIs(1);
       usercard.checkRecipientsContain('Control Center FR South');

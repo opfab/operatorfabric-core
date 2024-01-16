@@ -677,6 +677,7 @@
     },
     "messageUserCard": {
       "noMessageError":"Vous ne pouvez pas envoyer un message vide",
+      "messageTitleLabel": "TITRE DU MESSAGE",
       "textareaLabel":"MESSAGE"
     },
     "questionCard" : {

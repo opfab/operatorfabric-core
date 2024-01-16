@@ -1,6 +1,6 @@
 {
 	"message":{
-		"title":"Message",
+		"title":"Message - {{messageTitle}}",
 		"summary":"Message received"
 	},
 	"question":{
