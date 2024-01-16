@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -661,5 +661,43 @@ describe('Response card tests', function () {
         .should('have.text', ' YES ')
         .next()
         .should('have.text', ' Cypress test for response publisher ');
+    });
+
+    it('Check read and acknowledgment when response actions contains PROPAGATE_READ_ACK_TO_PARENT_CARD', () => {
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples');
+        usercard.selectProcess('Message or question');
+        usercard.selectState('Confirmation');
+        cy.get('#question').invoke('val', 'question');
+        cy.get('#message').invoke('val', 'Cypress test for PROPAGATE_READ_ACK_TO_PARENT_CARD');
+        usercard.selectRecipient('Control Center FR North');
+        usercard.selectRecipient('Control Center FR South');
+        usercard.previewThenSendCard();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        feed.openFirstCard();
+        card.acknowledge();
+
+        //acknowledged card is not visible in the feed
+        feed.checkNumberOfDisplayedCardsIs(0);
+        opfab.logout();
+
+        opfab.loginWithUser('operator2_fr');
+        feed.openFirstCard();
+        cy.get('#opfab-div-card-template-processed');
+        cy.get('#confirmation-response');
+
+        card.sendResponse();
+        opfab.logout();
+
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(1);
+        //Check card is unread
+        cy.get('of-light-card').eq(0).find('.card-title, .card-title').should('have.css', 'font-weight')
+            .and('match', /700|bold/);
+
+        //Check is not acknowledged
+        cy.get('of-light-card').eq(0).find('.fa-check').should('not.exist')
     });
 });
