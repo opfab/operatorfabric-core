@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,7 +90,7 @@ describe ('Feed notification configuration tests',function () {
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(0).find('tr').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(2).find('tr').should('have.length', 12);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(2).find('tr').should('have.length', 11);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('tr').contains('Dummy response state for tests').should('not.exist');
@@ -143,7 +143,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').last().find('p').eq(0).should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(0).find('tr').should('have.length', 12);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(0).find('tr').should('have.length', 11);
 
     
     })
@@ -194,7 +194,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('tr').should('have.length', 2);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(6).find('tr').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(7).find('tr').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(8).find('tr').should('have.length', 12);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(8).find('tr').should('have.length', 11);
 
         // We check 'Process example/Network Contingencies' is disabled (because 'filteringNotificationAllowed' is false for the corresponding perimeter)
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4)
@@ -502,7 +502,7 @@ describe ('Feed notification configuration tests',function () {
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 36);
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 35);
         cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 0);
     })
 
@@ -510,7 +510,7 @@ describe ('Feed notification configuration tests',function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 36);
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 35);
         cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 0);
 
         // We subscribe to three process/state for mail notif
@@ -534,7 +534,7 @@ describe ('Feed notification configuration tests',function () {
         opfab.navigateToFeed(); // we navigate to another screen
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 32);
         cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 3);
 
         cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash').should('exist');
@@ -546,7 +546,7 @@ describe ('Feed notification configuration tests',function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 32);
         cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 3);
 
         cy.get('.opfab-feedconfiguration-processlist').eq(0).contains(/^Message $/)
@@ -570,7 +570,7 @@ describe ('Feed notification configuration tests',function () {
         opfab.navigateToFeed(); // we navigate to another screen
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 34);
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
         cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 2);
         cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-with-slash')
             .should('exist'); // subscription for mail notif automatically canceled for this state

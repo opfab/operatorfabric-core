@@ -80,3 +80,9 @@ To update the entities in your mongo database, you can execute the following scr
 `./launchMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
 
 This script will assign the roles "ACTIVITY_AREA", "CARD_RECEIVER" and "CARD_SENDER" to all the entities that have "entityAllowedToSendCard = true" and the role "CARD_RECEIVER" to the others. Please refer to the documentation to see the other possible roles and their effect.
+
+== Deletion of deprecated functions in templateGateway/usercardTemplateGateway
+
+Functions in templateGateway/usercardTemplateGateway do not exist anymore, you can refer to the
+migration documentation to opfab 4.0 to know which functions you have to use.
+
