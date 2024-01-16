@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -40,7 +40,7 @@
 
                             <td>
                                 <ng-template #connected>
-                                    <span class="badge rounded-pill bg-success">{{line.connectedUsersCount}}
+                                    <span class="badge rounded-pill bg-primary">{{line.connectedUsersCount}}
                                     </span>&nbsp;<span [id]="'grouped-label-' + line.entityId" class="opfab-group-label"
                                         [disablePopover]="!isEllipsisActive('grouped-label-' + line.entityId)"
                                         placement="top-left"
@@ -55,7 +55,7 @@
                                       &nbsp; {{user}} &nbsp;
                                     </div>
                                   </ng-template>
-                                <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
+                                <ng-template #disconnected><span class="badge rounded-pill bg-secondary">0</span></ng-template>
                                 <span *ngIf="line.connectedUsersCount;then connected else disconnected"></span>
                             </td>
                         </tr>

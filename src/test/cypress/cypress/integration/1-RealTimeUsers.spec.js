@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,8 +28,8 @@ describe ('RealTimeUsersPage',()=>{
 
         // we should have 8 disconnected entities and 2 connected (because admin is member of 2 entities)
         cy.get('.badge').should('have.length', 10);
-        cy.get('.bg-success').should('have.length', 2);
-        cy.get('.bg-danger').should('have.length', 8);
+        cy.get('.bg-primary').should('have.length', 2);
+        cy.get('.bg-secondary').should('have.length', 8);
     })
 
     it('Connection of operator3_fr and check of Real time users screen', ()=> {
@@ -39,9 +39,9 @@ describe ('RealTimeUsersPage',()=>{
         // we should have 9 disconnected entities and 1 connected (operator3_fr for ENTITY3_FR)
         // we check the connected badge is for the third row
         cy.get('.badge').should('have.length', 10);
-        cy.get('.bg-success').should('have.length', 1);
-        cy.get('.bg-danger').should('have.length', 9);
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('.bg-primary').should('have.length', 1);
+        cy.get('.bg-secondary').should('have.length', 9);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator3_fr');
 
@@ -58,9 +58,9 @@ describe ('RealTimeUsersPage',()=>{
         // we should have 9 disconnected entities and 1 connected (operator2_fr for ENTITY2_FR)
         // we check the connected badge is for the second row
         cy.get('.badge').should('have.length', 10);
-        cy.get('.bg-success').should('have.length', 1);
-        cy.get('.bg-danger').should('have.length', 9);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('.bg-primary').should('have.length', 1);
+        cy.get('.bg-secondary').should('have.length', 9);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator2_fr');
 
@@ -77,23 +77,23 @@ describe ('RealTimeUsersPage',()=>{
 
         // we should have 6 disconnected entities and 4 connected (operator4_fr for ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR)
         cy.get('.badge').should('have.length', 10);
-        cy.get('.bg-success').should('have.length', 4);
-        cy.get('.bg-danger').should('have.length', 6);
+        cy.get('.bg-primary').should('have.length', 4);
+        cy.get('.bg-secondary').should('have.length', 6);
 
         // we check the connected badges
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
 
@@ -104,8 +104,8 @@ describe ('RealTimeUsersPage',()=>{
 
         // we should have 5 disconnected entities and 4 connected (operator4_fr for ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR)
         cy.get('.badge').should('have.length', 5);
-        cy.get('.bg-success').should('have.length', 4);
-        cy.get('.bg-danger').should('have.length', 1);
+        cy.get('.bg-primary').should('have.length', 4);
+        cy.get('.bg-secondary').should('have.length', 1);
 
         // operator4_fr disconnect from ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
         opfab.navigateToActivityArea();
@@ -131,23 +131,23 @@ describe ('RealTimeUsersPage',()=>{
         // we are on the French control centers
         // we should have 8 disconnected entities and 1 connected (operator4_fr for ENTITY1_FR only)
         cy.get('.badge').should('have.length', 5);
-        cy.get('.bg-success').should('have.length', 1);
-        cy.get('.bg-danger').should('have.length', 4);
+        cy.get('.bg-primary').should('have.length', 1);
+        cy.get('.bg-secondary').should('have.length', 4);
 
         // we check the connected/disconnected badges
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '0');
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '');
         // third row
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '0');
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '');
         // fourth row
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-danger').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '0');
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '');
 
@@ -170,23 +170,23 @@ describe ('RealTimeUsersPage',()=>{
         // we are on the French control centers
         // we should have 4 connected entities (operator4_fr for ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR)
         cy.get('.badge').should('have.length', 5);
-        cy.get('.bg-success').should('have.length', 4);
-        cy.get('.bg-danger').should('have.length', 1);
+        cy.get('.bg-primary').should('have.length', 4);
+        cy.get('.bg-secondary').should('have.length', 1);
 
         // we check the connected/disconnected badges
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-primary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
     })
