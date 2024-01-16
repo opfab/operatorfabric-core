@@ -674,8 +674,9 @@
       "message" : "You received a message : "
     },
     "messageUserCard": {
-      "noMessageError":"You must provide a message",
-      "textareaLabel" :"MESSAGE"
+      "noMessageError": "You must provide a message",
+      "messageTitleLabel": "MESSAGE TITLE",
+      "textareaLabel": "MESSAGE"
     },
     "questionCard" : {
       "responseInputLabel" : "RESPONSE",

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,12 +11,12 @@ declare const opfab;
 
 export class MessageUserCardTemplateView {
 
-    public getSpecificCardInformation(quillEditor: any) {
+    public getSpecificCardInformation(quillEditor: any, messageTitle: string) {
 
         const card = {
             summary: {key: 'message.summary'},
-            title: {key: 'message.title'},
-            data: {richMessage: quillEditor.getContents()}
+            title: {key: 'message.title', parameters : {"messageTitle" : messageTitle}},
+            data: {richMessage: quillEditor.getContents(), messageTitle: messageTitle}
         };
         if (quillEditor.isEmpty())
             return {
@@ -29,11 +29,24 @@ export class MessageUserCardTemplateView {
         };
     }
 
+    public getMessageTitle() {
+        let messageTitle = '';
+        if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
+            const messageTitleField = opfab.currentCard.getCard()?.data?.messageTitle;
+            if (messageTitleField) {
+                messageTitle = messageTitleField;
+            }
+        }
+        return messageTitle;
+    }
+
     public getRichMessage() {
         let message = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             const messageField = opfab.currentCard.getCard()?.data?.richMessage;
-            if (messageField) message = messageField;
+            if (messageField) {
+                message = messageField;
+            }
         }
         return message;
     }

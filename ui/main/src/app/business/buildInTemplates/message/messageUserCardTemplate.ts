@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,13 @@ export class MessageUserCardTemplate extends BaseUserCardTemplate {
         this.view = new MessageUserCardTemplateView();
         const richMessage = this.view.getRichMessage();
         const textareaLabel = opfab.utils.getTranslation('buildInTemplate.messageUserCard.textareaLabel');
+        const messageTitleLabel = opfab.utils.getTranslation('buildInTemplate.messageUserCard.messageTitleLabel');
         this.innerHTML = `
+        <br/>
+        <div class="opfab-input">
+            <label>${messageTitleLabel}</label>
+            <input id="usercard_message_title" value='${this.view.getMessageTitle()}'>
+        </div>
         <br/>
         <div class="opfab-textarea">
             <label>${textareaLabel}</label>
@@ -31,8 +37,9 @@ export class MessageUserCardTemplate extends BaseUserCardTemplate {
 
     getSpecificCardInformation() {
         const quillEditor = (<HTMLInputElement>document.getElementById('usercard_message_input'));
+        const messageTitle = (<HTMLInputElement>document.getElementById('usercard_message_title')).value;
 
-        return this.view.getSpecificCardInformation(quillEditor);
+        return this.view.getSpecificCardInformation(quillEditor, messageTitle);
     }
 
 }

@@ -676,6 +676,7 @@
     },
     "messageUserCard": {
       "noMessageError":"U moet een bericht opgeven",
+      "messageTitleLabel": "BERICHT TITEL",
       "textareaLabel":"BERICHT"
     },
     "questionCard" : {
