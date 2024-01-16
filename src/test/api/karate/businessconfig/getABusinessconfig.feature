@@ -31,6 +31,7 @@ Feature: Bundle
     And match response.states.questionState.deleteCardEnabledOnUserInterface == true
     And match response.states.questionState.showAcknowledgmentFooter == 'OnlyForUsersAllowedToEdit'
     And match response.states.messageState.type == 'CANCELED'
+    And match response.states.messageState.emailBodyTemplate == 'email_template'
     And match response.states.messageState.editCardEnabledOnUserInterface == false
     And match response.states.messageState.copyCardEnabledOnUserInterface == false
     And match response.states.messageState.showAcknowledgmentFooter == 'OnlyForEmittingEntity'
