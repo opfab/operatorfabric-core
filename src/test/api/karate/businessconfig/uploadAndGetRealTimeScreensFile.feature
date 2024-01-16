@@ -10,6 +10,13 @@ Feature: uploadRealTimeScreens
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
+  Scenario: Post empty realtime screens configuration file
+    Given url opfabUrl + '/businessconfig/realtimescreens'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = { read: 'resources/emptyRealtimescreens.json' }
+    When method post
+    And status 201
+
   Scenario: Check that realtime screens configuration does not exist
     Given url opfabUrl + '/businessconfig/realtimescreens'
     And header Authorization = 'Bearer ' + authTokenAsTSO
