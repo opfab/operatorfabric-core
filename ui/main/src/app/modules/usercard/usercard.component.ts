@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {UserService} from 'app/business/services/users/user.service';
 import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, fromCardToLightCard, TimeSpan} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {EntitiesService} from 'app/business/services/users/entities.service';
@@ -602,13 +602,17 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     keepChildCards: this.specificInformation.card.keepChildCards
                         ? this.specificInformation.card.keepChildCards
                         : false,
+                    actions: this.specificInformation.card.actions ? this.specificInformation.card.actions : [],
                     data: this.specificInformation.card.data,
                     rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
                     wktGeometry: wktGeometry,
                     wktProjection: wktProjection,
                     tags: tags
                 } as Card;
-                this.childCards = this.cardToEdit?.card.keepChildCards ? this.cardToEdit.childCards : [];
+                if (this.cardToEdit?.card.keepChildCards)
+                    logger.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
+
+                this.childCards = (this.cardToEdit?.card.keepChildCards || this.cardToEdit?.card.actions?.includes(CardAction.KEEP_CHILD_CARDS))? this.cardToEdit.childCards : [];
                 if (
                     this.specificInformation.childCard &&
                     UserPermissionsService.isUserEnabledToRespond(

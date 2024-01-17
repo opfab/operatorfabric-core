@@ -86,3 +86,6 @@ This script will assign the roles "ACTIVITY_AREA", "CARD_RECEIVER" and "CARD_SEN
 Functions in templateGateway/usercardTemplateGateway do not exist anymore, you can refer to the
 migration documentation to opfab 4.0 to know which functions you have to use.
 
+== Card keepChildCards
+
+The card field `keepChildCards` is now deprecated, use the new `actions` field (string array) including "KEEP_CHILD_CARDS" action instead.

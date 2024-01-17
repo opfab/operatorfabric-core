@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -162,7 +162,8 @@ public class CardProcessingService {
     }
 
     private Void deleteChildCardsProcess(CardPublicationData card, Optional<Jwt> jwt) {
-        if (Boolean.FALSE.equals(card.getKeepChildCards())) {
+
+        if (!shouldKeepChildCards(card)) {
             String idCard = card.getProcess() + "." + card.getProcessInstanceId();
             Optional<List<CardPublicationData>> childCard = cardRepository
                     .findChildCard(cardRepository.findCardById(idCard));
@@ -171,6 +172,12 @@ public class CardProcessingService {
             }
         }
         return null;
+    }
+
+    private boolean shouldKeepChildCards(CardPublicationData card) {
+        if (Boolean.TRUE.equals(card.getKeepChildCards()))
+            log.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
+        return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0);
     }
 
     private void deleteCards(List<CardPublicationData> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {

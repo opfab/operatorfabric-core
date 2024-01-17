@@ -410,7 +410,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check response for operator1_fr is still present after update of card with keepChildCard=true re-logging', function () {
+    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function () {
         script.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -449,7 +449,7 @@ describe('Response card tests', function () {
         card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
     });
 
-    it('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging', function () {
+    it('Check response for  operator1_fr  is not present after update of card without KEEP_CHILD_CARDS action re-logging', function () {
         script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -481,7 +481,7 @@ describe('Response card tests', function () {
         // operator1_fr should see 3 archived cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
 
-        // open card detail for card with keepChildCards=false and check there are no responses
+        // open card detail for card without KEEP_CHILD_CARDS action and check there are no responses
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');
@@ -494,7 +494,7 @@ describe('Response card tests', function () {
         // close card detail
         cy.get('#opfab-archives-card-detail-close').click();
 
-        // open card detail for card with keepChildCards=true and check it should have 3 child cards
+        // open card detail for card with KEEP_CHILD_CARDS action and check it should have 3 child cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(1).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');

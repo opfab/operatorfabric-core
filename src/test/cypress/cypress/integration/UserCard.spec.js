@@ -581,9 +581,9 @@ describe('User Card ', function () {
   })
 
 
-  describe('Show responses in card preview when keepChildCards=true ', function () {
+  describe('Show responses in card preview when card has KEEP_CHILD_CARDS action', function () {
 
-    it('Send User card with keepChildCards=true', () => {
+    it('Send User card with KEEP_CHILD_CARDS action', () => {
       
       script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');

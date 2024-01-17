@@ -179,7 +179,9 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.entitiesAllowedToRespond,
         card.entitiesRequiredToRespond,
         card.entitiesAllowedToEdit,
-        card.publisherType
+        card.publisherType,
+        card.secondsBeforeTimeSpanForReminder,
+        card.actions
     );
 }
 
@@ -217,6 +219,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.wktProjection,
         card.secondsBeforeTimeSpanForReminder,
         card.timeSpans,
-        card.rRule
+        card.rRule,
+        card.actions
     );
 }
