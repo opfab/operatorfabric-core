@@ -12,11 +12,13 @@ package org.opfab.cards.model;
 /**
  * Defines the actions to be done when card is received
  * <dl>
- *     <dt>PROPAGATE_READ_ACK_TO_PARENT_CARD</dt>
+ *    <dt>PROPAGATE_READ_ACK_TO_PARENT_CARD</dt>
+ *    <dt>KEEP_CHILD_CARDS </dt>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  */
 public enum CardActionEnum {
-   PROPAGATE_READ_ACK_TO_PARENT_CARD
+   PROPAGATE_READ_ACK_TO_PARENT_CARD,
+   KEEP_CHILD_CARDS
 }

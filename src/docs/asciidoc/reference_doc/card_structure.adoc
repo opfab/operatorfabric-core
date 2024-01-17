@@ -168,6 +168,7 @@ NOTE: Only the POINT and POLYGON are supported.
 
 ==== Actions (`actions`)
 A list of predetermined actions that will be executed upon receiving the card. The available actions include:
+- KEEP_CHILD_CARDS : used to keep child cards when the parent card is modified.
 - PROPAGATE_READ_ACK_TO_PARENT_CARD : used only for response cards. When receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 
 === Business period 

@@ -312,7 +312,7 @@ export class LightCardsStore {
     }
 
     private lightCardHasChildFromCurrentUserEntity(oldCardVersion, newCard): boolean {
-        if (oldCardVersion) return newCard.keepChildCards && oldCardVersion.hasChildCardFromCurrentUserEntity;
+        if (oldCardVersion) return (newCard.keepChildCards || newCard.actions?.includes(CardAction.KEEP_CHILD_CARDS)) && oldCardVersion.hasChildCardFromCurrentUserEntity;
         else {
             // if a child card form the current user entity has been loaded in the UI before the parent card
             if (this.orphanedLightChildCardsFromCurrentEntity.has(newCard.id)) {

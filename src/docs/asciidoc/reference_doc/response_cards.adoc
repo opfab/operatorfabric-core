@@ -186,7 +186,7 @@ entities allowed to respond to the card. If the user is not in the entity, he wi
 
 NOTE: By default, OperatorFabric considers that if the parent card (question card) is modified, then the child cards
 are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent
-card the field "keepChildCards" and set it to true.
+card the field "actions" as a string array containing the "KEEP_CHILD_CARDS" action.
 
 The header in the card details will list the entities from which a response is expected, color-coding them depending
 on whether they've already responded (green) or not (orange).
