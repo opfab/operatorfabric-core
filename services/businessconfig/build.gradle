@@ -36,6 +36,13 @@ bootJar {
     }
 }
 
+swaggerSources {
+    endpoints {
+        code {
+            components = ['models']
+        }
+    }
+}
 
 /////// CUSTOM TASKS
 // Test data tasks >>>>>
