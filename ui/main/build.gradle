@@ -5,6 +5,9 @@ plugins {
 
 npmInstall {
     inputs.files(fileTree('node_modules'))
+    // Important: Use 'npm ci' instead of 'npm install' to ensure consistent dependencies.
+    // 'npm ci' uses the exact versions from package-lock.json, preventing unexpected changes.
+    npmCommand = ['ci'] 
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
