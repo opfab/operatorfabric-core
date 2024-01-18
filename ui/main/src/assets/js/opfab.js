@@ -171,6 +171,11 @@ opfab.richTextEditor = {
         }
         return null;
 
+    },
+
+    getDeltaFromText(message) {
+        const delta ={ops: [{ insert: message }] };
+        return JSON.stringify(delta);
     }
 
 };

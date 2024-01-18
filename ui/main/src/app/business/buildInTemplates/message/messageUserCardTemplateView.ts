@@ -45,7 +45,7 @@ export class MessageUserCardTemplateView {
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             const messageField = opfab.currentCard.getCard()?.data?.richMessage;
             if (messageField) {
-                message = messageField;
+                message = opfab.utils.escapeHtml(messageField);
             }
         }
         return message;

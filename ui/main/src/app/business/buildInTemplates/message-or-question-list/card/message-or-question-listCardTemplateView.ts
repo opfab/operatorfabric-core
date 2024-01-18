@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,9 +20,9 @@ export class MessageOrQuestionListCardTemplateView {
         return title;
     }
 
-    public getMessage() {
-        let message = opfab.currentCard.getCard()?.data?.message;
-        if (message) message = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(message));
+    public getRichMessage() {
+        let message = opfab.currentCard.getCard()?.data?.richMessage;
+        if (message) message = opfab.utils.escapeHtml(message);
         else message = '';
         return message;
     }
