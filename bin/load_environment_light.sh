@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,5 +13,5 @@ source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk install java 17.0.8.1-zulu
 sdk use java 17.0.8.1-zulu
-nvm install v20.10.0
-nvm use v20.10.0
+nvm install v20.11.0
+nvm use v20.11.0
