@@ -9,6 +9,7 @@ dependencies {
     implementation misc.guava
     implementation misc.snappy
     implementation cloud.avro
+    implementation misc.compress
 //End transitive dependencies
 
     implementation spring.securityOauthResource, spring.securityOauthJose
@@ -20,6 +21,7 @@ dependencies {
     implementation cloud.kafkaAvroSchemaRegistryClient
     implementation cloud.kafkaAvroSerializer
     testImplementation cloud.springKafkaTest
+
 
 
     implementation boot.starterWeb, boot.starterUndertow
