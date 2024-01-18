@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,24 +21,10 @@ describe('MessageOrQuestionList Card template', () => {
 
     it('GIVEN a card WHEN get title and message THEN title and message are provided', () => {
         opfab.currentCard.getCard = function () {
-            return {data: {title: 'My title', message: 'My message'}};
+            return {data: {title: 'My title', richMessage: 'My message'}};
         };
         expect(view.getTitle()).toEqual('My title');
-        expect(view.getMessage()).toEqual('My message');
-    });
-
-    it('GIVEN a card WHEN get message with new line THEN message is provided with <br> tag', () => {
-        opfab.currentCard.getCard = function () {
-            return {data: {message: 'My message \n message'}};
-        };
-        expect(view.getMessage()).toEqual('My message <br/> message');
-    });
-
-    it('GIVEN a card WHEN get message with a HTML tag THEN message is provided with HTML tag escaped', () => {
-        opfab.currentCard.getCard = function () {
-            return {data: {message: 'My message <script>'}};
-        };
-        expect(view.getMessage()).toEqual('My message &lt;script&gt;');
+        expect(view.getRichMessage()).toEqual('My message');
     });
 
     it('GIVEN a card WHEN get title with a HTML tag THEN title is provided with HTML tag escaped', () => {

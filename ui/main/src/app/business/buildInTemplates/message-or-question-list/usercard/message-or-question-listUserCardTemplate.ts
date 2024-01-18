@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,8 +33,8 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         <br/>
 
         <div class="opfab-textarea">
-            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')} </label>
-            <textarea id="message" name="message" style="width:100%" rows="3">${this.view.getMessage()}</textarea>
+        <label>${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')}</label>
+            <opfab-richtext-editor id="message">${this.view.getRichMessage()}</opfab-richtext-editor>
         </div>
 
         <br/>
@@ -46,8 +46,8 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     }
 
     getSpecificCardInformation() {
-        const message = (<HTMLInputElement>document.getElementById('message')).value;
-        return this.view.getSpecificCardInformation(message);
+        const quillEditor = (<HTMLInputElement>document.getElementById('message'));
+        return this.view.getSpecificCardInformation(quillEditor);
     }
 
     initMultiSelect() {
@@ -69,12 +69,16 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         const messageId = this.messageSelect.getSelectedValues();
         const message = this.view.getMessageOrQuestion(messageId)
         if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
-            const messageArea =  document.getElementById("message") as HTMLTextAreaElement;
-            messageArea.value  = message?.message;
+            const quill =  document.getElementById("message");
+            this.setRichTextContent(quill, message?.message);
             this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
         } 
         
+    }
+
+    private setRichTextContent(quillEditor: any, message: string) {
+        quillEditor.setContents(opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message)));
     }
 
     private listenToEntityUsedForSendingCardChange() {
