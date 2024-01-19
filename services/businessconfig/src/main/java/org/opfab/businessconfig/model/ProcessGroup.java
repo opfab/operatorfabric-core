@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.businessconfig.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,21 +17,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * ProcessGroups Model, documented at {@link ProcessGroups}
- *
- * {@inheritDoc}
- *
- */
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProcessGroupsData implements ProcessGroups {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Validated
+public class ProcessGroup {
 
-  private List<ProcessGroup>  groups;
-
-  public void clear(){
-      this.groups.clear();
-  }
+  private String id;
+  private String name;
+  private List<String> processes;
 }

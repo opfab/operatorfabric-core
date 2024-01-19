@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,23 +14,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * <p>Please use builder to instantiate</p>
- *
- * <p>ProcessUiVisibility Model, documented at {@link ProcessUiVisibility}</p>
- *
- * {@inheritDoc}
- *
- *
- */
+import java.util.List;
+
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProcessUiVisibilityData implements ProcessUiVisibility {
+@Validated
+public class ProcessGroups {
 
-    private Boolean monitoring;
-    private Boolean processMonitoring;
-    private Boolean logging;
-    private Boolean calendar;
+  private List<ProcessGroup> groups;
+
+  public void clear() {
+    this.groups.clear();
+  }
 }

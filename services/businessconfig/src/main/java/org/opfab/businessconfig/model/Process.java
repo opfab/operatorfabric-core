@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 package org.opfab.businessconfig.model;
 
@@ -16,44 +15,37 @@ import lombok.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Process Model, documented at {@link Process}
- *
- * {@inheritDoc}
- *
- */
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ProcessData implements Process {
+@Validated
+public class Process {
 
   private String id;
   private String name;
   private String version;
   @Singular
   private Map<String, ProcessStates> states;
-  private ProcessUiVisibilityData uiVisibility;
+  private ProcessUiVisibility uiVisibility;
 
-  @Override
-  public Map<String,ProcessStates> getStates(){
+  public Map<String, ProcessStates> getStates() {
     return states;
   }
 
-  @Override
-  public ProcessUiVisibility getUiVisibility(){
+  public ProcessUiVisibility getUiVisibility() {
     return uiVisibility;
   }
 
-  @Override
-  public void setStates(Map<String,ProcessStates> states){
+  public void setStates(Map<String, ProcessStates> states) {
     this.states = new HashMap<>(states);
   }
 
-  @Override
-  public void setUiVisibility(ProcessUiVisibility uiVisibilityData){
-    this.uiVisibility = (ProcessUiVisibilityData) uiVisibilityData;
+  public void setUiVisibility(ProcessUiVisibility uiVisibilityData) {
+    this.uiVisibility = uiVisibilityData;
   }
 
 }

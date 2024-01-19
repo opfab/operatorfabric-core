@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,7 @@ public class MonitoringService implements ResourceLoaderAware {
             
             if (f.exists() && f.isFile()) {
                 log.info("loading monitoring.json file from {}", new File(storagePath).getAbsolutePath());
-                this.monitoring = objectMapper.readValue(f, MonitoringData.class);
+                this.monitoring = objectMapper.readValue(f, Monitoring.class);
             }
             else log.info("No monitoring.json file found in {} ", rootPath.toString());
         }

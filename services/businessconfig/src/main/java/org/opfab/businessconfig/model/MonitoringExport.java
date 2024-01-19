@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 package org.opfab.businessconfig.model;
 
@@ -17,14 +16,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RealTimeScreenData implements RealTimeScreen {
-
-    private String screenName;
-    private List<String> onlyDisplayUsersInGroups;
-    private List<ScreenColumn> screenColumns;
+@Validated
+public class MonitoringExport{   
+  
+  private List<MonitoringExportField> fields;  
 }
