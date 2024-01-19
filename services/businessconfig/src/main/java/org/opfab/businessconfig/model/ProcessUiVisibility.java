@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.businessconfig.model;
+
+import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScreenColumnData implements ScreenColumn {
-    private List<String> entitiesGroups;
+@Validated
+public class ProcessUiVisibility {
+
+    private Boolean monitoring;
+    private Boolean processMonitoring;
+    private Boolean logging;
+    private Boolean calendar;
 }

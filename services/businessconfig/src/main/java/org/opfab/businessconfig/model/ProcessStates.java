@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.businessconfig.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,12 +14,15 @@ import lombok.*;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ProcessStatesData implements ProcessStates {
+@Validated
+public class ProcessStates {
 
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen;
@@ -29,7 +31,7 @@ public class ProcessStatesData implements ProcessStates {
     @Builder.Default
     private Boolean cancelAcknowledgmentAllowed = true;
     @Builder.Default
-    private Boolean  closeCardWhenUserAcknowledges = true;
+    private Boolean closeCardWhenUserAcknowledges = true;
     @Builder.Default
     private Boolean editCardEnabledOnUserInterface = true;
     @Builder.Default
@@ -53,86 +55,83 @@ public class ProcessStatesData implements ProcessStates {
     private String modifyAnswerButtonLabel;
     private Boolean automaticPinWhenAcknowledged;
 
+    public AcknowledgmentAllowedEnum getAcknowledgmentAllowed() {
+        return this.acknowledgmentAllowed;
+    }
 
-    @Override
-    public AcknowledgmentAllowedEnum getAcknowledgmentAllowed() { return this.acknowledgmentAllowed; }
+    public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) {
+        this.acknowledgmentAllowed = acknowledgmentAllowed;
+    }
 
-    @Override
-    public void setAcknowledgmentAllowed(AcknowledgmentAllowedEnum acknowledgmentAllowed) { this.acknowledgmentAllowed = acknowledgmentAllowed; }
+    public ConsideredAcknowledgedForUserWhenEnum getConsideredAcknowledgedForUserWhen() {
+        return this.consideredAcknowledgedForUserWhen;
+    }
 
-    @Override
-    public ConsideredAcknowledgedForUserWhenEnum getConsideredAcknowledgedForUserWhen() { return this.consideredAcknowledgedForUserWhen; }
-
-    @Override
-    public void setConsideredAcknowledgedForUserWhen(ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen) {
+    public void setConsideredAcknowledgedForUserWhen(
+            ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen) {
         this.consideredAcknowledgedForUserWhen = consideredAcknowledgedForUserWhen;
     }
 
-    @Override
-    public ShowAcknowledgmentFooterEnum getShowAcknowledgmentFooter() { return this.showAcknowledgmentFooter; }
+    public ShowAcknowledgmentFooterEnum getShowAcknowledgmentFooter() {
+        return this.showAcknowledgmentFooter;
+    }
 
-    @Override
     public void setShowAcknowledgmentFooter(ShowAcknowledgmentFooterEnum showAcknowledgmentFooter) {
         this.showAcknowledgmentFooter = showAcknowledgmentFooter;
     }
 
-    @Override
-    public TypeOfStateEnum getType() { return this.type; }
+    public TypeOfStateEnum getType() {
+        return this.type;
+    }
 
-    @Override
-    public void setType(TypeOfStateEnum type) { this.type = type; }
+    public void setType(TypeOfStateEnum type) {
+        this.type = type;
+    }
 
-    @Override
     public Boolean getAutomaticPinWhenAcknowledged() {
         return this.automaticPinWhenAcknowledged;
     }
 
-    @Override
     public void setAutomaticPinWhenAcknowledged(Boolean automaticPinWhenAcknowledged) {
         this.automaticPinWhenAcknowledged = automaticPinWhenAcknowledged;
     }
-    @Override
+
     public Boolean getCancelAcknowledgmentAllowed() {
         return cancelAcknowledgmentAllowed;
     }
-    @Override
+
     public void setCancelAcknowledgmentAllowed(Boolean cancelAcknowledgmentAllowed) {
         this.cancelAcknowledgmentAllowed = cancelAcknowledgmentAllowed;
     }
-    @Override
-    public Boolean getCloseCardWhenUserAcknowledges() { return closeCardWhenUserAcknowledges;}
 
-    @Override
+    public Boolean getCloseCardWhenUserAcknowledges() {
+        return closeCardWhenUserAcknowledges;
+    }
+
     public void setCloseCardWhenUserAcknowledges(Boolean closeCardWhenUserAcknowledges) {
         this.closeCardWhenUserAcknowledges = closeCardWhenUserAcknowledges;
     }
 
-    @Override
     public Boolean getEditCardEnabledOnUserInterface() {
         return editCardEnabledOnUserInterface;
     }
 
-    @Override
     public void setEditCardEnabledOnUserInterface(Boolean editCardEnabledOnUserInterface) {
         this.editCardEnabledOnUserInterface = editCardEnabledOnUserInterface;
     }
 
-    @Override
     public Boolean getCopyCardEnabledOnUserInterface() {
         return copyCardEnabledOnUserInterface;
     }
 
-    @Override
     public void setCopyCardEnabledOnUserInterface(Boolean copyCardEnabledOnUserInterface) {
         this.copyCardEnabledOnUserInterface = copyCardEnabledOnUserInterface;
     }
 
-    @Override
     public Boolean getDeleteCardEnabledOnUserInterface() {
         return deleteCardEnabledOnUserInterface;
     }
 
-    @Override
     public void setDeleteCardEnabledOnUserInterface(Boolean deleteCardEnabledOnUserInterface) {
         this.deleteCardEnabledOnUserInterface = deleteCardEnabledOnUserInterface;
     }

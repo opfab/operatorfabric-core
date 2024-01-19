@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MonitoringData implements Monitoring {   
-  
-  private MonitoringExport export;  
+@Validated
+public class RealTimeScreens {
+    private List<RealTimeScreen> realTimeScreens;
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,19 @@
 package org.opfab.businessconfig.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+import java.util.List;
+
+import org.springframework.validation.annotation.Validated;
+
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
-public enum ResourceTypeEnum {
-  CSS("css", ".css"),
-  TEMPLATE("template", ".handlebars"),
-  I18N(".", ".json");
-
-  /**
-   * containing files subfolder name
-   */
-  private final String folder;
-  private final String suffix;
+@Builder
+@Validated
+public class ScreenColumn {
+    private List<String> entitiesGroups;
 }

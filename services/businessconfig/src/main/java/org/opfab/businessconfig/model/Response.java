@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 package org.opfab.businessconfig.model;
 
@@ -19,20 +18,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * <p>Please use builder to instantiate</p>
- *
- * <p>Detail Model, documented at {@link Response}</p>
- *
- * {@inheritDoc}
- *
- *
- */
+import org.springframework.validation.annotation.Validated;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResponseData implements Response {
+@Validated
+public class Response {
 
     private Boolean lock;
     private String state;
@@ -40,12 +33,10 @@ public class ResponseData implements Response {
     @Builder.Default
     private Boolean emittingEntityAllowedToRespond = false;
 
-    @Override
     public void setExternalRecipients(List<String> externalRecipients) {
         this.externalRecipients = new ArrayList<>(externalRecipients);
     }
 
-    @Override
     public List<String> getExternalRecipients() {
         if (externalRecipients == null)
             return Collections.emptyList();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,30 +9,19 @@
 
 package org.opfab.businessconfig.model;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * <p>Please use builder to instantiate</p>
- *
- * <p>ProcessUiVisibility Model, documented at {@link Recipient}</p>
- *
- * {@inheritDoc}
- *
- *
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EntitiesTreeData implements EntitiesTree {   
-    private String id;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<Integer> levels;
+@Validated
+public class Monitoring{   
+  
+  private MonitoringExport export;  
 }
