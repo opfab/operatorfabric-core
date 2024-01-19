@@ -50,7 +50,9 @@ services:
     volumes:
       - ../keycloak/export:/opt/keycloak/data/import
     command:
-      - "-v start-dev --import-realm"
+      - -v
+      - start-dev 
+      - --import-realm
     ports:
       - "89:89"
   mailhog:
