@@ -11,17 +11,7 @@ package org.opfab.businessconfig.model;
 
 import org.springframework.validation.annotation.Validated;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class Monitoring{   
-  
-  private MonitoringExport export;  
+public record Monitoring(
+    MonitoringExport export) {
 }

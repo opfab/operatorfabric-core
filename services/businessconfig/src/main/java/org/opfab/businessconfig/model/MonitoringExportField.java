@@ -9,27 +9,16 @@
 
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class MonitoringExportField {
-  private String columnName;
-  private String jsonField;
-  private String type;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private List<MonitoringExportField> fields;
-}
+public record MonitoringExportField(
+    String columnName,
+    String jsonField,
+    String type,
+    @JsonInclude(JsonInclude.Include.NON_NULL) List<MonitoringExportField> fields
+) {}

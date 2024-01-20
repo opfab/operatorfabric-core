@@ -7,25 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.businessconfig.model;
-
-import lombok.*;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 
 import org.springframework.validation.annotation.Validated;
 
-
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Validated
-public class I18n {
-    @NotNull
-    private String key;
-    @Singular private Map<String,String> parameters;
+public record I18n(
+        @NotNull String key,
+        Map<String, String> parameters) {
 }

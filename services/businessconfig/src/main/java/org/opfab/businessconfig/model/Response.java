@@ -9,35 +9,28 @@
 
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class Response {
+public record Response(
+        Boolean lock,
+        String state,
+        List<String> externalRecipients,
+        Boolean emittingEntityAllowedToRespond) {
 
-    private Boolean lock;
-    private String state;
-    private List<String> externalRecipients;
-    @Builder.Default
-    private Boolean emittingEntityAllowedToRespond = false;
-
-    public void setExternalRecipients(List<String> externalRecipients) {
-        this.externalRecipients = new ArrayList<>(externalRecipients);
+    public Response {
+        if (emittingEntityAllowedToRespond == null)
+            emittingEntityAllowedToRespond = false;
     }
 
-    public List<String> getExternalRecipients() {
+    @SuppressWarnings("java:S6207")
+    // Sonar states that this method is redundant as is it the same as the default
+    // one but it is not as the default one does not return an empty list but null
+    // when value is null
+    public List<String> externalRecipients() {
         if (externalRecipients == null)
             return Collections.emptyList();
         return externalRecipients;

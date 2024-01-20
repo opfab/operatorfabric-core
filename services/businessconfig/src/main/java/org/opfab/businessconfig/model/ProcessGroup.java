@@ -10,24 +10,14 @@
 package org.opfab.businessconfig.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
-public class ProcessGroup {
-
-  private String id;
-  private String name;
-  private List<String> processes;
+public record ProcessGroup(
+    String id,
+    String name,
+    List<String> processes) {
 }

@@ -15,19 +15,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class EntitiesTree {   
-    private String id;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<Integer> levels;
+public record EntitiesTree(
+        String id,
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<Integer> levels) {
 }
