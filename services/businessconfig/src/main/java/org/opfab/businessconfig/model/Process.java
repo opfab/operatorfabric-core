@@ -10,42 +10,18 @@
 package org.opfab.businessconfig.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.validation.annotation.Validated;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
-public class Process {
-
-  private String id;
-  private String name;
-  private String version;
-  @Singular
-  private Map<String, ProcessStates> states;
-  private ProcessUiVisibility uiVisibility;
-
-  public Map<String, ProcessStates> getStates() {
-    return states;
-  }
-
-  public ProcessUiVisibility getUiVisibility() {
-    return uiVisibility;
-  }
-
-  public void setStates(Map<String, ProcessStates> states) {
-    this.states = new HashMap<>(states);
-  }
-
-  public void setUiVisibility(ProcessUiVisibility uiVisibilityData) {
-    this.uiVisibility = uiVisibilityData;
-  }
+public record Process(
+    String id,
+    String name,
+    String version,
+    Map<String, ProcessStates> states,
+    ProcessUiVisibility uiVisibility) {
 
 }

@@ -9,22 +9,11 @@
 
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class MonitoringExport{   
-  
-  private List<MonitoringExportField> fields;  
+public record MonitoringExport(
+    List<MonitoringExportField> fields) {
 }

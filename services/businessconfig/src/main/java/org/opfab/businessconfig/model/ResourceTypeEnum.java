@@ -9,19 +9,26 @@
 
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum ResourceTypeEnum {
   CSS("css", ".css"),
   TEMPLATE("template", ".handlebars"),
   I18N(".", ".json");
 
+  ResourceTypeEnum(String folder, String suffix) {
+    this.folder = folder;
+    this.suffix = suffix;
+  } 
   /**
    * containing files subfolder name
    */
   private final String folder;
   private final String suffix;
+
+  public String getFolder() {
+    return folder;
+  }
+
+  public String getSuffix() {
+    return suffix;
+  }
 }

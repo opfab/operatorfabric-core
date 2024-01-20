@@ -158,7 +158,7 @@ public class BusinessconfigController {
                                 .build(),
                         UNABLE_TO_LOAD_FILE_MSG);
             }
-            response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.getId());
+            response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.id());
             response.setStatus(201);
             return result;
         } catch (FileNotFoundException e) {
@@ -201,7 +201,7 @@ public class BusinessconfigController {
         ProcessStates state = null;
         Process process = getProcess(request, response, processId, version);
         if (process != null) {
-            state = process.getStates().get(stateName);
+            state = process.states().get(stateName);
             if (state == null) {
                 throw new ApiErrorException(
                         ApiError.builder()
@@ -228,7 +228,7 @@ public class BusinessconfigController {
             @PathVariable("state") String stateName,
             @Valid @RequestParam(value = "version", required = false) String version) {
         return getState(request, response, processId, stateName, version)
-                .getResponse();
+                .response();
     }
 
     @DeleteMapping(value = "/processes/{processId}", produces = { "application/json" })

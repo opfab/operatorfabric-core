@@ -9,23 +9,13 @@
 
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Validated
-public class RealTimeScreen {
-
-    private String screenName;
-    private List<String> onlyDisplayUsersInGroups;
-    private List<ScreenColumn> screenColumns;
+public record RealTimeScreen(
+        String screenName,
+        List<String> onlyDisplayUsersInGroups,
+        List<ScreenColumn> screenColumns) {
 }

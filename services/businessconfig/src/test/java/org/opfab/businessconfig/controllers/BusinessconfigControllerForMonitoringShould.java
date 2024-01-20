@@ -143,7 +143,7 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
                 // check new file has been saved on disk
                 Monitoring monitoringFormFile = getMonitoringFormFile();
                 assertThat(monitoringFormFile).isNotNull();
-                assertThat(monitoringFormFile.getExport().getFields().get(0).getColumnName()).isEqualTo("myField");
+                assertThat(monitoringFormFile.export().fields().get(0).columnName()).isEqualTo("myField");
         }
 
 }

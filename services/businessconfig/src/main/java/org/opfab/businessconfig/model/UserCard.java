@@ -10,47 +10,29 @@
 package org.opfab.businessconfig.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Validated
-public class UserCard {
-    private String template;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean severityVisible;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean startDateVisible;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean endDateVisible;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Builder.Default
-    private Boolean expirationDateVisible = false;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Builder.Default
-    private Boolean lttdVisible = false;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean recipientVisible;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean recipientForInformationVisible;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<EntitiesTree> publisherList;
-
+public record UserCard(
+    String template,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean severityVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean startDateVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean endDateVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean expirationDateVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean lttdVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean recipientVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean recipientForInformationVisible,
+    List<EntitiesTree> publisherList
+) {
+    public UserCard {
+        if (expirationDateVisible == null) {
+            expirationDateVisible = false;
+        }
+        if (lttdVisible == null) {
+            lttdVisible = false;
+        }
+    }
 }
+

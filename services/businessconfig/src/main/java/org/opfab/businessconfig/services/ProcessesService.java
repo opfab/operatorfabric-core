@@ -104,7 +104,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @return registered processes
      */
     public List<Process> listProcessHistory(String processId) {
-        return completeCache.values().stream().filter(p -> p.getId().equals(processId)).toList();
+        return completeCache.values().stream().filter(p -> p.id().equals(processId)).toList();
     }
 
     /**
@@ -159,10 +159,10 @@ public class ProcessesService implements ResourceLoaderAware {
             Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath + BUNDLE_FOLDER);
             // load default Processes and recursively loads versioned Processes
             Map<String, Process> result = loadCache0(root.getFile(),
-                    Process::getId,
+                    Process::id,
                     (f, p) -> completeResult.put(
-                            p.getId(),
-                            loadCache0(f, Process::getVersion, null)));
+                            p.id(),
+                            loadCache0(f, Process::version, null)));
             this.completeCache.clear();
             this.defaultCache.clear();
             this.defaultCache.putAll(result);
@@ -247,7 +247,7 @@ public class ProcessesService implements ResourceLoaderAware {
         String finalVersion = version;
 
         if ((version == null) || (version.length() == 0)) {
-            finalVersion = this.fetch(processId).getVersion();
+            finalVersion = this.fetch(processId).version();
         }
 
         process = versions.get(finalVersion);
@@ -329,8 +329,8 @@ public class ProcessesService implements ResourceLoaderAware {
     public boolean checkNoDuplicateProcessInUploadedFile(ProcessGroups newProcessGroups) {
         HashMap<String, Integer> mapOfProcesses = new HashMap<>();
 
-        for (ProcessGroup group : newProcessGroups.getGroups()) {
-            for (String process : group.getProcesses()) {
+        for (ProcessGroup group : newProcessGroups.groups()) {
+            for (String process : group.processes()) {
                 if (mapOfProcesses.containsKey(process))
                     return false;
                 else
@@ -386,16 +386,16 @@ public class ProcessesService implements ResourceLoaderAware {
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         Process process = objectMapper.readValue(outConfigPath.toFile(), Process.class);
 
-        this.checkInputDoesNotContainForbiddenCharacters("id of the process", process.getId());
+        this.checkInputDoesNotContainForbiddenCharacters("id of the process", process.id());
 
         // process root
         Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
-                .resolve(process.getId())
+                .resolve(process.id())
                 .normalize();
         // process default config
         Path existingConfigPath = existingRootPath.resolve(CONFIG_FILE_NAME);
         // process versioned root
-        Path existingVersionPath = existingRootPath.resolve(process.getVersion());
+        Path existingVersionPath = existingRootPath.resolve(process.version());
         // move versioned dir
         PathUtils.silentDelete(existingVersionPath);
         PathUtils.moveDir(outPath, existingVersionPath);
@@ -404,13 +404,13 @@ public class ProcessesService implements ResourceLoaderAware {
         PathUtils.copy(existingVersionPath.resolve(CONFIG_FILE_NAME), existingConfigPath);
 
         // update caches
-        defaultCache.put(process.getId(), process);
-        completeCache.put(process.getId(), process.getVersion(), process);
+        defaultCache.put(process.id(), process);
+        completeCache.put(process.id(), process.version(), process);
 
         pushProcessChangeInEventBus();
 
         // retrieve newly loaded process from cache
-        return fetch(process.getId(), process.getVersion());
+        return fetch(process.id(), process.version());
     }
 
     /**
@@ -471,7 +471,7 @@ public class ProcessesService implements ResourceLoaderAware {
          * possible
          * heavy operations like file system access)
          */
-        if ((process.getVersion().equals(version)) &&
+        if ((process.version().equals(version)) &&
                 completeCache.row(id).size() == 1) {
             // delete the whole bundle
             // delete process root from disk
@@ -480,7 +480,7 @@ public class ProcessesService implements ResourceLoaderAware {
             removeFromCache(id);
         } else {// case: multiple versions => to delete only the given version
             Path processVersionPath = processRootPath.resolve(version);
-            if (process.getVersion().equals(version)) {// case: version to delete is the default one => root config
+            if (process.version().equals(version)) {// case: version to delete is the default one => root config
                                                        // replacement
                 // replace default
                 // choose the most recent through filesystem walk
@@ -529,12 +529,12 @@ public class ProcessesService implements ResourceLoaderAware {
             } finally {
                 this.completeCache.clear();
                 this.defaultCache.clear();
-                this.processGroupsCache.clear();
+                this.processGroupsCache = new ProcessGroups(new ArrayList<>());
             }
         } else {
             this.completeCache.clear();
             this.defaultCache.clear();
-            this.processGroupsCache.clear();
+            new ProcessGroups(new ArrayList<>());
         }
         pushProcessChangeInEventBus();
     }
