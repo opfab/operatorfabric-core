@@ -1,0 +1,11 @@
+{
+    "name": "Another process example",
+    "version": "0.5",
+    "states": {
+        "actionState": {
+            "name": "actionState",
+            "description": "action state",
+            "templateName": "action"
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "id": "anotherProcess",
+    "name": "Another process example",
+    "version": "0.5",
+    "invalidField": "dummyValue",
+    "states": {
+        "actionState": {
+            "name": "actionState",
+            "description": "action state",
+            "templateName": "action"
+        }
+    }
+}

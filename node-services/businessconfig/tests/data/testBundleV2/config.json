@@ -1,0 +1,13 @@
+{
+    "id": "testProcess",
+    "name": "Process example ",
+    "version": "2",
+    "states": {
+        "messageState": {
+            "name": "Message",
+            "description": "Message state",
+            "templateName": "template",
+            "styles": ["style"]
+        }
+    }
+}

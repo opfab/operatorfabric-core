@@ -1,0 +1,21 @@
+operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+  servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
+    users: "http://127.0.0.1:2103"
+  internalAccount:
+    login: opfab
+    password: test
+  logConfig:
+    logFolder: logs/
+    logFile: "%DATE%.log"
+    logLevel: info
+  businessconfig:
+    port: 2100
+    storage:
+      path: "tmp/storage"
+
