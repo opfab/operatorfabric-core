@@ -33,6 +33,13 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         <br/>
 
         <div class="opfab-textarea">
+            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.summaryLabel')} </label>
+            <textarea id="summary" name="summary" style="width:100%" rows="1">${this.view.getSummary()}</textarea>
+        </div>
+
+        <br/>
+
+        <div class="opfab-textarea">
         <label>${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')}</label>
             <opfab-richtext-editor id="message">${this.view.getRichMessage()}</opfab-richtext-editor>
         </div>
@@ -47,7 +54,8 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
     getSpecificCardInformation() {
         const quillEditor = (<HTMLInputElement>document.getElementById('message'));
-        return this.view.getSpecificCardInformation(quillEditor);
+        const summary = (<HTMLInputElement>document.getElementById('summary')).value;
+        return this.view.getSpecificCardInformation(quillEditor, summary);
     }
 
     initMultiSelect() {
@@ -62,15 +70,19 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         document.querySelector('#message-select').addEventListener('change', ()=> {
             that.fillTextAndRecipientFields();
         });
-
     }
 
     fillTextAndRecipientFields () {
         const messageId = this.messageSelect.getSelectedValues();
         const message = this.view.getMessageOrQuestion(messageId)
+
         if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
             const quill =  document.getElementById("message");
             this.setRichTextContent(quill, message?.message);
+
+            const summaryArea =  document.getElementById("summary") as HTMLTextAreaElement;
+            summaryArea.value = message?.summary ?? '';
+
             this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
         } 
@@ -115,13 +127,15 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
     private setMessageListOptions(selected?) {
         this.titleOptions  = this.view.getMessageListOptions();
+
         if (this.titleOptions?.length > 0) {
             this.messageSelect.setOptions(this.titleOptions);
-            if (selected && this.titleOptions.find(t => t.value === selected))
+
+            if (selected && this.titleOptions.find(t => t.value === selected)) {
                 this.messageSelect.setSelectedValues(selected);
-            else this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+            } else {
+                this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+            }
         }
     }
-
-
 }

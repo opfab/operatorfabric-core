@@ -744,6 +744,7 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITEL",
+      "summaryLabel": "OVERZICHT",
       "messageLabel": "BERICHT",
       "emptyMessage": "U kunt geen leeg bericht verzenden"
     }

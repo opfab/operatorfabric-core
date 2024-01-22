@@ -33,12 +33,12 @@ describe('MessageOrQuestionList UserCard template', () => {
         initOpfabApiMock();
     });
 
-    it('GIVEN an new card THEN initial selected message option is the first option', () => {
+    it('GIVEN a new card THEN initial selected message option is the first option', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1',message: 'message1'},
+            messagesList: [{id: 'id1', summary: 'summary1', message: 'message1'},
             { id: 'id2', message: 'message2'},
-            { id: 'id3', message: 'message3'}]
+            { id: 'id3', summary: 'summary3', message: 'message3'}]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -53,15 +53,16 @@ describe('MessageOrQuestionList UserCard template', () => {
         expect(view.getInitialSelectedOption()).toEqual('id1');
     });
 
-    it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
+    it('GIVEN an existing card WHEN user edit card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
             return 'EDITION';
         };
         opfab.currentCard.getCard = function () {
-            return {data: {richMessage: 'My message'}};
+            return {data: {richMessage: 'My message', summary: 'My summary'}};
         };
         expect(view.getRichMessage()).toEqual('My message');
+        expect(view.getSummary()).toEqual('My summary');
     });
     
     it('GIVEN an existing card with an HTML tag in  message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
@@ -78,7 +79,7 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user edit card THEN initial selected message option is actual option id', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1',message: 'message1'},
+            messagesList: [{id: 'id1', message: 'message1'},
             { id: 'id2', message: 'message2'},
             { id: 'id3', message: 'message3'}]
         };
@@ -98,7 +99,7 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user copy card THEN initial selected message option is actual option id', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1',message: 'message1'},
+            messagesList: [{id: 'id1', message: 'message1'},
             { id: 'id2', message: 'message2'},
             { id: 'id3', message: 'message3'}]
         };
@@ -116,22 +117,23 @@ describe('MessageOrQuestionList UserCard template', () => {
     });
 
 
-    it('GIVEN an existing card WHEN user copy card THEN message is actual message', () => {
+    it('GIVEN an existing card WHEN user copy card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
             return 'COPY';
         };
         opfab.currentCard.getCard = function () {
-            return {data: {richMessage: 'My message'}};
+            return {data: {richMessage: 'My message', summary: 'My summary'}};
         };
         expect(view.getRichMessage()).toEqual('My message');
+        expect(view.getSummary()).toEqual('My summary');
     });
 
     it('GIVEN a user WHEN create card with empty question THEN card is not valid with error message ', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const quillEditor = new QuillEditorMock();
 
-        const specficCardInformation = view.getSpecificCardInformation(quillEditor);
+        const specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.valid).toEqual(false);
         expect(specficCardInformation.errorMsg).toEqual(
             'Translation of buildInTemplate.message-or-question-listUserCard.emptyMessage'
@@ -161,23 +163,23 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         const quillEditor = new QuillEditorMock();
         quillEditor.setContents('My question');
-        let specficCardInformation = view.getSpecificCardInformation(quillEditor);
+        let specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('ACTION')
 
         view.selectedMessage.question = false;
         quillEditor.setContents('My message');
-        specficCardInformation = view.getSpecificCardInformation(quillEditor);
+        specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('INFORMATION');
 
         let selectedMessageWithSeverity = {title: "my title", question: true, severity: 'ACTION'};
         view.selectedMessage = selectedMessageWithSeverity;
         quillEditor.setContents('My question');
-        specficCardInformation = view.getSpecificCardInformation(quillEditor);
+        specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('ACTION');
 
         view.selectedMessage.severity = 'ALARM';
         quillEditor.setContents('My message');
-        specficCardInformation = view.getSpecificCardInformation(quillEditor);
+        specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('ALARM');
 
     });
