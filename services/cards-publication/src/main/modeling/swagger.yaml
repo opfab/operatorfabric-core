@@ -883,17 +883,17 @@ paths:
   /rateLimiter:
     post:
       summary: reset the rate limiter
-      responses: 
+      responses:
         '200':
           description: rate limiter reset
         '400':
           description: bad request
-  /logs :
+  /logs:
     post:
       summary: sends remote logs
       produces:
         - application/json
-      responses: 
+      responses:
         '200':
           description: remote logs sent
         '400':
@@ -1088,9 +1088,10 @@ paths:
       - in: body
         name: entitiesAcks
         description: List of user entities for which the card will be acknowledged
-        type: array
-        items:
-          type: string
+        schema:
+          type: array
+          items:
+            type: string
     post:
       operationId: postUserAcknowledgement
       tags:
