@@ -743,6 +743,7 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITLE",
+      "summaryLabel": "SUMMARY",
       "messageLabel": "MESSAGE",
       "emptyMessage": "You can't send an empty message"
     }

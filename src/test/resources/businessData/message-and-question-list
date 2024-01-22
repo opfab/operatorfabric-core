@@ -16,6 +16,7 @@
     "messagesList": [{
         "id": "Warning",
         "title": "Warning about the state of the grid",
+        "summary": "Warning about the state of the grid : a problem has been detected",
         "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
         "question": false,
         "severity": "ALARM",
@@ -52,6 +53,7 @@
     {
         "id": "Situation_solved",
         "title": "Situation solved",
+        "summary": "Situation solved : all the problems have been dealt with",
         "message": "All the problems have been dealt with, please resume normal operations",
         "question": false,
         "publishers":  [

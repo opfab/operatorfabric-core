@@ -18,9 +18,24 @@ export class MessageOrQuestionListUserCardTemplateView {
 
     public getRichMessage() {
         let message = opfab.currentCard.getCard()?.data?.richMessage;
-        if (message) message = opfab.utils.escapeHtml(message);
-        else message = '';
+
+        if (message) {
+            message = opfab.utils.escapeHtml(message);
+        } else {
+            message = '';
+        }
         return message;
+    }
+
+    public getSummary() {
+        let summary = opfab.currentCard.getCard()?.data?.summary;
+
+        if (summary) {
+            summary = opfab.utils.escapeHtml(summary);
+        } else {
+            summary = '';
+        }
+        return summary;
     }
 
     public getTitleId() {
@@ -32,7 +47,8 @@ export class MessageOrQuestionListUserCardTemplateView {
         return opfab.currentCard.getCard()?.publisher;
     }
 
-    public getSpecificCardInformation(quillEditor: any) {
+    public getSpecificCardInformation(quillEditor: any, summary: string) {
+        summary = summary.trim();
 
         if (quillEditor.isEmpty()) {
             return {
@@ -45,7 +61,9 @@ export class MessageOrQuestionListUserCardTemplateView {
         const id = this.selectedMessage.id;
         const question = this.selectedMessage.question;
         let severity = question ? 'ACTION' : 'INFORMATION';
-        if (this.selectedMessage.severity) severity = this.selectedMessage.severity;
+        if (this.selectedMessage.severity) {
+            severity = this.selectedMessage.severity;
+        }
         
         let entitiesAllowedToRespond;
 
@@ -57,11 +75,12 @@ export class MessageOrQuestionListUserCardTemplateView {
 
         const card = {
 		title : {key : "message_or_question_list.title", parameters : {"messageTitle" : title} },
-            summary: {key : "message_or_question_list.summary"},
+            summary: {key : "message_or_question_list.summary", parameters: {"summary" : summary.length ? " : " + summary : ""}},
             startDate: new Date().valueOf(),
             data: {
                 id: id,
                 title: title,
+                summary: summary,
                 richMessage: quillEditor.getContents(),
                 question: question
             },
@@ -85,7 +104,7 @@ export class MessageOrQuestionListUserCardTemplateView {
     public getMessageOrQuestion(messageId: string) {
         this.messageOrQuestionList.messagesList.forEach( (message) => {
             if (message.id === messageId) {
-                this.selectedMessage = message
+                this.selectedMessage = message;
             }
         })
         return this.selectedMessage;

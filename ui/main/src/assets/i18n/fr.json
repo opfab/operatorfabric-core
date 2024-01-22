@@ -745,6 +745,7 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITRE",
+      "summaryLabel": "RÉSUMÉ",
       "messageLabel": "MESSAGE",
       "emptyMessage": "Vous ne pouvez pas envoyer un message vide"
     } 
