@@ -748,5 +748,14 @@
       "emptyMessage": "U kunt geen leeg bericht verzenden"
     }
 
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "RIJKE TEKST CONVERTER",
+      "richTextEditor": "RIJKE TEKST",
+      "convert": "Converteer",
+      "result": "CONVERSIERESULTAAT",
+      "copy": "Kopiëren naar klembord"
+    }
   }
 }

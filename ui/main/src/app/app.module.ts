@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -83,6 +83,7 @@ import {TranslationService} from './business/services/translation/translation.se
 import {ProcessmonitoringModule} from './modules/processmonitoring/processmonitoring.module';
 import {AngularSupervisedEntitiesServer} from './server/angularSupervisedEntities.server';
 import {SupervisedEntitiesServer} from './business/server/supervised-entities.server';
+import {RichTextModule} from './modules/devtools/richtext/richtext.module';
 
 @NgModule({
     imports: [
@@ -109,6 +110,7 @@ import {SupervisedEntitiesServer} from './business/server/supervised-entities.se
         NavbarModule,
         ActivityareaModule,
         UserActionLogsModule,
+        RichTextModule,
         ServiceWorkerModule.register('ngsw-worker.js')
     ],
     declarations: [

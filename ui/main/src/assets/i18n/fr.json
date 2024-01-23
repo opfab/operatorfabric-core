@@ -748,5 +748,14 @@
       "messageLabel": "MESSAGE",
       "emptyMessage": "Vous ne pouvez pas envoyer un message vide"
     } 
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "CONVERTISSEUR DE TEXTE RICHE",
+      "richTextEditor": "TEXTE RICHE",
+      "convert": "Convertir",
+      "result": "RÉSULTAT DE LA CONVERSION",
+      "copy": "Copier dans le presse-papiers"
+    }
   }
 }
