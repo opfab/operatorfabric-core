@@ -16,6 +16,7 @@ operatorfabric:
     authToken: "http://127.0.0.1:2002/auth/token"
     users: "http://127.0.0.1:2103"
     cardsConsultation: "http://127.0.0.1:2104"
+    businessconfig: "http://127.0.0.1:2100"
   internalAccount:
     login: opfab
     password: test

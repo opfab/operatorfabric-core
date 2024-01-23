@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,6 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+import Handlebars from 'handlebars';
 import SendMailService from '../server-side/sendMailService';
 import GetResponse from '../../common/server-side/getResponse';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
@@ -221,25 +222,15 @@ export default class CardsDiffusionControl {
             ' - ' +
             this.getFormattedDateAndTimeFromEpochDate(card.startDate);
         if (card.endDate) subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate);
-        const body =
-            this.bodyPrefix +
-            ' <a href="' +
-            this.opfabUrlInMailContent +
-            '/#/feed/cards/' +
-            card.id +
-            '">' +
-            card.titleTranslated +
-            ' - ' +
-            card.summaryTranslated +
-            '</a>';
-
+        const body = await this.processCardTemplate(card);
         try {
             await this.mailService.sendMail(subject, body, this.from, to);
             this.registerNewSending(to);
             await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {
             this.logger.error('Error sending mail ', e);
-        }
+        };
+        
     }
 
     private removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
@@ -252,6 +243,44 @@ export default class CardsDiffusionControl {
         } else {
             return arrayToFilter;
         }
+    }
+
+    private async processCardTemplate(card: any): Promise<string> {
+        let cardBodyHtml = '';
+        try {
+            const cardConfigResponse = await this.opfabServicesInterface.getProcessConfig(card.process);
+                if (cardConfigResponse.isValid()) {
+                    const cardConfig = cardConfigResponse.getData();
+                    const stateName = card.state;
+                    if( cardConfig?.states?.[stateName]?.emailBodyTemplate) {
+                        const cardContentResponse = await this.opfabServicesInterface.getCard(card.id);
+                        if (cardContentResponse.isValid()) {
+                            const cardContent = cardContentResponse.getData();
+                            const templateResponse = await this.opfabServicesInterface.getTemplate(card.process, cardConfig.states[stateName].emailBodyTemplate);
+                            if (templateResponse.isValid()) {
+                                const template = templateResponse.getData();
+                                const compiler = Handlebars.compile(template);
+                                cardBodyHtml = compiler(cardContent);
+                            }
+                        }
+                    } else {
+                        cardBodyHtml = this.bodyPrefix +
+                            ' <a href="' +
+                            this.opfabUrlInMailContent +
+                            '/#/feed/cards/' +
+                            card.id +
+                            '">' +
+                            card.titleTranslated +
+                            ' - ' +
+                            card.summaryTranslated +
+                            '</a>';
+                    }
+                }
+        } catch(e) {
+            console.warn("Couldn't parse email for : ", card.state, e);
+        }
+        
+        return cardBodyHtml;
     }
 
     private async cleanCardsAreadySent() {

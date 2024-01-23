@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,6 +57,7 @@ const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface(
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
