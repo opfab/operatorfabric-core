@@ -11,6 +11,7 @@ operatorfabric:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsConsultation: "http://cards-consultation:2104"
+    businessconfig: "http://businessconfig:2100"
   internalAccount:
     login: opfab
   logConfig:

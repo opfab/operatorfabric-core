@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 import GetResponse from './getResponse';
-import JwtTokenUtils from './jwtTokenUtils'
+import JwtTokenUtils from './jwtTokenUtils';
 
 
 export default class OpfabServicesInterface {
@@ -22,6 +22,7 @@ export default class OpfabServicesInterface {
     opfabUsersUrl: string = '';
     opfabCardsConsultationUrl: string = '';
     opfabCardsPublicationUrl: string = '';
+    opfabBusinessconfigUrl: string = '';
     opfabGetTokenUrl: string = '';
 
 
@@ -57,6 +58,11 @@ export default class OpfabServicesInterface {
 
     public setOpfabCardsPublicationUrl(opfabCardsPublicationUrl: string) {
         this.opfabCardsPublicationUrl = opfabCardsPublicationUrl;
+        return this;
+    }
+    
+    public setopfabBusinessconfigUrl(opfabBusinessconfigUrl: string) {
+        this.opfabBusinessconfigUrl = opfabBusinessconfigUrl;
         return this;
     }
 
@@ -118,6 +124,25 @@ export default class OpfabServicesInterface {
             return new GetResponse(null, false);
         }
        
+    }
+
+    public async getCard(cardId: string) {
+        try {
+            await this.getToken();
+            const response = await this.sendGetCardRequest(cardId);
+            
+            if (response?.data) {
+                const card = response.data.card
+                return new GetResponse(card, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse(null, false);
+            }
+        } catch (e) {
+            this.logger.warn(`Impossible to get card with id : ${cardId} `, e);
+            return new GetResponse(null, false);
+        }
     }
 
     public async getCards(filter: any) {
@@ -208,6 +233,16 @@ export default class OpfabServicesInterface {
         });
     }
 
+    sendGetCardRequest(cardId: string) {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabCardsConsultationUrl + '/cards/' + cardId,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
     sendGetCardsRequest(filter: any) {
         return this.sendRequest({
             method: 'post',
@@ -260,6 +295,62 @@ export default class OpfabServicesInterface {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/entities/' + id,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
+    public async getProcessConfig(id: string): Promise<GetResponse> {
+        try {
+            await this.getToken();
+            const response = await this.sendGetProcessConfigRequest(id);
+            if (response?.data) {
+                return new GetResponse(response.data, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse([], false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get process config ' + id, e);
+            return new GetResponse([], false);
+        }
+       
+    }
+
+    sendGetProcessConfigRequest(processId: string) {
+        const url = this.opfabBusinessconfigUrl + '/businessconfig/processes/' + processId
+        return this.sendRequest({
+            method: 'get',
+            url: url,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
+    public async getTemplate(processId: string, templateName: any) {
+       try {
+            await this.getToken();
+            const response = await this.sendGetTemplateRequest(processId, templateName);
+            if (response?.data) {
+                return new GetResponse(response.data, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse([], false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get template ' + templateName, e);
+            return new GetResponse([], false);
+        }
+    }
+
+    sendGetTemplateRequest(processId: string, templateName: string) {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabBusinessconfigUrl + '/businessconfig/processes/' + processId + '/templates/' + templateName,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
