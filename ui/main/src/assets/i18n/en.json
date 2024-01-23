@@ -746,5 +746,14 @@
       "messageLabel": "MESSAGE",
       "emptyMessage": "You can't send an empty message"
     }
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "RICH TEXT CONVERTER",
+      "richTextEditor": "RICH TEXT",
+      "convert": "Convert",
+      "result": "CONVERSION RESULT",
+      "copy": "Copy to clipboard"
+    }
   }
 }

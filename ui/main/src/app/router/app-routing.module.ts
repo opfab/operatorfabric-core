@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import {DashboardComponent} from 'app/modules/dashboard/dashboard.component';
 import {ArchivesComponent} from '../modules/archives/archives.component';
 import {LoggingComponent} from '../modules/logging/logging.component';
 import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
+import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
 
 const defaultPath = '/feed';
 
@@ -98,6 +99,10 @@ const routes: Routes = [
     {
         path: 'useractionlogs',
         component: UserActionLogsComponent
+    },
+    {
+        path: 'devtools/richtext',
+        component: RichTextComponent
     },
     {path: '**', redirectTo: defaultPath}
 ];
