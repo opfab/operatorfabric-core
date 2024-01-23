@@ -149,4 +149,8 @@ export class MessageOrQuestionListUserCardTemplateView {
         return selectedOption;
     }
 
+    setRichTextContent(quillEditor: any, message: any) {
+        const delta = message.richMessage ? JSON.stringify(message.richMessage) : opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message.message));
+        quillEditor.setContents(delta);
+    }
 }

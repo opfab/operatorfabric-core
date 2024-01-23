@@ -78,7 +78,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
         if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
             const quill =  document.getElementById("message");
-            this.setRichTextContent(quill, message?.message);
+            this.view.setRichTextContent(quill, message);
 
             const summaryArea =  document.getElementById("summary") as HTMLTextAreaElement;
             summaryArea.value = message?.summary ?? '';
@@ -87,10 +87,6 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
             this.previousTitleId = messageId;
         } 
         
-    }
-
-    private setRichTextContent(quillEditor: any, message: string) {
-        quillEditor.setContents(opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message)));
     }
 
     private listenToEntityUsedForSendingCardChange() {

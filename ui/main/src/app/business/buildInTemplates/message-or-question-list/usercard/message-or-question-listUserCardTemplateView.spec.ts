@@ -238,4 +238,42 @@ describe('MessageOrQuestionList UserCard template', () => {
         expect(messages[0].value).toEqual('id3');
         expect(messages[1].value).toEqual('id4');
     });
+
+    it('GIVEN a message list WHEN selected message has richMessage field THEN quill editor content is the richMessage', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{
+                id: 'id1',
+                richMessage: {"ops":[{"attributes":{"color":"#e60000","bold":true}},{"insert":"Rich message"}]},
+            }]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        const selectedMessage = messageOrQuestionList.messagesList[0];
+
+        const quillEditor = new QuillEditorMock();
+        view.setRichTextContent(quillEditor, selectedMessage)
+
+        expect(quillEditor.getContents()).toEqual("{\"ops\":[{\"attributes\":{\"color\":\"#e60000\",\"bold\":true}},{\"insert\":\"Rich message\"}]}");
+    });
+
+    it('GIVEN a message list WHEN selected message does not have richMessage field THEN quill editor content is the message in delta format', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{
+                id: 'id2',
+                message: 'message2',
+            }]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        const selectedMessage = messageOrQuestionList.messagesList[0];
+
+        const quillEditor = new QuillEditorMock();
+        view.setRichTextContent(quillEditor, selectedMessage);
+
+        expect(quillEditor.getContents()).toEqual("{\"ops\":[{\"insert\":\"message2\"}]}");
+    });
 });
