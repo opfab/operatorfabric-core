@@ -17,7 +17,7 @@
         "id": "Warning",
         "title": "Warning about the state of the grid",
         "summary": "Warning about the state of the grid : a problem has been detected",
-        "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
+        "richMessage": {"ops":[{"attributes":{"color":"#e60000","bold":true},"insert":"A problem has been detected"},{"insert":", please put maintenance work on hold and be on stand by"},{"attributes":{"header":2},"insert":"\n"}]},
         "question": false,
         "severity": "ALARM",
         "publishers":  [
