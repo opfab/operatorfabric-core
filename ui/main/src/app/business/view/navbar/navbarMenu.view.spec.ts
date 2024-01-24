@@ -436,17 +436,14 @@ describe('NavbarMenuView', () => {
     });
 
     describe('Right menu', () => {
-        const originalOpfabStyle_init = opfabStyle.init;
-        const originalOpfabStyle_setCss = opfabStyle.setCss;
+        const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
 
         beforeEach(async () => {
-            opfabStyle.init = () => {};
-            opfabStyle.setCss = () => {};
+            opfabStyle.setOpfabTheme = () => {};
         });
 
         afterEach(() => {
-            opfabStyle.init = originalOpfabStyle_init;
-            opfabStyle.setCss = originalOpfabStyle_setCss;
+            opfabStyle.setOpfabTheme = originalOpfabStyle_setOpfabTheme;
         });
 
         it('visible if configured in ui-menu config', async () => {

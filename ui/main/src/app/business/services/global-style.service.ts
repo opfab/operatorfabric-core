@@ -23,7 +23,6 @@ export class GlobalStyleService {
     private static styleChangeEvent: BehaviorSubject<string>;
 
     public static init() {
-        opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
         GlobalStyleService.setStyle('NIGHT');
     }
@@ -47,7 +46,7 @@ export class GlobalStyleService {
 
     public static setStyle(style: string) {
         GlobalStyleService.style = style;
-        opfabStyle.setCss(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_STYLE : opfabStyle.DAY_STYLE);
+        opfabStyle.setOpfabTheme(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_THEME : opfabStyle.DAY_THEME);
         GlobalStyleService.styleChanged();
     }
 
