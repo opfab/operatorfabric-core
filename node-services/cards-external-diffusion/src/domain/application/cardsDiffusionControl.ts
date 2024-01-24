@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import Handlebars from 'handlebars';
 import SendMailService from '../server-side/sendMailService';
 import GetResponse from '../../common/server-side/getResponse';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
@@ -15,12 +14,14 @@ import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
 import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
 import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
+import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
 
 export default class CardsDiffusionControl {
 
     opfabUrlInMailContent: any;
 
-    private opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
+    private cardsExternalDiffusionOpfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
+    private businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface;
     private cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService;
     private logger: any;
     private secondsAfterPublicationToConsiderCardAsNotRead: number;
@@ -32,8 +33,13 @@ export default class CardsDiffusionControl {
     private activateCardsDiffusionRateLimiter: boolean;
     private cardsDiffusionRateLimiter: CardsDiffusionRateLimiter;
 
-    public setOpfabServicesInterface(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface) {
-        this.opfabServicesInterface = opfabServicesInterface;
+    public setOpfabServicesInterface(cardsExternalDiffusionOpfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface) {
+        this.cardsExternalDiffusionOpfabServicesInterface = cardsExternalDiffusionOpfabServicesInterface;
+        return this;
+    }
+
+    public setOpfabBusinessConfigServicesInterface(businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface) {
+        this.businessConfigOpfabServicesInterface = businessConfigOpfabServicesInterface;
         return this;
     }
 
@@ -106,10 +112,10 @@ export default class CardsDiffusionControl {
     }
 
     public async checkUnreadCards() {
-        const users = this.opfabServicesInterface.getUsers();
+        const users = this.cardsExternalDiffusionOpfabServicesInterface.getUsers();
         const userLogins = users.map((u) => u.login);
 
-        const connectedResponse = await this.opfabServicesInterface.getUsersConnected();
+        const connectedResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getUsersConnected();
         if (connectedResponse.isValid()) {
             const connectedUsers = connectedResponse.getData().map((u: {login: string;}) => u.login);
             const usersToCheck = this.removeElementsFromArray(userLogins, connectedUsers);
@@ -120,7 +126,7 @@ export default class CardsDiffusionControl {
                 const dateFrom = now - this.windowInSecondsForCardSearch * 1000;
                 cardFilters.push({columnName: 'publishDateFrom', filter: [dateFrom], matchType: 'EQUALS'});
 
-                const cardsResponse: GetResponse = await this.opfabServicesInterface.getCards({
+                const cardsResponse: GetResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCards({
                     adminMode: true,
                     filters: cardFilters
                 });
@@ -143,7 +149,7 @@ export default class CardsDiffusionControl {
     private async sendCardsToUserIfNecessary(cards: [], login: string) {
         this.logger.debug('Check user ' + login);
         
-        const resp = await this.opfabServicesInterface.getUserWithPerimetersByLogin(login);
+        const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(login);
         if (resp.isValid()) {
             const userWithPerimeters = resp.getData();
             this.logger.debug('Got user with perimeters ' + JSON.stringify(userWithPerimeters));
@@ -246,40 +252,30 @@ export default class CardsDiffusionControl {
     }
 
     private async processCardTemplate(card: any): Promise<string> {
-        let cardBodyHtml = '';
+        let cardBodyHtml = this.bodyPrefix +
+        ' <a href="' +
+        this.opfabUrlInMailContent +
+        '/#/feed/cards/' +
+        card.id +
+        '">' +
+        card.titleTranslated +
+        ' - ' +
+        card.summaryTranslated +
+        '</a>';
         try {
-            const cardConfigResponse = await this.opfabServicesInterface.getProcessConfig(card.process);
-                if (cardConfigResponse.isValid()) {
-                    const cardConfig = cardConfigResponse.getData();
-                    const stateName = card.state;
-                    if( cardConfig?.states?.[stateName]?.emailBodyTemplate) {
-                        const cardContentResponse = await this.opfabServicesInterface.getCard(card.id);
-                        if (cardContentResponse.isValid()) {
-                            const cardContent = cardContentResponse.getData();
-                            const templateResponse = await this.opfabServicesInterface.getTemplate(card.process, cardConfig.states[stateName].emailBodyTemplate);
-                            if (templateResponse.isValid()) {
-                                const template = templateResponse.getData();
-                                const compiler = Handlebars.compile(template);
-                                cardBodyHtml = compiler(cardContent);
-                            }
-                        }
-                    } else {
-                        cardBodyHtml = this.bodyPrefix +
-                            ' <a href="' +
-                            this.opfabUrlInMailContent +
-                            '/#/feed/cards/' +
-                            card.id +
-                            '">' +
-                            card.titleTranslated +
-                            ' - ' +
-                            card.summaryTranslated +
-                            '</a>';
-                    }
+            const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(card.process, card.processVersion);
+            const stateName = card.state;
+            if (cardConfig?.states?.[stateName]?.emailBodyTemplate) {
+                const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
+                if (cardContentResponse.isValid()) {
+                    const cardContent = cardContentResponse.getData();
+                    const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(card.process, cardConfig.states[stateName].emailBodyTemplate, card.processVersion);
+                    cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
                 }
+            }
         } catch(e) {
             console.warn("Couldn't parse email for : ", card.state, e);
         }
-        
         return cardBodyHtml;
     }
 

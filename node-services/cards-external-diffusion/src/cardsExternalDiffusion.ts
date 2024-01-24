@@ -20,6 +20,7 @@ import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/c
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
 import ConfigService from './domain/client-side/configService';
 import CardsExternalDiffusionDatabaseService from './domain/server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
 
 const app = express();
 app.disable("x-powered-by");
@@ -62,6 +63,16 @@ const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface(
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
 
+const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInterface()
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
+    .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
+    .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
+    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
+    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
+    .setLogger(logger);
+
 opfabServicesInterface.loadUsersData().catch(error => 
     logger.error("error during loadUsersData", error)
 );
@@ -77,7 +88,7 @@ const authorizationService = new AuthorizationService()
 
 const serviceConfig = configService.getConfig();
 
-const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, cardsExternalDiffusionDatabaseService, mailService, serviceConfig, logger);
+const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, opfabBusinessConfigServicesInterface, cardsExternalDiffusionDatabaseService, mailService, serviceConfig, logger);
 
 app.get('/status', (req, res) => {
 
@@ -152,6 +163,7 @@ app.listen(adminPort, () => {
 async function start() {
     await cardsExternalDiffusionDatabaseService.connectToMongoDB();
     opfabServicesInterface.startListener();
+    opfabBusinessConfigServicesInterface.startListener();
 
     if (activeOnStartUp) {
         cardsExternalDiffusionService.start();
