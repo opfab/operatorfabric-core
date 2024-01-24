@@ -25,19 +25,16 @@ describe('NavbarMenuView - OnMenuClick', () => {
     const translationService = new TranslationServiceMock();
     let applicationRouterMock: ApplicationRouterMock;
 
-    const originalOpfabStyle_init = opfabStyle.init;
-    const originalOpfabStyle_setCss = opfabStyle.setCss;
+    const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
 
     beforeEach(async () => {
-        opfabStyle.init = () => {};
-        opfabStyle.setCss = () => {};
+        opfabStyle.setOpfabTheme = () => {};
         await stubUiMenuConfigLoading({});
         mockRouter();
     });
 
     afterEach(() => {
-        opfabStyle.init = originalOpfabStyle_init;
-        opfabStyle.setCss = originalOpfabStyle_setCss;
+        opfabStyle.setOpfabTheme = originalOpfabStyle_setOpfabTheme;
     });
 
     describe('Click on menu to open inside the application', () => {
