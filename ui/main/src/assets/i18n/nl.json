@@ -354,7 +354,8 @@
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",
     "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
-    "savingInProgress": "aan het opslaan..."
+    "savingInProgress": "aan het opslaan...",
+    "noAreaAvailable": "Geen activiteitengebied beschikbaar"
   },
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE",
