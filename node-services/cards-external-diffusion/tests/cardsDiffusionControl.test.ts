@@ -15,14 +15,13 @@ import logger from '../src/common/server-side/logger';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
 import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from '../src/domain/server-side/BusinessConfigOpfabServicesInterface';
 
 class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
     public isResponseValid = true;
 
     cards: Array<any> = new Array();
     card: any;
-    template: string;
-    config: any;
     allUsers: Array<any> = new Array();
     connectedUsers: Array<any> = new Array();
 
@@ -48,19 +47,23 @@ class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInte
         const foundIndex = this.usersWithPerimeters.findIndex((u) => u.userData.login === login);
         return new GetResponse(foundIndex >= 0 ? this.usersWithPerimeters[foundIndex] : null, true);
     }
+}
 
-    public async getProcessConfig(): Promise<GetResponse> {
-        return new GetResponse(this.config, this.isResponseValid);
+class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfabServicesInterface {
+    public isResponseValid = true;
+    config: any;
+    template: string;
+
+    async fetchProcessConfig() {
+        return this.config;
     }
 
-    public async getTemplate(): Promise<GetResponse> {
-        return new GetResponse(this.template, this.isResponseValid);
+    async fetchTemplate() {
+        return ( () => {return this.template});
     }
 }
 
 class SendMailServiceStub extends SendMailService {
-
-
     numberOfMailsSent = 0;
     sent: Array<any> = [];
 
@@ -101,9 +104,8 @@ class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
 describe('Cards external diffusion', function () {
     let cardsDiffusionControl: CardsDiffusionControl;
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
+    let opfabBusinessConfigServicesInterfaceStub: OpfabBusinessConfigServicesInterfaceStub;
     let mailService: SendMailServiceStub;
-
- 
 
     const perimeters = [
         {
@@ -118,11 +120,13 @@ describe('Cards external diffusion', function () {
     // after making CardsExternalDiffusionOpfabServicesInterface extend OpfabServicesInterface
     function setup() {
         opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
+        opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
 
         mailService = new SendMailServiceStub({smtpHost: 'localhost', smtpPort: 1025});
         cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterfaceStub)
+            .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterfaceStub)
             .setCardsExternalDiffusionDatabaseService(new DatabaseServiceStub())
             .setMailService(mailService)
             .setFrom('test@opfab.com')
@@ -131,7 +135,6 @@ describe('Cards external diffusion', function () {
             .setOpfabUrlInMailContent('http://localhost')
             .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
             .setWindowInSecondsForCardSearch(120);
-
     }
 
     it('Should not send card when publishDate is before configured period', async function () {
@@ -233,39 +236,29 @@ describe('Cards external diffusion', function () {
     it('Body of email should fit card content when valid email is sent', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
                 userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
                 email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
-            {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
-                sendCardsByEmail: true,
-                email: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
         ];
 
-        opfabServicesInterfaceStub.config = 
-            {
-                id: 'defaultProcess',
-                name: 'Process example ',
-                version: '1',
-                states: {
-                    processState: {
-                        emailBodyTemplate: 'testTemplateMail'
-                    }
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    emailBodyTemplate: 'testTemplateMail'
                 }
-            };
+            }
+        };
 
         opfabServicesInterfaceStub.cards = [
             {
@@ -275,6 +268,7 @@ describe('Cards external diffusion', function () {
                 publishDate: publishDateAfterAlertingPeriod,
                 startDate: publishDateAfterAlertingPeriod,
                 titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
                 entityRecipients: ['ENTITY1']
@@ -284,23 +278,24 @@ describe('Cards external diffusion', function () {
             uid: '1001',
             id: 'defaultProcess.process1',
             publisher: 'publisher1',
-            publishDate: publishDateAfterAlertingPeriod,
-            startDate: publishDateAfterAlertingPeriod,
             titleTranslated: 'Title1',
+            summaryTranslated: 'Summary1',
             process: 'defaultProcess',
             state: 'processState',
             entityRecipients: ['ENTITY1']
         };
 
-        opfabServicesInterfaceStub.template = `{{titleTranslated}}`;
+        opfabBusinessConfigServicesInterfaceStub.template = 'Title1';
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
-        expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
-        expect(mailService.sent[0].body).toEqual('Title1');
+        expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
+        expect(mailService.sent[0].body).toEqual(
+            'Body <a href="http://localhost/#/feed/cards/defaultProcess.process1">Title1 - Summary1</a> <br> Title1'
+        );
     });
 
     it('Should not send same card twice', async function () {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 import CardsDiffusionControl from '../application/cardsDiffusionControl';
 import CardsDiffusionRateLimiter from '../application/cardsDiffusionRateLimiter';
 import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
@@ -24,6 +25,7 @@ export default class CardsExternalDiffusionService {
 
 
     constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface,
+            opfabBusinessConfigServicesInterface: BusinessConfigOpfabServicesInterface,
             cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService, 
             mailService: SendMailService, serviceConfig: any, logger: any) {
         this.logger = logger;
@@ -31,6 +33,7 @@ export default class CardsExternalDiffusionService {
         this.cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterface)
+            .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
             .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
             .setFrom(serviceConfig.mailFrom)
