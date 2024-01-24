@@ -208,4 +208,13 @@ describe('ActivityAreaPage', () => {
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
     });
+
+    it('Check message is displayed when user has no activity area', function () {
+        opfab.loginWithUser('opfab');
+        opfab.navigateToActivityArea();
+        cy.get('#opfab-no-activityarea').should('exist');
+        cy.get('#opfab-no-activityarea').contains('No activity area available').should('exist');
+        cy.get('#opfab-activity-areas').should('not.exist');
+        
+    });
 });

@@ -354,7 +354,8 @@
   "activityArea": {
     "title": "ZONE D'ACTIVITÉ",
     "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ",
-    "savingInProgress": "Enregistrement en cours..."
+    "savingInProgress": "Enregistrement en cours...",
+    "noAreaAvailable": "Pas de zone d'activité disponible"
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS",

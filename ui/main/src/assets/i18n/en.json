@@ -354,7 +354,8 @@
   "activityArea": {
     "title": "ACTIVITY AREA",
     "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA",
-    "savingInProgress": "Saving in progress..."
+    "savingInProgress": "Saving in progress...",
+    "noAreaAvailable": "No activity area available"
   },
   "feedConfiguration": {
     "title": "NOTIFICATION CONFIGURATION",

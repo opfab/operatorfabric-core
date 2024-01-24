@@ -12,8 +12,10 @@
 </div>
 
 <of-spinner *ngIf="!isScreenLoaded"></of-spinner>
-
-<div *ngIf="activityAreaPage?.activityAreaClusters?.length">
+<div *ngIf="activityAreaPage?.activityAreaClusters?.length == 0">
+    <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>activityArea.noAreaAvailable</div>
+</div>
+<div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length">
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-container" >
             <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
