@@ -12,6 +12,8 @@ const mongoClient = require('mongodb').MongoClient;
 const login = process.argv[4];
 const pwd = process.argv[5];
 
+const action = process.argv[6];
+
 const databaseUrl = 'mongodb://' + login + ':' + pwd + '@' + process.argv[2] + ':' + process.argv[3] + '/';
 const databaseName = 'operator-fabric';
 
@@ -47,4 +49,37 @@ async function updateEntityRoles(databaseUrl, databaseName) {
   }
 }
 
-updateEntityRoles(databaseUrl, databaseName);
+async function clean(databaseUrl, databaseName) {
+
+  console.log("Cleaning database");
+
+  const client = new mongoClient(databaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+  try {
+    await client.connect();
+
+    console.log("Connection to the mongo database has been established");
+
+    const db = client.db(databaseName);
+    const entitiesCollection = db.collection('entity');
+
+    await entitiesCollection.updateMany(
+      {},
+      { $unset: {entityAllowedToSendCard:""} }
+    );
+    
+    console.log("Entities have been successfully updated");
+
+  } finally {
+    await client.close();
+    console.log("Connection to the mongo database has been terminated");
+  }
+}
+
+
+if (action === 'start')
+  updateEntityRoles(databaseUrl, databaseName);
+else if (action === 'clean')
+  clean(databaseUrl, databaseName);
+else
+  console.log("Invalid action : " + action);

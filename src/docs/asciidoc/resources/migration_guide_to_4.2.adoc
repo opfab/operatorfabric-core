@@ -81,6 +81,11 @@ To update the entities in your mongo database, you can execute the following scr
 
 This script will assign the roles "ACTIVITY_AREA", "CARD_RECEIVER" and "CARD_SENDER" to all the entities that have "entityAllowedToSendCard = true" and the role "CARD_RECEIVER" to the others. Please refer to the documentation to see the other possible roles and their effect.
 
+After successful execution of the previous script you should execute the following script to cleanup the database removing the deprecated attribute "entityAllowedToSendCard":
+
+`./cleanMongoAfterMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
+
+
 == Deletion of deprecated functions in templateGateway/usercardTemplateGateway
 
 Functions in templateGateway/usercardTemplateGateway do not exist anymore, you can refer to the

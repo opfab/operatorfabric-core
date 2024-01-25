@@ -12,8 +12,8 @@
 if [ "$#" -ne 4 ]; then
   echo "Error : invalid number of arguments"
   echo "Usage: "
-  echo "./docker-compose.sh <containerNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>"
+  echo "./launchMigration.sh <IPorDNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>"
   exit 1
 fi
 
-docker-compose run migration-entity-roles $1 $2 $3 $4
+docker-compose run migration-entity-roles $1 $2 $3 $4 "start"
