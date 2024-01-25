@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {Utilities} from './utilities';
 
 describe('Utilities', () => {
@@ -54,43 +53,6 @@ describe('Utilities', () => {
             const charactersToKeep = 5;
             const result = Utilities.sliceForFormat(str, charactersToKeep);
             expect(result).toEqual('Hello...');
-        });
-    });
-
-    describe('convertNgbDateTimeToEpochDate', () => {
-        it('should convert NgbDateTime to epoch date', () => {
-            const ngbDateTime = new DateTimeNgb({year: 2021, month: 10, day: 1}, {hour: 0, minute: 0, second: 0});
-            const result = Utilities.convertNgbDateTimeToEpochDate(ngbDateTime);
-            expect(result).toEqual(1633039200000); // corresponds to 2021-10-01 00:00:00 in TZ Paris
-        });
-
-        it('should return null when NgbDateTime is not provided', () => {
-            const result = Utilities.convertNgbDateTimeToEpochDate(null);
-            expect(result).toBeNull();
-        });
-
-        it('should return null when NgbDateTime date is not provided', () => {
-            const ngbDateTime = new DateTimeNgb(null, {hour: 0, minute: 0, second: 0});
-            const result = Utilities.convertNgbDateTimeToEpochDate(ngbDateTime);
-            expect(result).toBeNull();
-        });
-    });
-
-    describe('convertEpochDateToNgbDateTime', () => {
-        it('should convert epoch date to NgbDateTime', () => {
-            const epochDate = 1633039200000; // corresponds to 2021-10-01 00:00:00 in TZ Paris
-            const result = Utilities.convertEpochDateToNgbDateTime(epochDate);
-            expect(result.date.year).toEqual(2021);
-            expect(result.date.month).toEqual(10);
-            expect(result.date.day).toEqual(1);
-            expect(result.time.hour).toEqual(0);
-            expect(result.time.minute).toEqual(0);
-            expect(result.time.second).toEqual(0);
-        });
-
-        it('should return null when epoch date is not provided', () => {
-            const result = Utilities.convertEpochDateToNgbDateTime(null);
-            expect(result).toBeNull();
         });
     });
 

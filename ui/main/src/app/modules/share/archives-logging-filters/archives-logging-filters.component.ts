@@ -25,8 +25,6 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {MessageLevel} from '@ofModel/message.model';
@@ -54,10 +52,6 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
         result = true;
     }
     return result;
-};
-
-export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
-    return new DateTimeNgb(date, time).formatDateTime();
 };
 
 @Component({
@@ -135,7 +129,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     activeMinDate: {year: number; month: number; day: number} = null;
     activeMaxDate: {year: number; month: number; day: number} = null;
 
-    defaultMinPublishDate: NgbDateStruct;
+    defaultMinPublishDateStringFormat: string;
 
     constructor(
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
@@ -170,6 +164,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.dateTimeFilterChange
             .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
             .subscribe(() => this.setDateFilterBounds());
+
+        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
     }
 
     ngAfterViewInit(): void {
@@ -244,12 +240,17 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             const element = filters[key];
             // if the form element is date
             if (element) {
-                if (checkElement(FilterDateTypes, key)) this.dateFilterToMap(key, element);
-                else {
+                if (checkElement(FilterDateTypes, key)) {
+                    this.dateFilterToMap(key, element);
+                } else {
                     if (element.length) {
-                        if (key === 'state') this.stateFilterToMap(element);
-                        else if (key === 'processGroup') this.processGroupFilterToMap(element);
-                        else this.otherFilterToMap(element, key);
+                        if (key === 'state') {
+                            this.stateFilterToMap(element);
+                        } else if (key === 'processGroup') {
+                            this.processGroupFilterToMap(element);
+                        } else {
+                            this.otherFilterToMap(element, key);
+                        }
                     }
                 }
             }
@@ -263,8 +264,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     dateFilterToMap(key: string, element: any) {
-        const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
-        if (epochDate) this.filters.set(key, [epochDate]);
+        if (element.length) {
+            this.filters.set(key, [Date.parse(element + ':00')]);
+        }
     }
 
     stateFilterToMap(element: any) {
@@ -347,47 +349,34 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         const min = moment(Date.now());
         min.subtract(defaultPublishDateInterval, 'day');
         const minDate = min.toDate();
-        this.defaultMinPublishDate = {
-            day: minDate.getDate(),
-            month: minDate.getMonth() + 1,
-            year: minDate.getFullYear()
-        };
+
+        this.defaultMinPublishDateStringFormat =
+            minDate.getFullYear() +
+            '-' +
+            String(minDate.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(minDate.getDate()).padStart(2, '0') +
+            'T00:00';
     }
 
     setDateFilterBounds(): void {
-        if (this.parentForm.value.publishDateFrom?.date) {
-            this.publishMinDate = {
-                year: this.parentForm.value.publishDateFrom.date.year,
-                month: this.parentForm.value.publishDateFrom.date.month,
-                day: this.parentForm.value.publishDateFrom.date.day
-            };
+        if (this.parentForm.value.publishDateFrom?.length) {
+            this.publishMinDate = this.parentForm.value.publishDateFrom;
         }
 
-        if (this.parentForm.value.publishDateTo?.date) {
-            this.publishMaxDate = {
-                year: this.parentForm.value.publishDateTo.date.year,
-                month: this.parentForm.value.publishDateTo.date.month,
-                day: this.parentForm.value.publishDateTo.date.day
-            };
+        if (this.parentForm.value.publishDateTo?.length) {
+            this.publishMaxDate = this.parentForm.value.publishDateTo;
         } else {
             this.publishMaxDate = null;
         }
 
-        if (this.parentForm.value.activeFrom?.date) {
-            this.activeMinDate = {
-                year: this.parentForm.value.activeFrom.date.year,
-                month: this.parentForm.value.activeFrom.date.month,
-                day: this.parentForm.value.activeFrom.date.day
-            };
+        if (this.parentForm.value.activeFrom?.length) {
+            this.activeMinDate = this.parentForm.value.activeFrom;
         } else {
             this.activeMinDate = null;
         }
-        if (this.parentForm.value.activeTo?.date) {
-            this.activeMaxDate = {
-                year: this.parentForm.value.activeTo.date.year,
-                month: this.parentForm.value.activeTo.date.month,
-                day: this.parentForm.value.activeTo.date.day
-            };
+        if (this.parentForm.value.activeTo?.length) {
+            this.activeMaxDate = this.parentForm.value.activeTo;
         } else {
             this.activeMaxDate = null;
         }
@@ -414,6 +403,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.publishMaxDate = null;
         this.activeMinDate = null;
         this.activeMaxDate = null;
+        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
         this.setDateFilterBounds();
     }
 
@@ -462,19 +452,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         if (!val || val === '') {
             return null;
         }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
+        return Date.parse(val);
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

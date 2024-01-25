@@ -12,7 +12,6 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {DatesForm} from './dates-form.model';
-import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-usercard-dates-form',
@@ -34,7 +33,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     }>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    endDateMin: {year: number; month: number; day: number} = null;
+    endDateMin: string;
 
     ngOnInit() {
         this.datesForm = new FormGroup({
@@ -61,7 +60,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 .get('startDate')
                 .setValue(
                     this.datesFormInputData.startDate.initialEpochDate != null
-                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.startDate.initialEpochDate)
+                        ? this.epochDateToString(this.datesFormInputData.startDate.initialEpochDate)
                         : ''
                 );
         }
@@ -73,7 +72,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 .get('endDate')
                 .setValue(
                     this.datesFormInputData.endDate.initialEpochDate != null
-                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.endDate.initialEpochDate)
+                        ? this.epochDateToString(this.datesFormInputData.endDate.initialEpochDate)
                         : ''
                 );
         }
@@ -85,7 +84,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 .get('lttd')
                 .setValue(
                     this.datesFormInputData.lttd.initialEpochDate != null
-                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.lttd.initialEpochDate)
+                        ? this.epochDateToString(this.datesFormInputData.lttd.initialEpochDate)
                         : ''
                 );
         }
@@ -97,9 +96,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 .get('expirationDate')
                 .setValue(
                     this.datesFormInputData.expirationDate.initialEpochDate != null
-                        ? Utilities.convertEpochDateToNgbDateTime(
-                              this.datesFormInputData.expirationDate.initialEpochDate
-                          )
+                        ? this.epochDateToString(this.datesFormInputData.expirationDate.initialEpochDate)
                         : ''
                 );
         }
@@ -114,31 +111,42 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     private setEndDateFilterBounds(): void {
         if (this.datesForm) {
             if (this.datesFormInputData.startDate.isVisible) {
-                this.endDateMin = {
-                    year: this.datesForm.value.startDate.date.year,
-                    month: this.datesForm.value.startDate.date.month,
-                    day: this.datesForm.value.startDate.date.day
-                };
+                this.endDateMin = this.datesForm.value.startDate;
             } else {
                 this.endDateMin = null;
             }
         }
     }
 
+    public epochDateToString(epochDate: number): string {
+        const dateObject = new Date(epochDate);
+        return (
+            dateObject.getFullYear() +
+            '-' +
+            String(dateObject.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(dateObject.getDate()).padStart(2, '0') +
+            'T' +
+            String(dateObject.getHours()).padStart(2, '0') +
+            ':' +
+            String(dateObject.getMinutes()).padStart(2, '0')
+        );
+    }
+
     public getStartDateAsEpoch(): number {
-        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('startDate').value);
+        return Date.parse(this.datesForm.get('startDate').value);
     }
 
     public getEndDateAsEpoch(): number {
-        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('endDate').value);
+        return Date.parse(this.datesForm.get('endDate').value);
     }
 
     public getLttdAsEpoch(): number {
-        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('lttd').value);
+        return Date.parse(this.datesForm.get('lttd').value);
     }
 
     public getExpirationDateAsEpoch(): number {
-        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('expirationDate').value);
+        return Date.parse(this.datesForm.get('expirationDate').value);
     }
 
     // Hack : The three following method use setTimeout to let the component update the date internally

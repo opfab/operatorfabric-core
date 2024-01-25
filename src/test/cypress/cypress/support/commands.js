@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,19 +40,8 @@ Cypress.Commands.add('delayRequestResponse', (url, delayTime = 2000) => {
     });
 });
 
-Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minutes) => {
-    cy.get('#opfab-datepicker-' + formName).click();
-    cy.get('[aria-label="Select year"]').select(year);
-    cy.get('[aria-label="Select month"]').select(month);
-    cy.get('[aria-label*="' + day + ',"]').click();
-    cy.get('#opfab-timepicker-' + formName)
-        .find('[aria-label="Hours"]')
-        .click()
-        .type('{backspace}{backspace}' + hours);
-    cy.get('#opfab-timepicker-' + formName)
-        .find('[aria-label="Minutes"]')
-        .click()
-        .type('{backspace}{backspace}' + minutes);
+Cypress.Commands.add('setFormDateTime', (inputId, year, month, day, hours, minutes) => {
+    cy.get('#' + inputId).type(year + '-' + month + '-' + day + 'T' + hours + ':' + minutes);
 });
 
 Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {

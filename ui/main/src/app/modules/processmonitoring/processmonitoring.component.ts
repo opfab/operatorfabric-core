@@ -26,7 +26,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
@@ -36,8 +36,6 @@ import {ProcessMonitoringView} from 'app/business/view/processmonitoring/process
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-import {Utilities} from 'app/business/common/utilities';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -56,10 +54,6 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
         result = true;
     }
     return result;
-};
-
-export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
-    return new DateTimeNgb(date, time).formatDateTime();
 };
 
 @Component({
@@ -265,24 +259,18 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     setDateFilterBounds(): void {
-        if (this.processMonitoringForm.value.activeFrom?.date) {
-            this.activeMinDate = {
-                year: this.processMonitoringForm.value.activeFrom.date.year,
-                month: this.processMonitoringForm.value.activeFrom.date.month,
-                day: this.processMonitoringForm.value.activeFrom.date.day
-            };
+        if (this.processMonitoringForm.value.activeFrom?.length > 0) {
+            this.activeMinDate = this.processMonitoringForm.value.activeFrom;
         } else {
             this.activeMinDate = null;
         }
-        if (this.processMonitoringForm.value.activeTo?.date) {
-            this.activeMaxDate = {
-                year: this.processMonitoringForm.value.activeTo.date.year,
-                month: this.processMonitoringForm.value.activeTo.date.month,
-                day: this.processMonitoringForm.value.activeTo.date.day
-            };
+
+        if (this.processMonitoringForm.value.activeTo?.length > 0) {
+            this.activeMaxDate = this.processMonitoringForm.value.activeTo;
         } else {
             this.activeMaxDate = null;
         }
+
         this.changeDetector.markForCheck();
     }
 
@@ -388,8 +376,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     dateFilterToMap(key: string, element: any) {
-        const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
-        if (epochDate) this.filters.set(key, [epochDate]);
+        const epochDate = Date.parse(element);
+        if (epochDate) {
+            this.filters.set(key, [epochDate]);
+        }
     }
 
     processFilterToMap(element: any) {

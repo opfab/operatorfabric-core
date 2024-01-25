@@ -420,7 +420,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       usercard.checkEmitterSelectDoesNotExist();
       cy.get('#message').find('div').eq(0).type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
-      cy.setFormDateTime('startDate','2020','Jan',20,8,0);
+      cy.setFormDateTime('opfab-usercard-startdate-choice-input','2020','01','20','08','00');
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.openFirstCard();
@@ -652,7 +652,7 @@ describe('User Card ', function () {
 
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).click({force: true});
       cy.get('#message').find('div').eq(0).type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
-      cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
+      cy.setFormDateTime('opfab-usercard-startdate-choice-input', '2020', '01', '20', '08', '00');
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.checkNumberOfDisplayedCardsIs(1);
@@ -900,56 +900,33 @@ describe('User Card ', function () {
       startDate.setMinutes(0);
       startDate.setSeconds(0);
       const expectedStartDate = startDate.getFullYear() + '-' + (startDate.getMonth()+1).toString().padStart(2, '0') + '-' + startDate.getDate().toString().padStart(2, '0');
+      const startHour = startDate.getHours() < 10 ? '0' + startDate.getHours() : '' + startDate.getHours();
+      const expectedStartDateTime = expectedStartDate + 'T' + startHour + ':00';
 
       const endDate = new Date(startDate.getTime() + 8 * 3600000);
       const expectedEndDate = endDate.getFullYear() + '-' + (endDate.getMonth()+1).toString().padStart(2, '0') + '-' + endDate.getDate().toString().padStart(2, '0');
+      const endHour = endDate.getHours() < 10 ? '0' + endDate.getHours() : '' + endDate.getHours();
+      const expectedEndDateTime = expectedEndDate + 'T' + endHour + ':00';
       
       const lttdDate = new Date(startDate.getTime() + 4 * 3600000);
       const expectedLttdDate = lttdDate.getFullYear() + '-' + (lttdDate.getMonth()+1).toString().padStart(2, '0') + '-' + lttdDate.getDate().toString().padStart(2, '0');
+      const lttdHour = lttdDate.getHours() < 10 ? '0' + lttdDate.getHours() : '' + lttdDate.getHours();
+      const expectedLttdDateTime = expectedLttdDate + 'T' + lttdHour + ':00';
 
       cy.waitDefaultTime();
 
-      cy.get('#opfab-datepicker-startDate').invoke('val').then((text) => {
-        expect(expectedStartDate).to.equal(text);
+      cy.get('#opfab-usercard-startdate-choice-input').invoke('val').then((text) => {
+        expect(expectedStartDateTime).to.equal(text);
       });
 
-      const startHour = startDate.getHours() < 10 ? '0' + startDate.getHours() : '' + startDate.getHours();
-      cy.get('#opfab-timepicker-startDate').find('[aria-label="Hours"]').invoke('val').then((text) => {
-        expect(startHour).to.equal(text);
-      });
-      cy.get('#opfab-timepicker-startDate').find('[aria-label="Minutes"]').invoke('val').then((text) => {
-        expect('00').to.equal(text);
+      cy.get('#opfab-usercard-enddate-choice-input').invoke('val').then((text) => {
+        expect(expectedEndDateTime).to.equal(text);
       });
 
-      cy.get('#opfab-datepicker-endDate').invoke('val').then((text) => {
-        expect(expectedEndDate).to.equal(text);
+      cy.get('#opfab-usercard-lttd-choice-input').invoke('val').then((text) => {
+        expect(expectedLttdDateTime).to.equal(text);
       });
-
-      const endHour = endDate.getHours() < 10 ? '0' + endDate.getHours() : '' + endDate.getHours();
-
-      cy.get('#opfab-timepicker-endDate').find('[aria-label="Hours"]').invoke('val').then((text) => {
-        expect(endHour).to.equal(text);
-      });
-      cy.get('#opfab-timepicker-endDate').find('[aria-label="Minutes"]').invoke('val').then((text) => {
-        expect('00').to.equal(text);
-      });
-
-      cy.get('#opfab-datepicker-lttd').invoke('val').then((text) => {
-        expect(expectedLttdDate).to.equal(text);
-      });
-
-      const lttdHour = lttdDate.getHours() < 10 ? '0' + lttdDate.getHours() : '' + lttdDate.getHours();
-
-      cy.get('#opfab-timepicker-lttd').find('[aria-label="Hours"]').invoke('val').then((text) => {
-        expect(lttdHour).to.equal(text);
-      });
-      cy.get('#opfab-timepicker-lttd').find('[aria-label="Minutes"]').invoke('val').then((text) => {
-        expect('00').to.equal(text);
-      });
-
     })
-
-
   })
 
   describe("Should receive card emitter from gateway", function() {
@@ -1135,7 +1112,7 @@ describe('User Card ', function () {
       cy.get('#status-select').click();
       cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
     })
-  }) 
+  })
 
 
 
@@ -1152,9 +1129,13 @@ describe('User Card ', function () {
       usercard.selectService('Base Examples');
       usercard.selectProcess('Process example');
       usercard.selectState('Process example');
-      cy.setFormDateTime('startDate','2020','Jan',20,8,0);
-      cy.setFormDateTime('endDate','2029','Jun',25,11,10);
-      cy.setFormDateTime('expirationDate','2029','Jun',25,11,10);
+      cy.setFormDateTime('opfab-usercard-startdate-choice-input','2020','01','20','08','00');
+      cy.setFormDateTime('opfab-usercard-enddate-choice-input','2029','06','25','11','10');
+      cy.setFormDateTime('opfab-usercard-expirationdate-choice-input','2029','06','25','11','10');
+
+      //workaround for cypress. If we don't do that, the date for expiration date is not well set
+      cy.setFormDateTime('opfab-usercard-startdate-choice-input','2020','01','20','08','00');
+
       usercard.previewThenSendCard();
       feed.openFirstCard();
       card.checkExpirationDateIconDoesExist();

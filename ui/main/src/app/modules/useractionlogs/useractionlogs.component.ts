@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnIni
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {TranslationService} from 'app/business/services/translation/translation.service';
@@ -40,7 +39,6 @@ export class UserActionLogsComponent implements OnInit {
     actionsSelected = [];
     loginListLoaded = false;
     loadingInProgress = false;
-    initialDateFrom;
     errorMessage;
     currentResultPage = 1;
 
@@ -79,11 +77,15 @@ export class UserActionLogsComponent implements OnInit {
 
     private setInitialDateFrom() {
         const initDate = this.userActionLogsPage.initialFromDate;
-        this.initialDateFrom = {
-            day: initDate.getDate(),
-            month: initDate.getMonth() + 1,
-            year: initDate.getFullYear()
-        };
+
+        const initialDateFrom =
+            initDate.getFullYear() +
+            '-' +
+            String(initDate.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(initDate.getDate()).padStart(2, '0') +
+            'T00:00';
+        this.userActionLogsForm.controls.dateFrom.setValue(initialDateFrom);
     }
 
     private initLoginMultiselect() {
@@ -143,17 +145,12 @@ export class UserActionLogsComponent implements OnInit {
         }
     }
 
-    private extractDateAndTime(form: AbstractControl) {
+    private extractDateAndTime(form: AbstractControl): number {
         const val = form.value;
         if (!val || val === '') {
             return null;
         }
-        const hour = val.time?.hour ?? 0;
-        const minute = val.time?.minute ?? 0;
-        const second = val.time?.second ?? 0;
-
-        const converter = new DateTimeNgb(val.date, {hour, minute, second});
-        return converter.convertToNumber();
+        return Date.parse(val);
     }
 
     changePage(page) {
@@ -185,5 +182,6 @@ export class UserActionLogsComponent implements OnInit {
         this.actionsSelected = [];
         this.userActionLogsResult = null;
         this.errorMessage = null;
+        this.setInitialDateFrom();
     }
 }

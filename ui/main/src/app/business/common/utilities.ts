@@ -9,8 +9,6 @@
 
 import {Process} from '@ofModel/processes.model';
 import {Observable, catchError, forkJoin, of, take} from 'rxjs';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {Severity} from '@ofModel/light-card.model';
 
 export class Utilities {
@@ -74,27 +72,6 @@ export class Utilities {
                 )
             )
         );
-    }
-
-    public static convertNgbDateTimeToEpochDate(ngbDateTime: DateTimeNgb): number {
-        if (!ngbDateTime) return null;
-        if (!ngbDateTime.date) return null;
-        const dateFromNgb = new Date(ngbDateTime.date.year, ngbDateTime.date.month - 1, ngbDateTime.date.day);
-        dateFromNgb.setHours(ngbDateTime.time.hour);
-        dateFromNgb.setMinutes(ngbDateTime.time.minute);
-        dateFromNgb.setSeconds(ngbDateTime.time.second);
-        return dateFromNgb.valueOf();
-    }
-
-    public static convertEpochDateToNgbDateTime(epochDate: number): DateTimeNgb {
-        if (!epochDate) return null;
-        const dateToConvert = new Date(epochDate);
-        const ngbDate = new NgbDate(dateToConvert.getFullYear(), dateToConvert.getMonth() + 1, dateToConvert.getDate());
-        return new DateTimeNgb(ngbDate, {
-            hour: dateToConvert.getHours(),
-            minute: dateToConvert.getMinutes(),
-            second: dateToConvert.getSeconds()
-        });
     }
 
     public static isNavigatorChromiumBased() {

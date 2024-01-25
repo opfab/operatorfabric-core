@@ -124,8 +124,12 @@ export class UserActionLogsView {
     private getFiltersForRequest(): Map<string, Array<string>> {
         const filters = new Map();
         filters.set('size', ['10']);
-        if (this.selectedLogins) filters.set('login', this.selectedLogins);
-        if (this.selectedActions) filters.set('action', this.selectedActions);
+        if (this.selectedLogins) {
+            filters.set('login', this.selectedLogins);
+        }
+        if (this.selectedActions) {
+            filters.set('action', this.selectedActions);
+        }
         filters.set('page', [this.pageNumber.toString()]);
         filters.set('dateFrom', [this.dateFrom.toString()]);
         if (this.dateTo) filters.set('dateTo', [this.dateTo.toString()]);

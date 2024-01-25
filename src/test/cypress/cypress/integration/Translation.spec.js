@@ -113,10 +113,10 @@ describe('Test translations', function () {
         checkLabel('#opfab-tags', tagLabel);
         checkLabel('#opfab-process', processLabel);
         checkLabel('#opfab-state', stateLabel);
-        checkLabel('#opfab-publish-date-from', publishFromLabel);
-        checkLabel('#opfab-publish-date-to', publishToLabel);
-        checkLabel('#opfab-active-from', activeFromLabel);
-        checkLabel('#opfab-active-to', activeToLabel);
+        checkDatePickerLabel('#opfab-publish-date-from', publishFromLabel);
+        checkDatePickerLabel('#opfab-publish-date-to', publishToLabel);
+        checkDatePickerLabel('#opfab-active-from', activeFromLabel);
+        checkDatePickerLabel('#opfab-active-to', activeToLabel);
     }
 
     function checkArchivesScreenTexts(selectServiceText, selectTagText, selectProcessText, selectStateText, searchText, resetText) {
@@ -172,8 +172,8 @@ describe('Test translations', function () {
 
     function checkDateFilterTexts(dateTitle, startText, endText, applyToTimelineText) {
         cy.get('#opfab-feed-filter-date-title').should('have.text', dateTitle);
-        checkLabel('#opfab-feed-filter-dateTimeFrom', startText);
-        checkLabel('#opfab-feed-filter-dateTimeTo', endText);
+        checkLabel('#opfab-start', startText);
+        checkLabel('#opfab-end', endText);
         cy.get('#opfab-timeline-filter-form').should('have.text', applyToTimelineText);
     }
 
@@ -184,6 +184,10 @@ describe('Test translations', function () {
 
     function checkLabel(labelId, labelText) {
         cy.get(labelId).find('label').first().should("have.text",labelText);
+    }
+
+    function checkDatePickerLabel(labelId, labelText) {
+        cy.get(labelId).parent().find('label').first().should("have.text",labelText);
     }
 
     function checkPlaceholderText(selectId, placeholderText) {

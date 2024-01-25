@@ -99,17 +99,27 @@
 
         <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form" style="padding-left: 7px;">
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top: 20px;width:200px">
-                <div class="form-group" id="opfab-start">
-                    <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (dateTimeChange)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
-                      [maxDate]="startMaxDate"  labelKey="feed.filters.time." [timeSpinners]="false"></of-datetime-filter>
+            <div style="margin-left: 2px; margin-right: 2px;margin-top: 20px;width: 210px;min-width: 210px">
+                <div class="form-group nopaddingrow opfab-input" id="opfab-start">
+                    <label for="opfab-feed-filter-dateTimeFrom" translate>feed.filters.time.start.label</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-feed-filter-dateTimeFrom"
+                            formControlName="dateTimeFrom"
+                            (change)="onDateTimeChange($event)"
+                            [max]="startMaxDate">
                 </div>
             </div>
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:20px;width:200px;">
-                <div class="form-group" id="opfab-end">
-                    <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
-                    [minDate]="endMinDate"  labelKey="feed.filters.time." [timeSpinners]="false" (dateTimeChange)="onDateTimeChange($event)"></of-datetime-filter>
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:20px;width: 210px;min-width: 210px">
+                <div class="form-group nopaddingrow opfab-input" id="opfab-end">
+                    <label for="opfab-feed-filter-dateTimeTo" translate>feed.filters.time.end.label</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-feed-filter-dateTimeTo"
+                            formControlName="dateTimeTo"
+                            (change)="onDateTimeChange($event)"
+                            [min]="endMinDate">
                 </div>
 
             </div>
