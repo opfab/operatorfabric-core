@@ -22,7 +22,6 @@ import {ChartCommonModule, NgxChartsModule} from '@swimlane/ngx-charts';
 import {CustomTimelineChartComponent} from './components/time-line/custom-timeline-chart/custom-timeline-chart.component';
 import {MouseWheelDirective} from './components/time-line/directives/mouse-wheel.directive';
 import {InitChartComponent} from './components/time-line/init-chart/init-chart.component';
-import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {FeedSortComponent} from './components/card-list/filters/feed-sort/feed-sort.component';
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
@@ -43,7 +42,6 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         TranslateModule,
         NgbModule,
         CardModule,
-        DatetimeFilterModule,
         FeedRoutingModule,
         LightCardModule,
         TimelineButtonsModule,

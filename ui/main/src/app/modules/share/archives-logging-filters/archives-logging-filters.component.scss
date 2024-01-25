@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,15 +34,15 @@
 .opfab-publish-date {
     margin-left: 40px;
     margin-right: 30px;
-    width: 230px;
-    min-width: 230px;
+    width: 175px;
+    min-width: 175px;
+    margin-bottom: 30px;
 }
 
 .opfab-buttons {
     margin-left: 60px;
     margin-bottom: 22px;
-    margin-top: auto;
-    padding-top: 10px;
+    margin-top: 80px;
 }
 
 .opfab-btn-search-admin-mode {

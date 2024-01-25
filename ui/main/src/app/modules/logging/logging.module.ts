@@ -14,7 +14,6 @@ import {LoggingComponent} from './logging.component';
 import {CardModule} from '../card/card.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
 import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
@@ -34,7 +33,6 @@ import {SenderCellRendererComponent} from './components/cell-renderers/sender-ce
         CardModule,
         TranslateModule,
         NgbModule,
-        DatetimeFilterModule,
         SimplifiedCardViewModule,
         ArchivesLoggingFiltersModule,
         SpinnerModule,

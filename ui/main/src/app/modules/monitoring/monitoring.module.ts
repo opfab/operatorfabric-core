@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringComponent} from './monitoring.component';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
-import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {AppRoutingModule} from '../../router/app-routing.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
 import {AgGridModule} from 'ag-grid-angular';
@@ -39,7 +38,6 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         CardModule,
         TranslateModule,
         NgbModule,
-        DatetimeFilterModule,
         AppRoutingModule,
         MultiSelectModule,
         TimelineButtonsModule,

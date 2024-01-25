@@ -60,14 +60,24 @@
         </div>
         
         <div class="opfab-vertical-bar"></div>
-        <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="processMonitoringForm">
-            <div>
-                <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (dateTimeChange)="onDateTimeChange()">
-                </of-datetime-filter>
+        <div style="margin-left:40px;width:230px;min-width:230px;margin-bottom:30px" [formGroup]="processMonitoringForm">
+            <div class="nopaddingrow opfab-input" style="margin-top: 30px; margin-bottom: 54px;">
+                <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
+                <input
+                        type="datetime-local"
+                        id="opfab-active-from"
+                        formControlName="activeFrom"
+                        (change)="onDateTimeChange()"
+                        [max]="activeMaxDate">
             </div>
-            <div>
-                <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (dateTimeChange)="onDateTimeChange()">
-                </of-datetime-filter>
+            <div class="nopaddingrow opfab-input">
+                <label for="opfab-active-to" translate>shared.filters.activeTo</label>
+                <input
+                        type="datetime-local"
+                        id="opfab-active-to"
+                        formControlName="activeTo"
+                        (change)="onDateTimeChange()"
+                        [min]="activeMinDate">
             </div>
         </div>
         

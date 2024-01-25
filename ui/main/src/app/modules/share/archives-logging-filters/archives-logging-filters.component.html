@@ -79,31 +79,52 @@
 
 
             <div class="opfab-vertical-bar" *ngIf="displayPublishDateFilter"></div>
-            <div class="opfab-publish-date" [formGroup]="this.parentForm" *ngIf="displayPublishDateFilter">
-                <div>
-                    <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
-                    labelKey="shared.filters." [maxDate]="publishMaxDate" (dateTimeChange)="onDateTimeChange()"></of-datetime-filter>
+            <div class="opfab-publish-date" [formGroup]="this.parentForm" *ngIf="displayPublishDateFilter"
+                 style="width:210px;min-width: 210px;">
+                <div class="nopaddingrow opfab-input" style="margin-top: 28px; margin-bottom: 54px;">
+                    <label for="opfab-publish-date-from" translate>shared.filters.publishDateFrom</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-publish-date-from"
+                            (change)="onDateTimeChange()"
+                            formControlName="publishDateFrom"
+                            [max]="publishMaxDate">
                 </div>
-                <div>
-                    <of-datetime-filter id="opfab-publish-date-to" filterPath="publishDateTo" formControlName="publishDateTo"
-                    labelKey="shared.filters." [minDate]="publishMinDate" (dateTimeChange)="onDateTimeChange()"></of-datetime-filter>
+                <div class="nopaddingrow opfab-input">
+                    <label for="opfab-publish-date-to" translate>shared.filters.publishDateTo</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-publish-date-to"
+                            (change)="onDateTimeChange()"
+                            formControlName="publishDateTo"
+                            [min]="publishMinDate">
                 </div>
             </div>
 
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="this.parentForm">
-                <div>
-                    <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (dateTimeChange)="onDateTimeChange()">
-                    </of-datetime-filter>
+            <div style="margin-left:40px;width:210px;min-width: 210px;" [formGroup]="this.parentForm">
+                <div class="nopaddingrow opfab-input" style="margin-top: 28px; margin-bottom: 54px;">
+                    <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-active-from"
+                            (change)="onDateTimeChange()"
+                            formControlName="activeFrom"
+                            [max]="activeMaxDate">
                 </div>
-                <div>
-                    <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (dateTimeChange)="onDateTimeChange()">
-                    </of-datetime-filter>
+                <div class="nopaddingrow opfab-input">
+                    <label for="opfab-active-to" translate>shared.filters.activeTo</label>
+                    <input
+                            type="datetime-local"
+                            id="opfab-active-to"
+                            (change)="onDateTimeChange()"
+                            formControlName="activeTo"
+                            [min]="activeMinDate">
                 </div>
             </div>
             <div  class="opfab-buttons">
                 <label *ngIf="hasCurrentUserRightsToViewAllArchivedCards || hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters"
-                       id="opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox" style="margin-left:10px;max-width: 200px" class="opfab-checkbox" translate>shared.adminMode
+                       id="opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox" style="margin-left:10px;max-width: 200px;margin-top: -50px" class="opfab-checkbox" translate>shared.adminMode
                     <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked">
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>

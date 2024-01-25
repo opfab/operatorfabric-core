@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -31,15 +31,20 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
             </div>
         </div>
 
-        <div style="display: flex; margin-top: 10px" [formGroup]="this.userActionLogsForm">
-            <div style="margin-left: 10px">
-                <of-datetime-filter id="opfab-date-from" filterPath="dateFrom" formControlName="dateFrom"
-                    labelKey="useractionlogs.filters." [defaultDate]="initialDateFrom"
-                    [defaultTime]="{hour: 0, minute: 0}"></of-datetime-filter>
+        <div style="display: flex; margin-top: 39px" [formGroup]="this.userActionLogsForm">
+            <div class="nopaddingrow opfab-input" style="margin-left: 10px">
+                <label for="opfab-date-from" translate>useractionlogs.filters.dateFrom</label>
+                <input
+                        type="datetime-local"
+                        id="opfab-date-from"
+                        formControlName="dateFrom">
             </div>
-            <div style="margin-left: 10px">
-                <of-datetime-filter id="opfab-date-to" filterPath="dateTo" formControlName="dateTo"
-                    labelKey="useractionlogs.filters."></of-datetime-filter>
+            <div class="nopaddingrow opfab-input" style="margin-left: 10px">
+                <label for="opfab-date-to" translate>useractionlogs.filters.dateTo</label>
+                <input
+                        type="datetime-local"
+                        id="opfab-date-to"
+                        formControlName="dateTo">
             </div>
         </div>
 

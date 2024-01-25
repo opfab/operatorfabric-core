@@ -14,11 +14,8 @@ import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/oper
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -404,18 +401,35 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     initDateTimeFilter() {
         this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-        const savedStart = UserPreferencesService.getPreference('opfab.feed.filter.start');
-        const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
+        const savedStart =
+            UserPreferencesService.getPreference('opfab.feed.filter.start') != null
+                ? new Date(+UserPreferencesService.getPreference('opfab.feed.filter.start'))
+                : null;
+        const savedEnd =
+            UserPreferencesService.getPreference('opfab.feed.filter.end') != null
+                ? new Date(+UserPreferencesService.getPreference('opfab.feed.filter.end'))
+                : null;
 
-        if (savedStart) {
-            this.timeFilterForm
-                .get('dateTimeFrom')
-                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
+        if (savedStart != null) {
+            const savedStartString =
+                savedStart.getFullYear() +
+                '-' +
+                String(savedStart.getMonth() + 1).padStart(2, '0') +
+                '-' +
+                String(savedStart.getDate()).padStart(2, '0') +
+                'T00:00';
+            this.timeFilterForm.get('dateTimeFrom').setValue(savedStartString);
         }
-        if (savedEnd) {
-            this.timeFilterForm
-                .get('dateTimeTo')
-                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
+
+        if (savedEnd != null) {
+            const savedEndString =
+                savedEnd.getFullYear() +
+                '-' +
+                String(savedEnd.getMonth() + 1).padStart(2, '0') +
+                '-' +
+                String(savedEnd.getDate()).padStart(2, '0') +
+                'T00:00';
+            this.timeFilterForm.get('dateTimeTo').setValue(savedEndString);
         }
 
         this.setNewFilterValue();
@@ -450,22 +464,18 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.endMinDate = null;
         } else {
             UserPreferencesService.setPreference('opfab.feed.filter.start', status.start);
-            this.endMinDate = {
-                year: this.timeFilterForm.value.dateTimeFrom.date.year,
-                month: this.timeFilterForm.value.dateTimeFrom.date.month,
-                day: this.timeFilterForm.value.dateTimeFrom.date.day
-            };
+            if (this.timeFilterForm.value.dateTimeFrom?.length) {
+                this.endMinDate = this.timeFilterForm.value.dateTimeFrom;
+            }
         }
         if (status.end == null || isNaN(status.end)) {
             UserPreferencesService.removePreference('opfab.feed.filter.end');
             this.startMaxDate = null;
         } else {
             UserPreferencesService.setPreference('opfab.feed.filter.end', status.end);
-            this.startMaxDate = {
-                year: this.timeFilterForm.value.dateTimeTo.date.year,
-                month: this.timeFilterForm.value.dateTimeTo.date.month,
-                day: this.timeFilterForm.value.dateTimeTo.date.day
-            };
+            if (this.timeFilterForm.value.dateTimeTo?.length) {
+                this.startMaxDate = this.timeFilterForm.value.dateTimeTo;
+            }
         }
 
         this.filteredLightCardStore.updateFilter(this.dateFilterType, true, status);
@@ -477,19 +487,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!val || val === '') {
             return null;
         }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
+        return Date.parse(val);
     }
 
     isFilterActive(): boolean {
