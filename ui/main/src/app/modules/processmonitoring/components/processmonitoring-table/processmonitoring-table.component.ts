@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,7 +72,8 @@ export class ProcessmonitoringTableComponent {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 130
+                    width: 130,
+                    resizable: false
                 },
                 noFiltersDataColumn: {
                     sortable: false,
@@ -127,7 +128,8 @@ export class ProcessmonitoringTableComponent {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 18
+                    maxWidth: 18,
+                    resizable: false
                 }
             },
             ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
@@ -175,7 +177,8 @@ export class ProcessmonitoringTableComponent {
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split(".").pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
-                        flex: column.size
+                        maxWidth: column.size,
+                        resizable: false
                     });
                 } else {
                     this.columnDefs.push({
@@ -184,7 +187,8 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split(".").pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: column.size
+                        maxWidth: column.size,
+                        resizable: false
                     });
                 }
             });
