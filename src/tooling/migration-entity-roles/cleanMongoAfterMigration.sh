@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Copyright (c) 2024, RTE (http://www.rte-france.com)
 #See AUTHORS.txt
@@ -8,4 +8,12 @@
 #SPDX-License-Identifier: MPL-2.0
 #This file is part of the OperatorFabric project.
 
-node migration-entity-roles.js $1 $2 $3 $4 $5
+
+if [ "$#" -ne 4 ]; then
+  echo "Error : invalid number of arguments"
+  echo "Usage: "
+  echo "./cleanMongoAfterMigration.sh <IPorDNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>"
+  exit 1
+fi
+
+docker-compose run migration-entity-roles $1 $2 $3 $4 "clean"
