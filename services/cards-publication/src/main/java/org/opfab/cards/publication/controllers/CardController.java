@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -178,7 +178,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardProcessingService.processUserRead(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.processUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -203,7 +203,7 @@ public class CardController {
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, user.getUserData().getLogin());  
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -228,7 +228,7 @@ public class CardController {
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserRead(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.deleteUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {

@@ -5,6 +5,8 @@ operatorfabric:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+    jwt:
+      login-claim: preferred_username
   rabbitmq:
     host: "localhost"
     port: 5672
