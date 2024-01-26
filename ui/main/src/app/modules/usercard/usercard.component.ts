@@ -333,7 +333,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         allowedUserEntities.forEach((userEntityId) => {
             const entity = EntitiesService.getEntities().find((e) => e.id === userEntityId);
-            if (entity.roles.includes(RolesEnum.CARD_SENDER)) entitiesList.push({value: entity.id, label: entity.name});
+            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) entitiesList.push({value: entity.id, label: entity.name});
         });
         return entitiesList;
     }
