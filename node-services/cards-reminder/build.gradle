@@ -58,13 +58,11 @@ docker {
 				from('.') {
 					include 'startCardsReminder.sh'
 					include 'package.json'
+					include 'package-lock.json'
+					include 'node_modules/**'
 					into '.'
 				}
 			}
-    files( "bin", "package.json", "config")
-    buildArgs([
-                'https_proxy'    : proxy.https
-                ])
     dockerfile file("docker/Dockerfile")
 }
 
