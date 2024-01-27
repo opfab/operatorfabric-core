@@ -13,33 +13,27 @@ package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.constraints.Min;
 import lombok.*;
-import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Instant;
 import java.util.*;
 
-/**
- * <p>Please use builder to instantiate</p>
- *
- * <p>Card Model, documented at {@link Card}</p>
- * <p>
- * {@inheritDoc}
- *
- *
- */
+
 @Data
 @Document(collection = "cards")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class CardPublicationData implements Card {
+@Validated
+public class Card  {
 
     @Builder.Default
     private String uid = UUID.randomUUID().toString();
@@ -141,12 +135,6 @@ public class CardPublicationData implements Card {
     @JsonIgnore
     private List<String> usersReads;
 
-    @Transient
-    private Boolean hasBeenAcknowledged;
-
-    @Transient
-    private Boolean hasBeenRead;
-
     @Indexed
     private String processStateKey;
 
@@ -159,11 +147,13 @@ public class CardPublicationData implements Card {
     private String wktGeometry;
     private String wktProjection;
 
+    @Min(0)
     private Integer  secondsBeforeTimeSpanForReminder;
 
     private Boolean toNotify;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("rRule")  
     private RRule rRule;
 
     @Indexed
@@ -177,53 +167,6 @@ public class CardPublicationData implements Card {
         this.uid = UUID.randomUUID().toString();
         this.processStateKey = process + "." + state;
         this.entitiesAcks = Collections.emptyList();
-    }
-
-    public LightCardPublicationData toLightCard() {
-        LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
-                .id(this.getId())
-                .uid(this.getUid())
-                .parentCardId(this.getParentCardId())
-                .initialParentCardUid(this.getInitialParentCardUid())
-                .keepChildCards(this.getKeepChildCards())
-                .publisher(this.getPublisher())
-                .processVersion(this.getProcessVersion())
-                .process(this.getProcess())
-                .processInstanceId(this.getProcessInstanceId())
-                .state(this.getState())
-                .lttd(this.getLttd())
-                .startDate(this.getStartDate())
-                .endDate(this.getEndDate())
-                .expirationDate(this.getExpirationDate())
-                .publishDate(this.getPublishDate())
-                .severity(this.getSeverity())
-                .tags(this.getTags())
-                .entitiesAllowedToRespond(this.getEntitiesAllowedToRespond())
-                .entitiesRequiredToRespond(this.getEntitiesRequiredToRespond())
-                .title(((I18nPublicationData) this.getTitle()).copy())
-                .summary(((I18nPublicationData) this.getSummary()).copy())
-                .titleTranslated(this.getTitleTranslated())
-                .summaryTranslated(this.getSummaryTranslated())
-                .publisherType(this.getPublisherType())
-                .representative(this.getRepresentative())
-                .representativeType(this.getRepresentativeType())
-                .wktGeometry(this.wktGeometry)
-                .wktProjection(this.wktProjection)
-                .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
-                .userRecipients(this.getUserRecipients())
-                .groupRecipients(this.getGroupRecipients())
-                .entityRecipients(this.getEntityRecipients())
-                .entityRecipientsForInformation(this.getEntityRecipientsForInformation())
-                .actions(this.getActions());
-
-
-        if (this.getTimeSpans() != null)
-            result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
-
-        if (this.getRRule() != null)
-            result.rRule(this.getRRule());
-
-        return result.build();
     }
 
 

@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package org.opfab.cards.publication.repositories;
 
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.ArchivedCard;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.users.model.User;
 
 import java.time.Instant;
@@ -20,21 +20,21 @@ import java.util.Optional;
 
 public interface CardRepository {
 
-    public Optional<CardPublicationData> findByUid(String uid);
+    public Optional<Card> findByUid(String uid);
 
-    public Optional<ArchivedCardPublicationData> findArchivedCardByUid(String uid);
+    public Optional<ArchivedCard> findArchivedCardByUid(String uid);
 
-    public void saveCard(CardPublicationData card);
+    public void saveCard(Card card);
 
-    public void saveCardToArchive(ArchivedCardPublicationData card);
+    public void saveCardToArchive(ArchivedCard card);
 
-    public void deleteCard(CardPublicationData cardToDelete);
+    public void deleteCard(Card cardToDelete);
 
-    public void updateArchivedCard(ArchivedCardPublicationData card);
+    public void setArchivedCardAsDeleted(String process, String processInstanceId,Instant deletionDate);
 
-    public CardPublicationData findCardById(String id);
+    public Card findCardById(String id);
 
-    public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card);
+    public Optional<List<Card>> findChildCard(Card card);
 
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks);
 
@@ -44,9 +44,9 @@ public interface CardRepository {
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid);
 
-    public List<CardPublicationData>  deleteCardsByEndDateBefore(Instant endDateBefore);
+    public List<Card>  deleteCardsByEndDateBefore(Instant endDateBefore);
 
-    public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate);
+    public List<Card> findCardsByExpirationDate(Instant expirationDate);
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid);
 

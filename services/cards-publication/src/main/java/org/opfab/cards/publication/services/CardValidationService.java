@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,8 +53,7 @@ public class CardValidationService {
      * @throws ConstraintViolationException if there is an error during validation
      *                                      based on object annotation configuration
      */
-    void validate(CardPublicationData c) throws ConstraintViolationException {
-
+    void validate(Card c) throws ConstraintViolationException {
         if (!checkIsParentCardIdExisting(c))
             throw new ConstraintViolationException(
                     "The parentCardId " + c.getParentCardId() + " is not the id of any card", null);
@@ -88,6 +87,11 @@ public class CardValidationService {
             throw new ConstraintViolationException(
                     "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled", null);
 
+        if (!checkDurationInMinutesIsNotNegative(c))
+            throw new ConstraintViolationException(
+                    "constraint violation : TimeSpan.Recurrence.durationInMinutes: must be greater than or equal to 0", null);
+
+
         if (!checkIsAllDaysOfWeekValid(c))
             throw new ConstraintViolationException(
                     "constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7",
@@ -96,6 +100,10 @@ public class CardValidationService {
         if (!checkIsAllMonthsValid(c))
             throw new ConstraintViolationException(
                     "constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11", null);
+
+        if (!checkRRuleDurationInMinutesIsNotNegative(c))
+            throw new ConstraintViolationException(
+                    "constraint violation : RRule.durationInMinutes: must be greater than or equal to 0", null);
 
         // constraint check : process and state must not contain "." (because we use it
         // as a separator)
@@ -119,19 +127,19 @@ public class CardValidationService {
         return !((Optional.ofNullable(cardId).isPresent()) && (cardRepository.findCardById(cardId) == null));
     }
 
-    boolean checkIsParentCardIdExisting(CardPublicationData c) {
+    boolean checkIsParentCardIdExisting(Card c) {
         return checkIsCardIdExisting(c.getParentCardId());
     }
 
     // The check of existence of uid is done in archivedCards collection
-    boolean checkIsInitialParentCardUidExisting(CardPublicationData c) {
+    boolean checkIsInitialParentCardUidExisting(Card c) {
         String initialParentCardUid = c.getInitialParentCardUid();
 
         return !((Optional.ofNullable(initialParentCardUid).isPresent()) &&
                 (!cardRepository.findArchivedCardByUid(initialParentCardUid).isPresent()));
     }
 
-    boolean checkForbiddenChars(CardPublicationData card) {
+    boolean checkForbiddenChars(Card card) {
         for (char ch : FORBIDDEN_CHARS)
         {
             if (card.getProcess().contains(Character.toString(ch)) || card.getProcessInstanceId().contains(Character.toString(ch)))
@@ -140,7 +148,7 @@ public class CardValidationService {
         return true;
     }
 
-    boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
+    boolean checkIsDotCharacterNotInProcessAndState(Card c) {
         return !((c.getProcess().contains(Character.toString('.'))) ||
                 (c.getState() != null && c.getState().contains(Character.toString('.'))));
     }
@@ -163,7 +171,7 @@ public class CardValidationService {
         return false;
     }
 
-    public void checkProcessStateExistsInBundles(CardPublicationData card) {
+    public void checkProcessStateExistsInBundles(Card card) {
         if (!doesProcessStateExistInBundles(card.getProcess(), card.getProcessVersion(), card.getState())) {
             throw new ApiErrorException(
                     ApiError.builder()
@@ -174,26 +182,26 @@ public class CardValidationService {
         }
     }
 
-    boolean checkIsEndDateAfterStartDate(CardPublicationData c) {
+    boolean checkIsEndDateAfterStartDate(Card c) {
         Instant endDateInstant = c.getEndDate();
         Instant startDateInstant = c.getStartDate();
         return !((endDateInstant != null) && (startDateInstant != null)
                 && (endDateInstant.compareTo(startDateInstant) < 0));
     }
 
-    boolean checkIsExpirationDateAfterStartDate(CardPublicationData c) {
+    boolean checkIsExpirationDateAfterStartDate(Card c) {
         Instant expirationDateInstant = c.getExpirationDate();
         Instant startDateInstant = c.getStartDate();
         return !((expirationDateInstant != null) && (startDateInstant != null)
                 && (expirationDateInstant.compareTo(startDateInstant) < 0));
     }
 
-    boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {
+    boolean checkIsAllTimeSpanEndDateAfterStartDate(Card c) {
         if (c.getTimeSpans() != null) {
             for (int i = 0; i < c.getTimeSpans().size(); i++) {
                 if (c.getTimeSpans().get(i) != null) {
-                    Instant endInstant = c.getTimeSpans().get(i).getEnd();
-                    Instant startInstant = c.getTimeSpans().get(i).getStart();
+                    Instant endInstant = c.getTimeSpans().get(i).end();
+                    Instant startInstant = c.getTimeSpans().get(i).start();
                     if ((endInstant != null) && (endInstant.compareTo(startInstant) < 0))
                         return false;
                 }
@@ -202,14 +210,14 @@ public class CardValidationService {
         return true;
     }
 
-    boolean checkIsAllHoursAndMinutesFilled(CardPublicationData c) {
+    boolean checkIsAllHoursAndMinutesFilled(Card c) {
         if (c.getTimeSpans() != null) {
             for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
 
-                if ((currentTimeSpan != null) && (currentTimeSpan.getRecurrence() != null)) {
-                    HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.getRecurrence().getHoursAndMinutes();
-                    if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.getHours() == null)
-                            || (currentHoursAndMinutes.getMinutes() == null))
+                if ((currentTimeSpan != null) && (currentTimeSpan.recurrence() != null)) {
+                    HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.recurrence().hoursAndMinutes();
+                    if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.hours() == null)
+                            || (currentHoursAndMinutes.minutes() == null))
                         return false;
                 }
             }
@@ -217,16 +225,41 @@ public class CardValidationService {
         return true;
     }
 
-    boolean checkIsAllDaysOfWeekValid(CardPublicationData c) {
+
+    boolean checkDurationInMinutesIsNotNegative(Card c) {
+        if (c.getTimeSpans() != null) {
+            for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+                if ((currentTimeSpan != null) && (currentTimeSpan.recurrence() != null)) {
+                    Integer durationInMinutes = currentTimeSpan.recurrence().durationInMinutes();
+                    if (durationInMinutes != null && durationInMinutes<0)
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkRRuleDurationInMinutesIsNotNegative(Card c) {
+        if (c.getRRule() != null) {
+            Integer durationInMinutes = c.getRRule().durationInMinutes();
+            if (durationInMinutes != null && durationInMinutes<0)
+                return false;
+        }
+        return true;
+    }
+
+    boolean checkIsAllDaysOfWeekValid(Card c) {
+      
         if (c.getTimeSpans() == null)
             return true;
 
         for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
 
-            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+            if ((currentTimeSpan == null) || (currentTimeSpan.recurrence() == null))
                 return true;
 
-            List<Integer> currentDaysOfWeek = currentTimeSpan.getRecurrence().getDaysOfWeek();
+            List<Integer> currentDaysOfWeek = currentTimeSpan.recurrence().daysOfWeek();
 
             if (currentDaysOfWeek != null) {
                 for (Integer dayOfWeek : currentDaysOfWeek) {
@@ -238,16 +271,16 @@ public class CardValidationService {
         return true;
     }
 
-    boolean checkIsAllMonthsValid(CardPublicationData c) {
+    boolean checkIsAllMonthsValid(Card c) {
         if (c.getTimeSpans() == null)
             return true;
 
         for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
 
-            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+            if ((currentTimeSpan == null) || (currentTimeSpan.recurrence() == null))
                 return true;
 
-            List<Integer> currentMonths = currentTimeSpan.getRecurrence().getMonths();
+            List<Integer> currentMonths = currentTimeSpan.recurrence().months();
 
             if (currentMonths != null) {
                 for (Integer month : currentMonths) {

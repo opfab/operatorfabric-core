@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.repositories.I18NRepository;
 import org.opfab.springtools.error.model.ApiError;
@@ -38,33 +38,36 @@ public class CardTranslationService {
         this.i18NRepository = i18NRepository;
 
     }
-    
-    public void translate(CardPublicationData card) throws ApiErrorException {
+
+    public void translate(Card card) throws ApiErrorException {
 
         try {
             JsonNode i18n = i18NRepository.getI18n(card.getProcess(), card.getProcessVersion());
-            if (i18n==null) {
+            if (i18n == null) {
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.BAD_REQUEST)
-                        .message(String.format(NO_I18N_FILE, card.getProcess(), card.getProcessVersion(), card.getProcessInstanceId()))
+                        .message(String.format(NO_I18N_FILE, card.getProcess(), card.getProcessVersion(),
+                                card.getProcessInstanceId()))
                         .build());
             }
             I18nTranslation translation = new I18nTranslation(i18n);
 
             if (!authorizeToSendCardWithInvalidProcessState) {
-                checkI18nExists(translation, card.getTitle().getKey(), card.getProcess(), card.getProcessVersion(), card.getProcessInstanceId());
-                checkI18nExists(translation, card.getSummary().getKey(), card.getProcess(), card.getProcessVersion(), card.getProcessInstanceId());
+                checkI18nExists(translation, card.getTitle().key(), card.getProcess(), card.getProcessVersion(),
+                        card.getProcessInstanceId());
+                checkI18nExists(translation, card.getSummary().key(), card.getProcess(), card.getProcessVersion(),
+                        card.getProcessInstanceId());
             }
 
-            card.setTitleTranslated(translation.translate(card.getTitle().getKey(), card.getTitle().getParameters()));
-            card.setSummaryTranslated(translation.translate(card.getSummary().getKey(), card.getSummary().getParameters()));
+            card.setTitleTranslated(translation.translate(card.getTitle().key(), card.getTitle().parameters()));
+            card.setSummaryTranslated(translation.translate(card.getSummary().key(), card.getSummary().parameters()));
         } catch (InterruptedException ex) {
             log.error("Error getting card translation (Interrupted Exception)", ex);
             Thread.currentThread().interrupt();
         } catch (IOException ex) {
             log.error("Error getting card translation", ex);
-            card.setTitleTranslated(card.getTitle().getKey());
-            card.setSummaryTranslated(card.getSummary().getKey());
+            card.setTitleTranslated(card.getTitle().key());
+            card.setSummaryTranslated(card.getSummary().key());
         }
     }
 
@@ -80,13 +83,13 @@ public class CardTranslationService {
         }
     }
 
-    public String translateCardField(String process, String processVersion, I18n i18nValue){
+    public String translateCardField(String process, String processVersion, I18n i18nValue) {
 
-        String translatedField = i18nValue.getKey();
+        String translatedField = i18nValue.key();
         try {
             JsonNode i18n = i18NRepository.getI18n(process, processVersion);
             I18nTranslation translation = new I18nTranslation(i18n);
-            translatedField = translation.translate(i18nValue.getKey(), i18nValue.getParameters());
+            translatedField = translation.translate(i18nValue.key(), i18nValue.parameters());
         } catch (InterruptedException ex) {
             log.error("Error getting field translation (Interrupted Exception)", ex);
             Thread.currentThread().interrupt();
@@ -95,5 +98,5 @@ public class CardTranslationService {
         }
         return translatedField;
     }
-    
+
 }

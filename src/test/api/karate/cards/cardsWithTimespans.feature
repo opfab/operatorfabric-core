@@ -377,7 +377,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
       | cardToTestBadRequest1 | "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled"                     |
       | cardToTestBadRequest2 | "constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7"  |
       | cardToTestBadRequest3 | "constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11"     |
-      | cardToTestBadRequest4 | "timeSpans[0].recurrence.durationInMinutes: must be greater than or equal to 0" |
+      | cardToTestBadRequest4 | "constraint violation : TimeSpan.Recurrence.durationInMinutes: must be greater than or equal to 0" |
       | cardToTestBadRequest5 | "secondsBeforeTimeSpanForReminder: must be greater than or equal to 0" |
 
 

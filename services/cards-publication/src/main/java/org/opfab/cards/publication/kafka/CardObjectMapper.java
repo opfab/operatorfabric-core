@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,8 +19,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.opfab.avro.ResponseCard;
-import org.opfab.cards.publication.configuration.json.CardsModule;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.springtools.json.InstantModule;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,6 @@ public class CardObjectMapper {
 
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new CardsModule());
         objectMapper.registerModule(new InstantModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
@@ -48,8 +46,8 @@ public class CardObjectMapper {
     public ResponseCard readResponseCardValue(String writeValueAsString) throws JsonProcessingException {
         return objectMapper.readValue(writeValueAsString, ResponseCard.class);
     }
-    public CardPublicationData readCardPublicationDataValue(String writeValueAsString) throws JsonProcessingException {
-        return objectMapper.readValue(writeValueAsString, CardPublicationData.class);
+    public Card readCardPublicationDataValue(String writeValueAsString) throws JsonProcessingException {
+        return objectMapper.readValue(writeValueAsString, Card.class);
     }
 
     public Map<String,Object> readJSONValue(String writeValueAsString) throws JsonProcessingException {

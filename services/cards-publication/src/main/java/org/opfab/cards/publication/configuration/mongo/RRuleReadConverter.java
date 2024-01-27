@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,9 @@
 package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.opfab.cards.model.DayEnum;
-import org.opfab.cards.model.FreqEnum;
+import org.opfab.cards.publication.model.DayEnum;
+import org.opfab.cards.publication.model.FreqEnum;
 import org.opfab.cards.publication.model.RRule;
-import org.opfab.cards.publication.model.RRulePublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
 
         String tzid = source.getString("tzid");
 
-        RRulePublicationData.RRulePublicationDataBuilder builder = RRulePublicationData.builder()
+        RRule.RRuleBuilder builder = RRule.builder()
                 .freq(freq)
                 .count(count)
                 .interval(interval)

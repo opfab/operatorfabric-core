@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class CardCommandFactory {
     private final CardObjectMapper objectMapper;
 
-    public CardCommand createResponseCard(CardPublicationData cardPublicationData) {
+    public CardCommand createResponseCard(Card cardPublicationData) {
         CardCommand cardCommand = new CardCommand();
         final Object cardData = cardPublicationData.getData();
         ResponseCard kafkaCard;

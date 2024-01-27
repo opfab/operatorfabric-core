@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.*;
@@ -52,7 +52,7 @@ public class ExternalAppService {
         this.responseCardProducer = responseCardProducer;
     }
 
-    public void sendCardToExternalApplication(CardPublicationData card, Optional<Jwt> jwt) {
+    public void sendCardToExternalApplication(Card card, Optional<Jwt> jwt) {
 
         Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
         if (externalRecipientsFromCard.isPresent() && !externalRecipientsFromCard.get().isEmpty()) {
@@ -72,7 +72,7 @@ public class ExternalAppService {
         }
     }
 
-    public void notifyExternalApplicationThatCardIsDeleted(CardPublicationData card, Optional<Jwt> jwt) {
+    public void notifyExternalApplicationThatCardIsDeleted(Card card, Optional<Jwt> jwt) {
 
         Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
         if (externalRecipientsFromCard.isPresent() && !externalRecipientsFromCard.get().isEmpty()) {
@@ -101,14 +101,14 @@ public class ExternalAppService {
         .findFirst();
     }
 
-    private void callExternalApplication(CardPublicationData card, String externalRecipientUrl, Optional<Jwt> jwt) {
+    private void callExternalApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         if (externalRecipientUrl.startsWith("kafka:")) {
             callExternalKafkaApplication(card);
         } else{
             callExternalHttpApplication(card, externalRecipientUrl, jwt);
         }
     }
-    private void notifyExternalApplication(CardPublicationData card, String externalRecipientUrl, Optional<Jwt> jwt) {
+    private void notifyExternalApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         if (externalRecipientUrl.startsWith("kafka:")) {
             notifyExternalKafkaApplication(card);
         } else{
@@ -117,21 +117,21 @@ public class ExternalAppService {
     }
 
 
-    private void callExternalKafkaApplication(CardPublicationData card) {
+    private void callExternalKafkaApplication(Card card) {
         responseCardProducer.send(card);
     }
 
-    private void notifyExternalKafkaApplication(CardPublicationData card) {
+    private void notifyExternalKafkaApplication(Card card) {
         log.warn("Kafka card suppression notification not implemented");
     }
 
-    private void callExternalHttpApplication(CardPublicationData card, String externalRecipientUrl, Optional<Jwt> jwt) {
+    private void callExternalHttpApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         try {
             log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
 
             HttpHeaders headers = createRequestHeader(jwt);
 
-            HttpEntity<CardPublicationData> requestBody = new HttpEntity<>(card, headers);
+            HttpEntity<Card> requestBody = new HttpEntity<>(card, headers);
 
             restTemplate.postForObject(externalRecipientUrl, requestBody, Void.class);
 
@@ -144,7 +144,7 @@ public class ExternalAppService {
 
     }
 
-    private void notifyExternalHttpApplication(CardPublicationData card, String externalRecipientUrl, Optional<Jwt> jwt) {
+    private void notifyExternalHttpApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         try {
             HttpHeaders headers = createRequestHeader(jwt);
             HttpEntity<String> requestBody = new HttpEntity<>("", headers);

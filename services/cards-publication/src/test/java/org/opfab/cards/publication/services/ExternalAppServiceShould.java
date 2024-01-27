@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,12 +14,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.model.TimeSpanPublicationData;
+import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.I18n;
+import org.opfab.cards.publication.model.SeverityEnum;
+import org.opfab.cards.publication.model.TimeSpan;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -72,7 +72,7 @@ class ExternalAppServiceShould {
 
     @Test
     void sendCardToExternalApplicationKafka() {
-        CardPublicationData card = createCardPublicationData(externalRecipientKafka);
+        Card card = createCardPublicationData(externalRecipientKafka);
         ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
         externalAppService.sendCardToExternalApplication(card, Optional.empty());
         verify (responseCardProducer).send(card);
@@ -80,20 +80,19 @@ class ExternalAppServiceShould {
 
     @Test
     void sendCardToExternalApplicationHttp() {
-        CardPublicationData card = createCardPublicationData(externalRecipientHttp);
+        Card card = createCardPublicationData(externalRecipientHttp);
         ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
         externalAppService.sendCardToExternalApplication(card, Optional.empty());
         verify (restTemplate).postForObject(anyString(), any(), any());
     }
 
-    private CardPublicationData createCardPublicationData( String externalRecipients ) {
-        return  CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+    private Card createCardPublicationData( String externalRecipients ) {
+        return  Card.builder().publisher("PUBLISHER_1").processVersion("O")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
+                .title(new I18n("title",null))
+                .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
                 .process("process1")
                 .state("state1")
                 .externalRecipients(Arrays.asList(externalRecipients))

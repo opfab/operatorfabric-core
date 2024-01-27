@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 package org.opfab.cards.publication.services;
 
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class CardPermissionControlService {
 
-    boolean isCardPublisherAllowedForUser(CardPublicationData card, String login) {
+    boolean isCardPublisherAllowedForUser(Card card, String login) {
         if (card.getRepresentative() != null) {
             if (card.getRepresentativeType().equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL))
                 return card.getRepresentative().equalsIgnoreCase(login);
@@ -33,11 +33,11 @@ public class CardPermissionControlService {
         return true;
     }
 
-    boolean isUserAllowedToEditCard(CurrentUserWithPerimeters user, CardPublicationData card, CardPublicationData oldCard) {
+    boolean isUserAllowedToEditCard(CurrentUserWithPerimeters user, Card card, Card oldCard) {
         return oldCard.getPublisher().equals(card.getPublisher()) || isUserInEntityAllowedToEditCard(oldCard, user);
     }
 
-    private boolean isUserInEntityAllowedToEditCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+    private boolean isUserInEntityAllowedToEditCard(Card card, CurrentUserWithPerimeters user) {
         if (user.getUserData().getEntities().contains(card.getPublisher()))
             return true;
         List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
@@ -48,7 +48,7 @@ public class CardPermissionControlService {
         return false;
     }
 
-    boolean isCardPublisherInUserEntities(CardPublicationData card, CurrentUserWithPerimeters user) {
+    boolean isCardPublisherInUserEntities(Card card, CurrentUserWithPerimeters user) {
 
 
         Optional<List<String>> entitiesUser= Optional.ofNullable(user.getUserData().getEntities());
@@ -61,12 +61,12 @@ public class CardPermissionControlService {
     2nd check : card.publisherType == ENTITY
     3rd check : the card has been sent by an entity of the user connected
     4th check : the user has the Write access to the process/state of the card */
-    boolean isUserAllowedToDeleteThisCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+    boolean isUserAllowedToDeleteThisCard(Card card, CurrentUserWithPerimeters user) {
         return !isCurrentUserReadOnly(user) && card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
             && user.getUserData().getEntities().contains(card.getPublisher()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
-    boolean isUserAuthorizedToSendCard(CardPublicationData card, CurrentUserWithPerimeters user) {
+    boolean isUserAuthorizedToSendCard(Card card, CurrentUserWithPerimeters user) {
         return !isCurrentUserReadOnly(user) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
@@ -80,7 +80,7 @@ public class CardPermissionControlService {
         return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
-    private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, CardPublicationData card) {
+    private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, Card card) {
         Optional<ComputedPerimeter> cardPerimeter = perimeters.stream().
                 filter(x->x.getState().equalsIgnoreCase(card.getState()) && x.getProcess().equalsIgnoreCase(card.getProcess())).findFirst();
         return cardPerimeter.isPresent() && RightsEnum.RECEIVEANDWRITE.equals(cardPerimeter.get().getRights());
