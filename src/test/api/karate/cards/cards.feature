@@ -114,6 +114,7 @@ Feature: Cards
     And match response.card.uid == cardUid
     And match response.card.titleTranslated == 'card Title'
     And match response.card.summaryTranslated == 'card summary'
+    And match response.card.severity == 'INFORMATION'
 
 
     #get card without  authentication

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020-2021 Alliander (http://www.alliander.com)
- * Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.*;
-import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.configuration.kafka.ConsumerFactoryAutoConfiguration;
@@ -25,9 +24,8 @@ import org.opfab.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
 import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.model.TimeSpanPublicationData;
+import org.opfab.cards.publication.model.SeverityEnum;
+import org.opfab.cards.publication.model.TimeSpan;
 import org.opfab.cards.publication.services.ExternalAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,10 +62,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {UnitTestApplication.class})
-@ContextConfiguration(classes = {CardCommandConsumerListener.class, ConsumerFactoryAutoConfiguration.class,
-        KafkaListenerContainerFactoryConfiguration.class, ProducerFactoryAutoConfiguration.class, CreateCardCommandHandler.class})
-@ActiveProfiles({"test", "kafka"})
+@SpringBootTest(classes = { UnitTestApplication.class })
+@ContextConfiguration(classes = { CardCommandConsumerListener.class, ConsumerFactoryAutoConfiguration.class,
+        KafkaListenerContainerFactoryConfiguration.class, ProducerFactoryAutoConfiguration.class,
+        CreateCardCommandHandler.class })
+@ActiveProfiles({ "test", "kafka" })
 @Profile("kafka")
 @DirtiesContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -94,19 +93,18 @@ class SendKafkaCardShould {
     private static volatile boolean receiveCardCommandResultIsOK;
     private KafkaMessageListenerContainer<String, String> container;
 
-
     @BeforeEach
     public void cleanBefore() {
         cardRepositoryMock.clear();
     }
-
 
     @AfterEach
     public void cleanAfter() {
         cardRepositoryMock.clear();
     }
 
-    // Configure a dummy topic and listener so we know Kafka is ready when this method finishes
+    // Configure a dummy topic and listener so we know Kafka is ready when this
+    // method finishes
     @BeforeAll
     void setUp() {
         embeddedKafkaBroker.afterPropertiesSet();
@@ -116,11 +114,14 @@ class SendKafkaCardShould {
         processRepositoryMock.setProcessAsString(process, "myVersion");
         services.getCardValidationService().setProcessRepository(processRepositoryMock);
 
-        Map<String, Object> configs = new HashMap<>(KafkaTestUtils.consumerProps("consumerGroup", "true", embeddedKafkaBroker));
-        DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new StringDeserializer());
+        Map<String, Object> configs = new HashMap<>(
+                KafkaTestUtils.consumerProps("consumerGroup", "true", embeddedKafkaBroker));
+        DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(configs,
+                new StringDeserializer(), new StringDeserializer());
         ContainerProperties containerProperties = new ContainerProperties(TOPIC);
         container = new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
-        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+        BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
         container.setupMessageListener((MessageListener<String, String>) records::add);
         container.start();
         ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic());
@@ -160,17 +161,17 @@ class SendKafkaCardShould {
 
         kafkaTemplate.send(commandTopic, cardCommand);
 
-        CardPublicationData card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
+        org.opfab.cards.publication.model.Card card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         for (int retries = 20; retries > 0 && card == null; retries--) {
-            Thread.sleep(250);  // Give the service some time to process the card
+            Thread.sleep(250); // Give the service some time to process the card
             card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         }
 
         assertThat(card, is(notNullValue()));
     }
 
-    @KafkaListener(topics = "${operatorfabric.cards-publication.kafka.topics.response-card.topicname}",
-            properties = {"auto.offset.reset = earliest"})
+    @KafkaListener(topics = "${operatorfabric.cards-publication.kafka.topics.response-card.topicname}", properties = {
+            "auto.offset.reset = earliest" })
     public void consumer(ConsumerRecord<String, CardCommand> consumerRecord) {
         CardCommand cardCommand = consumerRecord.value();
         ResponseCard card = cardCommand.getResponseCard();
@@ -188,17 +189,19 @@ class SendKafkaCardShould {
         latch = new CountDownLatch(1);
 
         // Send response card via Kafka
-        CardPublicationData cardPublicationData = CardPublicationData.builder()
+        org.opfab.cards.publication.model.Card cardPublicationData = org.opfab.cards.publication.model.Card.builder()
                 .id("12345")
                 .uid("uid1234")
                 .parentCardId("MyParent123")
                 .publisher("PUBLISHER_1").processVersion("O")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
+                .title(new org.opfab.cards.publication.model.I18n("title",null))
+                .summary(new org.opfab.cards.publication.model.I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123L)).build())
+                .timeSpan(new TimeSpan(
+                        Instant.ofEpochMilli(123L),
+                        null,
+                        null))
                 .process("process1")
                 .state("state1")
                 .externalRecipient("camunda1")

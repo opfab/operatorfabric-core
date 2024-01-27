@@ -1,6 +1,4 @@
 dependencies {
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
-    swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
     implementation misc.commonsLang
@@ -50,5 +48,3 @@ bootJar {
     }
 }
 
-tasks.compileJava.dependsOn generateSwaggerCode
-tasks.compileTestJava.dependsOn generateSwaggerCode

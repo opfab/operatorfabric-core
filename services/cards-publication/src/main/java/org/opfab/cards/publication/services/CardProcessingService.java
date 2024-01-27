@@ -11,7 +11,6 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.ratelimiter.CardSendingLimiter;
 import org.opfab.cards.publication.repositories.CardRepository;
@@ -20,7 +19,6 @@ import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
-
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -76,11 +74,11 @@ public class CardProcessingService {
 
     }
 
-    public void processCard(CardPublicationData card) {
+    public void processCard(Card card) {
         processCard(card, Optional.empty(), Optional.empty());
     }
 
-    public void processCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
+    public void processCard(Card card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
 
         if (card.getPublisherType() == null)
             card.setPublisherType(PublisherTypeEnum.EXTERNAL);
@@ -112,7 +110,7 @@ public class CardProcessingService {
         processOneCard(card, Optional.empty(), jwt);
     }
 
-    public void processUserCard(CardPublicationData card, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
+    public void processUserCard(Card card, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
         card.setPublisherType(PublisherTypeEnum.ENTITY);
         this.cardValidationService.validate(card);
         if (!authorizeToSendCardWithInvalidProcessState)
@@ -120,10 +118,10 @@ public class CardProcessingService {
         processOneCard(card, Optional.of(user), jwt);
     }
 
-    private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
+    private void processOneCard(Card card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
-        CardPublicationData oldCard = getExistingCard(card.getId());
+        Card oldCard = getExistingCard(card.getId());
         if (user.isPresent()) {
             if (oldCard != null && !cardPermissionControlService.isUserAllowedToEditCard(user.get(), card, oldCard))
                 throw new ApiErrorException(ApiError.builder()
@@ -155,17 +153,22 @@ public class CardProcessingService {
                 cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.UPDATE);
         }
 
-        cardRepository.saveCardToArchive(new ArchivedCardPublicationData(card));
+        // IMPORTANT: The deletionDate of the old card must be set to the publishDate of the new card.
+        // This is a crucial step when consulting archived cards via the card consultation service.
+        // If a child card is set as deleted before its parent card, the user will not see the child card when
+        // when the old parent card is displayed.
+        cardRepository.setArchivedCardAsDeleted(card.getProcess(), card.getProcessInstanceId(),card.getPublishDate());
+        cardRepository.saveCardToArchive(new ArchivedCard(card));
 
         log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),
                 card.getProcessInstanceId(), card.getState());
     }
 
-    private Void deleteChildCardsProcess(CardPublicationData card, Optional<Jwt> jwt) {
+    private Void deleteChildCardsProcess(Card card, Optional<Jwt> jwt) {
 
         if (!shouldKeepChildCards(card)) {
             String idCard = card.getProcess() + "." + card.getProcessInstanceId();
-            Optional<List<CardPublicationData>> childCard = cardRepository
+            Optional<List<Card>> childCard = cardRepository
                     .findChildCard(cardRepository.findCardById(idCard));
             if (childCard.isPresent()) {
                 deleteCards(childCard.get(), card.getPublishDate(), jwt);
@@ -174,40 +177,40 @@ public class CardProcessingService {
         return null;
     }
 
-    private boolean shouldKeepChildCards(CardPublicationData card) {
+    private boolean shouldKeepChildCards(Card card) {
         if (Boolean.TRUE.equals(card.getKeepChildCards()))
             log.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
         return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0);
     }
 
-    private void deleteCards(List<CardPublicationData> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {
+    private void deleteCards(List<Card> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {
         cardPublicationData.forEach(x -> deleteCard(x.getId(), deletionDate, jwt));
     }
 
-    private CardPublicationData getExistingCard(String cardId) {
+    private Card getExistingCard(String cardId) {
         return cardRepository.findCardById(cardId);
     }
 
     public void deleteCard(String id, Optional<Jwt> jwt) {
-        CardPublicationData cardToDelete = cardRepository.findCardById(id);
+        Card cardToDelete = cardRepository.findCardById(id);
         deleteCard(cardToDelete, jwt);
     }
 
     public void deleteCard(String id, Instant deletionDate, Optional<Jwt> jwt) {
-        CardPublicationData cardToDelete = cardRepository.findCardById(id);
+        Card cardToDelete = cardRepository.findCardById(id);
         deleteCard(cardToDelete, deletionDate, jwt);
     }
 
     public void deleteCards(Instant endDateBefore) {
-        List<CardPublicationData> deletedCards = cardRepository.deleteCardsByEndDateBefore(endDateBefore);
+        List<Card> deletedCards = cardRepository.deleteCardsByEndDateBefore(endDateBefore);
         deletedCards.stream().forEach(
                 deletedCard -> cardNotificationService.notifyOneCard(deletedCard, CardOperationTypeEnum.DELETE));
     }
 
-    public Optional<CardPublicationData> deleteCard(String id, Optional<CurrentUserWithPerimeters> user,
+    public Optional<Card> deleteCard(String id, Optional<CurrentUserWithPerimeters> user,
             Optional<Jwt> jwt) {
 
-        CardPublicationData cardToDelete = cardRepository.findCardById(id);
+        Card cardToDelete = cardRepository.findCardById(id);
         if (user.isPresent()) { // if user is not present it means we have checkAuthenticationForCardSending =
                                 // false
             boolean isAdmin = cardPermissionControlService.hasCurrentUserAnyPermission(user.get(),
@@ -226,15 +229,15 @@ public class CardProcessingService {
         return deleteCard(cardToDelete, jwt);
     }
 
-    public Optional<CardPublicationData> prepareAndDeleteCard(CardPublicationData card) {
+    public Optional<Card> prepareAndDeleteCard(Card card) {
         if (card.getId() == null || card.getId().isEmpty()) {
             card.prepare(card.getPublishDate());
         }
         return deleteCard(card, Optional.empty());
     }
 
-    public Optional<CardPublicationData> deleteUserCard(String id, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
-        CardPublicationData cardToDelete = cardRepository.findCardById(id);
+    public Optional<Card> deleteUserCard(String id, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
+        Card cardToDelete = cardRepository.findCardById(id);
         if (cardToDelete == null)
             return Optional.empty();
 
@@ -253,23 +256,19 @@ public class CardProcessingService {
                 .forEach(cardToDelete -> deleteCard(cardToDelete, expirationDate, Optional.empty()));
     }
 
-    private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Optional<Jwt> jwt) {
+    private Optional<Card> deleteCard(Card cardToDelete, Optional<Jwt> jwt) {
         return deleteCard(cardToDelete, Instant.now(), jwt);
     }
 
-    private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Instant deletionDate,
+    private Optional<Card> deleteCard(Card cardToDelete, Instant deletionDate,
             Optional<Jwt> jwt) {
-        Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
+        Optional<Card> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepository.deleteCard(cardToDelete);
-            cardRepository.findArchivedCardByUid(cardToDelete.getUid()).ifPresent(deleted -> {
-                deleted.setDeletionDate(deletionDate);
-                cardRepository.updateArchivedCard(deleted);
-            });
-
+            cardRepository.setArchivedCardAsDeleted(cardToDelete.getProcess(), cardToDelete.getProcessInstanceId(),deletionDate);
             externalAppService.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
-            Optional<List<CardPublicationData>> childCard = cardRepository.findChildCard(cardToDelete);
+            Optional<List<Card>> childCard = cardRepository.findChildCard(cardToDelete);
             if (childCard.isPresent()) {
                 childCard.get().forEach(x -> deleteCard(x.getId(), deletionDate, jwt));
             }
@@ -277,7 +276,7 @@ public class CardProcessingService {
         return deletedCard;
     }
 
-    private String buildPublisherErrorMessage(CardPublicationData card, String login, boolean delete) {
+    private String buildPublisherErrorMessage(Card card, String login, boolean delete) {
         String errorMessagePrefix = "Card publisher is set to " + card.getPublisher() + " and account login is "
                 + login;
         if (card.getRepresentative() != null) {

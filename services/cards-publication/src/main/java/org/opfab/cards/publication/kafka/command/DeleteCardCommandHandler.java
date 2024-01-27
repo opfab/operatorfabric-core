@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
-import org.opfab.cards.publication.model.CardPublicationData;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -37,7 +36,7 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
         log.debug("Received Kafka DELETE CARD with processInstanceId {}, taskId {} and variables: {}",
                 kafkaCard.getProcessInstanceId(), kafkaCard.getProcess(), kafkaCard.getData());
 
-        CardPublicationData card = buildCardPublicationData(cardCommand);
+        org.opfab.cards.publication.model.Card card = buildCardPublicationData(cardCommand);
         if (card != null) {
             services.getCardProcessingService().prepareAndDeleteCard(card);
         }

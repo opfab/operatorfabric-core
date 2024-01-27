@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -43,7 +43,7 @@ class ResponseCardProducerShould {
 
     private  SendResult<String, CardCommand> sendResult;
     private CompletableFuture<SendResult<String, CardCommand>> responseFuture;
-    private CardPublicationData cardPublicationData;
+    private Card cardPublicationData;
     private CardCommand cardCommand;
 
 
@@ -55,7 +55,7 @@ class ResponseCardProducerShould {
     void setUp() {
         ReflectionTestUtils.setField(cut,"topic", topic);
 
-        cardPublicationData = mock(CardPublicationData.class);
+        cardPublicationData = mock(Card.class);
         cardCommand = mock(CardCommand.class);
         ResponseCard card = mock(ResponseCard.class);
         when(card.getProcess()).thenReturn(key);

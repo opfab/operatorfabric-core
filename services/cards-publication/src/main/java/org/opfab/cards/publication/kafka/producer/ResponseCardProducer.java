@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.Card;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -33,7 +33,7 @@ public class ResponseCardProducer {
     @Value("${operatorfabric.cards-publication.kafka.topics.response-card.topicname:opfab-response}")
     private String topic;
 
-    public void send(CardPublicationData cardPublicationData) {
+    public void send(Card cardPublicationData) {
         log.debug("ResponseCard: {}", cardPublicationData.toString());
 
         CardCommand cardCommand = cardCommandFactory.createResponseCard(cardPublicationData);

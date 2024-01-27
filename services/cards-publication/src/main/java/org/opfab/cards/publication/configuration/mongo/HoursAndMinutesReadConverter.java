@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package org.opfab.cards.publication.configuration.mongo;
 
 import org.bson.Document;
 import org.opfab.cards.publication.model.HoursAndMinutes;
-import org.opfab.cards.publication.model.HoursAndMinutesPublicationData;
 
 public  class  HoursAndMinutesReadConverter {
 
@@ -26,6 +25,6 @@ public  class  HoursAndMinutesReadConverter {
         Integer hours = source.getInteger("hours");
         Integer minutes = source.getInteger("minutes");
 
-        return new HoursAndMinutesPublicationData(hours,minutes);
+        return new HoursAndMinutes(hours,minutes);
     }
 }
