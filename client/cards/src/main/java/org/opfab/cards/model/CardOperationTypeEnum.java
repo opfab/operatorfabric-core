@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,12 +17,14 @@ package org.opfab.cards.model;
  *     <dt>ADD</dt><dd>Operation lists cards object to add</dd>
  *     <dt>UPDATE</dt><dd>Operation lists cards object to update</dd>
  *     <dt>DELETE</dt><dd>Operation lists card ids to delete</dd>
+ *     <dt>ACK</dt><dd>Operation lists card ids to ack</dd>
+ *     <dt>UNACK</dt><dd>Operation lists card ids to unack</dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  */
 public enum CardOperationTypeEnum {
   
-  ADD,UPDATE,DELETE,ACK
+  ADD,UPDATE,DELETE,ACK,UNACK
 }
 

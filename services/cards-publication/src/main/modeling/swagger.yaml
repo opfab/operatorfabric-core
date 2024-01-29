@@ -37,10 +37,14 @@ definitions:
       * ADD - Operation lists cards object to be added
       * UPDATE - Operation lists cards object to be updated
       * DELETE - Operation lists card ids to be deleted
+      * ACK - Operation lists card ids to be acknowledged
+      * UNACK - Operation lists card ids to be unacknowledged
     enum:
       - ADD
       - UPDATE
       - DELETE
+      - ACK
+      - UNACK
     example: ADD
   SeverityEnum:
     type: string
@@ -1107,7 +1111,21 @@ paths:
           description: No action done, the item already exists
         '404':
           description: Try to remove item from unexisting card
-    delete:
+  '/cards/cancelUserAcknowledgement/{uid}':
+    parameters:
+      - in: path
+        name: uid
+        type: string
+        required: true
+        description: "The card uid"
+      - in: body
+        name: entitiesAcks
+        description: List of user entities for which the card will be acknowledged
+        schema:
+          type: array
+          items:
+            type: string
+    post:
       operationId: deleteUserAcknowledgement
       tags:
         - cards

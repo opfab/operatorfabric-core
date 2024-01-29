@@ -34,8 +34,8 @@ export class AcknowledgeService {
         return AcknowledgeService.acknowledgeServer.postUserAcknowledgement(cardUid, entitiesAcks);
     }
 
-    public static  deleteUserAcknowledgement(cardUid: string): Observable<ServerResponse<void>> {
-        return AcknowledgeService.acknowledgeServer.deleteUserAcknowledgement(cardUid);
+    public static  deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
+        return AcknowledgeService.acknowledgeServer.deleteUserAcknowledgement(cardUid, entitiesAcks);
     }
 
     public static isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {

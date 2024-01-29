@@ -302,7 +302,7 @@ public class CardProcessingService {
                     .build());
 
         cardRepository.findByUid(cardUid).ifPresent(selectedCard -> cardNotificationService
-                .pushAckOfCardInEventBus(cardUid, selectedCard.getId(), entitiesAcks));
+                .pushAckOfCardInEventBus(cardUid, selectedCard.getId(), entitiesAcks, CardOperationTypeEnum.ACK));
 
         log.info("Set ack on card with uid {} for user {} and entities {}", cardUid, user.getUserData().getLogin(),
                 entitiesAcks);
@@ -319,9 +319,19 @@ public class CardProcessingService {
         return cardRepository.deleteUserRead(userName, cardUid);
     }
 
-    public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, String userName) {
-        log.info("Delete ack on card with uid {} for user {} ", cardUid, userName);
-        return cardRepository.deleteUserAck(userName, cardUid);
+    public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, CurrentUserWithPerimeters user, List<String> entitiesAcks) {
+        log.info("Delete ack on card with uid {} for user {} and entities {} ", cardUid, user.getUserData().getLogin(), entitiesAcks);
+        
+        if (!user.getUserData().getEntities().containsAll(entitiesAcks))
+            throw new ApiErrorException(ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message("Cancel acknowledgement impossible : User is not member of all the entities given in the request")
+                .build());
+
+        cardRepository.findByUid(cardUid).ifPresent(selectedCard -> cardNotificationService
+                .pushAckOfCardInEventBus(cardUid, selectedCard.getId(), entitiesAcks, CardOperationTypeEnum.UNACK));
+        
+        return cardRepository.deleteUserAck(user.getUserData().getLogin(), cardUid, entitiesAcks);
 
     }
 

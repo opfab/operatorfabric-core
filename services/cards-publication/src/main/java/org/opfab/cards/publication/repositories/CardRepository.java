@@ -40,7 +40,7 @@ public interface CardRepository {
 
     public UserBasedOperationResult addUserRead(String name, String cardUid);
 
-    public UserBasedOperationResult deleteUserAck(String userName, String cardUid);
+    public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks);
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid);
 

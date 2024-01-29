@@ -63,7 +63,7 @@ export class LightCardsStore {
     private nbCardLoadedInHalfSecondInterval = 0;
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
     private loadingInProgress = new Subject();
-    private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
+    private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[], operation: CardOperationType}>();
 
     private unsubscribe$ = new Subject<void>();
 
@@ -186,9 +186,28 @@ export class LightCardsStore {
                             );
                             this.receivedAcksSubject.next({
                                 cardUid: operation.cardUid,
-                                entitiesAcks: operation.entitiesAcks
+                                entitiesAcks: operation.entitiesAcks,
+                                operation: CardOperationType.ACK
                             });
                             break;
+                        case CardOperationType.UNACK:
+                                logger.info(
+                                    'LightCardStore - Receive unack on card uid=' +
+                                        operation.cardUid +
+                                        ', id=' +
+                                        operation.cardId,
+                                    LogOption.LOCAL_AND_REMOTE
+                                );
+                                this.removeEntitiesAcksForLightCard(
+                                    operation.cardId,
+                                    operation.entitiesAcks
+                                );
+                                this.receivedAcksSubject.next({
+                                    cardUid: operation.cardUid,
+                                    entitiesAcks: operation.entitiesAcks,
+                                    operation: CardOperationType.UNACK
+                                });
+                                break;
                         default:
                             logger.info(
                                 `LightCardStore - Unknown operation ` +
@@ -378,7 +397,23 @@ export class LightCardsStore {
         }
     }
 
-    public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[]}> {
+    public removeEntitiesAcksForLightCard(cardId: string, entitiesAcksToRemove: string[]) {
+        const card = this.lightCards.get(cardId);
+
+        if (card?.entitiesAcks && entitiesAcksToRemove) {
+
+            entitiesAcksToRemove.forEach(entityToRemove => {
+                const indexToRemove = card.entitiesAcks.indexOf(entityToRemove);
+                if (indexToRemove >= 0)
+                    card.entitiesAcks.splice(indexToRemove);
+            })
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            this.lightCardsEvents.next(this.lightCards);
+        }
+    }
+    
+
+    public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[], operation: CardOperationType}> {
         return this.receivedAcksSubject.asObservable();
     }
 
