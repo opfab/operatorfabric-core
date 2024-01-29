@@ -173,33 +173,40 @@ Feature: CardsUserAcknowledgement
     When method post
     Then status 404
 
-
-
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+#cancel acknowledgement to the card with operator1_fr with entities for which the user is not a member
+    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
-    When method delete
+    And request entity1entity2Array
+    When method post
+    Then status 403
+
+    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
+    And header Authorization = 'Bearer ' + authToken
+    And request entity1Array
+    When method post
     Then status 200
 
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    # unacknowledgment is onluy possible at the user level and not at the entity level
-    And match response.card.entitiesAcks ==  ["ENTITY1_FR","ENTITY2_FR"]
+    # card is unacknowledged also at the entity level
+    And match response.card.entitiesAcks ==  ["ENTITY2_FR"]
     And match response.card.hasBeenAcknowledged == false
     And match response.card.uid == uid
 
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
-    When method delete
+    And request entity1Array
+    When method post
     Then status 204
 
 
-    #ack unexisting card 
-
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/unexisting_card____uid'
+    #unack unexisting card 
+    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken
-    When method delete
+    And request entity1Array
+    When method post
     Then status 404
     
   Scenario: Delete the test card

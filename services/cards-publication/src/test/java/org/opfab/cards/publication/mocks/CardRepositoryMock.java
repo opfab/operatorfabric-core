@@ -98,7 +98,7 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
+        throw new UnsupportedOperationException("Unimplemented method 'addUserAck'");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
+    public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks) {
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserAck'");
     }
 

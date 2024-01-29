@@ -11,5 +11,5 @@ package org.opfab.cards.publication.model;
 
 public enum CardOperationTypeEnum {
 
-  ADD, UPDATE, DELETE, ACK
+  ADD, UPDATE, DELETE, ACK, UNACK
 }

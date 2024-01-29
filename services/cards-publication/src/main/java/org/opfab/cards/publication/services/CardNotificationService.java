@@ -56,16 +56,17 @@ public class CardNotificationService {
         }
     }
 
-    public void pushAckOfCardInEventBus(String cardUid, String cardId, List<String> entitiesAcks) {
-        CardOperation cardOperation = new CardOperation(CardOperationTypeEnum.ACK,
-                cardId, cardUid, null, entitiesAcks);
+    public void pushAckOfCardInEventBus(String cardUid, String cardId, List<String> entitiesAcks, CardOperationTypeEnum operationType ) {
+        CardOperation cardOperation = new CardOperation(operationType, cardId, cardUid, null, entitiesAcks);
 
         try {
             eventBus.sendEvent("ack", mapper.writeValueAsString(cardOperation));
-            log.debug("Acknowledgement for cardUid={} and cardId={} with entitiesAcks={} sent to event bus", cardUid,
-                    cardId, entitiesAcks);
+            log.debug("{} for cardUid={} and cardId={} with entitiesAcks={} sent to event bus", 
+                    operationType == CardOperationTypeEnum.ACK ? "Acknowlegement" : "Cancel acknowledgement" , 
+                    cardUid, cardId, entitiesAcks);
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card operation for acknowledgement to json on event bus");
         }
     }
+
 }

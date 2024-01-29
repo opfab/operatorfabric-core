@@ -15,6 +15,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import { RolesEnum } from '@ofModel/roles.model';
+import {CardOperationType} from '@ofModel/card-operation.model';
 
 @Component({
     selector: 'of-card-acks-footer',
@@ -27,6 +28,8 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
+    private static ORANGE : string = '#ff6600';
+    private static GREEN : string = 'green';
 
     ngOnInit() {
         OpfabStore.getLightCardStore()
@@ -34,19 +37,19 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {
                 if (receivedAck.cardUid === this.card.uid) {
-                    this.addAckFromSubscription(receivedAck.entitiesAcks);
+                    this.updateAckFromSubscription(receivedAck.entitiesAcks, receivedAck.operation);
                 }
             });
     }
 
-    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
+    private updateAckFromSubscription(entitiesAcksToUpdate: string[], operation: CardOperationType) {
         if (this.listEntitiesToAck?.length > 0) {
-            entitiesAcksToAdd.forEach((entityAckToAdd) => {
+            entitiesAcksToUpdate.forEach((entityAckToUpdate) => {
                 const indexToUpdate = this.listEntitiesToAck.findIndex(
-                    (entityToAck) => entityToAck.id === entityAckToAdd
+                    (entityToAck) => entityToAck.id === entityAckToUpdate
                 );
                 if (indexToUpdate !== -1) {
-                    this.listEntitiesToAck[indexToUpdate].color = 'green';
+                    this.listEntitiesToAck[indexToUpdate].color = operation === CardOperationType.ACK ? CardAcksFooterComponent.GREEN : CardAcksFooterComponent.ORANGE;
                 }
             });
         }
@@ -82,7 +85,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
             this.listEntitiesToAck.push({
                 id: entityToAck,
                 name: EntitiesService.getEntityName(entityToAck),
-                color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
+                color: this.checkEntityAcknowledged(entityToAck) ? CardAcksFooterComponent.GREEN : CardAcksFooterComponent.ORANGE
             })
         );
         this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));

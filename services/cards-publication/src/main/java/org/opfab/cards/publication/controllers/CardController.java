@@ -194,16 +194,17 @@ public class CardController {
     }
 
     /**
-     * DELETE userAcknowledgement for a card to updating that card
+     * POST cancelUserAcknowledgement for a card to updating that card
      *
      * @param cardUid Id to create publisher
      */
-    @DeleteMapping("/userAcknowledgement/{cardUid}")
+    @PostMapping("/cancelUserAcknowledgement/{cardUid}")
     public Void deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
+            @RequestBody List<String> entitiesAcks,
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, user.getUserData().getLogin());  
+        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, user, entitiesAcks);
         if (!result.isCardFound())
             response.setStatus(404);
         else {

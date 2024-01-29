@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,8 +83,10 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
 
-        // Check "Cancel acknowledgment" button is not present
-        cy.get("#opfab-card-details-btn-unack").should('not.exist');
+        // Check "Cancel acknowledgment" button is present
+        cy.get("#opfab-card-details-btn-unack").should('exist');
+        card.unacknowledge();
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
 
     });
 

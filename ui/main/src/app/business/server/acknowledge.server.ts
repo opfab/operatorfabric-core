@@ -14,5 +14,5 @@ export abstract class AcknowledgeServer {
 
     abstract postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>>;
 
-    abstract deleteUserAcknowledgement(cardUid: string): Observable<ServerResponse<void>>;
+    abstract deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>>;
 }

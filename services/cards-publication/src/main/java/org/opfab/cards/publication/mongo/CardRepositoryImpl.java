@@ -126,9 +126,12 @@ public class CardRepositoryImpl implements CardRepository {
         return toUserBasedOperationResult(updateFirst);
     }
 
-    public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
+    public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks) {
+        Update update = new Update().pull(USERS_ACKS, userName);
+        if (entitiesAcks != null) 
+            update = update.pullAll(ENTITIES_ACKS, entitiesAcks.toArray());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull(USERS_ACKS, userName), Card.class);
+                update, Card.class);
         log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
