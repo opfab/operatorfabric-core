@@ -15,6 +15,7 @@
 		},
 		"mailState" : {
 			"templateName" : "template",
+			"emailBodyTemplate" : "email_template",
 			"description": "Mail",
 			"styles" : [ "style" ]
 		},
