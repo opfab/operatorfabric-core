@@ -42,8 +42,7 @@
         "eqeqeq": [2, "smart"],
         "prefer-const": 2,
         "no-trailing-spaces": "error",
-        "keyword-spacing": ["error"],
-        "@typescript-eslint/no-inferrable-types": 2
+        "keyword-spacing": ["error"]
       }
     },
     {

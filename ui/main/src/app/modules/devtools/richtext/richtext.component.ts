@@ -21,7 +21,7 @@ declare const opfab;
 })
 
 export class RichTextComponent implements OnInit{
-    
+
     modules = {
         toolbar: [
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -52,7 +52,7 @@ export class RichTextComponent implements OnInit{
     convert() {
         const quillEditor = document.getElementById('rich-editor') as any;
         this.delta = quillEditor.getContents();
-        
+
     }
 
     copyToClipboard(): void {

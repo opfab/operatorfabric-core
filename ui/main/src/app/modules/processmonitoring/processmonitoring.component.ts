@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -106,7 +106,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             if (process.uiVisibility?.processMonitoring) {
                 const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
-                for (let key of process.states.keys()) {
+                for (const key of process.states.keys()) {
                     this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
                     this.processStateName.set(process.id + '.' + key, process.states.get(key).name);
                     this.stateColors.set(process.id + '.' + key, process.states.get(key).color);
@@ -283,7 +283,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
 
-                    let lineForExport = {};
+                    const lineForExport = {};
                     lineForExport[severityColumnName] = card.severity;
                     this.processMonitoring.forEach(column => {
                         if (column.type === 'date') {

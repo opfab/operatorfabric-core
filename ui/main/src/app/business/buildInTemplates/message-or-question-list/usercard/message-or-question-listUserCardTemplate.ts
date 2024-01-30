@@ -65,7 +65,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
             search: true
         });
 
-        let that = this; 
+        const that = this;
 
         document.querySelector('#message-select').addEventListener('change', ()=> {
             that.fillTextAndRecipientFields();
@@ -76,7 +76,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         const messageId = this.messageSelect.getSelectedValues();
         const message = this.view.getMessageOrQuestion(messageId)
 
-        if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
+        if ( this.previousTitleId !== messageId || opfab.currentUserCard.getEditionMode() === 'CREATE') {
             const quill =  document.getElementById("message");
             this.view.setRichTextContent(quill, message);
 
@@ -85,8 +85,8 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
             this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
-        } 
-        
+        }
+
     }
 
     private listenToEntityUsedForSendingCardChange() {

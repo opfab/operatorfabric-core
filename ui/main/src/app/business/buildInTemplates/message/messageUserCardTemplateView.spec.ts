@@ -12,7 +12,7 @@ import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 
 declare const opfab;
 
-        
+
 class QuillEditorMock {
     contents: string;
 
@@ -25,7 +25,7 @@ class QuillEditorMock {
     }
 
     isEmpty() {
-        return !this.contents || this.contents.length == 0;
+        return !this.contents || this.contents.length === 0;
     }
 }
 

@@ -12,14 +12,14 @@
 </div>
 
 <of-spinner *ngIf="!isScreenLoaded"></of-spinner>
-<div *ngIf="activityAreaPage?.activityAreaClusters?.length == 0">
+<div *ngIf="activityAreaPage?.activityAreaClusters?.length === 0">
     <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>activityArea.noAreaAvailable</div>
 </div>
 <div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length">
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-container" >
             <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
-                <span *ngIf="cluster.name != ' '" >
+                <span *ngIf="cluster.name !== ' '" >
                     <span class="opfab-activityarea-cluster-name">{{cluster.name}} &nbsp;</span>
                     <table class ="opfab-activityarea-table" aria-describedby="activity area table">
                         <tr *ngFor="let line of cluster.lines;">
@@ -40,7 +40,7 @@
                         </tr>
                     </table>
                 </span>
-                <span *ngIf="cluster.name == ' '" >
+                <span *ngIf="cluster.name === ' '" >
                     <table class ="opfab-activityarea-table" aria-describedby="activity area table">
                         <tr *ngFor="let line of cluster.lines;">
                             <th class ="opfab-table-line" >

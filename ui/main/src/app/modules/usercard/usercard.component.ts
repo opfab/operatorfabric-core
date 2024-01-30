@@ -505,7 +505,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private reinsertScripts(): void {
-        const scripts = <HTMLCollection>this.element.nativeElement.getElementsByTagName('script');
+        const scripts = <HTMLCollection> this.element.nativeElement.getElementsByTagName('script');
         Array.from(scripts).forEach((script) => {
             const scriptCopy = document.createElement('script');
             scriptCopy.type = (<HTMLScriptElement>script).type ? (<HTMLScriptElement>script).type : 'text/javascript';
@@ -628,7 +628,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     this.card = {...this.card, hasChildCardFromCurrentUserEntity: true};
                 }
                 this.displayPreview = true;
-                
+
                 this.updateRegularlyConnectedUsers();
             });
     }
@@ -647,7 +647,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 connectedRecipients.forEach( recipient => {
                     this.connectedRecipients.add(recipient)
                 })
-            }) 
+            })
         )
     }
 

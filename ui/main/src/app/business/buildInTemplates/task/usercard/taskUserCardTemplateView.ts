@@ -15,7 +15,7 @@ export class TaskCardTemplateView {
 
         const byhour =  [time.slice(0, 2)]; // the hours are the 2 first characters
         const byminute =  [time.slice(-2)]; // the minutes are the 2 last characters
-        
+
         const rRule = {
             freq: freq,
             byweekday : byweekday,

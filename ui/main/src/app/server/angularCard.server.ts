@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,9 +33,9 @@ export class AngularCardServer extends AngularServer implements CardServer {
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.cardConsultationUrl = `${environment.url}/cards/cards`; 
+        this.cardConsultationUrl = `${environment.url}/cards/cards`;
         this.archivesUrl = `${environment.url}/cards/archives`;
-        this.cardPublicationUrl = `${environment.url}/cardspub/cards`; 
+        this.cardPublicationUrl = `${environment.url}/cardspub/cards`;
         this.userCardReadUrl = `${environment.url}/cardspub/cards/userCardRead`;
         this.userCardUrl = `${environment.url}/cardspub/cards/userCard`;
     }
@@ -79,7 +79,7 @@ export class AngularCardServer extends AngularServer implements CardServer {
     }
 
     fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>> {
-        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard)); 
+        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard));
     }
 
 }

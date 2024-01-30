@@ -49,7 +49,7 @@ describe('Question UserCard template', () => {
                 }
             };
         };
-        let text = view.fillTexts();
+        const text = view.fillTexts();
         expect(text.textForBysetpos).toEqual("Translation of buildInTemplate.taskCard.the Translation of buildInTemplate.taskCard.first ");
         expect(text.textForByWeekday).toEqual(" Translation of shared.calendar.monday");
         expect(text.textForBymonthday).toEqual("Translation of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>");

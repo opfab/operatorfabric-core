@@ -113,7 +113,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
             .forEach((entity) => {
                 if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
                     this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
-            }  
+            }
             );
     }
 
@@ -124,7 +124,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
             .forEach((entity) => {
                 if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
                     this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
-            }  
+            }
             );
     }
 

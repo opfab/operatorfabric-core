@@ -24,7 +24,7 @@ const defaultPath = '/feed';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
-//  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode 
+//  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode
 
 const routes: Routes = [
     {
@@ -127,7 +127,7 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
      * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
      */
     initialNavigation: 'disabled',
-    
+
     // required to reload external application when user click again on the same link
     // see https://github.com/opfab/operatorfabric-core/issues/4509
     onSameUrlNavigation: 'reload'

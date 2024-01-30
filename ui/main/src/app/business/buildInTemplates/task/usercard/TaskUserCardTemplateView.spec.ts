@@ -41,16 +41,16 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a user WHEN create card with data THEN card is provided with data', () => {
         const view = new TaskCardTemplateView();
-        let taskTitle = "My task Title";
-        let taskDescription = "My task Description";
-        let freq = 'DAILY';
-        let durationInMinutes = "15";
-        let minutesForReminder = "5";
-        let byweekday = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
-        let bymonth = [ 1, 2, 3];
-        let bysetpos =[];
-        let bymonthday =[];
-        let time = "15:15";
+        const taskTitle = "My task Title";
+        const taskDescription = "My task Description";
+        const freq = 'DAILY';
+        const durationInMinutes = "15";
+        const minutesForReminder = "5";
+        const byweekday = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
+        const bymonth = [ 1, 2, 3];
+        const bysetpos =[];
+        const bymonthday =[];
+        const time = "15:15";
         const specficCardInformation = view.getSpecificCardInformation(taskTitle, taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time)
         expect(specficCardInformation.valid).toEqual(true);
         expect(specficCardInformation.card.data.taskTitle).toEqual("My task Title");

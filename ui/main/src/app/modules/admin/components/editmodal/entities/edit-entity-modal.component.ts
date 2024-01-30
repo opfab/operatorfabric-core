@@ -88,7 +88,7 @@ export class EditEntityModalComponent implements OnInit {
             ),
             name: new FormControl(
                 '',
-                [Validators.required], 
+                [Validators.required],
                 uniqueEntityNameValidator
             ),
             description: new FormControl(''),
@@ -131,7 +131,7 @@ export class EditEntityModalComponent implements OnInit {
             const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.'+role);
             this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation))
         };
-        
+
     }
 
     private isUserInCurrentEntity(usr: User) :boolean {

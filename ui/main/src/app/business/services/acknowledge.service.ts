@@ -24,12 +24,12 @@ import {UserService} from './users/user.service';
 export class AcknowledgeService {
 
     private static acknowledgeServer: AcknowledgeServer
- 
+
     public static setAcknowledgeServer(acknowledgeServer: AcknowledgeServer) {
         AcknowledgeService.acknowledgeServer = acknowledgeServer;
     }
 
-    
+
     public static postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
         return AcknowledgeService.acknowledgeServer.postUserAcknowledgement(cardUid, entitiesAcks);
     }

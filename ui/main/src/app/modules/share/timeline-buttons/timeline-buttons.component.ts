@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -196,7 +196,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param endDomain new end of domain
      */
     setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false): void {
-        if (this.currentDomainId == 'W') {
+        if (this.currentDomainId === 'W') {
             /*
              * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
@@ -399,12 +399,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         // shift domain one minute before change of cycle
         if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-            let startDomain = moment(currentDate + 60 * 1000)
+            const startDomain = moment(currentDate + 60 * 1000)
                 .hours(0)
                 .minutes(0)
                 .second(0)
                 .millisecond(0);
-            let endDomain = moment(currentDate + 60 * 1000)
+            const endDomain = moment(currentDate + 60 * 1000)
                 .hours(0)
                 .minutes(0)
                 .second(0)
