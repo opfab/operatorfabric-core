@@ -1,4 +1,4 @@
-// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -8,8 +8,14 @@
 
 = Email Notifications
 
-OpFab can send card notifications via email. These notifications are sent when a new card is published for a user, remains unread for a configured period, and the user is not connected to OpFab. The email subject includes the card title, summary, and start and end dates. The email body contains a link to the card details in OpFab.
+OpFab can send card notifications via email. These notifications are sent when a new card is published for a user, remains unread for a configured period, and the user is not connected to OpFab. The email subject includes the card title, summary, and start and end dates.
 
 == Configuring Email Notifications
 
 Users can enable email notifications in their user settings. They must provide an email address for receiving notifications and select the processes/states they want to be notified about.
+
+== Email Content
+
+The email body contains a link to the card details in OpFab. In the config.json file containing the state definition, the "emailBodyTemplate" field allows to define a template specific to the email body content.
+This template can use handlebars helpers for formatting but can't run javascript. If no template is specified, the mail is sent with just the link to the card in the body.
+
