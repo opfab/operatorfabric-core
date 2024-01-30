@@ -8,6 +8,7 @@
  */
 
 import Handlebars from 'handlebars';
+import {HandlebarsHelper} from './handlebarsHelpers';
 import GetResponse from '../../common/server-side/getResponse';
 import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
@@ -25,6 +26,7 @@ export default class BusinessConfigOpfabServicesInterface
     constructor() {
         super();
         this.listener = new EventBusListener().addListener(this);
+        HandlebarsHelper.init();
     }
 
     async onMessage(message: any) {

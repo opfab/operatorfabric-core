@@ -12,6 +12,7 @@ import CardsDiffusionControl from '../src/domain/application/cardsDiffusionContr
 import SendMailService from '../src/domain/server-side/sendMailService';
 import GetResponse from '../src/common/server-side/getResponse';
 import logger from '../src/common/server-side/logger';
+import Handlebars from 'handlebars';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
 import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/cardsExternaDiffusionDatabaseService';
@@ -59,7 +60,7 @@ class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfabServic
     }
 
     async fetchTemplate() {
-        return ( () => {return this.template});
+        return Handlebars.compile(this.template);
     }
 }
 
@@ -285,7 +286,7 @@ describe('Cards external diffusion', function () {
             entityRecipients: ['ENTITY1']
         };
 
-        opfabBusinessConfigServicesInterfaceStub.template = 'Title1';
+        opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
