@@ -17,21 +17,12 @@ import {HandlebarsHelper} from './handlebarsHelper';
 
 export class HandlebarsService {
     private static templateCache: Map<string, Function> = new Map();
-    private static _locale: string;
 
     public static init() {
         HandlebarsHelper.init();
         ConfigService.getConfigValueAsObservable('settings.locale').subscribe((locale) => {
-            HandlebarsService.changeLocale(locale);
+            HandlebarsHelper.changeLocale(locale);
         });
-    }
-
-    public static changeLocale(locale: string) {
-        if (locale) {
-            HandlebarsService._locale = locale;
-        } else {
-            HandlebarsService._locale = 'en';
-        }
     }
 
     public static executeTemplate(templateName: string, context: DetailContext): Observable<string> {
