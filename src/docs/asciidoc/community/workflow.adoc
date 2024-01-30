@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -102,19 +102,19 @@ branch `1.8.hotfixes`.
 ==== Common conventions
 
 *Naming convention:* Feature branches names should always start with "FE-" followed by the reference of the GitHub issue
-they're addressing, optionally followed by additional information if several branches are associated with a given issue.
+they're addressing, followed by additional information to give context. 
 
 .Examples of valid feature branch names:
-* FE-123
-* FE-123_Documentation
-* FE-123_1
+* FE-123-AddMailNotification
+* FE-123-FixIssueWithMailNotification
+* FE-123-RefactorBundleCompression
 
 .Examples of invalid feature branch names:
 * 123
-* FE123
+* FE-123
 * SomeTextDescribingTheBranch
 
-Commit messages should also start with the GitHub issue reference: `#123 My commit message`
+Commit messages should also contain the GitHub issue reference: ` My commit message (#123)`
 
 This allows the branch, PR and commits to be directly accessible from the GitHub issue.
 
