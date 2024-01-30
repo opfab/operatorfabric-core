@@ -183,6 +183,8 @@ Scenario: Start/Stop/Status API
     And match response.items[0].To[0].Mailbox == 'operator1_fr'
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title - card summary') == 0
+    And match response.items[0].Content.Body contains 'A MESSAGE'
+    And match response.items[0].Content.Body contains '/api_test.process1'
 
 
 
