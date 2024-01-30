@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,9 +52,9 @@ export class Utilities {
     private static removeEmojis(str: string): string{
         // regex to find all emojis (see https://www.regextester.com/106421 )
         let temp = str.replace(/\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/g,"")
-        // The ⚠️ emoji (\u26A0) has a base64 code of "4pqg77iP". This code is made up of 2 parts: 
-        //  -"4pqg" which is an alternate version of the emoji 
-        //  -"77iP" which is a variation selector, which left alone is an empty character  
+        // The ⚠️ emoji (\u26A0) has a base64 code of "4pqg77iP". This code is made up of 2 parts:
+        //  -"4pqg" which is an alternate version of the emoji
+        //  -"77iP" which is a variation selector, which left alone is an empty character
         // When using .replace() only the first part is removed and the empty character messes up the string comparison
         // The variation selector's UTF-8 code is "%EF%B8%8F"
         temp = temp.replace(decodeURIComponent("%EF%B8%8F"), "").trim()

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {takeUntil, debounceTime, Subject} from 'rxjs';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -16,7 +16,7 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
     selector: 'of-usercard-select-card-emitter-form',
     templateUrl: './usercard-select-card-emitter-form.component.html'
 })
-export class UsercardSelectCardEmitterFormComponent implements OnInit {
+export class UsercardSelectCardEmitterFormComponent implements OnInit,OnDestroy {
     @Input() public userEntitiesAllowedToSendCardOptions;
     @Input() public initialPublisher;
 
@@ -34,9 +34,6 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
         search: true
     };
 
-    constructor() {
-        // No body because all members are Inputs.
-    }
 
     ngOnInit() {
         this.selectCardEmitterForm = new FormGroup({

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,7 +41,7 @@ export class CountDown {
             const secondsAsString = this.convertNumberOnTwoDigitString(seconds);
 
             this.countDown = minutesAsString + ':' + secondsAsString;
-            if (hours != 0) this.countDown = hours + ':' + this.countDown;
+            if (hours !== 0) this.countDown = hours + ':' + this.countDown;
         }
         // reprocess 500ms after
         setTimeout(() => this.computeCountDown(), 500);

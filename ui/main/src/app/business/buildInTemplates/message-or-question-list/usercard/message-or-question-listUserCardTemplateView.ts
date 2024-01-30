@@ -53,7 +53,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         if (quillEditor.isEmpty()) {
             return {
                 valid:false,
-                errorMsg : opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage') 
+                errorMsg : opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage')
             }
         }
 
@@ -64,7 +64,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         if (this.selectedMessage.severity) {
             severity = this.selectedMessage.severity;
         }
-        
+
         let entitiesAllowedToRespond;
 
         if (this.selectedMessage.question) {
@@ -122,13 +122,13 @@ export class MessageOrQuestionListUserCardTemplateView {
     setSelectedEmitter(entity: string) {
         this.selectedEmitter = entity;
     }
-    
+
     getMessageListOptions() {
 
         const titlesOptions = [];
-        if (this.messageOrQuestionList) 
+        if (this.messageOrQuestionList)
             this.messageOrQuestionList.messagesList.forEach( (message) => {
-                
+
                 if ( !message.publishers || message.publishers.length === 0 || message.publishers.includes(this.selectedEmitter) ) {
                     const option = {
                         label: message.title,

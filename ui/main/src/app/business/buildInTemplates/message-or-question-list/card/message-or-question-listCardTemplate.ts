@@ -73,8 +73,8 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
 
     private setFunctionToGetUserResponseInput() {
         this.messageOrQuestionListCardTemplateView.setFunctionToGetResponseInput(() =>  {
-            return [ (<HTMLInputElement>document.getElementById('YES')).checked, 
-            (<HTMLInputElement>document.getElementById('comment')).value]; 
+            return [ (<HTMLInputElement>document.getElementById('YES')).checked,
+            (<HTMLInputElement>document.getElementById('comment')).value];
             })
     }
 

@@ -243,13 +243,13 @@ export class LightCardsStore {
     public isLightCardHasBeenAcknowledged(card) {
         let hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
         const children = this.getChildCards(card.id);
-        if (hasBeenAcknowledged && children) {         
-            for (let child of children) {
+        if (hasBeenAcknowledged && children) {
+            for (const child of children) {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(child)) {
                     hasBeenAcknowledged = false;
                     break;
                 }
-            } 
+            }
         }
         return hasBeenAcknowledged;
     }
@@ -257,13 +257,13 @@ export class LightCardsStore {
     public isLightCardHasBeenRead(card) {
         let hasBeenRead = card.hasBeenRead;
         const children = this.getChildCards(card.id);
-        if (hasBeenRead && children) {         
-            for (let child of children) {
+        if (hasBeenRead && children) {
+            for (const child of children) {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
                     hasBeenRead = false;
                     break;
                 }
-            } 
+            }
         }
         return hasBeenRead;
     }
@@ -280,7 +280,7 @@ export class LightCardsStore {
             }
 
             this.unreadAndUnackParentCardIfNeeded(card);
-            
+
         }
     }
 

@@ -131,7 +131,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        if(this.userEntitiesAllowedToRespond) {
+        if (this.userEntitiesAllowedToRespond) {
             this.userEntitiesAllowedToRespond.forEach((entityId) => {
                 const entity = EntitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});

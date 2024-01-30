@@ -91,7 +91,7 @@ export class ActivityAreaView {
     }
 
     private addLineToCluster(cluster: ActivityAreaEntityCluster, line: ActivityAreaLine): void {
-        if (!cluster.lines.some((clusterLine) => clusterLine.entityId == line.entityId)) {
+        if (!cluster.lines.some((clusterLine) => clusterLine.entityId === line.entityId)) {
             cluster.lines.push(line);
         }
     }

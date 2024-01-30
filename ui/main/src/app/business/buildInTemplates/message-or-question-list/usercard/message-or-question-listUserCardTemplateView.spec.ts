@@ -24,7 +24,7 @@ class QuillEditorMock {
     }
 
     isEmpty() {
-        return !this.contents || this.contents.length == 0;
+        return !this.contents || this.contents.length === 0;
     }
 }
 
@@ -64,7 +64,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });
-    
+
     it('GIVEN an existing card with an HTML tag in  message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
@@ -171,7 +171,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('INFORMATION');
 
-        let selectedMessageWithSeverity = {title: "my title", question: true, severity: 'ACTION'};
+        const selectedMessageWithSeverity = {title: "my title", question: true, severity: 'ACTION'};
         view.selectedMessage = selectedMessageWithSeverity;
         quillEditor.setContents('My question');
         specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
@@ -196,7 +196,7 @@ describe('MessageOrQuestionList UserCard template', () => {
                ]
             },
             {
-                
+
                 id: 'id2',
                 message: 'allowed publishers :  ENTITY3_FR',
                 publishers:  [

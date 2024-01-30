@@ -142,7 +142,7 @@ describe('Realtimeusers', () => {
     });
 
     const realtimeScreensTestConfig = {
-            
+
         "realTimeScreens": [
             {
             "screenName": "All Control Centers",
@@ -191,5 +191,5 @@ describe('Realtimeusers', () => {
             }
         ]
 };
-                
+
 });

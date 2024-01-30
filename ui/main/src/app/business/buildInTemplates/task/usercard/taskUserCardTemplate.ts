@@ -232,7 +232,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.selectAllDaysIfInCreateMode();
         this.selectAllMonthsIfInCreateMode();
     }
-    
+
     displayDailyFrequency() {
         (<HTMLInputElement>document.getElementById("radioButtonMonthlyFreq")).checked = false;
         document.getElementById("daysOfWeek").hidden = false;
@@ -271,8 +271,8 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         document.getElementById("nthWeekdayTable").hidden = false;
     }
 
-    
-    
+
+
     initMultiSelects() {
         this.occurrenceNumberSelect = opfab.multiSelect.init({
             id: "occurrence-number-select",
@@ -341,7 +341,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             this.checkMonthDaily(bymonth);
         }
     }
-   
+
     checkWeekDay(byweekday) {
         if (byweekday.includes('MO')) (<HTMLInputElement>document.getElementById("Monday")).checked = true;
         if (byweekday.includes('TU')) (<HTMLInputElement>document.getElementById("Tuesday")).checked = true;
@@ -380,7 +380,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         } else {
             if (bymonthday) {
                 for (const monthday of bymonthday) {
-                    switch(monthday) {
+                    switch (monthday) {
                         case "1" :
                             (<HTMLInputElement>document.getElementById("firstDay")).checked = true;
                             break;
@@ -417,10 +417,10 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     }
 
     initEventListeners() {
-        let that = this; 
+        const that = this;
         document.querySelector('#radioButtonDailyFreq').addEventListener("click", function() {that.displayDailyFrequency();});
         document.querySelector('#radioButtonMonthlyFreq').addEventListener("click", function() {that.displayMonthlyFrequency();});
-        
+
         document.querySelector('#selectAllDays').addEventListener("click", function() {that.toggleSelectAllDays();});
         document.querySelector('#weekdaysCheckboxes').addEventListener("click", function() {that.checkIsAllDaysSelected();});
 
@@ -454,12 +454,12 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;
         const taskDescription = (<HTMLInputElement>document.getElementById('taskDescription')).value;
 
-        let that = this;
+        const that = this;
 
         let freq = '';
         let byweekday = [];
         let bymonth = [];
-        let bymonthday = [];
+        const bymonthday = [];
         let bysetpos = [];
 
         if ((<HTMLInputElement>document.getElementById("radioButtonMonthlyFreq")).checked === true) {
@@ -514,7 +514,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     }
 
     fetchMonths() {
-        let bymonth = [];
+        const bymonth = [];
         if ((<HTMLInputElement>document.getElementById("JanuaryMonthly")).checked)   bymonth.push(1);
         if ((<HTMLInputElement>document.getElementById("FebruaryMonthly")).checked)  bymonth.push(2);
         if ((<HTMLInputElement>document.getElementById("MarchMonthly")).checked)     bymonth.push(3);
@@ -531,7 +531,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         return bymonth;
     }
     fetchWeekDay() {
-        let byweekday = [];
+        const byweekday = [];
         if ((<HTMLInputElement>document.getElementById("Monday")).checked)    byweekday.push('MO');
         if ((<HTMLInputElement>document.getElementById("Tuesday")).checked)   byweekday.push('TU');
         if ((<HTMLInputElement>document.getElementById("Wednesday")).checked) byweekday.push('WE');
@@ -543,7 +543,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         return byweekday;
     }
     fetchMonthDaily() {
-        let bymonth = [];
+        const bymonth = [];
         if ((<HTMLInputElement>document.getElementById("JanuaryDaily")).checked)   bymonth.push(1);
         if ((<HTMLInputElement>document.getElementById("FebruaryDaily")).checked)  bymonth.push(2);
         if ((<HTMLInputElement>document.getElementById("MarchDaily")).checked)     bymonth.push(3);

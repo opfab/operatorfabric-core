@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ export class UrlLockService {
     private readonly IS_OPFAB_URL_CURRENTLY_USED_KEY = 'isOpfabUrlCurrentlyUsed';
     private readonly DISCONNECTED_BY_NEW_USER_USING_SAME_URL = 'disconnectedByNewUserUsingSameUrl';
     private readonly store = localStorage;
-    private disconnectSignalListener:Function ; 
+    private disconnectSignalListener:Function ;
 
     public lockUrl(): void {
         this.store.setItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY, 'true');
@@ -47,6 +47,6 @@ export class UrlLockService {
     }
 
     private isEventADisconnectionSignal(event):boolean {
-        return event.storageArea == this.store && event.key == this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL;
+        return event.storageArea === this.store && event.key === this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL;
     }
 }

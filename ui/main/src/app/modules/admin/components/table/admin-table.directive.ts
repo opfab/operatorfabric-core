@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -190,8 +190,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         // if provided, i18nPrefixForHeader should have trailing dot
 
         // Create data columns from fields
-        let columnDefs: ColDef[];
-        columnDefs = new Array(fields.length);
+        const columnDefs: ColDef[] = new Array(fields.length);
 
         fields.forEach((field: Field, index: number) => {
             const columnDef = {
@@ -215,7 +214,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     params.data.id.toLowerCase() === 'admin')
         };
 
-        // Add action columns 
+        // Add action columns
         const edit_col = new ActionColumn('edit');
         const delete_col = new ActionColumn('delete');
         delete_col.cellClassRules = deleteActionCellClassRules;
@@ -353,7 +352,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
         if (resourceName !== undefined) {
             fileName = resourceName;
-        } 
+        }
 
         read.onload = (e) => {
             BusinessDataService.updateBusinessData(fileName, formData).subscribe( () => {

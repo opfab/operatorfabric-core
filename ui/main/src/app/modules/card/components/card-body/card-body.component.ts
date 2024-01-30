@@ -271,7 +271,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             CardService.postUserCardRead(this.card.uid).subscribe();
-            
+
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
 
         if (this.childCards) {

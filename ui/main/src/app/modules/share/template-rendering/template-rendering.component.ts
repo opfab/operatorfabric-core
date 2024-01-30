@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -182,7 +182,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private loadTemplateJSScripts(): void {
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
+        const scripts = <HTMLScriptElement[]> this.element.nativeElement.getElementsByTagName('script');
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];

@@ -52,11 +52,11 @@ export class TaskCardTemplateView {
         const byweekday = opfab.currentCard.getCard()?.data?.byweekday;
         const bymonth = opfab.currentCard.getCard()?.data?.bymonth;
 
-        let textForBysetpos = this.writeTextBySetPos(freq, bysetpos, byweekday);
-        let textForByWeekDay = this.writeTextByWeekDay(freq, byweekday);
-        let textForBymonthday = this.writeTextByMonthDay(bymonthday);
-        let textForBymonth = this.writeTextByMonth(bymonth);
-             
+        const textForBysetpos = this.writeTextBySetPos(freq, bysetpos, byweekday);
+        const textForByWeekDay = this.writeTextByWeekDay(freq, byweekday);
+        const textForBymonthday = this.writeTextByMonthDay(bymonthday);
+        const textForBymonth = this.writeTextByMonth(bymonth);
+
         return {
             textForBysetpos: textForBysetpos,
             textForByWeekday: textForByWeekDay,
@@ -74,7 +74,7 @@ export class TaskCardTemplateView {
             if (bysetpos.includes("4"))  textForBysetpos += opfab.utils.getTranslation("buildInTemplate.taskCard.fourth") + ", ";
             if (bysetpos.includes("-1")) textForBysetpos += opfab.utils.getTranslation("buildInTemplate.taskCard.last") + ", ";
 
-            if (textForBysetpos != "") {
+            if (textForBysetpos !== "") {
                 textForBysetpos = textForBysetpos.slice(0, -2); //we delete the last comma
                 textForBysetpos = opfab.utils.getTranslation("buildInTemplate.taskCard.the") + " " + textForBysetpos + " ";
             }
