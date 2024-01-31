@@ -34,6 +34,6 @@ export class ProcessesTableComponent extends AdminTableDirective implements OnIn
         this.gridOptions.columnTypes['versionColumn'] = {
             resizable: false
         };
-        super.ngOnInit();
+        super.initCrudService();
     }
 }

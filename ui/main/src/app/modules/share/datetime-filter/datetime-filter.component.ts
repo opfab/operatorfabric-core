@@ -84,7 +84,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     @Input() filterPath: string;
     @Input() defaultDate: NgbDateStruct;
     @Input() defaultTime: {hour: number; minute: number;};
-    @Output() change = new EventEmitter();
+    @Output() dateTimeChange = new EventEmitter();
     @Input() minDate: {year: number; month: number; day: number};
     @Input() maxDate: {year: number; month: number; day: number};
     @Input() timeSpinners = true;
@@ -169,7 +169,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             // this was causing an infinite loop in usercard-dates-form.component.ts
             if (val !== this.previousDateValue) {
                 this.previousDateValue = val;
-                this.change.emit();
+                this.dateTimeChange.emit();
             }
         });
         this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((val) => {
@@ -180,7 +180,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             // when user erases values in input field
             else this.timeInput.setValue({hour:0 ,minute:0,second:0});
 
-            this.change.emit();
+            this.dateTimeChange.emit();
         });
     }
 

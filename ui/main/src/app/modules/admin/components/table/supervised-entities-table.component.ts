@@ -71,6 +71,6 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             flex: 4,
             resizable: false
         };
-        super.ngOnInit();
+        super.initCrudService();
     }
 }

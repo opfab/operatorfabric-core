@@ -16,6 +16,12 @@ npmInstall {
 
 }
 
+
+task runLint(type: NpmTask) {
+    args = ['run','lint']
+}
+
+
 task runBuild(type: NpmTask) {
     inputs.files(fileTree('src'))
     inputs.files(fileTree('node_modules'))
@@ -25,9 +31,10 @@ task runBuild(type: NpmTask) {
 
     outputs.dir('build')
 
-    dependsOn npmInstall
+    dependsOn npmInstall,runLint
     args = ['run', 'build','--baseHref=/ui/', '--deployUrl=/ui/']
 }
+
 
 task runHeadlessTests(type: NpmTask) {
     inputs.files(fileTree('src'))
