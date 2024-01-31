@@ -164,8 +164,4 @@ operatorfabric.users.default:
      name: South Europe Control Center
      description: South Europe Control Center
      roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-  user-settings:
-    - login: operator3_fr
-      description: Da Operator Rulez
-
 #logging.level.org.opfab: debug

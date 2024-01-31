@@ -113,9 +113,7 @@
     "replayEnabled": true
   },
   "settingsScreen": {
-    "hiddenSettings": [
-      "description"
-    ]
+    "hiddenSettings": []
   },
   "about": {
     "firstapplication": {
