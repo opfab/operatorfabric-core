@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -11,28 +11,28 @@
         <div *ngIf="datesFormInputData.startDate.isVisible" style="width:280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-startdate-choice">
             <of-datetime-filter  filterPath="startDate" formControlName="startDate"
                 labelKey="userCard.filters." 
-                (change)="onStartDateChange()">
+                (dateTimeChange)="onStartDateChange()">
             </of-datetime-filter>
         </div>
 
         <div *ngIf="datesFormInputData.endDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-enddate-choice">
             <of-datetime-filter filterPath="endDate" formControlName="endDate"
                 labelKey="userCard.filters." [minDate]="endDateMin"
-                (change)="onEndDateChange()">
+                (dateTimeChange)="onEndDateChange()">
             </of-datetime-filter>
         </div>
 
         <div *ngIf="datesFormInputData.lttd.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-lttd-choice">
             <of-datetime-filter filterPath="lttd" formControlName="lttd" 
                 labelKey="userCard.filters." 
-                (change) ="onLttdChange()" >
+                (dateTimeChange) ="onLttdChange()" >
             </of-datetime-filter>
         </div>
 
         <div *ngIf="datesFormInputData.expirationDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-expirationdate-choice">
             <of-datetime-filter filterPath="expirationDate" formControlName="expirationDate"
                                 labelKey="userCard.filters."
-                                (change)="onExpirationDateChange()">
+                                (dateTimeChange)="onExpirationDateChange()">
             </of-datetime-filter>
         </div>
     </div>

@@ -48,7 +48,7 @@ export function initOpfabApiMock() {
         listenToTemplateRenderingComplete(listener) {},
         listenToChildCards(listener) {}
     };
-    
+
     opfab.currentUserCard = {
         getEditionMode: function () {},
         getEndDate: function () {},

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,7 +64,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Input() tags: any[];
     @Input() displayPublishDateFilter = true;
     @Output() search = new EventEmitter<string>();
-    @Output() reset = new EventEmitter<string>();
+    @Output() resetFormEvent = new EventEmitter<string>();
 
     hasCurrentUserRightsToViewAllArchivedCards: boolean;
     hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters: boolean;
@@ -215,7 +215,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     toggleAdminMode() {
         this.isAdminModeChecked = !this.isAdminModeChecked;
         UserPreferencesService.setPreference('opfab.seeOnlyCardsForWhichUserIsRecipient', String(!this.isAdminModeChecked));
-        this.reset.emit(null);
+        this.resetFormEvent.emit(null);
         this.loadValuesForFilters();
     }
 
@@ -390,7 +390,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     resetForm() {
-        this.reset.emit(null);
+        this.resetFormEvent.emit(null);
         this.tagsSelected = [];
         this.processGroupSelected = [];
         this.processSelected = [];

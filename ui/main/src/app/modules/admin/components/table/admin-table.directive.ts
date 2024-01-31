@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectorRef, Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, Injectable, OnDestroy} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -55,7 +55,7 @@ export class ActionColumn {
 
 @Directive()
 @Injectable()
-export abstract class AdminTableDirective implements OnInit, OnDestroy {
+export abstract class AdminTableDirective implements OnDestroy {
     actionButtonsDisplayed: any;
     showAddButton = true;
     processesDefinition: Process[];
@@ -152,7 +152,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         };
     }
 
-    ngOnInit() {
+    initCrudService() {
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
     }
 

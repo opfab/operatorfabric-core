@@ -180,15 +180,13 @@ opfab.richTextEditor = {
 
 };
 
-
-
 class QuillEditor extends HTMLElement {
 
-    emptyRexp = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/gm;
 
     constructor() {
         super();
         this.init();
+        this.EMPTY_REGEXP = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/gm;
 
         const toolbarOptions = [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -254,7 +252,7 @@ class QuillEditor extends HTMLElement {
     }
 
     isEmpty() {
-        return this.emptyRexp.test(this.quill.root.innerHTML);
+        return this.EMPTY_REGEXP.test(this.quill.root.innerHTML);
     }
 
     // Lifecycle method: called when the element is added to the DOM
