@@ -230,6 +230,9 @@
       },
       "applyFiltersToTimeLine" : {
         "label" : "Appliquer les filtres à la timeline"
+      },
+      "process": {
+        "label": "Processus"
       }
     },
     "sort": {

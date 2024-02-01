@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,9 @@ import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
 
 @Component({
     selector: 'of-feed-filter',
@@ -32,6 +35,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
     @Input() defaultAcknowledgmentFilter: string;
     @Input() hideResponseFilter: boolean;
+    @Input() hideProcessFilter: boolean;
 
     @Input() defaultSorting: string;
 
@@ -63,8 +67,15 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         timeLineControl: FormControl<boolean | null>;
     }>;
 
+    processFilterForm: FormGroup<{
+        process: FormControl<string | null>;
+    }>;
+
     endMinDate: {year: number; month: number; day: number} = null;
     startMaxDate: {year: number; month: number; day: number} = null;
+
+    processMultiSelect: MultiSelect;
+    processList = [];
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
     private filteredLightCardStore: FilteredLightCardsStore;
@@ -76,6 +87,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.timeFilterForm = this.createDateTimeForm();
         this.responseFilterForm = this.createResponseFormGroup();
         this.timeLineFilterForm = this.createTimeLineFormGroup();
+        this.processFilterForm = this.createProcessForm();
     }
 
     private createFormGroup() {
@@ -125,6 +137,30 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         });
     }
 
+    private createProcessForm() {
+        return new FormGroup({
+            process: new FormControl<string | null>(''),
+        },
+        {updateOn: 'change'}
+        );
+    }
+
+    private initializeProcessMultiSelect() {
+        this.processMultiSelect = {
+            id: 'process',
+            options: [],
+            config: {
+                labelKey: 'shared.filters.process',
+                placeholderKey: 'shared.filters.selectProcessText',
+                sortOptions: true,
+                nbOfDisplayValues: 4,
+                multiple: false
+            },
+            selectedOptions: []
+        };
+
+    }
+
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
@@ -145,6 +181,35 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideApplyFiltersToTimeLineChoice) {
             this.initTimeLineFilter();
         }
+
+        if (!this.hideProcessFilter) {
+            this.initializeProcessMultiSelect();
+            this.initProcessFilter();
+        }
+    }
+
+    private loadVisibleProcessesForCurrentUser() {
+        ProcessesService.getAllProcesses().forEach((process) => {
+            if (
+                UserService.isReceiveRightsForProcess(process.id)
+            ) {
+                this.processList.push(process);
+            }
+        });
+    }
+
+    private initProcessFilter() {
+        this.loadVisibleProcessesForCurrentUser();
+        this.processMultiSelect.options.push(new MultiSelectOption('', ''));
+        this.processList.forEach( process => this.processMultiSelect.options.push(new MultiSelectOption(process.id, process.name)));
+        this.processFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
+            this.filterActiveChange.next(this.isFilterActive());
+            return this.filteredLightCardStore.updateFilter(
+                FilterType.PROCESS_FILTER,
+                true,
+                {process: form.process}
+            );
+        });
     }
 
     private initTypeFilter() {
@@ -374,7 +439,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.responseFilterForm.get('responseControl').value ||
             !this.ackFilterForm.get('notAckControl').value ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            this.processFilterForm.get('process').value.length>0
         );
     }
 
@@ -391,7 +457,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                     this.ackFilterForm.get('notAckControl').value
                 ) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            this.processFilterForm.get('process').value.length>0
         );
     }
 
@@ -413,6 +480,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         }
         if (!this.hideApplyFiltersToTimeLineChoice) {
             this.timeLineFilterForm.get('timeLineControl').setValue(true, {emitEvent: true});
+        }
+        if (!this.hideProcessFilter) {
+            this.processMultiSelect.selectedOptions = []
         }
     }
 

@@ -61,6 +61,28 @@
 
     <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
     
+    <div *ngIf="!hideProcessFilter" style="margin-top:-5px;">
+
+        <div class="row opfab-filter-header">
+            <span id='opfab-feed-filter-process-title' translate>feed.filters.process.label</span>
+        </div>
+
+        <form [formGroup]="processFilterForm" id="opfab-process-filter-form" style="padding-left: 7px;">
+
+            <div style="margin-left:2px; margin-top:20px; width:280px">
+                <div class="form-group" id="opfab-process">
+
+                    <of-multi-select id="opfab-process-select" [multiSelectId]="processMultiSelect.id" [parentForm]="processFilterForm"
+                        [config]="processMultiSelect.config" [options]="processMultiSelect.options"
+                        [selectedOptions]="processMultiSelect.selectedOptions">
+                    </of-multi-select>
+                </div>
+            </div>
+
+        </form>
+        
+    </div>
+
     <div *ngIf="!(hideTimerTags)" style="margin-top:-5px;">
 
         <div class="row opfab-filter-header">
