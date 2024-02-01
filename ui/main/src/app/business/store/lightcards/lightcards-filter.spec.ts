@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ describe('NewFilterService ', () => {
         let cards: LightCard[] = new Array();
         cards = cards.concat(
             getSeveralLightCards(1, {
+                process: 'process1',
                 startDate: new Date().valueOf(),
                 endDate: null,
                 publishDate: new Date().valueOf(),
@@ -35,6 +36,7 @@ describe('NewFilterService ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
+                process: 'process1',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR,
@@ -46,6 +48,7 @@ describe('NewFilterService ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
+                process: 'process2',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 2 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 2,
@@ -56,6 +59,7 @@ describe('NewFilterService ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
+                process: 'process3',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 3 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 3,
@@ -323,4 +327,29 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[2]);
         });
     });
+
+    describe('process filter', () => {
+        it('filter 4 cards by process => shall return the cards with selected process only', () => {
+            const cards = getFourCards();
+            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+            service.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: 'process2'
+            });
+            const filteredCards = service.filterLightCards(cards);
+            expect(filteredCards.length).toBe(1);
+            expect(filteredCards).toContain(cards[2]);
+        });
+
+        it('filter 4 cards by process, filter is set to null process  => shall return all the cards', () => {
+            const cards = getFourCards();
+            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+            service.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: null
+            });
+            const filteredCards = service.filterLightCards(cards);
+            expect(filteredCards.length).toBe(4);
+        });
+
+    });
+
 });

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,6 +32,7 @@ export class LightCardsFilter {
         this.filters[FilterType.PUBLISHDATE_FILTER] = this.initPublishDateFilter();
         this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.initAcknowledgementFilter();
         this.filters[FilterType.RESPONSE_FILTER] = this.initResponseFilter();
+        this.filters[FilterType.PROCESS_FILTER] = this.initProcessFilter();
         this.businessDateFilter = this.initBusinessDateFilter();
     }
 
@@ -177,6 +178,19 @@ export class LightCardsFilter {
             },
             false,
             true
+        );
+    }
+
+    private initProcessFilter(): Filter {
+        return new Filter(
+            (card: LightCard, status) => {
+                if (status.process) {
+                    return status.process === card.process;
+                }
+                return true;
+            },
+            false,
+            {process: null}
         );
     }
 }
