@@ -64,8 +64,8 @@ docker {
 				}
 			}
     buildArgs([
-        'https_proxy'    : proxy.https
-        ])
+            'https_proxy'    : proxy.https
+            ])
     dockerfile file("docker/Dockerfile")
 }
 

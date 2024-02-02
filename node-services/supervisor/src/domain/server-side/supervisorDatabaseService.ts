@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,30 +9,31 @@
 
 import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
+import {MongoConfig} from './MongoConfig';
 
 export default class SupervisorDatabaseService {
     logger: Logger;
     mongoClient: MongoClient;
     mongoDB: Db;
-    mongoConfig: any;
+    mongoConfig: MongoConfig;
     retryInterval = 5000; // Retry every 5 seconds
 
-    public setMongoDbConfiguration(mongoConfig: any) {
+    public setMongoDbConfiguration(mongoConfig: MongoConfig): this {
         this.mongoConfig = mongoConfig;
         this.mongoClient = new MongoClient(mongoConfig.uri);
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public async connectToMongoDB() {
+    public async connectToMongoDB(): Promise<void> {
         await this.connectWithRetry();
     }
 
-    private async connectWithRetry() {
+    private async connectWithRetry(): Promise<void> {
         while (true) {
             try {
                 this.logger.info('Try to open database ' + this.mongoConfig.database);
@@ -44,7 +45,9 @@ export default class SupervisorDatabaseService {
                     this.logger.error('MongoDB connection closed unexpectedly');
                     // Attempt to reconnect after a delay
                     setTimeout(() => {
-                        this.connectWithRetry();
+                        this.connectWithRetry().catch((error) => {
+                            this.logger.error('Failed to reconnect to MongoDB' + error);
+                        });
                     }, this.retryInterval);
                 });
                 this.mongoClient.on('error', (err) => {
@@ -59,41 +62,36 @@ export default class SupervisorDatabaseService {
     }
 
     public async getSupervisedEntities(): Promise<any[]> {
-        return this.mongoDB
-            .collection('supervisedEntities')
-            .find()
-            .toArray();
+        return await this.mongoDB.collection('supervisedEntities').find().toArray();
     }
-        
 
     public async saveSupervisedEntity(supervisedEntity: any): Promise<void> {
         try {
-            const query = { entityId: supervisedEntity.entityId };
-            const update = { $set: {supervisors: supervisedEntity.supervisors}, $setOnInsert: {entityId: supervisedEntity.entityId}};
-            const options = { upsert: true };
+            const query = {entityId: supervisedEntity.entityId};
+            const update = {
+                $set: {supervisors: supervisedEntity.supervisors},
+                $setOnInsert: {entityId: supervisedEntity.entityId}
+            };
+            const options = {upsert: true};
             await this.mongoDB.collection('supervisedEntities').updateOne(query, update, options);
         } catch (error) {
-            this.logger.error('Mongo error in insert supervised Entity' + error);
+            this.logger.error('Mongo error in insert supervised Entity' + JSON.stringify(error));
         }
-        return Promise.resolve();
     }
 
     public async getSupervisedEntity(id: any): Promise<any> {
         try {
-            return this.mongoDB.collection('supervisedEntities').findOne({entityId: id});
+            return await this.mongoDB.collection('supervisedEntities').findOne({entityId: id});
         } catch (error) {
-            this.logger.error('Mongo error in find supervised Entity' + error);
+            this.logger.error('Mongo error in find supervised Entity' + JSON.stringify(error));
         }
-        return Promise.resolve();
     }
 
     public async deleteSupervisedEntity(id: any): Promise<void> {
         try {
             await this.mongoDB.collection('supervisedEntities').deleteOne({entityId: id});
         } catch (error) {
-            this.logger.error('Mongo error in delete supervised Entity' + error);
+            this.logger.error('Mongo error in delete supervised Entity' + JSON.stringify(error));
         }
-        return Promise.resolve();
     }
-
 }

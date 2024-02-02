@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,125 +6,136 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+import {EntityToSupervise} from '../application/entityToSupervise';
 import SupervisorDatabaseService from '../server-side/supervisorDatabaseService';
 import ConfigDTO from './configDTO';
-const fs = require('fs');
+import fs from 'fs';
 
 export default class ConfigService {
-
     supervisorDatabaseService: SupervisorDatabaseService;
     supervisorConfig: ConfigDTO;
     configFilePath: string | null;
     logger: any;
 
-    constructor(supervisorDatabaseService: SupervisorDatabaseService, defaulConfig: any, configFilePath: string | null, logger: any) {
-
+    constructor(
+        supervisorDatabaseService: SupervisorDatabaseService,
+        defaulConfig: any,
+        configFilePath: string | null,
+        logger: any
+    ) {
         this.supervisorDatabaseService = supervisorDatabaseService;
         this.configFilePath = configFilePath;
         this.logger = logger;
 
         try {
-            if (configFilePath && fs.existsSync(configFilePath)) {
+            if (configFilePath != null && fs.existsSync(configFilePath)) {
                 this.loadFromFile();
             } else {
                 this.supervisorConfig = new ConfigDTO();
                 this.supervisorConfig.secondsBetweenConnectionChecks = defaulConfig.secondsBetweenConnectionChecks;
-                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendFirstCard = defaulConfig.nbOfConsecutiveNotConnectedToSendFirstCard;
-                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendSecondCard =  defaulConfig.nbOfConsecutiveNotConnectedToSendSecondCard;
-                this.supervisorConfig.considerConnectedIfUserInGroups =  defaulConfig.considerConnectedIfUserInGroups;
-                this.supervisorConfig.entitiesToSupervise =  defaulConfig.entitiesToSupervise;
-                this.supervisorConfig.processesToSupervise =  defaulConfig.processesToSupervise;
-                this.supervisorConfig.windowInSecondsForCardSearch  = defaulConfig.windowInSecondsForCardSearch ;
-                this.supervisorConfig.secondsBetweenAcknowledgmentChecks = defaulConfig.secondsBetweenAcknowledgmentChecks;
-                this.supervisorConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged = defaulConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged;
+                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendFirstCard =
+                    defaulConfig.nbOfConsecutiveNotConnectedToSendFirstCard;
+                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendSecondCard =
+                    defaulConfig.nbOfConsecutiveNotConnectedToSendSecondCard;
+                this.supervisorConfig.considerConnectedIfUserInGroups = defaulConfig.considerConnectedIfUserInGroups;
+                this.supervisorConfig.entitiesToSupervise = defaulConfig.entitiesToSupervise;
+                this.supervisorConfig.processesToSupervise = defaulConfig.processesToSupervise;
+                this.supervisorConfig.windowInSecondsForCardSearch = defaulConfig.windowInSecondsForCardSearch;
+                this.supervisorConfig.secondsBetweenAcknowledgmentChecks =
+                    defaulConfig.secondsBetweenAcknowledgmentChecks;
+                this.supervisorConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged =
+                    defaulConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged;
                 this.supervisorConfig.disconnectedCardTemplate = defaulConfig.disconnectedCardTemplate;
                 this.supervisorConfig.unackCardTemplate = defaulConfig.unackCardTemplate;
                 this.save();
             }
-          } catch(err) {
-            this.logger.error(err)
-          }
-
+        } catch (err) {
+            this.logger.error(err);
+        }
     }
 
-    public async synchronizeWithMongoDb() {
-      try {
-          const entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
-          this.logger.debug("Supervised entities from mongodb " + JSON.stringify(entitiesToSupervise));
+    public async synchronizeWithMongoDb(): Promise<ConfigDTO> {
+        try {
+            const entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
+            this.logger.debug('Supervised entities from mongodb ' + JSON.stringify(entitiesToSupervise));
 
-          if (entitiesToSupervise.length > 0) {
-              this.supervisorConfig.entitiesToSupervise = entitiesToSupervise;
-              this.save();
-          } else {
-            await this.initMongoDbFromConfigFile();
-            // Need to reset with values from mongo to be consistent with objects type (objects from mongo contain _id field)
-            this.supervisorConfig.entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
-          }
-
-        } catch(error) {
-          this.logger.error("Error synchronizing with database " + error);
+            if (entitiesToSupervise.length > 0) {
+                this.supervisorConfig.entitiesToSupervise = entitiesToSupervise;
+                this.save();
+            } else {
+                await this.initMongoDbFromConfigFile();
+                // Need to reset with values from mongo to be consistent with objects type (objects from mongo contain _id field)
+                this.supervisorConfig.entitiesToSupervise =
+                    await this.supervisorDatabaseService.getSupervisedEntities();
+            }
+        } catch (error) {
+            this.logger.error('Error synchronizing with database ' + JSON.stringify(error));
         }
         return this.supervisorConfig;
     }
 
-    private async initMongoDbFromConfigFile() {
-      for (const entityToSupervise of this.supervisorConfig.entitiesToSupervise) {
-        this.logger.debug("Add supervised entity " + JSON.stringify(entityToSupervise));
-        await this.supervisorDatabaseService.saveSupervisedEntity(entityToSupervise);
-      }
-    }
-    
-
-    public async saveSupervisedEntity(supervisedEntity: any) {
-      await this.supervisorDatabaseService.saveSupervisedEntity(supervisedEntity);
-
-      const index = this.supervisorConfig.entitiesToSupervise.findIndex(entity => entity.entityId === supervisedEntity.entityId);
-      if (index >= 0) {
-        this.supervisorConfig.entitiesToSupervise.splice(index);
-      }
-      this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
-      this.save();
+    private async initMongoDbFromConfigFile(): Promise<void> {
+        for (const entityToSupervise of this.supervisorConfig.entitiesToSupervise) {
+            this.logger.debug('Add supervised entity ' + JSON.stringify(entityToSupervise));
+            await this.supervisorDatabaseService.saveSupervisedEntity(entityToSupervise);
+        }
     }
 
-    public async deleteSupervisedEntity(entityId: any) {
+    public async saveSupervisedEntity(supervisedEntity: EntityToSupervise): Promise<void> {
+        await this.supervisorDatabaseService.saveSupervisedEntity(supervisedEntity);
+
+        const index = this.supervisorConfig.entitiesToSupervise.findIndex(
+            (entity) => entity.entityId === supervisedEntity.entityId
+        );
+        if (index >= 0) {
+            this.supervisorConfig.entitiesToSupervise.splice(index);
+        }
+        this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
+        this.save();
+    }
+
+    public async deleteSupervisedEntity(entityId: any): Promise<void> {
         await this.supervisorDatabaseService.deleteSupervisedEntity(entityId);
 
-        const index = this.supervisorConfig.entitiesToSupervise.findIndex(entity => entity.entityId === entityId.entityId);
+        const index = this.supervisorConfig.entitiesToSupervise.findIndex(
+            (entity) => entity.entityId === entityId.entityId
+        );
         if (index >= 0) {
             this.supervisorConfig.entitiesToSupervise.splice(index);
         }
         this.save();
     }
 
-    private loadFromFile() {
-        let rawdata = fs.readFileSync(this.configFilePath);
-        this.supervisorConfig = JSON.parse(rawdata);
+    private loadFromFile(): void {
+        if (this.configFilePath != null) {
+            const rawdata = fs.readFileSync(this.configFilePath);
+            this.supervisorConfig = JSON.parse(rawdata.toString());
+        }
     }
 
-    private save() {
-      if (this.configFilePath) {
-        let data = JSON.stringify(this.supervisorConfig);
-        fs.writeFileSync(this.configFilePath, data);
-      }
+    private save(): void {
+        if (this.configFilePath != null) {
+            const data = JSON.stringify(this.supervisorConfig);
+            fs.writeFileSync(this.configFilePath, data);
+        }
     }
 
-    getSupervisorConfig() : ConfigDTO {
+    getSupervisorConfig(): ConfigDTO {
         return this.supervisorConfig;
     }
 
-    public patch(update: any) : ConfigDTO {
+    public patch(update: object): ConfigDTO {
         try {
-            for (const [key, value] of Object.entries(update)) {          
-              if (this.supervisorConfig.hasOwnProperty(key) && value != null && value != undefined) {
-                (this.supervisorConfig as any)[key] = value;
-              }
+            for (const [key, value] of Object.entries(update)) {
+                if (Object.prototype.hasOwnProperty.call(this.supervisorConfig, key) && value != null) {
+                    (this.supervisorConfig as any)[key] = value;
+                }
             }
             this.save();
-          } catch (error) {
+        } catch (error) {
             this.logger.error(error);
-          }
+        }
 
         return this.supervisorConfig;
-
     }
 }
