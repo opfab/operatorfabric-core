@@ -68,6 +68,7 @@ public class UserSettingsService {
                 || (userSettingsPatch.getProcessesStatesNotifiedByEmail() != null)
                 || (userSettingsPatch.getEntitiesDisconnected() != null)
                 || (userSettingsPatch.getSendCardsByEmail() != null)
+                || (userSettingsPatch.getEmailToPlainText() != null)
                 || (userSettingsPatch.getEmail() != null))
             notificationService.publishUpdatedUserMessage(login);
 

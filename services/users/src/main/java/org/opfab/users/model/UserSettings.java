@@ -37,6 +37,7 @@ public class UserSettings {
     private Integer replayInterval;
     private Boolean remoteLoggingEnabled;
     private Boolean sendCardsByEmail;
+    private Boolean emailToPlainText;
     private String email;
     private Map<String, List<String>> processesStatesNotNotified;
     private Map<String, List<String>> processesStatesNotifiedByEmail;
@@ -61,6 +62,7 @@ public class UserSettings {
         this.replayInterval = settings.getReplayInterval();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
+        this.emailToPlainText = settings.getEmailToPlainText();
         this.email = settings.getEmail();
 
         if (settings.getProcessesStatesNotNotified() != null)
@@ -199,6 +201,14 @@ public class UserSettings {
         this.sendCardsByEmail = sendCardsByEmail;
     }
 
+    public Boolean getEmailToPlainText() {
+        return emailToPlainText;
+    }
+
+    public void setEmailToPlainText(Boolean emailToPlainText) {
+        this.emailToPlainText = emailToPlainText;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -289,6 +299,8 @@ public class UserSettings {
                 this.getEntitiesDisconnected(), ArrayList::new);
         result.sendCardsByEmail = ObjectUtils.getNotNullOrDefault(other.getSendCardsByEmail(),
                 this.getSendCardsByEmail());
+        result.emailToPlainText = ObjectUtils.getNotNullOrDefault(other.getEmailToPlainText(),
+                this.getEmailToPlainText());
         result.email = ObjectUtils.getNotNullOrDefault(other.getEmail(), this.getEmail());
 
         return result;

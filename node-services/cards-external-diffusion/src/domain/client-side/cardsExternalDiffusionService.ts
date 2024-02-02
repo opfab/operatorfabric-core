@@ -76,7 +76,7 @@ export default class CardsExternalDiffusionService {
 
     private checkRegularly() {
         if (this.active) {
-            this.logger.info('checkRegularly');
+            this.logger.info('Check regularly');
             this.cardsDiffusionControl
                 .checkUnreadCards()
                 .catch((error) => this.logger.error('error during periodic check' + error))

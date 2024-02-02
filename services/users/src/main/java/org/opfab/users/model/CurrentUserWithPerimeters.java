@@ -30,6 +30,7 @@ public class CurrentUserWithPerimeters {
     private Map<String, List<String>> processesStatesNotifiedByEmail;
 
     private Boolean sendCardsByEmail;
+    private Boolean emailToPlainText;
     private String email;
 
     @Valid
@@ -57,6 +58,14 @@ public class CurrentUserWithPerimeters {
 
     public void setSendCardsByEmail(Boolean sendCardsByEmail) {
         this.sendCardsByEmail = sendCardsByEmail;
+    }
+
+    public Boolean getEmailToPlainText() {
+        return emailToPlainText;
+    }
+
+    public void setEmailToPlainText(Boolean emailToPlainText) {
+        this.emailToPlainText = emailToPlainText;
     }
 
     public String getEmail() {
