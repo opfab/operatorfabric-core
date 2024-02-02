@@ -98,11 +98,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
-
     }
 
     private removeAckFromSubscription(entitiesAcksToRemove: string[]) {
-        let lightcard = fromCardToLightCard(this.card);
+        const lightcard = fromCardToLightCard(this.card);
         if (lightcard?.entitiesAcks && entitiesAcksToRemove) {
 
             entitiesAcksToRemove.forEach(entityToRemove => {
@@ -116,7 +115,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
-
     }
 
     ngOnChanges(changes: SimpleChanges): void {
