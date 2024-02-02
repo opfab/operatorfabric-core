@@ -152,24 +152,25 @@ export default class CardsDiffusionControl {
         const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(login);
         if (resp.isValid()) {
             const userWithPerimeters = resp.getData();
+            const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
             this.logger.debug('Got user with perimeters ' + JSON.stringify(userWithPerimeters));
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 const unreadCards = await this.getCardsForUser(cards, userWithPerimeters);
                 for (let i = 0; i < unreadCards.length; i++) {
-                    await this.sendCardIfAllowed(unreadCards[i], userWithPerimeters.email);
+                    await this.sendCardIfAllowed(unreadCards[i], userWithPerimeters.email, emailToPlainText);
                 }
             }
         }
     }
 
 
-    private async sendCardIfAllowed(unreadCard: any, userEmail: string): Promise<void> {
+    private async sendCardIfAllowed(unreadCard: any, userEmail: string, emailToPlainText: boolean): Promise<void> {
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(unreadCard.uid, userEmail);
 
             if (!alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(unreadCard, userEmail);
+                    await this.sendMail(unreadCard, userEmail, emailToPlainText);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${unreadCard.uid}`);
                 }
@@ -208,6 +209,11 @@ export default class CardsDiffusionControl {
 
     private isEmailSettingEnabled(userWithPerimeters: any): boolean {
         return userWithPerimeters.sendCardsByEmail && userWithPerimeters.email;
+        
+    }
+
+    private shouldEmailBePlainText(userWithPerimeters: any): boolean {
+        return userWithPerimeters.emailToPlainText;
     }
 
     private isCardUnreadForUser(card: any, user: any): boolean {
@@ -217,7 +223,7 @@ export default class CardsDiffusionControl {
         );
     }
 
-    private async sendMail(card: any, to: string) {
+    private async sendMail(card: any, to: string, emailToPlainText:boolean) {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
         let subject =
             this.subjectPrefix +
@@ -230,7 +236,7 @@ export default class CardsDiffusionControl {
         if (card.endDate) subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate);
         const body = await this.processCardTemplate(card);
         try {
-            await this.mailService.sendMail(subject, body, this.from, to);
+            await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
             this.registerNewSending(to);
             await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {

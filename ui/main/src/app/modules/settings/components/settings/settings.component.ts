@@ -36,6 +36,7 @@ export class SettingsComponent implements OnInit {
     systemNotificationCompliantDefaultValue: boolean;
     systemNotificationInformationDefaultValue: boolean;
     sendCardsByEmailDefaultValue: boolean;
+    emailToPlainTextDefaultValue: boolean;
 
     userConfiguration: UserConfiguration;
 
@@ -86,6 +87,9 @@ export class SettingsComponent implements OnInit {
             : false;
         this.sendCardsByEmailDefaultValue = ConfigService.getConfigValue('settings.sendCardsByEmail')
             ? ConfigService.getConfigValue('settings.sendCardsByEmail')
+            : false;
+        this.emailToPlainTextDefaultValue = ConfigService.getConfigValue('settings.emailToPlainText')
+            ? ConfigService.getConfigValue('settings.emailToPlainText')
             : false;
         const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
 

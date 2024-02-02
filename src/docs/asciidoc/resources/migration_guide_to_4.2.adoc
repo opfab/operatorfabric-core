@@ -97,6 +97,12 @@ The card field `keepChildCards` is now deprecated, use the new `actions` field (
 
 
 == Feed process and state filter
+
 New filters have been added to feed filters to allow filtering by card process and state.
 It is possible to hide the process filter by setting `feed.card.hideProcessFilter` to `true` in `web-ui.json` config file. When process filter is hidden than also state filter is hidden.
-It is possible to hide just the the state filter by setting `feed.card.hideStateFilter` to `true` in `web-ui.json` config file
+It is possible to hide just the the state filter by setting `feed.card.hideStateFilter` to `true` in `web-ui.json` config file.
+
+== User settings
+
+A new setting to send emails in plain text instead of HTML has been added in the settings screen of the user.
+This setting can be hidden in the configuration file of the web-ui by the field "settings.settingsScreen.hiddenSettings" by adding the value "emailToPlainText".

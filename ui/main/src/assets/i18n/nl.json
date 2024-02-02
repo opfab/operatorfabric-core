@@ -321,7 +321,8 @@
     "systemNotificationCompliant": "Conform",
     "systemNotificationInformation": "Informatie",
     "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
-    "sendCardsByEmail" : "Kaartmeldingen per e-mail versturen",
+    "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
+    "emailToPlainText": "De e-mails versturen in platte tekst",
     "email": "Email"
   },
   "archive": {

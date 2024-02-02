@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -39,6 +39,9 @@
 
     <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('sendCardsByEmail')">
       <of-checkbox-setting settingPath="sendCardsByEmail" labelClass="label-sendCardsByEmail" name="sendCardsByEmail" [checked]=sendCardsByEmailDefaultValue></of-checkbox-setting>
+      <span *ngIf="!hiddenSettings?.includes('emailToPlainText')">
+        <of-checkbox-setting settingPath="emailToPlainText" labelClass="label-emailToPlainText" name="emailToPlainText" [checked]=emailToPlainTextDefaultValue></of-checkbox-setting>
+      </span>
     </div>
 
     <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('sendCardsByEmail')">

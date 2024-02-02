@@ -150,6 +150,7 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setReplayInterval(10);
                 userSettings.setRemoteLoggingEnabled(false);
                 userSettings.setSendCardsByEmail(false);
+                userSettings.setEmailToPlainText(false);
                 userSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                 userSettings.setEntitiesDisconnected(entitiesDisconnected);
 
