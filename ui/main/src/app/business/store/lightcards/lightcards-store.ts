@@ -411,7 +411,6 @@ export class LightCardsStore {
             this.lightCardsEvents.next(this.lightCards);
         }
     }
-    
 
     public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[], operation: CardOperationType}> {
         return this.receivedAcksSubject.asObservable();
