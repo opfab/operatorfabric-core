@@ -7,16 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.cards.consultation.model;
 
-
-package org.opfab.cards.consultation.repositories;
-
-import org.opfab.cards.consultation.model.Card;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface CardRepository extends ReactiveMongoRepository<Card, String>,CardCustomRepository {
-
+public enum PublisherTypeEnum {  
+  EXTERNAL,
+  ENTITY
 }
+

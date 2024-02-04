@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -152,9 +152,9 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
                     CardOperationsGetParameters.CardOperationsGetParametersBuilder builder = CardOperationsGetParameters.builder()
                             .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
                             .clientId(request.queryParam(CLIENT_ID).orElse(null))
-                            .rangeStart(t.getT2().getRangeStart())
-                            .rangeEnd(t.getT2().getRangeEnd())
-                            .publishFrom(t.getT2().getPublishFrom())
+                            .rangeStart(t.getT2().rangeStart())
+                            .rangeEnd(t.getT2().rangeEnd())
+                            .publishFrom(t.getT2().publishFrom())
                             .test(false)
                             .notification(true);
                     return builder.build();

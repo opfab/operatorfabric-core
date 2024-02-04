@@ -7,16 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.cards.consultation.model;
 
+import java.util.List;
 
-package org.opfab.cards.consultation.repositories;
-
-import org.opfab.cards.consultation.model.Card;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface CardRepository extends ReactiveMongoRepository<Card, String>,CardCustomRepository {
-
+public record Recurrence(
+        String timeZone,
+        List<Integer> daysOfWeek,
+        HoursAndMinutes hoursAndMinutes,
+        Integer durationInMinutes,
+        List<Integer> months) {
 }

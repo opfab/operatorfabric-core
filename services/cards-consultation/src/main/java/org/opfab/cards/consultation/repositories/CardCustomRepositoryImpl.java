@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,12 +11,11 @@ package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.cards.consultation.model.CardConsultationData;
+import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
-import org.opfab.cards.consultation.model.CardOperationConsultationData;
-import org.opfab.cards.consultation.model.LightCardConsultationData;
-import org.opfab.cards.model.CardOperationTypeEnum;
+import org.opfab.cards.consultation.model.CardOperationTypeEnum;
+import org.opfab.cards.consultation.model.CardsFilter;
+import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
@@ -59,16 +58,16 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         this.template = template;
     }
 
-    public Mono<CardConsultationData> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
-        return findByIdWithUser(template, id, currentUserWithPerimeters, CardConsultationData.class);
+    public Mono<Card> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        return findByIdWithUser(template, id, currentUserWithPerimeters, Card.class);
     }
 
-    public Flux<CardConsultationData> findByParentCardId(String parentId) {
-        return findByParentCardId(template, parentId, CardConsultationData.class);
+    public Flux<Card> findByParentCardId(String parentId) {
+        return findByParentCardId(template, parentId, Card.class);
     }
 
-	public Flux<CardConsultationData> findByInitialParentCardUid(String initialParentCardUid) {
-		return findByInitialParentCardUid(template, initialParentCardUid, CardConsultationData.class);
+	public Flux<Card> findByInitialParentCardUid(String initialParentCardUid) {
+		return findByInitialParentCardUid(template, initialParentCardUid, Card.class);
 	}
 
 
@@ -76,16 +75,12 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	public Flux<CardOperation> getCardOperations(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
 	CurrentUserWithPerimeters currentUserWithPerimeters)
 	{
-		return findCards(publishFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard -> {
-			CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
-			return builder
-					.type(CardOperationTypeEnum.ADD)
-					.card(LightCardConsultationData.copy(lightCard))
-					.build();				
-		});
+		return findCards(publishFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard ->
+			new CardOperation(CardOperationTypeEnum.ADD, null, LightCard.copy(lightCard))
+		);
 	}
 	
-    private Flux<CardConsultationData> findCards(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
+    private Flux<Card> findCards(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
 	CurrentUserWithPerimeters currentUserWithPerimeters)
 	{	
 		Criteria criteria ;
@@ -110,7 +105,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         query.addCriteria(criteria);
         query.addCriteria(criteriaForProcessesStatesNotNotified);
         log.debug("launch query with user {}", currentUserWithPerimeters.getUserData().getLogin());
-        return template.find(query, CardConsultationData.class).map(card -> {
+        return template.find(query, Card.class).map(card -> {
             log.debug("Find card {}",card.getId());
 			card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(currentUserWithPerimeters.getUserData().getLogin()));
 			card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(currentUserWithPerimeters.getUserData().getLogin()));
@@ -167,11 +162,11 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
             Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
 		CardsFilter queryFilter = filter.getT2();
 
-		if ((queryFilter.getSelectedFields() != null) && (!queryFilter.getSelectedFields().isEmpty())) {
+		if ((queryFilter.selectedFields() != null) && (!queryFilter.selectedFields().isEmpty())) {
 			return findWithUserAndFilterAndSelectedFields(filter);
 		}
 
-        Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
+        Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.page() != null ? queryFilter.page().intValue() : null , queryFilter.size() != null ? queryFilter.size().intValue() : null);
         String[] fields = {"uid",
         "publisher",
         "processVersion",
@@ -198,14 +193,14 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
 
         if (pageableRequest.isPaged()) {
-            return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
+            return template.aggregate(agg, CARDS_COLLECTION, LightCard.class)
                     .cast(Object.class).collectList()
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
         } else {
-            return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
+            return template.aggregate(agg, CARDS_COLLECTION, LightCard.class)
                     .cast(Object.class).collectList()
                     .map(PageImpl::new);
         }
@@ -215,12 +210,12 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 			Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
 		CardsFilter queryFilter = filter.getT2();
 
-		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
+		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.page() != null ? queryFilter.page().intValue() : null , queryFilter.size() != null ? queryFilter.size().intValue() : null);
 		List<String> fields = new ArrayList<>(List.of(
 				"uid",
 				"severity"));
 
-		fields.addAll(queryFilter.getSelectedFields());
+		fields.addAll(queryFilter.selectedFields());
 		List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
 		String[] selectedFields = fieldsWithoutDuplicates.toArray(String[]::new);
 
@@ -245,8 +240,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
     public boolean checkIfInAdminMode(CurrentUserWithPerimeters currentUserWithPerimeters,
             CardsFilter filter) {
-        if (filter.getAdminMode() != null) {
-            boolean adminMode = Boolean.TRUE.equals(filter.getAdminMode());
+        if (filter.adminMode() != null) {
+            boolean adminMode = Boolean.TRUE.equals(filter.adminMode());
             boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                     (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
 

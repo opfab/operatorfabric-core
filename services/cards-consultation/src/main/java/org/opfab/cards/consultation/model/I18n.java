@@ -7,16 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.cards.consultation.model;
 
+import java.util.Map;
 
-package org.opfab.cards.consultation.repositories;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import org.opfab.cards.consultation.model.Card;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface CardRepository extends ReactiveMongoRepository<Card, String>,CardCustomRepository {
-
+public record I18n(String key, @JsonInclude(JsonInclude.Include.NON_EMPTY) Map<String, String> parameters) {
 }

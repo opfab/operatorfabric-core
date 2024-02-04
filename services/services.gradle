@@ -1,17 +1,12 @@
 subprojects {
 
-    /////// PLUGINS
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
     apply plugin: "com.palantir.docker"
-    apply plugin: 'org.hidetake.swagger.generator'
-
-    /////// DEPENDENCIES
 
     dependencies {
-        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         implementation boot.actuator
         implementation misc.micrometer
         annotationProcessor misc.lombok
@@ -35,44 +30,22 @@ subprojects {
         testImplementation.exclude module: "spring-boot-starter-tomcat"
     }
 
-    /////// COMPILATION
-
     sourceSets {
         main {
             java {
                 srcDir 'src/main/java'
-                srcDir 'build/swagger/src/main/java'
             }
             resources{
                 srcDir 'src/main/resources'
-                srcDir 'build/src/generated/resources'
             }
         }
     }
-
-    // Tests
 
     test {
         useJUnitPlatform()
 
         filter {
             includeTestsMatching "*Should"
-        }
-    }
-
-    swaggerSources {
-        endpoints {
-            inputFile = file('src/main/modeling/swagger.yaml')
-            code {
-                language = 'org.opfab.generators.OpfabSpringGenerator'
-                additionalProperties = [ignoreImportMappings:"false"]
-                configFile = file('src/main/modeling/config.json')
-                outputDir = file("./build/swagger")
-                templateDir = file('../src/main/resources/swagger-templates')
-            }
-            ui {
-                outputDir = file("./build/docs/api")
-            }
         }
     }
 

@@ -8,15 +8,12 @@
  */
 
 
+package org.opfab.cards.consultation.model;
 
-package org.opfab.cards.consultation.repositories;
+import java.time.Instant;
 
-import org.opfab.cards.consultation.model.Card;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface CardRepository extends ReactiveMongoRepository<Card, String>,CardCustomRepository {
-
+public record TimeSpan(
+        Instant start,
+        Instant end,
+        Recurrence recurrence) {
 }

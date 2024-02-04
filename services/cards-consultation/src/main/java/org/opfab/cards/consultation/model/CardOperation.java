@@ -7,16 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.cards.consultation.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-package org.opfab.cards.consultation.repositories;
-
-import org.opfab.cards.consultation.model.Card;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface CardRepository extends ReactiveMongoRepository<Card, String>,CardCustomRepository {
+public record CardOperation(CardOperationTypeEnum type, @JsonInclude(JsonInclude.Include.NON_EMPTY) String cardId,
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) LightCard card) {
 
 }
