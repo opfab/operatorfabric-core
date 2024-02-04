@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,21 +18,11 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Configures mongo {@link org.bson.Document} to Business objects converters
- *
- */
 @Component
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
 
+    @SuppressWarnings("rawtypes")
     public List<Converter> converterList() {
-
-        List<Converter> converterList = new ArrayList<>();
-        converterList.add(new I18nReadConverter());
-        converterList.add(new LightCardReadConverter());
-        converterList.add(new TimeSpanReadConverter());
-        converterList.add(new RRuleReadConverter());
-
-        return converterList;
+        return new ArrayList<>();
     }
 }

@@ -32,7 +32,7 @@ public record LightCard(
         I18n summary,
         String titleTranslated,
         String summaryTranslated,
-        List<TimeSpan> timeSpansSet,
+        List<TimeSpan> timeSpans,
         List<String> entitiesAcks,
         List<String> entityRecipients,
         List<String> groupRecipients,

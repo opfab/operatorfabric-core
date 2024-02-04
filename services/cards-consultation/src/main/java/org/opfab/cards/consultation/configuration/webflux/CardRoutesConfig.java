@@ -12,10 +12,10 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 
-import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardActionEnum;
-import org.opfab.cards.consultation.model.CardConsultationData;
-import org.opfab.cards.consultation.model.CardData;
+import org.opfab.cards.consultation.model.Card;
+import org.opfab.cards.consultation.model.CardWithChildCards;
+import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -65,14 +65,14 @@ public class CardRoutesConfig implements UserExtractor {
                         .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardId(userCardT2.getT2().getId()).collectList()))
                         .doOnNext(t2 -> {
                             CurrentUserWithPerimeters user = t2.getT1().getT1();
-                            CardConsultationData card = t2.getT1().getT2();
+                            Card card = t2.getT1().getT2();
                             card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(user.getUserData().getLogin()));
                             card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(user.getUserData().getLogin()));
                         })
                         .flatMap(t2 -> {
                             CurrentUserWithPerimeters user = t2.getT1().getT1();
-                            CardConsultationData card = t2.getT1().getT2();
-                            List<CardConsultationData> childCards = t2.getT2();
+                            Card card = t2.getT1().getT2();
+                            List<Card> childCards = t2.getT2();
                             childCards.forEach(child -> {
                                 if (child.getActions() != null && child.getActions().contains(CardActionEnum.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
                                     child.setHasBeenAcknowledged(child.getUsersAcks() != null && child.getUsersAcks().contains(user.getUserData().getLogin()));
@@ -82,7 +82,7 @@ public class CardRoutesConfig implements UserExtractor {
 
                             return ok()
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .body(fromValue(CardData.builder().card(card).childCards(childCards).build()));
+                                    .body(fromValue(new CardWithChildCards(card, childCards)));
                         })
                         .switchIfEmpty(notFound().build());
     }

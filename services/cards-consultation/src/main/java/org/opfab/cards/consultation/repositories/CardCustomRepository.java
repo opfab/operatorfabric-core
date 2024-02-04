@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ package org.opfab.cards.consultation.repositories;
 
 
 import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.cards.consultation.model.CardConsultationData;
+import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import java.time.Instant;
 /*
 * <p>Needed to avoid trouble at runtime when springframework try to create mongo request for findByIdWithUser method</p>
 * */
-public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<CardConsultationData> {
+public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<Card> {
 
         /**
      * Finds Card published earlier than <code>latestPublication</code> and either :

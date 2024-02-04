@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,10 @@ package org.opfab.cards.consultation.repositories;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
-import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.ArchivedCard;
 import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.cards.consultation.model.CardsFilterData;
-import org.opfab.cards.consultation.model.FilterModelData;
-import org.opfab.cards.model.FilterMatchTypeEnum;
+import org.opfab.cards.consultation.model.FilterMatchTypeEnum;
+import org.opfab.cards.consultation.model.FilterModel;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
@@ -169,7 +168,7 @@ public class ArchivedCardRepositoryShould {
 
     }
 
-    private void persistCard(ArchivedCardConsultationData simpleArchivedCard) {
+    private void persistCard(ArchivedCard simpleArchivedCard) {
         StepVerifier.create(repository.save(simpleArchivedCard))
                 .expectNextCount(1)
                 .expectComplete()
@@ -180,7 +179,7 @@ public class ArchivedCardRepositoryShould {
     void persistCard() {
         repository.deleteAll().subscribe();
 
-        ArchivedCardConsultationData card =
+        ArchivedCard card =
                 createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"});
         StepVerifier.create(repository.save(card))
                 .expectNextMatches(computeCardPredicate())
@@ -193,32 +192,32 @@ public class ArchivedCardRepositoryShould {
                 .verify();
     }
 
-    private Predicate<ArchivedCardConsultationData> computeCardPredicate() {
-        Predicate<ArchivedCardConsultationData> predicate = c -> !(c.getId()==null);
-        predicate = predicate.and(c -> firstPublisher.equals(c.getPublisher()));
-        predicate = predicate.and(c -> c.getUserRecipients().contains(login1));
-        predicate = predicate.and(c -> c.getGroupRecipients().contains("rte"));
-        predicate = predicate.and(c -> c.getGroupRecipients().contains("operator"));
-        predicate = predicate.and(c -> c.getEntityRecipients().size() == 2);
-        predicate = predicate.and(c -> c.getEntityRecipients().get(0).equals("entity1"));
-        predicate = predicate.and(c -> c.getEntityRecipients().get(1).equals("entity2"));
+    private Predicate<ArchivedCard> computeCardPredicate() {
+        Predicate<ArchivedCard> predicate = c -> !(c.id()==null);
+        predicate = predicate.and(c -> firstPublisher.equals(c.publisher()));
+        predicate = predicate.and(c -> c.userRecipients().contains(login1));
+        predicate = predicate.and(c -> c.groupRecipients().contains("rte"));
+        predicate = predicate.and(c -> c.groupRecipients().contains("operator"));
+        predicate = predicate.and(c -> c.entityRecipients().size() == 2);
+        predicate = predicate.and(c -> c.entityRecipients().get(0).equals("entity1"));
+        predicate = predicate.and(c -> c.entityRecipients().get(1).equals("entity2"));
         return predicate;
     }
 
     @Test void fetchArchivedCardByIdWithUserWhoIsARecipient() {
 
-        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null);
-        String id = archivedCard.getId();
+        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null);
+        String id = archivedCard.id();
 
         persistCard(archivedCard);
 
         StepVerifier.create(repository.findByIdWithUser(id, currentUser1))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(id);
-                    assertThat(card.getPublisher()).isEqualTo("PUBLISHER");
-                    assertThat(card.getProcessInstanceId()).isEqualTo("PROCESS1");
-                    assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
-                    assertThat(card.getEndDate()).isEqualTo(nowMinusOne);
+                    assertThat(card.id()).isEqualTo(id);
+                    assertThat(card.publisher()).isEqualTo("PUBLISHER");
+                    assertThat(card.processInstanceId()).isEqualTo("PROCESS1");
+                    assertThat(card.startDate()).isEqualTo(nowMinusTwo);
+                    assertThat(card.endDate()).isEqualTo(nowMinusOne);
                 })
                 .expectComplete()
                 .verify();
@@ -226,8 +225,8 @@ public class ArchivedCardRepositoryShould {
 
     @Test void fetchArchivedCardByIdWithUserWhoIsNotARecipient() {
 
-        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"someGroup","operator"}, null);
-        String id = archivedCard.getId();
+        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"someGroup","operator"}, null);
+        String id = archivedCard.id();
 
         persistCard(archivedCard);
 
@@ -241,19 +240,19 @@ public class ArchivedCardRepositoryShould {
 
         //Find cards with given publishers and a given processInstanceId
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("publisher")
             .matchType(FilterMatchTypeEnum.IN)
             .filter(List.of(secondPublisher, businessconfigPublisher))
             .build();
-        FilterModelData filter2 = FilterModelData.builder()
+        FilterModel filter2 = FilterModel.builder()
             .columnName("processInstanceId")
             .matchType(FilterMatchTypeEnum.EQUALS)
             .filter(List.of("PROCESS1"))
             .build();
 
             
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1, filter2)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -277,13 +276,13 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithRegularParamsEmptyResultSet() {
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("publisher")
             .matchType(FilterMatchTypeEnum.IN)
             .filter(List.of("noSuchPublisher"))
             .build();
             
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -306,16 +305,16 @@ public class ArchivedCardRepositoryShould {
         Instant end = nowPlusOne;
 
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("publishDateFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
-        FilterModelData filter2 = FilterModelData.builder()
+        FilterModel filter2 = FilterModel.builder()
             .columnName("publishDateTo")
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
             
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1, filter2)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -342,12 +341,12 @@ public class ArchivedCardRepositoryShould {
         //Find cards published after start (included)
         Instant start = now;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("publishDateFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
             
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -374,12 +373,12 @@ public class ArchivedCardRepositoryShould {
         //Find cards published before end (included)
         Instant end = nowMinusTwo;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("publishDateTo")
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
         
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -407,16 +406,16 @@ public class ArchivedCardRepositoryShould {
         Instant start = nowMinusHalf;
         Instant end = nowPlusHalf;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("activeFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
-        FilterModelData filter2 = FilterModelData.builder()
+        FilterModel filter2 = FilterModel.builder()
             .columnName("activeTo")
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
         
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1, filter2)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -443,12 +442,12 @@ public class ArchivedCardRepositoryShould {
         //Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("activeFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
             
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -477,13 +476,13 @@ public class ArchivedCardRepositoryShould {
         //Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("activeFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
             
         //Page 1
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .size(BigDecimal.valueOf(2))
             .page(BigDecimal.ZERO)
             .filters(List.of(filter1)).build();
@@ -510,7 +509,11 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
         //Page 2
-        filters.setPage(BigDecimal.ONE);
+
+        filters = CardsFilter.builder()
+            .size(BigDecimal.valueOf(2))
+            .page(BigDecimal.ONE)
+            .filters(List.of(filter1)).build();
         filterParams = of(currentUser1, filters);
 
 
@@ -533,7 +536,11 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
         //Page 3
-        filters.setPage(BigDecimal.valueOf(2));
+        filters = CardsFilter.builder()
+        .size(BigDecimal.valueOf(2))
+        .page(BigDecimal.valueOf(2))
+        .filters(List.of(filter1)).build();
+
         filterParams = of(currentUser1, filters);
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -563,13 +570,13 @@ public class ArchivedCardRepositoryShould {
         //Find cards with an active period that is at least partly before end
         Instant end = nowMinusTwo;
 
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("activeTo")
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
 
         
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -598,27 +605,27 @@ public class ArchivedCardRepositoryShould {
 
         Instant publishTo = now;
      
-        FilterModelData filter1 = FilterModelData.builder()
+        FilterModel filter1 = FilterModel.builder()
             .columnName("activeFrom")
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
-        FilterModelData filter2 = FilterModelData.builder()
+        FilterModel filter2 = FilterModel.builder()
             .columnName("activeTo")
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
 
-        FilterModelData filter3= FilterModelData.builder()
+        FilterModel filter3= FilterModel.builder()
             .columnName("publishDateTo")
             .filter(List.of(Long.toString(publishTo.toEpochMilli())))
             .build();
 
-        FilterModelData filter4= FilterModelData.builder()
+        FilterModel filter4= FilterModel.builder()
             .columnName("publisher")
             .matchType(FilterMatchTypeEnum.EQUALS)
             .filter(List.of(firstPublisher))
             .build();
 
-        CardsFilter filters = CardsFilterData.builder()
+        CardsFilter filters = CardsFilter.builder()
             .filters(List.of(filter1, filter2, filter3, filter4)).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
@@ -647,7 +654,7 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsUserRecipientIsAllowedToSee() {
 
         //Cards visible by user1
-        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
@@ -668,7 +675,7 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
 
         //Cards visible by someone from group "rte"
-        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser2, filters);
 
@@ -689,7 +696,7 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
 
         //Cards visible by user3 (who has no groups at all)
-        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser3, filters);
 
 
@@ -704,7 +711,7 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
 
         //Cards visible by someone from entity "someEntity"
-        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser4, filters);
 
 
@@ -719,7 +726,7 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
 
         //Cards visible by someone from group "group1" and from entity "entity1"
-        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser5, filters);
 
 
