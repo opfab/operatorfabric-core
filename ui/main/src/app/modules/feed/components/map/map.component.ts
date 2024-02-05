@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,6 +48,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private graphChart = null;
     public lightCardsToDisplay: LightCard[];
     private filteredLightCardStore: FilteredLightCardsStore;
+    private popupContent: string;
 
     constructor(private translate: TranslateService, private router: Router) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -77,6 +78,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
                 this.zoomToLocation(lightCardId);
             });
+
+            this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', "publishDateAndTitle");
         }
     }
 
@@ -259,8 +262,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     displayCardDetailsOnButton(lightCard: LightCard): string {
-        const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
-        return `${publishDate} : ${lightCard.titleTranslated}`;
+        if (this.popupContent === 'summary') {
+            return `${lightCard.summaryTranslated}`;
+        } else {
+            const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+            return `${publishDate} : ${lightCard.titleTranslated}`;
+        }
     }
 
     private getExtentWithMargin() {
