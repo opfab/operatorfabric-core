@@ -80,6 +80,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |feed.card.hideApplyFiltersToTimeLineChoice|false|no|Control if you want to show or hide the option of applying filters or not to timeline in the feed page
 |feed.card.hideResponseFilter|false|no|Control if you want to show or hide the response filter in the feed page
 |feed.card.hideProcessFilter|false|no|Control if you want to show or hide the process filter in the feed page
+|feed.card.hideStateFilter|false|no|Control if you want to show or hide the state filter in the feed page
 |feed.card.maxNbOfCardsToDisplay|100|no| Max number of card visible in feed (This limit is used for performance reasons, setting the value too high can have consequences on browser response times)
 |feed.card.secondsBeforeLttdForClockDisplay|180|no| Number of seconds before lttd when a clock is activated in cards on the feed
 |feed.card.time.display|BUSINESS|no

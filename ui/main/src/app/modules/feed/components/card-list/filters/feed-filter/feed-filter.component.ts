@@ -24,6 +24,7 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
+import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 
 @Component({
     selector: 'of-feed-filter',
@@ -36,6 +37,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() defaultAcknowledgmentFilter: string;
     @Input() hideResponseFilter: boolean;
     @Input() hideProcessFilter: boolean;
+    @Input() hideStateFilter: boolean;
 
     @Input() defaultSorting: string;
 
@@ -69,6 +71,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     processFilterForm: FormGroup<{
         process: FormControl<string | null>;
+        state: FormControl<string | null>;
     }>;
 
     endMinDate: {year: number; month: number; day: number} = null;
@@ -76,11 +79,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     processMultiSelect: MultiSelect;
     processList = [];
+    selectedProcess: string;
+    stateMultiSelect: MultiSelect;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor() {
+    constructor(private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
@@ -140,7 +145,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private createProcessForm() {
         return new FormGroup(
             {
-                process: new FormControl<string | null>('')
+                process: new FormControl<string | null>(''),
+                state: new FormControl<string | null>('')
             },
             {updateOn: 'change'}
         );
@@ -153,6 +159,21 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             config: {
                 labelKey: 'shared.filters.process',
                 placeholderKey: 'shared.filters.selectProcessText',
+                sortOptions: true,
+                nbOfDisplayValues: 4,
+                multiple: false
+            },
+            selectedOptions: []
+        };
+    }
+
+    private initializeStateMultiSelect() {
+        this.stateMultiSelect = {
+            id: 'state',
+            options: [],
+            config: {
+                labelKey: 'shared.filters.state',
+                placeholderKey: 'shared.filters.selectStateText',
                 sortOptions: true,
                 nbOfDisplayValues: 4,
                 multiple: false
@@ -186,6 +207,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.initializeProcessMultiSelect();
             this.initProcessFilter();
         }
+        if (!this.hideStateFilter) {
+            this.initializeStateMultiSelect();
+        }
     }
 
     private loadVisibleProcessesForCurrentUser() {
@@ -196,6 +220,20 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         });
     }
 
+    private loadVisibleStatesForCurrentUserAndProcess() {
+        this.stateMultiSelect.options = [];
+        if (this.selectedProcess?.length > 0) {
+            const selected = this.processList.find((process) => process.id === this.selectedProcess);
+            const stateOptions = this.processStatesDropdownListService.getStatesMultiSelectOptionsPerSingleProcess(
+                selected,
+                false,
+                true
+            );
+            this.stateMultiSelect.options.push(new MultiSelectOption('', ''));
+            stateOptions.forEach((option) => this.stateMultiSelect.options.push(option));
+        }
+    }
+
     private initProcessFilter() {
         this.loadVisibleProcessesForCurrentUser();
         this.processMultiSelect.options.push(new MultiSelectOption('', ''));
@@ -204,7 +242,15 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         );
         this.processFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             this.filterActiveChange.next(this.isFilterActive());
-            return this.filteredLightCardStore.updateFilter(FilterType.PROCESS_FILTER, true, {process: form.process});
+            const selectedProcessChanged = form.process !== this.selectedProcess;
+            this.selectedProcess = form.process;
+            if (!this.hideStateFilter && selectedProcessChanged) {
+                this.loadVisibleStatesForCurrentUserAndProcess();
+            }
+            return this.filteredLightCardStore.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: form.process,
+                state: form.state
+            });
         });
     }
 

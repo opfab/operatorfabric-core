@@ -185,7 +185,9 @@ export class LightCardsFilter {
     private initProcessFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                if (status.process) {
+                if (status.process && status.state) {
+                    return status.process === card.process && status.state === card.process + '.' + card.state;
+                } else if (status.process) {
                     return status.process === card.process;
                 }
                 return true;

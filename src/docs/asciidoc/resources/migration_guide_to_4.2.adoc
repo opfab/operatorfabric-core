@@ -96,6 +96,7 @@ migration documentation to opfab 4.0 to know which functions you have to use.
 The card field `keepChildCards` is now deprecated, use the new `actions` field (string array) including "KEEP_CHILD_CARDS" action instead.
 
 
-== Feed process filter
-A new filter has been added to feed filters to allow filtering by card process.
-It is possible to hide the process filter by setting `feed.card.hideProcessFilter` to `true` in `web-ui.json` config file
+== Feed process and state filter
+New filters have been added to feed filters to allow filtering by card process and state.
+It is possible to hide the process filter by setting `feed.card.hideProcessFilter` to `true` in `web-ui.json` config file. When process filter is hidden than also state filter is hidden.
+It is possible to hide just the the state filter by setting `feed.card.hideStateFilter` to `true` in `web-ui.json` config file

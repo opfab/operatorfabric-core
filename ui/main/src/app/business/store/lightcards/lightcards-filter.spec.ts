@@ -25,6 +25,7 @@ describe('NewFilterService ', () => {
         cards = cards.concat(
             getSeveralLightCards(1, {
                 process: 'process1',
+                state: 'first',
                 startDate: new Date().valueOf(),
                 endDate: null,
                 publishDate: new Date().valueOf(),
@@ -37,6 +38,7 @@ describe('NewFilterService ', () => {
         cards = cards.concat(
             getSeveralLightCards(1, {
                 process: 'process1',
+                state: 'second',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR,
@@ -49,6 +51,7 @@ describe('NewFilterService ', () => {
         cards = cards.concat(
             getSeveralLightCards(1, {
                 process: 'process2',
+                state: 'state2',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 2 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 2,
@@ -60,6 +63,7 @@ describe('NewFilterService ', () => {
         cards = cards.concat(
             getSeveralLightCards(1, {
                 process: 'process3',
+                state: 'state3',
                 startDate: new Date().valueOf(),
                 endDate: new Date().valueOf() + 3 * ONE_HOUR,
                 publishDate: new Date().valueOf() - ONE_HOUR * 3,
@@ -348,6 +352,31 @@ describe('NewFilterService ', () => {
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(4);
+        });
+
+        it('filter 4 cards by process and state => shall return the cards with selected process and state only', () => {
+            const cards = getFourCards();
+            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+            service.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: 'process1',
+                state: 'process1.second'
+            });
+            const filteredCards = service.filterLightCards(cards);
+            expect(filteredCards.length).toBe(1);
+            expect(filteredCards).toContain(cards[1]);
+        });
+
+        it('filter 4 cards by process and empty state => shall return the cards with selected process', () => {
+            const cards = getFourCards();
+            service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+            service.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: 'process1',
+                state: ''
+            });
+            const filteredCards = service.filterLightCards(cards);
+            expect(filteredCards.length).toBe(2);
+            expect(filteredCards).toContain(cards[0]);
+            expect(filteredCards).toContain(cards[1]);
         });
     });
 });
