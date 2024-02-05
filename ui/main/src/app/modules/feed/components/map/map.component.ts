@@ -49,6 +49,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     public lightCardsToDisplay: LightCard[];
     private filteredLightCardStore: FilteredLightCardsStore;
     private popupContent: string;
+    private static highlightPolygonStrokeWidth: number;
 
     constructor(
         private translate: TranslateService,
@@ -81,6 +82,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
 
             this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', 'publishDateAndTitle');
+            MapComponent.highlightPolygonStrokeWidth = ConfigService.getConfigValue(
+                'feed.geomap.highlightPolygonStrokeWidth',
+                2
+            );
         }
     }
 
@@ -427,10 +432,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private static polygonStyle(severity: Severity, highlight: boolean) {
         const fillOpacity = highlight ? 0.6 : 0.1;
+        const strokeWidth = highlight ? this.highlightPolygonStrokeWidth : 2;
         return new Style({
             stroke: new Stroke({
                 color: MapComponent.severityToColorMap(0.8)[severity],
-                width: 2
+                width: strokeWidth
             }),
             fill: new Fill({
                 color: MapComponent.severityToColorMap(fillOpacity)[severity] // 'rgba(0, 0, 255, 0.1)'
