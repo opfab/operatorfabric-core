@@ -48,6 +48,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     hideResponseFilter: boolean;
     hideTimerTags: boolean;
     hideProcessFilter: boolean;
+    hideStateFilter: boolean;
     hideApplyFiltersToTimeLineChoice: boolean;
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
@@ -81,6 +82,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         this.hideTimerTags = ConfigService.getConfigValue('feed.card.hideTimeFilter', false);
         this.hideResponseFilter = ConfigService.getConfigValue('feed.card.hideResponseFilter', false);
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
+        this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
         this.hideApplyFiltersToTimeLineChoice = ConfigService.getConfigValue(
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false

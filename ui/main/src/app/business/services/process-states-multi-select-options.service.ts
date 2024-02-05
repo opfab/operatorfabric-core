@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {Process} from '@ofModel/processes.model';
 
 /** This class contains functions to get the list of process and states for filters in UI */
 
@@ -28,23 +29,36 @@ export class ProcessStatesMultiSelectOptionsService {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
         ProcessesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
-            stateOptions.options = [];
-            process.states.forEach((state, stateid) => {
-                if (
-                    this.doesStateHaveToBeDisplayedInFilters(
-                        hideChildStates,
-                        state.isOnlyAChildState,
-                        process.id,
-                        stateid,
-                        isAdminModeAndUserHasRightToSeeAllStates
-                    )
-                ) {
-                    stateOptions.options.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
-                }
-            });
+            stateOptions.options = this.getStatesMultiSelectOptionsPerSingleProcess(
+                process,
+                isAdminModeAndUserHasRightToSeeAllStates,
+                hideChildStates
+            );
             if (stateOptions.options.length > 0) statesMultiSelectOptionsPerProcess.push(stateOptions);
         });
         return statesMultiSelectOptionsPerProcess;
+    }
+
+    getStatesMultiSelectOptionsPerSingleProcess(
+        process: Process,
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        hideChildStates: boolean
+    ): any[] {
+        const stateOptions: Array<MultiSelectOption> = [];
+        process.states.forEach((state, stateid) => {
+            if (
+                this.doesStateHaveToBeDisplayedInFilters(
+                    hideChildStates,
+                    state.isOnlyAChildState,
+                    process.id,
+                    stateid,
+                    isAdminModeAndUserHasRightToSeeAllStates
+                )
+            ) {
+                stateOptions.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
+            }
+        });
+        return stateOptions;
     }
 
     private doesStateHaveToBeDisplayedInFilters(

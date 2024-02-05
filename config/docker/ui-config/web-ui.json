@@ -54,6 +54,8 @@
         "display": "BUSINESS"
       },
       "hideResponseFilter": false,
+      "hideProcessFilter": false,
+      "hideStateFilter": false,
       "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
       "hideAckAllCardsFeature": false,

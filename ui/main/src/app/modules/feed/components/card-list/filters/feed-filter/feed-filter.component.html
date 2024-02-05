@@ -78,7 +78,15 @@
                     </of-multi-select>
                 </div>
             </div>
+            <div *ngIf="!hideProcessFilter && stateMultiSelect?.options?.length > 0" style="margin-left:2px; margin-top:20px; width:280px">
+                <div class="form-group" id="opfab-state">
 
+                    <of-multi-select id="opfab-state-select" [multiSelectId]="stateMultiSelect.id" [parentForm]="processFilterForm"
+                        [config]="stateMultiSelect.config" [options]="stateMultiSelect.options"
+                        [selectedOptions]="stateMultiSelect.selectedOptions">
+                    </of-multi-select>
+                </div>
+            </div>
         </form>
         
     </div>
