@@ -77,7 +77,8 @@
       "initialZoom": 6,
       "zoomLevelWhenZoomToLocation": 14,
       "maxZoom": 11,
-      "zoomDuration": 500
+      "zoomDuration": 500,
+      "highlightPolygonStrokeWidth": 5
     },
     "enableGroupedCards": false
   },

@@ -100,6 +100,7 @@ a|card time display mode in the feed. Values :
 |feed.geomap.defaultDataProjection|EPSG:4326|no| The default data projection of `card.wktGeometry` to use when no wktProjection is embedded in the card.
 |feed.geomap.enable|false|no|_(Experimental feature)_: If true a geographical map will be shown and cards that have geographical coordinates will be drawn on the map.
 |feed.geomap.enableGraph|false|no|Show a graph on the map with number of cards per severity.
+|feed.geomap.highlightPolygonStrokeWidth|2|no| Define the stroke width when highlighting polygon in the geomap view of a card.
 |feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialZoom|1|no| Initial zoom level of the map.
