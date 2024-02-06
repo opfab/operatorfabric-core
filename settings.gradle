@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 
 rootProject.name = 'operator-fabric'
 
-include 'tools:swagger-spring-generators'
+include 'tools:swagger-generator'
 include 'tools:generic:utilities'
 include 'tools:spring:spring-utilities'
 include 'tools:spring:spring-mongo-utilities'
