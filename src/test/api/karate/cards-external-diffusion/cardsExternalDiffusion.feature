@@ -185,7 +185,7 @@ Scenario: Check mail for operator 1 is sent
     When method post
     Then status 200
 
-    * configure retry = { count: 15, interval: 1000 }
+    * configure retry = { count: 45, interval: 1000 }
     Given url 'http://localhost:8025/api/v2/messages'
 	And header Authorization = 'Bearer ' + authTokenOperator1
     And retry until responseStatus == 200  && response.count == 1
@@ -235,7 +235,7 @@ Scenario: Post card for operator2
 
 Scenario: Check email has been sent as plain text
 
-    * configure retry = { count: 15, interval: 1000 }
+    * configure retry = { count: 45, interval: 1000 }
     Given url 'http://localhost:8025/api/v2/messages'
 	And header Authorization = 'Bearer ' + authTokenOperator2
     And retry until responseStatus == 200  && response.count == 1

@@ -19,7 +19,7 @@
 	"title" : {"key" : "messageState.title"},
 	"data" : {"richMessage": "{\"ops\":[{\"insert\":\"France-England's interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}"},
 	"timeSpans" : [
-		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_2hours}},
 		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
 		]
 }
