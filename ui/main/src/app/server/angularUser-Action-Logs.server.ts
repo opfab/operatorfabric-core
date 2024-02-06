@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ServerResponse} from "app/business/server/serverResponse";
-import {Observable} from "rxjs";
-import {AngularServer} from "./angular.server";
+import {ServerResponse} from 'app/business/server/serverResponse';
+import {Observable} from 'rxjs';
+import {AngularServer} from './angular.server';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {environment} from "@env/environment";
-import {Injectable} from "@angular/core";
-import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
-import {Page} from "@ofModel/page.model";
-import {UserActionLog} from "@ofModel/user-action-log.model";
+import {environment} from '@env/environment';
+import {Injectable} from '@angular/core';
+import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
+import {Page} from '@ofModel/page.model';
+import {UserActionLog} from '@ofModel/user-action-log.model';
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +30,7 @@ export class AngularUserActionLogsServer extends AngularServer implements UserAc
 
     queryUserActionLogs(filters: Map<string, string[]>): Observable<ServerResponse<Page<UserActionLog>>> {
         const params = this.convertFiltersIntoHttpParams(filters);
-        return this.processHttpResponse(this.httpClient.get<Page<UserActionLog>>(this.userActionsUrl, {params}))
+        return this.processHttpResponse(this.httpClient.get<Page<UserActionLog>>(this.userActionsUrl, {params}));
     }
 
     convertFiltersIntoHttpParams(filters: Map<string, string[]>): HttpParams {
@@ -38,5 +38,4 @@ export class AngularUserActionLogsServer extends AngularServer implements UserAc
         filters.forEach((values, key) => values.forEach((value) => (params = params.append(key, value))));
         return params;
     }
-
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import {OpfabStore} from 'app/business/store/opfabStore';
     templateUrl: './responses-cell-renderer.component.html'
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {
-
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
     private params: any;

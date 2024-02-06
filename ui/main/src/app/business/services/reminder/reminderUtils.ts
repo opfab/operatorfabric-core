@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: 
 }
 
 function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurrence): number {
-    if (! isRecurrenceObjectInValidFormat(recurrence)) {
+    if (!isRecurrenceObjectInValidFormat(recurrence)) {
         return -1;
     }
 
@@ -58,15 +58,14 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
     const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
     if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
         nextDateTime.add(1, 'day');
-        nextDateTime.set('hours',0);
-        nextDateTime.set('minutes',0)
+        nextDateTime.set('hours', 0);
+        nextDateTime.set('minutes', 0);
     }
 
     moveToValidMonth(nextDateTime, recurrence);
 
     if (isDaysOfWeekFieldSet(recurrence)) {
         if (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday())) {
-
             // we keep the month found previously
             const monthForNextDateTime = nextDateTime.month();
 
@@ -77,7 +76,8 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
                 nb_add++;
                 nextDateTime.add(1, 'day');
 
-                if (nextDateTime.month() !== monthForNextDateTime) { // in case incrementing took us into the next month
+                if (nextDateTime.month() !== monthForNextDateTime) {
+                    // in case incrementing took us into the next month
                     moveToValidMonth(nextDateTime, recurrence);
                 }
             } while (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday()));
@@ -116,17 +116,14 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
 }
 
 function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
-    if (!recurrence.months || recurrence.months.length === 0)
-        return;
-    if (recurrence.months.includes(nextDateTime.month()))
-        return;
+    if (!recurrence.months || recurrence.months.length === 0) return;
+    if (recurrence.months.includes(nextDateTime.month())) return;
     let nb_add = 0;
     do {
         nb_add++;
-        if (nb_add > 12)
-            return ; // in case we have an invalid recurrence months array
+        if (nb_add > 12) return; // in case we have an invalid recurrence months array
         nextDateTime.add(1, 'month');
-        nextDateTime.set('date',1);
+        nextDateTime.set('date', 1);
     } while (!recurrence.months.includes(nextDateTime.month()));
 }
 

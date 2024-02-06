@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModal, NgbModalOptions, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-spinner',
@@ -17,7 +26,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from "@ng-bootstrap/ng-bootstrap
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
-    @Input() loadingText = "shared.loadingInProgress";
+    @Input() loadingText = 'shared.loadingInProgress';
     @Input() timeBeforeDisplayingSpinner = 500;
     @Input() seeInModal = false;
 
@@ -27,14 +36,17 @@ export class SpinnerComponent implements OnInit, OnDestroy {
 
     mustDisplaySpinner = false;
 
-    constructor(private modalService: NgbModal, private changeDetector: ChangeDetectorRef) {}
+    constructor(
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
+    ) {}
 
     ngOnInit() {
         setTimeout(() => {
             this.mustDisplaySpinner = true;
 
             if (this.seeInModal) {
-                if (! this.destroy) {
+                if (!this.destroy) {
                     this.modalRef = this.openInModal();
                 }
             }

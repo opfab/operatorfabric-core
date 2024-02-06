@@ -13,8 +13,7 @@ import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 
 export class OpfabEventStreamService {
-
-    private static opfabEventStreamServer: OpfabEventStreamServer
+    private static opfabEventStreamServer: OpfabEventStreamServer;
 
     public static initSubscription = new Subject<void>();
 
@@ -28,8 +27,6 @@ export class OpfabEventStreamService {
     private static businessDataChange = new Subject<void>();
 
     private static eventStreamClosed = false;
-
-
 
     public static setEventStreamServer(opfabEventStreamServer: OpfabEventStreamServer) {
         OpfabEventStreamService.opfabEventStreamServer = opfabEventStreamServer;
@@ -102,7 +99,10 @@ export class OpfabEventStreamService {
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (start < OpfabEventStreamService.startOfAlreadyLoadedPeriod && end > OpfabEventStreamService.endOfAlreadyLoadedPeriod) {
+        if (
+            start < OpfabEventStreamService.startOfAlreadyLoadedPeriod &&
+            end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
+        ) {
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
@@ -123,9 +123,15 @@ export class OpfabEventStreamService {
             LogOption.LOCAL_AND_REMOTE
         );
         OpfabEventStreamService.opfabEventStreamServer.setBusinessPeriod(start, end).subscribe(() => {
-            if (!OpfabEventStreamService.startOfAlreadyLoadedPeriod || start < OpfabEventStreamService.startOfAlreadyLoadedPeriod)
+            if (
+                !OpfabEventStreamService.startOfAlreadyLoadedPeriod ||
+                start < OpfabEventStreamService.startOfAlreadyLoadedPeriod
+            )
                 OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
-            if (!OpfabEventStreamService.endOfAlreadyLoadedPeriod || end > OpfabEventStreamService.endOfAlreadyLoadedPeriod)
+            if (
+                !OpfabEventStreamService.endOfAlreadyLoadedPeriod ||
+                end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
+            )
                 OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
         });
     }

@@ -12,8 +12,6 @@ import {UserService} from 'app/business/services/users/user.service';
 import {LoggerService as logger} from './logs/logger.service';
 
 export class MenuService {
-
-
     public static queryMenuEntryURL(id: string): string {
         for (const menuConfig of ConfigService.getMenuConfig().navigationBar) {
             if (menuConfig.entries) {
@@ -22,9 +20,8 @@ export class MenuService {
                 }
             } else if (menuConfig.customMenuId === id) return menuConfig.url;
         }
-        return "";
+        return '';
     }
-
 
     public static isNightDayModeMenuVisible(): boolean {
         const topRightMenus = ConfigService.getMenuConfig().topRightMenus;
@@ -39,7 +36,6 @@ export class MenuService {
         }
         return false;
     }
-
 
     private static isMenuVisibleForUserGroups(menuConfig: any): boolean {
         return (

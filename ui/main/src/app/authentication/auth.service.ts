@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@ import {PasswordAuthenticationHandler} from './password-authentication-handler';
     providedIn: 'root'
 })
 export class AuthService {
-
     private mode: AuthenticationMode = AuthenticationMode.NONE;
     private rejectLoginMessage = new Subject<Message>();
     private login: string;
@@ -38,15 +37,15 @@ export class AuthService {
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient
-    ) {
-    }
+    ) {}
 
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');
         CurrentUserStore.setToken(localStorage.getItem('token'));
-        this.mode = ConfigService
-            .getConfigValue('security.oauth2.flow.mode', 'password')
-            .toLowerCase() as AuthenticationMode;
+        this.mode = ConfigService.getConfigValue(
+            'security.oauth2.flow.mode',
+            'password'
+        ).toLowerCase() as AuthenticationMode;
         logger.info(`Auth mode set to ${this.mode}`);
         if (this.mode !== AuthenticationMode.NONE) CurrentUserStore.setAuthenticationUsesToken();
         switch (this.mode) {
@@ -57,15 +56,10 @@ export class AuthService {
                 this.authHandler = new CodeAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.NONE:
-                this.authHandler = new NoneAuthenticationHandler(
-                    this.httpClient
-                );
+                this.authHandler = new NoneAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.IMPLICIT:
-                this.authHandler = new ImplicitAuthenticationHandler(
-                    this.httpClient,
-                    this.oauthServiceForImplicitMode
-                );
+                this.authHandler = new ImplicitAuthenticationHandler(this.httpClient, this.oauthServiceForImplicitMode);
                 break;
             default:
                 logger.error('No valid authentication mode');
@@ -106,10 +100,10 @@ export class AuthService {
     }
 
     private redirectToCurrentLocation(): void {
-            const pathname = window.location.hash;
-            const hashLength = pathname.length;
-            const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
-            this.router.navigate([decodeURI(lastDestination)]);
+        const pathname = window.location.hash;
+        const hashLength = pathname.length;
+        const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
+        this.router.navigate([decodeURI(lastDestination)]);
     }
 
     public rejectLogin(message: Message) {
@@ -147,7 +141,7 @@ export class AuthService {
     }
 
     public tryToLogin(username: string, password: string) {
-        logger.info("Try to login");
+        logger.info('Try to login');
         this.authHandler.tryToLogin(username, password);
     }
 }

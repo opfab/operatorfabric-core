@@ -53,7 +53,7 @@ export class ExternalAppIFrameView {
         const deeplinkWithoutParams = deeplink?.split('?')[0];
         const deeplinkParams = deeplink?.split('?')[1];
 
-        const menuUrl = MenuService.queryMenuEntryURL(menuId)
+        const menuUrl = MenuService.queryMenuEntryURL(menuId);
         let url = menuUrl;
         if (deeplinkWithoutParams) url += deeplinkWithoutParams;
         url = this.addParamsToUrl(url, menuEntryParams);
@@ -61,11 +61,10 @@ export class ExternalAppIFrameView {
         url = this.addOpfabThemeParamToUrl(url);
         this.urlSubject.next(url);
         this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId);
-
     }
 
     private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string) {
-        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId  + '/');
+        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId + '/');
     }
 
     private addParamsToUrl(url, params) {
@@ -82,8 +81,7 @@ export class ExternalAppIFrameView {
     }
 
     private reloadIframeWhenGlobalStyleChange() {
-        GlobalStyleService
-            .getStyleChange()
+        GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
             .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));
     }

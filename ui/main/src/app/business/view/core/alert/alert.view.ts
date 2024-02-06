@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,10 +19,7 @@ export class AlertView {
     private lastMessageDate: number;
     private hideMessagesLevel: MessageLevel[] = [];
 
-    constructor(
-        private translationService: TranslationService
-    ) {
-
+    constructor(private translationService: TranslationService) {
         this.alertMessageBusinessAutoClose = ConfigService.getConfigValue('alerts.messageBusinessAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';

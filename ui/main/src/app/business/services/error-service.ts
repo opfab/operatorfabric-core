@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,9 +14,7 @@ import {throwError} from 'rxjs';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from './alert-message.service';
 
-
 export class ErrorService {
-
     public static handleServerResponseError(error: ServerResponse<any>) {
         if (error.status === ServerResponseStatus.NOT_FOUND) {
             AlertMessageService.sendAlertMessage({

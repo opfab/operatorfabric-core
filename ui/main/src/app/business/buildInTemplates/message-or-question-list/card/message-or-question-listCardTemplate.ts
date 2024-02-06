@@ -68,14 +68,16 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
         <div id="childs-div">
         </div>
         `;
-        opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
+        opfab.richTextEditor.showRichMessage(document.getElementById('richMessage'));
     }
 
     private setFunctionToGetUserResponseInput() {
-        this.messageOrQuestionListCardTemplateView.setFunctionToGetResponseInput(() =>  {
-            return [ (<HTMLInputElement>document.getElementById('YES')).checked,
-            (<HTMLInputElement>document.getElementById('comment')).value];
-            })
+        this.messageOrQuestionListCardTemplateView.setFunctionToGetResponseInput(() => {
+            return [
+                (<HTMLInputElement>document.getElementById('YES')).checked,
+                (<HTMLInputElement>document.getElementById('comment')).value
+            ];
+        });
     }
 
     private listenToResponses() {
@@ -91,8 +93,10 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
                 responses?.forEach((response) => {
                     html += '<tr>';
                     html += '<td>' + response.entityName + '</td>';
-                    if (response.agreement) html += `<td> <span style="color:green"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.yes')} </span></td>`
-                    else html += `<td> <span style="color:red"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.no')} </span></td>`
+                    if (response.agreement)
+                        html += `<td> <span style="color:green"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.yes')} </span></td>`;
+                    else
+                        html += `<td> <span style="color:red"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.no')} </span></td>`;
                     html += '<td>' + response.comment + '</td> </tr>';
                 });
                 html += '</table> </div></center>';
@@ -107,5 +111,4 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
             else document.getElementById('reponse').hidden = true;
         });
     }
-
 }

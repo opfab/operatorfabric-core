@@ -9,7 +9,8 @@
 
 import {
     AfterViewInit,
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     OnDestroy,
@@ -31,7 +32,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
-import {SelectedCardService} from "../../business/services/card/selectedCard.service";
+import {SelectedCardService} from '../../business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-processmonitoring',
@@ -40,19 +41,18 @@ import {SelectedCardService} from "../../business/services/card/selectedCard.ser
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewInit {
-
     tags: any[];
     size: number;
     processMonitoringForm = new FormGroup({
-            tags: new FormControl([]),
-            state: new FormControl([]),
-            process: new FormControl([]),
-            processGroup: new FormControl([]),
-            publishDateFrom: new FormControl<string | null>(null),
-            publishDateTo: new FormControl(''),
-            activeFrom: new FormControl(''),
-            activeTo: new FormControl('')
-        });
+        tags: new FormControl([]),
+        state: new FormControl([]),
+        process: new FormControl([]),
+        processGroup: new FormControl([]),
+        publishDateFrom: new FormControl<string | null>(null),
+        publishDateTo: new FormControl(''),
+        activeFrom: new FormControl(''),
+        activeTo: new FormControl('')
+    });
 
     results: LightCard[];
     currentPage = 0;
@@ -136,7 +136,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             }
         }, 5000);
 
-        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(
+            (selectedCardId) => (this.selectedCardId = selectedCardId)
+        );
     }
 
     ngAfterViewInit() {
@@ -150,7 +152,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.firstQueryHasBeenDone = false;
     }
 
-     sendFilterQuery(page_number: number, isSearchButtonClicked: boolean): void {
+    sendFilterQuery(page_number: number, isSearchButtonClicked: boolean): void {
         this.technicalError = false;
         this.loadingInProgress = true;
 
@@ -161,56 +163,51 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate);
 
-        CardService
-            .fetchFilteredCards(filter)
-            .subscribe({
-                next: (page: Page<any>) => {
-                    this.loadingInProgress = false;
+        CardService.fetchFilteredCards(filter).subscribe({
+            next: (page: Page<any>) => {
+                this.loadingInProgress = false;
 
-                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1, and page on backend starts at 0
+                this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1, and page on backend starts at 0
 
-                    if (!this.firstQueryHasBeenDone) {
-                        this.firstQueryHasResults = page.content.length > 0;
-                        this.resultsNumber = page.totalElements;
-                    }
-
-                    this.firstQueryHasBeenDone = true;
-
-                    page.content.forEach((card) => {
-                        this.cardPostProcessing(card);
-                    });
-                    this.results = page.content;
-                    this.totalElements= page.totalElements;
-                    this.totalPages= page.totalPages;
-                    this.changeDetector.markForCheck();
-                },
-                error: () => {
-                    this.firstQueryHasBeenDone = false;
-                    this.loadingInProgress = false;
-                    this.technicalError = true;
-                    this.changeDetector.markForCheck();
+                if (!this.firstQueryHasBeenDone) {
+                    this.firstQueryHasResults = page.content.length > 0;
+                    this.resultsNumber = page.totalElements;
                 }
-            });
 
+                this.firstQueryHasBeenDone = true;
+
+                page.content.forEach((card) => {
+                    this.cardPostProcessing(card);
+                });
+                this.results = page.content;
+                this.totalElements = page.totalElements;
+                this.totalPages = page.totalPages;
+                this.changeDetector.markForCheck();
+            },
+            error: () => {
+                this.firstQueryHasBeenDone = false;
+                this.loadingInProgress = false;
+                this.technicalError = true;
+                this.changeDetector.markForCheck();
+            }
+        });
     }
 
-    private getFilter(page: number, size: number, filtersTemplate: ArchivesLoggingFiltersComponent) : CardsFilter {
+    private getFilter(page: number, size: number, filtersTemplate: ArchivesLoggingFiltersComponent): CardsFilter {
         const filters = [];
         let isAdminMode = filtersTemplate.isAdminModeChecked;
-        filtersTemplate.filters?.forEach( (values, key) => {
-            if (key === 'adminMode')
-                isAdminMode = values[0];
-            else
-                filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
+        filtersTemplate.filters?.forEach((values, key) => {
+            if (key === 'adminMode') isAdminMode = values[0];
+            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected, set the filter to the list of process that shall be visible on the UI
-        if (this.listOfProcessesForRequest.length && !(filtersTemplate.filters?.has('process')))
+        if (this.listOfProcessesForRequest.length && !filtersTemplate.filters?.has('process'))
             filters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
-        this.columnFilters.forEach(filter => filters.push(filter));
+        this.columnFilters.forEach((filter) => filters.push(filter));
 
         const selectedFields: string[] = [];
-        this.processMonitoring.forEach(column => {
+        this.processMonitoring.forEach((column) => {
             selectedFields.push(column.field);
         });
 
@@ -251,9 +248,13 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     onTableFilterChange(filterModel) {
         this.columnFilters = [];
-        Object.keys(filterModel).forEach(column => {
-            const type : string = filterModel[column].type;
-            this.columnFilters.push(new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [filterModel[column].filter]))
+        Object.keys(filterModel).forEach((column) => {
+            const type: string = filterModel[column].type;
+            this.columnFilters.push(
+                new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                    filterModel[column].filter
+                ])
+            );
         });
         this.sendFilterQuery(0, false);
     }
@@ -274,34 +275,32 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate);
 
-        CardService
-            .fetchFilteredCards(filter)
-            .subscribe((page: Page<Object>) => {
-                const lines = page.content;
-                const severityColumnName = this.translateColumn('shared.result.severity');
+        CardService.fetchFilteredCards(filter).subscribe((page: Page<Object>) => {
+            const lines = page.content;
+            const severityColumnName = this.translateColumn('shared.result.severity');
 
-                lines.forEach((card: any) => {
-                    this.cardPostProcessing(card);
+            lines.forEach((card: any) => {
+                this.cardPostProcessing(card);
 
-                    const lineForExport = {};
-                    lineForExport[severityColumnName] = card.severity;
-                    this.processMonitoring.forEach(column => {
-                        if (column.type === 'date') {
-                            lineForExport[column.colName] = this.displayTime(card[String(column.field).split(".").pop()]);
-                        } else {
-                            lineForExport[column.colName] = card[String(column.field).split(".").pop()];
-                        }
-                    });
-
-                    exportArchiveData.push(lineForExport);
+                const lineForExport = {};
+                lineForExport[severityColumnName] = card.severity;
+                this.processMonitoring.forEach((column) => {
+                    if (column.type === 'date') {
+                        lineForExport[column.colName] = this.displayTime(card[String(column.field).split('.').pop()]);
+                    } else {
+                        lineForExport[column.colName] = card[String(column.field).split('.').pop()];
+                    }
                 });
-                ExcelExport.exportJsonToExcelFile(exportArchiveData, 'ProcessMonitoring');
-                this.modalRef.close();
+
+                exportArchiveData.push(lineForExport);
             });
+            ExcelExport.exportJsonToExcelFile(exportArchiveData, 'ProcessMonitoring');
+            this.modalRef.close();
+        });
     }
 
-    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        return this.translationService.getTranslation(key,interpolateParams);
+    translateColumn(key: string, interpolateParams?: Map<string, string>): any {
+        return this.translationService.getTranslation(key, interpolateParams);
     }
 
     ngOnDestroy() {

@@ -13,8 +13,8 @@ import {ColDef, GridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
-import {NgbModal, NgbModalOptions, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {SelectedCardService} from "../../../../business/services/card/selectedCard.service";
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {SelectedCardService} from '../../../../business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-processmonitoring-table',
@@ -22,7 +22,6 @@ import {SelectedCardService} from "../../../../business/services/card/selectedCa
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProcessmonitoringTableComponent {
-
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LightCard[];
     @Input() processGroupVisible: boolean;
@@ -45,9 +44,10 @@ export class ProcessmonitoringTableComponent {
 
     private columnDefs: ColDef[] = [];
 
-    constructor(private translate: TranslateService,
-                private modalService: NgbModal) {
-
+    constructor(
+        private translate: TranslateService,
+        private modalService: NgbModal
+    ) {
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this
@@ -169,13 +169,13 @@ export class ProcessmonitoringTableComponent {
         ];
 
         if (this.processMonitoring) {
-            this.processMonitoring.forEach(column => {
+            this.processMonitoring.forEach((column) => {
                 if (column.type === 'date') {
                     this.columnDefs.push({
                         type: 'summaryColumn',
                         headerName: column.colName,
                         cellRenderer: 'timeCellRenderer',
-                        field: String(column.field).split(".").pop(),
+                        field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         maxWidth: column.size,
                         resizable: false
@@ -184,7 +184,7 @@ export class ProcessmonitoringTableComponent {
                     this.columnDefs.push({
                         type: 'summaryColumn',
                         headerName: column.colName,
-                        field: String(column.field).split(".").pop(),
+                        field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
                         maxWidth: column.size,

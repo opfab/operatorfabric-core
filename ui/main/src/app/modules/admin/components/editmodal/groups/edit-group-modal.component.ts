@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,14 +9,7 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {
-    AbstractControl,
-    AsyncValidatorFn,
-    FormControl,
-    FormGroup,
-    ValidationErrors,
-    Validators
-} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
@@ -30,7 +23,6 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 
-
 @Component({
     selector: 'of-edit-group-modal',
     templateUrl: './edit-group-modal.component.html',
@@ -38,14 +30,13 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditGroupModalComponent implements OnInit {
-
     groupForm: FormGroup<{
-        id: FormControl<string | null>,
-        name: FormControl<string | null>,
-        description: FormControl<string | null>,
-        perimeters: FormControl<{}[] | null>,
-        permissions: FormControl<[] | null>,
-        realtime: FormControl<boolean | null>,
+        id: FormControl<string | null>;
+        name: FormControl<string | null>;
+        description: FormControl<string | null>;
+        perimeters: FormControl<{}[] | null>;
+        permissions: FormControl<[] | null>;
+        realtime: FormControl<boolean | null>;
     }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -89,7 +80,7 @@ export class EditGroupModalComponent implements OnInit {
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
         }
         uniqueGroupNameValidator.push(this.uniqueGroupNameValidatorFn());
-            // modal used for creating a new group
+        // modal used for creating a new group
 
         this.groupForm = new FormGroup({
             id: new FormControl(
@@ -97,15 +88,11 @@ export class EditGroupModalComponent implements OnInit {
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new FormControl(
-                '',
-                [Validators.required],
-                uniqueGroupNameValidator
-            ),
+            name: new FormControl('', [Validators.required], uniqueGroupNameValidator),
             description: new FormControl(''),
             perimeters: new FormControl([]),
             permissions: new FormControl([]),
-            realtime: new FormControl<boolean | null>(false),
+            realtime: new FormControl<boolean | null>(false)
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -120,8 +107,11 @@ export class EditGroupModalComponent implements OnInit {
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupPermissions = this.row.permissions;
 
-            UserService.getAll().subscribe(users => {
-                this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+            UserService.getAll().subscribe((users) => {
+                this.groupUsers = users
+                    .filter((usr) => this.isUserInCurrentGroup(usr))
+                    .map((usr) => usr.login)
+                    .join(', ');
                 this.changeDetector.markForCheck();
             });
         }
@@ -129,13 +119,10 @@ export class EditGroupModalComponent implements OnInit {
         PerimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
-
-
-
     }
 
-    private isUserInCurrentGroup(usr: User) :boolean {
-        return usr.groups && usr.groups.findIndex(g => g === this.row.id) >= 0;
+    private isUserInCurrentGroup(usr: User): boolean {
+        return usr.groups && usr.groups.findIndex((g) => g === this.row.id) >= 0;
     }
 
     update() {
@@ -156,24 +143,27 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     uniqueGroupIdValidatorFn(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors> =>
-        {
-            const err : ValidationErrors = {'uniqueGroupIdViolation': true};
-            return this.isUniqueGroupId(this.groupForm.controls["id"].value)? of(null) : of(err)
-        }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueGroupIdViolation: true};
+            return this.isUniqueGroupId(this.groupForm.controls['id'].value) ? of(null) : of(err);
+        };
     }
 
     isUniqueGroupName(groupName: string): boolean {
-        if (groupName && GroupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
+        if (
+            groupName &&
+            GroupsService.getGroups().filter((group) => group.name === groupName.trim() && group.id !== this.row?.id)
+                .length
+        )
+            return false;
         else return true;
     }
 
     uniqueGroupNameValidatorFn(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors> =>
-        {
-            const err : ValidationErrors = {'uniqueGroupNameViolation': true};
-            return this.isUniqueGroupName(this.groupForm.controls["name"].value)? of(null) : of(err)
-        }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueGroupNameViolation: true};
+            return this.isUniqueGroupName(this.groupForm.controls['name'].value) ? of(null) : of(err);
+        };
     }
 
     onSavesuccess() {
@@ -188,18 +178,17 @@ export class EditGroupModalComponent implements OnInit {
         );
 
         AlertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
-
     }
 
     private cleanForm() {
         if (this.row) {
             this.groupForm.value['id'] = this.row.id;
         }
-        this.id.setValue((this.id.value).trim());
-        this.name.setValue((this.name.value).trim());
+        this.id.setValue(this.id.value.trim());
+        this.name.setValue(this.name.value.trim());
 
         if (this.description.value) {
-            this.description.setValue((this.description.value).trim());
+            this.description.setValue(this.description.value.trim());
         }
 
         this.realtime.setValue(this.realtime.value);

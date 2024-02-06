@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
-import {ConfigService} from "../../business/services/config.service";
+import {ConfigService} from '../../business/services/config.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 
@@ -76,7 +76,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
     constructor(
         private modalService: NgbModal,
-        private translateService: TranslateService,
+        private translateService: TranslateService
     ) {
         this.processesStatesLabels = new Map();
         this.processIdsByProcessGroup = new Map();
@@ -196,8 +196,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
         this.preparedListOfProcessesStates.forEach((processState) => {
             const notNotifiedStatesForThisProcess = processesStatesNotNotified
-            ? processesStatesNotNotified.get(processState.processId)
-            : null;
+                ? processesStatesNotNotified.get(processState.processId)
+                : null;
 
             let isChecked = true;
 
@@ -253,8 +253,10 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
                     const stateLabel = state.name ? state.name : stateId;
 
-                    const filteringNotificationAllowed =
-                        UserService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
+                    const filteringNotificationAllowed = UserService.isFilteringNotificationAllowedForProcessAndState(
+                        process.id,
+                        stateId
+                    );
                     if (filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
@@ -290,14 +292,14 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     private removeProcessesWithoutDisplayedStates() {
         const toRemove = [];
         this.processGroupsAndLabels.forEach((processGroupData) => {
-            processGroupData.processes = processGroupData.processes.filter(
-                (processData) => this.processesStatesLabels.has(processData.processId)
+            processGroupData.processes = processGroupData.processes.filter((processData) =>
+                this.processesStatesLabels.has(processData.processId)
             );
             if (processGroupData.processes.length === 0) toRemove.push(processGroupData.groupId);
         });
         this.processGroupsAndLabels = this.processGroupsAndLabels.filter((group) => !toRemove.includes(group.groupId));
-        this.processesWithoutGroup = this.processesWithoutGroup.filter(
-            (processData) => this.processesStatesLabels.has(processData.idProcess)
+        this.processesWithoutGroup = this.processesWithoutGroup.filter((processData) =>
+            this.processesStatesLabels.has(processData.idProcess)
         );
     }
 
@@ -363,7 +365,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
     computeProcessesStatesNotifiedByEmail() {
         this.currentUserWithPerimeters.processesStatesNotifiedByEmail?.forEach((listOfStateIds, processId) => {
-            listOfStateIds.forEach(stateId => {
+            listOfStateIds.forEach((stateId) => {
                 this.processesStatesNotifiedByEmail.set(processId + '.' + stateId, true);
             });
         });
@@ -398,42 +400,39 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 const currentStateId = this.preparedListOfProcessesStates[i].stateId;
 
                 const statesNotNotifiedUpdate = processesStatesNotNotifiedUpdate.get(currentProcessId);
-                if (statesNotNotifiedUpdate)
-                    statesNotNotifiedUpdate.push(currentStateId);
+                if (statesNotNotifiedUpdate) statesNotNotifiedUpdate.push(currentStateId);
                 else processesStatesNotNotifiedUpdate.set(currentProcessId, [currentStateId]);
             }
         });
 
         const processesStatesNotifiedByEmail = this.computeMapOfProcessesNotifiedByMail();
 
-        SettingsService
-            .patchUserSettings({
-                login: this.currentUserWithPerimeters.userData.login,
-                processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate),
-                processesStatesNotifiedByEmail: Object.fromEntries(processesStatesNotifiedByEmail)
-            })
-            .subscribe({
-                next: (resp) => {
-                    this.saveSettingsInProgress = false;
-                    this.messageAfterSavingSettings = '';
-                    const msg = resp.message;
-                    if (msg?.includes('unable')) {
-                        LoggerService.error('Impossible to save settings, error message from service : ' + msg);
-                        this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
-                        this.displaySendResultError = true;
-                    } else {
-                        OpfabStore.getLightCardStore().removeAllLightCards();
-                        UserService.loadUserWithPerimetersData().subscribe();
-                    }
-                    this.modalRef.close();
-                },
-                error: (err) => {
-                    console.error('Error when saving settings :', err);
-                    this.modalRef.close();
+        SettingsService.patchUserSettings({
+            login: this.currentUserWithPerimeters.userData.login,
+            processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate),
+            processesStatesNotifiedByEmail: Object.fromEntries(processesStatesNotifiedByEmail)
+        }).subscribe({
+            next: (resp) => {
+                this.saveSettingsInProgress = false;
+                this.messageAfterSavingSettings = '';
+                const msg = resp.message;
+                if (msg?.includes('unable')) {
+                    LoggerService.error('Impossible to save settings, error message from service : ' + msg);
                     this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                     this.displaySendResultError = true;
+                } else {
+                    OpfabStore.getLightCardStore().removeAllLightCards();
+                    UserService.loadUserWithPerimetersData().subscribe();
                 }
-            });
+                this.modalRef.close();
+            },
+            error: (err) => {
+                console.error('Error when saving settings :', err);
+                this.modalRef.close();
+                this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
+                this.displaySendResultError = true;
+            }
+        });
     }
 
     doNotConfirmSaveSettings() {

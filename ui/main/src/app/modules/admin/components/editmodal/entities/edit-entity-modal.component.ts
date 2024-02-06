@@ -31,12 +31,12 @@ import {RolesEnum} from '@ofModel/roles.model';
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{
-        id: FormControl<string | null>,
-        name: FormControl<string | null>,
-        description: FormControl<string | null>,
-        roles: FormControl<[] | null>,
-        labels: FormControl<[] | null>,
-        parents: FormControl<[] | null>
+        id: FormControl<string | null>;
+        name: FormControl<string | null>;
+        description: FormControl<string | null>;
+        roles: FormControl<[] | null>;
+        labels: FormControl<[] | null>;
+        parents: FormControl<[] | null>;
     }>;
 
     @Input() row: any;
@@ -74,11 +74,11 @@ export class EditEntityModalComponent implements OnInit {
     ngOnInit() {
         const uniqueEntityIdValidator = [];
         const uniqueEntityNameValidator = [];
-        if (!this.row){
+        if (!this.row) {
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
         }
         uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
-            // modal used for creating a new entity
+        // modal used for creating a new entity
 
         this.entityForm = new FormGroup({
             id: new FormControl(
@@ -86,11 +86,7 @@ export class EditEntityModalComponent implements OnInit {
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new FormControl(
-                '',
-                [Validators.required],
-                uniqueEntityNameValidator
-            ),
+            name: new FormControl('', [Validators.required], uniqueEntityNameValidator),
             description: new FormControl(''),
             roles: new FormControl([]),
             labels: new FormControl([]),
@@ -104,8 +100,11 @@ export class EditEntityModalComponent implements OnInit {
             this.selectedEntities = this.row.parents;
             this.selectedRoles = this.row.roles;
 
-            UserService.getAll().subscribe(users => {
-                this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
+            UserService.getAll().subscribe((users) => {
+                this.entityUsers = users
+                    .filter((usr) => this.isUserInCurrentEntity(usr))
+                    .map((usr) => usr.login)
+                    .join(', ');
                 this.changeDetector.markForCheck();
             });
         }
@@ -128,14 +127,13 @@ export class EditEntityModalComponent implements OnInit {
         });
 
         for (const role in RolesEnum) {
-            const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.'+role);
-            this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation))
-        };
-
+            const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.' + role);
+            this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation));
+        }
     }
 
-    private isUserInCurrentEntity(usr: User) :boolean {
-        return usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
+    private isUserInCurrentEntity(usr: User): boolean {
+        return usr.entities && usr.entities.findIndex((g) => g === this.row.id) >= 0;
     }
 
     update() {
@@ -154,41 +152,43 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length)
-            return false;
+        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length) return false;
         else return true;
     }
 
     uniqueEntityIdValidatorFn(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> =>
-        {
-            const err : ValidationErrors = {'uniqueEntityIdViolation': true};
-            return this.isUniqueEntityId(this.entityForm.controls["id"].value)? of(null) : of(err)
-        }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueEntityIdViolation: true};
+            return this.isUniqueEntityId(this.entityForm.controls['id'].value) ? of(null) : of(err);
+        };
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (entityName && EntitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (
+            entityName &&
+            EntitiesService.getEntities().filter(
+                (entity) => entity.name === entityName.trim() && entity.id !== this.row?.id
+            ).length
+        )
             return false;
         else return true;
     }
 
     uniqueEntityNameValidatorFn(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors> =>
-            {
-                const err : ValidationErrors = {'uniqueEntityNameViolation': true};
-                return this.isUniqueEntityName(this.entityForm.controls["name"].value)? of(null) : of(err)
-            }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueEntityNameViolation: true};
+            return this.isUniqueEntityName(this.entityForm.controls['name'].value) ? of(null) : of(err);
+        };
     }
 
     private cleanForm() {
         if (this.row) {
             this.entityForm.value['id'] = this.row.id;
         }
-        this.id.setValue((this.id.value).trim());
-        this.name.setValue((this.name.value).trim());
-        this.description.setValue((this.description.value).trim());
-        this.roles.setValue((this.roles.value));
+        this.id.setValue(this.id.value.trim());
+        this.name.setValue(this.name.value.trim());
+        this.description.setValue(this.description.value.trim());
+        this.roles.setValue(this.roles.value);
     }
 
     get id() {

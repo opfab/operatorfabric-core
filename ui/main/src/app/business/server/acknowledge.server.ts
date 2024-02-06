@@ -11,7 +11,6 @@ import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
 export abstract class AcknowledgeServer {
-
     abstract postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>>;
 
     abstract deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>>;

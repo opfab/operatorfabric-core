@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -100,7 +100,6 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     ngOnInit() {
-
         ServicesConfig.setServers({
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
@@ -121,7 +120,6 @@ export class ApplicationLoadingComponent implements OnInit {
             templateCssServer: this.templateCssServer,
             settingsServer: this.settingsServer
         });
-
 
         this.loadUIConfiguration();
         OpfabAPIService.init();
@@ -207,7 +205,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadSettings() {
         SettingsService.getUserSettings().subscribe({
-            next: ({ status, data }) => {
+            next: ({status, data}) => {
                 switch (status) {
                     case ServerResponseStatus.OK:
                         logger.info('Settings loaded ' + JSON.stringify(data));

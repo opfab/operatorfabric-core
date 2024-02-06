@@ -16,16 +16,12 @@ import {AngularServer} from './angular.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class AngularAdminProcessesServer extends AngularServer implements AdminProcessServer {
-
     readonly processesUrl: string;
-    constructor(
-        private httpClient: HttpClient,
-    ) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.processesUrl = `${environment.url}/businessconfig/processes`;
     }
@@ -42,5 +38,4 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
         const url = `${this.processesUrl}/${id}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
-
 }

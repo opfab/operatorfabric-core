@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FilteredLightCardsStore} from "./lightcards/lightcards-feed-filter-store";
-import {LightCardsStore} from "./lightcards/lightcards-store";
+import {FilteredLightCardsStore} from './lightcards/lightcards-feed-filter-store';
+import {LightCardsStore} from './lightcards/lightcards-store';
 
 export class OpfabStore {
-
     private static lightCardsStore: LightCardsStore = new LightCardsStore();
-    private static filteredLightCardsStore: FilteredLightCardsStore = new FilteredLightCardsStore(OpfabStore.lightCardsStore);
+    private static filteredLightCardsStore: FilteredLightCardsStore = new FilteredLightCardsStore(
+        OpfabStore.lightCardsStore
+    );
 
     public static getFilteredLightCardStore() {
         return OpfabStore.filteredLightCardsStore;
@@ -32,5 +33,4 @@ export class OpfabStore {
         OpfabStore.filteredLightCardsStore = new FilteredLightCardsStore(OpfabStore.lightCardsStore);
         OpfabStore.init();
     }
-
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 import {getOneCard} from '@tests/helpers';
 
@@ -21,11 +20,10 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 describe('Handlebars Services', () => {
     let processServer: ProcessServerMock;
 
-
     const now = moment(Date.now());
 
     beforeAll(() => {
-        HandlebarsService.init()
+        HandlebarsService.init();
     });
 
     beforeEach(() => {
@@ -42,7 +40,7 @@ describe('Handlebars Services', () => {
                 numbers: [0, 1, 2, 3, 4, 5],
                 unsortedNumbers: [2, 1, 4, 0, 5, 3],
                 numberStrings: ['0', '1', '2', '3', '4', '5'],
-                unsortedStrings: ["jack", "john", "hubert"],
+                unsortedStrings: ['jack', 'john', 'hubert'],
                 arrays: [[], [0, 1, 2], ['0', '1', '2', '3']],
                 undefinedValue: undefined,
                 nullValue: null,
@@ -68,13 +66,13 @@ describe('Handlebars Services', () => {
         });
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
-            processServer.setResponseForTemplate(new ServerResponse(template,ServerResponseStatus.OK,null));
-            HandlebarsService
-                .executeTemplate("test", new DetailContext(card, userContext, null))
-                .subscribe((result) => {
+            processServer.setResponseForTemplate(new ServerResponse(template, ServerResponseStatus.OK, null));
+            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
+                (result) => {
                     expect(result).withContext(contextMessage).toEqual(expectedResult);
                     done();
-                });
+                }
+            );
         }
 
         it('compile simple template', (done) => {
@@ -331,10 +329,9 @@ describe('Handlebars Services', () => {
         });
 
         it('compile  now ', (done) => {
-            processServer.setResponseForTemplate(new ServerResponse('{{now}}',ServerResponseStatus.OK,null));
-            HandlebarsService
-                .executeTemplate("test", new DetailContext(card, userContext, null))
-                .subscribe((result) => {
+            processServer.setResponseForTemplate(new ServerResponse('{{now}}', ServerResponseStatus.OK, null));
+            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
+                (result) => {
                     // As it takes times to execute and the test are asynchronous we could not test the exact value
                     // so we test the range of the result
                     // taking into account asynchronous mechansim for test tool
@@ -343,7 +340,8 @@ describe('Handlebars Services', () => {
                     expect(result).toBeGreaterThan(now.valueOf());
                     expect(result).toBeLessThan(now.valueOf() + 60000);
                     done();
-                });
+                }
+            );
         });
 
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {

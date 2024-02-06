@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
-
 
 @Component({
     selector: 'of-edit-supervised-entity-modal',
@@ -58,7 +57,6 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-
         this.entityForm = new FormGroup({
             entityId: new FormControl<string | null>('', [Validators.required]),
             supervisors: new FormControl<string[] | null>([], [Validators.required])
@@ -84,7 +82,7 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     }
 
     isEntityAlreadySupervised(entityId: string) {
-        return this.supervisedEntities.findIndex(supervisedEntity => supervisedEntity.entityId === entityId ) >=0;
+        return this.supervisedEntities.findIndex((supervisedEntity) => supervisedEntity.entityId === entityId) >= 0;
     }
 
     initializeMultiselectOptions() {
@@ -138,7 +136,6 @@ export class EditSupervisedEntityModalComponent implements OnInit {
             this.entityForm.value['entityId'] = this.row.entityId;
         }
         this.entityId.setValue((this.entityId.value as string).trim());
-
     }
 
     get entityId() {

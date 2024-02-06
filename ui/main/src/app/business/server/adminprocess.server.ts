@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
 export abstract class AdminProcessServer {
-    abstract deleteById(id: string): Observable<ServerResponse<any>>
+    abstract deleteById(id: string): Observable<ServerResponse<any>>;
     abstract queryAllProcesses(): Observable<ServerResponse<Process[]>>;
     abstract update(processData: Process): Observable<ServerResponse<Process>>;
 }

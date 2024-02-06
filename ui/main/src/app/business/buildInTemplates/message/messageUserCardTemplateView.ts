@@ -10,12 +10,10 @@
 declare const opfab;
 
 export class MessageUserCardTemplateView {
-
     public getSpecificCardInformation(quillEditor: any, messageTitle: string) {
-
         const card = {
             summary: {key: 'message.summary'},
-            title: {key: 'message.title', parameters : {"messageTitle" : messageTitle}},
+            title: {key: 'message.title', parameters: {messageTitle: messageTitle}},
             data: {richMessage: quillEditor.getContents(), messageTitle: messageTitle}
         };
         if (quillEditor.isEmpty())
@@ -50,5 +48,4 @@ export class MessageUserCardTemplateView {
         }
         return message;
     }
-
 }

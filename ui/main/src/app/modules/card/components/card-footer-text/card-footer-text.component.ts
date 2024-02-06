@@ -22,9 +22,9 @@ import {CardOperationType} from '@ofModel/card-operation.model';
 @Component({
     selector: 'of-card-footer-text',
     templateUrl: './card-footer-text.component.html',
-    styleUrls:['./card-footer-text.component.scss']
+    styleUrls: ['./card-footer-text.component.scss']
 })
-export class CardFooterTextComponent implements OnChanges,OnInit {
+export class CardFooterTextComponent implements OnChanges, OnInit {
     @Input() card: Card;
     @Input() childCards: Card[];
     public formattedPublishDate = '';
@@ -37,14 +37,12 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(
-    ) {
+    constructor() {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
-
         OpfabStore.getLightCardStore()
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
@@ -96,15 +94,19 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
             // We compute the entities recipients of the card, taking into account parent entities
             const entityRecipients = EntitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = EntitiesService
-                .resolveEntitiesAllowedToSendCards(entityRecipients)
-                .map((entity) => entity.id);
+            const entityRecipientsAllowedToSendCards = EntitiesService.resolveEntitiesAllowedToSendCards(
+                entityRecipients
+            ).map((entity) => entity.id);
 
             const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
                 entityRecipientsAllowedToSendCards.includes(entityId)
             );
             userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                addressedTo.push({id: entityId, entityName: EntitiesService.getEntityName(entityId), acknowledged: this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
+                addressedTo.push({
+                    id: entityId,
+                    entityName: EntitiesService.getEntityName(entityId),
+                    acknowledged: this.card.entitiesAcks ? this.card.entitiesAcks.includes(entityId) : false
+                });
             });
 
             addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));

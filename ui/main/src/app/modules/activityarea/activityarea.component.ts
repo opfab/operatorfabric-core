@@ -35,9 +35,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
 
-    constructor(
-        private modalService: NgbModal
-    ) {}
+    constructor(private modalService: NgbModal) {}
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView();
@@ -95,7 +93,8 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     openConfirmSaveSettingsModal(content) {
-        if (this.askConfirmation) this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
+        if (this.askConfirmation)
+            this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
         else this.confirmSaveSettings();
     }
 

@@ -26,7 +26,6 @@ export class FiltersComponent implements OnInit {
 
     loadingInProgress = false;
 
-
     ngOnInit() {
         this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,10 +42,7 @@ export class SoundActivationComponent implements OnInit {
     private activateSoundIfNotActivated() {
         setTimeout(() => {
             const playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
-            if (
-                !playSoundOnExternalDevice &&
-                this.soundNotificationService.isAtLeastOneSoundActivated()
-            ) {
+            if (!playSoundOnExternalDevice && this.soundNotificationService.isAtLeastOneSoundActivated()) {
                 const context = new AudioContext();
                 if (context.state !== 'running') {
                     context.resume();

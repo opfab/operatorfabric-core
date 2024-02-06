@@ -29,7 +29,6 @@ import {LogOption, LoggerService as logger} from 'app/business/services/logs/log
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {AcknowledgeService} from '../../services/acknowledge.service';
 
-
 /**
  *
  * This class is used to store and provide lightCard to all other classes in "real time" (feed, monitoring, calendar... )
@@ -63,7 +62,11 @@ export class LightCardsStore {
     private nbCardLoadedInHalfSecondInterval = 0;
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
     private loadingInProgress = new Subject();
-    private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[], operation: CardOperationType}>();
+    private receivedAcksSubject = new Subject<{
+        cardUid: string;
+        entitiesAcks: string[];
+        operation: CardOperationType;
+    }>();
 
     private unsubscribe$ = new Subject<void>();
 
@@ -81,10 +84,7 @@ export class LightCardsStore {
     // To do that we combine a debounce waiting for the end of the flow and an interval to get the cards list every second
 
     private getLightCardsWithLimitedUpdateRate(): Observable<any> {
-        return merge(
-            this.getLightCardsInterval(),
-            this.getLightCardDebounce()
-        ).pipe(
+        return merge(this.getLightCardsInterval(), this.getLightCardDebounce()).pipe(
             map((cards) => {
                 const array = new Array();
                 cards.forEach((card, id) => {
@@ -129,15 +129,12 @@ export class LightCardsStore {
             if (this.nbCardLoadedInPreviousHalfSecondInterval >= 5) {
                 this.loadingInProgress.next(true);
             } else {
-                this.nbCardLoadedInPreviousHalfSecondInterval =
-                    this.nbCardLoadedInHalfSecondInterval;
+                this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
             }
             this.nbCardLoadedInHalfSecondInterval = 0;
         } else {
-            if (this.nbCardLoadedInPreviousHalfSecondInterval < 5)
-                this.loadingInProgress.next(false);
-            this.nbCardLoadedInPreviousHalfSecondInterval =
-                this.nbCardLoadedInHalfSecondInterval;
+            if (this.nbCardLoadedInPreviousHalfSecondInterval < 5) this.loadingInProgress.next(false);
+            this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
         }
         setTimeout(() => this.checkForLoadingInProgress(), 500);
     }
@@ -145,7 +142,6 @@ export class LightCardsStore {
     // debounceTimeInMs is to be modify only in testing case
     // Default value must be kept for production
     public initStore() {
-
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
         OpfabEventStreamService.getCardOperationStream()
@@ -180,10 +176,7 @@ export class LightCardsStore {
                                     operation.cardId,
                                 LogOption.LOCAL_AND_REMOTE
                             );
-                            this.addEntitiesAcksForLightCard(
-                                operation.cardId,
-                                operation.entitiesAcks
-                            );
+                            this.addEntitiesAcksForLightCard(operation.cardId, operation.entitiesAcks);
                             this.receivedAcksSubject.next({
                                 cardUid: operation.cardUid,
                                 entitiesAcks: operation.entitiesAcks,
@@ -191,23 +184,20 @@ export class LightCardsStore {
                             });
                             break;
                         case CardOperationType.UNACK:
-                                logger.info(
-                                    'LightCardStore - Receive unack on card uid=' +
-                                        operation.cardUid +
-                                        ', id=' +
-                                        operation.cardId,
-                                    LogOption.LOCAL_AND_REMOTE
-                                );
-                                this.removeEntitiesAcksForLightCard(
+                            logger.info(
+                                'LightCardStore - Receive unack on card uid=' +
+                                    operation.cardUid +
+                                    ', id=' +
                                     operation.cardId,
-                                    operation.entitiesAcks
-                                );
-                                this.receivedAcksSubject.next({
-                                    cardUid: operation.cardUid,
-                                    entitiesAcks: operation.entitiesAcks,
-                                    operation: CardOperationType.UNACK
-                                });
-                                break;
+                                LogOption.LOCAL_AND_REMOTE
+                            );
+                            this.removeEntitiesAcksForLightCard(operation.cardId, operation.entitiesAcks);
+                            this.receivedAcksSubject.next({
+                                cardUid: operation.cardUid,
+                                entitiesAcks: operation.entitiesAcks,
+                                operation: CardOperationType.UNACK
+                            });
+                            break;
                         default:
                             logger.info(
                                 `LightCardStore - Unknown operation ` +
@@ -249,10 +239,7 @@ export class LightCardsStore {
             this.newLightChildCards.next(card);
         } else {
             const oldCardVersion = this.lightCards.get(card.id);
-            card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(
-                oldCardVersion,
-                card
-            );
+            card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(oldCardVersion, card);
             card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledged(card);
             card.hasBeenRead = this.isLightCardHasBeenRead(card);
             this.addOrUpdateParentLightCard(card);
@@ -264,7 +251,10 @@ export class LightCardsStore {
         const children = this.getChildCards(card.id);
         if (hasBeenAcknowledged && children) {
             for (const child of children) {
-                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(child)) {
+                if (
+                    child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) &&
+                    !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(child)
+                ) {
                     hasBeenAcknowledged = false;
                     break;
                 }
@@ -291,7 +281,7 @@ export class LightCardsStore {
         if (card.parentCardId) {
             const children = this.childCards.get(card.parentCardId);
             if (children) {
-                const childIndex = children.findIndex(child => child.id === card.id);
+                const childIndex = children.findIndex((child) => child.id === card.id);
                 if (childIndex >= 0) children.splice(childIndex);
                 children.push(card);
             } else {
@@ -299,7 +289,6 @@ export class LightCardsStore {
             }
 
             this.unreadAndUnackParentCardIfNeeded(card);
-
         }
     }
 
@@ -311,7 +300,10 @@ export class LightCardsStore {
                 if (parent.hasBeenRead && !card.hasBeenRead) {
                     this.setLightCardRead(parent.id, false);
                 }
-                if (parent.hasBeenAcknowledged && !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card)) {
+                if (
+                    parent.hasBeenAcknowledged &&
+                    !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card)
+                ) {
                     this.setLightCardAcknowledgment(parent.id, false);
                 }
             }
@@ -331,7 +323,11 @@ export class LightCardsStore {
     }
 
     private lightCardHasChildFromCurrentUserEntity(oldCardVersion, newCard): boolean {
-        if (oldCardVersion) return (newCard.keepChildCards || newCard.actions?.includes(CardAction.KEEP_CHILD_CARDS)) && oldCardVersion.hasChildCardFromCurrentUserEntity;
+        if (oldCardVersion)
+            return (
+                (newCard.keepChildCards || newCard.actions?.includes(CardAction.KEEP_CHILD_CARDS)) &&
+                oldCardVersion.hasChildCardFromCurrentUserEntity
+            );
         else {
             // if a child card form the current user entity has been loaded in the UI before the parent card
             if (this.orphanedLightChildCardsFromCurrentEntity.has(newCard.id)) {
@@ -401,18 +397,16 @@ export class LightCardsStore {
         const card = this.lightCards.get(cardId);
 
         if (card?.entitiesAcks && entitiesAcksToRemove) {
-
-            entitiesAcksToRemove.forEach(entityToRemove => {
+            entitiesAcksToRemove.forEach((entityToRemove) => {
                 const indexToRemove = card.entitiesAcks.indexOf(entityToRemove);
-                if (indexToRemove >= 0)
-                    card.entitiesAcks.splice(indexToRemove);
-            })
+                if (indexToRemove >= 0) card.entitiesAcks.splice(indexToRemove);
+            });
             card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
 
-    public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[], operation: CardOperationType}> {
+    public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[]; operation: CardOperationType}> {
         return this.receivedAcksSubject.asObservable();
     }
 

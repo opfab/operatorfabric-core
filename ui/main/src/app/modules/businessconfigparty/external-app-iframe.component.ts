@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externa
 export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
     private externalAppIFrameView: ExternalAppIFrameView;
-
 
     ngOnInit() {
         this.externalAppIFrameView = new ExternalAppIFrameView();

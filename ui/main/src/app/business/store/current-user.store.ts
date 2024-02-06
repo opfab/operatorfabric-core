@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 import {ReplaySubject, Observable, Subject} from 'rxjs';
 
 export class CurrentUserStore {
-
     private static connectionEvent = new ReplaySubject<string>(1);
     private static sessionWillSoonExpireEvent = new Subject<boolean>();
     private static sessionExpiredEvent = new Subject<boolean>();

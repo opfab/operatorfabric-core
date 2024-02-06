@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ApplicationRouter} from "app/business/server/application-router";
-
+import {ApplicationRouter} from 'app/business/server/application-router';
 
 export class ApplicationRouterMock extends ApplicationRouter {
-
     public urlCalled: string;
 
     navigateTo(url: string) {

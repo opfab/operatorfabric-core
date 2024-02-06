@@ -67,7 +67,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public isResponseLocked = false;
     public fullscreen = false;
     public showMaxAndReduceButton = false;
-    public showDetailCardHeader= true;
+    public showDetailCardHeader = true;
     public htmlTemplateContent: SafeHtml;
     public templateOffset = 15;
     public truncatedTitle: string;
@@ -82,9 +82,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public user: User;
     private userWithPerimeters: UserWithPerimeters;
 
-    constructor(
-        private router: Router
-    ) {
+    constructor(private router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
@@ -94,8 +92,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this.integrateChildCardsInRealTime();
         const pageType = RouterStore.getCurrentPageType();
-        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
-        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
+        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD)
+            this.templateOffset = 35;
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD)
+            this.showMaxAndReduceButton = true;
     }
 
     private integrateChildCardsInRealTime() {
@@ -193,9 +193,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private computeCardHasBeenRead() {
-        this.card = {...this.card,
-            hasBeenRead: OpfabStore.getLightCardStore().isLightCardHasBeenRead(this.card)
-        }
+        this.card = {...this.card, hasBeenRead: OpfabStore.getLightCardStore().isLightCardHasBeenRead(this.card)};
     }
 
     private computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
@@ -212,9 +210,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const entitiesAllowedOrRequiredToRespond = EntitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
-        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
-            .map((entity) => entity.id);
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards =
+            EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(
+                (entity) => entity.id
+            );
 
         logger.debug(
             `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
@@ -237,9 +236,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
         const entitiesRequiredToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
 
-        const entityIdsRequiredToRespondAndAllowedToSendCards = EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond)
-            .map((entity) => entity.id);
+        const entityIdsRequiredToRespondAndAllowedToSendCards = EntitiesService.resolveEntitiesAllowedToSendCards(
+            entitiesRequiredToRespond
+        ).map((entity) => entity.id);
 
         const userEntitiesRequiredToRespondAndAllowedToSendCards =
             entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
@@ -255,7 +254,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private markAsReadIfNecessary() {
-
         if (this.card.hasBeenRead === false) {
             // we do not set now the card as read in the store, as we want to keep
             // the card as unread in the feed
@@ -271,15 +269,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             CardService.postUserCardRead(this.card.uid).subscribe();
-
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
 
         if (this.childCards) {
-            this.childCards.forEach(child => {
+            this.childCards.forEach((child) => {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
                     CardService.postUserCardRead(child.uid).subscribe();
                 }
-            })
+            });
         }
     }
 
@@ -321,7 +318,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
         OpfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
         OpfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
-        }
+    }
 
     private stopRegularlyCheckLttd() {
         this.regularlyLttdCheckActive = false;
@@ -353,12 +350,12 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public isThereEnoughSpaceToShowCard() {
         const domElement = document.getElementsByTagName('of-card-body');
-        const cardWidth =  domElement.item(0).getBoundingClientRect().width;
+        const cardWidth = domElement.item(0).getBoundingClientRect().width;
 
-        if (cardWidth === 0) //Full screen
-            return window.innerWidth > 1300
-        else
-            return cardWidth > 485 || window.innerWidth > 1300;
+        if (cardWidth === 0)
+            //Full screen
+            return window.innerWidth > 1300;
+        else return cardWidth > 485 || window.innerWidth > 1300;
     }
 
     public setFullScreen(active) {

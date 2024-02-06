@@ -671,21 +671,19 @@ describe('NavbarMenuView', () => {
         });
 
         it('should update menu labels in upper menu', async () => {
-            await stubConfigLoading(
-                {
-                    navigationBar: [
-                        {
-                            entries: [
-                                {customMenuId: 'customMenu1', label: 'customMenu1Label_translation_key'},
-                                {opfabCoreMenuId: 'archives'}
-                            ]
-                        },
-                        {
-                            opfabCoreMenuId: 'feed'
-                        }
-                    ]
-                }
-            );
+            await stubConfigLoading({
+                navigationBar: [
+                    {
+                        entries: [
+                            {customMenuId: 'customMenu1', label: 'customMenu1Label_translation_key'},
+                            {opfabCoreMenuId: 'archives'}
+                        ]
+                    },
+                    {
+                        opfabCoreMenuId: 'feed'
+                    }
+                ]
+            });
             const navbarMenuView = new NavbarMenuView(translationService);
             const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of menu.feed');
@@ -703,9 +701,7 @@ describe('NavbarMenuView', () => {
         it('should update menu labels in right menu', async () => {
             await stubConfigLoading({
                 navigationBar: [],
-                topRightMenus: [
-                    {opfabCoreMenuId: 'realtimeusers', visible: true}
-                ]
+                topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
             const navbarMenuView = new NavbarMenuView(translationService);
             const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
@@ -718,16 +714,16 @@ describe('NavbarMenuView', () => {
             expect(newRightMenuElements[0].label).toEqual('Translation (fr) of menu.realtimeusers');
             navbarMenuView.destroy();
         });
-        it ('should trigger menu change listener when locale change', async () => {
+        it('should trigger menu change listener when locale change', async () => {
             await stubConfigLoading({
                 navigationBar: [],
-                topRightMenus: [
-                    {opfabCoreMenuId: 'realtimeusers', visible: true}
-                ]
+                topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
             const navbarMenuView = new NavbarMenuView(translationService);
             let listenerHasBeenCalled = false;
-            navbarMenuView.setMenuChangeListener(() => {listenerHasBeenCalled = true;});
+            navbarMenuView.setMenuChangeListener(() => {
+                listenerHasBeenCalled = true;
+            });
             translationService.setLang('fr');
             ConfigService.setConfigValue('settings.locale', 'fr');
             expect(listenerHasBeenCalled).toBeTruthy();

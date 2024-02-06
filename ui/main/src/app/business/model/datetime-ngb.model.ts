@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,10 @@ export function isNumber(value: any): value is number {
 }
 
 export class DateTimeNgb {
-    constructor(readonly date?: NgbDateStruct, readonly time: NgbTimeStruct = {hour: 0, minute: 0, second: 0}) {
+    constructor(
+        readonly date?: NgbDateStruct,
+        readonly time: NgbTimeStruct = {hour: 0, minute: 0, second: 0}
+    ) {
         // in case time is explicitly set to null/undefined set to default one
         if (!time) {
             this.time = {hour: 0, minute: 0, second: 0};
@@ -64,7 +67,6 @@ export class DateTimeNgb {
         }
         return str;
     }
-
 
     // a function that transform timestruct to string
     formatTime(): string {

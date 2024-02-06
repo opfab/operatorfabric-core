@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
-
 
 export class AdminProcessesService {
     private static processes: Process[];

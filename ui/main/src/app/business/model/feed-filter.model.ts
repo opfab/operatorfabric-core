@@ -10,10 +10,13 @@
 import {LightCard} from '@ofModel/light-card.model';
 
 export class Filter {
+    constructor(
+        readonly filteringFunction: (LightCard, any) => boolean,
+        public active: boolean,
+        public status: any
+    ) {}
 
-    constructor(readonly filteringFunction: (LightCard, any) => boolean, public active: boolean, public status: any) {}
-
-     static chainFilter(card: LightCard, next: Filter[]): boolean {
+    static chainFilter(card: LightCard, next: Filter[]): boolean {
         return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
     }
 
@@ -21,7 +24,7 @@ export class Filter {
      * Apply this filter to a card, then a chain of filter recursively.
      * The recursion stops when the card is filtered out
      */
-     chainFilter(card: LightCard, next: Filter[]): boolean {
+    chainFilter(card: LightCard, next: Filter[]): boolean {
         if (this.applyFilter(card)) {
             return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
         }

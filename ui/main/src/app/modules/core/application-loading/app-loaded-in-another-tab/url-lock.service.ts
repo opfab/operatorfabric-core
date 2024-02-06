@@ -12,13 +12,11 @@ import {Injectable} from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-
-
 export class UrlLockService {
     private readonly IS_OPFAB_URL_CURRENTLY_USED_KEY = 'isOpfabUrlCurrentlyUsed';
     private readonly DISCONNECTED_BY_NEW_USER_USING_SAME_URL = 'disconnectedByNewUserUsingSameUrl';
     private readonly store = localStorage;
-    private disconnectSignalListener:Function ;
+    private disconnectSignalListener: Function;
 
     public lockUrl(): void {
         this.store.setItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY, 'true');
@@ -30,23 +28,23 @@ export class UrlLockService {
 
     public isUrlLocked(): boolean {
         const urlLock = this.store.getItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY);
-        return  urlLock ? JSON.parse(urlLock) : false;
+        return urlLock ? JSON.parse(urlLock) : false;
     }
 
-    public disconnectOtherUsers() : void {
+    public disconnectOtherUsers(): void {
         this.store.setItem(this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL, JSON.stringify(new Date().getTime()));
     }
 
-    public setDisconnectSignalListener(listener: Function) : void {
+    public setDisconnectSignalListener(listener: Function): void {
         this.disconnectSignalListener = listener;
         window.addEventListener('storage', this.listenForDisconnectSignal.bind(this), false);
     }
 
-    private listenForDisconnectSignal(event) : void {
-        if (this.isEventADisconnectionSignal(event))  this.disconnectSignalListener();
+    private listenForDisconnectSignal(event): void {
+        if (this.isEventADisconnectionSignal(event)) this.disconnectSignalListener();
     }
 
-    private isEventADisconnectionSignal(event):boolean {
+    private isEventADisconnectionSignal(event): boolean {
         return event.storageArea === this.store && event.key === this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL;
     }
 }

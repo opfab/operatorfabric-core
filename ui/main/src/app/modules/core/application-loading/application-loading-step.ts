@@ -7,27 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable, ReplaySubject} from "rxjs";
-
+import {Observable, ReplaySubject} from 'rxjs';
 
 export class ApplicationLoadingStep {
-
     private finishedWithoutError: ReplaySubject<boolean> = new ReplaySubject(1);
     private finishedWithErrors: ReplaySubject<boolean> = new ReplaySubject(1);
 
     public execute() {
-            // implement here the step execution
+        // implement here the step execution
     }
 
-    protected setStepAsFinishedWithoutError() : void {
-
+    protected setStepAsFinishedWithoutError(): void {
         this.finishedWithoutError.next(true);
         this.finishedWithoutError.complete();
     }
 
-
-    protected setStepAsFinishedWithError() : void {
-
+    protected setStepAsFinishedWithError(): void {
         this.finishedWithErrors.next(true);
         this.finishedWithErrors.complete();
     }
@@ -36,10 +31,7 @@ export class ApplicationLoadingStep {
         return this.finishedWithoutError.asObservable();
     }
 
-
     public isFinishedWithErrors(): Observable<boolean> {
         return this.finishedWithErrors.asObservable();
     }
 }
-
-

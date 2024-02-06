@@ -14,7 +14,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-info',
@@ -29,8 +29,7 @@ export class InfoComponent implements OnInit {
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
-    }
+    constructor(private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.updateTime();
@@ -74,7 +73,6 @@ export class InfoComponent implements OnInit {
         if (this.userEntitiesToDisplay.length > 20) {
             this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0, 17) + '...';
             this.userEntitiesToDisplayTrimmed = true;
-        }
-        else this.userEntitiesToDisplayTrimmed = false;
+        } else this.userEntitiesToDisplayTrimmed = false;
     }
 }

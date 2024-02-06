@@ -22,23 +22,19 @@ export class AngularAcknowledgeServer extends AngularServer implements Acknowled
     readonly userAckUrl: string;
     readonly cancelUserAckUrl: string;
 
-    constructor(
-        private httpClient: HttpClient,
-    ) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.userAckUrl = `${environment.url}/cardspub/cards/userAcknowledgement`;
         this.cancelUserAckUrl = `${environment.url}/cardspub/cards/cancelUserAcknowledgement`;
     }
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        return this.processHttpResponse(
-            this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks)
-            );
+        return this.processHttpResponse(this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks));
     }
 
     deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        return this.processHttpResponse(this.httpClient.post<void>(`${this.cancelUserAckUrl}/${cardUid}`, entitiesAcks));
+        return this.processHttpResponse(
+            this.httpClient.post<void>(`${this.cancelUserAckUrl}/${cardUid}`, entitiesAcks)
+        );
     }
-
-
 }

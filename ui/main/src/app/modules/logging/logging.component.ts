@@ -7,7 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -38,15 +47,15 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     tags: any[];
     size: number;
     loggingForm = new FormGroup({
-            tags: new FormControl([]),
-            state: new FormControl([]),
-            process: new FormControl([]),
-            processGroup: new FormControl([]),
-            publishDateFrom: new FormControl<string | null>(null),
-            publishDateTo: new FormControl(''),
-            activeFrom: new FormControl(''),
-            activeTo: new FormControl('')
-        });
+        tags: new FormControl([]),
+        state: new FormControl([]),
+        process: new FormControl([]),
+        processGroup: new FormControl([]),
+        publishDateFrom: new FormControl<string | null>(null),
+        publishDateTo: new FormControl(''),
+        activeFrom: new FormControl(''),
+        activeTo: new FormControl('')
+    });
 
     results: LightCard[];
     currentPage = 0;
@@ -119,7 +128,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.isProcessGroupFilterVisible = this.filtersTemplate.isProcessGroupFilterVisible();
-
     }
 
     resetForm() {
@@ -138,8 +146,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
 
-        CardService
-            .fetchFilteredArchivedCards(filter)
+        CardService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (page: Page<any>) => {
@@ -158,8 +165,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                         this.cardPostProcessing(card);
                     });
                     this.results = page.content;
-                    this.totalElements= page.totalElements;
-                    this.totalPages= page.totalPages;
+                    this.totalElements = page.totalElements;
+                    this.totalPages = page.totalPages;
                     this.changeDetector.markForCheck();
                 },
                 error: () => {
@@ -171,20 +178,18 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             });
     }
 
-    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>) : CardsFilter {
+    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>): CardsFilter {
         const filters = [];
         let isAdminMode = false;
-        filtersMap.forEach( (values, key) => {
-            if (key === 'adminMode')
-                isAdminMode = values[0];
-            else
-                filters.push(new FilterModel(key,null,FilterMatchTypeEnum.IN, values));
+        filtersMap.forEach((values, key) => {
+            if (key === 'adminMode') isAdminMode = values[0];
+            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected , set the filter to the list of process that shall be visible on the UI
         if (this.listOfProcessesForRequest.length && !filtersMap.has('process'))
-            filters.push(new FilterModel('process',null,FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
+            filters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
-        this.columnFilters.forEach(filter => filters.push(filter));
+        this.columnFilters.forEach((filter) => filters.push(filter));
         return new CardsFilter(page, size, isAdminMode, true, false, filters);
     }
 
@@ -222,9 +227,13 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     onTableFilterChange(filterModel) {
         this.columnFilters = [];
-        Object.keys(filterModel).forEach(column => {
-            const type : string = filterModel[column].type;
-            this.columnFilters.push(new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [filterModel[column].filter]))
+        Object.keys(filterModel).forEach((column) => {
+            const type: string = filterModel[column].type;
+            this.columnFilters.push(
+                new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                    filterModel[column].filter
+                ])
+            );
         });
         this.sendFilterQuery(0);
     }
@@ -245,8 +254,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
 
-        CardService
-            .fetchFilteredArchivedCards(filter)
+        CardService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
@@ -302,8 +310,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             });
     }
 
-    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        return this.translationService.getTranslation(key,interpolateParams);
+    translateColumn(key: string, interpolateParams?: Map<string, string>): any {
+        return this.translationService.getTranslation(key, interpolateParams);
     }
 
     ngOnDestroy() {

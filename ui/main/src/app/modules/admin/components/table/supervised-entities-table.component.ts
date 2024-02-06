@@ -39,8 +39,9 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             filter: 'agTextColumnFilter',
             filterParams: {
                 valueGetter: (params) => {
-                    const entity = this.entitiesDefinition
-                        .find((entityDefinition) => params.data.entityId === entityDefinition.id);
+                    const entity = this.entitiesDefinition.find(
+                        (entityDefinition) => params.data.entityId === entityDefinition.id
+                    );
 
                     return entity ? entity.name : params.data.entityId;
                 }

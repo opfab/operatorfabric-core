@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,9 +15,7 @@ import {ErrorService} from 'app/business/services/error-service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
-
-export class ExternalDevicesService  {
-
+export class ExternalDevicesService {
     private static externalDevicesServer: ExternalDevicesServer;
 
     /**
@@ -29,35 +27,59 @@ export class ExternalDevicesService  {
     }
 
     static sendNotification(notification: Notification): Observable<any> {
-        return ExternalDevicesService.externalDevicesServer.sendNotification(notification).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
+        return ExternalDevicesService.externalDevicesServer.sendNotification(notification).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data;
+                else return ErrorService.handleServerResponseError(serverResponse);
+            })
+        );
     }
 
     static fetchUserConfiguration(login: string): Observable<UserConfiguration> {
-        return ExternalDevicesService.externalDevicesServer.fetchUserConfiguration(login).pipe(( map((serverResponse) => serverResponse.data)));
+        return ExternalDevicesService.externalDevicesServer
+            .fetchUserConfiguration(login)
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
     static queryAllUserConfigurations(): Observable<UserConfiguration[]> {
-        return ExternalDevicesService.externalDevicesServer.queryAllUserConfigurations().pipe(( map((serverResponse) => serverResponse.data)));
+        return ExternalDevicesService.externalDevicesServer
+            .queryAllUserConfigurations()
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
     static queryAllDevices(): Observable<Device[]> {
-        return ExternalDevicesService.externalDevicesServer.queryAllDevices().pipe(( map((serverResponse) => serverResponse.data)));
+        return ExternalDevicesService.externalDevicesServer
+            .queryAllDevices()
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
     static updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
-        return ExternalDevicesService.externalDevicesServer.updateUserConfiguration(userconfigData).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
+        return ExternalDevicesService.externalDevicesServer.updateUserConfiguration(userconfigData).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data;
+                else return ErrorService.handleServerResponseError(serverResponse);
+            })
+        );
     }
 
     static enableDevice(deviceId: string): Observable<string> {
-        return ExternalDevicesService.externalDevicesServer.enableDevice(deviceId).pipe(( map((serverResponse) => serverResponse.data)));
+        return ExternalDevicesService.externalDevicesServer
+            .enableDevice(deviceId)
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
     static disableDevice(deviceId: string): Observable<string> {
-        return ExternalDevicesService.externalDevicesServer.disableDevice(deviceId).pipe(( map((serverResponse) => serverResponse.data)));
+        return ExternalDevicesService.externalDevicesServer
+            .disableDevice(deviceId)
+            .pipe(map((serverResponse) => serverResponse.data));
     }
 
     static deleteByUserLogin(login: string) {
-        return ExternalDevicesService.externalDevicesServer.deleteByUserLogin(login).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
+        return ExternalDevicesService.externalDevicesServer.deleteByUserLogin(login).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data;
+                else return ErrorService.handleServerResponseError(serverResponse);
+            })
+        );
     }
 }
-

@@ -13,7 +13,6 @@ import {firstValueFrom} from 'rxjs';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 
 describe('ConfigService', () => {
-
     let configServerMock: ConfigServerMock;
 
     beforeEach(() => {
@@ -23,14 +22,16 @@ describe('ConfigService', () => {
     });
     describe('Web-ui config', () => {
         it('GIVEN_A_Web-ui_Configuration_File_WHEN_Loading_THEN_Configuration_Is_Loaded', async () => {
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse({field: 'value'},ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(
+                new ServerResponse({field: 'value'}, ServerResponseStatus.OK, null)
+            );
             const conf = await firstValueFrom(ConfigService.loadWebUIConfiguration());
             expect(conf).toEqual({field: 'value'});
         });
 
         it('GIVEN_A_Loaded_Configuration_WHEN_Get_Config_Value_THEN_Obtain_Config_Value', async () => {
             const conf = {field1: 'value1', nested: {field2: 'value2'}};
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
             await firstValueFrom(ConfigService.loadWebUIConfiguration());
             expect(ConfigService.getConfigValue('field1')).toEqual('value1');
             expect(ConfigService.getConfigValue('nested.field2')).toEqual('value2');
@@ -38,14 +39,14 @@ describe('ConfigService', () => {
 
         it('GIVEN_A_Loaded_Configuration_WHEN_Get_Non_Existing_Config_Value_THEN_Obtain_FallBack_Config_Value', async () => {
             const conf = {field1: 'value1', nested: {field2: 'value2'}};
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
             await firstValueFrom(ConfigService.loadWebUIConfiguration());
             expect(ConfigService.getConfigValue('unexisting', 'myfallback')).toEqual('myfallback');
         });
 
         it('GIVEN_A_Loaded_Configuration_WHEN_Set_Config_Value_THEN_Initial_Config_Value_Change', async () => {
             const conf = {field1: 'value1', nested: {field2: 'value2'}};
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
             await firstValueFrom(ConfigService.loadWebUIConfiguration());
             ConfigService.setConfigValue('nested.field2', 'newValue2');
             expect(ConfigService.getConfigValue('nested.field2')).toEqual('newValue2');
@@ -65,7 +66,7 @@ describe('ConfigService', () => {
                 settings3: 'newS3'
             };
 
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
             await firstValueFrom(ConfigService.loadWebUIConfiguration());
             ConfigService.overrideConfigSettingsWithUserSettings(settings);
             expect(ConfigService.getConfigValue('settings.settings1')).toEqual('newS1');
@@ -75,7 +76,7 @@ describe('ConfigService', () => {
 
         it('GIVEN_A_Loaded_Configuration_WHEN_Change_Config_Value_THEN_Change_Is_Received_Via_Observable', async () => {
             const conf = {field1: 'value1', nested: {field2: 'value2'}};
-            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
             await firstValueFrom(ConfigService.loadWebUIConfiguration());
             let observableEmissionNb = 0;
             const getConfig = ConfigService.getConfigValueAsObservable('nested.field2').subscribe((value) => {
@@ -86,7 +87,6 @@ describe('ConfigService', () => {
             ConfigService.setConfigValue('nested.field2', 'newValue2');
             expect(observableEmissionNb).toBe(2);
             getConfig.unsubscribe();
-
         });
     });
 
@@ -96,24 +96,26 @@ describe('ConfigService', () => {
                 {
                     opfabCoreMenuId: 'feed',
                     visible: true
-                }],
-            locales : [{
-                language: "en",
-                i18n: {
-                    title: "First menu",
-                    entry: "Single menu entry"
                 }
-            }]
+            ],
+            locales: [
+                {
+                    language: 'en',
+                    i18n: {
+                        title: 'First menu',
+                        entry: 'Single menu entry'
+                    }
+                }
+            ]
         };
 
-
         it('GIVEN_A_Menu_Configuration_File_WHEN_Fetch_Custom_Menu_Translation_THEN_Translation_Is_Available', async () => {
-            configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf,ServerResponseStatus.OK,null));
+            configServerMock.setResponseForMenuConfiguration(
+                new ServerResponse(menuConf, ServerResponseStatus.OK, null)
+            );
             const translation = await firstValueFrom(ConfigService.fetchMenuTranslations());
-            expect(translation[0].language).toEqual("en");
-            expect(translation[0].i18n["title"]).toEqual("First menu");
+            expect(translation[0].language).toEqual('en');
+            expect(translation[0].i18n['title']).toEqual('First menu');
         });
-
     });
-
 });

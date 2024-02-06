@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
 export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
-
     protected checkTokenUrl = `${environment.url}/auth/check_token`;
     protected askTokenUrl = `${environment.url}/auth/token`;
 
@@ -35,7 +34,7 @@ export abstract class AuthHandler {
     protected delegateUrl: string;
     protected loginClaim: string;
 
-    constructor( protected httpClient: HttpClient) {
+    constructor(protected httpClient: HttpClient) {
         this.secondsToCloseSession = ConfigService.getConfigValue('secondsToCloseSession', 60);
         this.clientId = ConfigService.getConfigValue('security.oauth2.client-id', null);
         this.delegateUrl = ConfigService.getConfigValue('security.oauth2.flow.delegate-url', null);
@@ -83,7 +82,7 @@ export abstract class AuthHandler {
         const jwt = this.decodeToken(authInfo.access_token);
         if (authInfo.expires_in) {
             expirationDate = Date.now() + ONE_SECOND * authInfo.expires_in;
-        } else  {
+        } else {
             expirationDate = jwt[EXPIRE_CLAIM];
         }
         const user = new AuthenticatedUser();
@@ -97,7 +96,7 @@ export abstract class AuthHandler {
         try {
             return jwtDecode(token);
         } catch (err) {
-            logger.error(" Error in token decoding " + err);
+            logger.error(' Error in token decoding ' + err);
             return null;
         }
     }

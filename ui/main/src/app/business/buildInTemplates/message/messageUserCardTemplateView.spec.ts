@@ -12,7 +12,6 @@ import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 
 declare const opfab;
 
-
 class QuillEditorMock {
     contents: string;
 
@@ -30,7 +29,6 @@ class QuillEditorMock {
 }
 
 describe('Message UserCard template', () => {
-
     let view: MessageUserCardTemplateView;
 
     beforeEach(() => {

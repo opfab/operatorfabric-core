@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,10 +60,12 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
 
     getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>> {
         const params = new HttpParams().set('allVersions', true);
-        return this.processHttpResponse(this.httpClient.get(this.processesUrl, {
-            params: params,
-            responseType: 'text'
-        })).pipe(map((response) => this.convertProcessesStatesInResponseToMap(response)));
+        return this.processHttpResponse(
+            this.httpClient.get(this.processesUrl, {
+                params: params,
+                responseType: 'text'
+            })
+        ).pipe(map((response) => this.convertProcessesStatesInResponseToMap(response)));
     }
 
     convertProcessesStatesInResponseToMap(serverResponse: ServerResponse<any>): ServerResponse<Process[]> {

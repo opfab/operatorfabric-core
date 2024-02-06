@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,6 @@ import {PageType, RouterStore} from './business/store/router.store';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
     reloadCanceled: boolean;
 
     public applicationLoaded = false;
@@ -66,18 +65,16 @@ export class AppComponent {
 
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
-        const pageType =  RouterStore.getCurrentPageType();
+        const pageType = RouterStore.getCurrentPageType();
         if (pageType === PageType.FEED) this.soundNotificationService.clearOutstandingNotifications();
     }
 
     constructor(
         private soundNotificationService: SoundNotificationService,
-        private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
-    ) {
-    }
+        private routerNavigationService: RouterNavigationService // put it here to have it injected and started a startup
+    ) {}
 
     onApplicationLoaded() {
         this.applicationLoaded = true;
-
     }
 }

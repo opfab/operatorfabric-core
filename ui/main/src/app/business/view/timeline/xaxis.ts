@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 import moment, {Moment} from 'moment';
-
 
 export class Rectangle {
     public start: number;
@@ -150,7 +149,7 @@ export class XAxis {
             while (startOfDay < this.gridTimeDomain[1]) {
                 let endOfDay = moment(startOfDay).set('hour', 23).set('minute', 59).valueOf();
                 if (endOfDay.valueOf() > this.gridTimeDomain[1]) endOfDay = this.gridTimeDomain[1];
-                const rectangle : Rectangle = {
+                const rectangle: Rectangle = {
                     start: startOfDay,
                     end: endOfDay,
                     changeBgColor: changeBgColor,
@@ -163,7 +162,7 @@ export class XAxis {
         }
     }
 
-    private getWeekFormatting(start:number, end:number) {
+    private getWeekFormatting(start: number, end: number) {
         if (end - start < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
         return moment(start).format('ddd DD MMM');
     }

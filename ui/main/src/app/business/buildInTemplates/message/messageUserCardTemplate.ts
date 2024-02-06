@@ -12,7 +12,6 @@ import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 
 declare const opfab;
 export class MessageUserCardTemplate extends BaseUserCardTemplate {
-
     view: MessageUserCardTemplateView;
 
     constructor() {
@@ -36,10 +35,9 @@ export class MessageUserCardTemplate extends BaseUserCardTemplate {
     }
 
     getSpecificCardInformation() {
-        const quillEditor = (<HTMLInputElement>document.getElementById('usercard_message_input'));
+        const quillEditor = <HTMLInputElement>document.getElementById('usercard_message_input');
         const messageTitle = (<HTMLInputElement>document.getElementById('usercard_message_title')).value;
 
         return this.view.getSpecificCardInformation(quillEditor, messageTitle);
     }
-
 }

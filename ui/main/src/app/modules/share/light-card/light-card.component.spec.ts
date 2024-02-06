@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ import {UserServer} from 'app/business/server/user.server';
 import {SoundServer} from 'app/business/server/sound.server';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
-import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
+import {AcknowledgeServer} from '../../../business/server/acknowledge.server';
 import {ConfigService} from 'app/business/services/config.service';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
@@ -72,10 +72,10 @@ describe('LightCardComponent', () => {
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: RemoteLoggerServer, useValue: null},
-                {provide: OpfabEventStreamServer, use:null},
+                {provide: OpfabEventStreamServer, use: null},
                 {provide: EntitiesServer, useValue: null},
                 {provide: UserServer, useValue: null},
-                {provide: ExternalDevicesServer, use:null},
+                {provide: ExternalDevicesServer, use: null},
                 {provide: SoundServer, use: null},
                 {provide: TranslationService, useClass: TranslationServiceMock},
                 {provide: AcknowledgeServer, useClass: null}

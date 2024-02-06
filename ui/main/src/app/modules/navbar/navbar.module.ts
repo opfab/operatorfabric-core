@@ -16,14 +16,10 @@ import {AppRoutingModule} from 'app/router/app-routing.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AboutComponent} from '../core/about/about.component';
-import {SpinnerModule} from "../share/spinner/spinner.module";
+import {SpinnerModule} from '../share/spinner/spinner.module';
 
 @NgModule({
-    declarations: [
-        NavbarComponent,
-        InfoComponent,
-        AboutComponent
-    ],
+    declarations: [NavbarComponent, InfoComponent, AboutComponent],
     imports: [CommonModule, TranslateModule, AppRoutingModule, UserCardModule, NgbModule, SpinnerModule],
     exports: [NavbarComponent]
 })

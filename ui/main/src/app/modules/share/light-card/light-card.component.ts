@@ -62,7 +62,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
-        GroupedCardsService.computeEvent.pipe(takeUntil(this.ngUnsubscribe))
+        GroupedCardsService.computeEvent
+            .pipe(takeUntil(this.ngUnsubscribe))
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
@@ -75,18 +76,16 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeLttdParams() {
-        ProcessesService
-            .queryProcess(this.lightCard.process, this.lightCard.processVersion)
-            .subscribe((process) => {
-                const state = process.states.get((this.lightCard.state));
-                if (state.type === TypeOfStateEnum.FINISHED) {
-                    this.showExpiredIcon = false;
-                    this.showExpiredLabel = false;
-                } else if (state.response) {
-                    this.showExpiredIcon = false;
-                    this.expiredLabel = 'feed.responsesClosed';
-                }
-            });
+        ProcessesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe((process) => {
+            const state = process.states.get(this.lightCard.state);
+            if (state.type === TypeOfStateEnum.FINISHED) {
+                this.showExpiredIcon = false;
+                this.showExpiredLabel = false;
+            } else if (state.response) {
+                this.showExpiredIcon = false;
+                this.expiredLabel = 'feed.responsesClosed';
+            }
+        });
     }
 
     computeFromEntity() {
@@ -123,8 +122,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     private computeGroupedCardsIcon() {
-        this.showGroupedCardsIcon = GroupedCardsService.isParentGroupCard(this.lightCard)
-        && GroupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
+        this.showGroupedCardsIcon =
+            GroupedCardsService.isParentGroupCard(this.lightCard) &&
+            GroupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {
@@ -134,7 +134,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     handleDate(timeStamp: number): string {
         return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(timeStamp);
     }
-
 
     public select($event) {
         $event.stopPropagation();

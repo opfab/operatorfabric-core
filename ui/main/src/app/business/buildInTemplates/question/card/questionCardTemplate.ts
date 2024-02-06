@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,7 +41,9 @@ export class QuestionCardTemplate extends HTMLElement {
     }
 
     private setFunctionToGetUserResponseInput() {
-        this.questionCardTemplateView.setFunctionToGetResponseInput(() =>  (<HTMLInputElement>document.getElementById('template_response_input')).value )
+        this.questionCardTemplateView.setFunctionToGetResponseInput(
+            () => (<HTMLInputElement>document.getElementById('template_response_input')).value
+        );
     }
 
     private listenToResponses() {

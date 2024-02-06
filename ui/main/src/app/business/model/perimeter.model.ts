@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,11 +8,19 @@
  */
 
 export class Perimeter {
-    public constructor(readonly id: string, readonly process: string, readonly stateRights: Array<StateRight>) {}
+    public constructor(
+        readonly id: string,
+        readonly process: string,
+        readonly stateRights: Array<StateRight>
+    ) {}
 }
 
 export class StateRight {
-    constructor(readonly state: string, readonly right: RightsEnum, readonly filteringNotificationAllowed: boolean) {}
+    constructor(
+        readonly state: string,
+        readonly right: RightsEnum,
+        readonly filteringNotificationAllowed: boolean
+    ) {}
 }
 
 export enum RightsEnum {

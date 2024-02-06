@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,15 +17,13 @@ import {ICellRendererParams} from 'ag-grid-community';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
-
     public isChecked: boolean;
-    private params: ICellRendererParams
+    private params: ICellRendererParams;
 
     agInit(params: ICellRendererParams): void {
         this.params = params;
         this.isChecked = params.value;
     }
-
 
     // noinspection JSUnusedLocalSymbols
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
@@ -39,6 +37,4 @@ export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
         this.isChecked = !this.isChecked;
         this.params.context.componentParent.detectCheckboxClick(this.params.data, this.isChecked);
     }
-
-
 }

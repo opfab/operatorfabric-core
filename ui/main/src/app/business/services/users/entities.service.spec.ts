@@ -14,7 +14,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {AngularEntitiesServer} from 'app/server/angularEntities.server';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
@@ -55,14 +55,7 @@ describe('EntitiesService', () => {
             const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
             const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
             const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], [], []);
-            const entity3_1 = new Entity(
-                'ENTITY3.1',
-                'Control Room 3.1',
-                'Control Room 3.1',
-                [],
-                [],
-                ['ENTITY3']
-            );
+            const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', [], [], ['ENTITY3']);
             const entity3_1_1 = new Entity(
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',
@@ -115,9 +108,30 @@ describe('EntitiesService', () => {
         it('should return 1 entity', () => {
             const listEntities: Entity[] = [];
 
-            const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', [RolesEnum.CARD_SENDER], [], []);
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], ['ENTITYGROUP']);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], ['ENTITYGROUP']);
+            const entityGroup = new Entity(
+                'ENTITYGROUP',
+                'Control Rooms',
+                'Control Rooms',
+                [RolesEnum.CARD_SENDER],
+                [],
+                []
+            );
+            const entity1 = new Entity(
+                'ENTITY1',
+                'Control Room 1',
+                'Control Room 1',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['ENTITYGROUP']
+            );
+            const entity2 = new Entity(
+                'ENTITY2',
+                'Control Room 2',
+                'Control Room 2',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['ENTITYGROUP']
+            );
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -141,8 +155,22 @@ describe('EntitiesService', () => {
             const listEntities: Entity[] = [];
 
             const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', [], [], []);
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], ['ENTITYGROUP']);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], ['ENTITYGROUP']);
+            const entity1 = new Entity(
+                'ENTITY1',
+                'Control Room 1',
+                'Control Room 1',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['ENTITYGROUP']
+            );
+            const entity2 = new Entity(
+                'ENTITY2',
+                'Control Room 2',
+                'Control Room 2',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['ENTITYGROUP']
+            );
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -172,14 +200,7 @@ describe('EntitiesService', () => {
             const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
             const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
             const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], [], []);
-            const entity3_1 = new Entity(
-                'ENTITY3.1',
-                'Control Room 3.1',
-                'Control Room 3.1',
-                [],
-                [],
-                ['ENTITY3']
-            );
+            const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', [], [], ['ENTITY3']);
             const entity3_1_1 = new Entity(
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',

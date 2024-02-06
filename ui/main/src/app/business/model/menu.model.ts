@@ -16,13 +16,13 @@ export class MenuEntry {
     constructor(
         public readonly id: string,
         public readonly customMenuId: string,
-        public readonly opfabCoreMenuId : string,
+        public readonly opfabCoreMenuId: string,
         public readonly label: string,
         public readonly url: string,
         public readonly visible: boolean,
         public readonly entries: MenuEntry[],
         linkType?: MenuEntryLinkTypeEnum,
-        showOnlyForGroups?: string[],
+        showOnlyForGroups?: string[]
     ) {}
 }
 
@@ -33,7 +33,10 @@ export enum MenuEntryLinkTypeEnum {
 }
 
 export class Locale {
-    constructor(readonly language: string, readonly i18n: I18n) {}
+    constructor(
+        readonly language: string,
+        readonly i18n: I18n
+    ) {}
 }
 
 export class UIMenuFile {
@@ -42,7 +45,6 @@ export class UIMenuFile {
         readonly topRightIconMenus: MenuEntry[],
         readonly topRightMenus: MenuEntry[],
         readonly locales: Locale[],
-        readonly showDropdownMenuEvenIfOnlyOneEntry: boolean,
+        readonly showDropdownMenuEvenIfOnlyOneEntry: boolean
     ) {}
 }
-

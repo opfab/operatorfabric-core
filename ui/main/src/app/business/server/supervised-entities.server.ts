@@ -14,5 +14,7 @@ import {SupervisedEntity} from '@ofModel/supervised-entity.model';
 export abstract class SupervisedEntitiesServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>;
     abstract queryAllSupervisedEntities(): Observable<ServerResponse<SupervisedEntity[]>>;
-    abstract updateSupervisedEntity(supervisedEntityData: SupervisedEntity): Observable<ServerResponse<SupervisedEntity>>;
+    abstract updateSupervisedEntity(
+        supervisedEntityData: SupervisedEntity
+    ): Observable<ServerResponse<SupervisedEntity>>;
 }

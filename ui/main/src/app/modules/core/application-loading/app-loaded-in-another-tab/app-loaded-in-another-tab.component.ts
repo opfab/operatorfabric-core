@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, HostListener,TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UrlLockService} from './url-lock.service';
@@ -86,8 +86,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         // to avoid having the popup for user already connected
         setTimeout(() => this.sendCheckAppLoadedInAnotherTabDone(), 1000);
     }
-
-
 
     private createListenerForDisconnectSignal(): void {
         this.urlLockService.setDisconnectSignalListener(() => {

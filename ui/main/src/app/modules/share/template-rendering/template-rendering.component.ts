@@ -87,8 +87,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.screenSize && this.templateLoaded)
-            OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
         else this.render();
     }
 
@@ -182,7 +181,8 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private loadTemplateJSScripts(): void {
-        const scripts = <HTMLScriptElement[]> this.element.nativeElement.getElementsByTagName('script');
+        //bug eslint/prettier
+        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script'); // eslint-disable-line
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];

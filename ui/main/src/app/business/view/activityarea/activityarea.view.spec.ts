@@ -50,12 +50,66 @@ describe('ActivityAreaView', () => {
         entitiesServerMock = new EntitiesServerMock();
         EntitiesService.setEntitiesServer(entitiesServerMock);
         const entities: Entity[] = new Array();
-        entities.push(new Entity('CLUSTERING_ENTITY', 'CLUSTERING_ENTITY_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.ACTIVITY_AREA_GROUP], [], []));
-        entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY_WITH_NO_ACTIVITY_AREA_ROLE', 'ENTITY3_NAME', '', [RolesEnum.CARD_SENDER], [], ['CLUSTERING_ENTITY']));
-        entities.push(new Entity('ENTITY_WITH_NO_CLUSTERING_PARENT', 'ENTITY4_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], ['ENTITY1']));
-        entities.push(new Entity('ENTITY_WITH_NO_PARENT', 'ENTITY5_NAME', '', [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER], [], null));
+        entities.push(
+            new Entity(
+                'CLUSTERING_ENTITY',
+                'CLUSTERING_ENTITY_NAME',
+                '',
+                [RolesEnum.CARD_SENDER, RolesEnum.ACTIVITY_AREA_GROUP],
+                [],
+                []
+            )
+        );
+        entities.push(
+            new Entity(
+                'ENTITY1',
+                'ENTITY1_NAME',
+                '',
+                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [],
+                ['CLUSTERING_ENTITY']
+            )
+        );
+        entities.push(
+            new Entity(
+                'ENTITY2',
+                'ENTITY2_NAME',
+                '',
+                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [],
+                ['CLUSTERING_ENTITY']
+            )
+        );
+        entities.push(
+            new Entity(
+                'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE',
+                'ENTITY3_NAME',
+                '',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['CLUSTERING_ENTITY']
+            )
+        );
+        entities.push(
+            new Entity(
+                'ENTITY_WITH_NO_CLUSTERING_PARENT',
+                'ENTITY4_NAME',
+                '',
+                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [],
+                ['ENTITY1']
+            )
+        );
+        entities.push(
+            new Entity(
+                'ENTITY_WITH_NO_PARENT',
+                'ENTITY5_NAME',
+                '',
+                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [],
+                null
+            )
+        );
         entitiesServerMock.setEntities(entities);
         EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
@@ -66,7 +120,6 @@ describe('ActivityAreaView', () => {
         SettingsService.setSettingsServer(settingsServerMock);
         CurrentUserStore.setCurrentUserAuthenticationValid('currentUser');
     }
-
 
     afterEach(() => {
         jasmine.clock().uninstall();
@@ -204,8 +257,14 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['anotherUser', 'anotherUser2', 'anotherUser3']);
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsersText).toEqual('anotherUser, anotherUser2, anotherUser3');
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
+            'anotherUser',
+            'anotherUser2',
+            'anotherUser3'
+        ]);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsersText).toEqual(
+            'anotherUser, anotherUser2, anotherUser3'
+        );
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual(['anotherUser2']);
     });
@@ -284,7 +343,6 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {
-
         const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
         OpfabStore.reset();

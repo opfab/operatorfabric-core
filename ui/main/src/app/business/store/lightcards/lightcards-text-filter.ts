@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,11 +25,13 @@ export class LightCardsTextFilter {
     }
 
     public searchLightCards(cards: LightCard[]): LightCard[] {
-        if (!this.searchTerm || this.searchTerm.length===0) {
+        if (!this.searchTerm || this.searchTerm.length === 0) {
             return cards;
         } else {
-            const titleCards = cards.filter(card => card.titleTranslated?.toUpperCase().includes(this.searchTerm));
-            const summaryCards = cards.filter(card => card.summaryTranslated?.toUpperCase().includes(this.searchTerm))
+            const titleCards = cards.filter((card) => card.titleTranslated?.toUpperCase().includes(this.searchTerm));
+            const summaryCards = cards.filter((card) =>
+                card.summaryTranslated?.toUpperCase().includes(this.searchTerm)
+            );
             const searchedCards = titleCards.concat(summaryCards);
             return searchedCards.filter((card, index) => searchedCards.indexOf(card) === index);
         }

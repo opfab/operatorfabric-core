@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,9 +20,7 @@ import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {OpfabEventStreamService} from '../../services/events/opfabEventStream.service';
 import {LightCardsStore} from './lightcards-store';
 
-
 export class FilteredLightCardsStore {
-
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
     private filteredAndSearchedLightCards = new ReplaySubject(1);
@@ -65,10 +63,9 @@ export class FilteredLightCardsStore {
         return this.filteredLightCardsForTimeLine.asObservable();
     }
 
-    public getFilteredAndSearchedLightCards() : Observable<any> {
+    public getFilteredAndSearchedLightCards(): Observable<any> {
         return this.filteredAndSearchedLightCards.asObservable();
     }
-
 
     private computeFilteredLightCards() {
         combineLatest([
@@ -83,7 +80,7 @@ export class FilteredLightCardsStore {
                     const lightCards = results[1];
                     const onlyBusinessFitlerForTimeLine = results[2];
 
-                    logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
+                    logger.debug('Number of cards in memory : ' + results[1].length, LogOption.LOCAL_AND_REMOTE);
 
                     if (onlyBusinessFitlerForTimeLine) {
                         const cardFilteredByBusinessDate =
@@ -104,11 +101,16 @@ export class FilteredLightCardsStore {
 
     private computeFilteredAndSearchedLightCards() {
         combineLatest([this.lightCardTextFilter.getSearchChanges(), this.getFilteredLightCards()])
-            .pipe(map((results) => {
-                return this.lightCardTextFilter.searchLightCards(results[1]);
-            }))
+            .pipe(
+                map((results) => {
+                    return this.lightCardTextFilter.searchLightCards(results[1]);
+                })
+            )
             .subscribe((lightCards) => {
-                logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
+                logger.debug(
+                    'Number of cards visible after filtering and searching : ' + lightCards.length,
+                    LogOption.LOCAL_AND_REMOTE
+                );
                 this.filteredAndSearchedLightCards.next(lightCards);
             });
     }
@@ -130,8 +132,9 @@ export class FilteredLightCardsStore {
     }
 
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
-        if (filterType === FilterType.BUSINESSDATE_FILTER) OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
-        this.lightCardFilter.updateFilter(filterType,active,status);
+        if (filterType === FilterType.BUSINESSDATE_FILTER)
+            OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
+        this.lightCardFilter.updateFilter(filterType, active, status);
     }
 
     public getBusinessDateFilter(): Filter {
@@ -146,7 +149,7 @@ export class FilteredLightCardsStore {
         return this.lightCardsSorter.setSortBy(sortBy);
     }
 
-    public setSearchTermForTextFilter(searchTerm:string) {
+    public setSearchTermForTextFilter(searchTerm: string) {
         return this.lightCardTextFilter.setSearchTerm(searchTerm);
     }
 }

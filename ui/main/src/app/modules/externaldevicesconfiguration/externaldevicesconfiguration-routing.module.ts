@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,13 +15,11 @@ import {UsersTableComponent} from './table/users.table.component';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
 
-
 const defaultPath = 'devices';
 
-const canActivateAdmin: CanActivateFn =
-    (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-      return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
-    };
+const canActivateAdmin: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+};
 
 const routes: Routes = [
     {

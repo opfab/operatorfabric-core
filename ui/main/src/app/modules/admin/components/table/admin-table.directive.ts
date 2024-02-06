@@ -36,20 +36,19 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 
-
 export class ActionColumn {
     colId: any;
     type: any;
     headerClass: any;
     cellStyle: any;
     maxWidth: any;
-    cellClassRules:any;
-    constructor( colId: string) {
+    cellClassRules: any;
+    constructor(colId: string) {
         this.colId = colId;
-        this.type= 'actionColumn';
-        this.headerClass= 'action-cell-column-header';
-        this.cellStyle= {'padding-left': '0', 'padding-right': '0'};
-        this.maxWidth= 50;
+        this.type = 'actionColumn';
+        this.headerClass = 'action-cell-column-header';
+        this.cellStyle = {'padding-left': '0', 'padding-right': '0'};
+        this.maxWidth = 50;
     }
 }
 
@@ -273,14 +272,12 @@ export abstract class AdminTableDirective implements OnDestroy {
         }
         if (columnId === 'download') {
             const fileName = params.data[this.idField];
-            BusinessDataService.getBusinessData(fileName).then(
-                resource =>{
-                    const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
-                        type: 'application/json;charset=UTF-8'
-                    });
-                    saveAs(fileToSave, fileName);
-                }
-            );
+            BusinessDataService.getBusinessData(fileName).then((resource) => {
+                const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                    type: 'application/json;charset=UTF-8'
+                });
+                saveAs(fileToSave, fileName);
+            });
         }
         if (columnId === 'update') {
             this.updateItem();
@@ -312,7 +309,7 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     createNewItem(): void {
         if (this.tableType === AdminItemType.BUSINESSDATA) {
-            document.getElementById("fileUploader").click()
+            document.getElementById('fileUploader').click();
         } else {
             const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
             modalRef.componentInstance.type = this.tableType;
@@ -333,20 +330,20 @@ export abstract class AdminTableDirective implements OnDestroy {
     }
 
     updateItem(): void {
-        document.getElementById("fileUpdater").click()
+        document.getElementById('fileUpdater').click();
     }
 
     onFileSelected(event) {
         const file: File = event.target.files[0];
         if (file) {
-            this.uploadFile(file)
+            this.uploadFile(file);
         }
     }
 
     uploadFile(file: File, resourceName?: string) {
         const read = new FileReader();
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append('file', file);
         read.readAsBinaryString(file);
         let fileName = file.name;
 
@@ -355,11 +352,10 @@ export abstract class AdminTableDirective implements OnDestroy {
         }
 
         read.onload = (e) => {
-            BusinessDataService.updateBusinessData(fileName, formData).subscribe( () => {
+            BusinessDataService.updateBusinessData(fileName, formData).subscribe(() => {
                 this.refreshData();
             });
-        }
-
+        };
     }
 
     refreshData() {
@@ -439,10 +435,11 @@ export abstract class AdminTableDirective implements OnDestroy {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
             if (cellRenderer.itemType) {
-                     const found = this.dataHandlingService
+                const found = this.dataHandlingService
                     .resolveCrudServiceDependingOnType(cellRenderer.itemType)
-                    .getCachedValues().find(e => e.id === id);
-                    return found?.name ? found.name : id;
+                    .getCachedValues()
+                    .find((e) => e.id === id);
+                return found?.name ? found.name : id;
             }
         }
         return id;

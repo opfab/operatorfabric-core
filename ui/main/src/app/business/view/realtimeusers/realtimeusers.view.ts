@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigServer} from "app/business/server/config.server";
-import {ServerResponseStatus} from "app/business/server/serverResponse";
-import {LoggerService as logger} from "app/business/services/logs/logger.service";
-import {EntitiesService} from "app/business/services/users/entities.service";
-import {UserService} from "app/business/services/users/user.service";
-import {Observable, ReplaySubject} from "rxjs";
-import {RealtimePage,
-        RealtimePageScreenOption,
-        RealtimePageScreen,
-        RealtimePageScreenColumn,
-        RealtimePageEntityGroup,
-        RealtimePageLine} from "./realtimePage";
+import {ConfigServer} from 'app/business/server/config.server';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {Observable, ReplaySubject} from 'rxjs';
+import {
+    RealtimePage,
+    RealtimePageScreenOption,
+    RealtimePageScreen,
+    RealtimePageScreenColumn,
+    RealtimePageEntityGroup,
+    RealtimePageLine
+} from './realtimePage';
 
 export class RealtimeUsersView {
-
     private realtimePage: RealtimePage;
     private realtimeScreens: RealtimePageScreen[] = [];
     private connectedUsersPerEntity: Map<string, string[]> = new Map<string, string[]>();
@@ -29,8 +30,7 @@ export class RealtimeUsersView {
     private pageLoaded = new ReplaySubject<RealtimePage>(1);
     private updateInterval;
 
-    constructor(private configServer: ConfigServer
-    ) {
+    constructor(private configServer: ConfigServer) {
         this.init();
     }
 
@@ -41,7 +41,6 @@ export class RealtimeUsersView {
 
                 const config = result.data.realTimeScreens;
                 config.forEach((configScreen, index) => {
-
                     // options
                     const screenOption = new RealtimePageScreenOption();
                     screenOption.value = String(index);
@@ -56,7 +55,6 @@ export class RealtimeUsersView {
                         // columns
                         const screenColumn = new RealtimePageScreenColumn();
                         configColumn.entitiesGroups.forEach((configEntityGroupId) => {
-
                             // entitiesGroups
                             const entityGroup = new RealtimePageEntityGroup();
                             entityGroup.name = EntitiesService.getEntityName(configEntityGroupId);
@@ -92,10 +90,7 @@ export class RealtimeUsersView {
 
             connectedUsers.forEach((connectedUser) => {
                 if (connectedUser.entitiesConnected) {
-                    this.connectedUsersGroups.set(
-                        connectedUser.login,
-                        connectedUser.groups ?? []
-                    );
+                    this.connectedUsersGroups.set(connectedUser.login, connectedUser.groups ?? []);
                     connectedUser.entitiesConnected.forEach((entityConnected) => {
                         const connectedUsersToEntity = this.connectedUsersPerEntity.get(entityConnected) ?? [];
 
@@ -131,8 +126,7 @@ export class RealtimeUsersView {
         const usersFiltered = [];
 
         const usersUnfiltered = this.connectedUsersPerEntity.get(entity) ?? [];
-        if (displayedGroups.length === 0 || usersUnfiltered.length === 0)
-            return usersUnfiltered;
+        if (displayedGroups.length === 0 || usersUnfiltered.length === 0) return usersUnfiltered;
 
         usersUnfiltered.forEach((userUnfiltered) => {
             const userGroups = this.connectedUsersGroups.get(userUnfiltered);

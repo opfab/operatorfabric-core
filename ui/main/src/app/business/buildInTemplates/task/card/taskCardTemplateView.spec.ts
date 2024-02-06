@@ -25,8 +25,8 @@ describe('Question UserCard template', () => {
                 data: {
                     taskTitle: 'My task Title',
                     taskDescription: 'My task Description',
-                    byhour: ["5"],
-                    byminute: ["15"],
+                    byhour: ['5'],
+                    byminute: ['15'],
                     durationInMinutes: '15'
                 }
             };
@@ -41,18 +41,22 @@ describe('Question UserCard template', () => {
         opfab.currentCard.getCard = function () {
             return {
                 data: {
-                    freq: "MONTHLY",
-                    bysetpos: ["1"],
-                    byweekday: ["MO"],
-                    bymonthday: ["1"],
+                    freq: 'MONTHLY',
+                    bysetpos: ['1'],
+                    byweekday: ['MO'],
+                    bymonthday: ['1'],
                     bymonth: [1]
                 }
             };
         };
         const text = view.fillTexts();
-        expect(text.textForBysetpos).toEqual("Translation of buildInTemplate.taskCard.the Translation of buildInTemplate.taskCard.first ");
-        expect(text.textForByWeekday).toEqual(" Translation of shared.calendar.monday");
-        expect(text.textForBymonthday).toEqual("Translation of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>");
-        expect(text.textForBymonth).toEqual("Translation of buildInTemplate.taskCard.in Translation of shared.calendar.january");
+        expect(text.textForBysetpos).toEqual(
+            'Translation of buildInTemplate.taskCard.the Translation of buildInTemplate.taskCard.first '
+        );
+        expect(text.textForByWeekday).toEqual(' Translation of shared.calendar.monday');
+        expect(text.textForBymonthday).toEqual('Translation of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>');
+        expect(text.textForBymonth).toEqual(
+            'Translation of buildInTemplate.taskCard.in Translation of shared.calendar.january'
+        );
     });
 });

@@ -26,7 +26,7 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-card-list',
@@ -57,7 +57,10 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private modalService: NgbModal, private router: Router) {
+    constructor(
+        private modalService: NgbModal,
+        private router: Router
+    ) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
@@ -184,11 +187,11 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     private handleChildCardsUserAcknowledgement(cardId, entitiesAcks) {
         const childCards = OpfabStore.getLightCardStore().getChildCards(cardId);
         if (childCards) {
-            childCards.forEach(child => {
+            childCards.forEach((child) => {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
                     AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
                 }
-            })
+            });
         }
     }
 

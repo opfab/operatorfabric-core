@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,9 +70,9 @@ export class CardHeaderComponent implements OnChanges {
         if (!entityIds) return [];
         const entities = EntitiesService.getEntitiesFromIds(entityIds);
         const processDefinition = ProcessesService.getProcess(this.card.process);
-        const emittingEntityAllowedToRespond = processDefinition.states.get(this.card.state).response?.emittingEntityAllowedToRespond || false ;
-        const entitiesIdAllowedToRespond = EntitiesService
-            .resolveEntitiesAllowedToSendCards(entities)
+        const emittingEntityAllowedToRespond =
+            processDefinition.states.get(this.card.state).response?.emittingEntityAllowedToRespond || false;
+        const entitiesIdAllowedToRespond = EntitiesService.resolveEntitiesAllowedToSendCards(entities)
             .map((entity) => entity.id)
             .filter((x) => x !== this.card.publisher || emittingEntityAllowedToRespond);
         return entitiesIdAllowedToRespond;

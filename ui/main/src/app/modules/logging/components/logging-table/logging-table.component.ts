@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,6 @@ import {Subject} from 'rxjs';
     templateUrl: './logging-table.component.html'
 })
 export class LoggingTableComponent implements OnDestroy {
-
     @Input() result: LightCard[];
     @Input() processGroupVisible: boolean;
     @Input() totalElements: number;
@@ -54,9 +53,7 @@ export class LoggingTableComponent implements OnDestroy {
     private readonly descriptionColumnName;
     private readonly senderColumnName;
 
-    constructor(
-        private translate: TranslateService    ) {
-
+    constructor(private translate: TranslateService) {
         this.timeColumnName = this.translateColumn('shared.result.timeOfAction');
         this.processGroupColumnName = this.translateColumn('shared.result.processGroup');
         this.processColumnName = this.translateColumn('shared.result.process');
@@ -65,7 +62,6 @@ export class LoggingTableComponent implements OnDestroy {
         this.stateColumnName = this.translateColumn('shared.result.state');
         this.descriptionColumnName = this.translateColumn('shared.result.description');
         this.senderColumnName = this.translateColumn('shared.result.sender');
-
 
         this.gridOptions = <GridOptions>{
             context: {
@@ -188,20 +184,72 @@ export class LoggingTableComponent implements OnDestroy {
                 headerClass: 'opfab-ag-header-with-no-padding',
                 cellClassRules: severityCellClassRules
             },
-            {type: 'timeColumn', headerName: this.timeColumnName, field: 'publishDate', cellRenderer: 'timeCellRenderer', headerClass: 'opfab-ag-header-with-no-padding',cellClass: 'opfab-ag-cell-with-left-padding'},
+            {
+                type: 'timeColumn',
+                headerName: this.timeColumnName,
+                field: 'publishDate',
+                cellRenderer: 'timeCellRenderer',
+                headerClass: 'opfab-ag-header-with-no-padding',
+                cellClass: 'opfab-ag-cell-with-left-padding'
+            }
         ];
         if (this.processGroupVisible)
-            this.columnDefs.push({type: 'noFiltersDataColumn', headerName: this.processGroupColumnName, field: 'process', cellRenderer: 'processGroupCellRenderer',headerClass: 'opfab-ag-header-with-no-padding', cellClass: 'opfab-ag-cell-with-no-padding'});
+            this.columnDefs.push({
+                type: 'noFiltersDataColumn',
+                headerName: this.processGroupColumnName,
+                field: 'process',
+                cellRenderer: 'processGroupCellRenderer',
+                headerClass: 'opfab-ag-header-with-no-padding',
+                cellClass: 'opfab-ag-cell-with-no-padding'
+            });
 
-        this.columnDefs.push({type: 'noFiltersDataColumn', headerName: this.processColumnName, field: 'processName',headerClass: 'opfab-ag-header-with-no-padding', cellClass: 'opfab-ag-cell-with-no-padding'});
-        this.columnDefs.push({type: 'titleColumn', headerName: this.titleColumnName, field: 'titleTranslated', headerClass: 'opfab-ag-cheader-with-right-padding',cellClass: 'opfab-ag-cell-with-no-padding'});
-        this.columnDefs.push({type: 'summaryColumn', headerName: this.summaryColumnName, field: 'summaryTranslated', headerClass: 'opfab-ag-cheader-with-right-padding',cellClass: 'opfab-ag-cell-with-no-padding'});
-        this.columnDefs.push({type: 'stateDataColumn', headerName: this.stateColumnName, field: 'state', cellRenderer: 'stateCellRenderer', headerClass: 'opfab-ag-header-with-no-padding',cellClass: 'opfab-ag-cell-with-no-padding'});
-        this.columnDefs.push({type: 'stateDataColumn', headerName: this.descriptionColumnName, field: 'state', cellRenderer: 'stateDescriptionCellRenderer', headerClass: 'opfab-ag-header-with-no-padding',cellClass: 'opfab-ag-cell-with-no-padding'});
-        this.columnDefs.push({type: 'senderColumn', headerName: this.senderColumnName, field: 'state', cellRenderer: 'senderCellRenderer', headerClass: 'opfab-ag-header-with-no-padding',cellClass: 'opfab-ag-cell-with-no-padding'});
+        this.columnDefs.push({
+            type: 'noFiltersDataColumn',
+            headerName: this.processColumnName,
+            field: 'processName',
+            headerClass: 'opfab-ag-header-with-no-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
+        this.columnDefs.push({
+            type: 'titleColumn',
+            headerName: this.titleColumnName,
+            field: 'titleTranslated',
+            headerClass: 'opfab-ag-cheader-with-right-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
+        this.columnDefs.push({
+            type: 'summaryColumn',
+            headerName: this.summaryColumnName,
+            field: 'summaryTranslated',
+            headerClass: 'opfab-ag-cheader-with-right-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
+        this.columnDefs.push({
+            type: 'stateDataColumn',
+            headerName: this.stateColumnName,
+            field: 'state',
+            cellRenderer: 'stateCellRenderer',
+            headerClass: 'opfab-ag-header-with-no-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
+        this.columnDefs.push({
+            type: 'stateDataColumn',
+            headerName: this.descriptionColumnName,
+            field: 'state',
+            cellRenderer: 'stateDescriptionCellRenderer',
+            headerClass: 'opfab-ag-header-with-no-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
+        this.columnDefs.push({
+            type: 'senderColumn',
+            headerName: this.senderColumnName,
+            field: 'state',
+            cellRenderer: 'senderCellRenderer',
+            headerClass: 'opfab-ag-header-with-no-padding',
+            cellClass: 'opfab-ag-cell-with-no-padding'
+        });
 
         this.gridApi.setColumnDefs(this.columnDefs);
-
     }
 
     updateResultPage(currentPage): void {
@@ -233,5 +281,4 @@ export class LoggingTableComponent implements OnDestroy {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
-
 }

@@ -22,9 +22,7 @@ export class ConfirmationDialogComponent {
     @Input() btnOkText: string;
     @Input() btnCancelText: string;
 
-    constructor(private activeModal: NgbActiveModal) {
-
-    }
+    constructor(private activeModal: NgbActiveModal) {}
 
     public decline() {
         this.activeModal.close(false);

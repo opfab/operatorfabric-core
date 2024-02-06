@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@ export class UserServerMock implements UserServer {
     private userSubject: ReplaySubject<ServerResponse<User>>;
     private connectedUsersSubject: ReplaySubject<ServerResponse<any>>;
     private queryAllUsersSubject: ReplaySubject<ServerResponse<any>>;
-
 
     setResponseForCurrentUserWithPerimeter(currentUserWithPerimeter: ServerResponse<UserWithPerimeters>) {
         this.currentUserWithPerimeterSubject = new ReplaySubject<ServerResponse<UserWithPerimeters>>();
@@ -57,7 +56,7 @@ export class UserServerMock implements UserServer {
         return this.currentUserWithPerimeterSubject.asObservable();
     }
     queryAllUsers(): Observable<ServerResponse<User[]>> {
-       return this.queryAllUsersSubject.asObservable();
+        return this.queryAllUsersSubject.asObservable();
     }
     updateUser(userData: User): Observable<ServerResponse<User>> {
         throw new Error('Method not implemented.');

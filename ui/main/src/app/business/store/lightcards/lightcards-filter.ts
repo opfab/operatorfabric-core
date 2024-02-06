@@ -12,9 +12,7 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
 
-
 export class LightCardsFilter {
-
     private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
     private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
 
@@ -48,7 +46,10 @@ export class LightCardsFilter {
                 filterToUpdate.status = status;
             }
         }
-        logger.debug('Filter change : type= ' + filterType + ' ,active=' + active + ' ,value= '  + JSON.stringify(status),LogOption.REMOTE);
+        logger.debug(
+            'Filter change : type= ' + filterType + ' ,active=' + active + ' ,value= ' + JSON.stringify(status),
+            LogOption.REMOTE
+        );
         this.filterChanges.next(true);
     }
 

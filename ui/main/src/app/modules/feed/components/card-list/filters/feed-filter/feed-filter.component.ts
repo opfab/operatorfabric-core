@@ -138,10 +138,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private createProcessForm() {
-        return new FormGroup({
-            process: new FormControl<string | null>(''),
-        },
-        {updateOn: 'change'}
+        return new FormGroup(
+            {
+                process: new FormControl<string | null>('')
+            },
+            {updateOn: 'change'}
         );
     }
 
@@ -158,7 +159,6 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             },
             selectedOptions: []
         };
-
     }
 
     ngOnDestroy() {
@@ -190,9 +190,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private loadVisibleProcessesForCurrentUser() {
         ProcessesService.getAllProcesses().forEach((process) => {
-            if (
-                UserService.isReceiveRightsForProcess(process.id)
-            ) {
+            if (UserService.isReceiveRightsForProcess(process.id)) {
                 this.processList.push(process);
             }
         });
@@ -201,14 +199,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private initProcessFilter() {
         this.loadVisibleProcessesForCurrentUser();
         this.processMultiSelect.options.push(new MultiSelectOption('', ''));
-        this.processList.forEach( process => this.processMultiSelect.options.push(new MultiSelectOption(process.id, process.name)));
+        this.processList.forEach((process) =>
+            this.processMultiSelect.options.push(new MultiSelectOption(process.id, process.name))
+        );
         this.processFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             this.filterActiveChange.next(this.isFilterActive());
-            return this.filteredLightCardStore.updateFilter(
-                FilterType.PROCESS_FILTER,
-                true,
-                {process: form.process}
-            );
+            return this.filteredLightCardStore.updateFilter(FilterType.PROCESS_FILTER, true, {process: form.process});
         });
     }
 
@@ -440,7 +436,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.ackFilterForm.get('notAckControl').value ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
-            this.processFilterForm.get('process').value.length>0
+            this.processFilterForm.get('process').value.length > 0
         );
     }
 
@@ -458,7 +454,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 ) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
-            this.processFilterForm.get('process').value.length>0
+            this.processFilterForm.get('process').value.length > 0
         );
     }
 
@@ -482,7 +478,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.timeLineFilterForm.get('timeLineControl').setValue(true, {emitEvent: true});
         }
         if (!this.hideProcessFilter) {
-            this.processMultiSelect.selectedOptions = []
+            this.processMultiSelect.selectedOptions = [];
         }
     }
 
