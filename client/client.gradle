@@ -9,7 +9,7 @@ subprojects {
     /////// COMPILATION
 
     dependencies {
-        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+        swaggerCodegen generator.swagger, project(':tools:swagger-generator')
         swaggerUI generator.swaggerUI
         annotationProcessor misc.lombok
         implementation misc.lombok
@@ -83,7 +83,7 @@ subprojects {
     tasks.jacocoTestReport.dependsOn test
     tasks.compileJava.dependsOn generateSwaggerCode
     tasks.compileTestJava.dependsOn generateSwaggerCode
-    tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-spring-generators:assemble'
+    tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-generator:assemble'
 
 
 
