@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.cards.consultation.configuration.ThreadPoolTaskSchedulerConfiguration;
 import org.opfab.cards.consultation.configuration.json.JacksonConfig;
-import org.opfab.cards.consultation.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
@@ -31,7 +30,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @SpringBootApplication
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
-@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class, UserActionLogsConfiguration.class,UserActionLogRepositoryImpl.class,EventBusSpy.class,UserServiceCacheMock.class})
+@Import({JacksonConfig.class,ThreadPoolTaskSchedulerConfiguration.class, UserActionLogsConfiguration.class,UserActionLogRepositoryImpl.class,EventBusSpy.class,UserServiceCacheMock.class})
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {
