@@ -22,16 +22,11 @@ class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInte
 
     public isResponseValid = true;
 
-    cards: Array<any> = new Array();
     card: any;
     allUsers: Array<any> = new Array();
     connectedUsers: Array<any> = new Array();
 
     usersWithPerimeters: Array<any> = new Array();
-
-    async getCards() {
-        return new GetResponse(this.cards, this.isResponseValid);
-    }
 
     async getCard() {
         return new GetResponse(this.card, this.isResponseValid);
@@ -87,6 +82,11 @@ class SendMailServiceStub extends SendMailService {
 
 class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
     sent: Array<any> = [];
+    cards: Array<any> = new Array();
+
+    public async getCards() {
+        return this.cards;
+    }
 
     public async getSentMail(cardUid: string, email: string) {
         const found = this.sent.find((sentmail) => sentmail.cardUid == cardUid && sentmail.email == email);
@@ -110,8 +110,8 @@ describe('Cards external diffusion', function () {
     let cardsDiffusionControl: CardsDiffusionControl;
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
     let opfabBusinessConfigServicesInterfaceStub: OpfabBusinessConfigServicesInterfaceStub;
+    let databaseServiceStub: DatabaseServiceStub;
     let mailService: SendMailServiceStub;
-    let databaseService: DatabaseServiceStub;
 
     const perimeters = [
         {
@@ -127,14 +127,14 @@ describe('Cards external diffusion', function () {
     function setup() {
         opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
         opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
+        databaseServiceStub = new DatabaseServiceStub();
 
         mailService = new SendMailServiceStub({smtpHost: 'localhost', smtpPort: 1025});
-        databaseService = new DatabaseServiceStub();
         cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterfaceStub)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterfaceStub)
-            .setCardsExternalDiffusionDatabaseService(databaseService)
+            .setCardsExternalDiffusionDatabaseService(databaseServiceStub)
             .setMailService(mailService)
             .setFrom('test@opfab.com')
             .setSubjectPrefix('Subject')
@@ -169,7 +169,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '0001',
                 id: 'defaultProcess.process1',
@@ -214,7 +214,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1000',
                 id: 'defaultProcess.process1',
@@ -280,7 +280,7 @@ describe('Cards external diffusion', function () {
             entityRecipients: ['ENTITY1']
         };
 
-        opfabServicesInterfaceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
@@ -335,7 +335,7 @@ describe('Cards external diffusion', function () {
             entityRecipients: ['ENTITY1']
         };
 
-        opfabServicesInterfaceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
@@ -373,7 +373,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1002',
                 id: 'defaultProcess.process1',
@@ -421,7 +421,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1003',
                 id: 'defaultProcess.process1',
@@ -466,7 +466,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1004',
                 id: 'defaultProcess.process1',
@@ -511,7 +511,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1005',
                 id: 'defaultProcess.process1',
@@ -557,7 +557,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1006',
                 id: 'defaultProcess.process1',
@@ -603,7 +603,7 @@ describe('Cards external diffusion', function () {
                 computedPerimeters: perimeters
             }
         ];
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '1007',
                 id: 'defaultProcess.process1',
@@ -645,7 +645,7 @@ describe('Cards external diffusion', function () {
                 computedPerimeters: perimeters
             }
         ];
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '2006',
                 id: 'defaultProcess.process1',
@@ -669,14 +669,14 @@ describe('Cards external diffusion', function () {
         cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
         expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeFalsy();
 
-        let registeredMailSent = await databaseService.getSentMail('2006', 'operator_1@opfab.com');
+        let registeredMailSent = await databaseServiceStub.getSentMail('2006', 'operator_1@opfab.com');
         expect(registeredMailSent).toBeUndefined();
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
-        registeredMailSent = await databaseService.getSentMail('2006', 'operator_1@opfab.com');
+        registeredMailSent = await databaseServiceStub.getSentMail('2006', 'operator_1@opfab.com');
         expect(registeredMailSent.cardUid).toEqual('2006');
         expect(registeredMailSent.email).toEqual('operator_1@opfab.com');
     });
@@ -700,7 +700,7 @@ describe('Cards external diffusion', function () {
                 computedPerimeters: perimeters
             }
         ];
-        opfabServicesInterfaceStub.cards = [
+        databaseServiceStub.cards = [
             {
                 uid: '2007',
                 id: 'defaultProcess.process1',

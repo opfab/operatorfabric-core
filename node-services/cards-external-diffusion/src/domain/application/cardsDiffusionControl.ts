@@ -8,7 +8,6 @@
  */
 
 import SendMailService from '../server-side/sendMailService';
-import GetResponse from '../../common/server-side/getResponse';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
@@ -121,32 +120,22 @@ export default class CardsDiffusionControl {
             const usersToCheck = this.removeElementsFromArray(userLogins, connectedUsers);
             this.logger.debug('Disconnected users ' + usersToCheck);
             if (usersToCheck.length > 0) {
-                const cardFilters = [];
-                const now = Date.now();
-                const dateFrom = now - this.windowInSecondsForCardSearch * 1000;
-                cardFilters.push({columnName: 'publishDateFrom', filter: [dateFrom], matchType: 'EQUALS'});
-
-                const cardsResponse: GetResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCards({
-                    adminMode: true,
-                    filters: cardFilters
-                });
-                if (cardsResponse.isValid()) {
-                    const cards = cardsResponse.getData();
-                    if (cards.length > 0) {
-                        this.logger.debug('Found cards: ' + cards.length);
-                        usersToCheck.forEach((login) => {
-                            this.sendCardsToUserIfNecessary(cards, login).catch(error =>
-                                this.logger.error("error during sendCardsToUserIfNecessary ", error)
-                            )
-                        });
-                    }
+                const dateFrom = Date.now() - this.windowInSecondsForCardSearch * 1000;
+                const cards = await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom);
+                if (cards.length > 0) {
+                    this.logger.debug('Found cards: ' + cards.length);
+                    usersToCheck.forEach((login) => {
+                        this.sendCardsToUserIfNecessary(cards, login).catch(error =>
+                            this.logger.error("error during sendCardsToUserIfNecessary ", error)
+                        )
+                    });
                 }
             }
             await this.cleanCardsAreadySent();
         }
     }
 
-    private async sendCardsToUserIfNecessary(cards: [], login: string) {
+    private async sendCardsToUserIfNecessary(cards: any[], login: string) {
         this.logger.debug('Check user ' + login);
         
         const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(login);
@@ -166,7 +155,6 @@ export default class CardsDiffusionControl {
     private async sendCardIfAllowed(unreadCard: any, userEmail: string, emailToPlainText: boolean): Promise<void> {
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(unreadCard.uid, userEmail);
-
             if (!alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
                     await this.sendMail(unreadCard, userEmail, emailToPlainText);
@@ -189,7 +177,7 @@ export default class CardsDiffusionControl {
             this.cardsDiffusionRateLimiter.registerNewSending(destination);
     }
 
-    private async getCardsForUser(cards : [], userWithPerimeters: any) : Promise<any[]> {
+    private async getCardsForUser(cards : any[], userWithPerimeters: any) : Promise<any[]> {
 
         const perimeters = userWithPerimeters.computedPerimeters;
         this.logger.debug('Got user perimeters' + JSON.stringify(perimeters));
@@ -213,7 +201,7 @@ export default class CardsDiffusionControl {
     }
 
     private shouldEmailBePlainText(userWithPerimeters: any): boolean {
-        return userWithPerimeters.emailToPlainText;
+        return userWithPerimeters.emailToPlainText ? userWithPerimeters.emailToPlainText : false;
     }
 
     private isCardUnreadForUser(card: any, user: any): boolean {

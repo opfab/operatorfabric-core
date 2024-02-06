@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,9 @@
  */
 
 import {Db, MongoClient} from 'mongodb';
-import {Logger} from 'winston';
 
 export default class CardsExternalDiffusionDatabaseService {
-    logger: Logger;
+    logger: any;
     mongoClient: MongoClient;
     mongoDB: Db;
     mongoConfig: any;
@@ -78,14 +77,40 @@ export default class CardsExternalDiffusionDatabaseService {
     }
 
 
-    public async deleteMailsSentBefore(dateLimit: number): Promise<void> {
+    public async deleteMailsSentBefore(limitDate: number): Promise<void> {
 
         try {
-            await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').deleteMany({date: {$lte: dateLimit}});
+            await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').deleteMany({date: {$lte: limitDate}});
         } catch (error) {
             this.logger.error('Mongo error saving sent mail' + error);
         }
         return Promise.resolve();
+    }
+
+    public async getCards(publishDate: number): Promise<any[]> {
+        let cards = new Array();
+        try {
+            cards = await this.mongoDB.collection('cards').find({publishDate: {$gte: new Date(publishDate)}}).project({
+                id: '$_id',
+                uid: 1,
+                processVersion: 1,
+                process: 1,
+                state: 1,
+                titleTranslated: 1,
+                summaryTranslated: 1,
+                publishDate: 1,
+                usersReads: 1,
+                startDate: 1,
+                endDate: 1,
+                userRecipients: 1,
+                groupRecipients: 1,
+                entityRecipients: 1 ,
+                _id: 0
+            }).toArray();
+        } catch (error) {
+            this.logger.error('Mongo error finding cards' + error);
+        }
+        return Promise.resolve(cards);
     }
 
 }
