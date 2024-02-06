@@ -16,7 +16,7 @@ import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
 import {RolesEnum} from '@ofModel/roles.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import { Entity } from '@ofModel/entity.model';
+import {Entity} from '@ofModel/entity.model';
 
 export class ActivityAreaView {
     private activityAreaSubject = new ReplaySubject<ActivityAreaPage>(1);
@@ -26,8 +26,7 @@ export class ActivityAreaView {
     private currentUserLogin;
     private intervalForConnectedUsersUpdate;
 
-    constructor(
-    ) {
+    constructor() {
         this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
         this.activityAreaClusters = new Map();
@@ -68,10 +67,7 @@ export class ActivityAreaView {
                     const parentEntity = EntitiesService.getEntity(parentId);
                     if (parentEntity?.roles && parentEntity.roles.includes(RolesEnum.ACTIVITY_AREA_GROUP)) {
                         this.isEntityAlreadyACluster(parentEntity.name)
-                            ? this.addLineToCluster(
-                                  this.activityAreaClusters.get(parentEntity.name),
-                                  activityAreaLine
-                              )
+                            ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.name), activityAreaLine)
                             : this.activityAreaClusters.set(
                                   parentEntity.name,
                                   new ActivityAreaEntityCluster(parentEntity.name, [activityAreaLine])
@@ -154,17 +150,18 @@ export class ActivityAreaView {
                 entitiesDisconnected.push(line.entityId);
             });
         });
-        return SettingsService
-            .patchUserSettings({login: this.currentUserLogin, entitiesDisconnected: entitiesDisconnected})
-            .pipe(
-                map((response) => {
-                    if (response.status === ServerResponseStatus.OK) {
-                        OpfabStore.getLightCardStore().removeAllLightCards();
-                        UserService.loadUserWithPerimetersData().subscribe();
-                        return true;
-                    } else return false;
-                })
-            );
+        return SettingsService.patchUserSettings({
+            login: this.currentUserLogin,
+            entitiesDisconnected: entitiesDisconnected
+        }).pipe(
+            map((response) => {
+                if (response.status === ServerResponseStatus.OK) {
+                    OpfabStore.getLightCardStore().removeAllLightCards();
+                    UserService.loadUserWithPerimetersData().subscribe();
+                    return true;
+                } else return false;
+            })
+        );
     }
 
     public getActivityAreaPage(): Observable<ActivityAreaPage> {

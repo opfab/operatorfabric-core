@@ -50,7 +50,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private filteredLightCardStore: FilteredLightCardsStore;
     private popupContent: string;
 
-    constructor(private translate: TranslateService, private router: Router) {
+    constructor(
+        private translate: TranslateService,
+        private router: Router
+    ) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 
@@ -70,16 +73,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                     }
                 });
             this.updateMapWhenGlobalStyleChange();
-            MapService.highlightCardEvent
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(({lightCardId, highLight}) => {
-                    this.highlightFeature(lightCardId, highLight);
-                });
+            MapService.highlightCardEvent.pipe(takeUntil(this.unsubscribe$)).subscribe(({lightCardId, highLight}) => {
+                this.highlightFeature(lightCardId, highLight);
+            });
             MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
                 this.zoomToLocation(lightCardId);
             });
 
-            this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', "publishDateAndTitle");
+            this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', 'publishDateAndTitle');
         }
     }
 

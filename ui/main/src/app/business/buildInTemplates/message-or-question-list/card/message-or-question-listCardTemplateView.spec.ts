@@ -151,6 +151,5 @@ describe('MessageOrQuestionList Card template', () => {
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].comment).toEqual('my response &lt;script&gt;');
         expect(responsesResult[0].agreement).toEqual(true);
-
     });
 });

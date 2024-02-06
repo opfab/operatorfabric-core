@@ -10,7 +10,14 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserService} from 'app/business/services/users/user.service';
-import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, fromCardToLightCard, TimeSpan} from '@ofModel/card.model';
+import {
+    Card,
+    CardCreationReportData,
+    CardData,
+    fromCardToCardForPublishing,
+    fromCardToLightCard,
+    TimeSpan
+} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
@@ -38,7 +45,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {SystemNotificationService} from '../../business/services/notifications/system-notification.service';
 import {Observable} from 'rxjs';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-usercard',
@@ -149,8 +156,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.setPublisherForCreatingUsercard();
 
         if (this.cardIdToEdit) {
-
-            OpfabAPIService.currentUserCard.editionMode = 'EDITION'
+            OpfabAPIService.currentUserCard.editionMode = 'EDITION';
             this.loadCardForEdition();
         } else {
             OpfabAPIService.currentUserCard.editionMode = 'CREATE';
@@ -180,7 +186,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         }
     }
 
-
     private loadCardForEdition() {
         this.editCardMode = true;
         CardService.loadCard(this.cardIdToEdit).subscribe((card) => {
@@ -195,7 +200,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             this.initialSelectedRecipientsForInformation = this.cardToEdit.card.entityRecipientsForInformation;
             this.pageLoading = false;
             this.datesFromCardToEdit = true;
-            OpfabAPIService.currentUserCard.startDate =  this.cardToEdit.card.startDate;
+            OpfabAPIService.currentUserCard.startDate = this.cardToEdit.card.startDate;
             OpfabAPIService.currentUserCard.endDate = this.cardToEdit.card.endDate;
             OpfabAPIService.currentUserCard.lttd = this.cardToEdit.card.lttd;
             OpfabAPIService.currentUserCard.expirationDate = this.cardToEdit.card.expirationDate;
@@ -287,7 +292,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         if (
             OpfabAPIService.currentUserCard.startDate ||
-            OpfabAPIService.currentUserCard.endDate||
+            OpfabAPIService.currentUserCard.endDate ||
             OpfabAPIService.currentUserCard.lttd ||
             OpfabAPIService.currentUserCard.expirationDate
         ) {
@@ -324,16 +329,17 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let allowedUserEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (this.userCardConfiguration?.publisherList?.length > 0) {
             const configuredPublisherList = [];
-            EntitiesService
-                .resolveEntities(this.userCardConfiguration.publisherList)
-                .forEach((e) => configuredPublisherList.push(e.id));
+            EntitiesService.resolveEntities(this.userCardConfiguration.publisherList).forEach((e) =>
+                configuredPublisherList.push(e.id)
+            );
 
             allowedUserEntities = allowedUserEntities.filter((entity) => configuredPublisherList.includes(entity));
         }
 
         allowedUserEntities.forEach((userEntityId) => {
             const entity = EntitiesService.getEntities().find((e) => e.id === userEntityId);
-            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) entitiesList.push({value: entity.id, label: entity.name});
+            if (entity.roles?.includes(RolesEnum.CARD_SENDER))
+                entitiesList.push({value: entity.id, label: entity.name});
         });
         return entitiesList;
     }
@@ -387,10 +393,9 @@ export class UserCardComponent implements OnInit, OnDestroy {
         OpfabAPIService.currentUserCard.expirationDate = null;
         OpfabAPIService.currentUserCard.initialSeverity = null;
 
-
-        this.userCardConfiguration = ProcessesService
-            .getProcess(this.selectedProcessId)
-            .states.get(this.selectedStateId).userCard;
+        this.userCardConfiguration = ProcessesService.getProcess(this.selectedProcessId).states.get(
+            this.selectedStateId
+        ).userCard;
         this.setFieldsVisibility();
         if (!this.cardToEdit && !this.cardToCopy) {
             this.initialSelectedRecipients = [];
@@ -409,20 +414,13 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     private setFieldsVisibility() {
         if (this.userCardConfiguration) {
-            this.severityVisible =
-                this.userCardConfiguration.severityVisible ?? true;
-            this.startDateVisible =
-                this.userCardConfiguration.startDateVisible ?? true;
-            this.endDateVisible =
-                this.userCardConfiguration.endDateVisible ?? true;
-            this.lttdVisible =
-                this.userCardConfiguration.lttdVisible ?? false;
-            this.expirationDateVisible =
-                this.userCardConfiguration.expirationDateVisible ?? false;
-            this.recipientVisible =
-                this.userCardConfiguration.recipientVisible ?? true;
-            this.recipientForInformationVisible =
-                this.userCardConfiguration.recipientForInformationVisible ?? false;
+            this.severityVisible = this.userCardConfiguration.severityVisible ?? true;
+            this.startDateVisible = this.userCardConfiguration.startDateVisible ?? true;
+            this.endDateVisible = this.userCardConfiguration.endDateVisible ?? true;
+            this.lttdVisible = this.userCardConfiguration.lttdVisible ?? false;
+            this.expirationDateVisible = this.userCardConfiguration.expirationDateVisible ?? false;
+            this.recipientVisible = this.userCardConfiguration.recipientVisible ?? true;
+            this.recipientForInformationVisible = this.userCardConfiguration.recipientForInformationVisible ?? false;
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
@@ -452,8 +450,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
             this.isLoadingCardTemplate = true;
 
-            HandlebarsService
-                .queryTemplate(this.selectedProcessId, selected.version, templateName)
+            HandlebarsService.queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
@@ -473,9 +470,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     error: (error) => {
                         this.isLoadingCardTemplate = false;
 
-                        logger.error(
-                            'WARNING impossible to load template ' + templateName + ', error = ' + error
-                        );
+                        logger.error('WARNING impossible to load template ' + templateName + ', error = ' + error);
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 });
@@ -505,7 +500,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private reinsertScripts(): void {
-        const scripts = <HTMLCollection> this.element.nativeElement.getElementsByTagName('script');
+        //bug eslint/prettier
+        const scripts = <HTMLCollection>this.element.nativeElement.getElementsByTagName('script'); //eslint-disable-line
         Array.from(scripts).forEach((script) => {
             const scriptCopy = document.createElement('script');
             scriptCopy.type = (<HTMLScriptElement>script).type ? (<HTMLScriptElement>script).type : 'text/javascript';
@@ -549,88 +545,90 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         this.isPreparingCard = true;
 
-        CardService
-            .postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
-            .subscribe((response) => {
-                this.isPreparingCard = false;
-                const titleTranslated = response.body.translatedField;
+        CardService.postTranslateCardField(selectedProcess.id, selectedProcess.version, title).subscribe((response) => {
+            this.isPreparingCard = false;
+            const titleTranslated = response.body.translatedField;
 
-                if (!tags) {
-                    tags = this.cardToEdit?.card.tags ? this.cardToEdit?.card.tags : null
-                }
-                if (!wktGeometry) {
-                    wktGeometry = this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null
-                }
-                if (!wktProjection) {
-                    wktProjection = this.cardToEdit?.card.wktProjection ? this.cardToEdit?.card.wktProjection : null
-                }
+            if (!tags) {
+                tags = this.cardToEdit?.card.tags ? this.cardToEdit?.card.tags : null;
+            }
+            if (!wktGeometry) {
+                wktGeometry = this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null;
+            }
+            if (!wktProjection) {
+                wktProjection = this.cardToEdit?.card.wktProjection ? this.cardToEdit?.card.wktProjection : null;
+            }
 
-                this.card = {
-                    id: 'dummyId',
-                    publishDate: null,
-                    publisher: cardEmitter,
-                    publisherType: 'ENTITY',
-                    processVersion: selectedProcess.version,
-                    process: selectedProcess.id,
-                    processInstanceId: this.getProcessInstanceId(),
-                    state: this.selectedStateId,
-                    startDate: startDate,
-                    endDate: endDate,
-                    expirationDate: expirationDate,
-                    lttd: lttd,
-                    severity: this.getSeverity(),
-                    hasBeenAcknowledged: false,
-                    hasBeenRead: false,
-                    userRecipients: [],
-                    entityRecipients: this.recipients.concat(recipientsForInformation),
-                    entityRecipientsForInformation: recipientsForInformation,
-                    entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(this.recipients),
-                    entitiesRequiredToRespond: this.specificInformation.card.entitiesRequiredToRespond
-                        ? this.specificInformation.card.entitiesRequiredToRespond
-                        : [],
-                    entitiesAllowedToEdit: this.getValueOrNull(this.specificInformation.card.entitiesAllowedToEdit),
-                    externalRecipients: this.getValueOrNull(this.specificInformation.card.externalRecipients),
-                    title: title,
-                    titleTranslated: titleTranslated,
-                    summary: this.specificInformation.card.summary
-                        ? this.specificInformation.card.summary
-                        : 'UNDEFINED',
-                    secondsBeforeTimeSpanForReminder: this.getValueOrNull(
-                        this.specificInformation.card.secondsBeforeTimeSpanForReminder
-                    ),
-                    timeSpans: this.getTimeSpans(this.specificInformation, startDate, endDate),
-                    keepChildCards: this.specificInformation.card.keepChildCards
-                        ? this.specificInformation.card.keepChildCards
-                        : false,
-                    actions: this.specificInformation.card.actions ? this.specificInformation.card.actions : [],
-                    data: this.specificInformation.card.data,
-                    rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
-                    wktGeometry: wktGeometry,
-                    wktProjection: wktProjection,
-                    tags: tags
-                } as Card;
-                if (this.cardToEdit?.card.keepChildCards)
-                    logger.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
+            this.card = {
+                id: 'dummyId',
+                publishDate: null,
+                publisher: cardEmitter,
+                publisherType: 'ENTITY',
+                processVersion: selectedProcess.version,
+                process: selectedProcess.id,
+                processInstanceId: this.getProcessInstanceId(),
+                state: this.selectedStateId,
+                startDate: startDate,
+                endDate: endDate,
+                expirationDate: expirationDate,
+                lttd: lttd,
+                severity: this.getSeverity(),
+                hasBeenAcknowledged: false,
+                hasBeenRead: false,
+                userRecipients: [],
+                entityRecipients: this.recipients.concat(recipientsForInformation),
+                entityRecipientsForInformation: recipientsForInformation,
+                entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(this.recipients),
+                entitiesRequiredToRespond: this.specificInformation.card.entitiesRequiredToRespond
+                    ? this.specificInformation.card.entitiesRequiredToRespond
+                    : [],
+                entitiesAllowedToEdit: this.getValueOrNull(this.specificInformation.card.entitiesAllowedToEdit),
+                externalRecipients: this.getValueOrNull(this.specificInformation.card.externalRecipients),
+                title: title,
+                titleTranslated: titleTranslated,
+                summary: this.specificInformation.card.summary ? this.specificInformation.card.summary : 'UNDEFINED',
+                secondsBeforeTimeSpanForReminder: this.getValueOrNull(
+                    this.specificInformation.card.secondsBeforeTimeSpanForReminder
+                ),
+                timeSpans: this.getTimeSpans(this.specificInformation, startDate, endDate),
+                keepChildCards: this.specificInformation.card.keepChildCards
+                    ? this.specificInformation.card.keepChildCards
+                    : false,
+                actions: this.specificInformation.card.actions ? this.specificInformation.card.actions : [],
+                data: this.specificInformation.card.data,
+                rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
+                wktGeometry: wktGeometry,
+                wktProjection: wktProjection,
+                tags: tags
+            } as Card;
+            if (this.cardToEdit?.card.keepChildCards)
+                logger.warn(
+                    "Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead"
+                );
 
-                this.childCards = (this.cardToEdit?.card.keepChildCards || this.cardToEdit?.card.actions?.includes(CardAction.KEEP_CHILD_CARDS))? this.cardToEdit.childCards : [];
-                if (
-                    this.specificInformation.childCard &&
-                    UserPermissionsService.isUserEnabledToRespond(
-                        UserService.getCurrentUserWithPerimeters(),
-                        this.card,
-                        selectedProcess
-                    )
-                ) {
-                    const userChildCard = this.getChildCard(this.specificInformation.childCard);
-                    this.childCards = this.childCards.filter((c) => c.publisher !== userChildCard.publisher);
-                    this.childCards.push(userChildCard);
+            this.childCards =
+                this.cardToEdit?.card.keepChildCards ||
+                this.cardToEdit?.card.actions?.includes(CardAction.KEEP_CHILD_CARDS)
+                    ? this.cardToEdit.childCards
+                    : [];
+            if (
+                this.specificInformation.childCard &&
+                UserPermissionsService.isUserEnabledToRespond(
+                    UserService.getCurrentUserWithPerimeters(),
+                    this.card,
+                    selectedProcess
+                )
+            ) {
+                const userChildCard = this.getChildCard(this.specificInformation.childCard);
+                this.childCards = this.childCards.filter((c) => c.publisher !== userChildCard.publisher);
+                this.childCards.push(userChildCard);
 
-                    this.card = {...this.card, hasChildCardFromCurrentUserEntity: true};
-                }
-                this.displayPreview = true;
+                this.card = {...this.card, hasChildCardFromCurrentUserEntity: true};
+            }
+            this.displayPreview = true;
 
-                this.updateRegularlyConnectedUsers();
-            });
+            this.updateRegularlyConnectedUsers();
+        });
     }
 
     private updateRegularlyConnectedUsers() {
@@ -644,11 +642,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
         return CardService.fetchConnectedRecipients(fromCardToLightCard(this.card)).pipe(
             map((connectedRecipients) => {
                 this.connectedRecipients.clear();
-                connectedRecipients.forEach( recipient => {
-                    this.connectedRecipients.add(recipient)
-                })
+                connectedRecipients.forEach((recipient) => {
+                    this.connectedRecipients.add(recipient);
+                });
             })
-        )
+        );
     }
 
     private stopUpdateRegularlyConnectedUser() {
@@ -669,7 +667,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private isSpecificInformationValid(): boolean {
-
         const specificInformation = OpfabAPIService.userCardTemplateInterface.getSpecificCardInformation();
         if (!specificInformation) {
             logger.error(
@@ -712,8 +709,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let endDate = null;
         if (this.endDateVisible) endDate = this.currentEndDate;
         else {
-            if (this.specificInformation?.card.endDate)
-                endDate = this.specificInformation.card.endDate;
+            if (this.specificInformation?.card.endDate) endDate = this.specificInformation.card.endDate;
         }
         return endDate;
     }
@@ -722,8 +718,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let lttd = null;
         if (this.lttdVisible) lttd = this.currentLttd;
         else {
-            if (this.specificInformation?.card.lttd)
-                lttd = this.specificInformation.card.lttd;
+            if (this.specificInformation?.card.lttd) lttd = this.specificInformation.card.lttd;
         }
         return lttd;
     }
@@ -734,7 +729,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
             tags = this.specificInformation.card.tags;
         }
         return tags;
-
     }
 
     private getWktGeometry(): string {
@@ -770,7 +764,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         }
 
         const currentDateTime = new Date().valueOf();
-        if (lttd && ((lttd < startDate) || (lttd <= currentDateTime))) {
+        if (lttd && (lttd < startDate || lttd <= currentDateTime)) {
             this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
@@ -956,9 +950,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
-                logger.error(
-                    'Impossible to send card , message from service : ' + msg + '. Error message : ' + error
-                );
+                logger.error('Impossible to send card , message from service : ' + msg + '. Error message : ' + error);
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                 this.displaySendingCardInProgress = false;
             } else {

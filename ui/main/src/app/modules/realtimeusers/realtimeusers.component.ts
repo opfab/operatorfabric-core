@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
-
     realTimeScreensForm: FormGroup<{
         realTimeScreen: FormControl<string | null>;
     }>;
@@ -37,18 +36,14 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     realtimePage: RealtimePage;
     initialScreenOption: string;
 
-    constructor(
-        private configServer: ConfigServer
-    ) {}
+    constructor(private configServer: ConfigServer) {}
 
     ngOnInit(): void {
         this.realTimeScreensForm = new FormGroup({
             realTimeScreen: new FormControl('')
         });
 
-        this.realtimeusersView = new RealtimeUsersView(
-            this.configServer
-        );
+        this.realtimeusersView = new RealtimeUsersView(this.configServer);
         this.realtimeusersView.getPage().subscribe((realtimePage) => {
             if (realtimePage) {
                 this.realtimePage = realtimePage;
@@ -61,9 +56,9 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     setInitialScreenOption(): void {
-        const screenOptionPreference = Number(UserPreferencesService.getPreference(
-            'opfab.realTimeScreens.screenIndexToDisplayFirst'
-        ));
+        const screenOptionPreference = Number(
+            UserPreferencesService.getPreference('opfab.realTimeScreens.screenIndexToDisplayFirst')
+        );
         this.initialScreenOption = this.realtimePage.screenOptions[screenOptionPreference]
             ? String(screenOptionPreference)
             : '0';
@@ -74,21 +69,17 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         this.realTimeScreensForm.get('realTimeScreen').valueChanges.subscribe((optionIndex) => {
             if (optionIndex) {
                 this.realtimeusersView.setSelectedScreen(optionIndex);
-                UserPreferencesService.setPreference(
-                    'opfab.realTimeScreens.screenIndexToDisplayFirst',
-                    optionIndex
-                );
+                UserPreferencesService.setPreference('opfab.realTimeScreens.screenIndexToDisplayFirst', optionIndex);
             }
         });
     }
 
     ngOnDestroy() {
-        if (this.realtimePage)
-            this.realtimeusersView.stopUpdate();
+        if (this.realtimePage) this.realtimeusersView.stopUpdate();
     }
 
     isEllipsisActive(id: string): boolean {
         const element = document.getElementById(id);
-        return (element.offsetWidth < element.scrollWidth);
-   }
+        return element.offsetWidth < element.scrollWidth;
+    }
 }

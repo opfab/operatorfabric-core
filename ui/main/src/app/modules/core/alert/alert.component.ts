@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -18,21 +18,12 @@ import {AlertPage} from 'app/business/view/core/alert/alertPage';
     styleUrls: ['./alert.component.scss'],
     templateUrl: './alert.component.html'
 })
-export class AlertComponent  {
-
+export class AlertComponent {
     public alertView: AlertView;
-    public alertPage : AlertPage;
+    public alertPage: AlertPage;
 
-    constructor(
-        translationService: TranslationService
-    ) {
+    constructor(translationService: TranslationService) {
         this.alertView = new AlertView(translationService);
         this.alertPage = this.alertView.getAlertPage();
     }
-
-
 }
-
-
-
-

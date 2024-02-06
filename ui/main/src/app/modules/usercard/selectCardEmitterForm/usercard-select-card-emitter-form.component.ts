@@ -16,7 +16,7 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
     selector: 'of-usercard-select-card-emitter-form',
     templateUrl: './usercard-select-card-emitter-form.component.html'
 })
-export class UsercardSelectCardEmitterFormComponent implements OnInit,OnDestroy {
+export class UsercardSelectCardEmitterFormComponent implements OnInit, OnDestroy {
     @Input() public userEntitiesAllowedToSendCardOptions;
     @Input() public initialPublisher;
 
@@ -33,7 +33,6 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit,OnDestroy 
         multiple: false,
         search: true
     };
-
 
     ngOnInit() {
         this.selectCardEmitterForm = new FormGroup({

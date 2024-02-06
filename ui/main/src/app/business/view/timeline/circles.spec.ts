@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,21 +14,19 @@ import {getOneCard} from '@tests/helpers';
 import {Frequency} from '@ofModel/light-card.model';
 import {Recurrence, TimeSpan} from '@ofModel/card.model';
 
-
-
 describe('Timeline Circles', () => {
     const startDate = moment().startOf('year');
     const endDate = moment().startOf('year').add(1, 'year');
     const circles = new Circles();
 
-    const RED= '#A71A1A';
+    const RED = '#A71A1A';
     const ORANGE = '#FD9313';
-    const GREEN ='#00BB03';
+    const GREEN = '#00BB03';
     const BLUE = '#1074AD';
 
     beforeEach(() => {
         const gridTimeDomain = [moment(startDate).valueOf(), moment(endDate).valueOf()];
-        const cardsTimeDomain = {startDate:moment(startDate).valueOf(), endDate: moment(endDate).valueOf()};
+        const cardsTimeDomain = {startDate: moment(startDate).valueOf(), endDate: moment(endDate).valueOf()};
         const domainId = 'Y';
         const xAxis = new XAxis();
         xAxis.setupAxis(domainId, gridTimeDomain);
@@ -164,25 +162,23 @@ describe('Timeline Circles', () => {
         expect(circles.circles[1].count).toEqual(1);
     });
 
-
     it('set three cards in the same interval and same severity , there shoud be one circle with 3 summary  ', () => {
-
         const card1 = getOneCard({
-            id : 'card1',
+            id: 'card1',
             startDate: moment(startDate).add(5, 'day').add(1, 'hour').valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title1'
         });
 
         const card2 = getOneCard({
-            id : 'card2',
+            id: 'card2',
             startDate: moment(startDate).add(6, 'day').add(3, 'hour').valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title2'
         });
 
         const card3 = getOneCard({
-            id : 'card3',
+            id: 'card3',
             startDate: moment(startDate).add(8, 'day').add(8, 'hour').valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title3'
@@ -199,9 +195,9 @@ describe('Timeline Circles', () => {
         expect(circles.circles[0].summary[2].cardId).toEqual('card3');
     });
 
-    it("1 rRule recurrence per month shall generate 12 circles on timeline in year mode", () => {
+    it('1 rRule recurrence per month shall generate 12 circles on timeline in year mode', () => {
         const card1 = getOneCard({
-            id : 'card1',
+            id: 'card1',
             startDate: moment(startDate).valueOf(),
             endDate: moment(endDate).valueOf(),
             severity: 'ALARM',
@@ -220,17 +216,15 @@ describe('Timeline Circles', () => {
         expect(circles.circles.length).toEqual(12);
     });
 
-    it(" recurrence per month for 5 months  shall generate 10 circles on timeline in year mode (1 per half month)", () => {
-
-
+    it(' recurrence per month for 5 months  shall generate 10 circles on timeline in year mode (1 per half month)', () => {
         const recurrence = new Recurrence(null);
-        recurrence.timeZone = 'Europe/Paris';;
+        recurrence.timeZone = 'Europe/Paris';
         recurrence.hoursAndMinutes = {hours: 16, minutes: 30};
-        recurrence.months = [1,2,3,4,5];
+        recurrence.months = [1, 2, 3, 4, 5];
         recurrence.durationInMinutes = 60;
 
         const card1 = getOneCard({
-            id : 'card1',
+            id: 'card1',
             startDate: moment(startDate).valueOf(),
             endDate: moment(endDate).valueOf(),
             severity: 'ALARM',
@@ -243,13 +237,14 @@ describe('Timeline Circles', () => {
         expect(circles.circles.length).toEqual(10);
     });
 
-
     it('set two circle with if one card with two timespans', () => {
         const card = getOneCard({
             startDate: moment(startDate).valueOf(),
             severity: 'ALARM',
-            timeSpans: [new TimeSpan(startDate.valueOf(), endDate.valueOf(), null),
-                new TimeSpan(moment(startDate).add('2','month').valueOf(), endDate.valueOf(), null)]
+            timeSpans: [
+                new TimeSpan(startDate.valueOf(), endDate.valueOf(), null),
+                new TimeSpan(moment(startDate).add('2', 'month').valueOf(), endDate.valueOf(), null)
+            ]
         });
 
         circles.setCardsToDrawOnTimeLine([card]);

@@ -7,16 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CommonModule} from "@angular/common";
-import {NgModule} from "@angular/core";
-import {TranslateModule} from "@ngx-translate/core";
-import {RichTextComponent} from "./richtext.component";
-
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
+import {RichTextComponent} from './richtext.component';
 
 @NgModule({
     declarations: [RichTextComponent],
-    imports: [
-    CommonModule,
-    TranslateModule]
+    imports: [CommonModule, TranslateModule]
 })
 export class RichTextModule {}

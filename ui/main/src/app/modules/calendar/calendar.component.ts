@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,6 @@ import {OpfabStore} from 'app/business/store/opfabStore';
     styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
-
     private filteredLightCardStore: FilteredLightCardsStore;
 
     constructor(private modalService: NgbModal) {
@@ -106,7 +105,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private initDataPipe(): void {
-        OpfabStore.getLightCardStore().getLightCards()
+        OpfabStore.getLightCardStore()
+            .getLightCards()
             .pipe(takeUntil(this.unsubscribe$), debounceTime(200), distinctUntilChanged())
             .subscribe((cards) => this.processCards(cards));
     }

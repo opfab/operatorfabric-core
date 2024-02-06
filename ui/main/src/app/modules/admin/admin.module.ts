@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2019-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2019-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,6 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
 import {EntityNameCellRendererComponent} from './components/cell-renderers/entity-name-cell-renderer.component';
 import {EditSupervisedEntityModalComponent} from './components/editmodal/supervised-entities/edit-supervised-entity-modal.component';
-
 
 @NgModule({
     declarations: [

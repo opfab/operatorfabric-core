@@ -15,7 +15,7 @@ import {Entity} from '@ofModel/entity.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-usercard-recipients-form',
@@ -84,48 +84,42 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRecipientsOptions() {
         this.recipientsOptions = [];
-        EntitiesService
-            .getEntities()
-            .forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
-                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
-                }
+        EntitiesService.getEntities().forEach((entity) => {
+            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
             }
-            );
+        });
     }
 
     private loadRecipientsForInformationOptions() {
         this.recipientsForInformationOptions = [];
-        EntitiesService
-            .getEntities()
-            .forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
-                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
-                }
+        EntitiesService.getEntities().forEach((entity) => {
+            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                this.recipientsForInformationOptions.push(
+                    new MultiSelectOption(entity.id, this.getEntityLabel(entity))
+                );
             }
-            );
+        });
     }
 
     private loadRestrictedRecipientList(recipients: EntitiesTree[]): void {
         this.recipientsOptions = [];
-        EntitiesService
-            .resolveEntities(recipients)
-            .forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
-                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
+        EntitiesService.resolveEntities(recipients).forEach((entity) => {
+            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
             }
-            );
+        });
     }
 
     private loadRestrictedRecipientForInformationList(recipientsForInformation: EntitiesTree[]): void {
         this.recipientsForInformationOptions = [];
-        EntitiesService
-            .resolveEntities(recipientsForInformation)
-            .forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
-                    this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))                }
+        EntitiesService.resolveEntities(recipientsForInformation).forEach((entity) => {
+            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+                this.recipientsForInformationOptions.push(
+                    new MultiSelectOption(entity.id, this.getEntityLabel(entity))
+                );
             }
-            );
+        });
     }
 
     private getEntityLabel(entity: Entity) {
@@ -155,8 +149,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         OpfabAPIService.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
             if (
                 !this.editCardMode &&
-                (!this.selectedRecipientsForInformation ||
-                    this.selectedRecipientsForInformation.length === 0)
+                (!this.selectedRecipientsForInformation || this.selectedRecipientsForInformation.length === 0)
             )
                 this.selectedRecipientsForInformation = recipients;
         };
@@ -165,14 +158,14 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private listenForSelectedRecipientList() {
         // Set initial recipient list from template only if not in edition mode
         OpfabAPIService.currentUserCard.setSelectedRecipients = (recipients) => {
-                this.selectedRecipients = recipients;
+            this.selectedRecipients = recipients;
         };
     }
 
     private listenForSelectedRecipientForInformationList() {
         // Set initial recipient list from template only if not in edition mode
         OpfabAPIService.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
-                this.selectedRecipientsForInformation = recipients;
+            this.selectedRecipientsForInformation = recipients;
         };
     }
 

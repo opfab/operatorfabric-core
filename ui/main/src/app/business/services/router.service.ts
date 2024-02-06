@@ -7,18 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ApplicationRouter} from "../server/application-router";
+import {ApplicationRouter} from '../server/application-router';
 
 export class RouterService {
-
     private static router: ApplicationRouter;
 
     public static setApplicationRouter(router: ApplicationRouter) {
-        RouterService.router = router
+        RouterService.router = router;
     }
 
     public static navigateTo(url: string) {
         RouterService.router.navigateTo(url);
     }
-
 }

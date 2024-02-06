@@ -7,15 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationService} from "app/business/services/translation/translation.service";
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 export class TranslationServiceMock extends TranslationService {
-
     lang = 'en';
 
-    getTranslation(key: string, params?: Map<string,string>): string {
-        let translation = "Translation (" + this.lang + ") of " + key;
-        if (params) translation +=  " with values=" + Array.from(params.values());
+    getTranslation(key: string, params?: Map<string, string>): string {
+        let translation = 'Translation (' + this.lang + ') of ' + key;
+        if (params) translation += ' with values=' + Array.from(params.values());
         return translation;
     }
     setLang(lang: string) {

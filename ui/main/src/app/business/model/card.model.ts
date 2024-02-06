@@ -47,7 +47,7 @@ export class Card {
         readonly publisherType?: PublisherType | string,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
-        readonly tags? : string[],
+        readonly tags?: string[],
         readonly wktGeometry?: string,
         readonly wktProjection?: string,
         public secondsBeforeTimeSpanForReminder?: number,
@@ -99,15 +99,25 @@ export class CardForPublishing {
 }
 
 export class CardData {
-    constructor(readonly card: Card, readonly childCards: Card[]) {}
+    constructor(
+        readonly card: Card,
+        readonly childCards: Card[]
+    ) {}
 }
 
 export class CardCreationReportData {
-    constructor(readonly uid: string, readonly id: string) {}
+    constructor(
+        readonly uid: string,
+        readonly id: string
+    ) {}
 }
 
 export class TimeSpan {
-    constructor(readonly start: number, readonly end?: number, readonly recurrence?: Recurrence) {}
+    constructor(
+        readonly start: number,
+        readonly end?: number,
+        readonly recurrence?: Recurrence
+    ) {}
 }
 
 export class Recurrence {
@@ -121,7 +131,10 @@ export class Recurrence {
 }
 
 export class HourAndMinutes {
-    constructor(public hours: number, public minutes: number) {}
+    constructor(
+        public hours: number,
+        public minutes: number
+    ) {}
 }
 
 export class RRule {

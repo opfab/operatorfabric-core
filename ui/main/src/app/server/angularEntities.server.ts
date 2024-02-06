@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,10 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {AngularServer} from './angular.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
 
-
 @Injectable({
     providedIn: 'root'
 })
-export class AngularEntitiesServer extends AngularServer implements EntitiesServer{
+export class AngularEntitiesServer extends AngularServer implements EntitiesServer {
     readonly entitiesUrl: string;
     protected _entities: Entity[];
     /**
@@ -38,10 +37,10 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
     }
 
     queryAllEntities(): Observable<ServerResponse<Entity[]>> {
-        return this.processHttpResponse(this.httpClient.get<Entity[]>(`${this.entitiesUrl}`))
+        return this.processHttpResponse(this.httpClient.get<Entity[]>(`${this.entitiesUrl}`));
     }
 
     updateEntity(entityData: Entity): Observable<ServerResponse<Entity>> {
-        return this.processHttpResponse(this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData))
+        return this.processHttpResponse(this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData));
     }
 }

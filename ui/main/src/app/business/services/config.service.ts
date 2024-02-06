@@ -10,7 +10,7 @@
 import {filter, map, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject} from 'rxjs';
-import {Locale,UIMenuFile} from '@ofModel/menu.model';
+import {Locale, UIMenuFile} from '@ofModel/menu.model';
 import {ConfigServer} from '../server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponseStatus} from '../server/serverResponse';
@@ -85,13 +85,11 @@ export class ConfigService {
         return ConfigService.menuConfig;
     }
 
-
     public static fetchMenuTranslations(): Observable<Locale[]> {
         return ConfigService.configServer
             .getMenuConfiguration()
             .pipe(map((serverResponse) => serverResponse.data?.locales));
     }
-
 
     public static loadMonitoringConfig(): Observable<MonitoringConfig> {
         return ConfigService.configServer.getMonitoringConfiguration().pipe(

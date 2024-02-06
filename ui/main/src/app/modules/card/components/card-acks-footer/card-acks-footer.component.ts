@@ -14,7 +14,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 import {CardOperationType} from '@ofModel/card-operation.model';
 
 @Component({
@@ -28,8 +28,8 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    private static ORANGE : string = '#ff6600';
-    private static GREEN : string = 'green';
+    private static ORANGE: string = '#ff6600';
+    private static GREEN: string = 'green';
 
     ngOnInit() {
         OpfabStore.getLightCardStore()
@@ -49,7 +49,10 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
                     (entityToAck) => entityToAck.id === entityAckToUpdate
                 );
                 if (indexToUpdate !== -1) {
-                    this.listEntitiesToAck[indexToUpdate].color = operation === CardOperationType.ACK ? CardAcksFooterComponent.GREEN : CardAcksFooterComponent.ORANGE;
+                    this.listEntitiesToAck[indexToUpdate].color =
+                        operation === CardOperationType.ACK
+                            ? CardAcksFooterComponent.GREEN
+                            : CardAcksFooterComponent.ORANGE;
                 }
             });
         }
@@ -67,7 +70,10 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     private computeListEntitiesToAck() {
         const resolved = new Set<string>();
 
-        const entityRecipientsToAck = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
+        const entityRecipientsToAck = Utilities.removeElementsFromArray(
+            this.card.entityRecipients,
+            this.card.entityRecipientsForInformation
+        );
 
         entityRecipientsToAck.forEach((entityRecipient) => {
             const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
@@ -75,8 +81,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
                 resolved.add(entityRecipient);
             }
 
-            EntitiesService
-                .resolveChildEntities(entityRecipient)
+            EntitiesService.resolveChildEntities(entityRecipient)
                 .filter((child) => child.roles.includes(RolesEnum.CARD_SENDER))
                 .forEach((child) => resolved.add(child.id));
         });
@@ -85,7 +90,9 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
             this.listEntitiesToAck.push({
                 id: entityToAck,
                 name: EntitiesService.getEntityName(entityToAck),
-                color: this.checkEntityAcknowledged(entityToAck) ? CardAcksFooterComponent.GREEN : CardAcksFooterComponent.ORANGE
+                color: this.checkEntityAcknowledged(entityToAck)
+                    ? CardAcksFooterComponent.GREEN
+                    : CardAcksFooterComponent.ORANGE
             })
         );
         this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));

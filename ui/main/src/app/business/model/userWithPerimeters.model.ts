@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,12 @@ export class UserWithPerimeters {
 }
 
 export class ComputedPerimeter {
-    public constructor(readonly process: string, readonly state: string, readonly rights: RightsEnum, readonly filteringNotificationAllowed: boolean) {}
+    public constructor(
+        readonly process: string,
+        readonly state: string,
+        readonly rights: RightsEnum,
+        readonly filteringNotificationAllowed: boolean
+    ) {}
 }
 
 export function userRight(rights: RightsEnum) {

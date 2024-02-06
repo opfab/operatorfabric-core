@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters
 import {CrudBusinessDataService} from 'app/business/services/admin/crud-business-data.service';
 import {CrudSupervisedEntitiesService} from 'app/business/services/admin/crud-supervised-entities-service';
 
-
 @Injectable()
 export class SharingService implements OnDestroy {
     private readonly _paginationPageSize$: ReplaySubject<number>;
@@ -33,8 +32,7 @@ export class SharingService implements OnDestroy {
     private crudBusinessDataService: CrudBusinessDataService;
     private supervisedEntitiesService: CrudSupervisedEntitiesService;
 
-    constructor(
-    ) {
+    constructor() {
         this._paginationPageSize$ = new ReplaySubject<number>();
         this.crudUserService = new CrudUserService();
         this.crudEntitiesService = new CrudEntitiesService();
@@ -43,7 +41,6 @@ export class SharingService implements OnDestroy {
         this.crudProcessesService = new CrudProcessesService();
         this.crudBusinessDataService = new CrudBusinessDataService();
         this.supervisedEntitiesService = new CrudSupervisedEntitiesService();
-
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -73,7 +70,6 @@ export class SharingService implements OnDestroy {
         }
     }
 
-
     get paginationPageSize$(): Observable<number> {
         return this._paginationPageSize$;
     }
@@ -99,5 +95,5 @@ export enum AdminItemType {
     PERIMETER = 'perimeter',
     PROCESS = 'process',
     BUSINESSDATA = 'businessData',
-    SUPERVISED_ENTITY = "supervisedEntity"
+    SUPERVISED_ENTITY = 'supervisedEntity'
 }

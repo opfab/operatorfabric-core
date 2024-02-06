@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MenuEntryLinkTypeEnum} from "@ofModel/menu.model";
+import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 
-export class NavbarPage{
+export class NavbarPage {
     showEnvironmentName: boolean;
     environmentName: string;
     environmentColor: string;
@@ -17,7 +17,7 @@ export class NavbarPage{
 }
 
 export class Logo {
-    isDefaultOpfabLogo: boolean
+    isDefaultOpfabLogo: boolean;
     base64Image: string;
     height: number;
     width: number;
@@ -33,10 +33,10 @@ export class NavbarMenu {
 }
 
 export class NavbarMenuElement {
-    isCoreMenu :boolean
+    isCoreMenu: boolean;
     id: string;
-    url : string;
-    label : string;
+    url: string;
+    label: string;
     linkType: MenuEntryLinkTypeEnum;
     dropdownMenu: NavbarMenuElement[];
 }

@@ -47,46 +47,47 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         <br/>
         `;
         this.listenToEntityUsedForSendingCardChange();
-        this.view.initRecipientsAndMessageList(this.getAttribute('businessData')).then(() => this.handleInitialSettings())
+        this.view
+            .initRecipientsAndMessageList(this.getAttribute('businessData'))
+            .then(() => this.handleInitialSettings());
         this.initMultiSelect();
         this.previousTitleId = this.view.getTitleId();
     }
 
     getSpecificCardInformation() {
-        const quillEditor = (<HTMLInputElement>document.getElementById('message'));
+        const quillEditor = <HTMLInputElement>document.getElementById('message');
         const summary = (<HTMLInputElement>document.getElementById('summary')).value;
         return this.view.getSpecificCardInformation(quillEditor, summary);
     }
 
     initMultiSelect() {
         this.messageSelect = opfab.multiSelect.init({
-            id: "message-select",
+            id: 'message-select',
             multiple: false,
             search: true
         });
 
         const that = this;
 
-        document.querySelector('#message-select').addEventListener('change', ()=> {
+        document.querySelector('#message-select').addEventListener('change', () => {
             that.fillTextAndRecipientFields();
         });
     }
 
-    fillTextAndRecipientFields () {
+    fillTextAndRecipientFields() {
         const messageId = this.messageSelect.getSelectedValues();
-        const message = this.view.getMessageOrQuestion(messageId)
+        const message = this.view.getMessageOrQuestion(messageId);
 
-        if ( this.previousTitleId !== messageId || opfab.currentUserCard.getEditionMode() === 'CREATE') {
-            const quill =  document.getElementById("message");
+        if (this.previousTitleId !== messageId || opfab.currentUserCard.getEditionMode() === 'CREATE') {
+            const quill = document.getElementById('message');
             this.view.setRichTextContent(quill, message);
 
-            const summaryArea =  document.getElementById("summary") as HTMLTextAreaElement;
+            const summaryArea = document.getElementById('summary') as HTMLTextAreaElement;
             summaryArea.value = message?.summary ?? '';
 
             this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
         }
-
     }
 
     private listenToEntityUsedForSendingCardChange() {
@@ -122,15 +123,15 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     }
 
     private setMessageListOptions(selected?) {
-        this.titleOptions  = this.view.getMessageListOptions();
+        this.titleOptions = this.view.getMessageListOptions();
 
         if (this.titleOptions?.length > 0) {
             this.messageSelect.setOptions(this.titleOptions);
 
-            if (selected && this.titleOptions.find(t => t.value === selected)) {
+            if (selected && this.titleOptions.find((t) => t.value === selected)) {
                 this.messageSelect.setSelectedValues(selected);
             } else {
-                this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+                this.messageSelect.setSelectedValues(this.titleOptions[0].value);
             }
         }
     }

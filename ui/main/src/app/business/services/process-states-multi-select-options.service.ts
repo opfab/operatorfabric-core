@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,11 +19,12 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
     providedIn: 'root'
 })
 export class ProcessStatesMultiSelectOptionsService {
-    constructor(
-        private translate: TranslateService
-    ) {}
+    constructor(private translate: TranslateService) {}
 
-    getStatesMultiSelectOptionsPerProcess(isAdminModeAndUserHasRightToSeeAllStates: boolean, hideChildStates: boolean): any[] {
+    getStatesMultiSelectOptionsPerProcess(
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        hideChildStates: boolean
+    ): any[] {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
         ProcessesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
@@ -55,11 +56,15 @@ export class ProcessStatesMultiSelectOptionsService {
     ): boolean {
         return (
             !(hideChildStates && isOnlyAChildState) &&
-            (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcessAndState(processId, stateId))
+            (isAdminModeAndUserHasRightToSeeAllStates ||
+                UserService.isReceiveRightsForProcessAndState(processId, stateId))
         );
     }
 
-    getProcessesWithoutProcessGroupMultiSelectOptions(isAdminModeAndUserHasRightToSeeAllStates: boolean, processesFilter?: string[]): any[] {
+    getProcessesWithoutProcessGroupMultiSelectOptions(
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        processesFilter?: string[]
+    ): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
         ProcessesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {

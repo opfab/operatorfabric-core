@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,12 +8,10 @@
  */
 
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-import { Utilities } from './utilities';
+import {Utilities} from './utilities';
 
 describe('Utilities', () => {
-
     describe('compareObj', () => {
-
         it('should compare two strings correctly', () => {
             const str1 = 'apple';
             const str2 = 'banana';
@@ -29,8 +27,8 @@ describe('Utilities', () => {
         });
 
         it('should compare two equal objects correctly', () => {
-            const obj1 = { key: 'value' };
-            const obj2 = { key: 'value' };
+            const obj1 = {key: 'value'};
+            const obj2 = {key: 'value'};
             const result = Utilities.compareObj(obj1, obj2);
             expect(result).toBe(0);
         });
@@ -41,7 +39,6 @@ describe('Utilities', () => {
             const result = Utilities.compareObj(str1, str2);
             expect(result).toBe(0);
         });
-
     });
 
     describe('sliceForFormat', () => {
@@ -62,10 +59,7 @@ describe('Utilities', () => {
 
     describe('convertNgbDateTimeToEpochDate', () => {
         it('should convert NgbDateTime to epoch date', () => {
-            const ngbDateTime = new DateTimeNgb(
-                {year: 2021, month: 10, day: 1},
-                {hour: 0, minute: 0, second: 0}
-            );
+            const ngbDateTime = new DateTimeNgb({year: 2021, month: 10, day: 1}, {hour: 0, minute: 0, second: 0});
             const result = Utilities.convertNgbDateTimeToEpochDate(ngbDateTime);
             expect(result).toEqual(1633039200000); // corresponds to 2021-10-01 00:00:00 in TZ Paris
         });

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
@@ -16,14 +15,12 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {LoggerService as logger} from '../logs/logger.service';
 import {ErrorService} from '../error-service';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
-
-export class EntitiesService{
+export class EntitiesService {
     protected static _entities: Entity[];
     private static ngUnsubscribe$ = new Subject<void>();
     private static entitiesServer: EntitiesServer;
-
 
     public static setEntitiesServer(entitiesServer: EntitiesServer) {
         EntitiesService.entitiesServer = entitiesServer;
@@ -32,7 +29,7 @@ export class EntitiesService{
     public static deleteById(id: string) {
         return EntitiesService.entitiesServer.deleteById(id).pipe(
             tap((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     EntitiesService.deleteFromCachedEntities(id);
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
@@ -48,14 +45,14 @@ export class EntitiesService{
     public static queryAllEntities(): Observable<Entity[]> {
         return EntitiesService.entitiesServer.queryAllEntities().pipe(
             map((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     return entitiesResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
                     return [];
                 }
             })
-            );
+        );
     }
 
     public static updateEntity(entityData: Entity): Observable<Entity> {
@@ -101,7 +98,7 @@ export class EntitiesService{
         );
     }
 
-    public static getEntity(entityId) : Entity {
+    public static getEntity(entityId): Entity {
         const entity = EntitiesService._entities.find((entity) => entity.id === entityId);
         return entity;
     }
@@ -162,8 +159,7 @@ export class EntitiesService{
             } else {
                 if (!resolvedEntities.find((o) => o.id === r.id)) {
                     const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
-                    if (entity)
-                        resolvedEntities.push(entity);
+                    if (entity) resolvedEntities.push(entity);
                     else logger.info('Entity not found : ' + r.id);
                 }
             }

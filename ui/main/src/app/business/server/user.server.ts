@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ export abstract class UserServer {
     abstract deleteById(login: string): Observable<ServerResponse<any>>;
     abstract getUser(user: string): Observable<ServerResponse<User>>;
     abstract synchronizeWithToken(): Observable<ServerResponse<User>>;
-    abstract currentUserWithPerimeters(): Observable<ServerResponse<UserWithPerimeters>>
+    abstract currentUserWithPerimeters(): Observable<ServerResponse<UserWithPerimeters>>;
     abstract queryAllUsers(): Observable<ServerResponse<User[]>>;
     abstract updateUser(userData: User): Observable<ServerResponse<User>>;
     abstract loadConnectedUsers(): Observable<ServerResponse<any[]>>;

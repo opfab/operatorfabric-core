@@ -349,7 +349,5 @@ describe('NewFilterService ', () => {
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(4);
         });
-
     });
-
 });

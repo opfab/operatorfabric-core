@@ -32,7 +32,7 @@ class FormResult {
     valid: boolean;
     errorMsg: string;
     responseCardData: any;
-    publisher?: string
+    publisher?: string;
     responseState?: string;
     actions?: CardAction[];
 }
@@ -81,9 +81,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public btnUnlockLabel = 'response.btnUnlock';
     isReadOnlyUser: boolean;
 
-    constructor(
-        private modalService: NgbModal
-    ) {
+    constructor(private modalService: NgbModal) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
@@ -126,7 +124,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     private disablePopUpButtonIfNoEntitySelected(): void {
         this.selectEntitiesForm.get('entities').valueChanges.subscribe((selectedEntities) => {
             this.isEntityFormFilled = selectedEntities.length >= 1;
-        })
+        });
     }
 
     private computeEntityOptionsDropdownListForResponse(): void {
@@ -160,7 +158,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
             if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
-                logger.error("Response card publisher not allowed : " + publisherEntity);
+                logger.error('Response card publisher not allowed : ' + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }
@@ -191,19 +189,17 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 actions: responseData.actions
             };
             this.sendingResponseInProgress = true;
-            CardService.postCard(card).subscribe(
-                (resp) => {
-                    this.sendingResponseInProgress = false;
-                    if (resp.status !== ServerResponseStatus.OK) {
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(resp);
-                    } else {
-                        this.isResponseLocked = true;
-                        OpfabAPIService.templateInterface.lockAnswer();
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                    }
+            CardService.postCard(card).subscribe((resp) => {
+                this.sendingResponseInProgress = false;
+                if (resp.status !== ServerResponseStatus.OK) {
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                    console.error(resp);
+                } else {
+                    this.isResponseLocked = true;
+                    OpfabAPIService.templateInterface.lockAnswer();
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 }
-            );
+            });
         } else {
             responseData.errorMsg && responseData.errorMsg !== ''
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
@@ -212,7 +208,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients: Array<string>) {
-        if ((this.card.publisherType === 'ENTITY') && (!entityRecipients?.includes(this.card.publisher))) {
+        if (this.card.publisherType === 'ENTITY' && !entityRecipients?.includes(this.card.publisher)) {
             entityRecipients.push(this.card.publisher);
         }
     }

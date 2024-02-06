@@ -41,25 +41,36 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a user WHEN create card with data THEN card is provided with data', () => {
         const view = new TaskCardTemplateView();
-        const taskTitle = "My task Title";
-        const taskDescription = "My task Description";
+        const taskTitle = 'My task Title';
+        const taskDescription = 'My task Description';
         const freq = 'DAILY';
-        const durationInMinutes = "15";
-        const minutesForReminder = "5";
-        const byweekday = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
-        const bymonth = [ 1, 2, 3];
-        const bysetpos =[];
-        const bymonthday =[];
-        const time = "15:15";
-        const specficCardInformation = view.getSpecificCardInformation(taskTitle, taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time)
+        const durationInMinutes = '15';
+        const minutesForReminder = '5';
+        const byweekday = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+        const bymonth = [1, 2, 3];
+        const bysetpos = [];
+        const bymonthday = [];
+        const time = '15:15';
+        const specficCardInformation = view.getSpecificCardInformation(
+            taskTitle,
+            taskDescription,
+            freq,
+            durationInMinutes,
+            minutesForReminder,
+            byweekday,
+            bymonth,
+            bysetpos,
+            bymonthday,
+            time
+        );
         expect(specficCardInformation.valid).toEqual(true);
-        expect(specficCardInformation.card.data.taskTitle).toEqual("My task Title");
-        expect(specficCardInformation.card.data.taskDescription).toEqual("My task Description");
+        expect(specficCardInformation.card.data.taskTitle).toEqual('My task Title');
+        expect(specficCardInformation.card.data.taskDescription).toEqual('My task Description');
         expect(specficCardInformation.card.data.freq).toEqual('DAILY');
-        expect(specficCardInformation.card.data.durationInMinutes).toEqual("15");
-        expect(specficCardInformation.card.data.minutesForReminder).toEqual("5");
-        expect(specficCardInformation.card.data.byweekday).toEqual([ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ]);
-        expect(specficCardInformation.card.data.bymonth).toEqual([ 1, 2, 3]);
+        expect(specficCardInformation.card.data.durationInMinutes).toEqual('15');
+        expect(specficCardInformation.card.data.minutesForReminder).toEqual('5');
+        expect(specficCardInformation.card.data.byweekday).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
+        expect(specficCardInformation.card.data.bymonth).toEqual([1, 2, 3]);
         expect(specficCardInformation.card.data.bysetpos).toEqual([]);
         expect(specficCardInformation.card.data.bymonthday).toEqual([]);
         expect(specficCardInformation.card.data.byhour).toEqual(['15']);
@@ -72,30 +83,31 @@ describe('Question UserCard template', () => {
             return 'EDITION';
         };
         opfab.currentCard.getCard = function () {
-            return {data: {
-                taskTitle: "My task Title",
-                taskDescription: "My task Description",
-                freq: 'DAILY',
-                byhour: ["15"],
-                byminute: ["15"],
-                durationInMinutes: "15",
-                minutesForReminder: "5",
-                byweekday: [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ],
-                bymonth: [ 1, 2, 3],
-                bysetpos: [],
-                bymonthday: []
+            return {
+                data: {
+                    taskTitle: 'My task Title',
+                    taskDescription: 'My task Description',
+                    freq: 'DAILY',
+                    byhour: ['15'],
+                    byminute: ['15'],
+                    durationInMinutes: '15',
+                    minutesForReminder: '5',
+                    byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+                    bymonth: [1, 2, 3],
+                    bysetpos: [],
+                    bymonthday: []
                 }
-            }
-        }
-        expect(view.getTaskTitle()).toEqual("My task Title");
-        expect(view.getTaskDescription()).toEqual("My task Description");
+            };
+        };
+        expect(view.getTaskTitle()).toEqual('My task Title');
+        expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');
         expect(view.getDurationInMinutes(null)).toEqual('15');
         expect(view.getMinutesForReminder(null)).toEqual('5');
-        expect(view.getWeekDay()).toEqual([ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ]);
+        expect(view.getWeekDay()).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
         expect(view.getSetPos()).toEqual([]);
-        expect(view.getMonth()).toEqual([1,2,3]);
+        expect(view.getMonth()).toEqual([1, 2, 3]);
         expect(view.getMonthDay()).toEqual([]);
     });
 
@@ -105,30 +117,31 @@ describe('Question UserCard template', () => {
             return 'COPY';
         };
         opfab.currentCard.getCard = function () {
-            return {data: {
-                taskTitle: "My task Title",
-                taskDescription: "My task Description",
-                freq: 'DAILY',
-                byhour: ["15"],
-                byminute: ["15"],
-                durationInMinutes: "15",
-                minutesForReminder: "5",
-                byweekday: [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ],
-                bymonth: [ 1, 2, 3],
-                bysetpos: [],
-                bymonthday: []
+            return {
+                data: {
+                    taskTitle: 'My task Title',
+                    taskDescription: 'My task Description',
+                    freq: 'DAILY',
+                    byhour: ['15'],
+                    byminute: ['15'],
+                    durationInMinutes: '15',
+                    minutesForReminder: '5',
+                    byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+                    bymonth: [1, 2, 3],
+                    bysetpos: [],
+                    bymonthday: []
                 }
-            }
-        }
-        expect(view.getTaskTitle()).toEqual("My task Title");
-        expect(view.getTaskDescription()).toEqual("My task Description");
+            };
+        };
+        expect(view.getTaskTitle()).toEqual('My task Title');
+        expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');
         expect(view.getDurationInMinutes(null)).toEqual('15');
         expect(view.getMinutesForReminder(null)).toEqual('5');
-        expect(view.getWeekDay()).toEqual([ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ]);
+        expect(view.getWeekDay()).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
         expect(view.getSetPos()).toEqual([]);
-        expect(view.getMonth()).toEqual([1,2,3]);
+        expect(view.getMonth()).toEqual([1, 2, 3]);
         expect(view.getMonthDay()).toEqual([]);
     });
 });

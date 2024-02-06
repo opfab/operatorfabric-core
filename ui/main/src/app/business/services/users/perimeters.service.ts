@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,8 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 import {LoggerService} from '../logs/logger.service';
 
-
-export class PerimetersService  {
-
-    private static perimeterServer : PerimetersServer;
+export class PerimetersService {
+    private static perimeterServer: PerimetersServer;
     private static _perimeters: Perimeter[];
 
     private static ngUnsubscribe$ = new Subject<void>();
@@ -44,7 +42,9 @@ export class PerimetersService  {
     }
 
     private static updateCachedPerimeters(perimeterData: Perimeter): void {
-        const updatedPerimeters = PerimetersService._perimeters.filter((perimeter) => perimeter.id !== perimeterData.id);
+        const updatedPerimeters = PerimetersService._perimeters.filter(
+            (perimeter) => perimeter.id !== perimeterData.id
+        );
         updatedPerimeters.push(perimeterData);
         PerimetersService._perimeters = updatedPerimeters;
     }

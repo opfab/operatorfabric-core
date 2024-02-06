@@ -8,14 +8,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 @Component({
     selector: 'of-loading-in-progress',
     templateUrl: './loading-in-progress.component.html'
 })
-export class LoadingInProgressComponent implements OnInit, OnDestroy{
-
+export class LoadingInProgressComponent implements OnInit, OnDestroy {
     showReloadButton = false;
     reloadTimeout: any;
 

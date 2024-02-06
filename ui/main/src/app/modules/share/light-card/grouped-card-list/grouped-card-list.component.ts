@@ -18,7 +18,6 @@ import {Observable} from 'rxjs';
     styleUrls: ['./grouped-card-list.component.scss']
 })
 export class GroupedCardListComponent implements OnInit {
-
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
 

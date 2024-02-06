@@ -12,7 +12,6 @@ declare const opfab;
 export class MessageOrQuestionListCardTemplateView {
     showInputField: Function;
 
-
     public getTitle() {
         let title = opfab.currentCard.getCard()?.data?.title;
         if (title) title = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(title));
@@ -27,13 +26,12 @@ export class MessageOrQuestionListCardTemplateView {
         return message;
     }
 
-    public setFunctionToGetResponseInput( getResponseInput: Function) {
+    public setFunctionToGetResponseInput(getResponseInput: Function) {
         opfab.currentCard.registerFunctionToGetUserResponse(() => {
-            const response  = getResponseInput();
+            const response = getResponseInput();
             return {valid: true, responseCardData: {agreement: response[0], comment: response[1]}};
         });
     }
-
 
     public listenToResponses(setResponses: Function) {
         opfab.currentCard.listenToChildCards((childCards) => {
@@ -53,7 +51,8 @@ export class MessageOrQuestionListCardTemplateView {
 
     public listenToInputFieldVisibility(showInputField: Function) {
         this.showInputField = showInputField;
-        if (opfab.currentCard.isUserAllowedToRespond() && opfab.currentCard.getCard()?.data.question) this.listenToLock();
+        if (opfab.currentCard.isUserAllowedToRespond() && opfab.currentCard.getCard()?.data.question)
+            this.listenToLock();
         else showInputField(false);
     }
 
@@ -65,5 +64,4 @@ export class MessageOrQuestionListCardTemplateView {
             if (this.showInputField) this.showInputField(false);
         });
     }
-
 }

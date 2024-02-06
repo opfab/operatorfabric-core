@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {RolesEnum} from "./roles.model";
+import {RolesEnum} from './roles.model';
 
 export class Entity {
     public constructor(

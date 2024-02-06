@@ -9,13 +9,12 @@
 
 declare const opfab;
 
-
-
 export function initOpfabApiMock() {
-
     opfab.users = {
         entities: {
-            getEntityName: function (entityId) {return entityId + " name"},
+            getEntityName: function (entityId) {
+                return entityId + ' name';
+            },
             getEntity: function (entityId) {},
             getAllEntities: function () {}
         }
@@ -26,9 +25,8 @@ export function initOpfabApiMock() {
         redirectToBusinessMenu: function (menuId, urlExtension) {}
     };
 
-
     opfab.currentCard = {
-        getCard: function() {},
+        getCard: function () {},
         isUserAllowedToRespond: function () {},
         isUserMemberOfAnEntityRequiredToRespond: function () {},
         getEntitiesAllowedToRespond: function () {},
@@ -75,10 +73,7 @@ export function initOpfabApiMock() {
         setInitialStartDate: function (startDate) {}
     };
 
-    opfab.utils.getTranslation = function(key,values) {
-        return "Translation of " + key;
-    }
-
+    opfab.utils.getTranslation = function (key, values) {
+        return 'Translation of ' + key;
+    };
 }
-
-

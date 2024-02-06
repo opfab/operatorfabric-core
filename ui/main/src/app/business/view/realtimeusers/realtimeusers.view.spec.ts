@@ -16,7 +16,7 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {Entity} from '@ofModel/entity.model';
 import {RealtimeUsersView} from './realtimeusers.view';
 import {RealtimePage} from './realtimePage';
-import { RolesEnum } from '@ofModel/roles.model';
+import {RolesEnum} from '@ofModel/roles.model';
 
 describe('Realtimeusers', () => {
     let view: RealtimeUsersView;
@@ -42,15 +42,29 @@ describe('Realtimeusers', () => {
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         const entities: Entity[] = [
-          new Entity('ENTITY_FR', 'French Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
-          new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
-          new Entity('ENTITY2_FR', 'ENTITY2_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
-          new Entity('ENTITY_IT', 'Italian Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
-          new Entity('EUROPEAN_SUPERVISION_CENTERS', 'EUROPEAN_SUPERVISION_CENTERS', '', [RolesEnum.CARD_SENDER], [], []),
-          new Entity('IT_SUPERVISOR_ENTITY', 'IT SUPERVISION CENTER', '', [RolesEnum.CARD_SENDER], [], ['EUROPEAN_SUPERVISION_CENTERS']),
-          new Entity('ENTITY_NL', 'Dutch Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
-          new Entity('ENTITY1_NL', 'ENTITY1_NL_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_NL']),
-          new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_IT'])
+            new Entity('ENTITY_FR', 'French Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
+            new Entity('ENTITY2_FR', 'ENTITY2_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
+            new Entity('ENTITY_IT', 'Italian Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
+            new Entity(
+                'EUROPEAN_SUPERVISION_CENTERS',
+                'EUROPEAN_SUPERVISION_CENTERS',
+                '',
+                [RolesEnum.CARD_SENDER],
+                [],
+                []
+            ),
+            new Entity(
+                'IT_SUPERVISOR_ENTITY',
+                'IT SUPERVISION CENTER',
+                '',
+                [RolesEnum.CARD_SENDER],
+                [],
+                ['EUROPEAN_SUPERVISION_CENTERS']
+            ),
+            new Entity('ENTITY_NL', 'Dutch Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY1_NL', 'ENTITY1_NL_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_NL']),
+            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_IT'])
         ];
         entitiesServerMock.setEntities(entities);
 
@@ -142,54 +156,52 @@ describe('Realtimeusers', () => {
     });
 
     const realtimeScreensTestConfig = {
-
-        "realTimeScreens": [
+        realTimeScreens: [
             {
-            "screenName": "All Control Centers",
-            "screenColumns": [
-                {
-                "entitiesGroups": ["ENTITY_FR","ENTITY_IT","ENTITY_NL"]
-                },
-                {
-                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
-                }
-            ]
+                screenName: 'All Control Centers',
+                screenColumns: [
+                    {
+                        entitiesGroups: ['ENTITY_FR', 'ENTITY_IT', 'ENTITY_NL']
+                    },
+                    {
+                        entitiesGroups: ['EUROPEAN_SUPERVISION_CENTERS']
+                    }
+                ]
             },
             {
-            "screenName": "French Control Centers",
-            "screenColumns": [
-                {
-                "entitiesGroups": ["ENTITY_FR"]
-                },
-                {
-                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
-                }
-            ]
+                screenName: 'French Control Centers',
+                screenColumns: [
+                    {
+                        entitiesGroups: ['ENTITY_FR']
+                    },
+                    {
+                        entitiesGroups: ['EUROPEAN_SUPERVISION_CENTERS']
+                    }
+                ]
             },
             {
-            "screenName": "Italian Control Centers",
-            "screenColumns": [
-                {
-                "entitiesGroups": ["ENTITY_IT"]
-                },
-                {
-                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
-                }
-            ]
+                screenName: 'Italian Control Centers',
+                screenColumns: [
+                    {
+                        entitiesGroups: ['ENTITY_IT']
+                    },
+                    {
+                        entitiesGroups: ['EUROPEAN_SUPERVISION_CENTERS']
+                    }
+                ]
             },
             {
-            "screenName": "Dutch Control Centers",
-            "onlyDisplayUsersInGroups": ['group2', 'group3'],
-            "screenColumns": [
-                {
-                "entitiesGroups": ["ENTITY_NL"]
-                },
-                {
-                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
-                }
-            ]
+                screenName: 'Dutch Control Centers',
+                onlyDisplayUsersInGroups: ['group2', 'group3'],
+                screenColumns: [
+                    {
+                        entitiesGroups: ['ENTITY_NL']
+                    },
+                    {
+                        entitiesGroups: ['EUROPEAN_SUPERVISION_CENTERS']
+                    }
+                ]
             }
         ]
-};
-
+    };
 });

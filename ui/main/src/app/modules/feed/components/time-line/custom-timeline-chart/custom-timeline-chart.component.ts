@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -95,7 +95,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.updateRealtime();
     }
 
-
     /**
      * loop function for set xRealTimeLine at the actual time
      * xRealTimeLine is a vertical bar which represent the current time
@@ -133,9 +132,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             legendType: ScaleType.Time
         });
 
-        this.xScale = scaleTime()
-            .range([0, this.dims.width])
-            .domain(this.timeLineView.getTimeGridDomain());
+        this.xScale = scaleTime().range([0, this.dims.width]).domain(this.timeLineView.getTimeGridDomain());
         this.yScale = scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
         this.translateGraph = `translate(${this.dims.xOffset} , 30)`;
     }

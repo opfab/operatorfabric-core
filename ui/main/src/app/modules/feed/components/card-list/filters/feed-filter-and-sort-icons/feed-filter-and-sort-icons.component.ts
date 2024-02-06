@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 import {Component, Input, OnChanges, Output} from '@angular/core';
 import {Subject} from 'rxjs';
 
-
 @Component({
     selector: 'of-feed-filter-icon',
     templateUrl: './feed-filter-and-sort-icons.component.html',
@@ -21,15 +20,14 @@ export class FeedFilterAndSortIconsComponent implements OnChanges {
 
     @Output() showFiltersAndSort = new Subject();
 
-
     filterSelected = false;
     sortSelected = false;
 
-    filterIconCssClass = "opfab-icon-filter"
+    filterIconCssClass = 'opfab-icon-filter';
 
     toggleFilters() {
         this.filterSelected = !this.filterSelected;
-        this.showFiltersAndSort.next({filter : this.filterSelected});
+        this.showFiltersAndSort.next({filter: this.filterSelected});
         this.computeIconClass();
     }
 
@@ -37,15 +35,13 @@ export class FeedFilterAndSortIconsComponent implements OnChanges {
         this.computeIconClass();
     }
 
-    private computeIconClass(){
+    private computeIconClass() {
         if (this.filterSelected) {
-            if (this.filterActive) this.filterIconCssClass = "opfab-icon-filter-open-active";
-            else this.filterIconCssClass = "opfab-icon-filter-open";
-        }
-        else {
-            if (this.filterActive) this.filterIconCssClass = "opfab-icon-filter-active";
-            else this.filterIconCssClass = "opfab-icon-filter";
+            if (this.filterActive) this.filterIconCssClass = 'opfab-icon-filter-open-active';
+            else this.filterIconCssClass = 'opfab-icon-filter-open';
+        } else {
+            if (this.filterActive) this.filterIconCssClass = 'opfab-icon-filter-active';
+            else this.filterIconCssClass = 'opfab-icon-filter';
         }
     }
-
 }

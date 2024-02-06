@@ -124,7 +124,7 @@ export class OpfabAPIService {
             return resource;
         };
 
-        opfab.navigate.redirectToBusinessMenu = function (menuId,urlExtension) {
+        opfab.navigate.redirectToBusinessMenu = function (menuId, urlExtension) {
             const urlSplit = document.location.href.split('#');
             // WARNING : HACK
             //
@@ -136,11 +136,7 @@ export class OpfabAPIService {
             //
             // To solve the problem we encode two times the url before giving it to the browser
             // so we always have a unique case : a double encoded url
-            let newUrl =
-                urlSplit[0] +
-                '#/businessconfigparty/' +
-                encodeURIComponent(encodeURIComponent(menuId)) +
-                '/' ;
+            let newUrl = urlSplit[0] + '#/businessconfigparty/' + encodeURIComponent(encodeURIComponent(menuId)) + '/';
 
             if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
             document.location.href = newUrl;
@@ -199,7 +195,8 @@ export class OpfabAPIService {
             return self.currentCard.entitiesAllowedToRespond;
         };
         opfab.currentCard.getEntityUsedForUserResponse = function () {
-            console.warn(new Date().toISOString(),
+            console.warn(
+                new Date().toISOString(),
                 ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
             );
             return self.currentCard.entityUsedForUserResponse;

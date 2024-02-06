@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,10 +25,8 @@ import {OpfabStore} from 'app/business/store/opfabStore';
     providedIn: 'root'
 })
 export class SoundNotificationService implements OnDestroy {
-
-
     private static RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
-    private static ERROR_MARGIN = 4000 // in milliseconds
+    private static ERROR_MARGIN = 4000; // in milliseconds
 
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
@@ -57,9 +55,7 @@ export class SoundNotificationService implements OnDestroy {
     private isServiceActive = true;
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private soundServer: SoundServer
-    ) {
+    constructor(private soundServer: SoundServer) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -103,11 +99,12 @@ export class SoundNotificationService implements OnDestroy {
         ConfigService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
             this.replayEnabled = x;
         });
-        ConfigService
-            .getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
-            .subscribe((x) => {
-                this.replayInterval = Math.max(3, x);
-            });
+        ConfigService.getConfigValueAsObservable(
+            'settings.replayInterval',
+            SoundNotificationService.DEFAULT_REPLAY_INTERVAL
+        ).subscribe((x) => {
+            this.replayInterval = Math.max(3, x);
+        });
 
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
         this.initSoundPlayingForSessionEnd();
@@ -127,7 +124,9 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private listenForCardUpdate() {
-        OpfabStore.getLightCardStore().getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
+        OpfabStore.getLightCardStore()
+            .getNewLightCards()
+            .subscribe((card) => this.handleLoadedCard(card));
     }
 
     ngOnDestroy() {
@@ -150,7 +149,7 @@ export class SoundNotificationService implements OnDestroy {
         else {
             if (
                 !card.hasBeenRead &&
-                this.checkCardHasBeenPublishAfterLastUserAction(card)&&
+                this.checkCardHasBeenPublishAfterLastUserAction(card) &&
                 this.checkCardIsRecent(card)
             ) {
                 this.incomingCardOrReminder.next(card);
@@ -172,11 +171,10 @@ export class SoundNotificationService implements OnDestroy {
 
     public lastSentCard(cardId: string) {
         this.lastSentCardId = cardId;
-
     }
 
     private checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
-        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction  > 0;
+        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction > 0;
     }
 
     private checkCardIsRecent(card: LightCard): boolean {

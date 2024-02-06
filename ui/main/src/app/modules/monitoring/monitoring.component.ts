@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,8 +47,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     isThereProcessStateToDisplay: boolean;
     selectedCardId: string;
 
-    constructor(
-    ) {
+    constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             if (process.uiVisibility?.monitoring) {
@@ -91,7 +90,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
 
-        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(
+            (selectedCardId) => (this.selectedCardId = selectedCardId)
+        );
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
@@ -150,17 +151,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             entityIdsAllowedOrRequiredToRespond
         );
 
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(
+            (entity) => entity.id
+        );
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         if (!card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map((entity) => entity.id);
     }
 
     private cardToResult(card: LightCard): LineOfMonitoringResult {

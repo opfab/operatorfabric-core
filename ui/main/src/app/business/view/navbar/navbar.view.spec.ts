@@ -14,7 +14,6 @@ import {ConfigService} from 'app/business/services/config.service';
 import {firstValueFrom} from 'rxjs';
 import {NavbarPage} from './navbarPage';
 
-
 describe('NavbarView', () => {
     describe('get environment name and color', () => {
         it('should set showEnvironmentName to false if no environmentName define in web-ui.json', async () => {
@@ -104,5 +103,4 @@ describe('NavbarView', () => {
         ConfigService.setConfigServer(configServerMock);
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
     }
-
 });

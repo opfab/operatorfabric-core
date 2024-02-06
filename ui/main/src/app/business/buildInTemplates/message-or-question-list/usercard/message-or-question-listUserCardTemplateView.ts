@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 declare const opfab;
 
 export class MessageOrQuestionListUserCardTemplateView {
-
     messageOrQuestionList;
     selectedMessage;
     selectedEmitter;
@@ -40,7 +38,7 @@ export class MessageOrQuestionListUserCardTemplateView {
 
     public getTitleId() {
         const titleId = opfab.currentCard.getCard()?.data?.id;
-        return titleId
+        return titleId;
     }
 
     public getPublisher() {
@@ -52,9 +50,9 @@ export class MessageOrQuestionListUserCardTemplateView {
 
         if (quillEditor.isEmpty()) {
             return {
-                valid:false,
-                errorMsg : opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage')
-            }
+                valid: false,
+                errorMsg: opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage')
+            };
         }
 
         const title = this.selectedMessage.title.trim();
@@ -68,14 +66,19 @@ export class MessageOrQuestionListUserCardTemplateView {
         let entitiesAllowedToRespond;
 
         if (this.selectedMessage.question) {
-            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
+            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients
+                ? this.selectedMessage?.possibleRecipients
+                : '';
         } else {
             entitiesAllowedToRespond = [];
         }
 
         const card = {
-		title : {key : "message_or_question_list.title", parameters : {"messageTitle" : title} },
-            summary: {key : "message_or_question_list.summary", parameters: {"summary" : summary.length ? " : " + summary : ""}},
+            title: {key: 'message_or_question_list.title', parameters: {messageTitle: title}},
+            summary: {
+                key: 'message_or_question_list.summary',
+                parameters: {summary: summary.length ? ' : ' + summary : ''}
+            },
             startDate: new Date().valueOf(),
             data: {
                 id: id,
@@ -85,7 +88,7 @@ export class MessageOrQuestionListUserCardTemplateView {
                 question: question
             },
             severity: severity,
-            entitiesAllowedToRespond: entitiesAllowedToRespond,
+            entitiesAllowedToRespond: entitiesAllowedToRespond
         };
 
         return {
@@ -98,15 +101,17 @@ export class MessageOrQuestionListUserCardTemplateView {
         this.messageOrQuestionList = await opfab.businessconfig.businessData.get(businessDataName);
 
         opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
-        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(this.messageOrQuestionList.possibleRecipients);
+        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(
+            this.messageOrQuestionList.possibleRecipients
+        );
     }
 
     public getMessageOrQuestion(messageId: string) {
-        this.messageOrQuestionList.messagesList.forEach( (message) => {
+        this.messageOrQuestionList.messagesList.forEach((message) => {
             if (message.id === messageId) {
                 this.selectedMessage = message;
             }
-        })
+        });
         return this.selectedMessage;
     }
 
@@ -124,19 +129,21 @@ export class MessageOrQuestionListUserCardTemplateView {
     }
 
     getMessageListOptions() {
-
         const titlesOptions = [];
         if (this.messageOrQuestionList)
-            this.messageOrQuestionList.messagesList.forEach( (message) => {
-
-                if ( !message.publishers || message.publishers.length === 0 || message.publishers.includes(this.selectedEmitter) ) {
+            this.messageOrQuestionList.messagesList.forEach((message) => {
+                if (
+                    !message.publishers ||
+                    message.publishers.length === 0 ||
+                    message.publishers.includes(this.selectedEmitter)
+                ) {
                     const option = {
                         label: message.title,
                         value: message.id
                     };
                     titlesOptions.push(option);
                 }
-            })
+            });
         return titlesOptions;
     }
 
@@ -150,7 +157,9 @@ export class MessageOrQuestionListUserCardTemplateView {
     }
 
     setRichTextContent(quillEditor: any, message: any) {
-        const delta = message.richMessage ? JSON.stringify(message.richMessage) : opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message.message));
+        const delta = message.richMessage
+            ? JSON.stringify(message.richMessage)
+            : opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message.message));
         quillEditor.setContents(delta);
     }
 }

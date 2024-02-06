@@ -36,9 +36,11 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN a new card THEN initial selected message option is the first option', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1', summary: 'summary1', message: 'message1'},
-            { id: 'id2', message: 'message2'},
-            { id: 'id3', summary: 'summary3', message: 'message3'}]
+            messagesList: [
+                {id: 'id1', summary: 'summary1', message: 'message1'},
+                {id: 'id2', message: 'message2'},
+                {id: 'id3', summary: 'summary3', message: 'message3'}
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -79,9 +81,11 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user edit card THEN initial selected message option is actual option id', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1', message: 'message1'},
-            { id: 'id2', message: 'message2'},
-            { id: 'id3', message: 'message3'}]
+            messagesList: [
+                {id: 'id1', message: 'message1'},
+                {id: 'id2', message: 'message2'},
+                {id: 'id3', message: 'message3'}
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -99,9 +103,11 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user copy card THEN initial selected message option is actual option id', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{id: 'id1', message: 'message1'},
-            { id: 'id2', message: 'message2'},
-            { id: 'id3', message: 'message3'}]
+            messagesList: [
+                {id: 'id1', message: 'message1'},
+                {id: 'id2', message: 'message2'},
+                {id: 'id3', message: 'message3'}
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -115,7 +121,6 @@ describe('MessageOrQuestionList UserCard template', () => {
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
-
 
     it('GIVEN an existing card WHEN user copy card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
@@ -143,10 +148,12 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN a message list with ids WHEN given a message id THEN message associated to id is returned', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{
-                id: 'id',
-                message: 'my message'
-            }]
+            messagesList: [
+                {
+                    id: 'id',
+                    message: 'my message'
+                }
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -158,20 +165,20 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN a user WHEN create card THEN card is the correct severity', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
 
-        const selectedMessageWithoutseverity = {title: "default severity", question: true};
+        const selectedMessageWithoutseverity = {title: 'default severity', question: true};
         view.selectedMessage = selectedMessageWithoutseverity;
 
         const quillEditor = new QuillEditorMock();
         quillEditor.setContents('My question');
         let specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
-        expect(specficCardInformation.card.severity).toEqual('ACTION')
+        expect(specficCardInformation.card.severity).toEqual('ACTION');
 
         view.selectedMessage.question = false;
         quillEditor.setContents('My message');
         specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('INFORMATION');
 
-        const selectedMessageWithSeverity = {title: "my title", question: true, severity: 'ACTION'};
+        const selectedMessageWithSeverity = {title: 'my title', question: true, severity: 'ACTION'};
         view.selectedMessage = selectedMessageWithSeverity;
         quillEditor.setContents('My question');
         specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
@@ -181,43 +188,37 @@ describe('MessageOrQuestionList UserCard template', () => {
         quillEditor.setContents('My message');
         specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.card.severity).toEqual('ALARM');
-
     });
 
     it('GIVEN a message list with restricted publishers WHEN given a selected emitter THEN only allowed messages options are returned', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{
-                id: 'id1',
-                message: 'allowed publishers : ENTITY1_FR ENTITY2_FR',
-                publishers:  [
-                    'ENTITY1_FR',
-                    'ENTITY2_FR'
-               ]
-            },
-            {
-
-                id: 'id2',
-                message: 'allowed publishers :  ENTITY3_FR',
-                publishers:  [
-                    'ENTITY3_FR'
-               ]
-            },
-            {
-                id: 'id3',
-                message: 'empty allowed publishers',
-                publishers:  []
-            },
-            {
-                id: 'id4',
-                message: 'publishers not defined'
-            }
-        ]
+            messagesList: [
+                {
+                    id: 'id1',
+                    message: 'allowed publishers : ENTITY1_FR ENTITY2_FR',
+                    publishers: ['ENTITY1_FR', 'ENTITY2_FR']
+                },
+                {
+                    id: 'id2',
+                    message: 'allowed publishers :  ENTITY3_FR',
+                    publishers: ['ENTITY3_FR']
+                },
+                {
+                    id: 'id3',
+                    message: 'empty allowed publishers',
+                    publishers: []
+                },
+                {
+                    id: 'id4',
+                    message: 'publishers not defined'
+                }
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
         view.setSelectedEmitter('ENTITY1_FR');
-        let messages = view.getMessageListOptions()
+        let messages = view.getMessageListOptions();
         expect(messages.length).toEqual(3);
         expect(messages[0].value).toEqual('id1');
         expect(messages[1].value).toEqual('id3');
@@ -225,7 +226,7 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
         view.setSelectedEmitter('ENTITY3_FR');
-        messages = view.getMessageListOptions()
+        messages = view.getMessageListOptions();
         expect(messages.length).toEqual(3);
         expect(messages[0].value).toEqual('id2');
         expect(messages[1].value).toEqual('id3');
@@ -233,7 +234,7 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
         view.setSelectedEmitter('ENTITY4_FR');
-        messages = view.getMessageListOptions()
+        messages = view.getMessageListOptions();
         expect(messages.length).toEqual(2);
         expect(messages[0].value).toEqual('id3');
         expect(messages[1].value).toEqual('id4');
@@ -242,29 +243,12 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN a message list WHEN selected message has richMessage field THEN quill editor content is the richMessage', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         const messageOrQuestionList = {
-            messagesList: [{
-                id: 'id1',
-                richMessage: {"ops":[{"attributes":{"color":"#e60000","bold":true}},{"insert":"Rich message"}]},
-            }]
-        };
-
-        view.messageOrQuestionList = messageOrQuestionList;
-
-        const selectedMessage = messageOrQuestionList.messagesList[0];
-
-        const quillEditor = new QuillEditorMock();
-        view.setRichTextContent(quillEditor, selectedMessage)
-
-        expect(quillEditor.getContents()).toEqual("{\"ops\":[{\"attributes\":{\"color\":\"#e60000\",\"bold\":true}},{\"insert\":\"Rich message\"}]}");
-    });
-
-    it('GIVEN a message list WHEN selected message does not have richMessage field THEN quill editor content is the message in delta format', () => {
-        const view = new MessageOrQuestionListUserCardTemplateView();
-        const messageOrQuestionList = {
-            messagesList: [{
-                id: 'id2',
-                message: 'message2',
-            }]
+            messagesList: [
+                {
+                    id: 'id1',
+                    richMessage: {ops: [{attributes: {color: '#e60000', bold: true}}, {insert: 'Rich message'}]}
+                }
+            ]
         };
 
         view.messageOrQuestionList = messageOrQuestionList;
@@ -274,6 +258,29 @@ describe('MessageOrQuestionList UserCard template', () => {
         const quillEditor = new QuillEditorMock();
         view.setRichTextContent(quillEditor, selectedMessage);
 
-        expect(quillEditor.getContents()).toEqual("{\"ops\":[{\"insert\":\"message2\"}]}");
+        expect(quillEditor.getContents()).toEqual(
+            '{"ops":[{"attributes":{"color":"#e60000","bold":true}},{"insert":"Rich message"}]}'
+        );
+    });
+
+    it('GIVEN a message list WHEN selected message does not have richMessage field THEN quill editor content is the message in delta format', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [
+                {
+                    id: 'id2',
+                    message: 'message2'
+                }
+            ]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        const selectedMessage = messageOrQuestionList.messagesList[0];
+
+        const quillEditor = new QuillEditorMock();
+        view.setRichTextContent(quillEditor, selectedMessage);
+
+        expect(quillEditor.getContents()).toEqual('{"ops":[{"insert":"message2"}]}');
     });
 });

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,6 @@ export enum LogLevel {
 }
 
 export class LoggerService {
-
     // Default value ERROR so we do not pollute unit test
     private static logLevel: LogLevel = LogLevel.ERROR;
 
@@ -43,13 +42,12 @@ export class LoggerService {
         }
     }
 
-
     public static setLogLevel(logLevel: LogLevel) {
         LoggerService.logLevel = logLevel;
     }
 
     public static debug(log: string, logOption: LogOption = LogOption.LOCAL) {
-        if (LoggerService.logLevel === LogLevel.DEBUG)  LoggerService.log(log, 'DEBUG', logOption);
+        if (LoggerService.logLevel === LogLevel.DEBUG) LoggerService.log(log, 'DEBUG', logOption);
     }
 
     public static info(log: string, logOption: LogOption = LogOption.LOCAL) {
@@ -64,4 +62,3 @@ export class LoggerService {
         LoggerService.log(log, 'ERROR', logOption);
     }
 }
-

@@ -8,7 +8,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PreloadAllModules,RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../modules/core/application-loading/login/login.component';
 import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
 import {CalendarComponent} from '../modules/calendar/calendar.component';
@@ -20,7 +20,6 @@ import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmo
 import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
 
 const defaultPath = '/feed';
-
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -41,7 +40,7 @@ const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: DashboardComponent,
+        component: DashboardComponent
     },
     {
         path: 'logging',
@@ -87,7 +86,8 @@ const routes: Routes = [
     },
     {
         path: 'changepassword',
-        loadChildren: () => import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
+        loadChildren: () =>
+            import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
     },
     {
         path: 'externaldevicesconfiguration',
@@ -113,25 +113,23 @@ const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
 export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisibleElements);
 
-
-
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-    enableTracing: false,
-    preloadingStrategy: PreloadAllModules,
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-     */
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-     */
-    initialNavigation: 'disabled',
+            enableTracing: false,
+            preloadingStrategy: PreloadAllModules,
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            initialNavigation: 'disabled',
 
-    // required to reload external application when user click again on the same link
-    // see https://github.com/opfab/operatorfabric-core/issues/4509
-    onSameUrlNavigation: 'reload'
-})
+            // required to reload external application when user click again on the same link
+            // see https://github.com/opfab/operatorfabric-core/issues/4509
+            onSameUrlNavigation: 'reload'
+        })
     ],
     exports: [RouterModule]
 })

@@ -77,7 +77,7 @@ import {AngularSoundServer} from './server/angularSound.server';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {BusinessDataServer} from './business/server/businessData.server';
 import {AngularBusinessDataServer} from './server/angularBusinessData.server';
-import {LoadingInProgressComponent} from "./modules/core/application-loading/loading-in-progress/loading-in-progress.component";
+import {LoadingInProgressComponent} from './modules/core/application-loading/loading-in-progress/loading-in-progress.component';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
 import {TranslationService} from './business/services/translation/translation.service';
 import {ProcessmonitoringModule} from './modules/processmonitoring/processmonitoring.module';

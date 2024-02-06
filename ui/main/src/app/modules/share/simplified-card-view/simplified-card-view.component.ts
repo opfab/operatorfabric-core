@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,8 +19,6 @@ import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService} from 'app/business/services/logs/logger.service';
-
-
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -64,19 +62,16 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map((entity) => entity.id);
     }
 
     private getTemplateAndStyle() {
-        ProcessesService
-            .queryProcess(this.card.process, this.card.processVersion)
+        ProcessesService.queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (businessconfig) => {
                     if (businessconfig) {
-                        this.cardState = businessconfig.states.get((this.card.state));
+                        this.cardState = businessconfig.states.get(this.card.state);
                         this.isLoading = false;
                     }
                 },

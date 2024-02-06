@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,16 +19,14 @@ export class StateDescriptionCellRendererComponent implements ICellRendererAngul
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
 
-
     stateColor: {color: string};
     description: string;
 
-
-
     agInit(params: any): void {
-        this.stateColor = {'color': params.data.stateColor};
-        this.description = params.context.componentParent.processStateDescriptionMap.get(params.data.process + '.' + params.data.state);
-
+        this.stateColor = {color: params.data.stateColor};
+        this.description = params.context.componentParent.processStateDescriptionMap.get(
+            params.data.process + '.' + params.data.state
+        );
     }
 
     // noinspection JSUnusedLocalSymbols

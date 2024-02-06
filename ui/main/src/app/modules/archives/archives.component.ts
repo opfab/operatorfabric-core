@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil, tap} from 'rxjs/operators';
@@ -146,67 +154,72 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
-        const filter = this.getFilter(page_number, Number(this.size), this.filtersTemplate.filters, this.isCollapsibleUpdatesActivated);
+        const filter = this.getFilter(
+            page_number,
+            Number(this.size),
+            this.filtersTemplate.filters,
+            this.isCollapsibleUpdatesActivated
+        );
 
-        CardService
-        .fetchFilteredArchivedCards(filter)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-            next: (page: Page<LightCard>) => {
-                if (page) {
-                    this.resultsNumber = page.totalElements;
-                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
-                    this.firstQueryHasBeenDone = true;
-                    this.hasResult = page.content.length > 0;
-                    this.results = page.content;
+        CardService.fetchFilteredArchivedCards(filter)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                next: (page: Page<LightCard>) => {
+                    if (page) {
+                        this.resultsNumber = page.totalElements;
+                        this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
+                        this.firstQueryHasBeenDone = true;
+                        this.hasResult = page.content.length > 0;
+                        this.results = page.content;
 
-                    if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                        const requestID = new Date().valueOf();
-                        this.lastRequestID = requestID;
-                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
+                        if (this.isCollapsibleUpdatesActivated && this.hasResult) {
+                            const requestID = new Date().valueOf();
+                            this.lastRequestID = requestID;
+                            this.loadUpdatesByCardId(requestID, isAdminModeChecked);
+                        } else {
+                            this.loadingInProgress = false;
+                            this.changeDetector.markForCheck();
+                            this.updatesByCardId = [];
+                            this.results.forEach((lightCard) => {
+                                this.updatesByCardId.push({
+                                    mostRecent: lightCard,
+                                    cardHistories: [],
+                                    displayHistory: false,
+                                    tooManyRows: false
+                                });
+                            });
+                        }
                     } else {
+                        this.firstQueryHasBeenDone = false;
                         this.loadingInProgress = false;
                         this.changeDetector.markForCheck();
-                        this.updatesByCardId = [];
-                        this.results.forEach((lightCard) => {
-                            this.updatesByCardId.push({
-                                mostRecent: lightCard,
-                                cardHistories: [],
-                                displayHistory: false,
-                                tooManyRows: false
-                            });
-                        });
+                        this.technicalError = true;
                     }
-                } else {
+                },
+                error: () => {
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
                     this.changeDetector.markForCheck();
                     this.technicalError = true;
                 }
-            },
-            error: () => {
-                this.firstQueryHasBeenDone = false;
-                this.loadingInProgress = false;
-                this.changeDetector.markForCheck();
-                this.technicalError = true;
-            }
-        });
+            });
     }
 
-    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>, latestUpdateOnly: boolean) : CardsFilter {
+    private getFilter(
+        page: number,
+        size: number,
+        filtersMap: Map<string, any[]>,
+        latestUpdateOnly: boolean
+    ): CardsFilter {
         const filters = [];
         let isAdminMode = false;
-        filtersMap.forEach( (values, key) => {
-            if (key === 'adminMode')
-                isAdminMode = values[0];
-            else
-                filters.push(new FilterModel(key,null,FilterMatchTypeEnum.IN, values));
+        filtersMap.forEach((values, key) => {
+            if (key === 'adminMode') isAdminMode = values[0];
+            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
         });
 
         return new CardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
     }
-
-
 
     loadUpdatesByCardId(requestID: number, isAdminModeChecked: boolean) {
         this.updatesByCardId = [];
@@ -243,8 +256,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         if (isAdminModeChecked) {
             filters.set('adminMode', ['true']);
         }
-        const filter = this.getFilter(0, 1 + this.historySize , filters, false);
-
+        const filter = this.getFilter(0, 1 + this.historySize, filters, false);
 
         return CardService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
@@ -301,8 +313,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
-        CardService
-            .fetchFilteredArchivedCards(filter)
+        CardService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
@@ -325,7 +336,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
-                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(
+                                    ', '
+                                ),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(
@@ -340,7 +353,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
-                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(
+                                    ', '
+                                ),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processColumnName]: this.getProcessName(card.process)
@@ -356,8 +371,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.initExportArchiveData();
     }
 
-    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        return this.translationService.getTranslation(key,interpolateParams);
+    translateColumn(key: string, interpolateParams?: Map<string, string>): any {
+        return this.translationService.getTranslation(key, interpolateParams);
     }
 
     openCard(cardId) {
@@ -366,9 +381,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         CardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             if (card) {
-
                 this.selectedCard = card.card;
-                this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
+                this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated, 100);
                 this.selectedChildCards = card.childCards;
 
                 const options: NgbModalOptions = {
@@ -428,12 +442,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return process?.name ?? processId;
     }
 
-    getEntityName(name:string) {
+    getEntityName(name: string) {
         return EntitiesService.getEntityName(name);
     }
 
     findProcessGroupLabelForProcess(process: string) {
-        return ProcessesService.findProcessGroupLabelForProcess(process)
+        return ProcessesService.findProcessGroupLabelForProcess(process);
     }
 
     ngOnDestroy() {

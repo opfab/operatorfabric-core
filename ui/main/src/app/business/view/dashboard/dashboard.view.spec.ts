@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,7 @@ describe('Dashboard', () => {
     let filteredLightCardStore: FilteredLightCardsStore;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
@@ -45,8 +45,6 @@ describe('Dashboard', () => {
         OpfabStore.reset();
         filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     });
-
-
 
     afterEach(() => {
         dashboard.destroy();
@@ -93,7 +91,11 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes).toHaveSize(0);
@@ -109,7 +111,11 @@ describe('Dashboard', () => {
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(0);
@@ -131,7 +137,11 @@ describe('Dashboard', () => {
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -160,7 +170,11 @@ describe('Dashboard', () => {
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -185,7 +199,11 @@ describe('Dashboard', () => {
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -266,7 +284,11 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(actionCard);
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(4);
@@ -310,7 +332,11 @@ describe('Dashboard', () => {
             hasBeenAcknowledged: true
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);
@@ -337,7 +363,11 @@ describe('Dashboard', () => {
             severity: Severity.INFORMATION
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filteredLightCardStore.getBusinessDateFilter().status);
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
         let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(1);
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);

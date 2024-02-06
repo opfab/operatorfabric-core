@@ -29,8 +29,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import { RolesEnum } from '@ofModel/roles.model';
-
+import {RolesEnum} from '@ofModel/roles.model';
 
 describe('User action logs view ', () => {
     let translationService: TranslationService;
@@ -80,7 +79,7 @@ describe('User action logs view ', () => {
         );
         UserService.setUserServer(userServerMock);
         await firstValueFrom(UserService.loadUserWithPerimetersData());
-    };
+    }
 
     async function mockUserActionLogsService() {
         userActionLogsServerMock = new UserActionLogsServerMock();
@@ -110,7 +109,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a list of user WHEN get all user login THEN user login list is provided ', async () => {
-
         const user2 = new User('login2', 'firstName2', 'lastName2', null, ['group1'], ['ENTITY1']);
         userServerMock.setResponseForQueryAllUsers(new ServerResponse([user, user2], ServerResponseStatus.OK, ''));
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
@@ -163,7 +161,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN end date before start date THEN error message is provide ', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setDateFrom(2);
         userActionLogsView.setDateTo(1);
@@ -174,7 +171,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains entity names', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
@@ -185,7 +181,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains formatted dates', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
@@ -196,7 +191,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by login THEN request is send with login list', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setSelectedLogins(['login1', 'login2']);
         await firstValueFrom(userActionLogsView.search());
@@ -209,7 +203,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by action THEN request is send with action list', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setSelectedActions(['ACK_CARD', 'SEND_CARD']);
         await firstValueFrom(userActionLogsView.search());
@@ -221,7 +214,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN setting page number 2 THEN request is send with page 2', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setPageNumber(2);
         await firstValueFrom(userActionLogsView.search());
@@ -232,7 +224,6 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filtering by date THEN request is send with date filtering', async () => {
-
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setDateTo(2);
         userActionLogsView.setDateFrom(1);

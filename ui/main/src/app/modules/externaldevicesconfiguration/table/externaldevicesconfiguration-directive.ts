@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,9 @@ import {ActionCellRendererComponent} from '../../admin/components/cell-renderers
 import {ConfirmationDialogService} from '../../admin/services/confirmation-dialog.service';
 import {ExternaldevicesconfigurationModalComponent} from '../editModal/externaldevicesconfiguration-modal.component';
 
-
 @Directive()
 @Injectable()
 export abstract class ExternalDevicesConfigurationDirective {
-
     configurations: any[];
     gridOptions: GridOptions;
     public gridApi;
@@ -111,7 +109,6 @@ export abstract class ExternalDevicesConfigurationDirective {
         return this.translateService.instant(this.i18NPrefix + headerIdentifier);
     }
 
-
     onGridReady(params) {
         this.gridApi = params.api;
         this.gridApi.paginationSetPageSize(this.pageSize);
@@ -126,7 +123,7 @@ export abstract class ExternalDevicesConfigurationDirective {
      * name of the fields returned by the API for the type in question.
      * @return ColDef[] object containing the column definitions for the grid
      * */
-     createColumnDefs(fields: Field[]): ColDef[] {
+    createColumnDefs(fields: Field[]): ColDef[] {
         // Create data columns from fields
         const columnDefs = new Array(fields.length);
 
@@ -138,10 +135,8 @@ export abstract class ExternalDevicesConfigurationDirective {
                 colId: field.name
             };
 
-
             columnDefs[index] = columnDef;
         });
-
 
         return columnDefs;
     }
@@ -209,7 +204,6 @@ export abstract class ExternalDevicesConfigurationDirective {
         if (columnId === 'delete') {
             this.openDeleteConfirmationDialog(params.data);
         }
-
     }
 
     openDeleteConfirmationDialog(row: any): any {
@@ -238,23 +232,24 @@ export abstract class ExternalDevicesConfigurationDirective {
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
-
-
 }
-
 
 export class Field {
     public name: string;
-    public type: string
+    public type: string;
 
     /**
      * @param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.
      * @param fieldType: the type of the input in the ag grid
-   **/
+     **/
     constructor(name: string, fieldType: FieldType = FieldType.DATA_COLUMN) {
         this.name = name;
         this.type = fieldType;
     }
 }
 
-export enum FieldType { DATA_COLUMN = 'dataColumn', ACTION_COLUMN='actionColumn', CHECKBOX_COLUMN='checkboxColumn' }
+export enum FieldType {
+    DATA_COLUMN = 'dataColumn',
+    ACTION_COLUMN = 'actionColumn',
+    CHECKBOX_COLUMN = 'checkboxColumn'
+}

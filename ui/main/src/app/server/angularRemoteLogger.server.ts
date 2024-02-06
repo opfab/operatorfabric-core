@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ServerResponse} from "app/business/server/serverResponse";
-import {Observable} from "rxjs";
-import {AngularServer} from "./angular.server";
+import {ServerResponse} from 'app/business/server/serverResponse';
+import {Observable} from 'rxjs';
+import {AngularServer} from './angular.server';
 import {HttpClient} from '@angular/common/http';
-import {environment} from "@env/environment";
-import {Injectable} from "@angular/core";
-import {RemoteLoggerServer} from "app/business/server/remote-logger.server";
+import {environment} from '@env/environment';
+import {Injectable} from '@angular/core';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +26,6 @@ export class AngularRemoteLoggerServer extends AngularServer implements RemoteLo
     }
 
     postLogs(logsToPush): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush))
-
+        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush));
     }
 }

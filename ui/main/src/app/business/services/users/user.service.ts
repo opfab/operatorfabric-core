@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,30 +18,31 @@ import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse'
 import {LoggerService as logger} from '../logs/logger.service';
 import {ErrorService} from '../error-service';
 
-
 export class UserService {
     private static _userWithPerimeters: UserWithPerimeters;
     private static ngUnsubscribe = new Subject<void>();
-    private static _userRightsPerProcessAndState: Map<string, {rights: RightsEnum; filteringNotificationAllowed: boolean}> = new Map();
+    private static _userRightsPerProcessAndState: Map<
+        string,
+        {rights: RightsEnum; filteringNotificationAllowed: boolean}
+    > = new Map();
     private static _receiveRightPerProcess: Map<string, number> = new Map();
     private static userServer;
-
 
     public static setUserServer(userServer: UserServer) {
         UserService.userServer = userServer;
     }
 
     public static deleteById(login: string) {
-        return UserService.userServer
-            .deleteById(login)
-            .pipe(map((userResponse: ServerResponse<any>) => {
+        return UserService.userServer.deleteById(login).pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(userResponse);
                     return null;
                 }
-            }));
+            })
+        );
     }
 
     public static getUser(user: string): Observable<User> {
@@ -150,8 +151,8 @@ export class UserService {
     public static hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            UserService._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length >
-            0
+            UserService._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
+                .length > 0
         );
     }
 
@@ -166,7 +167,7 @@ export class UserService {
                 computedPerimeter.rights === RightsEnum.Receive ||
                 computedPerimeter.rights === RightsEnum.ReceiveAndWrite
             )
-            UserService._receiveRightPerProcess.set(computedPerimeter.process, 1);
+                UserService._receiveRightPerProcess.set(computedPerimeter.process, 1);
         });
     }
 
@@ -213,7 +214,7 @@ export class UserService {
 
     public static loadConnectedUsers(): Observable<any[]> {
         return this.userServer.loadConnectedUsers().pipe(
-            map((userResponse : ServerResponse<any>) => {
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -230,13 +231,10 @@ export class UserService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    logger.error(
-                        'Impossible to check if new connection will disconnect existing subscription'
-                    );
+                    logger.error('Impossible to check if new connection will disconnect existing subscription');
                     return null;
                 }
             })
         );
     }
-
 }

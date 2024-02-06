@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
 
     agInit(params: any): void {
         const value = params.getValue();
-        this._nameValues = value;;
+        this._nameValues = value;
 
         if (this.itemType) {
             this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.itemType);
@@ -56,7 +56,6 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                     .join(', ');
             }
         }
-
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes

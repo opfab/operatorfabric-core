@@ -15,7 +15,7 @@ import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {NavbarMenuElement} from './navbarPage';
 import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
-import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock ';
+import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 import {RouterService} from 'app/business/services/router.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 

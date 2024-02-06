@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,7 +63,7 @@ export class AngularUserServer extends AngularServer implements UserServer {
     // We need to convert manually the states to have a Map of states
     // otherwise we end up with an object instead of a Map;
     convertStatesToMap(key, value): Map<string, Array<string>> {
-        if ((key === 'processesStatesNotNotified') || (key === 'processesStatesNotifiedByEmail')) {
+        if (key === 'processesStatesNotNotified' || key === 'processesStatesNotifiedByEmail') {
             const mapOfStates = new Map<string, Array<string>>();
             for (const state in value) {
                 mapOfStates.set(state, value[state]);
