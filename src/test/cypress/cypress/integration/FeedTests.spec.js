@@ -321,6 +321,12 @@ describe('FeedScreen tests', function () {
         feed.checkFilterIsActive();
         feed.checkNumberOfDisplayedCardsIs(2);
 
+        feed.filterByState('defaultProcess.questionState');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+
+
         feed.filterByProcess('');
         feed.checkFilterIsNotActive();
         feed.checkNumberOfDisplayedCardsIs(3);

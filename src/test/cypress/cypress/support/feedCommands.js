@@ -140,6 +140,13 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
+    filterByState = function (state) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-process-filter-form').should('exist');
+        cy.get("#opfab-state-select").find('[data-value="' + state + '"]' ).click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
     checkFilterIsActive= function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-active');
     }
