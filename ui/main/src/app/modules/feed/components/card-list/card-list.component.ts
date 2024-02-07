@@ -37,6 +37,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
+    @Input() processFilter: string;
+    @Input() stateFilter: string;
 
     @Output() showFilters = new Subject<boolean>();
 
