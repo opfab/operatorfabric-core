@@ -17,6 +17,7 @@
     <div id="opfab-filters" [class.opfab-filters-hidden]="!filterOpen" class="opfab-filters opfab-card-list" style="width:600px"> 
       <of-feed-filter (filterActiveChange)="onFilterActiveChange($event)" [hideTimerTags]="hideTimerTags" 
       [hideProcessFilter]="hideProcessFilter" [hideStateFilter]="hideStateFilter"
+      [processFilter]="processFilter" [stateFilter]="stateFilter"
       [defaultAcknowledgmentFilter]="defaultAcknowledgmentFilter" [hideResponseFilter]="hideResponseFilter" 
       [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice" [defaultSorting]="defaultSorting"></of-feed-filter>
     </div>

@@ -12,6 +12,8 @@ import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {Router} from '@angular/router';
+import {ConfigService} from 'app/business/services/config.service';
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
@@ -26,13 +28,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public openPopover: NgbPopover;
     public currentCircleHovered;
     public popoverTimeOut;
+    private hideProcessFilter: boolean;
+    private hideStateFilter: boolean;
 
-    constructor(private modalService: NgbModal) {
+    constructor(
+        private modalService: NgbModal,
+        private router: Router
+    ) {
         this.dashboard = new Dashboard();
     }
 
     ngOnInit(): void {
         this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
+        this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
+        this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
     }
 
     ngOnDestroy() {
@@ -82,5 +91,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
+    }
+
+    onProcessClick(processId: string) {
+        if (!this.hideProcessFilter) this.router.navigate(['/feed'], {queryParams: {processFilter: processId}});
+    }
+
+    onStateClick(processId: string, stateId: string) {
+        if (!this.hideProcessFilter && !this.hideStateFilter)
+            this.router.navigate(['/feed'], {queryParams: {processFilter: processId, stateFilter: stateId}});
     }
 }

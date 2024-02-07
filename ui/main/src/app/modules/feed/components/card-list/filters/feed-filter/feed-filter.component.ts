@@ -38,6 +38,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideResponseFilter: boolean;
     @Input() hideProcessFilter: boolean;
     @Input() hideStateFilter: boolean;
+    @Input() processFilter: string = '';
+    @Input() stateFilter: string = '';
 
     @Input() defaultSorting: string;
 
@@ -206,9 +208,27 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideProcessFilter) {
             this.initializeProcessMultiSelect();
             this.initProcessFilter();
+            if (!this.hideStateFilter) {
+                this.initializeStateMultiSelect();
+            }
+            this.setInitialSelectedProcess();
+            this.setInitialSelectedState();
         }
-        if (!this.hideStateFilter) {
-            this.initializeStateMultiSelect();
+    }
+
+    private setInitialSelectedProcess() {
+        if (this.processMultiSelect && this.processFilter) {
+            this.processMultiSelect.selectedOptions = [this.processFilter];
+            this.processFilterForm.get('process').setValue(this.processFilter, {emitEvent: true});
+        }
+    }
+
+    private setInitialSelectedState() {
+        if (this.stateMultiSelect && this.stateFilter) {
+            this.stateMultiSelect.selectedOptions = [this.processFilter + '.' + this.stateFilter];
+            this.processFilterForm
+                .get('state')
+                .setValue(this.processFilter + '.' + this.stateFilter, {emitEvent: true});
         }
     }
 
