@@ -9,11 +9,13 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands";
 import {ScriptCommands} from "../support/scriptCommands";
+import {FeedCommands} from '../support/feedCommands'
 
 describe('Entity acknowledgment tests for icon in light-card', function () {
 
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
+    const feed = new FeedCommands();
 
     before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
@@ -78,6 +80,51 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('of-dashboard').find("ellipse").should('have.length', 35)
         checkNthCircleContains("kitchenSink", 0, "0");
 
+    });
+
+    it('Check redirection to filtered Feed page ', function () {
+
+        opfab.loginWithUser('operator1_fr');
+    
+        opfab.navigateToDashboard();
+    
+        const currentDate = new Date(); 
+    
+        script.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/process.json');
+
+        // Check click on process, should redirect to feed with active filter and 2 cards
+        cy.get('.opfab-dashboard-process').eq(4).contains('Process example');
+        cy.get('.opfab-dashboard-process').eq(4).find('.opfab-feed-link').eq(0).contains('Process example').click();
+        // Check if URL changes to feed with filters query parameter
+        cy.url().should('include', 'feed?processFilter=defaultProcess');
+        cy.url().should('not.include', 'stateFilter=');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(2);
+
+        opfab.navigateToDashboard();
+        
+        // Click on state with 1 card
+        cy.get('.opfab-dashboard-process').eq(4).find('.opfab-feed-link').eq(5).contains('Message').click();
+        cy.url().should('include', 'feed?processFilter=defaultProcess&stateFilter=messageState');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+        opfab.navigateToDashboard();
+        
+        // Click on state with no cards
+        cy.get('.opfab-dashboard-process').eq(4).find('.opfab-feed-link').eq(3).contains('Data quality').click();
+        cy.url().should('include', 'feed?processFilter=defaultProcess&stateFilter=dataQualityState');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(0);
+
+        opfab.navigateToDashboard();
+
+        // Click on process with no cards
+        cy.get('.opfab-dashboard-process').eq(8).contains('Test process for cypress').click();
+        cy.url().should('include', 'feed?processFilter=cypress');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(0);
     });
 });
 
