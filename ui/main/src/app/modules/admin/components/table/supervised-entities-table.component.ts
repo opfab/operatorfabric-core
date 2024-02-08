@@ -48,6 +48,7 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             },
             wrapText: true,
             autoHeight: true,
+            maxWidth: 500,
             flex: 3
         };
         this.gridOptions.columnTypes['supervisorsColumn'] = {

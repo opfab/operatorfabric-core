@@ -134,6 +134,7 @@ export abstract class AdminTableDirective implements OnDestroy {
                     filter: true,
                     wrapText: true,
                     autoHeight: true,
+                    maxWidth: 400,
                     flex: 4
                 }
             },
