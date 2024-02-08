@@ -163,7 +163,9 @@
     </div>
     <div class="modal-body text-center" id="opfab-about-dialog-body">
       <a class="opfab-about-brand" style="margin-right: 0">
-        <of-logo></of-logo>
+        <div [ngClass]="{'opfab-logo':navbarPage.logo.isDefaultOpfabLogo}">
+          <img [src]="getImage()" [attr.width]="navbarPage.logo.width" [attr.height]="navbarPage.logo.height" alt="logo" />
+        </div>
       </a>
       <div>
         <of-about> </of-about>
