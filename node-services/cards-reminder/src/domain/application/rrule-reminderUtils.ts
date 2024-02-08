@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,43 +14,43 @@ const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     let nextTime = -1;
-    if (!startingDate) {
+    if (startingDate == null) {
         startingDate = new Date().valueOf();
     }
-    if (card.timeSpans?.length > 0) nextTime = -1;
+    if (card.timeSpans != null && card.timeSpans.length > 0) nextTime = -1;
     else if (startingDate > card.startDate) {
         nextTime = getNextDateTimeFromRRule(startingDate, card);
     } else {
         nextTime = getNextDateTimeFromRRule(card.startDate, card);
     }
-    if (!!card.endDate && nextTime > card.endDate) nextTime = -1;
+    if (card.endDate != null && nextTime > card.endDate) nextTime = -1;
     return nextTime;
 }
 
 export function getNextDateTimeFromRRule(startingDate: number, card: Card): number {
-    if (card.rRule?.freq) {
+    if (card.rRule?.freq != null) {
         const byhourSorted = card.rRule.byhour;
-        if (byhourSorted) {
+        if (byhourSorted != null) {
             byhourSorted.sort(function (a, b) {
                 return a - b;
             });
         }
         const byminuteSorted = card.rRule.byminute;
-        if (byminuteSorted) {
+        if (byminuteSorted != null) {
             byminuteSorted.sort(function (a, b) {
                 return a - b;
             });
         }
 
-        const byweekdayForRRule = [];
-        if (card.rRule.byweekday) {
+        const byweekdayForRRule: any[] = [];
+        if (card.rRule.byweekday != null) {
             card.rRule.byweekday.forEach((weekday) => {
                 byweekdayForRRule.push(Weekday.fromStr(weekday));
             });
         }
 
         let tzid = 'Europe/Paris';
-        if (card.rRule.tzid && card.rRule.tzid !== '') {
+        if (card.rRule.tzid != null && card.rRule.tzid !== '') {
             tzid = card.rRule.tzid;
         }
 
@@ -75,11 +75,16 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
                 dateObjectToYYYYMMDDTHHmmss(new Date(startingDate + NB_MILLISECONDS_IN_ONE_MINUTE))
         );
 
-        const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1;})[0];
+        const nextDateTimeFromRRule = rule.all(function (date, i) {
+            return i < 1;
+        })[0];
 
         // It is necessary to do this addition to have the right hour, maybe a bug of rrule.js here too...
-        if (nextDateTimeFromRRule) {
-            return (nextDateTimeFromRRule.valueOf() + nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE);
+        if (nextDateTimeFromRRule != null) {
+            return (
+                nextDateTimeFromRRule.valueOf() +
+                nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE
+            );
         }
     }
     return -1;

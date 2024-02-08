@@ -13,7 +13,6 @@ import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
-
 import ReminderService from './domain/application/reminderService';
 import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
 import CardsReminderService from './domain/client-side/cardsReminderService';
@@ -27,10 +26,13 @@ app.disable('x-powered-by');
 
 app.use(bodyParser.json());
 
-// Token verification activated except for heathcheck request
+/* eslint-disable */
+// disable eslint as false positive , promise are authorized see
+// https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
+
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 app.use(
-    /\/((?!healthcheck).)*/,
+    /\/((?!healthcheck).)*/, // Token verification activated except for heathcheck request
     expressjwt({
         secret: jwksRsa.expressJwtSecret({
             cache: true,
@@ -41,12 +43,14 @@ app.use(
         algorithms: ['RS256']
     })
 );
+/* eslint-enable */
 
 app.use(express.static('public'));
-const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
-const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
-const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup');
+const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
+const adminPort: string = config.get('operatorfabric.cardsReminder.adminPort');
+
+const activeOnStartUp: boolean = config.get('operatorfabric.cardsReminder.activeOnStartup');
 
 const logger = Logger.getLogger();
 
@@ -91,69 +95,105 @@ const cardsReminderService = new CardsReminderService(
 );
 
 app.get('/status', (req, res) => {
-    authorizationService.isAdminUser(req).then((isAdmin) => {
-        if (!isAdmin) res.status(403).send();
-        else res.send(cardsReminderService.isActive());
-    });
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else res.send(cardsReminderService.isActive());
+        })
+        .catch((err) => {
+            logger.error('Error in GET /status' + err);
+            res.status(500).send();
+        });
 });
 
 app.get('/start', (req, res) => {
-    authorizationService.isAdminUser(req).then((isAdmin) => {
-        if (!isAdmin) res.status(403).send();
-        else {
-            cardsReminderService.start();
-            res.send('Start service');
-        }
-    });
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                cardsReminderService.start();
+                res.send('Start service');
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in GET /start' + err);
+            res.status(500).send();
+        });
 });
 
 app.get('/stop', (req, res) => {
-    authorizationService.isAdminUser(req).then((isAdmin) => {
-        if (!isAdmin) res.status(403).send();
-        else {
-            logger.info('Stop card reminder service asked');
-            cardsReminderService.stop();
-            res.send('Stop service');
-        }
-    });
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                logger.info('Stop card reminder service asked');
+                cardsReminderService.stop();
+                res.send('Stop service');
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in GET /stop' + err);
+            res.status(500).send();
+        });
 });
 
 app.get('/reset', (req, res) => {
-    authorizationService.isAdminUser(req).then((isAdmin) => {
-        if (!isAdmin) res.status(403).send();
-        else {
-            logger.info('Reset card reminder service asked');
-            cardsReminderService.reset();
-            res.send('Reset service');
-        }
-    });
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                logger.info('Reset card reminder service asked');
+                cardsReminderService.reset().catch((err) => {
+                    logger.error('Error resetting service in GET /start' + err);
+                });
+                res.send('Reset service');
+            }
+        })
+        .catch((err) => {
+            logger.error('Error resetting service in GET /start' + err);
+            res.status(500).send();
+        });
 });
 
 app.get('/logLevel', (req, res) => {
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
-        else {
-            res.send(Logger.getLogLevel());
-        }
-    })
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                res.send(Logger.getLogLevel());
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in GET /logLevel' + err);
+            res.status(500).send();
+        });
 });
 
 app.post('/logLevel', (req, res) => {
-
-    authorizationService.isAdminUser(req).then(isAdmin => {
-        if (!isAdmin) 
-            res.status(403).send();
-        else {
-            logger.info('Set log level: ' + JSON.stringify(req.body));
-            const level = req.body.configuredLevel ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
-            if (Logger.setLogLevel(level)) {
-                res.contentType('text/plain').send(Logger.getLogLevel());
-            } else {
-                res.status(400).send("Bad log level");
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                logger.info('Set log level: ' + JSON.stringify(req.body));
+                const level: string =
+                    req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+                if (Logger.setLogLevel(level)) {
+                    res.contentType('text/plain').send(Logger.getLogLevel());
+                } else {
+                    res.status(400).send('Bad log level');
+                }
             }
-        }
-    })
+        })
+        .catch((err) => {
+            logger.error('Error in POST /logLevel' + err);
+            res.status(500).send();
+        });
 });
 
 app.get('/healthcheck', (req, res) => {
@@ -166,7 +206,7 @@ app.listen(adminPort, () => {
 
 opfabServicesInterface.startListener();
 
-async function start() {
+async function start(): Promise<void> {
     await remindDatabaseService.connectToMongoDB();
     await rRuleRemindDatabaseService.connectToMongoDB();
     if (activeOnStartUp) {
@@ -174,4 +214,5 @@ async function start() {
     }
     logger.info('Application started');
 }
-start();
+
+start().catch((err) => logger.error('Impossible to start' + err));

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,32 +8,32 @@
  */
 
 import 'jest';
-import {Card, Recurrence, TimeSpan} from '../src/domain/model/card.model';
-import {getNextTimeForRepeating} from '../src/domain/application/reminderUtils';
+import {Card, Recurrence, TimeSpan} from '../domain/model/card.model';
+import {getNextTimeForRepeating} from '../domain/application/reminderUtils';
 import moment from 'moment-timezone';
 
 describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {
     const timeZone = 'Europe/Paris';
     let testCard: Card;
-    let recurrence;
-    let recurrence2;
-    let recurrence3;
-    let recurrence4;
+    let recurrence: Recurrence;
+    let recurrence2: Recurrence;
+    let recurrence3: Recurrence;
+    let recurrence4: Recurrence;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     beforeEach(() => {
-        recurrence = new Recurrence(null);
+        recurrence = new Recurrence({hours: 0, minutes: 0});
         recurrence.timeZone = timeZone;
-        recurrence2 = new Recurrence(null);
+        recurrence2 = new Recurrence({hours: 0, minutes: 0});
         recurrence2.timeZone = timeZone;
-        recurrence3 = new Recurrence(null);
+        recurrence3 = new Recurrence({hours: 0, minutes: 0});
         recurrence3.timeZone = timeZone;
-        recurrence4 = new Recurrence(null);
+        recurrence4 = new Recurrence({hours: 0, minutes: 0});
         recurrence4.timeZone = timeZone;
-        testCard.endDate =  moment.tz('2050-01-01 08:00', 'Europe/Paris').valueOf();
+        testCard.endDate = moment.tz('2050-01-01 08:00', 'Europe/Paris').valueOf();
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00  => 2000/01/02 10:00 ', () => {
@@ -45,7 +45,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
- 
+
     it('2000/01/01 10:00 , Recurrence :10:10  => 2000/01/01 10:10 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 10};
@@ -70,7 +70,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 9, minutes: 0};
         testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
-        testCard.endDate =  moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf();
+        testCard.endDate = moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf();
 
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(-1);
@@ -170,53 +170,53 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
-    
 
-    it('2000/01/01 14:00 TimeZone London , ' +
-    'Recurrence :10:15 , 10:10 ,15:00, 10:06 / Time Zone : Paris ' +
-    '=> 2000/01/02 9:06 TimeZone London ', () => {
-        const date = moment.tz('2000-01-01 14:00', 'Europe/London').valueOf();
+    it(
+        '2000/01/01 14:00 TimeZone London , ' +
+            'Recurrence :10:15 , 10:10 ,15:00, 10:06 / Time Zone : Paris ' +
+            '=> 2000/01/02 9:06 TimeZone London ',
+        () => {
+            const date = moment.tz('2000-01-01 14:00', 'Europe/London').valueOf();
 
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 15};
-        recurrence2.hoursAndMinutes = {hours: 10, minutes: 10};
-        recurrence3.hoursAndMinutes = {hours: 15, minutes: 0};
-        recurrence4.hoursAndMinutes = {hours: 10, minutes: 6};
-        recurrence.timeZone = 'Europe/Paris';
-        recurrence2.timeZone = 'Europe/Paris';
-        recurrence3.timeZone = 'Europe/Paris';
-        recurrence4.timeZone = 'Europe/Paris';
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3),
-            new TimeSpan(0, null, recurrence4)
-        ];
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 15};
+            recurrence2.hoursAndMinutes = {hours: 10, minutes: 10};
+            recurrence3.hoursAndMinutes = {hours: 15, minutes: 0};
+            recurrence4.hoursAndMinutes = {hours: 10, minutes: 6};
+            recurrence.timeZone = 'Europe/Paris';
+            recurrence2.timeZone = 'Europe/Paris';
+            recurrence3.timeZone = 'Europe/Paris';
+            recurrence4.timeZone = 'Europe/Paris';
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3),
+                new TimeSpan(0, null, recurrence4)
+            ];
 
-        const expectedResponseDate = moment.tz('2000-01-02 09:06', 'Europe/London').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
-
+            const expectedResponseDate = moment.tz('2000-01-02 09:06', 'Europe/London').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 });
-
 
 describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () => {
     const timeZone = 'Europe/Paris';
     let testCard: Card;
-    let recurrence;
-    let recurrence2;
-    let recurrence3;
+    let recurrence: Recurrence;
+    let recurrence2: Recurrence;
+    let recurrence3: Recurrence;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     beforeEach(() => {
-        recurrence = new Recurrence(null);
+        recurrence = new Recurrence({hours: 0, minutes: 0});
         recurrence.timeZone = timeZone;
-        recurrence2 = new Recurrence(null);
+        recurrence2 = new Recurrence({hours: 0, minutes: 0});
         recurrence2.timeZone = timeZone;
-        recurrence3 = new Recurrence(null);
+        recurrence3 = new Recurrence({hours: 0, minutes: 0});
         recurrence3.timeZone = timeZone;
     });
 
@@ -241,8 +241,6 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponse);
     });
-
-
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence :10:30 / invalid day(8) => -1 ', () => {
         moment.locale('en');
@@ -373,68 +371,77 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , ' +
-    'Recurrence :10:30 5:20 18:00 / Saturday(6) Sunday(7) Wednesday(3) ' +
-    '=> 2020/11/11 Wednesday 5:20 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
-        recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
-        recurrence.daysOfWeek = [6, 7, 3];
-        recurrence2.daysOfWeek = [6, 7, 3];
-        recurrence3.daysOfWeek = [6, 7, 3];
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3)
-        ];
+    it(
+        '2020/11/09 Monday 12:00 , ' +
+            'Recurrence :10:30 5:20 18:00 / Saturday(6) Sunday(7) Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 5:20 ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+            recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
+            recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
+            recurrence.daysOfWeek = [6, 7, 3];
+            recurrence2.daysOfWeek = [6, 7, 3];
+            recurrence3.daysOfWeek = [6, 7, 3];
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3)
+            ];
 
-        const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/Paris').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/Paris').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
-    it('2020/11/09 Monday 12:00 , ' +
-    'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
-    '=> 2020/11/11 Wednesday 5:20 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
-        recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
-        recurrence.daysOfWeek = [6, 7];
-        recurrence2.daysOfWeek = [6, 7];
-        recurrence3.daysOfWeek = [3];
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3)
-        ];
+    it(
+        '2020/11/09 Monday 12:00 , ' +
+            'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 5:20 ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+            recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
+            recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
+            recurrence.daysOfWeek = [6, 7];
+            recurrence2.daysOfWeek = [6, 7];
+            recurrence3.daysOfWeek = [3];
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3)
+            ];
 
-        const expectedResponseDate = moment.tz('2020-11-11 18:00', 'Europe/Paris').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 18:00', 'Europe/Paris').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
-    it('2020/11/09 Monday 12:00 , ' +
-    'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
-    '=> 2020/11/11 Wednesday 5:20 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
-        recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
-        recurrence.daysOfWeek = [6, 7, 3];
-        recurrence2.daysOfWeek = [6, 7];
-        recurrence3.daysOfWeek = [3];
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3)
-        ];
+    it(
+        '2020/11/09 Monday 12:00 , ' +
+            'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 5:20 ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+            recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
+            recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
+            recurrence.daysOfWeek = [6, 7, 3];
+            recurrence2.daysOfWeek = [6, 7];
+            recurrence3.daysOfWeek = [3];
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3)
+            ];
 
-        const expectedResponseDate = moment.tz('2020-11-11 10:30', 'Europe/Paris').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 10:30', 'Europe/Paris').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
     it('2020/11/09 Monday 12:00 , Recurrence :10:30 5:20 18:00 / Saturday(6) Sunday(7) Wednesday(3) => 2020/11/11 Wednesday 5:20 ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
@@ -455,74 +462,75 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00  Time Zone : London ' +
-    'Recurrence :10:30 5:20 18:00  Time Zone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
-    '=> 2020/11/11 Wednesday 5:20  Time Zone : London ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
-        recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
-        recurrence.daysOfWeek = [6, 7, 3];
-        recurrence2.daysOfWeek = [6, 7, 3];
-        recurrence3.daysOfWeek = [6, 7, 3];
-        recurrence.timeZone = 'Europe/London';
-        recurrence2.timeZone = 'Europe/London';
-        recurrence3.timeZone = 'Europe/London';
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3)
-        ];
+    it(
+        '2020/11/09 Monday 12:00  Time Zone : London ' +
+            'Recurrence :10:30 5:20 18:00  Time Zone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 5:20  Time Zone : London ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+            recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
+            recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
+            recurrence.daysOfWeek = [6, 7, 3];
+            recurrence2.daysOfWeek = [6, 7, 3];
+            recurrence3.daysOfWeek = [6, 7, 3];
+            recurrence.timeZone = 'Europe/London';
+            recurrence2.timeZone = 'Europe/London';
+            recurrence3.timeZone = 'Europe/London';
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3)
+            ];
 
-        const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/London').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 05:20', 'Europe/London').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
+    it(
+        '2020/11/09 Monday 11:00 Time Zone : London  ' +
+            'Recurrence :10:30 5:20 18:00 Time Zone Paris/ Saturday(6) Sunday(7) Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 4:20 Time Zone : London ',
+        () => {
+            const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
+            recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+            recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
+            recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
+            recurrence.daysOfWeek = [6, 7, 3];
+            recurrence2.daysOfWeek = [6, 7, 3];
+            recurrence3.daysOfWeek = [6, 7, 3];
+            testCard.timeSpans = [
+                new TimeSpan(0, null, recurrence),
+                new TimeSpan(0, null, recurrence2),
+                new TimeSpan(0, null, recurrence3)
+            ];
 
-
-    it('2020/11/09 Monday 11:00 Time Zone : London  ' +
-    'Recurrence :10:30 5:20 18:00 Time Zone Paris/ Saturday(6) Sunday(7) Wednesday(3) ' +
-    '=> 2020/11/11 Wednesday 4:20 Time Zone : London ', () => {
-        const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
-        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
-        recurrence3.hoursAndMinutes = {hours: 18, minutes: 0};
-        recurrence.daysOfWeek = [6, 7, 3];
-        recurrence2.daysOfWeek = [6, 7, 3];
-        recurrence3.daysOfWeek = [6, 7, 3];
-        testCard.timeSpans = [
-            new TimeSpan(0, null, recurrence),
-            new TimeSpan(0, null, recurrence2),
-            new TimeSpan(0, null, recurrence3)
-        ];
-
-        const expectedResponseDate = moment.tz('2020-11-11 04:20', 'Europe/London').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
-
-
-
+            const expectedResponseDate = moment.tz('2020-11-11 04:20', 'Europe/London').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 });
 
 describe('ReminderUtils:getNextTimeForRepeating with recurrence on months only   ', () => {
     const timeZone = 'Europe/Paris';
     let testCard: Card;
-    let recurrence;
-    let recurrence2;
-    let recurrence3;
+    let recurrence: Recurrence;
+    let recurrence2: Recurrence;
+    let recurrence3: Recurrence;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     beforeEach(() => {
-        recurrence = new Recurrence(null);
+        recurrence = new Recurrence({hours: 0, minutes: 0});
         recurrence.timeZone = timeZone;
-        recurrence2 = new Recurrence(null);
+        recurrence2 = new Recurrence({hours: 0, minutes: 0});
         recurrence2.timeZone = timeZone;
-        recurrence3 = new Recurrence(null);
+        recurrence3 = new Recurrence({hours: 0, minutes: 0});
         recurrence3.timeZone = timeZone;
     });
 
@@ -592,7 +600,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on months only  
         const date = moment.tz('2020-08-03 10:00', 'Europe/Paris').valueOf();
 
         recurrence.hoursAndMinutes = {hours: 16, minutes: 30};
-        recurrence.months = [1,11];
+        recurrence.months = [1, 11];
         testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
         const expectedResponseDate = moment.tz('2020-12-01 16:30', 'Europe/Paris').valueOf();
@@ -612,26 +620,25 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on months only  
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponse);
     });
-
 });
 
 describe('ReminderUtils:getNextTimeForRepeating with recurrence on days and months   ', () => {
     const timeZone = 'Europe/Paris';
     let testCard: Card;
-    let recurrence;
-    let recurrence2;
-    let recurrence3;
+    let recurrence: Recurrence;
+    let recurrence2: Recurrence;
+    let recurrence3: Recurrence;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     beforeEach(() => {
-        recurrence = new Recurrence(null);
+        recurrence = new Recurrence({hours: 0, minutes: 0});
         recurrence.timeZone = timeZone;
-        recurrence2 = new Recurrence(null);
+        recurrence2 = new Recurrence({hours: 0, minutes: 0});
         recurrence2.timeZone = timeZone;
-        recurrence3 = new Recurrence(null);
+        recurrence3 = new Recurrence({hours: 0, minutes: 0});
         recurrence3.timeZone = timeZone;
     });
 
@@ -804,7 +811,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on days and mont
 
         recurrence.hoursAndMinutes = {hours: 16, minutes: 30};
         recurrence.months = [7, 9];
-        recurrence.daysOfWeek = [3,5];
+        recurrence.daysOfWeek = [3, 5];
         testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
         const expectedResponseDate = moment.tz('2020-10-02 16:30', 'Europe/Paris').valueOf();
@@ -825,23 +832,22 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on days and mont
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
-    
 });
 
 describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ', () => {
     const timeZone = 'Europe/Paris';
-    let recurrence;
-    let recurrence2;
+    let recurrence: Recurrence;
+    let recurrence2: Recurrence;
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     beforeEach(() => {
-        recurrence = new Recurrence(null);
+        recurrence = new Recurrence({hours: 0, minutes: 0});
         recurrence.timeZone = timeZone;
-        recurrence2 = new Recurrence(null);
+        recurrence2 = new Recurrence({hours: 0, minutes: 0});
         recurrence2.timeZone = timeZone;
     });
 
@@ -874,7 +880,6 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
         expect(dateForRepeating).toEqual(-1);
     });
 
-
     it('Invalid recurrence days of week for one of two timespan  should return -1 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
@@ -891,7 +896,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     it('Invalid recurrence month 12 should return -1 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence.months = [12,3];
+        recurrence.months = [12, 3];
         testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
@@ -901,13 +906,10 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     it('Invalid recurrence month -1 should return -1 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
-        recurrence.months = [-1,3];
+        recurrence.months = [-1, 3];
         testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
 
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(-1);
     });
-
-
-
 });

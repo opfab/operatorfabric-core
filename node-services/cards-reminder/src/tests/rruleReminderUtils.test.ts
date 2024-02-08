@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, Day, Frequency} from '../src/domain/model/card.model';
+import {Card, Day, Frequency} from '../domain/model/card.model';
 import moment from 'moment-timezone';
-import {getNextTimeForRepeating} from '../src/domain/application/rrule-reminderUtils';
+import {getNextTimeForRepeating} from '../domain/application/rrule-reminderUtils';
 
 describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {
     let testCard: Card;
 
     beforeEach(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00  => 2000/01/02 10:00 ', () => {
@@ -60,7 +60,6 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-
     it('2000/01/01 10:00 with endDate 2000/01/02 8:00 , Recurrence :09:00  => -1 end date reach ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
@@ -69,7 +68,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byhour: [9],
             byminute: [0]
         };
-        testCard.endDate =  moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf();
+        testCard.endDate = moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf();
 
         const expectedResponseDate = -1;
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
@@ -84,7 +83,6 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byhour: [10],
             byminute: [10, 15]
         };
-        
 
         const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
@@ -168,7 +166,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence :10:30 / Monday => 2020/11/09 Monday 10:30 ', () => {
@@ -229,7 +227,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = new Date('2020-11-16 10:30').valueOf()
+        const expectedResponseDate = new Date('2020-11-16 10:30').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
@@ -339,66 +337,74 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , ' +
-       'Recurrence : 10:30 5:30 18:30 / Saturday Sunday Wednesday ' +
-       '=> 2020/11/11 Wednesday 5:30 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+    it(
+        '2020/11/09 Monday 12:00 , ' +
+            'Recurrence : 10:30 5:30 18:30 / Saturday Sunday Wednesday ' +
+            '=> 2020/11/11 Wednesday 5:30 ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
 
-        testCard.rRule = {
-            freq: Frequency.WEEKLY,
-            byweekday: [Day.SA, Day.SU, Day.WE],
-            byhour: [10, 5, 18],
-            byminute: [30]
-        };
+            testCard.rRule = {
+                freq: Frequency.WEEKLY,
+                byweekday: [Day.SA, Day.SU, Day.WE],
+                byhour: [10, 5, 18],
+                byminute: [30]
+            };
 
-        const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/Paris').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/Paris').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
-    it('2020/11/09 Monday 12:00  TimeZone : London ' +
-       'Recurrence : 10:30 5:30 18:30  TimeZone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
-       '=> 2020/11/11 Wednesday 5:30  TimeZone : London ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
+    it(
+        '2020/11/09 Monday 12:00  TimeZone : London ' +
+            'Recurrence : 10:30 5:30 18:30  TimeZone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 5:30  TimeZone : London ',
+        () => {
+            const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
 
-        testCard.rRule = {
-            freq: Frequency.WEEKLY,
-            byweekday: [Day.SA, Day.SU, Day.WE],
-            byhour: [10, 5, 18],
-            byminute: [30],
-            tzid: 'Europe/London'
-        };
+            testCard.rRule = {
+                freq: Frequency.WEEKLY,
+                byweekday: [Day.SA, Day.SU, Day.WE],
+                byhour: [10, 5, 18],
+                byminute: [30],
+                tzid: 'Europe/London'
+            };
 
-        const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/London').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/London').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 
-    it('2020/11/09 Monday 11:00 TimeZone : London  ' +
-       'Recurrence : 10:30 5:30 18:30 TimeZone Paris / Saturday(6) Sunday(7) Wednesday(3) ' +
-       '=> 2020/11/11 Wednesday 4:30 TimeZone : London ', () => {
-        const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
+    it(
+        '2020/11/09 Monday 11:00 TimeZone : London  ' +
+            'Recurrence : 10:30 5:30 18:30 TimeZone Paris / Saturday(6) Sunday(7) Wednesday(3) ' +
+            '=> 2020/11/11 Wednesday 4:30 TimeZone : London ',
+        () => {
+            const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
 
-        testCard.rRule = {
-            freq: Frequency.WEEKLY,
-            byweekday: [Day.SA, Day.SU, Day.WE],
-            byhour: [10, 5, 18],
-            byminute: [30]
-        };
+            testCard.rRule = {
+                freq: Frequency.WEEKLY,
+                byweekday: [Day.SA, Day.SU, Day.WE],
+                byhour: [10, 5, 18],
+                byminute: [30]
+            };
 
-        const expectedResponseDate = moment.tz('2020-11-11 04:30', 'Europe/London').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
+            const expectedResponseDate = moment.tz('2020-11-11 04:30', 'Europe/London').valueOf();
+            const dateForRepeating = getNextTimeForRepeating(testCard, date);
+            expect(dateForRepeating).toEqual(expectedResponseDate);
+        }
+    );
 });
 
 describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months only   ', () => {
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
-
 
     it('2020/11/09 10:00 , locale = en , Recurrence : 16:30 / November => 2020/11/09 16:30 ', () => {
         moment.locale('en');
@@ -501,7 +507,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     it('2020/11/12 Thursday 10:00 , locale = en , Recurrence : 16:30 / Wednesday / November => 2020/11/18 16:30 ', () => {
@@ -730,7 +736,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = new Card('uid','id',0);
+        testCard = new Card('uid', 'id', 0);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, first day of months  => 2000/02/01 10:00 ', () => {
@@ -929,7 +935,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
             freq: Frequency.MONTHLY,
             byhour: [16],
             byminute: [0],
-            bymonth: [1,2,3,4,5,6,7,9,10,11,12],
+            bymonth: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12],
             byweekday: [Day.FR],
             bysetpos: [-1]
         };
@@ -946,7 +952,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
             freq: Frequency.MONTHLY,
             byhour: [16],
             byminute: [0],
-            bymonth: [1,2,3,4,5,6,7,9,10,11,12],
+            bymonth: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12],
             byweekday: [Day.FR],
             bysetpos: [-1]
         };

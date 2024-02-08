@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,10 +14,10 @@ import {RRuleReminderService} from '../application/rruleReminderService';
 import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderService {
-    private cardsReminderControl: CardsReminderControl;
-    private checkPeriodInSeconds: number;
+    private readonly cardsReminderControl: CardsReminderControl;
+    private readonly checkPeriodInSeconds: number;
     private active = false;
-    private logger: any;
+    private readonly logger: any;
 
     constructor(
         opfabServicesInterface: CardsReminderOpfabServicesInterface,
@@ -39,11 +39,11 @@ export default class CardsReminderService {
         this.checkRegularly();
     }
 
-    public start() {
+    public start(): void {
         this.active = true;
     }
 
-    public stop() {
+    public stop(): void {
         this.active = false;
     }
 
@@ -51,21 +51,27 @@ export default class CardsReminderService {
         return this.active;
     }
 
-    public async reset() {
+    public async reset(): Promise<void> {
         const wasActive = this.active;
         this.stop();
         await this.cardsReminderControl.resetReminderDatabase();
         if (wasActive) this.start();
     }
 
-    private checkRegularly() {
+    private checkRegularly(): void {
         if (this.active) {
             this.logger.debug('Check if some cards need to be remind');
             this.cardsReminderControl
                 .checkCardsReminder()
                 .catch((error) => this.logger.warn('error during periodic check' + error))
-                .finally(() => setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000));
-        }
-        else setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
+                .finally(() =>
+                    setTimeout(() => {
+                        this.checkRegularly();
+                    }, this.checkPeriodInSeconds * 1000)
+                );
+        } else
+            setTimeout(() => {
+                this.checkRegularly();
+            }, this.checkPeriodInSeconds * 1000);
     }
 }

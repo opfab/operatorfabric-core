@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,69 +11,62 @@ import GetResponse from '../../common/server-side/getResponse';
 
 import EventBus from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface'
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
 export default class CardsReminderOpfabServicesInterface extends OpfabServicesInterface {
-
-
-    private listener: EventBus;
-
+    private readonly listener: EventBus;
 
     constructor() {
         super();
         this.listener = new EventBus();
     }
 
-
-    public setEventBusConfiguration(eventBusConfig: any) {
-        this.listener.setHost(eventBusConfig.host)
-            .setPort(eventBusConfig.port)
-            .setUsername(eventBusConfig.username)
-            .setPassword(eventBusConfig.password)
-            .setQueue("card","reminder.card",{ durable: true, autoDelete: false })
+    public setEventBusConfiguration(eventBusConfig: any): this {
+        this.listener
+            .setHost(eventBusConfig.host as string)
+            .setPort(eventBusConfig.port as number)
+            .setUsername(eventBusConfig.username as string)
+            .setPassword(eventBusConfig.password as string)
+            .setQueue('card', 'reminder.card', {durable: true, autoDelete: false});
         return this;
     }
 
-    public startListener() {
+    public startListener(): void {
         this.listener.start();
     }
 
-
-    public stopListener() {
+    public stopListener(): void {
         this.listener.stop();
     }
 
-    public addListener(listener: EventListener) {
+    public addListener(listener: EventListener): this {
         this.listener.addListener(listener);
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         this.listener.setLogger(logger);
         return this;
     }
 
-    public async sendCardReminder(cardId: string) {
-
+    public async sendCardReminder(cardId: string): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendCardReminderRequest(cardId);
-            if (response?.status == 200) {
+            if (response?.status === 200) {
                 return new GetResponse(null, true);
-            }
-            else {
-                this.logger.warn("HTTP request failed with status " + response?.status);
+            } else {
+                this.logger.warn('HTTP request failed with status ' + response?.status);
                 return new GetResponse(null, false);
             }
         } catch (e) {
             this.logger.warn('Impossible to send card reminder', e);
             return new GetResponse(null, false);
         }
-
-
     }
-    public async sendCardReminderRequest(cardId: string) {
+
+    public sendCardReminderRequest(cardId: string): any {
         return this.sendRequest({
             method: 'post',
             url: this.opfabCardsPublicationUrl + '/cards/resetReadAndAcks/' + cardId,
@@ -82,5 +75,4 @@ export default class CardsReminderOpfabServicesInterface extends OpfabServicesIn
             }
         });
     }
-
 }

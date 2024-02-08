@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ export default class CardsReminderControl {
     private remindDatabaseService: RemindDatabaseService;
     private logger: any;
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
@@ -58,7 +58,7 @@ export default class CardsReminderControl {
             this.logger.info(`ReminderControl - Send remind for card ${card.id} (uid=${card.uid})`);
             await this.opfabServicesInterface.sendCardReminder(card.uid);
         }
-        return Promise.resolve(true);
+        return true;
     }
 
     public async resetReminderDatabase(): Promise<boolean> {
@@ -76,6 +76,6 @@ export default class CardsReminderControl {
         } catch (error) {
             this.logger.warn('resetReminder error ' + error);
         }
-        return Promise.resolve(true);
+        return true;
     }
 }

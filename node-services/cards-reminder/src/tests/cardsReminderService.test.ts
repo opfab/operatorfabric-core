@@ -8,56 +8,54 @@
  */
 
 import 'jest';
-import Logger from '../src/common/server-side/logger';
-import ReminderService from '../src/domain/application/reminderService';
-import {RRuleReminderService} from '../src/domain/application/rruleReminderService';
-import {RRule, Day, Frequency} from '../src/domain/model/card.model';
-import {CardOperationType} from '../src/domain/model/card-operation.model';
+import Logger from '../common/server-side/logger';
+import ReminderService from '../domain/application/reminderService';
+import {RRuleReminderService} from '../domain/application/rruleReminderService';
+import {RRule, Day, Frequency} from '../domain/model/card.model';
+import {CardOperationType} from '../domain/model/card-operation.model';
 import {RemindDatabaseServiceStub} from './remindDataBaseServiceStub';
 import {OpfabServicesInterfaceStub} from './opfabServicesInterfaceStub';
-import CardsReminderService from '../src/domain/client-side/cardsReminderService';
-import GetResponse from '../src/common/server-side/getResponse';
+import CardsReminderService from '../domain/client-side/cardsReminderService';
+import GetResponse from '../common/server-side/getResponse';
 
 const logger = Logger.getLogger();
+const rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
+const remindDatabaseServiceStub = new RemindDatabaseServiceStub();
 
-let rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
-let remindDatabaseServiceStub = new RemindDatabaseServiceStub();
-
-let reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseServiceStub);
-let rruleReminderService = new RRuleReminderService()
+const reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseServiceStub);
+const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
     .setDatabaseService(rruleRemindDatabaseServiceStub);
 
-let opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(
+const opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(
     reminderService,
     rruleReminderService,
     remindDatabaseServiceStub
 );
 
-let cardsReminderService: CardsReminderService ;
+let cardsReminderService: CardsReminderService;
 
-function setCurrentTime(dateTime: string) {
+function setCurrentTime(dateTime: string): void {
     jest.setSystemTime(new Date(dateTime));
 }
-function checkNoReminderIsSent() {
+function checkNoReminderIsSent(): void {
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(0);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([]);
 }
 
-function checkOneReminderIsSent(cardUid: string = 'uid1') {
+function checkOneReminderIsSent(cardUid: string = 'uid1'): void {
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(1);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([cardUid]);
     opfabServicesInterfaceStub.clean();
 }
 
-
-async function sendCard(card) {
+async function sendCard(card): Promise<void> {
     remindDatabaseServiceStub.addCard(card);
 
     const cardOperation = {
         number: 1,
         publicationDate: 1,
-        card: card,
+        card,
         type: CardOperationType.ADD
     };
 
@@ -91,8 +89,8 @@ describe('Cards reminder with rrule structure', function () {
             uid: 'uid1',
             id: 'id1',
             secondsBeforeTimeSpanForReminder: 300,
-            rRule: rRule,
-            startDate: startDate
+            rRule,
+            startDate
         };
     }
 
@@ -119,7 +117,7 @@ describe('Cards reminder with rrule structure', function () {
     });
 
     it('GIVEN a card was sent WHEN current date (02:06) > remind date - secondsBeforeTimeSpanForReminder (02:05) THEN remind is sent', async function () {
-        expect(cardsReminderService.isActive()).toBeTruthy();        
+        expect(cardsReminderService.isActive()).toBeTruthy();
         await jest.advanceTimersByTimeAsync(6000);
         await jest.advanceTimersByTimeAsync(6000);
         await sendCard(getTestCard());
@@ -175,7 +173,7 @@ describe('Cards reminder with rrule structure', function () {
 
         setCurrentTime('2017-01-01 02:06');
         await jest.advanceTimersByTimeAsync(6000);
-        await checkOneReminderIsSent();
+        checkOneReminderIsSent();
     });
 
     it('GIVEN reset id called WHEN  a database error occur THEN program continue', async function () {
@@ -192,19 +190,17 @@ describe('Cards reminder with rrule structure', function () {
         await sendCard(getTestCard());
         setCurrentTime('2017-01-01 02:06');
         await jest.advanceTimersByTimeAsync(6000);
-        checkOneReminderIsSent()
+        checkOneReminderIsSent();
     });
 
     it('GIVEN an invalid message is received via  Event Bus THEN program ignore it and continue', async function () {
-        await reminderService.onMessage("invalid message");
-        await rruleReminderService.onMessage("invalid message");
+        await reminderService.onMessage('invalid message');
+        await rruleReminderService.onMessage('invalid message');
 
         // no more error , a new card is to be remind
         await sendCard(getTestCard());
         setCurrentTime('2017-01-01 02:06');
         await jest.advanceTimersByTimeAsync(6000);
-        checkOneReminderIsSent()
+        checkOneReminderIsSent();
     });
-
-
 });
