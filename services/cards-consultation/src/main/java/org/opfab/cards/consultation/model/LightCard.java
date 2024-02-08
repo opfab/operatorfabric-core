@@ -11,6 +11,8 @@ package org.opfab.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import org.springframework.data.annotation.Transient;
 import java.time.Instant;
@@ -65,6 +67,7 @@ public class LightCard {
     private String wktProjection;
     private Integer secondsBeforeTimeSpanForReminder;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
     private RRule rRule;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<CardActionEnum> actions;
