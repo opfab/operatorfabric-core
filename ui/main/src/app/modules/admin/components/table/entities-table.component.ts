@@ -35,7 +35,7 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
 
     ngOnInit() {
         this.gridOptions.columnTypes['rolesColumn'] = {
-            sortable: true,
+            sortable: false,
             wrapText: true,
             autoHeight: true,
             flex: 4
