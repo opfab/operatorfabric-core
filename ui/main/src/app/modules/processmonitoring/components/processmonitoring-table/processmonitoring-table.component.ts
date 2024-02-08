@@ -124,11 +124,7 @@ export class ProcessmonitoringTableComponent {
         ];
 
         if (this.processMonitoring) {
-            let columnSizeAverage = 0;
-            this.processMonitoring.forEach((column) => {
-                columnSizeAverage += Number(column.size);
-            });
-            columnSizeAverage = columnSizeAverage / this.processMonitoring.length;
+            const columnSizeAverage = this.computeColumnSizeAverage();
 
             this.processMonitoring.forEach((column) => {
                 if (column.type === 'date') {
@@ -138,7 +134,7 @@ export class ProcessmonitoringTableComponent {
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
-                        flex: column.size / columnSizeAverage,
+                        flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false
                     });
                 } else {
@@ -148,7 +144,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: column.size / columnSizeAverage,
+                        flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false
                     });
                 }
@@ -156,6 +152,14 @@ export class ProcessmonitoringTableComponent {
         }
 
         this.gridApi.setColumnDefs(this.columnDefs);
+    }
+
+    computeColumnSizeAverage(): number {
+        let columnSizeAverage = 0;
+        this.processMonitoring.forEach((column) => {
+            columnSizeAverage += isNaN(Number(column.size)) ? 1 : Number(column.size);
+        });
+        return columnSizeAverage / this.processMonitoring.length;
     }
 
     updateResultPage(currentPage): void {
