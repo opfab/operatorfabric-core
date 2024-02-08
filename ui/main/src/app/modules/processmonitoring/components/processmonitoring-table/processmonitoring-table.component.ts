@@ -67,34 +67,6 @@ export class ProcessmonitoringTableComponent {
                 return translate.instant('ag-grid.' + params.key);
             },
             columnTypes: {
-                timeColumn: {
-                    sortable: false,
-                    filter: false,
-                    wrapText: false,
-                    autoHeight: false,
-                    width: 130,
-                    resizable: false
-                },
-                noFiltersDataColumn: {
-                    sortable: false,
-                    filter: false,
-                    wrapText: false,
-                    autoHeight: false,
-                    flex: 1,
-                    maxWidth: 150,
-                    resizable: false
-                },
-                titleColumn: {
-                    sortable: false,
-                    filter: true,
-                    filterParams: {
-                        suppressAndOrCondition: true
-                    },
-                    wrapText: false,
-                    autoHeight: true,
-                    flex: 1,
-                    resizable: false
-                },
                 summaryColumn: {
                     sortable: false,
                     filter: true,
@@ -104,23 +76,6 @@ export class ProcessmonitoringTableComponent {
                     wrapText: false,
                     autoHeight: true,
                     flex: 1,
-                    resizable: false
-                },
-                stateDataColumn: {
-                    sortable: false,
-                    filter: false,
-                    wrapText: false,
-                    autoHeight: false,
-                    width: 190,
-                    resizable: false
-                },
-                senderColumn: {
-                    sortable: false,
-                    filter: false,
-                    wrapText: false,
-                    autoHeight: false,
-                    minWidth: 120,
-                    flex: 0.6,
                     resizable: false
                 },
                 severityColumn: {
@@ -169,6 +124,12 @@ export class ProcessmonitoringTableComponent {
         ];
 
         if (this.processMonitoring) {
+            let columnSizeAverage = 0;
+            this.processMonitoring.forEach((column) => {
+                columnSizeAverage += Number(column.size);
+            });
+            columnSizeAverage = columnSizeAverage / this.processMonitoring.length;
+
             this.processMonitoring.forEach((column) => {
                 if (column.type === 'date') {
                     this.columnDefs.push({
@@ -177,7 +138,7 @@ export class ProcessmonitoringTableComponent {
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
-                        maxWidth: column.size,
+                        flex: column.size / columnSizeAverage,
                         resizable: false
                     });
                 } else {
@@ -187,7 +148,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        maxWidth: column.size,
+                        flex: column.size / columnSizeAverage,
                         resizable: false
                     });
                 }
