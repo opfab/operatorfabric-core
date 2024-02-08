@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,11 @@ export class Card {
 }
 
 export class TimeSpan {
-    constructor(readonly start: number, readonly end?: number | null, readonly recurrence?: Recurrence) {}
+    constructor(
+        readonly start: number,
+        readonly end?: number | null,
+        readonly recurrence?: Recurrence
+    ) {}
 }
 
 export class Recurrence {
@@ -33,7 +37,10 @@ export class Recurrence {
 }
 
 export class HourAndMinutes {
-    constructor(public hours: number, public minutes: number) {}
+    constructor(
+        public hours: number,
+        public minutes: number
+    ) {}
 }
 
 export class RRule {

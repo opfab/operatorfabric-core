@@ -8,66 +8,67 @@
  */
 
 import 'jest';
-import Logger from '../src/common/server-side/logger';
-import ReminderService from '../src/domain/application/reminderService';
-import {RRuleReminderService} from '../src/domain/application/rruleReminderService';
-import {HourAndMinutes, RRule, Recurrence, TimeSpan, Day, Frequency} from '../src/domain/model/card.model';
-import CardsReminderControl from '../src/domain/application/cardsReminderControl';
-import {CardOperation, CardOperationType} from '../src/domain/model/card-operation.model';
+import Logger from '../common/server-side/logger';
+import ReminderService from '../domain/application/reminderService';
+import {RRuleReminderService} from '../domain/application/rruleReminderService';
+import {HourAndMinutes, RRule, Recurrence, TimeSpan, Day, Frequency} from '../domain/model/card.model';
+import CardsReminderControl from '../domain/application/cardsReminderControl';
+import {CardOperation, CardOperationType} from '../domain/model/card-operation.model';
 import {RemindDatabaseServiceStub} from './remindDataBaseServiceStub';
 import {OpfabServicesInterfaceStub} from './opfabServicesInterfaceStub';
 
 const logger = Logger.getLogger();
+const rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
+const remindDatabaseServiceStub = new RemindDatabaseServiceStub();
 
-let rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
-let remindDatabaseServiceStub = new RemindDatabaseServiceStub();
-
-let reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseServiceStub);
-let rruleReminderService = new RRuleReminderService()
+const reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseServiceStub);
+const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
     .setDatabaseService(rruleRemindDatabaseServiceStub);
 
+const opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(
+    reminderService,
+    rruleReminderService,
+    remindDatabaseServiceStub
+);
 
-let opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(reminderService,rruleReminderService,remindDatabaseServiceStub);
-
-let cardsReminderControl = new CardsReminderControl()
+const cardsReminderControl = new CardsReminderControl()
     .setOpfabServicesInterface(opfabServicesInterfaceStub)
     .setRruleReminderService(rruleReminderService)
     .setReminderService(reminderService)
     .setRemindDatabaseService(remindDatabaseServiceStub)
     .setLogger(logger);
 
-
-function setCurrentTime(dateTime: string) {
+function setCurrentTime(dateTime: string): void {
     jest.setSystemTime(new Date(dateTime));
 }
 
-async function checkNoReminderIsSent() {
+async function checkNoReminderIsSent(): Promise<void> {
     await cardsReminderControl.checkCardsReminder();
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(0);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([]);
 }
 
-async function checkOneReminderIsSent(cardUid: string = 'uid1') {
+async function checkOneReminderIsSent(cardUid: string = 'uid1'): Promise<void> {
     await cardsReminderControl.checkCardsReminder();
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(1);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([cardUid]);
     opfabServicesInterfaceStub.clean();
 }
 
-async function checkRemindersAreSent(uids: string[]) {
+async function checkRemindersAreSent(uids: string[]): Promise<void> {
     await cardsReminderControl.checkCardsReminder();
     expect(opfabServicesInterfaceStub.sentReminders).toEqual(uids);
     opfabServicesInterfaceStub.clean();
 }
 
-async function sendCard(card) {
+async function sendCard(card): Promise<void> {
     remindDatabaseServiceStub.addCard(card);
 
     const cardOperation = {
         number: 1,
         publicationDate: 1,
-        card: card,
+        card,
         type: CardOperationType.ADD
     };
 
@@ -101,8 +102,8 @@ describe('Cards reminder with rrule structure', function () {
             uid: 'uid1',
             id: 'id1',
             secondsBeforeTimeSpanForReminder: 300,
-            rRule: rRule,
-            startDate: startDate
+            rRule,
+            startDate
         };
     }
 
@@ -137,7 +138,6 @@ describe('Cards reminder with rrule structure', function () {
         setCurrentTime('2017-01-01 02:11');
         await checkOneReminderIsSent();
     });
-
 
     it('GIVEN a card was sent WHEN current date (02:06) > remind date +  (02:05) THEN no remind is sent', async function () {
         await sendCard(getTestCard());
@@ -266,6 +266,7 @@ describe('Cards reminder with rrule structure', function () {
         expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(1);
 
         const cardOperation = {
+            cardId: 'uid1',
             card: getTestCard(),
             type: CardOperationType.DELETE
         };
@@ -298,21 +299,21 @@ describe('Cards reminder with recurrence structure', function () {
     function getTestCard(): any {
         const startDate = new Date('2017-01-01 01:00').valueOf();
 
-        let recurrence = new Recurrence(
+        const recurrence = new Recurrence(
             new HourAndMinutes(2, 10),
             [1, 2, 3, 4, 5, 6, 7],
             'Europe/Paris',
             [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         );
 
-        let timespans = [new TimeSpan(startDate, null, recurrence)];
+        const timespans = [new TimeSpan(startDate, null, recurrence)];
 
         return {
             uid: 'uid1',
             id: 'id1',
             secondsBeforeTimeSpanForReminder: 300,
             timeSpans: timespans,
-            startDate: startDate
+            startDate
         };
     }
 
@@ -339,7 +340,6 @@ describe('Cards reminder with recurrence structure', function () {
         setCurrentTime('2017-01-01 02:06');
         await checkOneReminderIsSent();
     });
-
 
     it('GIVEN a card was sent WHEN current date (02:11) > remind date - secondsBeforeTimeSpanForReminder , with secondsBeforeTimeSpanForReminder = 0 (02:10) THEN remind is sent', async function () {
         const card = getTestCard();
@@ -453,6 +453,7 @@ describe('Cards reminder with recurrence structure', function () {
         expect(remindDatabaseServiceStub.getNbReminder()).toBe(1);
 
         const cardOperation: CardOperation = {
+            cardId: 'uid1',
             card: getTestCard(),
             type: CardOperationType.DELETE
         };
@@ -491,7 +492,7 @@ describe('Cards reminder with timespans and no recurrence', function () {
             id: 'id1',
             secondsBeforeTimeSpanForReminder: 300,
             timeSpans: timespans,
-            startDate: startDate
+            startDate
         };
     }
 
@@ -593,7 +594,6 @@ describe('Cards reminder with timespans and no recurrence', function () {
         setCurrentTime('2017-01-01 02:01');
         await checkNoReminderIsSent();
     });
-
 
     it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is set to a negative number THEN no reminder is sent', async function () {
         const card = getTestCard();

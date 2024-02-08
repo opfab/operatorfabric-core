@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,29 +10,27 @@
 import {Card, Recurrence, HourAndMinutes, TimeSpan} from '../model/card.model';
 import moment from 'moment-timezone';
 
-
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
-    if (card.timeSpans) {
+    if (card.timeSpans != null) {
         let nextTime = -1;
-       
+
         card.timeSpans.forEach((timeSpan) => {
-          
             const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, startingDate);
             if (timeForRepeating !== -1) {
                 if (nextTime === -1 || timeForRepeating < nextTime) nextTime = timeForRepeating;
             }
         });
-        if (card.endDate && nextTime > card.endDate) return -1;
+        if (card.endDate != null && nextTime > card.endDate) return -1;
         return nextTime;
     }
     return -1;
 }
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number): number {
-    if (!startingDate) {
+    if (startingDate == null) {
         startingDate = new Date().valueOf();
     }
-    if (!timeSpan.recurrence) {
+    if (timeSpan.recurrence == null) {
         if (timeSpan.start < startingDate) {
             return -1;
         } else {
@@ -50,9 +48,8 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
         return -1;
     }
 
-    if (!recurrence.timeZone) recurrence.timeZone = "Europe/Paris"
+    if (recurrence.timeZone == null) recurrence.timeZone = 'Europe/Paris';
     const nextDateTime = moment(StartingDate).tz(recurrence.timeZone);
-
 
     const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
     if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
@@ -64,15 +61,13 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
     moveToValidMonth(nextDateTime, recurrence);
 
     if (isDaysOfWeekFieldSet(recurrence)) {
-        if (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday())) {
+        if (recurrence?.daysOfWeek?.includes(nextDateTime.isoWeekday()) === false) {
             // we keep the month found previously
             const monthForNextDateTime = nextDateTime.month();
 
             nextDateTime.set('hours', 0);
             nextDateTime.set('minutes', 0);
-            let nb_add = 0;
             do {
-                nb_add++;
                 nextDateTime.add(1, 'day');
 
                 if (nextDateTime.month() !== monthForNextDateTime) {
@@ -98,7 +93,7 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
 }
 
 function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
-    if (recurrence.months) {
+    if (recurrence.months != null) {
         for (const month of recurrence.months) {
             if (month < 0 || month > 11) {
                 return false;
@@ -106,7 +101,7 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
         }
     }
 
-    if (recurrence.daysOfWeek) {
+    if (recurrence.daysOfWeek != null) {
         for (const dayOfWeek of recurrence.daysOfWeek) {
             if (dayOfWeek < 1 || dayOfWeek > 7) {
                 return false;
@@ -116,10 +111,10 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
     return true;
 }
 
-function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
-    if (!recurrence.months || recurrence.months.length === 0) return;
+function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence): void {
+    if (recurrence.months == null || recurrence.months.length === 0) return;
     if (recurrence.months.includes(nextDateTime.month())) return;
-    // month validity has been checked before 
+    // month validity has been checked before
     // so it avoids infinite loop for month outside of authorized range
     do {
         nextDateTime.add(1, 'month');
@@ -134,5 +129,5 @@ function isFirstHoursMinutesInferiorOrEqualToSecondOne(hm1: HourAndMinutes, hm2:
 }
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {
-    return recurrence.daysOfWeek?.length > 0;
+    return recurrence.daysOfWeek != null && recurrence.daysOfWeek.length > 0;
 }

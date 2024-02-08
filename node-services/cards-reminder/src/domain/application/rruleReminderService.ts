@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,19 +18,19 @@ export class RRuleReminderService implements EventListener {
     private databaseService: RemindDatabaseService;
     private logger: any;
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public setDatabaseService(databaseService: RemindDatabaseService) {
+    public setDatabaseService(databaseService: RemindDatabaseService): this {
         this.databaseService = databaseService;
         return this;
     }
 
-    async onMessage(message: any) {
+    async onMessage(message: any): Promise<void> {
         try {
-            const cardOperation: CardOperation = JSON.parse(message.content);
+            const cardOperation: CardOperation = JSON.parse(message.content as string);
 
             if (cardOperation.type === 'ADD' || cardOperation.type === 'UPDATE') {
                 this.logger.debug(
@@ -39,15 +39,15 @@ export class RRuleReminderService implements EventListener {
                 await this.addCardReminder(cardOperation.card);
             } else if (cardOperation.type === 'DELETE') {
                 this.logger.debug(`RRuleReminder - DELETE received for card id=${cardOperation.cardId}`);
-                await this.databaseService.removeReminder(cardOperation.cardId);
+                if (cardOperation.cardId != null) await this.databaseService.removeReminder(cardOperation.cardId);
             }
         } catch (error) {
             this.logger.warn('RRuleReminder - Error on card operation received ' + error);
         }
     }
 
-    public async addCardReminder(card: Card) {
-        if (card) {
+    public async addCardReminder(card: Card): Promise<void> {
+        if (card != null) {
             if (
                 card.secondsBeforeTimeSpanForReminder === undefined ||
                 card.secondsBeforeTimeSpanForReminder === null ||
@@ -58,13 +58,13 @@ export class RRuleReminderService implements EventListener {
                 return;
             }
             const reminderItem = await this.databaseService.getReminder(card.id);
-            if (reminderItem) {
+            if (reminderItem != null) {
                 if (reminderItem.cardUid === card.uid) {
                     // reminder exists , a remind has just occur , we need to set the reminder for next occurrence
                     this.logger.debug(
                         `RRuleReminder - Card ${card.id} (uid=${card.uid}) reminder exist for this uid , it means a remind just occurs , set next remind date`
                     );
-                    this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
+                    await this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
                     return;
                 } else {
                     // card is updated , remove existing reminder before recomputing the next remind date
@@ -86,7 +86,7 @@ export class RRuleReminderService implements EventListener {
                 this.logger.info(
                     `RRuleReminder - Will remind card ${card.id} (uid=${card.uid}) at ${new Date(
                         dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
-                    )}`
+                    ).toISOString()}`
                 );
                 await this.databaseService.persistReminder(reminder);
             } else
@@ -96,49 +96,53 @@ export class RRuleReminderService implements EventListener {
         }
     }
 
-    private async setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any) {
+    private async setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any): Promise<void> {
         this.logger.debug(`RRuleReminder - Card ${card.id} (uid=${card.uid}) compute the next reminder date`);
-        const startingDate = reminderItem.timeForReminding + card.secondsBeforeTimeSpanForReminder * 1000 + 1;
-        const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
-        if (dateForReminder >= 0) {
-            const reminder = new Reminder(
-                card.id,
-                card.uid,
-                dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
-            );
-            this.logger.info(
-                `RRuleReminder - Will remind card ${card.id} (uid=${card.uid}) at ${new Date(
+        if (card.secondsBeforeTimeSpanForReminder != null) {
+            const startingDate: number =
+                reminderItem.timeForReminding + card.secondsBeforeTimeSpanForReminder * 1000 + 1;
+            const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
+            if (dateForReminder >= 0) {
+                const reminder = new Reminder(
+                    card.id,
+                    card.uid,
                     dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
-                )}`
-            );
-            await this.databaseService.updateReminder(reminder);
-        } else {
-            this.logger.debug(
-                `RRuleReminder - Card ${card.id} (uid=${card.uid}) has no new occurrence , remove the reminder`
-            );
-            this.databaseService.removeReminder(card.id);
+                );
+                this.logger.info(
+                    `RRuleReminder - Will remind card ${card.id} (uid=${card.uid}) at ${new Date(
+                        dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
+                    ).toISOString()}`
+                );
+                await this.databaseService.updateReminder(reminder);
+                return;
+            }
         }
+
+        this.logger.debug(
+            `RRuleReminder - Card ${card.id} (uid=${card.uid}) has no new occurrence , remove the reminder`
+        );
+        await this.databaseService.removeReminder(card.id);
     }
 
     public async getCardsToRemindNow(): Promise<Card[]> {
-        const cardsToRemind = [];
+        const cardsToRemind: any[] = [];
         const reminders = await this.databaseService.getItemsToRemindNow();
         for (const reminder of reminders) {
-            const card = await this.databaseService.getCardByUid(reminder.cardUid);
-            if (card) {
+            const card = await this.databaseService.getCardByUid(reminder.cardUid as string);
+            if (card != null) {
                 cardsToRemind.push(card);
             } else {
                 // the card has been deleted in this case
                 this.logger.info(
                     `RRuleReminder - card with uid ${reminder.cardUid} does not exist anymore , remove reminder`
                 );
-                await this.databaseService.removeReminder(reminder.cardId);
+                await this.databaseService.removeReminder(reminder.cardId as string);
             }
         }
         return cardsToRemind;
     }
 
-    public async clearReminders() {
+    public async clearReminders(): Promise<void> {
         await this.databaseService.clearReminders();
     }
 }
