@@ -259,11 +259,11 @@ export default class CardsDiffusionControl {
 
     private async processCardTemplate(card: any): Promise<string> {
         let cardBodyHtml = this.bodyPrefix +
-        ' <a href="' +
+        ' <a href=" ' +
         this.opfabUrlInMailContent +
         '/#/feed/cards/' +
         card.id +
-        '">' +
+        ' ">' +
         card.titleTranslated +
         ' - ' +
         card.summaryTranslated +
