@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -391,7 +391,7 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.mail.auth.user||yes|Mail server authentication user
 |operatorfabric.mail.auth.pass||yes|Mail server authentication password
 |operatorfabric.cardsExternalDiffusion.adminPort|2106|no|Listen port
-|operatorfabric.cardsExternalDiffusion.activeOnStartup|true|false|Flag to start the notification service on startup
+|operatorfabric.cardsExternalDiffusion.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
 |operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix|'Opfab card received'|no|Mail subject prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
