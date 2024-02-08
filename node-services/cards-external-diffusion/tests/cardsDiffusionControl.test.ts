@@ -230,7 +230,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Body <a href="http://localhost/#/feed/cards/defaultProcess.process1">Title1 - Summary1</a>'
+            'Body <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a>'
         );
     });
 
@@ -295,7 +295,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Body <a href="http://localhost/#/feed/cards/defaultProcess.process1">Title1 - Summary1</a> <br> Title1'
+            'Body <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br> Title1'
         );
     });
 
