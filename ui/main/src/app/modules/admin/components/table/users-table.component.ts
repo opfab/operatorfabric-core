@@ -50,6 +50,7 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
             },
             wrapText: true,
             autoHeight: true,
+            maxWidth: 500,
             flex: 4
         };
         this.gridOptions.columnTypes['entitiesColumn'] = {
