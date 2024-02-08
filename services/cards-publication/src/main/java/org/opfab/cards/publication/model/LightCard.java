@@ -10,6 +10,8 @@
 package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -51,7 +53,9 @@ public record LightCard(
         String wktGeometry,
         String wktProjection,
         Integer secondsBeforeTimeSpanForReminder,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) RRule rRule,
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) 
+        @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
+        RRule rRule,
         @JsonInclude(JsonInclude.Include.NON_EMPTY) List<CardActionEnum> actions) {
 
     public LightCard(Card card) {
