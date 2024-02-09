@@ -13,7 +13,7 @@ import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
-import logger from './common/server-side/logger';
+import Logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService'
 import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
@@ -44,7 +44,9 @@ app.use(
 
 app.use(express.static("public"));
 const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
+const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
+const logger = Logger.getLogger();
 
 const activeOnStartUp = config.get('operatorfabric.cardsExternalDiffusion.activeOnStartup');
 
@@ -149,6 +151,34 @@ app.post('/config', (req, res) => {
     })
 });
 
+app.get('/logLevel', (req, res) => {
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            res.send(Logger.getLogLevel());
+        }
+    })
+});
+
+app.post('/logLevel', (req, res) => {
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Set log level: ' + JSON.stringify(req.body));
+            const level = req.body.configuredLevel ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+
+            if (Logger.setLogLevel(level)) {
+                res.contentType('text/plain').send(Logger.getLogLevel());
+            } else {
+                res.status(400).send("Bad log level");
+            }
+        }
+    })
+});
+
 app.get('/healthcheck', (req, res) => {
     res.send();
 });
@@ -156,9 +186,6 @@ app.get('/healthcheck', (req, res) => {
 app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
-
-
-
 
 async function start() {
     await cardsExternalDiffusionDatabaseService.connectToMongoDB();

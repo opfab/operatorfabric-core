@@ -11,7 +11,7 @@ import 'jest';
 import CardsDiffusionControl from '../src/domain/application/cardsDiffusionControl';
 import SendMailService from '../src/domain/server-side/sendMailService';
 import GetResponse from '../src/common/server-side/getResponse';
-import logger from '../src/common/server-side/logger';
+import Logger from '../src/common/server-side/logger';
 import Handlebars from 'handlebars';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
@@ -19,6 +19,7 @@ import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/car
 import BusinessConfigOpfabServicesInterface from '../src/domain/server-side/BusinessConfigOpfabServicesInterface';
 
 class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
+
     public isResponseValid = true;
 
     cards: Array<any> = new Array();
@@ -101,6 +102,9 @@ class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
         return Promise.resolve();
     }
 }
+
+
+const logger = Logger.getLogger();
 
 describe('Cards external diffusion', function () {
     let cardsDiffusionControl: CardsDiffusionControl;

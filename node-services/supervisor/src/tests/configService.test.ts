@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import logger from '../common/server-side/logger';
+import Logger from '../common/server-side/logger';
 import ConfigService from '../domain/client-side/configService';
 import ConfigDTO from '../domain/client-side/configDTO';
 import SupervisorDatabaseService from '../domain/server-side/supervisorDatabaseService';
@@ -36,6 +36,8 @@ function getDefaultConfig(): ConfigDTO {
     defaultConfig.entitiesToSupervise = entities;
     return defaultConfig;
 }
+
+const logger = Logger.getLogger();
 
 describe('config service', function () {
     it('Update config params ', async function () {
