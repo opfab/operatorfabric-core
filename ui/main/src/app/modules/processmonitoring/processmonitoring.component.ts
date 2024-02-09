@@ -156,10 +156,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        if (isSearchButtonClicked) {
-            const {value} = this.processMonitoringForm;
-            this.filtersTemplate.transformFiltersListToMap(value);
-        }
+        const {value} = this.processMonitoringForm;
+        this.filtersTemplate.transformFiltersListToMap(value);
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate);
 
