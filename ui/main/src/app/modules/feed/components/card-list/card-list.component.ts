@@ -167,7 +167,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 const entitiesAcks = [];
                 const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
                 entities.forEach((entity) => {
-                    if (entity.roles.includes(RolesEnum.CARD_SENDER))
+                    if (entity.roles?.includes(RolesEnum.CARD_SENDER))
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });

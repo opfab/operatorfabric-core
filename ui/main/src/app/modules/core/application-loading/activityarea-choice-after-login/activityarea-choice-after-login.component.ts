@@ -36,7 +36,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
         const login = UserService.getCurrentUserWithPerimeters().userData.login;
         UserService.getUser(login).subscribe((currentUser) => {
             const entities = EntitiesService.getEntitiesFromIds(currentUser.entities);
-            if (entities.filter((entity) => entity.roles.includes(RolesEnum.ACTIVITY_AREA)).length > 1)
+            if (entities.filter((entity) => entity.roles?.includes(RolesEnum.ACTIVITY_AREA)).length > 1)
                 this.modalRef = this.modalService.open(this.activityAreaPopupRef, {
                     centered: true,
                     backdrop: 'static',

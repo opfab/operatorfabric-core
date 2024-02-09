@@ -124,7 +124,7 @@ export class EntitiesService {
 
     public static isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = EntitiesService._entities.find((entity) => entity.id === idEntity);
-        return found?.roles.includes(RolesEnum.CARD_SENDER);
+        return found?.roles?.includes(RolesEnum.CARD_SENDER);
     }
 
     /** Given a list of entities that might contain parent entities, EntitiesService method returns the list of entities
@@ -133,7 +133,7 @@ export class EntitiesService {
     public static resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
         const allowed = new Set<Entity>();
         selected.forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_SENDER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) {
                 allowed.add(entity);
             } else {
                 const children = EntitiesService._entities.filter((child) => child.parents?.includes(entity.id));

@@ -56,7 +56,7 @@ export class ActivityAreaView {
 
     private addEntityToClusters(entity: Entity) {
         const entitiesConnected = UserService.getCurrentUserWithPerimeters().userData.entities;
-        if (entity?.roles.includes(RolesEnum.ACTIVITY_AREA)) {
+        if (entity?.roles?.includes(RolesEnum.ACTIVITY_AREA)) {
             const activityAreaLine = new ActivityAreaLine();
             activityAreaLine.entityId = entity.id;
             activityAreaLine.entityName = entity.name;

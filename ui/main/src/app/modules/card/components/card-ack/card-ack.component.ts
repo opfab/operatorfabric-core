@@ -227,7 +227,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.isReadOnlyUser) {
             const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
             entities.forEach((entity) => {
-                if (entity.roles.includes(RolesEnum.CARD_SENDER))
+                if (entity.roles?.includes(RolesEnum.CARD_SENDER))
                     // this avoids to display entities used only for grouping
                     entitiesAcks.push(entity.id);
             });
