@@ -85,7 +85,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private loadRecipientsOptions() {
         this.recipientsOptions = [];
         EntitiesService.getEntities().forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
                 this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
             }
         });
@@ -94,7 +94,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private loadRecipientsForInformationOptions() {
         this.recipientsForInformationOptions = [];
         EntitiesService.getEntities().forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
                 this.recipientsForInformationOptions.push(
                     new MultiSelectOption(entity.id, this.getEntityLabel(entity))
                 );
@@ -105,7 +105,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private loadRestrictedRecipientList(recipients: EntitiesTree[]): void {
         this.recipientsOptions = [];
         EntitiesService.resolveEntities(recipients).forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
                 this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
             }
         });
@@ -114,7 +114,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private loadRestrictedRecipientForInformationList(recipientsForInformation: EntitiesTree[]): void {
         this.recipientsForInformationOptions = [];
         EntitiesService.resolveEntities(recipientsForInformation).forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
                 this.recipientsForInformationOptions.push(
                     new MultiSelectOption(entity.id, this.getEntityLabel(entity))
                 );
