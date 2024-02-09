@@ -258,31 +258,49 @@ export default class CardsDiffusionControl {
     }
 
     private async processCardTemplate(card: any): Promise<string> {
-        let cardBodyHtml = this.bodyPrefix +
-        ' <a href=" ' +
-        this.opfabUrlInMailContent +
-        '/#/feed/cards/' +
-        card.id +
-        ' ">' +
-        card.titleTranslated +
-        ' - ' +
-        card.summaryTranslated +
-        '</a>';
+        let cardBodyHtml =
+            this.bodyPrefix +
+            ' <a href=" ' +
+            this.opfabUrlInMailContent +
+            '/#/feed/cards/' +
+            card.id +
+            ' ">' +
+            this.escapeHtml(card.titleTranslated) +
+            ' - ' +
+            this.escapeHtml(card.summaryTranslated) +
+            '</a>';
         try {
-            const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(card.process, card.processVersion);
+            const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
+                card.process,
+                card.processVersion
+            );
             const stateName = card.state;
             if (cardConfig?.states?.[stateName]?.emailBodyTemplate) {
                 const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
                 if (cardContentResponse.isValid()) {
                     const cardContent = cardContentResponse.getData();
-                    const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(card.process, cardConfig.states[stateName].emailBodyTemplate, card.processVersion);
+                    const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
+                        card.process,
+                        cardConfig.states[stateName].emailBodyTemplate,
+                        card.processVersion
+                    );
                     cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
                 }
             }
-        } catch(e) {
+        } catch (e) {
             console.warn("Couldn't parse email for : ", card.state, e);
         }
         return cardBodyHtml;
+    }
+
+    private escapeHtml(text: string): string {
+        if (!text) return text;
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     private async cleanCardsAreadySent() {
