@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import logger from '../src/common/server-side/logger';
+import Logger from '../src/common/server-side/logger';
 import ReminderService from '../src/domain/application/reminderService';
 import {RRuleReminderService} from '../src/domain/application/rruleReminderService';
 import {HourAndMinutes, RRule, Recurrence, TimeSpan, Day, Frequency} from '../src/domain/model/card.model';
@@ -17,7 +17,7 @@ import {CardOperation, CardOperationType} from '../src/domain/model/card-operati
 import {RemindDatabaseServiceStub} from './remindDataBaseServiceStub';
 import {OpfabServicesInterfaceStub} from './opfabServicesInterfaceStub';
 
-
+const logger = Logger.getLogger();
 
 let rruleRemindDatabaseServiceStub = new RemindDatabaseServiceStub();
 let remindDatabaseServiceStub = new RemindDatabaseServiceStub();

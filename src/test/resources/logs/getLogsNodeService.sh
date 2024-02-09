@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@
 # This file is part of the OperatorFabric project.
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
+
 password=$3
 if [[ -z $password ]]
 then
@@ -20,16 +21,15 @@ if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-
 if [[ -z $2 ]]
 then
-    echo "Usage : getLogs.sh host:port user password opfab_url"
+    echo "Usage : getLogsNodeService.sh host:port user password opfab_url"
 else
 	serviceAddress=$1
 	user=$2
 	
 	source ../getToken.sh $url $user $password
 	
-	response=$( curl -s "http://$serviceAddress/actuator/loggers/ROOT" -H "Authorization: Bearer $token" -H "Content-type:application/json")
+	response=$( curl -s "http://$serviceAddress/logLevel" -H "Authorization: Bearer $token" -H "Content-type:application/json")
 	echo $response
 fi

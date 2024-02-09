@@ -10,7 +10,9 @@
 import 'jest';
 import sinon from 'sinon';
 import OpfabServicesInterface from '../common/server-side/opfabServicesInterface';
-import logger from '../common/server-side/logger';
+import Logger from '../common/server-side/logger';
+
+const logger = Logger.getLogger();
 
 function getOpfabServicesInterface(): OpfabServicesInterface {
     return new OpfabServicesInterface()

@@ -11,54 +11,75 @@ import winston, {format} from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import config from 'config';
 
-const logFormat = winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    winston.format.align(),
-    winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
-);
+export default class Logger {
+    static logger: winston.Logger;
 
-const logConfiguration: any = config.get('operatorfabric.logConfig');
+    static readonly logFormat = winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp(),
+        winston.format.align(),
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+    );
 
-let logger = winston.createLogger({
-    format: format.combine(
-        format((info: winston.LogEntry) => {
-            info.message = prefixNewLinesToAvoidLogInjection(info.message);
-            return info;
-        })(),
-        logFormat
-    ),
-    transports: [new winston.transports.Console({level: logConfiguration.logLevel})]
-});
+    static readonly logConfiguration: any = config.get('operatorfabric.logConfig');
 
-if (logConfiguration.logFile != null) {
-    const transport = new DailyRotateFile({
-        filename: logConfiguration.logFolder + logConfiguration.logFile,
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: true,
-        maxSize: '20m',
-        maxFiles: '14d',
-        level: logConfiguration.logLevel
-    });
+    public static getLogger(): winston.Logger {
+        if (!this.logger) {
+            this.logger = winston.createLogger({
+                format: format.combine(
+                    format((info) => {
+                        info.message = this.prefixNewLinesToAvoidLogInjection(info.message);
+                        return info;
+                    })(),
+                    this.logFormat
+                ),
+                transports: [new winston.transports.Console({level: this.logConfiguration.logLevel})]
+            });
 
-    transport.on('rotate', function (oldFilename, newFilename) {
-        // call function like upload to s3 or on cloud
-    });
+            if (this.logConfiguration.logFile) {
+                const transport = new DailyRotateFile({
+                    filename: this.logConfiguration.logFolder + this.logConfiguration.logFile,
+                    datePattern: 'YYYY-MM-DD',
+                    zippedArchive: true,
+                    maxSize: '20m',
+                    maxFiles: '14d',
+                    level: this.logConfiguration.logLevel
+                });
 
-    logger = winston.createLogger({
-        format: format.combine(
-            format((info: winston.LogEntry) => {
-                info.message = prefixNewLinesToAvoidLogInjection(info.message);
-                return info;
-            })(),
-            logFormat
-        ),
-        transports: [transport, new winston.transports.Console({level: logConfiguration.logLevel})]
-    });
+                transport.on('rotate', function (oldFilename, newFilename) {
+                    // call function like upload to s3 or on cloud
+                });
+
+                this.logger = winston.createLogger({
+                    format: format.combine(
+                        format((info) => {
+                            info.message = this.prefixNewLinesToAvoidLogInjection(info.message);
+                            return info;
+                        })(),
+                        this.logFormat
+                    ),
+                    transports: [transport, new winston.transports.Console({level: this.logConfiguration.logLevel})]
+                });
+            }
+        }
+        return this.logger;
+    }
+
+    public static getLogLevel(): string | undefined {
+        return this.logger.transports[0].level;
+    }
+
+    public static setLogLevel(level: string): boolean {
+        if (this.logger.levels[level]) {
+            this.logger.transports.forEach((transport) => {
+                transport.level = level;
+            });
+            return true;
+        }
+        return false;
+    }
+
+    private static prefixNewLinesToAvoidLogInjection(message: string): string {
+        return message.replace(/[\n\r\b\v\f]/g, '\n       ... ');
+    }
 }
-
-function prefixNewLinesToAvoidLogInjection(message: string): string {
-    return message.replace(/[\n\r\b\v\f]/g, '\n       ... ');
-}
-
-export default logger;

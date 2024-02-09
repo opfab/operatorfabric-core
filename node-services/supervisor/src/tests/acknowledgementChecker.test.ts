@@ -9,7 +9,7 @@
 
 import 'jest';
 import AcknowledgementChecker from '../domain/application/acknowledgmentChecker';
-import logger from '../common/server-side/logger';
+import Logger from '../common/server-side/logger';
 import GetResponse from '../common/server-side/getResponse';
 import OpfabServicesInterface from '../common/server-side/opfabServicesInterface';
 
@@ -35,6 +35,8 @@ class OpfabServicesInterfaceForAckStub extends OpfabServicesInterface {
         this.entityRecipients = card.entityRecipients;
     }
 }
+
+const logger = Logger.getLogger();
 
 describe('acknowledgement checker', function () {
     let acknowledgementChecker: AcknowledgementChecker;

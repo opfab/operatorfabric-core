@@ -15,7 +15,7 @@ import config from 'config';
 import ConfigService from './domain/client-side/configService';
 import SupervisorService from './domain/client-side/supervisorService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
-import logger from './common/server-side/logger';
+import Logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
 import SupervisorDatabaseService from './domain/server-side/supervisorDatabaseService';
 import {EntityToSupervise} from './domain/application/entityToSupervise';
@@ -23,7 +23,6 @@ import {EntityToSupervise} from './domain/application/entityToSupervise';
 const app = express();
 app.disable('x-powered-by');
 app.use(bodyParser.json());
-
 
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 
@@ -46,6 +45,9 @@ app.use(
 
 app.use(express.static('public'));
 const adminPort: string = config.get('operatorfabric.supervisor.adminPort');
+const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
+
+const logger = Logger.getLogger();
 
 const supervisorDatabaseService = new SupervisorDatabaseService()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
@@ -166,8 +168,8 @@ app.get('/supervisedEntities', (req, res) => {
             }
         })
         .catch((err) => {
-            logger.error('Error getting authorization in GET /start' + err);
-            res.status(403).send();
+            logger.error('Error in GET /supervisedEntities' + err);
+            res.status(500).send();
         });
 });
 
@@ -193,8 +195,8 @@ app.post('/supervisedEntities', (req, res) => {
             }
         })
         .catch((err) => {
-            logger.error('Error in GET /supervisedEntities' + err);
-            res.status(403).send();
+            logger.error('Error in POST /supervisedEntities' + err);
+            res.status(500).send();
         });
 });
 
@@ -218,8 +220,45 @@ app.delete('/supervisedEntities/:id', (req, res) => {
             }
         })
         .catch((err) => {
-            logger.error('Error getting authorization in GET /supervisedEntities' + err);
-            res.status(403).send();
+            logger.error('Error in DELETE /supervisedEntities' + err);
+            res.status(500).send();
+        });
+});
+
+app.get('/logLevel', (req, res) => {
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                res.send(logger.transports[0].level);
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in GET /logLevel' + err);
+            res.status(500).send();
+        });
+});
+
+app.post('/logLevel', (req, res) => {
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) res.status(403).send();
+            else {
+                logger.info('Set log level: ' + JSON.stringify(req.body));
+                const level: string =
+                    req.body.configuredLevel !== null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+                if (Logger.setLogLevel(level)) {
+                    res.contentType('text/plain').send(Logger.getLogLevel());
+                } else {
+                    res.status(400).send('Bad log level');
+                }
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in POST /logLevel' + err);
+            res.status(500).send();
         });
 });
 

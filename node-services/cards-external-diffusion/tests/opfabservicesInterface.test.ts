@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import 'jest';
 import sinon from 'sinon';
-import logger from '../src/common/server-side/logger';
+import Logger from '../src/common/server-side/logger';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 
 
@@ -24,6 +24,7 @@ function getOpfabServicesInterface() {
         .setLogger(logger);
 }
 
+const logger = Logger.getLogger();
 
 describe('Opfab interface', function () {
     it('Should get one user login when one user connected ', async function () {

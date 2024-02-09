@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
-import logger from './common/server-side/logger';
 
 import ReminderService from './domain/application/reminderService';
 import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
@@ -21,6 +20,7 @@ import CardsReminderService from './domain/client-side/cardsReminderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
 import AuthorizationService from './common/server-side/authorizationService';
+import Logger from './common/server-side/logger';
 
 const app = express();
 app.disable('x-powered-by');
@@ -44,8 +44,11 @@ app.use(
 
 app.use(express.static('public'));
 const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
+const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
 const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup');
+
+const logger = Logger.getLogger();
 
 const remindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
@@ -124,6 +127,33 @@ app.get('/reset', (req, res) => {
             res.send('Reset service');
         }
     });
+});
+
+app.get('/logLevel', (req, res) => {
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            res.send(Logger.getLogLevel());
+        }
+    })
+});
+
+app.post('/logLevel', (req, res) => {
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Set log level: ' + JSON.stringify(req.body));
+            const level = req.body.configuredLevel ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+            if (Logger.setLogLevel(level)) {
+                res.contentType('text/plain').send(Logger.getLogLevel());
+            } else {
+                res.status(400).send("Bad log level");
+            }
+        }
+    })
 });
 
 app.get('/healthcheck', (req, res) => {

@@ -9,7 +9,7 @@
 
 import 'jest';
 import ConnectionChecker from '../domain/application/connectionChecker';
-import logger from '../common/server-side/logger';
+import Logger from '../common/server-side/logger';
 import GetResponse from '../common/server-side/getResponse';
 import OpfabServicesInterface from '../common/server-side/opfabServicesInterface';
 
@@ -37,6 +37,8 @@ class OpfabServicesInterfaceStub extends OpfabServicesInterface {
         this.minutes = card.data.minutes;
     }
 }
+
+const logger = Logger.getLogger();
 
 describe('connection checker', function () {
     let connectionChecker: ConnectionChecker;

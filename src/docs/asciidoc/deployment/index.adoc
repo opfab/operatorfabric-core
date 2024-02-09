@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -73,7 +73,14 @@ For the web-ui service's logs are in the /var/log/nginx directory. You can map t
 
 === Runtime configuration 
 
-Operator Fabric includes the ability to view and configure the log levels at runtime through APIs for most of the business services (the service supervisor , cards-external-diffusion and cards-reminder does not provide this feature). It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. These levels can be one of:
+
+Operator Fabric includes the ability to view and configure the log levels at runtime through APIs for most of the business services. It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. 
+
+
+Querying and setting logging levels is restricted to administrators.
+
+==== Java services
+For java services (user, businessconfig, cards-consultation, cards-publication and external-devices) the available logging levels are:
 
 * TRACE
 * DEBUG
@@ -81,9 +88,6 @@ Operator Fabric includes the ability to view and configure the log levels at run
 * WARN
 * ERROR
 * FATAL
-
-
-Querying and setting logging levels is restricted to administrators.
 
 To view the configured logging level for a given logger it is possible to send a GET request to the '/actuator/logger' URI as follows:
 ----
@@ -118,6 +122,39 @@ To set the log level for ROOT logger of a service it is possible to call the pro
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/setLogs.sh[src/test/resources/logs/setLogs.sh] as follows: `setLogs.sh <server:port> <log_level>  <user> <opfab_url>`. For example to set the log level to DEBUG for "card-publication" service  execute: `setLogs.sh localhost:2102 DEBUG admin http://localhost`
 
 
+==== Node Services
+For node services (supervisor, cards-external-diffusion and cards-reminder) the available logging levels are:
+
+* silly
+* debug
+* verbose
+* http
+* info
+* warn
+* error
+
+To view the configured logging level for a given logger it is possible to send a GET request to the '/logLevel' URI as follows:
+----
+curl http://<server>:<port>/logLevel -H "Authorization: Bearer ${token}" 
+----
+where `${token}` is a valid OAuth2 JWT for a user with administration privileges
+
+The response will be the configured logging level as string 
+
+To get the log level of a node service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/getLogsNodeService.sh[src/test/resources/logs/getLogsNodeService.sh] as follows: `getLogsNodeService.sh <server:port> <user> <opfab_url>`. For example to get the current log level for "card-external-diffusion" service  execute: `getLogsNodeService.sh localhost:2106 admin http://localhost`
+
+
+To configure a given logger, POST a json entity to the '/logLevel' URI, as follows:
+
+----
+curl -i -X POST http://<server>:<port>/logLevel -H "Authorization: Bearer ${token}" -H 'Content-Type: application/json' -d '{"configuredLevel": "debug"}'
+----
+
+To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
+
+To set the log level for a node service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/setLogsNodeService.sh[src/test/resources/logs/setLogsNodeService.sh] as follows: `setLogsNodeService.sh <server:port> <log_level>  <user> <opfab_url>`. For example to set the log level to DEBUG for "card-external-diffusion" service  execute: `setLogsNodeService.sh localhost:2106 DEBUG admin http://localhost`
 
 include::users_groups_admin.adoc[leveloffset=+1]
 
