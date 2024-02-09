@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,102 +16,113 @@ export default class EventBus {
     port: number;
     username: string;
     password: string;
-        
+
     exchange: string;
     queue: string;
     queueConfig: any;
 
     logger: any;
 
-    onConnectionCallback: Function;
-    onDisconnectionCallback: Function;
-    onMessageCallback: Function;
     connection: IAmqpConnectionManager;
 
-    listeners : Array<EventListener> = [];
+    listeners: EventListener[] = [];
 
-
-    public setHost(host: string) {
+    public setHost(host: string): this {
         this.host = host;
         return this;
     }
 
-    public setPort(port: number) {
+    public setPort(port: number): this {
         this.port = port;
         return this;
     }
 
-    public setUsername(username: string) {
+    public setUsername(username: string): this {
         this.username = username;
         return this;
     }
 
-    public setPassword(password: string) {
+    public setPassword(password: string): this {
         this.password = password;
         return this;
     }
 
-    public setQueue(exchange: string, queue: string, queueConfig: any) {
+    public setQueue(exchange: string, queue: string, queueConfig: any): this {
         this.exchange = exchange;
         this.queue = queue;
         this.queueConfig = queueConfig;
         return this;
     }
 
-    public addListener(listener: EventListener) {
+    public addListener(listener: EventListener): this {
         this.listeners.push(listener);
         return this;
     }
 
-    private onConnection() {
+    private onConnection(): void {
         this.logger.info('EventBusListener connected!');
     }
 
-    private onDisconnection(error: any) {
+    private onDisconnection(error: any): void {
         this.logger.error('EventBusListener disconnected!', error);
     }
 
-    private onMessage(message: any) {
-        this.listeners.forEach(listener => listener.onMessage(message));
+    private onMessage(message: any): void {
+        this.listeners.forEach((listener) => {
+            listener.onMessage(message);
+        });
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public start() {
-        const that = this;
-        this.connection = manager.connect(['amqp://' + this.username + ":" + this.password + '@' + this.host + ':' + this.port]);
-        this.connection.on('connect', () => this.onConnection());
-        this.connection.on('disconnect', err => this.onDisconnection( err));
-
-        const channelWrapper = this.connection.createChannel({
-            setup: (channel : any) => 
-
-             Promise.all([
-                channel.assertQueue(this.queue, this.queueConfig),
-                channel.assertExchange(this.exchange, 'fanout', { }),
-                channel.prefetch(1),
-                channel.bindQueue(this.queue, this.exchange, '#'),
-                channel.consume(this.queue, function(msg: any) {
-                    that.onMessage(msg);
-                  }, {
-                      noAck: true
-                    })
-            ])
+    public start(): void {
+        this.connection = manager.connect([
+            'amqp://' + this.username + ':' + this.password + '@' + this.host + ':' + this.port
+        ]);
+        this.connection.on('connect', () => {
+            this.onConnection();
+        });
+        this.connection.on('disconnect', (err) => {
+            this.onDisconnection(err);
         });
 
-        channelWrapper.waitForConnect()
-            .then(function() {
-                that.logger.info("EventBusListener listening for messages");
+        const channelWrapper = this.connection.createChannel({
+            setup: async (channel: any) =>
+                await Promise.all([
+                    channel.assertQueue(this.queue, this.queueConfig),
+                    channel.assertExchange(this.exchange, 'fanout', {}),
+                    channel.prefetch(1),
+                    channel.bindQueue(this.queue, this.exchange, '#'),
+                    channel.consume(
+                        this.queue,
+                        (msg: any) => {
+                            this.onMessage(msg);
+                        },
+                        {
+                            noAck: true
+                        }
+                    )
+                ])
+        });
+
+        channelWrapper
+            .waitForConnect()
+            .then(() => {
+                this.logger.info('EventBusListener listening for messages');
+            })
+            .catch((err) => {
+                this.logger.error('Error while waiting for connect : ' + JSON.stringify(err));
             });
     }
 
-    public stop() {
-        if (this.connection) {
-            this.connection.close();
+    public stop(): void {
+        if (this.connection != null) {
+            this.connection.close().catch((err) => {
+                this.logger.error('Error while closing connection : ' + JSON.stringify(err));
+            });
         }
     }
-
 }
