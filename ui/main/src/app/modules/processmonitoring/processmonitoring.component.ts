@@ -73,8 +73,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     processNames = new Map();
     stateColors = new Map();
 
-    interval: any;
-
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
 
     modalRef: NgbModalRef;
@@ -127,14 +125,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.tags = ConfigService.getConfigValue('processmonitoring.filters.tags.list');
 
         this.results = [];
-
-        this.interval = setInterval(() => {
-            if (this.currentPage === 0) {
-                this.sendFilterQuery(0, false);
-            } else {
-                this.sendFilterQuery(this.currentPage - 1, false);
-            }
-        }, 5000);
 
         SelectedCardService.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
@@ -302,10 +292,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     ngOnDestroy() {
-        if (this.interval) {
-            clearInterval(this.interval);
-        }
-
         if (this.modalRef) {
             this.modalRef.close();
         }
