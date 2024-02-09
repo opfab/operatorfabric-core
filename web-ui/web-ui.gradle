@@ -24,3 +24,11 @@ docker {
 }
 
 tasks.dockerPrepare.dependsOn ':ui:main-user-interface:build'
+
+tasks.named("docker") {
+    inputs.files(fileTree('../ui/main/build/distribution'))
+    inputs.files(fileTree('src/main/docker'))
+    inputs.file('src/main/docker/Dockerfile')
+
+    outputs.dir("build/docker")
+}

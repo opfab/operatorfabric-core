@@ -18,6 +18,14 @@ npmInstall {
 
 
 task runLint(type: NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    inputs.file('angular.json')
+
+     outputs.dir('build')
+
     args = ['run','lint']
 }
 
@@ -51,5 +59,6 @@ task runHeadlessTests(type: NpmTask) {
 
 build.dependsOn(runHeadlessTests)
 build.dependsOn(runBuild)
+runLint.dependsOn(npmInstall)
 
 assemble.dependsOn(runBuild)
