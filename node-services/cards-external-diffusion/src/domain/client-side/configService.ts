@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,9 @@ export default class ConfigService {
                 this.config.windowInSecondsForCardSearch = defaultConfig.windowInSecondsForCardSearch;
                 this.config.secondsAfterPublicationToConsiderCardAsNotRead = defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead;
                 this.config.checkPeriodInSeconds =  defaultConfig.checkPeriodInSeconds;
+                this.config.activateCardsDiffusionRateLimiter = defaultConfig.activateCardsDiffusionRateLimiter;
+                this.config.sendRateLimit = defaultConfig.sendRateLimit;
+                this.config.sendRateLimitPeriodInSec = defaultConfig.sendRateLimitPeriodInSec;
                 this.save();
             }
           } catch(err) {
