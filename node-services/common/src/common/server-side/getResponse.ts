@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,19 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export default class GetResponse {
-   
-    constructor(private data: any,private valid:boolean) {
+    constructor(
+        private readonly data: any,
+        private readonly valid: boolean
+    ) {}
 
-    }
-
-    public isValid() {
+    public isValid(): boolean {
         return this.valid;
     }
 
-    public getData(){
+    public getData(): any {
         return this.data;
     }
-
 }

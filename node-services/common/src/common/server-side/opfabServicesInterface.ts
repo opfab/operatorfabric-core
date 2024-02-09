@@ -12,9 +12,7 @@ import axios from 'axios';
 import GetResponse from './getResponse';
 import JwtTokenUtils from './jwtTokenUtils';
 
-
 export default class OpfabServicesInterface {
-
     token: string = '';
     tokenExpirationMargin: number = 60000;
     login: string = '';
@@ -25,48 +23,45 @@ export default class OpfabServicesInterface {
     opfabBusinessconfigUrl: string = '';
     opfabGetTokenUrl: string = '';
 
-
     logger: any;
     jwtToken: JwtTokenUtils = new JwtTokenUtils();
 
-    public setLogin(login: string) {
+    public setLogin(login: string): this {
         this.login = login;
         return this;
     }
 
-    public setPassword(password: string) {
+    public setPassword(password: string): this {
         this.password = password;
         return this;
     }
 
-    public setOpfabGetTokenUrl(opfabGetTokenUrl: string) {
+    public setOpfabGetTokenUrl(opfabGetTokenUrl: string): this {
         this.opfabGetTokenUrl = opfabGetTokenUrl;
         return this;
     }
 
-    public setOpfabUsersUrl(opfabUsersUrl: string) {
+    public setOpfabUsersUrl(opfabUsersUrl: string): this {
         this.opfabUsersUrl = opfabUsersUrl;
         return this;
     }
 
-
-    public setOpfabCardsConsultationUrl(opfabCardsConsultationUrl: string) {
+    public setOpfabCardsConsultationUrl(opfabCardsConsultationUrl: string): this {
         this.opfabCardsConsultationUrl = opfabCardsConsultationUrl;
         return this;
     }
 
-
-    public setOpfabCardsPublicationUrl(opfabCardsPublicationUrl: string) {
+    public setOpfabCardsPublicationUrl(opfabCardsPublicationUrl: string): this {
         this.opfabCardsPublicationUrl = opfabCardsPublicationUrl;
         return this;
     }
-    
-    public setopfabBusinessconfigUrl(opfabBusinessconfigUrl: string) {
+
+    public setopfabBusinessconfigUrl(opfabBusinessconfigUrl: string): this {
         this.opfabBusinessconfigUrl = opfabBusinessconfigUrl;
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         this.jwtToken.setLogger(logger);
         return this;
@@ -76,67 +71,60 @@ export default class OpfabServicesInterface {
         try {
             await this.getToken();
             const response = await this.sendGetUserRequest(login);
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No user defined in HTTP response")
+            } else {
+                this.logger.warn('No user defined in HTTP response');
                 return new GetResponse([], false);
             }
         } catch (e) {
             this.logger.warn('Impossible to get user', e);
             return new GetResponse([], false);
         }
-       
     }
 
     public async fetchAllUsers(): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendGetAllUsersRequest();
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No users defined in HTTP response")
+            } else {
+                this.logger.warn('No users defined in HTTP response');
                 return new GetResponse([], false);
             }
         } catch (e) {
             this.logger.warn('Impossible to get users', e);
             return new GetResponse([], false);
         }
-       
     }
 
     public async getUsersConnected(): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendUsersConnectedRequest();
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No connected users defined in HTTP response")
+            } else {
+                this.logger.warn('No connected users defined in HTTP response');
                 return new GetResponse(null, false);
             }
         } catch (e) {
             this.logger.warn('Impossible to get connected users', e);
             return new GetResponse(null, false);
         }
-       
     }
 
     public async getCard(cardId: string): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendGetCardRequest(cardId);
-            
-            if (response?.data) {
-                const card = response.data.card
+
+            if (response?.data != null) {
+                const card = response.data.card;
                 return new GetResponse(card, true);
-            }
-            else {
-                this.logger.warn("No card defined in HTTP response")
+            } else {
+                this.logger.warn('No card defined in HTTP response');
                 return new GetResponse(null, false);
             }
         } catch (e) {
@@ -149,15 +137,14 @@ export default class OpfabServicesInterface {
         try {
             await this.getToken();
             const response = await this.sendGetCardsRequest(filter);
-            const cards = new Array();
-            if (response?.data) {
+            const cards: any[] = [];
+            if (response?.data != null) {
                 response.data.content.forEach((card: any) => {
                     cards.push(card);
                 });
                 return new GetResponse(cards, true);
-            }
-            else {
-                this.logger.warn("No cards defined in HTTP response")
+            } else {
+                this.logger.warn('No cards defined in HTTP response');
                 return new GetResponse(null, false);
             }
         } catch (e) {
@@ -167,7 +154,6 @@ export default class OpfabServicesInterface {
     }
 
     public async getUserWithPerimeters(userToken: string | null): Promise<GetResponse> {
-
         try {
             const response = await this.sendRequest({
                 method: 'get',
@@ -176,39 +162,35 @@ export default class OpfabServicesInterface {
                     Authorization: 'Bearer ' + userToken
                 }
             });
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response?.data, true);
-            }
-            else {
-                this.logger.warn("No user with perimeters defined in HTTP response")
+            } else {
+                this.logger.warn('No user with perimeters defined in HTTP response');
                 return new GetResponse(null, false);
             }
         } catch (e) {
             this.logger.warn('Impossible to get user with perimeters', e);
             return new GetResponse(null, false);
         }
-
     }
 
     public async getEntity(id: string): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendGetEntityRequest(id);
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No entity defined in HTTP response")
+            } else {
+                this.logger.warn('No entity defined in HTTP response');
                 return new GetResponse([], false);
             }
         } catch (e) {
             this.logger.warn('Impossible to get entity ' + id, e);
             return new GetResponse([], false);
         }
-       
     }
 
-    async getToken() {
+    async getToken(): Promise<void> {
         if (!this.jwtToken.validateToken(this.token, this.tokenExpirationMargin)) {
             const response = await this.sendRequest({
                 method: 'post',
@@ -216,11 +198,11 @@ export default class OpfabServicesInterface {
                 data: `username=${this.login}&password=${this.password}&grant_type=password&client_id=opfab-client`
             });
             this.token = response?.data?.access_token;
-            if (!this.token) throw new Error('No token provided , http response = ' + response);
+            if (this.token == null) throw new Error('No token provided , http response = ' + response);
         }
     }
 
-    sendUsersConnectedRequest(): Promise<any> {
+    sendUsersConnectedRequest(): any {
         return this.sendRequest({
             method: 'get',
             url: this.opfabCardsConsultationUrl + '/connections',
@@ -230,7 +212,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetUserRequest(login: string): Promise<any> {
+    sendGetUserRequest(login: string): any {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/users/' + login,
@@ -240,7 +222,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetAllUsersRequest(): Promise<any> {
+    sendGetAllUsersRequest(): any {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/users',
@@ -250,7 +232,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetCardRequest(cardId: string) {
+    sendGetCardRequest(cardId: string): any {
         return this.sendRequest({
             method: 'get',
             url: this.opfabCardsConsultationUrl + '/cards/' + cardId,
@@ -260,7 +242,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetCardsRequest(filter: any) {
+    sendGetCardsRequest(filter: any): any {
         return this.sendRequest({
             method: 'post',
             url: this.opfabCardsConsultationUrl + '/cards',
@@ -271,7 +253,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    private sendGetEntityRequest(id: string): Promise<any> {
+    private sendGetEntityRequest(id: string): any {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/entities/' + id,
@@ -281,8 +263,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-
-    public async sendCard(card: any): Promise<any> {
+    public async sendCard(card: any): Promise<void> {
         try {
             await this.getToken();
             const request = {
@@ -299,10 +280,8 @@ export default class OpfabServicesInterface {
         }
     }
 
-
-
-    sendRequest(request: any) {
+    sendRequest(request: any): any {
         // Cast to <Promise<any>> required for testing, to be able to stub the call
-        return <Promise<any>>axios(request);
+        return <Promise<any>>axios(request); //eslint-disable-line
     }
 }
