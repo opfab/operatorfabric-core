@@ -101,6 +101,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.url().should('not.include', 'stateFilter=');
         feed.checkFilterIsActive();
         feed.checkNumberOfDisplayedCardsIs(2);
+        feed.openFirstCard();
+        cy.get('#opfab-card-title').contains('PROCESS STATE (CALCUL)');
 
         opfab.navigateToDashboard();
         
@@ -109,7 +111,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.url().should('include', 'feed?processFilter=defaultProcess&stateFilter=messageState');
         feed.checkFilterIsActive();
         feed.checkNumberOfDisplayedCardsIs(1);
-
+        feed.openFirstCard();
+        cy.get('#opfab-card-title').contains('MESSAGE');
         opfab.navigateToDashboard();
         
         // Click on state with no cards
