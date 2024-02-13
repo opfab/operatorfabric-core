@@ -29,7 +29,10 @@ Feature: get card Subscription
           "endDate" : endDate,
           "summary" : {"key" : "message.summary"},
           "title" : {"key" : "message.title"},
-          "data" : {"message":" Action Card"}
+          "data" : {"message":" Action Card"},
+          "rRule": {
+              "freq" : "WEEKLY"
+          }
         }
         return JSON.stringify(card);
       }
@@ -92,12 +95,14 @@ Feature: get card Subscription
       When method post
       Then status 201
 
-    # Get card uid
+    # Get card uid and check rRule field
       Given url opfabUrl + 'cards/cards/api_test.process1'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
       And def cardUid = response.card.uid
+      And match response.card.rRule.freq == 'WEEKLY'
+
 
     # Get subscription with past range and check that no card is returned
       Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ pastStartDate + '&rangeEnd=' + pastEndDate
@@ -106,12 +111,14 @@ Feature: get card Subscription
       Then status 200
       And match response == ''
 
-    # Get subscription and check that card is returned
+    # Get subscription and check that card is returned and check it contains rRule field
       Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
       And match response contains '"card":{"uid":"' + cardUid + '"'
+      And match response contains '"rRule":{"freq":"WEEKLY"'
+
 
     # delete card
       Given url opfabPublishCardUrl + 'cards/api_test.process1'
