@@ -107,6 +107,7 @@ describe('Cards external diffusion', function () {
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
     let opfabBusinessConfigServicesInterfaceStub: OpfabBusinessConfigServicesInterfaceStub;
     let mailService: SendMailServiceStub;
+    let databaseService: DatabaseServiceStub;
 
     const perimeters = [
         {
@@ -124,11 +125,12 @@ describe('Cards external diffusion', function () {
         opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
 
         mailService = new SendMailServiceStub({smtpHost: 'localhost', smtpPort: 1025});
+        databaseService = new DatabaseServiceStub();
         cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterfaceStub)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterfaceStub)
-            .setCardsExternalDiffusionDatabaseService(new DatabaseServiceStub())
+            .setCardsExternalDiffusionDatabaseService(databaseService)
             .setMailService(mailService)
             .setFrom('test@opfab.com')
             .setSubjectPrefix('Subject')
@@ -663,10 +665,16 @@ describe('Cards external diffusion', function () {
         cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
         expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeFalsy();
 
+        let registeredMailSent = await databaseService.getSentMail('2006', 'operator_1@opfab.com');
+        expect(registeredMailSent).toBeUndefined();
+
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
+        registeredMailSent = await databaseService.getSentMail('2006', 'operator_1@opfab.com');
+        expect(registeredMailSent.cardUid).toEqual('2006');
+        expect(registeredMailSent.email).toEqual('operator_1@opfab.com');
     });
 
     it('Should send cards if cardsDiffusionRateLimiter is not active', async function () {

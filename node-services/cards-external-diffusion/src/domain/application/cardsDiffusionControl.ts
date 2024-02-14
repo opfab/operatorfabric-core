@@ -163,7 +163,6 @@ export default class CardsDiffusionControl {
         }
     }
 
-
     private async sendCardIfAllowed(unreadCard: any, userEmail: string, emailToPlainText: boolean): Promise<void> {
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(unreadCard.uid, userEmail);
@@ -173,6 +172,7 @@ export default class CardsDiffusionControl {
                     await this.sendMail(unreadCard, userEmail, emailToPlainText);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${unreadCard.uid}`);
+                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(unreadCard.uid, userEmail);
                 }
             }
         } catch (error) {
