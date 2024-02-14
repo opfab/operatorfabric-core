@@ -10,38 +10,12 @@
 
 package org.opfab.users.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-
 public enum PermissionEnum {
-    ADMIN("ADMIN"),
-    ADMIN_BUSINESS_PROCESS("ADMIN_BUSINESS_PROCESS"),
-    VIEW_ALL_ARCHIVED_CARDS("VIEW_ALL_ARCHIVED_CARDS"),
-    VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS("VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS"),
-    VIEW_ALL_CARDS("VIEW_ALL_CARDS"),
-    VIEW_USER_ACTION_LOGS("VIEW_USER_ACTION_LOGS"),
-    READONLY("READONLY");
-
-    private String value;
-
-    PermissionEnum(String value) {
-        this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static PermissionEnum fromValue(String text) {
-        for (PermissionEnum b : PermissionEnum.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
-    }
+    ADMIN,
+    ADMIN_BUSINESS_PROCESS,
+    VIEW_ALL_ARCHIVED_CARDS,
+    VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+    VIEW_ALL_CARDS,
+    VIEW_USER_ACTION_LOGS,
+    READONLY;
 }
