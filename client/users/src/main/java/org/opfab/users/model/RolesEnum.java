@@ -10,34 +10,9 @@
 
  package org.opfab.users.model;
 
- import com.fasterxml.jackson.annotation.JsonCreator;
- import com.fasterxml.jackson.annotation.JsonValue;
- 
  public enum RolesEnum {
-     ACTIVITY_AREA("ACTIVITY_AREA"),
-     ACTIVITY_AREA_GROUP("ACTIVITY_AREA_GROUP"),
-     CARD_RECEIVER("CARD_RECEIVER"),
-     CARD_SENDER("CARD_SENDER");
- 
-     private String value;
- 
-     RolesEnum(String value) {
-         this.value = value;
-     }
- 
-     @Override
-     @JsonValue
-     public String toString() {
-         return String.valueOf(value);
-     }
- 
-     @JsonCreator
-     public static RolesEnum fromValue(String text) {
-         for (RolesEnum b : RolesEnum.values()) {
-             if (String.valueOf(b.value).equals(text)) {
-                 return b;
-             }
-         }
-         return null;
-     }
+    ACTIVITY_AREA,
+    ACTIVITY_AREA_GROUP,
+    CARD_RECEIVER,
+    CARD_SENDER;
  }
