@@ -267,23 +267,6 @@ class CurrentUserWithPerimetersServiceShould {
                                 PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS);
         }
 
-        // For compatibility with old version , being in admin group gives the admin
-        // permission
-        // to be removed in a future release
-        @Test
-        void GIVEN_User_With_Group_Admin_WHEN_Fetching_CurrentUserWithPerimeters_THEN_Permission_Admin_Is_Set() {
-
-                User user = new User();
-                user.setLogin("test");
-                user.addGroup(GROUP_ADMIN);
-                
-                CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                                usersServiceStub, userSettingsService, entityRepositoryStub);
-                CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
-                                .fetchCurrentUserWithPerimeters(user);
-                assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.ADMIN);
-        }
-
         @Test
         void GIVEN_User_Login_WHEN_FetchingUserWithPerimeters_CurrentUserWithPerimetersShouldContainsUserEntitiesParents()
                         throws Exception {

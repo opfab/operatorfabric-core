@@ -1,0 +1,15 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.2.0 to release 4.3.0
+
+
+== ADMIN group 
+Users belonging to 'ADMIN' group will not be automatically given admin rights anymore.
+The admin rights will be set only if user is member of a group with ADMIN permission.
+
+IMPORTANT: Before initiating the migration process, ensure that all users with administrative privileges are members of a group that has been explicitly granted the 'ADMIN' permission. Failing to do so may result in loss of the ability to administrate operator fabric

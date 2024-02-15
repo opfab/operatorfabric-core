@@ -108,16 +108,13 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         List<Criteria> criteria = new ArrayList<>();
         criteria.add(Criteria.where("_id").is(id));
 
-        boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
-                                                   (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
-        
         boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
                 PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
 
-        boolean isAdminModeForUserPerimeters = (!isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission &&
+        boolean isAdminModeForUserPerimeters = (!hasCurrentUserAdminPermission &&
                 hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS));
 
-        if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission)
+        if (!hasCurrentUserAdminPermission)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters, isAdminModeForUserPerimeters));
         return criteria;
     }
