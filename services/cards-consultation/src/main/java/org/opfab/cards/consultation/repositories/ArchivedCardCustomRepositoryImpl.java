@@ -161,18 +161,15 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             CardsFilter filter) {
         if (filter.adminMode() != null) {
             boolean adminMode = Boolean.TRUE.equals(filter.adminMode());
-            boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
-                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
 
             boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
                     PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
 
-            if (adminMode && !isCurrentUserMemberOfAdminGroup &&
-                    !hasCurrentUserAdminPermission)
+            if (adminMode && !hasCurrentUserAdminPermission)
                 log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group",
                         ADMIN_MODE);
 
-            return (isCurrentUserMemberOfAdminGroup || hasCurrentUserAdminPermission) && adminMode;
+            return (hasCurrentUserAdminPermission) && adminMode;
         }
         return false;
     }

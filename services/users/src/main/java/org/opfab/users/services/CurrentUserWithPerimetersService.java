@@ -67,7 +67,6 @@ public class CurrentUserWithPerimetersService {
                             if (list != null)
                                 perimetersData.addAll(list);
                             permissionsData.addAll(groupData.getPermissions());
-                            if (groupData.getId().equals("ADMIN")) permissionsData.add(PermissionEnum.ADMIN);
                         });
                 userWithPerimeterData.computePerimeters(perimetersData);
                 userWithPerimeterData.setPermissions(new ArrayList<>(permissionsData));
