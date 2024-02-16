@@ -62,7 +62,7 @@
       "label": "title.admin",
       "entries": [
         {
-          "customMenuId": "uid_test_3",
+          "customMenuId": "uid_test_4",
           "url": "https://opfab.github.io/",
           "label": "entry.admin",
           "linkType": "BOTH",
