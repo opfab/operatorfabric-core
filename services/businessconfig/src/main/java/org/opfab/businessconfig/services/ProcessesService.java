@@ -23,6 +23,7 @@ import org.opfab.businessconfig.model.Process;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
+import org.opfab.utilities.StringUtils;
 import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
@@ -618,6 +619,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException
      */
     public synchronized void deleteFile(String resourceName) throws IOException {
+        resourceName = StringUtils.sanitize(resourceName);
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
                 .resolve(resourceName)
                 .normalize();
@@ -642,6 +644,8 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateBusinessDataFile(String fileContent, String resourceName)
             throws IOException, ParseException {
+        
+        resourceName = StringUtils.sanitize(resourceName);
         Path businessDataPath = Paths.get(this.storagePath + "/businessdata").normalize();
 
         if (!businessDataPath.toFile().exists()) {
