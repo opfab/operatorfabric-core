@@ -290,8 +290,6 @@ describe('AdmininstrationPages', () => {
         // Check id and name are mandatory
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
-        cy.get('#opfab-group-users').should('not.exist');
-
         cy.get('#opfab-id').type('testgroup');
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
@@ -310,6 +308,10 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-permissions').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-permissions').click();
 
+        cy.get('#opfab-group-users').click();
+        cy.get('#opfab-group-users').find('.vscomp-option-text').eq(5).click({force: true});
+        cy.get('#opfab-group-users').click();
+
         cy.get('#opfab-realtime').check({force: true});
 
         cy.get('#opfab-admin-edit-btn-add').click();
@@ -326,7 +328,6 @@ describe('AdmininstrationPages', () => {
         cy.get('of-edit-group-modal').should('exist');
 
         cy.get('#opfab-id').should('not.exist');
-        cy.get('#opfab-group-users').should('be.empty');
 
         cy.get('.modal-title').should('contain.text', 'testgroup');
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
@@ -338,6 +339,9 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-name').type(' updated');
 
         cy.get('#opfab-description').type(' updated');
+
+        cy.get('#opfab-group-users').find('.vscomp-option.selected').should('have.length', 1);
+        cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator1_it');
 
         cy.get('#opfab-perimeters').click();
         // Deselect old perimeter
@@ -392,7 +396,10 @@ describe('AdmininstrationPages', () => {
 
          cy.get('of-edit-group-modal').should('exist');
          cy.get('.modal-title').should('contain.text', 'RTE');
-         cy.get('#opfab-group-users').contains('operator3_fr, operator5_fr');
+         cy.get('#opfab-group-users').find('.vscomp-option.selected').should('have.length', 2);
+         cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator3_fr');
+         cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(1).should('have.attr', 'data-value', 'operator5_fr');
+
     });
 
     it('List, add, edit, delete perimeters', () => {

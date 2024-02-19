@@ -518,6 +518,7 @@
         "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",
         "allEntitiesSupervised": "Alle entiteiten staan al onder toezicht"
       },
+      "selectUserText": "Selecteer Gebruiker",
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
       "selectPerimeterText": "Selecteen een Perimeter",

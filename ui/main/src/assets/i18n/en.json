@@ -517,6 +517,7 @@
         "confirmDelete": "Do you really want to delete supervised entity",
         "allEntitiesSupervised": "All entities are already supervised"
       },
+      "selectUserText": "Select a User",
       "selectGroupText": "Select a Group",
       "selectEntityText": "Select an Entity",
       "selectPerimeterText": "Select a Perimeter",

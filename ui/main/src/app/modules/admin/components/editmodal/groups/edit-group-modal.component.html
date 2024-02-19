@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -64,9 +64,14 @@
                              [selectedOptions]="selectedGroupPermissions">
             </of-multi-select>
           </div>
-          <div *ngIf="!!row" class="opfab-input opfab-edit-row" style="height: fit-content; min-height: 46px">
-            <label for="opfab-group-users" translate>admin.input.group.users</label>
-            <div style="padding:10px" id="opfab-group-users">{{groupUsers}}</div>
+          <div class="opfab-edit-row">
+            <of-multi-select id="opfab-group-users"
+              multiSelectId="users"
+              [parentForm]="groupForm"
+              [config]="usersMultiSelectConfig"
+              [options]="usersMultiSelectOptions"
+              [selectedOptions]="selectedUsers">
+            </of-multi-select>
           </div>
           <div class="opfab-edit-row">
             <label for="opfab-realtime" class="opfab-checkbox "> <span class="" translate>admin.input.group.realtime</span>

@@ -73,6 +73,7 @@ public class GroupsService {
             if (foundPerimetersResult.isSuccess()) {
                 boolean isAlreadyExisting = groupRepository.findById(group.getId()).isPresent();
                 Group newGroup = groupRepository.save(group);
+                updateGroupUsers(newGroup.getId(), group.getUsers());
                 notificationService.publishUpdatedGroupMessage(group.getId());
                 EntityCreationReport<Group> report = new EntityCreationReport<>(isAlreadyExisting, newGroup);
                 return new OperationResult<>(report, true, null, null);
