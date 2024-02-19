@@ -12,6 +12,7 @@ package org.opfab.users.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
 
@@ -28,6 +29,10 @@ public class Group {
     private String description;
     private Set<String> perimeters;
     private Set<PermissionEnum> permissions;
+
+    @Transient
+    private Set<String> users;
+
     private Boolean realtime = false;
 
     public Group(String id) {
@@ -136,5 +141,15 @@ public class Group {
 
     public void deletePermission(PermissionEnum permission) {
         permissions.remove(permission);
+    }
+
+    public List<String> getUsers() {
+        if (users == null)
+            return Collections.emptyList();
+        return new ArrayList<>(users);
+    }
+
+    public void setUsers(List<String> users) {
+        this.users = new HashSet<>(users);
     }
 }

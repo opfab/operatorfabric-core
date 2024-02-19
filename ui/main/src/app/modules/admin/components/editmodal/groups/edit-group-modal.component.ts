@@ -34,18 +34,26 @@ export class EditGroupModalComponent implements OnInit {
         id: FormControl<string | null>;
         name: FormControl<string | null>;
         description: FormControl<string | null>;
+        users: FormControl<{}[] | null>;
         perimeters: FormControl<{}[] | null>;
         permissions: FormControl<[] | null>;
         realtime: FormControl<boolean | null>;
     }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
+    usersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
     selectedGroupPermissions = [];
+    selectedUsers = [];
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.perimeters',
         placeholderKey: 'admin.input.selectPerimeterText',
+        sortOptions: true
+    };
+    usersMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.group.users',
+        placeholderKey: 'admin.input.selectUserText',
         sortOptions: true
     };
 
@@ -55,8 +63,6 @@ export class EditGroupModalComponent implements OnInit {
     private crudService: CrudService;
 
     groupPermissions = [];
-
-    groupUsers: string;
 
     public permissionsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.permissions',
@@ -90,6 +96,7 @@ export class EditGroupModalComponent implements OnInit {
             ),
             name: new FormControl('', [Validators.required], uniqueGroupNameValidator),
             description: new FormControl(''),
+            users: new FormControl([]),
             perimeters: new FormControl([]),
             permissions: new FormControl([]),
             realtime: new FormControl<boolean | null>(false)
@@ -106,15 +113,15 @@ export class EditGroupModalComponent implements OnInit {
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupPermissions = this.row.permissions;
-
-            UserService.getAll().subscribe((users) => {
-                this.groupUsers = users
-                    .filter((usr) => this.isUserInCurrentGroup(usr))
-                    .map((usr) => usr.login)
-                    .join(', ');
-                this.changeDetector.markForCheck();
-            });
         }
+
+        UserService.getAll().subscribe((users) => {
+            this.usersMultiSelectOptions = [];
+            users.forEach((u) => this.usersMultiSelectOptions.push(new MultiSelectOption(u.login, u.login)));
+            if (this.row)
+                this.selectedUsers = users.filter((usr) => this.isUserInCurrentGroup(usr)).map((usr) => usr.login);
+            this.changeDetector.markForCheck();
+        });
 
         PerimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
