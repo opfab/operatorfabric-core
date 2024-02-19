@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,15 +24,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Path manipulation utility
- *
- *
+ *  <br> <br> 
+ * <b>WARNING :</b>
+ * methods do not check for path manipulation vulnerabilities
+ * , please check path values before calling the methods
  */
 @Slf4j
 public class PathUtils {
 
-  /**
-   * Utility class don't need to be instantiated;
-   */
+
   private PathUtils(){
   }
 
@@ -48,6 +48,10 @@ public class PathUtils {
 
   /**
    * move directory targeted by path
+   * 
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path values before calling the method
    * @param source origin directory
    * @param target target directory
    * @throws IOException if an I/O error occurs
@@ -59,6 +63,10 @@ public class PathUtils {
 
   /**
    * copy directory targeted by path
+   * 
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path values before calling the method
    * @param source origin directory
    * @param target target directory
    * @throws IOException if an I/O error occurs
@@ -69,6 +77,9 @@ public class PathUtils {
 
   /**
    * delete directory targeted by path
+  * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path value before calling the method
    * @param source directoru to delete
    * @throws IOException if an I/O error occurs
    */
@@ -81,6 +92,9 @@ public class PathUtils {
 
   /**
    * copy file targeted by path
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path values before calling the method
    * @param source origin file
    * @param target target file
    * @throws IOException if an I/O error occurs
@@ -94,6 +108,9 @@ public class PathUtils {
 
   /**
    * Delete the file or directory targeted by source path. Logging exception instead of throwing them
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path value before calling the method
    * @param source target path
    * @return true if target was deleted, false otherwise
    */
@@ -111,6 +128,10 @@ public class PathUtils {
 
   /**
    * Delete the file or directory targeted by source path
+   * 
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path value before calling the method
    * @param source target path
    * @throws IOException if an I/O error occurs
    */
@@ -127,6 +148,10 @@ public class PathUtils {
 
   /**
    * Unpack tar.gz file
+   * 
+   * <br> <br> 
+   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+   * , please check path value before calling the method
    * @param is tar.gz inputstream
    * @param outPath output folder
    * @throws IOException if an I/O error occurs
@@ -180,6 +205,10 @@ public class PathUtils {
     }
   }
 
+  /** 
+  * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
+  * , please check path value before calling the method
+  **/
   public static void copyInputStreamToFile(InputStream is, String outPath) throws IOException {
 
     File targetFile = new File(outPath);
@@ -189,6 +218,8 @@ public class PathUtils {
             targetFile.toPath(),
             StandardCopyOption.REPLACE_EXISTING);
   }
+
+  
 }
 
 /**

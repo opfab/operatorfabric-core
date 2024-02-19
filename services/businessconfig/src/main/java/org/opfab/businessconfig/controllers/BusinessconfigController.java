@@ -295,7 +295,6 @@ public class BusinessconfigController {
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file,
             String endPointName, String resourceName) {
 
-        resourceName = StringUtils.sanitize(resourceName);
 
         try {
             if (endPointName.equals("processgroups"))
@@ -403,7 +402,7 @@ public class BusinessconfigController {
             @PathVariable("resourceName") String resourceName)
             throws ApiErrorException {
 
-        resourceName = StringUtils.sanitize(resourceName);
+       
 
         try {
             processService.deleteFile(resourceName);
