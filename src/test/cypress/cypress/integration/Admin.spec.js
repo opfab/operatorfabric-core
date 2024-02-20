@@ -157,8 +157,6 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
-        cy.get('#opfab-entity-users').should('not.exist');
-
         cy.get('#opfab-name').type('entity name');
 
         cy.get('#opfab-admin-edit-btn-add').should('not.be.disabled');
@@ -175,7 +173,9 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-parents').click();
 
-       
+        cy.get('#opfab-entity-users').click();
+        cy.get('#opfab-entity-users').find('.vscomp-option-text').eq(5).click({force: true});
+        cy.get('#opfab-entity-users').click();
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
@@ -197,8 +197,6 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-id').should('not.exist');
 
-        cy.get('#opfab-entity-users').should('be.empty');
-
         cy.get('.modal-title').should('contain.text', 'entityId');
 
         cy.get('#opfab-name').type(' updated');
@@ -206,9 +204,9 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-description').type(' updated');
 
         cy.get('#opfab-roles').click();
-        // Deselect old parents
+        // Deselect old roles
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
-        // Select new parent
+        // Select new role
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-roles').click();
 
@@ -230,6 +228,8 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-parents').click();
 
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').should('have.length', 1);
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator1_it');
  
         cy.get('#opfab-admin-entity-btn-save').click();
 
@@ -266,7 +266,12 @@ describe('AdmininstrationPages', () => {
 
         cy.get('of-edit-entity-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'ENTITY2_FR');
-        cy.get('#opfab-entity-users').contains('admin, operator2_fr, operator4_fr');
+
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').should('have.length', 4);
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'admin');
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(1).should('have.attr', 'data-value', 'operator1_crisisroom');
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(2).should('have.attr', 'data-value', 'operator2_fr');
+        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(3).should('have.attr', 'data-value', 'operator4_fr');
     });
 
     it('List, add, edit, delete groups', () => {
