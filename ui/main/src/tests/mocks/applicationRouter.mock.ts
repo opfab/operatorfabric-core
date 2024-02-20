@@ -15,4 +15,8 @@ export class ApplicationRouterMock extends ApplicationRouter {
     navigateTo(url: string) {
         this.urlCalled = url;
     }
+
+    getCurrentRoute(): string {
+        return this.urlCalled;
+    }
 }

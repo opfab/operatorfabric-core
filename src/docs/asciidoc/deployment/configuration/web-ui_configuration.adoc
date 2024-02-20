@@ -71,6 +71,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 
 |checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
 
+|defaultEntryPage|feed|no|This configuration determines the default page that will be displayed after a user logs in. The possible values include all core menus, with the exception of 'usercard' and 'about'. Additionally, you can set a custom application as the entry page by using 'businessconfigparty/menuId' as the value.
 |environmentColor|blue|no| Color of the background of the environment name. The format of color is css, for example : `red` , `#4052FF`
 |environmentName||no| Name of the environment to display in the top-right corner (examples: PROD , TEST .. ), if the value not set the environment name is not shown .
 

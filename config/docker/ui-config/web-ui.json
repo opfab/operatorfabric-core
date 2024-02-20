@@ -6,6 +6,7 @@
   "externalDevicesEnabled": true,
   "selectActivityAreaOnLogin": false,
   "heartbeatSendingInterval": 30,
+  "defaultEntryPage": "feed",
   "alerts": {
     "messageBusinessAutoClose": false,
     "messageOnBottomOfTheScreen": false,

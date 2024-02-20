@@ -102,7 +102,7 @@ export class AuthService {
     private redirectToCurrentLocation(): void {
         const pathname = window.location.hash;
         const hashLength = pathname.length;
-        const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
+        const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/';
         this.router.navigate([decodeURI(lastDestination)]);
     }
 

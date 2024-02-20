@@ -116,6 +116,10 @@ export class ServicesConfig {
         SelectedCardLoaderService.init();
         loadBuildInTemplates();
         ServicesConfig.initOpfabAPI();
+        if (RouterService.getCurrentRoute() === '/') {
+            const defaultEntryPage = ConfigService.getConfigValue('defaultEntryPage', 'feed');
+            RouterService.navigateTo(defaultEntryPage);
+        }
     }
 
     private static initOpfabAPI(): void {

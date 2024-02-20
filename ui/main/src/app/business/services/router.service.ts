@@ -19,4 +19,8 @@ export class RouterService {
     public static navigateTo(url: string) {
         RouterService.router.navigateTo(url);
     }
+
+    public static getCurrentRoute(): string {
+        return RouterService.router.getCurrentRoute();
+    }
 }

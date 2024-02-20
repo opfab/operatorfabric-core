@@ -19,8 +19,6 @@ import {LoggingComponent} from '../modules/logging/logging.component';
 import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
 import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
 
-const defaultPath = '/feed';
-
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
 //  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode
@@ -103,8 +101,7 @@ const routes: Routes = [
     {
         path: 'devtools/richtext',
         component: RichTextComponent
-    },
-    {path: '**', redirectTo: defaultPath}
+    }
 ];
 const startIndex = 0;
 const numberOfHiddenRoutes = 11; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration', 'useractionlogs'
