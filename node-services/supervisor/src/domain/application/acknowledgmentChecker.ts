@@ -136,7 +136,7 @@ export default class AcknowledgementChecker {
             }
         };
 
-        return await this.opfabInterface.sendCard(card);
+        await this.opfabInterface.sendCard(card);
     }
 
     private removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
@@ -151,7 +151,7 @@ export default class AcknowledgementChecker {
         }
     }
 
-                private cleanCardsAreadySent(): void {
+    private cleanCardsAreadySent(): void {
         const dateLimit = Date.now() - this.windowInSecondsForCardSearch * 1000;
         this.cardsAlreadySent.forEach((v, k) => {
             if (v < dateLimit) {

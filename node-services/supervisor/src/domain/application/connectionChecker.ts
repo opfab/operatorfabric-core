@@ -143,6 +143,6 @@ export default class ConnectionChecker {
         card.data = {disconnected: entityName, minutes};
         card.title = {key: 'connection.title', parameters: {disconnected: entityName}};
         card.summary = {key: 'connection.summary', parameters: {disconnected: entityName, minutes}};
-        return await this.opfabInterface.sendCard(card);
+        await this.opfabInterface.sendCard(card);
     }
 }

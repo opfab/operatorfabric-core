@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export class Card {
     entityRecipients: string[];
     entityRecipientsForInformation: string[];
