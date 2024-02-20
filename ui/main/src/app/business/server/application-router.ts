@@ -9,4 +9,5 @@
 
 export abstract class ApplicationRouter {
     abstract navigateTo(url: string);
+    abstract getCurrentRoute(): string;
 }

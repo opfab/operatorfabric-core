@@ -22,4 +22,8 @@ export class AngularRouterService extends ApplicationRouter {
     public navigateTo(url: string) {
         this.router.navigate([url]);
     }
+
+    public getCurrentRoute(): string {
+        return this.router.url;
+    }
 }
