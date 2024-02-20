@@ -1,4 +1,4 @@
-FROM nginx:1.25.3-alpine
+FROM nginx:1.25.4-alpine
 VOLUME /tmp
 RUN apk add bash logrotate --no-cache
 # del unused lib for security reason 
