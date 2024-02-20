@@ -70,6 +70,7 @@ public class EntitiesService {
             }
             boolean isAlreadyExisting = entityRepository.findById(entity.getId()).isPresent();
             Entity newEntity = entityRepository.save(entity);
+            updateEntityUsers(newEntity.getId(), entity.getUsers());
             notificationService.publishUpdatedConfigMessage();
             EntityCreationReport<Entity> report = new EntityCreationReport<>(isAlreadyExisting, newEntity);
             return new OperationResult<>(report, true, null, null);

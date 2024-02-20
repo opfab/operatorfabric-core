@@ -37,6 +37,7 @@ export class EditEntityModalComponent implements OnInit {
         roles: FormControl<[] | null>;
         labels: FormControl<[] | null>;
         parents: FormControl<[] | null>;
+        users: FormControl<[] | null>;
     }>;
 
     @Input() row: any;
@@ -45,8 +46,10 @@ export class EditEntityModalComponent implements OnInit {
     entities: Entity[];
     entityParentsMultiSelectOptions: Array<MultiSelectOption> = [];
     entityRolesMultiSelectOptions: Array<MultiSelectOption> = [];
+    entityUsersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedEntities = [];
     selectedRoles = [];
+    selectedUsers = [];
     entityParentsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.entity.parents',
         placeholderKey: 'admin.input.selectEntityText',
@@ -57,9 +60,12 @@ export class EditEntityModalComponent implements OnInit {
         placeholderKey: 'admin.input.selectEntityText',
         sortOptions: true
     };
+    entityUsersMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.entity.users',
+        placeholderKey: 'admin.input.selectUserText',
+        sortOptions: true
+    };
     labelsPlaceholder: string;
-
-    entityUsers: string;
 
     private crudService: CrudService;
 
@@ -90,7 +96,8 @@ export class EditEntityModalComponent implements OnInit {
             description: new FormControl(''),
             roles: new FormControl([]),
             labels: new FormControl([]),
-            parents: new FormControl([])
+            parents: new FormControl([]),
+            users: new FormControl([])
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -99,15 +106,15 @@ export class EditEntityModalComponent implements OnInit {
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
             this.selectedRoles = this.row.roles;
-
-            UserService.getAll().subscribe((users) => {
-                this.entityUsers = users
-                    .filter((usr) => this.isUserInCurrentEntity(usr))
-                    .map((usr) => usr.login)
-                    .join(', ');
-                this.changeDetector.markForCheck();
-            });
         }
+
+        UserService.getAll().subscribe((users) => {
+            this.entityUsersMultiSelectOptions = [];
+            users.forEach((u) => this.entityUsersMultiSelectOptions.push(new MultiSelectOption(u.login, u.login)));
+            if (this.row)
+                this.selectedUsers = users.filter((usr) => this.isUserInCurrentEntity(usr)).map((usr) => usr.login);
+            this.changeDetector.markForCheck();
+        });
 
         this.translate.get('admin.input.entity.addLabel').subscribe((translation) => {
             this.labelsPlaceholder = translation;

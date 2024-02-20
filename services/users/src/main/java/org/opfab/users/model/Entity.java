@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
 
@@ -41,6 +42,9 @@ public class Entity {
     private Set<String> parents;
     @Valid
     private SortedSet<RolesEnum> roles;
+
+    @Transient
+    private Set<String> users;
 
 
     public Entity(@NotNull String id, String name, String description, Set<String> labels, Set<String> parents, @Valid SortedSet<RolesEnum> roles) {
@@ -135,5 +139,15 @@ public class Entity {
             this.roles = roles.stream().collect(Collectors.toCollection(TreeSet::new));
         }
 
+    }
+
+    public List<String> getUsers() {
+        if (users == null)
+            return Collections.emptyList();
+        return new ArrayList<>(users);
+    }
+
+    public void setUsers(List<String> users) {
+        this.users = new HashSet<>(users);
     }
 }
