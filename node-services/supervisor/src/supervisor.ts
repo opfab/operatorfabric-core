@@ -24,14 +24,13 @@ const app = express();
 app.disable('x-powered-by');
 app.use(bodyParser.json());
 
-
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 
 /* eslint-disable */
 // disable eslint as false positive , promise are authorized see
 // https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
 app.use(
-    /\/((?!healthcheck).)*/,  // Token verification activated except for heathcheck request
+    /\/((?!healthcheck).)*/, // Token verification activated except for heathcheck request
     expressjwt({
         secret: jwksRsa.expressJwtSecret({
             cache: true,
