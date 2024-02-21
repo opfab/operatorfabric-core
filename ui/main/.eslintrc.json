@@ -1,62 +1,64 @@
 {
-  "root": true,
-  "ignorePatterns": [
-    "projects/**/*"
-  ],
-  "env": {
-    "es6":true
-  },
-
-  "parserOptions": {
-    "ecmaVersion": 2020
-  },
-  "overrides": [
-    {
-      "files": [
-        "*.ts"
-      ],
-      "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ],
-        "createDefaultProgram": true
-      },
-      "extends": [
-        "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:prettier/recommended"
-      ],
-      "rules": {
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "of",
-            "style": "camelCase"
-          }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "of",
-            "style": "kebab-case"
-          }
-        ],
-        "eqeqeq": [2, "smart"],
-        "prefer-const": 2,
-        "no-trailing-spaces": "error",
-        "keyword-spacing": ["error"]
-      }
+    "root": true,
+    "ignorePatterns": ["projects/**/*"],
+    "env": {
+        "es6": true
     },
-    {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
-      "rules": {}
-    }
-  ]
+
+    "parserOptions": {
+        "ecmaVersion": 2020
+    },
+    "plugins": ["ban"],
+    "rules": {
+        "ban/ban": [
+            2,
+            {"name": ["describe", "only"], "message": "don't focus tests"},
+            {"name": "fdescribe", "message": "don't focus tests"},
+            {"name": ["it", "only"], "message": "don't focus tests"},
+            {"name": "fit", "message": "don't focus tests"},
+            {"name": ["test", "only"], "message": "don't focus tests"},
+            {"name": "ftest", "message": "don't focus tests"}
+        ]
+    },
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "parserOptions": {
+                "project": ["tsconfig.json"],
+                "createDefaultProgram": true
+            },
+            "extends": [
+                "plugin:@angular-eslint/recommended",
+                "plugin:@angular-eslint/template/process-inline-templates",
+                "plugin:prettier/recommended"
+            ],
+            "rules": {
+                "@angular-eslint/directive-selector": [
+                    "error",
+                    {
+                        "type": "attribute",
+                        "prefix": "of",
+                        "style": "camelCase"
+                    }
+                ],
+                "@angular-eslint/component-selector": [
+                    "error",
+                    {
+                        "type": "element",
+                        "prefix": "of",
+                        "style": "kebab-case"
+                    }
+                ],
+                "eqeqeq": [2, "smart"],
+                "prefer-const": 2,
+                "no-trailing-spaces": "error",
+                "keyword-spacing": ["error"]
+            }
+        },
+        {
+            "files": ["*.html"],
+            "extends": ["plugin:@angular-eslint/template/recommended"],
+            "rules": {}
+        }
+    ]
 }
