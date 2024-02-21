@@ -323,6 +323,7 @@
     "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
     "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
     "emailToPlainText": "De e-mails versturen in platte tekst",
+    "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
     "email": "Email"
   },
   "archive": {

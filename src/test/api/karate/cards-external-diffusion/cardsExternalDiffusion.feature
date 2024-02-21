@@ -54,6 +54,7 @@ Feature: Cards external diffusion
     {
     "login" : "operator1_fr",
     "sendCardsByEmail": true,
+    "sendDailyEmail": true,
     "email" : "operator1_fr@opfab.com",
     "processesStatesNotifiedByEmail": {"api_test": ["mailState"]}
     }
@@ -70,14 +71,14 @@ Feature: Cards external diffusion
     }
     """
 
-#Create new perimeter
+# Create new perimeter
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeter
     When method post
     Then status 201
 
-#Attach perimeter to group
+# Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeterArray
@@ -161,6 +162,12 @@ Scenario: Start/Stop/Status API
     Then status 200
     And  match karate.toString(response) ==  'true'
 
+    # Call daily email API as non admin user should fail
+    Given url 'http://localhost:2106/sendDailyEmail'
+	And header Authorization = 'Bearer ' + authTokenOperator1
+    When method post
+    Then status 403
+
 Scenario: Check mail for operator 1 is sent
 
     * def updateConfig =
@@ -198,7 +205,7 @@ Scenario: Check mail for operator 1 is sent
     And match response.items[0].Content.Body contains 'A MESSAGE'
     And match response.items[0].Content.Body contains '/api_test.process1'
 
-    # Delete sent mail
+    # Delete sent email
     Given url 'http://localhost:8025/api/v1/messages'
 	And header Authorization = 'Bearer ' + authTokenOperator1
     When method delete
@@ -245,13 +252,13 @@ Scenario: Check email has been sent as plain text
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/plain; charset=utf-8'
 
-    # Delete sent mail
+    # Delete sent email
     Given url 'http://localhost:8025/api/v1/messages'
 	And header Authorization = 'Bearer ' + authTokenOperator1
     When method delete
     Then status 200
 
-Scenario: Restore
+Scenario: Restore email config
 
     * def defaultConfig =
     """
@@ -266,6 +273,35 @@ Scenario: Restore
     And request defaultConfig
     When method post
     Then status 200
+
+Scenario: Check daily recap email is being sent
+
+    # Send the daily recap
+    Given url 'http://localhost:2106/sendDailyEmail'
+	And header Authorization = 'Bearer ' + authTokenAdmin	
+    When method post
+    Then status 200
+
+    # Check daily recap is sent and a card link is in it
+    * configure retry = { count: 45, interval: 1000 }
+    Given url 'http://localhost:8025/api/v2/messages'
+	And header Authorization = 'Bearer ' + authTokenOperator2
+    And retry until responseStatus == 200  && response.count == 1
+    When method get
+    Then status 200
+    And match response.items[0].To[0].Mailbox == 'operator1_fr'
+    And match response.items[0].To[0].Domain == 'opfab.com'
+    And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
+    And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the day') == 0
+    And match response.items[0].Content.Body contains 'api_test.process1'
+
+    # Delete sent email
+    Given url 'http://localhost:8025/api/v1/messages'
+	And header Authorization = 'Bearer ' + authTokenOperator1
+    When method delete
+    Then status 200
+
+Scenario: Restore perimeter config
 
     # delete perimeter created previously
     Given url opfabUrl + 'users/perimeters/perimeter'

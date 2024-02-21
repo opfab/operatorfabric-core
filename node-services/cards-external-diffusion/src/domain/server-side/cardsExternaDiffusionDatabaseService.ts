@@ -105,6 +105,7 @@ export default class CardsExternalDiffusionDatabaseService {
                 userRecipients: 1,
                 groupRecipients: 1,
                 entityRecipients: 1 ,
+                severity: 1,
                 _id: 0
             }).toArray();
         } catch (error) {

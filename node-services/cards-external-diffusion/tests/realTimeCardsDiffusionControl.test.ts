@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,106 +8,20 @@
  */
 
 import 'jest';
-import CardsDiffusionControl from '../src/domain/application/cardsDiffusionControl';
-import SendMailService from '../src/domain/server-side/sendMailService';
-import GetResponse from '../src/common/server-side/getResponse';
+import RealTimeCardsDiffusionControl from '../src/domain/application/realTimeCardsDiffusionControl';
 import Logger from '../src/common/server-side/logger';
-import Handlebars from 'handlebars';
-import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
-import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/cardsExternaDiffusionDatabaseService';
-import BusinessConfigOpfabServicesInterface from '../src/domain/server-side/BusinessConfigOpfabServicesInterface';
-
-class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
-
-    public isResponseValid = true;
-
-    card: any;
-    allUsers: Array<any> = new Array();
-    connectedUsers: Array<any> = new Array();
-
-    usersWithPerimeters: Array<any> = new Array();
-
-    async getCard() {
-        return new GetResponse(this.card, this.isResponseValid);
-    }
-
-    public getUsers() {
-        return this.allUsers;
-    }
-
-    public async getUsersConnected(): Promise<GetResponse> {
-        return new GetResponse(this.connectedUsers, this.isResponseValid);
-    }
-
-    public async getUserWithPerimetersByLogin(login: string): Promise<GetResponse> {
-        const foundIndex = this.usersWithPerimeters.findIndex((u) => u.userData.login === login);
-        return new GetResponse(foundIndex >= 0 ? this.usersWithPerimeters[foundIndex] : null, true);
-    }
-}
-
-class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfabServicesInterface {
-    public isResponseValid = true;
-    config: any;
-    template: string;
-
-    async fetchProcessConfig() {
-        return this.config;
-    }
-
-    async fetchTemplate() {
-        return Handlebars.compile(this.template);
-    }
-}
-
-class SendMailServiceStub extends SendMailService {
-    numberOfMailsSent = 0;
-    sent: Array<any> = [];
-
-    public async sendMail(subject: string, body: string, from: string, to: string) {
-        if (to.indexOf('@') > 0) {
-            this.numberOfMailsSent++;
-
-            this.sent.push({
-                fromAddress: from,
-                toAddress: to,
-                subject: subject,
-                body: body
-            });
-
-            return Promise.resolve({messageId: 'msg1234'});
-        } else return Promise.reject(new Error());
-    }
-}
-
-class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
-    sent: Array<any> = [];
-    cards: Array<any> = new Array();
-
-    public async getCards() {
-        return this.cards;
-    }
-
-    public async getSentMail(cardUid: string, email: string) {
-        const found = this.sent.find((sentmail) => sentmail.cardUid == cardUid && sentmail.email == email);
-        return Promise.resolve(found);
-    }
-
-    public async persistSentMail(cardUid: string, email: string): Promise<void> {
-        this.sent.push({cardUid: cardUid, email: email, date: Date.now()});
-        return Promise.resolve();
-    }
-
-    public async deleteMailsSentBefore(dateLimit: number) {
-        return Promise.resolve();
-    }
-}
-
+import {
+    OpfabServicesInterfaceStub,
+    OpfabBusinessConfigServicesInterfaceStub,
+    DatabaseServiceStub,
+    SendMailServiceStub
+} from './testHelpers';
 
 const logger = Logger.getLogger();
 
 describe('Cards external diffusion', function () {
-    let cardsDiffusionControl: CardsDiffusionControl;
+    let realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
     let opfabBusinessConfigServicesInterfaceStub: OpfabBusinessConfigServicesInterfaceStub;
     let databaseServiceStub: DatabaseServiceStub;
@@ -130,7 +44,7 @@ describe('Cards external diffusion', function () {
         databaseServiceStub = new DatabaseServiceStub();
 
         mailService = new SendMailServiceStub({smtpHost: 'localhost', smtpPort: 1025});
-        cardsDiffusionControl = new CardsDiffusionControl()
+        realTimeCardsDiffusionControl = new RealTimeCardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterfaceStub)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterfaceStub)
@@ -183,7 +97,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
@@ -229,7 +143,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);
@@ -284,7 +198,7 @@ describe('Cards external diffusion', function () {
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);
@@ -339,7 +253,7 @@ describe('Cards external diffusion', function () {
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);
@@ -388,11 +302,11 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
         expect(mailService.numberOfMailsSent).toEqual(1);
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
     });
 
@@ -436,7 +350,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
@@ -481,13 +395,13 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
     });
 
-    it('Should not send card when email not set', async function () {
+    it('Should not send email when email address is not set', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [
@@ -526,7 +440,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
@@ -572,7 +486,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
@@ -618,7 +532,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(2);
@@ -662,8 +576,8 @@ describe('Cards external diffusion', function () {
 
         const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter().setLimitPeriodInSec(30).setSendRateLimit(1);
 
-        cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
-        cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
+        realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+        realTimeCardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
 
         expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeTruthy();
         cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
@@ -672,7 +586,7 @@ describe('Cards external diffusion', function () {
         let registeredMailSent = await databaseServiceStub.getSentMail('2006', 'operator_1@opfab.com');
         expect(registeredMailSent).toBeUndefined();
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
@@ -716,14 +630,14 @@ describe('Cards external diffusion', function () {
         ];
 
         const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter().setLimitPeriodInSec(30).setSendRateLimit(1);
-        cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
-        cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(false);
+        realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+        realTimeCardsDiffusionControl.setActivateCardsDiffusionRateLimiter(false);
 
         expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeTruthy();
         cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
         expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeFalsy();
 
-        await cardsDiffusionControl.checkUnreadCards();
+        await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);

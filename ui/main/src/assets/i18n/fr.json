@@ -323,7 +323,7 @@
     "systemNotificationsDisabledInBrowser": "Les notifications du système d'exploitation sont désactivées dans votre navigateur, vous ne serez pas notifié.",
     "sendCardsByEmail": "Envoi des notifications par mail",
     "emailToPlainText": "Envoi des mails en texte brut",
-
+    "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
     "email": "Email"
   },
   "archive": {

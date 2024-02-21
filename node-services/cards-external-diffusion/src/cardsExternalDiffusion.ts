@@ -187,6 +187,19 @@ app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
 
+app.post('/sendDailyEmail', (req, res) => {
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Sending email with cards from the last 24 hours');
+            cardsExternalDiffusionService.sendDailyRecap();
+            res.send();
+        }
+    })
+});
+
 async function start() {
     await cardsExternalDiffusionDatabaseService.connectToMongoDB();
     opfabServicesInterface.startListener();

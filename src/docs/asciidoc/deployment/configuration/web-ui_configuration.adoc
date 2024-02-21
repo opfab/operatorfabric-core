@@ -173,6 +173,7 @@ a|authentication mode, available options:
 "systemNotifications" : if present, the checkboxes for systemNotifications won't be displayed +
 "sendCardsByEmail"  : if present, the email options won't be displayed +
 "emailToPlainText"  : if present, the email option to have the emails sent as plain text won't be displayed
+"sendDailyEmail"  : if present, the email option to have the daily email recap won't be displayed
 
 |showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
 
