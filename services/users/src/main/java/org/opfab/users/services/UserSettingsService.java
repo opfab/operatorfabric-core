@@ -69,6 +69,7 @@ public class UserSettingsService {
                 || (userSettingsPatch.getEntitiesDisconnected() != null)
                 || (userSettingsPatch.getSendCardsByEmail() != null)
                 || (userSettingsPatch.getEmailToPlainText() != null)
+                || (userSettingsPatch.getSendDailyEmail() != null)
                 || (userSettingsPatch.getEmail() != null))
             notificationService.publishUpdatedUserMessage(login);
 

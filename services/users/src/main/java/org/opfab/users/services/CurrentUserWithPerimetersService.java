@@ -84,6 +84,7 @@ public class CurrentUserWithPerimetersService {
             userWithPerimeterData.setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
             userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
+            userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
         }
     }

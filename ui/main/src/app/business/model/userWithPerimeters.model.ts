@@ -20,6 +20,7 @@ export class UserWithPerimeters {
         readonly processesStatesNotifiedByEmail?: Map<string, Array<string>>,
         readonly sendCardsByEmail?: boolean,
         readonly emailToPlainText?: boolean,
+        readonly sendDailyEmail?: boolean,
         readonly email?: string
     ) {}
 }

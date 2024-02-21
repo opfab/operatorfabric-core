@@ -37,6 +37,7 @@ export class SettingsComponent implements OnInit {
     systemNotificationInformationDefaultValue: boolean;
     sendCardsByEmailDefaultValue: boolean;
     emailToPlainTextDefaultValue: boolean;
+    sendDailyEmailDefaultValue: boolean;
 
     userConfiguration: UserConfiguration;
 
@@ -90,6 +91,9 @@ export class SettingsComponent implements OnInit {
             : false;
         this.emailToPlainTextDefaultValue = ConfigService.getConfigValue('settings.emailToPlainText')
             ? ConfigService.getConfigValue('settings.emailToPlainText')
+            : false;
+        this.sendDailyEmailDefaultValue = ConfigService.getConfigValue('settings.sendDailyEmail')
+            ? ConfigService.getConfigValue('settings.sendDailyEmail')
             : false;
         const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
 

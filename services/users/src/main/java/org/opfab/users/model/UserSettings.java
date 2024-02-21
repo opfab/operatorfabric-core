@@ -38,6 +38,7 @@ public class UserSettings {
     private Boolean remoteLoggingEnabled;
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
+    private Boolean sendDailyEmail;
     private String email;
     private Map<String, List<String>> processesStatesNotNotified;
     private Map<String, List<String>> processesStatesNotifiedByEmail;
@@ -63,6 +64,7 @@ public class UserSettings {
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
+        this.sendDailyEmail = settings.getSendDailyEmail();
         this.email = settings.getEmail();
 
         if (settings.getProcessesStatesNotNotified() != null)
@@ -208,6 +210,14 @@ public class UserSettings {
     public void setEmailToPlainText(Boolean emailToPlainText) {
         this.emailToPlainText = emailToPlainText;
     }
+
+    public Boolean getSendDailyEmail() {
+        return sendDailyEmail;
+    }
+
+    public void setSendDailyEmail(Boolean sendDailyEmail) {
+        this.sendDailyEmail = sendDailyEmail;
+    }
     
     public String getEmail() {
         return email;
@@ -301,6 +311,8 @@ public class UserSettings {
                 this.getSendCardsByEmail());
         result.emailToPlainText = ObjectUtils.getNotNullOrDefault(other.getEmailToPlainText(),
                 this.getEmailToPlainText());
+        result.sendDailyEmail = ObjectUtils.getNotNullOrDefault(other.getSendDailyEmail(),
+                this.getSendDailyEmail());
         result.email = ObjectUtils.getNotNullOrDefault(other.getEmail(), this.getEmail());
 
         return result;

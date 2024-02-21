@@ -42,6 +42,9 @@
       <span *ngIf="!hiddenSettings?.includes('emailToPlainText')">
         <of-checkbox-setting settingPath="emailToPlainText" labelClass="label-emailToPlainText" name="emailToPlainText" [checked]=emailToPlainTextDefaultValue></of-checkbox-setting>
       </span>
+      <div *ngIf="!hiddenSettings?.includes('sendDailyEmail')">
+        <of-checkbox-setting settingPath="sendDailyEmail" labelClass="label-sendDailyEmail" name="sendDailyEmail" [checked]=sendDailyEmailDefaultValue></of-checkbox-setting>
+      </div>
     </div>
 
     <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('sendCardsByEmail')">

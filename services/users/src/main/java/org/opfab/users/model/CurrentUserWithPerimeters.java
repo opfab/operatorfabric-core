@@ -31,6 +31,7 @@ public class CurrentUserWithPerimeters {
 
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
+    private Boolean sendDailyEmail;
     private String email;
 
     @Valid
@@ -66,6 +67,14 @@ public class CurrentUserWithPerimeters {
 
     public void setEmailToPlainText(Boolean emailToPlainText) {
         this.emailToPlainText = emailToPlainText;
+    }
+
+    public Boolean getSendDailyEmail() {
+            return sendDailyEmail;
+        }
+    
+    public void setSendDailyEmail(Boolean sendDailyEmail) {
+        this.sendDailyEmail = sendDailyEmail;
     }
 
     public String getEmail() {

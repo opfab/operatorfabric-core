@@ -24,6 +24,9 @@ operatorfabric:
     defaultConfig:
       subjectPrefix: 'Opfab card received '
       bodyPrefix: 'You received a card in opfab : '
+      dailyEmailTitle: 'Cards received during the day'
+      hourToSendDailyEmail: 7
+      minuteToSendDailyEmail: 30
       opfabUrlInMailContent: http://localhost:2002
       windowInSecondsForCardSearch: 360
       secondsAfterPublicationToConsiderCardAsNotRead: 60
