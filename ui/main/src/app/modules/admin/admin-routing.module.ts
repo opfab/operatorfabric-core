@@ -19,15 +19,30 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {map} from 'rxjs';
 
 const defaultPath = 'users';
 
 const canActivateAdmin: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+    if (UserService.getCurrentUserWithPerimeters())
+        return Promise.resolve(UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]));
+    else
+        return UserService.loadUserWithPerimetersData().pipe(
+            map(() => UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
+        );
 };
 
 const canActivateAdminBusinessProcess: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.ADMIN_BUSINESS_PROCESS]);
+    if (UserService.getCurrentUserWithPerimeters())
+        return Promise.resolve(
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.ADMIN_BUSINESS_PROCESS])
+        );
+    else
+        return UserService.loadUserWithPerimetersData().pipe(
+            map(() =>
+                UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.ADMIN_BUSINESS_PROCESS])
+            )
+        );
 };
 
 const routes: Routes = [
