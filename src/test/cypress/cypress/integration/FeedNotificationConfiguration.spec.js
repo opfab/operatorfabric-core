@@ -565,9 +565,20 @@ describe ('Feed notification configuration tests',function () {
 
         // We unsubscribe from the state
         cy.get('@ProcessExampleMessageState').find('input').uncheck({force: true});
-        saveSettingsForNotificationConfigurationScreen();
 
-        opfab.navigateToFeed(); // we navigate to another screen
+        cy.get('#opfab-navbar-menu-feed').click(); // we navigate to another screen
+
+        cy.get('.modal-body').find('p').eq(0).should('contain.text', 'There are pending modifications, do you want to save?');
+        cy.get('#opfab-feedconfiguration-btn-cancel').click(); // and cancel
+        cy.get('#opfab-feedconfiguration-btn-cancel').should('not.exist'); // wait for dialog to go away
+        cy.hash().should('eq', '#/feedconfiguration'); // should stay in feed configuration page
+
+        cy.get('#opfab-navbar-menu-feed').click();
+
+        cy.get('.modal-body').find('p').eq(0).should('contain.text', 'There are pending modifications, do you want to save?');
+        cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm to save
+        cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+        cy.hash().should('eq', '#/feed');
 
         opfab.navigateToNotificationConfiguration();
         cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
@@ -582,6 +593,19 @@ describe ('Feed notification configuration tests',function () {
         // We subscribe again to the state
         cy.get('@ProcessExampleMessageState').find('input').check({force: true});
         saveSettingsForNotificationConfigurationScreen();
+
+        // Do a modificaton and navigate to another screen choosing not to save modifications
+        cy.get('@MessageOrQuestionMessageState').find('input').uncheck({force: true});
+
+        cy.get('#opfab-navbar-menu-feed').click(); // we navigate to another screen
+
+        cy.get('.modal-body').find('p').eq(0).should('contain.text', 'There are pending modifications, do you want to save?');
+        cy.get('#opfab-feedconfiguration-btn-no').click(); // do not save
+        cy.get('#opfab-feedconfiguration-btn-no').should('not.exist'); // wait for dialog to go away
+        cy.hash().should('eq', '#/feed'); 
+        opfab.navigateToNotificationConfiguration();
+        cy.get('@MessageOrQuestionMessageState').find('input').should('be.checked'); //modifications were not saved
+
     })
 })
 

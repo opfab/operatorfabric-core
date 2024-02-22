@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {UserService} from 'app/business/services/users/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -21,13 +21,14 @@ import {Utilities} from '../../business/common/utilities';
 import {ConfigService} from '../../business/services/config.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
     selector: 'of-feedconfiguration',
     templateUrl: './feedconfiguration.component.html',
     styleUrls: ['./feedconfiguration.component.scss']
 })
-export class FeedconfigurationComponent implements OnInit, AfterViewInit {
+export class FeedconfigurationComponent implements OnInit, AfterViewInit, OnDestroy {
     feedConfigurationForm: FormGroup<{
         processesStates: FormArray;
     }>;
@@ -59,6 +60,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     >;
     statesUnsubscribedButWithFilteringNotificationNotAllowed = '';
     @ViewChild('statesUnsubscribedButWithFilteringNotificationNotAllowedPopup') statesUnsubscribedTemplate: ElementRef;
+    @ViewChild('exitConfirmationPopup') exitConfirmationPopup: ElementRef;
     preparedListOfProcessesStates: {processId: string; stateId: string}[];
     isAllStatesSelectedPerProcess: Map<string, boolean>;
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
@@ -73,6 +75,9 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     isThereProcessStateToDisplay: boolean;
 
     processesStatesNotifiedByEmail: Map<string, boolean>;
+    changeSubscription: Subscription;
+    canDeactivateSubject = new Subject<boolean>();
+    pendingModification: boolean;
 
     constructor(
         private modalService: NgbModal,
@@ -105,12 +110,14 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     private selectStateForMailNotif(processId: string, stateId: string, stateControlIndex: number) {
         if (this.feedConfigurationForm.controls.processesStates.controls[stateControlIndex].value) {
             this.processesStatesNotifiedByEmail.set(processId + '.' + stateId, true);
+            this.pendingModification = true;
         }
     }
 
     private unselectStateForMailNotif(processId: string, stateId: string) {
         if (this.processesStatesNotifiedByEmail.has(processId + '.' + stateId)) {
             this.processesStatesNotifiedByEmail.delete(processId + '.' + stateId);
+            this.pendingModification = true;
         }
     }
 
@@ -333,6 +340,17 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         this.computeProcessesStatesNotifiedByEmail();
 
         this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, true).size > 0;
+        this.changeSubscription = this.feedConfigurationForm.valueChanges.subscribe(() => {
+            this.pendingModification = true;
+        });
+    }
+
+    canDeactivate() {
+        if (this.pendingModification) {
+            this.modalRef = this.modalService.open(this.exitConfirmationPopup, {centered: true, backdrop: 'static'});
+            return this.canDeactivateSubject;
+        }
+        return true;
     }
 
     ngAfterViewInit() {
@@ -414,6 +432,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         }).subscribe({
             next: (resp) => {
                 this.saveSettingsInProgress = false;
+                this.pendingModification = false;
+                this.canDeactivateSubject.next(true);
                 this.messageAfterSavingSettings = '';
                 const msg = resp.message;
                 if (msg?.includes('unable')) {
@@ -435,6 +455,13 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         });
     }
 
+    cancelNavigation() {
+        if (!this.saveSettingsInProgress) {
+            this.modalRef.close();
+        }
+        this.canDeactivateSubject.next(false);
+    }
+
     doNotConfirmSaveSettings() {
         // The modal must not be closed until the settings has been saved in the back
         // If not, with  slow network, when user go to the feed before the end of the request
@@ -444,6 +471,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         if (!this.saveSettingsInProgress) {
             this.modalRef.close();
         }
+        this.canDeactivateSubject.next(true);
     }
 
     openStatesUnsubscribedButWithFilteringNotificationNotAllowedModal() {
@@ -452,5 +480,9 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
     openConfirmSaveSettingsModal(content: TemplateRef<any>) {
         this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
+    }
+
+    ngOnDestroy(): void {
+        this.changeSubscription.unsubscribe();
     }
 }

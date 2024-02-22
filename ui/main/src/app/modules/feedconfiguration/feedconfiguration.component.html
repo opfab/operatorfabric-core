@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -135,6 +135,20 @@
             <p translate>shared.popup.areYouSure</p>
             <button id="opfab-feedconfiguration-btn-no" type="button" class="opfab-btn-cancel" (click)="doNotConfirmSaveSettings()" translate>button.cancel</button>
             <button id="opfab-feedconfiguration-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+        </div>
+    </ng-template>
+</div>
+
+<div class="my-3">
+    <ng-template #exitConfirmationPopup let-modal>
+        <div class="modal-header">
+            <div translate> shared.popup.title </div>
+        </div>
+        <div class="modal-body text-center">
+            <p translate>feedConfiguration.modificationToSave</p>
+            <button id="opfab-feedconfiguration-btn-no" type="button" class="opfab-btn-cancel opfab-small-button" (click)="doNotConfirmSaveSettings()" translate>button.dontSave</button>
+            <button id="opfab-feedconfiguration-btn-cancel" type="button" class="opfab-btn-cancel opfab-small-button" (click)="cancelNavigation()" translate>button.cancel</button>
+            <button id="opfab-feedconfiguration-btn-yes" type="button" ngbAutofocus class="opfab-btn opfab-small-button" (click)="confirmSaveSettings()" translate>button.save</button>
         </div>
     </ng-template>
 </div>
