@@ -59,7 +59,7 @@ class CardRepositoryShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
-        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+        perimeter.setRights(RightsEnum.ReceiveAndWrite);
 
         User user1 = new User();
         user1.setLogin("operator3");

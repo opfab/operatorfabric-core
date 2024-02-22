@@ -203,16 +203,16 @@ public class CurrentUserWithPerimeters {
             return rightsList.get(0);
 
         int size = rightsList.size();
-        if (rightsList.get(size - 2) == RightsEnum.RECEIVEANDWRITE
-                || rightsList.get(size - 1) == RightsEnum.RECEIVEANDWRITE)
-            return RightsEnum.RECEIVEANDWRITE;
+        if (rightsList.get(size - 2) == RightsEnum.ReceiveAndWrite
+                || rightsList.get(size - 1) == RightsEnum.ReceiveAndWrite)
+            return RightsEnum.ReceiveAndWrite;
 
         if (rightsList.get(size - 2) == rightsList.get(size - 1)) {
             rightsList.remove(size - 1);
             return mergeRights(rightsList);
         }
 
-        return RightsEnum.RECEIVEANDWRITE;
+        return RightsEnum.ReceiveAndWrite;
     }
 
     public Boolean mergeFilteringNotificationAllowed(List<Boolean> listFilteringNotificationAllowed) {

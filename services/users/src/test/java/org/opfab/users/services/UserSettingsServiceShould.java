@@ -68,14 +68,14 @@ public class UserSettingsServiceShould {
 
                 StateRight stateRight1 = new StateRight();
                 stateRight1.setState("state1");
-                stateRight1.setRight(RightsEnum.RECEIVE);
+                stateRight1.setRight(RightsEnum.Receive);
                 StateRight stateRight2 = new StateRight();
                 stateRight2.setState("state2");
-                stateRight2.setRight(RightsEnum.RECEIVEANDWRITE);
+                stateRight2.setRight(RightsEnum.ReceiveAndWrite);
                 stateRight2.setFilteringNotificationAllowed(true);
                 StateRight stateRightNotFilterable = new StateRight();
                 stateRightNotFilterable.setState("stateRightNotFilterable");
-                stateRightNotFilterable.setRight(RightsEnum.RECEIVE);
+                stateRightNotFilterable.setRight(RightsEnum.Receive);
                 stateRightNotFilterable.setFilteringNotificationAllowed(false);
 
                 Perimeter perimeter1 = new Perimeter();
