@@ -353,7 +353,10 @@
     "edit": "Wijzigen",
     "createCopy": "Een kopie maken",
     "yes": "JA",
-    "search" : "ZOEK"
+    "no": "NEE",
+    "search" : "ZOEK",
+    "save": "OPSLAAN",
+    "dontSave": "NIET OPSLAAN"
   },
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",
@@ -364,6 +367,7 @@
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE",
     "information": "INFORMATIE",
+    "modificationToSave": "Er zijn wijzigingen in behandeling, wilt u deze opslaan?",
     "youAreUnsubscribedFrom": "U bent uitgeschreven voor een of meer meldingen waarvoor uitschrijving niet toegestaan is.\n\nBetrokken melding(en) :\n",
     "youWillBeSubscribedAgain": "\n\nDoor op OK te klikken, wordt u opnieuw ingeschreven voor deze meldingen."
   },
