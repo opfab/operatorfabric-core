@@ -83,6 +83,6 @@ public class CardPermissionControlService {
     private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, Card card) {
         Optional<ComputedPerimeter> cardPerimeter = perimeters.stream().
                 filter(x->x.getState().equalsIgnoreCase(card.getState()) && x.getProcess().equalsIgnoreCase(card.getProcess())).findFirst();
-        return cardPerimeter.isPresent() && RightsEnum.RECEIVEANDWRITE.equals(cardPerimeter.get().getRights());
+        return cardPerimeter.isPresent() && RightsEnum.ReceiveAndWrite.equals(cardPerimeter.get().getRights());
     }
 }
