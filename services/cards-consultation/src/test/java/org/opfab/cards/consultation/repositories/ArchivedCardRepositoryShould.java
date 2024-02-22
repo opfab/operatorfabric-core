@@ -92,7 +92,7 @@ public class ArchivedCardRepositoryShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
-        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+        perimeter.setRights(RightsEnum.ReceiveAndWrite);
 
         user1.setLogin(login1);
         user1.addGroupsItem("someGroup");

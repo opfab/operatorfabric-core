@@ -7,35 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+// This enum does not use upperCase for historical reasons
+// changing it would break the API and necessitate a database migration for production deployments
 
+@SuppressWarnings("squid:S115")
 public enum RightsEnum {
-    RECEIVE("Receive"),
-    RECEIVEANDWRITE("ReceiveAndWrite");
-
-    private String value;
-
-    RightsEnum(String value) {
-        this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static RightsEnum fromValue(String text) {
-        for (RightsEnum b : RightsEnum.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
-    }
+    Receive,
+    ReceiveAndWrite
 }
