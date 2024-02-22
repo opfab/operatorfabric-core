@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserD
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
-        perimeter.setRights(RightsEnum.RECEIVEANDWRITE);
+        perimeter.setRights(RightsEnum.ReceiveAndWrite);
         this.setComputedPerimeters(Arrays.asList(perimeter));
     }
 

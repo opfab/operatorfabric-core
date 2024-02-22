@@ -8,16 +8,21 @@
  */
 
 
-
 package org.opfab.springtools.configuration.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -58,6 +63,15 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     }
 
 
+    // This method is necessary to avoid having field _class for each object in mongoDB 
+    @Override
+    public MappingMongoConverter mappingMongoConverter(ReactiveMongoDatabaseFactory databaseFactory,
+                                                       MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
+        MappingMongoConverter converter=super.mappingMongoConverter(databaseFactory,customConversions,mappingContext);
+        DefaultMongoTypeMapper typeMapper = new DefaultMongoTypeMapper(null);
+        converter.setTypeMapper(typeMapper);
+        return converter;
+    }
 
     @Override
     protected boolean autoIndexCreation() {
