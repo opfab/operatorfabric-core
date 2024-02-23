@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -26,7 +26,7 @@ save/load OperatorFabric Businessconfig  data
 
 == Generating docker images
 
-To Generate all docker images run `./gradlew dockerTagSnaphot' 
+To Generate all docker images run `./gradlew buildDocker' 
 
 == Generating documentation (from AsciiDoc sources)
 

@@ -1,7 +1,6 @@
 plugins {
 	id "java"
 	id "org.springframework.boot"
-	id "com.palantir.docker"
 	id "io.spring.dependency-management"
 }
 
@@ -23,15 +22,13 @@ bootJar {
 }
 
 
-docker {
-	name "lfeoperatorfabric/of-dummy-modbus-device:${project.version}"
-	if (!project.version.equals("SNAPSHOT"))
-		tag "latest", "latest"
-    labels (['project':"${project.group}"])
-	files( "build/libs")
-	dockerfile file('src/main/docker/Dockerfile')
-	buildArgs(['JAR_FILE'       : "dummyModbusDevice-${project.version.toUpperCase()}.jar",
-               'https_proxy'    : proxy.https])
+
+task buildDocker(type: Exec) {
+	workingDir project.projectDir
+	commandLine 'docker', 'build', 
+				'--build-arg', "https_proxy=${proxy.https}",
+				'--build-arg', "JAR_FILE=dummyModbusDevice-${project.version.toUpperCase()}.jar",
+				'-t', "lfeoperatorfabric/of-dummy-modbus-device:${project.version}", '.'
 }
 
 dependencies {
@@ -57,5 +54,4 @@ jar {
 	destinationDirectory.set(file("build/unused_plain_jar"))
 }
 
-tasks.docker.dependsOn build
-tasks.dockerPrepare.dependsOn bootJar
+tasks.buildDocker.dependsOn build

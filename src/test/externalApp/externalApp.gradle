@@ -1,7 +1,5 @@
 
-
 plugins {
-	id "com.palantir.docker"
 	id "org.springframework.boot"
 	id "io.spring.dependency-management"
 }
@@ -27,21 +25,12 @@ bootJar {
 }
 
 
-docker {
-	name "lfeoperatorfabric/of-external-app:${project.version}"
-
-	if (!project.version.equals("SNAPSHOT"))
-		tag "latest", "latest"
-    labels (['project':"${project.group}"])
-	    files( "build/libs"
-            , "../../../config/docker/common-docker.yml"
-            , "../../../config/docker/external-app-docker.yml"
-            , '../../main/docker/java-config-docker-entrypoint.sh'
-            ,'../../main/docker/add-certificates.sh')
-	dockerfile file('src/main/docker/Dockerfile')
-	buildArgs(['JAR_FILE'       : "externalApp-${project.version.toUpperCase()}.jar",
-               'https_proxy'    : proxy.https
-			 ])
+task buildDocker(type: Exec) {
+	workingDir project.projectDir
+	commandLine 'docker', 'build', 
+				'--build-arg', "https_proxy=${proxy.https}",
+				'--build-arg', "JAR_FILE=externalApp-${project.version.toUpperCase()}.jar",
+				'-t', "lfeoperatorfabric/of-external-app:${project.version}", '.'
 }
 
 dependencies {
@@ -78,5 +67,17 @@ jar {
 	destinationDirectory.set(file("build/unused_plain_jar"))
 }
 
-tasks.docker.dependsOn build
-tasks.dockerPrepare.dependsOn bootJar
+
+task copyScriptsForDockerImage(type: Copy) {
+	description 'copy script for docker image'
+	from "$project.projectDir/../../main/docker/add-certificates.sh"
+	from "$project.projectDir/../../main/docker/java-config-docker-entrypoint.sh"
+	into "$project.projectDir/build/docker"
+	doFirst {
+		logger.info "creating $project.projectDir/build/dockerFiles/"
+		new File("$project.projectDir/build/docker/").mkdirs()
+	}
+}
+
+tasks.buildDocker.dependsOn build
+tasks.buildDocker.dependsOn copyScriptsForDockerImage

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -106,7 +106,7 @@ To fully build opfab :
 [source,shell]
 ----
 cd ${OF_HOME}
-./gradlew dockerTagSnapshot
+./gradlew buildDocker
 ----
 
 Optionally, it is possible to 

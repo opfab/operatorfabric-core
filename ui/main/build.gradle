@@ -57,8 +57,20 @@ task runHeadlessTests(type: NpmTask) {
     args = ['run', 'headless']
 }
 
+task buildDocker(type: Exec) {
+    workingDir project.projectDir
+    commandLine 'docker', 'build', '--build-arg', "https_proxy=${proxy.https}",'-t', "lfeoperatorfabric/of-web-ui:${project.version}", '.'
+}
+
 build.dependsOn(runHeadlessTests)
 build.dependsOn(runBuild)
 runLint.dependsOn(npmInstall)
+tasks.buildDocker.dependsOn build
 
 assemble.dependsOn(runBuild)
+
+tasks.named("buildDocker") {
+    inputs.files(fileTree('build/distribution'))
+    inputs.files(fileTree('nginx'))
+    outputs.dir("build/docker")
+}

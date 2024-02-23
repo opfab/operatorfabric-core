@@ -1,7 +1,6 @@
 plugins {
     id "base"
     id 'com.github.node-gradle.node'
-    id "com.palantir.docker"
 }
 
 npmInstall {
@@ -35,39 +34,17 @@ task test(type: NpmTask) {
     inputs.file('package-lock.json')
     inputs.file('jest.config.js')
 
+    outputs.dir('build')
     dependsOn runBuild
     args = ['run', 'test']
 }
 
-docker {
-    name "lfeoperatorfabric/of-${project.name}:${project.version}"
-    if (!project.version.equals("SNAPSHOT"))
-        tag "latest", "latest"
-    labels (['project':"${project.group}"])
-    copySpec.with {
-				from('build') {
-					include 'domain/**'
-                    include 'common/**'
-                    include 'cardsReminder.js'
-					into 'dockerBuild'
-				}
-                from('config') {
-					include 'default-docker.yml'
-					into 'dockerConfig'
-				}
-				from('.') {
-					include 'startCardsReminder.sh'
-					include 'package.json'
-					include 'package-lock.json'
-					include 'node_modules/**'
-					into '.'
-				}
-			}
-    buildArgs([
-            'https_proxy'    : proxy.https
-            ])
-    dockerfile file("docker/Dockerfile")
+
+task buildDocker(type: Exec) {
+    workingDir project.projectDir
+    commandLine 'docker', 'build', '--build-arg', "https_proxy=${proxy.https}",'-t', "lfeoperatorfabric/of-${project.name}:${project.version}", '.'
 }
+
 
 tasks.runBuild.dependsOn(':node-services:node-common:npmInstall')
 
@@ -75,8 +52,15 @@ build.dependsOn(test)
 build.dependsOn(runBuild)
 
 assemble.dependsOn(runBuild)
-tasks.dockerPrepare.dependsOn test
+tasks.buildDocker.dependsOn build
 
-tasks.named("dockerPrepare") {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+tasks.named("buildDocker") {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('config'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('Dockerfile')
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    outputs.dir("build/docker")
 }
+

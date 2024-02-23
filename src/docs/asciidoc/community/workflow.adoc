@@ -371,7 +371,7 @@ Compile and run OperatorFabric docker images is the most effective way to check 
 
 . Pull the submitted branch on a testing machine;
 . Run a `docker-compose` with the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml` file;
-. Create `SNAPSHOT` docker images, from the `${OF_HOME}` directory with the following command: `./gradlew clean dockerTagSNAPSHOT`;
+. Create `SNAPSHOT` docker images, from the `${OF_HOME}` directory with the following command: `./gradlew clean buildDocker`;
 . Stop the `test-environment` docker-compose;
 . Go to `${OF_HOME}/config/docker`;
 . Run the `./docker-compose.sh` script (or use the `docker-compose.yml` with a `docker-compose` command);
