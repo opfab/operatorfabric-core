@@ -9,7 +9,7 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "cypress": "13.6.5",
+    "cypress": "13.6.6",
     "cypress-terminal-report": "6.0.0"
   },
   "dependencies": {
