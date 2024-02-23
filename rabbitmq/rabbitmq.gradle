@@ -1,12 +1,8 @@
 plugins {
 	id "base"
-	id "com.palantir.docker"
 }
 
-docker {
-	name "lfeoperatorfabric/of-${project.name.toLowerCase()}:${project.version}"
-	if (!project.version.equals("SNAPSHOT"))
-		tag "latest", "latest"
-	labels(['project': "${project.group}"])
-	dockerfile file("Dockerfile")
+task buildDocker(type: Exec) {
+    workingDir project.projectDir
+    commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-rabbitmq:${project.version}", '.'
 }

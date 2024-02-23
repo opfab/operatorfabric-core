@@ -54,7 +54,6 @@ include 'node-services:cards-reminder'
 include 'node-services:common'
 include 'node-services:supervisor'
 include 'rabbitmq'
-include 'web-ui'
 include 'ui:main'
 include 'externalApp'
 include 'karateTests'
@@ -76,8 +75,7 @@ project(':node-services:cards-reminder').name = 'cards-reminder'
 project(':node-services:common').name = 'node-common'
 project(':node-services:supervisor').name = 'supervisor'
 project(':rabbitmq').name = 'rabbitmq'
-project(':web-ui').name = 'web-ui'
-project(':ui:main').name = 'main-user-interface'
+project(':ui:main').name = 'web-ui'
 project(':externalApp').projectDir = file('src/test/externalApp')
 project(':karateTests').projectDir = file('src/test/api/karate')
 project(':cypressTests').projectDir = file('src/test/cypress')

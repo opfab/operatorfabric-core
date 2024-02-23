@@ -1,7 +1,6 @@
 plugins {
     id "base"
     id 'com.github.node-gradle.node'
-    id "com.palantir.docker"
 }
 
 npmInstall {
@@ -57,31 +56,10 @@ task deleteRuntimeConfigFile(type: Delete) {
     delete 'config/supervisorConfig.json'
 }
 
-docker {
-    name "lfeoperatorfabric/of-${project.name}:${project.version}"
-    if (!project.version.equals("SNAPSHOT"))
-        tag "latest", "latest"
-    labels (['project':"${project.group}"])
-    copySpec.with {
-				from('build') {
-					include 'domain/**'
-                    include 'common/**'
-                    include 'supervisor.js'
-					into 'dockerBuild'
-				}
-                from('config') {
-					include 'default-docker.yml'
-					into 'dockerConfig'
-				}
-				from('.') {
-					include 'startSupervisor.sh'
-					include 'package.json'
-                    include 'package-lock.json'
-					include 'node_modules/**'
-					into '.'
-				}
-			}
-    dockerfile file("docker/Dockerfile")
+
+task buildDocker(type: Exec) {
+    workingDir project.projectDir
+    commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-${project.name}:${project.version}", '.'
 }
 
 build.dependsOn(test)
@@ -90,12 +68,13 @@ build.dependsOn(runBuild)
 clean.dependsOn(deleteRuntimeConfigFile)
 
 assemble.dependsOn(runBuild)
-tasks.dockerPrepare.dependsOn build
+tasks.buildDocker.dependsOn build
 
-tasks.named("docker") {
+tasks.named("buildDocker") {
     inputs.files(fileTree('src'))
     inputs.files(fileTree('config'))
     inputs.files(fileTree('node_modules'))
+    inputs.file('Dockerfile')
     inputs.file('package.json')
     inputs.file('package-lock.json')
     outputs.dir("build/docker")
