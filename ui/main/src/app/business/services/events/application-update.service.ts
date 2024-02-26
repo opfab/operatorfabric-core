@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
@@ -21,17 +20,14 @@ import {OpfabEventStreamService} from './opfabEventStream.service';
 import {ProcessesService} from '../businessconfig/processes.service';
 import {BusinessDataService} from '../businessconfig/businessdata.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class ApplicationUpdateService {
-    init() {
-        this.listenForBusinessConfigUpdate();
-        this.listenForUserConfigUpdate();
-        this.listenForBusinessDataUpdate();
+    public static init() {
+        ApplicationUpdateService.listenForBusinessConfigUpdate();
+        ApplicationUpdateService.listenForUserConfigUpdate();
+        ApplicationUpdateService.listenForBusinessDataUpdate();
     }
 
-    private listenForBusinessConfigUpdate() {
+    private static listenForBusinessConfigUpdate() {
         OpfabEventStreamService.getBusinessConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
@@ -51,7 +47,7 @@ export class ApplicationUpdateService {
             .subscribe();
     }
 
-    private listenForUserConfigUpdate() {
+    private static listenForUserConfigUpdate() {
         OpfabEventStreamService.getUserConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
@@ -73,7 +69,7 @@ export class ApplicationUpdateService {
             .subscribe();
     }
 
-    private listenForBusinessDataUpdate() {
+    private static listenForBusinessDataUpdate() {
         OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
             logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             BusinessDataService.emptyCache();

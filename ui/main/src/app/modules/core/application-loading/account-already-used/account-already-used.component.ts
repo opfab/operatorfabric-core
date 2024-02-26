@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild} from 
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {ApplicationLoadingStep} from '../application-loading-step';
+import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
@@ -19,7 +19,7 @@ import {SessionManagerService} from 'app/business/services/session-manager.servi
     templateUrl: './account-already-used.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
+export class AccountAlreadyUsedComponent extends ApplicationLoadingComponent {
     @Input() public userLogin: string;
 
     @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
@@ -46,6 +46,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
                 this.sendEventAccountAlreadyInUseCheckDone();
             }
         });
+        return super.execute();
     }
 
     public loginEvenIfAccountIsAlreadyUsed(): void {
@@ -61,6 +62,6 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {
-        this.setStepAsFinishedWithoutError();
+        this.setAsFinishedWithoutError();
     }
 }

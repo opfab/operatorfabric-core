@@ -13,13 +13,13 @@ import {RolesEnum} from '@ofModel/roles.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {ApplicationLoadingStep} from '../application-loading-step';
+import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 
 @Component({
     selector: 'of-activityarea-choice-after-login',
     templateUrl: './activityarea-choice-after-login.component.html'
 })
-export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingStep {
+export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingComponent {
     private modalRef: NgbModalRef;
     @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
 
@@ -27,9 +27,12 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
         super();
     }
 
-    public execute(): void {
+    public execute(): Promise<boolean> {
         if (ConfigService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea();
-        else this.sendActivityAreaChoiceDone();
+        else {
+            return Promise.resolve(true);
+        }
+        return super.execute();
     }
 
     private confirmActivityArea() {
@@ -42,16 +45,12 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
                     backdrop: 'static',
                     size: 'xl'
                 });
-            else this.sendActivityAreaChoiceDone();
+            else this.setAsFinishedWithoutError();
         });
     }
 
     onActivityAreaConfirm() {
         this.modalRef.close();
-        this.sendActivityAreaChoiceDone();
-    }
-
-    sendActivityAreaChoiceDone() {
-        this.setStepAsFinishedWithoutError();
+        this.setAsFinishedWithoutError();
     }
 }
