@@ -12,7 +12,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {ApplicationLoadingStep} from '../application-loading-step';
+import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 
@@ -28,7 +28,7 @@ import {OpfabEventStreamService} from 'app/business/services/events/opfabEventSt
     styleUrls: ['./app-loaded-in-another-tab.component.scss'],
     templateUrl: './app-loaded-in-another-tab.component.html'
 })
-export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
+export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {
     @HostListener('window:beforeunload')
     onBeforeUnload() {
         if (this.isApplicationActive) {
@@ -53,10 +53,11 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         super();
     }
 
-    public execute(): void {
+    public async execute(): Promise<boolean> {
         this.opfabUrl = window.location.href;
-        this.checkIfAppLoadedInAnotherTab();
+        setTimeout(() => this.checkIfAppLoadedInAnotherTab(), 0);
         this.createListenerForDisconnectSignal();
+        return super.execute();
     }
 
     private checkIfAppLoadedInAnotherTab(): void {
@@ -75,7 +76,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
 
     private sendCheckAppLoadedInAnotherTabDone(): void {
         this.isApplicationActive = true;
-        this.setStepAsFinishedWithoutError();
+        this.setAsFinishedWithoutError();
     }
 
     public continueLoadingAndDisconnectOtherUsers(): void {
@@ -103,6 +104,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
 
     public cancelApplicationLoadingBecauseAppIsLoadedInAnotherTab(): void {
         this.confirmToContinueLoadingModal.close();
-        this.setStepAsFinishedWithError();
+        this.setAsFinishedWithError();
     }
 }

@@ -8,35 +8,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {merge, Subject} from 'rxjs';
 import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from '../config.service';
 import {LogOption, LoggerService as logger} from '../logs/logger.service';
-import {Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from '../alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {RouterService} from '../router.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class SystemNotificationService {
     private static RECENT_THRESHOLD = 4000;
 
-    private systemNotificationConfigBySeverity: Map<Severity, string>;
-    private systemNotificationEnabled: Map<Severity, boolean>;
-    private incomingCardOrReminder = new Subject();
-    private lastSentCardId: string;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private static systemNotificationConfigBySeverity: Map<Severity, string>;
+    private static systemNotificationEnabled: Map<Severity, boolean>;
+    private static incomingCardOrReminder = new Subject();
+    private static lastSentCardId: string;
+    private static filteredLightCardStore: FilteredLightCardsStore = OpfabStore.getFilteredLightCardStore();
 
-    constructor(private router: Router) {
-        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-    }
-
-    public initSystemNotificationService() {
+    public static initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();
         this.systemNotificationConfigBySeverity.set(Severity.ALARM, 'settings.systemNotificationAlarm');
         this.systemNotificationConfigBySeverity.set(Severity.ACTION, 'settings.systemNotificationAction');
@@ -61,7 +53,7 @@ export class SystemNotificationService {
         this.listenForCardUpdate();
     }
 
-    private isAtLeastOneSeverityEnabled(): boolean {
+    private static isAtLeastOneSeverityEnabled(): boolean {
         for (const entry of this.systemNotificationEnabled.entries()) {
             if (entry[1]) {
                 return true;
@@ -70,7 +62,7 @@ export class SystemNotificationService {
         return false;
     }
 
-    public requestPermissionForSystemNotification() {
+    public static requestPermissionForSystemNotification() {
         if (Notification.permission === 'default') {
             Notification.requestPermission();
         } else {
@@ -84,17 +76,17 @@ export class SystemNotificationService {
         }
     }
 
-    listenForCardUpdate() {
+    static listenForCardUpdate() {
         OpfabStore.getLightCardStore()
             .getNewLightCards()
             .subscribe((lightCard) => this.handleLoadedCard(lightCard));
     }
 
-    public handleRemindCard(card: LightCard) {
+    public static handleRemindCard(card: LightCard) {
         if (this.filteredLightCardStore.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
     }
 
-    public handleLoadedCard(lightCard: LightCard) {
+    public static handleLoadedCard(lightCard: LightCard) {
         if (lightCard.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no system notification as the card was sent by the current user
         else {
@@ -104,15 +96,15 @@ export class SystemNotificationService {
         }
     }
 
-    public lastSentCard(cardId: string) {
+    public static lastSentCard(cardId: string) {
         this.lastSentCardId = cardId;
     }
 
-    private checkCardIsRecent(card: LightCard): boolean {
+    private static checkCardIsRecent(card: LightCard): boolean {
         return new Date().getTime() - card.publishDate <= SystemNotificationService.RECENT_THRESHOLD;
     }
 
-    private initSystemNotificationForSeverity(severity: Severity) {
+    private static initSystemNotificationForSeverity(severity: Severity) {
         merge(this.incomingCardOrReminder.pipe(filter((card: LightCard) => card.severity === severity))).subscribe(
             (lightCard) => {
                 this.notifyIfSeverityEnabled(severity, lightCard);
@@ -120,7 +112,7 @@ export class SystemNotificationService {
         );
     }
 
-    private notifyIfSeverityEnabled(severity: Severity, lightCard: LightCard) {
+    private static notifyIfSeverityEnabled(severity: Severity, lightCard: LightCard) {
         if (this.systemNotificationEnabled.get(severity)) {
             logger.debug(new Date().toISOString() + ' Send system notification');
             this.sendSystemNotificationMessage(lightCard);
@@ -134,7 +126,7 @@ export class SystemNotificationService {
         }
     }
 
-    sendSystemNotificationMessage(lightCard: LightCard) {
+    static sendSystemNotificationMessage(lightCard: LightCard) {
         const severity = lightCard.severity.toString();
         const systemNotificationOptions = {
             body: `${lightCard.titleTranslated.toUpperCase()} \n ${lightCard.summaryTranslated}`
@@ -143,7 +135,7 @@ export class SystemNotificationService {
         systemNotification.onclick = () => {
             systemNotification.close();
             window.parent.focus();
-            this.router.navigate(['/feed/cards/', lightCard.id]);
+            RouterService.navigateTo('/feed/cards/' + lightCard.id);
         };
     }
 }
