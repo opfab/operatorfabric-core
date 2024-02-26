@@ -151,7 +151,7 @@ export class UserService {
     public static hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            UserService._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
+            UserService._userWithPerimeters?.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
                 .length > 0
         );
     }
