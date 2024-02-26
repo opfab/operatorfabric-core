@@ -90,8 +90,9 @@ export default class CardsExternalDiffusionDatabaseService {
     public async getCards(publishDate: number): Promise<any[]> {
         let cards = new Array();
         try {
-            cards = await this.mongoDB.collection('cards').find({publishDate: {$gte: new Date(publishDate)}}).project({
-                id: '$_id',
+            cards = await this.mongoDB.collection('cards').aggregate([
+                { $match: {publishDate: {$gte: new Date(publishDate)}} },
+                { $project: {id: '$_id',
                 uid: 1,
                 processVersion: 1,
                 process: 1,
@@ -104,9 +105,9 @@ export default class CardsExternalDiffusionDatabaseService {
                 endDate: 1,
                 userRecipients: 1,
                 groupRecipients: 1,
-                entityRecipients: 1 ,
-                _id: 0
-            }).toArray();
+                entityRecipients: 1,
+                _id: 0} }
+              ]).toArray();
         } catch (error) {
             this.logger.error('Mongo error finding cards' + error);
         }
