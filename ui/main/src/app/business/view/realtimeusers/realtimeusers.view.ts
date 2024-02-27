@@ -21,6 +21,7 @@ import {
     RealtimePageEntityGroup,
     RealtimePageLine
 } from './realtimePage';
+import {Utilities} from 'app/business/common/utilities';
 
 export class RealtimeUsersView {
     private realtimePage: RealtimePage;
@@ -57,7 +58,7 @@ export class RealtimeUsersView {
                         configColumn.entitiesGroups.forEach((configEntityGroupId) => {
                             // entitiesGroups
                             const entityGroup = new RealtimePageEntityGroup();
-                            entityGroup.name = EntitiesService.getEntityName(configEntityGroupId);
+                            entityGroup.name = EntitiesService.getEntityName(configEntityGroupId).toUpperCase();
                             EntitiesService.resolveChildEntities(configEntityGroupId).forEach((childEntity) => {
                                 // lines
                                 const line = new RealtimePageLine();
@@ -67,6 +68,7 @@ export class RealtimeUsersView {
                                 line.connectedUsers = '';
                                 entityGroup.lines.push(line);
                             });
+                            entityGroup.lines.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
                             screenColumn.entityPages.push(entityGroup);
                         });
                         screen.columns.push(screenColumn);

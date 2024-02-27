@@ -41,14 +41,14 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.badge').should('have.length', 10);
         cy.get('.bg-primary').should('have.length', 1);
         cy.get('.bg-secondary').should('have.length', 9);
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-primary').should('have.length', 1);
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator3_fr');
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-primary').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', 'operator3_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'European Supervision Centers');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'FRENCH CONTROL CENTERS');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'EUROPEAN SUPERVISION CENTERS');
     })
 
     it('Connection of operator2_fr, which is not in the ADMIN group, and check Real time users screen is authorized and screen is ok', ()=> {
@@ -60,14 +60,14 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.badge').should('have.length', 10);
         cy.get('.bg-primary').should('have.length', 1);
         cy.get('.bg-secondary').should('have.length', 9);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-primary').should('have.length', 1);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator2_fr');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-primary').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator2_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'European Supervision Centers');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'FRENCH CONTROL CENTERS');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'EUROPEAN SUPERVISION CENTERS');
     })
 
     it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR, ' +
@@ -99,9 +99,9 @@ describe ('RealTimeUsersPage',()=>{
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
-        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'European Supervision Centers');
-
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'FRENCH CONTROL CENTERS');
+        cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'EUROPEAN SUPERVISION CENTERS');
+        
         // we should have 5 disconnected entities and 4 connected (operator4_fr for ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR)
         cy.get('.badge').should('have.length', 5);
         cy.get('.bg-primary').should('have.length', 4);
@@ -135,13 +135,13 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-secondary').should('have.length', 4);
 
         // we check the connected/disconnected badges
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-primary').should('have.length', 1);
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', 'operator4_fr');
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).find('span').eq(0).should('have.text', '0');
+        cy.get('table').first().find('tr').eq(0).find('td').eq(0).should('contain.text', '');
         // second row
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '0');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-primary').should('have.length', 1);
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-secondary').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '0');
