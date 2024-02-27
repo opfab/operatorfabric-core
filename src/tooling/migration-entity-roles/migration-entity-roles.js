@@ -32,13 +32,13 @@ async function updateEntityRoles(databaseUrl, databaseName) {
     const entitiesCollection = db.collection('entity');
 
     await entitiesCollection.updateMany(
-      { entityAllowedToSendCard: true },
-      { $set: { roles: ["ACTIVITY_AREA", "CARD_SENDER", "CARD_RECEIVER"] } }
+      { entityAllowedToSendCard: false },
+      { $set: { roles: ["CARD_RECEIVER"] } }
     );
 
     await entitiesCollection.updateMany(
-      { entityAllowedToSendCard: false },
-      { $set: { roles: ["CARD_RECEIVER"] } }
+      { roles: {$exists: false} },
+      { $set: { roles: ["ACTIVITY_AREA", "CARD_SENDER", "CARD_RECEIVER"] } }
     );
 
     console.log("Entity roles have been successfully updated");
