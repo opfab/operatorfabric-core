@@ -44,7 +44,7 @@
                     <table class ="opfab-activityarea-table" aria-describedby="activity area table">
                         <tr *ngFor="let line of cluster.lines;">
                             <th class ="opfab-table-line" >
-                                <label style="font-weight: bold; margin-left: 30px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" class="opfab-checkbox">{{line.entityName}}
+                                <label class="opfab-checkbox opfab-activityarea-checkbox">{{line.entityName}}
                                     <input type="checkbox" [formControlName]=line.entityId [checked]="true">
                                     <span class="opfab-checkbox-checkmark"></span>
                                 </label>
