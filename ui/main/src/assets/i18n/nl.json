@@ -609,10 +609,17 @@
       "selectDeviceText": "Selecteer apparaat",
       "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
+      "addDevice": "NIEUW APPARAAT TOEVOEGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
-      "loadingExternalDevices": "Extern apparaat laden..."
+      "loadingExternalDevices": "Extern apparaat laden...",
+      "host": {
+        "required": "Host is vereist."
+      },
+      "port": {
+        "required": "Port is vereist."
+      }
     },
     "tabs": {
       "users": "Gebruikers Configuratie",
@@ -627,6 +634,10 @@
     "edit": "WIJZIGEN",
     "delete": "VERWIJDEREN",
     "id": "APPARATEN",
+    "deviceId":"ID",
+    "host": "HOST",
+    "port": "PORT",
+    "signalMapping": "SIGNAALTOEWIJZINGEN",
     "isEnabled": "IS INGESCHAKELD"
   },
   "useractionlogs": {

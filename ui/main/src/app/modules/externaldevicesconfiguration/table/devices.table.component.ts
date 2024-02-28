@@ -15,13 +15,13 @@ import {ExternalDevicesService} from 'app/business/services/notifications/extern
 
 @Component({
     selector: 'of-externaldevices',
-    templateUrl: './externaldevicesconfiguration-directive.html',
+    templateUrl: './externaldevices-directive.html',
     styleUrls: ['../externaldevicesconfiguration.component.scss']
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {
     fields = [new Field('id'), new Field('isEnabled', FieldType.CHECKBOX_COLUMN)];
 
-    canAddItems = false;
+    canAddItems = true;
 
     queryData(): Observable<any[]> {
         return ExternalDevicesService.queryAllDevices();
@@ -47,5 +47,22 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
                     )
             });
         }
+    }
+
+    createNewItem() {
+        const modalRef = this.modalService.open(this.addDeviceModalComponent, this.modalOptions);
+        modalRef.componentInstance.configurations = this.configurations;
+        modalRef.result.then(
+            // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up
+            // NGRX actions and effects for this sole purpose
+            () => {
+                // If modal is closed
+                this.refreshData(); // This refreshes the data when the modal is closed after a change
+            },
+            () => {
+                // If modal is dismissed (by clicking the "close" button, the top right cross icon
+                // or clicking outside the modal, there is no need to refresh the data
+            }
+        );
     }
 }

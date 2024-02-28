@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -32,13 +32,13 @@
                 <label for="opfab-userLogin" translate>externalDevicesConfiguration.userLogin</label>
                 <input type="text" disabled value="{{row.userLogin}}"/>
               </div>
-              <div *ngIf="!row"  class="row">
+              <div *ngIf="!row"  class="opfab-edit-row">
                 <of-multi-select id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" multiSelectId="userLogin"
                                  [parentForm]="userdeviceForm" [config]="multiSelectConfig" [options]="usersDropdownList">
                 </of-multi-select>
               </div>
 
-              <div class="row">
+              <div class="opfab-edit-row">
                 <of-multi-select *ngIf="devicesMultiSelectOptions.length > 0"  id="opfab-devicesDropdownList" multiSelectId="externalDeviceIds"
                   [parentForm]="userdeviceForm" [config]="devicesMultiSelectConfig"
                 [options]="devicesMultiSelectOptions" [selectedOptions]="selectedDevices">

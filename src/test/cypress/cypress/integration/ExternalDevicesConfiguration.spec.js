@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,8 +29,6 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Check that the tabs exist
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').should('exist');
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').should('exist');
-
-        cy.get('#addItem').should('not.exist');
 
         agGrid.countTableRows('ag-grid-angular', 3);
 
@@ -65,6 +63,37 @@ describe('ExternalDevicesconfigurationPage', () => {
         clickOnNthDevice(0);
     })
 
+
+    it('Add new external device', () => {
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
+
+        agGrid.countTableRows('ag-grid-angular', 3);
+
+        cy.get('#addItem').click();
+        cy.get('of-externaldevices-modal').should('exist');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-deviceId').type('CDS_4');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-host').type('localhost');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-port').type('1234');
+
+
+        cy.get('#opfab-signalMappingDropdownList').click();
+        cy.get('#opfab-signalMappingDropdownList').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-signalMappingDropdownList').click();
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.enabled');
+        cy.get('#opfab-admin-edit-btn-add').click();
+        cy.get('of-externaldevices-modal').should('not.exist');
+        agGrid.countTableRows('ag-grid-angular', 4);
+
+    })
+
     it('List, add, edit, delete user device configuration', () => {
         opfab.loginWithUser('admin');
         opfab.openExternalDevices();
@@ -77,7 +106,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Add new configuration
         cy.get('#addItem').click();
 
-        cy.get('of-externaldevices-modal').should('exist');
+        cy.get('of-externaldevices-users-modal').should('exist');
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
@@ -97,7 +126,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Edit previously created row
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 2, 'of-action-cell-renderer');
 
-        cy.get('of-externaldevices-modal').should('exist');
+        cy.get('of-externaldevices-users-modal').should('exist');
 
         // Remove external sound devices and see if save button is disabled
         clickOnNthDeviceInDropdown(0);
@@ -139,7 +168,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         for (let i = 0; i < 14; i++) {
             cy.get('#addItem').should('be.visible').click();
 
-            cy.get('of-externaldevices-modal').should('exist');
+            cy.get('of-externaldevices-users-modal').should('exist');
 
             clickOnNthUserInDropdown(0);
 
@@ -158,9 +187,9 @@ describe('ExternalDevicesconfigurationPage', () => {
         // When all users devices are configured it is not possible to add new configurations
         cy.get('#addItem').click();
 
-        cy.get('of-externaldevices-modal').should('exist');
+        cy.get('of-externaldevices-users-modal').should('exist');
         cy.get('#opfab-usersDropdownList').should('not.exist');
-        cy.get('of-externaldevices-modal').contains('All users devices are already configured');
+        cy.get('of-externaldevices-users-modal').contains('All users devices are already configured');
 
         cy.get('#opfab-admin-edit-btn-close').eq(0).click();
     });

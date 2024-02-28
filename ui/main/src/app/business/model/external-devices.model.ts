@@ -18,11 +18,19 @@ export class UserConfiguration {
     ) {}
 }
 
-export class Device {
+export class DeviceConfiguration {
     public constructor(
         readonly id: string,
-        readonly resolvedAddress: string,
+        readonly host: string,
         readonly port: number,
-        readonly isConnected: boolean
+        readonly signalMappingId: string,
+        readonly isEnabled: boolean
+    ) {}
+}
+
+export class SignalMapping {
+    public constructor(
+        readonly id: string,
+        readonly supportedSignals: Map<string, number>
     ) {}
 }

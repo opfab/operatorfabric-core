@@ -19,6 +19,7 @@ import {Observable, throwError} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
 import {ConfirmationDialogService} from '../../admin/services/confirmation-dialog.service';
 import {ExternaldevicesconfigurationModalComponent} from '../editModal/externaldevicesconfiguration-modal.component';
+import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
 
 @Directive()
 @Injectable()
@@ -29,6 +30,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     public pageSize = 10;
     public page = 1;
     private columnDefs: ColDef[] = [];
+    addDeviceModalComponent = ExternaldevicesModalComponent;
     editModalComponent = ExternaldevicesconfigurationModalComponent;
     modalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it

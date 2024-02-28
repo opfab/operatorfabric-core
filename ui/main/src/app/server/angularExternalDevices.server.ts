@@ -8,7 +8,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
+import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {Observable} from 'rxjs';
 import {AngularServer} from './angular.server';
@@ -24,6 +24,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
     readonly devicesUrl: string;
+    readonly devicesConfigurationsUrl: string;
 
     constructor(private httpClient: HttpClient) {
         super();
@@ -31,6 +32,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
         this.devicesUrl = this.externalDevicesUrl + '/devices';
+        this.devicesConfigurationsUrl = this.configurationsUrl + '/devices';
     }
 
     sendNotification(notification: Notification): Observable<ServerResponse<any>> {
@@ -48,7 +50,13 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     }
 
     queryAllDevices(): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<Device[]>(`${this.configurationsUrl}/devices`));
+        return this.processHttpResponse(
+            this.httpClient.get<DeviceConfiguration[]>(`${this.configurationsUrl}/devices`)
+        );
+    }
+
+    queryAllSignalMappings(): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.get<SignalMapping[]>(`${this.configurationsUrl}/signals`));
     }
 
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<ServerResponse<any>> {
@@ -72,5 +80,11 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     deleteByUserLogin(login: string): Observable<ServerResponse<any>> {
         const url = `${this.configurationsUrl}/users/${login}`;
         return this.processHttpResponse(this.httpClient.delete(url));
+    }
+
+    updateDevice(device: DeviceConfiguration): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(
+            this.httpClient.post<DeviceConfiguration>(`${this.devicesConfigurationsUrl}`, device)
+        );
     }
 }

@@ -1,0 +1,44 @@
+<!-- Copyright (c) 2024, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div *ngIf="!technicalError">
+    <div style="background-color: var(--opfab-bgcolor-darker); border: solid 5px var(--opfab-bgcolor-darker)">
+    
+        <div *ngIf="canAddItems" [hidden]="this.isLoadingData">
+            <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
+                <em class="fas fa-plus-circle"></em></a>
+                <span>&nbsp;<label for="addItem" translate> externalDevicesConfiguration.input.addDevice </label></span>
+            </div>
+            <br>
+        </div>
+
+        <ag-grid-angular id="opfab-externaldevices-table-grid" aria-describedby="External devices table"
+                (gridReady)="onGridReady($event)"
+                [gridOptions]="gridOptions"
+                [rowData]="this.configurations"
+                class="ag-theme-opfab">
+        </ag-grid-angular>
+
+        <div *ngIf="gridApi" class="opfab-pagination">
+            <div style="white-space: nowrap;margin-top:17px">
+            <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+            </div>
+            <div style="width:40%;margin-top:5px">
+            <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > pageSize" [collectionSize]="gridApi.paginationGetRowCount()"
+                [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+            </ngb-pagination>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate><br/><br/>shared.error.technicalError
+</div>

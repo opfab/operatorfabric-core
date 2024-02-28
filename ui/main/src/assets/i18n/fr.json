@@ -610,10 +610,17 @@
       "selectDeviceText": "Sélectionner un périphérique",
       "add": "AJOUTER UNE NOUVELLE CONFIGURATION",
       "edit": "MODIFIER LA CONFIGURATION",
+      "addDevice": "AJOUTER UN NOUVEAU PÉRIPHÉRIQUE",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés.",
-      "loadingExternalDevices": "Chargement des périphériques externes..."
+      "loadingExternalDevices": "Chargement des périphériques externes...",
+      "host": {
+        "required": "Serveur est obligatoire."
+      },
+      "port": {
+        "required": "Port est obligatoire."
+      }
     },
     "tabs": {
       "users": "Configuration des utilisateurs",
@@ -628,6 +635,10 @@
     "edit": "ÉDITER",
     "delete": "SUPPRIMER",
     "id": "PÉRIPHÉRIQUES",
+    "deviceId":"ID",
+    "host": "SERVEUR",
+    "port": "PORT",
+    "signalMapping": "MAPPAGES DE SIGNAUX",
     "isEnabled": "EST ACTIVÉ"
   },
   "useractionlogs": {

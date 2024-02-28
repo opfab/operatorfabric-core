@@ -608,10 +608,17 @@
       "selectDeviceText": "Select device",
       "add": "ADD NEW USER DEVICE CONFIGURATION",
       "edit": "EDIT USER DEVICE CONFIGURATION",
+      "addDevice": "ADD NEW DEVICE",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",
       "allUsersConfigured": "All users devices are already configured.",
-      "loadingExternalDevices": "Loading external devices..."
+      "loadingExternalDevices": "Loading external devices...",
+      "host": {
+        "required": "Host is required."
+      },
+      "port": {
+        "required": "Port is required."
+      }
     },
     "tabs": {
       "users": "Users Configuration",
@@ -624,6 +631,10 @@
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",
     "id": "DEVICES",
+    "deviceId":"ID",
+    "host": "HOST",
+    "port": "PORT",
+    "signalMapping": "SIGNAL MAPPINGS",
     "isEnabled": "IS ENABLED",
     "edit": "EDIT",
     "delete": "DELETE"

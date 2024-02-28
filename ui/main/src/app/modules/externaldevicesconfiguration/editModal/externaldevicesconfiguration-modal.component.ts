@@ -13,11 +13,11 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {Device, UserConfiguration} from '@ofModel/external-devices.model';
+import {DeviceConfiguration, UserConfiguration} from '@ofModel/external-devices.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
-    selector: 'of-externaldevices-modal',
+    selector: 'of-externaldevices-users-modal',
     templateUrl: './externaldevicesconfiguration-modal.component.html',
     styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
 })
@@ -78,7 +78,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         this.isLoadingUsers = false;
     }
 
-    setDevicesList(allDevices: Device[]) {
+    setDevicesList(allDevices: DeviceConfiguration[]) {
         allDevices.forEach((dev) => {
             this.devicesMultiSelectOptions.push({value: dev.id, label: dev.id});
         });
