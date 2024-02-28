@@ -76,7 +76,7 @@ export class EditUserModalComponent implements OnInit {
             comment: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
-            authorizedIPAddresses: new FormControl('', [Validators.pattern(/^((\d+(\.\d+){3}),?\s?)+$/)])
+            authorizedIPAddresses: new FormControl('', [Validators.pattern(/^(?:\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3},?)+$/)])
         });
 
         if (this.row) {
