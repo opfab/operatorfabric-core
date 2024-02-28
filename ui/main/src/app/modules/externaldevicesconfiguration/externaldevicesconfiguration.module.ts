@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,13 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
 import {UsersTableComponent} from './table/users.table.component';
 import {DevicesTableComponent} from './table/devices.table.component';
+import {ExternaldevicesModalComponent} from './editModal/externaldevices-modal.component';
 
 @NgModule({
     declarations: [
         ExternaldevicesconfigurationComponent,
         ExternaldevicesconfigurationModalComponent,
+        ExternaldevicesModalComponent,
         UsersTableComponent,
         DevicesTableComponent
     ],

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UserConfiguration, Notification} from '@ofModel/external-devices.model';
+import {UserConfiguration, Notification, DeviceConfiguration} from '@ofModel/external-devices.model';
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
@@ -16,8 +16,10 @@ export abstract class ExternalDevicesServer {
     abstract fetchUserConfiguration(login: string): Observable<ServerResponse<any>>;
     abstract queryAllUserConfigurations(): Observable<ServerResponse<any>>;
     abstract queryAllDevices(): Observable<ServerResponse<any>>;
+    abstract queryAllSignalMappings(): Observable<ServerResponse<any>>;
     abstract updateUserConfiguration(userconfigData: UserConfiguration): Observable<ServerResponse<any>>;
     abstract enableDevice(deviceId: string): Observable<ServerResponse<any>>;
     abstract disableDevice(deviceId: string): Observable<ServerResponse<any>>;
     abstract deleteByUserLogin(login: string): Observable<ServerResponse<any>>;
+    abstract updateDevice(DeviceConfiguration: any): Observable<ServerResponse<DeviceConfiguration>>;
 }
