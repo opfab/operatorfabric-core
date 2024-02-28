@@ -113,14 +113,14 @@ describe('Realtimeusers', () => {
         view.setSelectedScreen('1');
         expect(page.currentScreen.name).toEqual('French Control Centers');
         expect(page.currentScreen.columns.length).toEqual(2);
-        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('FRENCH CONTROL CENTERS');
+        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('French Control Centers');
         expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityId).toEqual('ENTITY1_FR');
         expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityName).toEqual('ENTITY1_FR_NAME');
 
         view.setSelectedScreen('2');
         expect(page.currentScreen.name).toEqual('Italian Control Centers');
         expect(page.currentScreen.columns.length).toEqual(2);
-        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('ITALIAN CONTROL CENTERS');
+        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('Italian Control Centers');
         expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityId).toEqual('ENTITY1_IT');
         expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityName).toEqual('ENTITY1_IT_NAME');
     });
