@@ -51,14 +51,17 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       
       - name: Job  status
+        env: 
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
         run: | 
-          export OF_VERSION=$(<VERSION)
           echo "----------------------------"
-          echo "Trigger by  : ${{ github.event_name }}"
-          echo "On branch : ${{ github.ref_name }} "
-          echo "PR source branch : ${{ github.head_ref }} " 
-          echo "PR target branch : ${{ github.base_ref }} " 
-          echo "Opfab Version : ${OF_VERSION}"
+          echo "Trigger by  : $EVENT_NAME"
+          echo "On branch : $REF_NAME "
+          echo "PR source branch : $HEAD_REF " 
+          echo "PR target branch : $BASE_REF " 
           echo "---------------------------"
       - name: Cache Gradle packages
         uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
@@ -107,14 +110,17 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     
       - name: Job  status
+        env: 
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
         run: | 
-          export OF_VERSION=$(<VERSION)
           echo "----------------------------"
-          echo "Trigger by  : ${{ github.event_name }}"
-          echo "On branch : ${{ github.ref_name }} "
-          echo "PR source branch : ${{ github.head_ref }} " 
-          echo "PR target branch : ${{ github.base_ref }} " 
-          echo "Opfab Version : ${OF_VERSION}"
+          echo "Trigger by  : $EVENT_NAME"
+          echo "On branch : $REF_NAME "
+          echo "PR source branch : $HEAD_REF " 
+          echo "PR target branch : $BASE_REF " 
           echo "---------------------------"
       - name: Cache Gradle packages
         uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
