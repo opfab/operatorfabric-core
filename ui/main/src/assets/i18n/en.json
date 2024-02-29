@@ -543,7 +543,7 @@
         "alreadyExisting": "Login already existing."
       },
       "authorizedIPAddresses": {
-        "pattern": "IP addresses need to follow the format XXX.XXX.XXX.XXX, XXX.XXX..."
+        "pattern": "IP addresses need to follow the format XXX.XXX.XXX.XXX,XXX.XXX..."
       },
       "firstName": {
         "required": "First name is required."

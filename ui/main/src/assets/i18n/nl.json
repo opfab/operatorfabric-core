@@ -544,7 +544,7 @@
         "alreadyExisting": "Gebruikersnaam bestaat al."
       },
       "authorizedIPAddresses": {
-        "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX, XXX.XXX... volgen"
+        "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX,XXX.XXX... volgen"
       },
       "firstName": {
         "required": "Voornaam is vereist."
