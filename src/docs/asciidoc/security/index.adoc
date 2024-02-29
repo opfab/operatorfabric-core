@@ -1,0 +1,79 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the licensewas not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+[[security]]
+= OperatorFabric Security 
+
+Cyber security is a major concern for the OperatorFabric. The security is ensured by the following measures:
+
+== Code analysis 
+
+The code is analyzed at each commit by a static code analyzer (Sonar Cloud). The code is also regularly reviewed by the development team or by external security experts.
+
+Each modification is done via a pull request and is reviewed by at least one other developer.
+
+
+== Security Updates
+OperatorFabric is regularly updated to integrate the latest security patches. To achieve this:
+
+ - Mend Bolt for GitHub is used to monitor OperatorFabric's dependencies and to receive notifications about any security updates.
+ - GitHub Dependabot is used to check for vulnerabilities in OperatorFabric's dependencies.
+ - GitHub Code Scanning is used to check for vulnerabilities in the Docker images.
+
+== Vulnerability Reporting
+
+GitHub's "Private Security Advisories" feature is used to report vulnerabilities in OperatorFabric.
+
+
+== Supply Chain Security
+
+The code is maintained in a public repository on github.
+
+- The list of users is regularly reviewed.
+- A restricted number of users have the right to: 
+   - merge code in the main branch
+   - push docker images to the dockerhub registry.
+   - push libraries to mavencentral
+
+== Deployment Security
+
+The tool is to be used in a production environment, to do so the software shall be deployed by end user in a secure way.
+
+=== Keycloak 
+
+Keycloak is used to manage the authentication for the OperatorFabric reference installation. The configuration provided by OperatorFabric is intended for demonstration or development purposes only. The production configuration of Keycloak MUST be handled by the end user. Users can also choose another solution to manage authentication, as OperatorFabric is designed to be compatible with any OIDC provider.
+
+=== MongoDB
+
+MongoDB is used to store OperatorFabric's data. The configuration provided by OperatorFabric is intended for demonstration or development purposes only. The production configuration of MongoDB MUST be handled by the end user.
+
+
+=== TLS/SSL
+
+OperatorFabric is designed to be used with TLS/SSL. However, the default configuration provided by OperatorFabric does not implement it, as it is intended for demonstration or development purposes only. The implementation of TLS/SSL MUST be handled by the end user, either by configuring the web-ui component to implement HTTPS or by using a proxy that implements HTTPS.
+
+
+=== Inter-Services Communication
+
+The services within OperatorFabric communicate with each other using HTTP. This communication is not encrypted. The components should not be exposed to the internet and should be deployed in a secure network, either by:
+-  Using a single instance with docker-compose that does not expose the services to the outside world
+-  Using a Kubernetes cluster with a private network
+
+=== Access to card publication without authentication
+
+It is possible, by configuration, to bypass authentication for third-party tool card sending. This option is only there for legacy purposes and shall not be used in a production environment.
+
+
+=== Template 
+
+OperatorFabric is designed to be used with card templates provided by the end user. These templates should be considered as code and reviewed by the end user before being used in a production environment. Failure to do so could lead to security issues.
+
+
+
+
+
