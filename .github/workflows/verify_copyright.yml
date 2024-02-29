@@ -3,6 +3,10 @@ name: Verify Copyright headers
 on:
   pull_request:
 
+
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   in_changed_files:
     runs-on: ubuntu-latest
