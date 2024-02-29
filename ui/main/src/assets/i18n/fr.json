@@ -545,7 +545,7 @@
         "alreadyExisting": "L'identifiant existe déjà."
       },
       "authorizedIPAddresses": {
-        "pattern": "Les adresses IP doivent être au format XXX.XXX.XXX.XXX, XXX.XXX..."
+        "pattern": "Les adresses IP doivent être au format XXX.XXX.XXX.XXX,XXX.XXX..."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."
