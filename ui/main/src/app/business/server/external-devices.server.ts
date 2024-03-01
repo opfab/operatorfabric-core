@@ -22,4 +22,5 @@ export abstract class ExternalDevicesServer {
     abstract disableDevice(deviceId: string): Observable<ServerResponse<any>>;
     abstract deleteByUserLogin(login: string): Observable<ServerResponse<any>>;
     abstract updateDevice(DeviceConfiguration: any): Observable<ServerResponse<DeviceConfiguration>>;
+    abstract deleteDevice(deviceId: string): Observable<ServerResponse<any>>;
 }

@@ -216,6 +216,47 @@ describe('ExternalDevicesconfigurationPage', () => {
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 4);
     });
 
+    it('Delete device', () => {
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
+
+        // Go to the users configuration screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
+
+        cy.get('#addItem').should('be.visible').click();
+
+        cy.get('of-externaldevices-users-modal').should('exist');
+
+        clickOnNthUserInDropdown(0);
+        clickOnNthDeviceInDropdown(2);
+        clickOnNthDeviceInDropdown(3);
+        cy.get('#opfab-admin-edit-btn-add').should('be.visible').click({force: true});
+        agGrid.countTableRows('#opfab-externaldevices-table-grid', 5);
+
+        agGrid.cellShould('#opfab-externaldevices-table-grid',4,1,'contain','CDS_3,CDS_4');
+
+        // Go to the device configuration screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').click();
+
+        // Delete device and confirm
+        agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+        cy.waitDefaultTime();
+
+        agGrid.countTableRows('#opfab-externaldevices-table-grid', 3);
+
+        // Go to the users configuration screen and delete last row
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
+        agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+
+
+    });
+
     function clickOnNthDeviceInDropdown(index) {
         cy.get('#opfab-devicesDropdownList').click();
         cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click({force: true});

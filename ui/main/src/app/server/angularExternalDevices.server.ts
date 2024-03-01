@@ -87,4 +87,8 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
             this.httpClient.post<DeviceConfiguration>(`${this.devicesConfigurationsUrl}`, device)
         );
     }
+
+    deleteDevice(deviceId: string): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.delete<string>(`${this.devicesConfigurationsUrl}/${deviceId}`));
+    }
 }
