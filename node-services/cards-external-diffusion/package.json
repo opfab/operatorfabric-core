@@ -17,7 +17,7 @@
     "amqplib": "0.10.3",
     "axios": "1.6.7",
     "config": "3.3.11",
-    "express": "4.18.2",
+    "express": "4.18.3",
     "express-jwt": "8.4.1",
     "handlebars": "4.7.8",
     "html-to-text": "9.0.5",
