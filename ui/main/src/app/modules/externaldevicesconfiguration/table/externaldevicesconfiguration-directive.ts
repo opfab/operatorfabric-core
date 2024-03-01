@@ -45,7 +45,7 @@ export abstract class ExternalDevicesConfigurationDirective {
 
     constructor(
         protected confirmationDialogService: ConfirmationDialogService,
-        private translateService: TranslateService,
+        protected translateService: TranslateService,
         protected modalService: NgbModal
     ) {
         this.gridOptions = <GridOptions>{

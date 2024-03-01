@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -174,8 +174,14 @@ public class ConfigService {
         List<UserConfiguration> foundUserConfigurations = userConfigurationRepository.findByExternalDeviceIds(deviceId);
         if (foundUserConfigurations != null) {
             for (UserConfiguration userConfigurationData :  foundUserConfigurations) {
-                userConfigurationData.setExternalDeviceIds(null);
-                log.info(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.userLogin);
+                List<String> devices = new ArrayList<>(userConfigurationData.externalDeviceIds);
+                devices.remove(deviceId);
+                if (devices.isEmpty()) {
+                    userConfigurationData.setExternalDeviceIds(null);
+                    log.info(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.userLogin);
+                } else {
+                    userConfigurationData.setExternalDeviceIds(devices);
+                }
             }
             userConfigurationRepository.saveAll(foundUserConfigurations);
         }

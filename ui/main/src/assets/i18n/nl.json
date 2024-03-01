@@ -615,9 +615,10 @@
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "addDevice": "NIEUW APPARAAT TOEVOEGEN",
       "confirm": "Bevestig alstublieft",
-      "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
+      "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen",
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
       "loadingExternalDevices": "Extern apparaat laden...",
+      "confirmDeleteDevice": "Wilt u de apparaat verwijderen",
       "host": {
         "required": "Host is vereist."
       },

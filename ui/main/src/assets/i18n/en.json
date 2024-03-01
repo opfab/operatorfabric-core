@@ -617,6 +617,7 @@
       "confirmDelete": "Do you really want to delete device configuration for user",
       "allUsersConfigured": "All users devices are already configured.",
       "loadingExternalDevices": "Loading external devices...",
+      "confirmDeleteDevice": "Do you really want to delete device",
       "host": {
         "required": "Host is required."
       },

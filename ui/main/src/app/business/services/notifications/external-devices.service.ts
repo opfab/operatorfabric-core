@@ -80,6 +80,12 @@ export class ExternalDevicesService {
             .pipe(map((serverResponse) => serverResponse.data));
     }
 
+    static deleteDevice(deviceId: string): Observable<string> {
+        return ExternalDevicesService.externalDevicesServer
+            .deleteDevice(deviceId)
+            .pipe(map((serverResponse) => serverResponse.data));
+    }
+
     static deleteByUserLogin(login: string) {
         return ExternalDevicesService.externalDevicesServer.deleteByUserLogin(login).pipe(
             map((serverResponse) => {

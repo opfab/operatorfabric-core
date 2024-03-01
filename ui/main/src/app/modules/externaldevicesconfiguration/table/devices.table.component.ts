@@ -9,7 +9,7 @@
 
 import {Component} from '@angular/core';
 import {MessageLevel} from '@ofModel/message.model';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 
@@ -19,7 +19,11 @@ import {ExternalDevicesService} from 'app/business/services/notifications/extern
     styleUrls: ['../externaldevicesconfiguration.component.scss']
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {
-    fields = [new Field('id'), new Field('isEnabled', FieldType.CHECKBOX_COLUMN)];
+    fields = [
+        new Field('id'),
+        new Field('isEnabled', FieldType.CHECKBOX_COLUMN),
+        new Field('delete', FieldType.ACTION_COLUMN)
+    ];
 
     canAddItems = true;
 
@@ -64,5 +68,28 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
                 // or clicking outside the modal, there is no need to refresh the data
             }
         );
+    }
+
+    openDeleteConfirmationDialog(row: any): any {
+        this.confirmationDialogService
+            .confirm(
+                this.translateService.instant('externalDevicesConfiguration.input.confirm'),
+                this.translateService.instant('externalDevicesConfiguration.input.confirmDeleteDevice') +
+                    ' ' +
+                    row['id'] +
+                    ' ?',
+                'OK',
+                this.translateService.instant('admin.input.cancel')
+            )
+            .then((confirmed) => {
+                if (confirmed) {
+                    // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
+                    // handled first
+                    ExternalDevicesService.deleteDevice(row['id']).subscribe(() => {
+                        this.refreshData();
+                    });
+                }
+            })
+            .catch((error) => throwError(() => error));
     }
 }
