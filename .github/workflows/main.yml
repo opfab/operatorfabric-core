@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' && github.ref_name != 'master' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       
       - name: Job  status
         run: | 
@@ -61,7 +61,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v4
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
         with:
           path: |
             ~/.gradle/caches
@@ -92,7 +92,7 @@ jobs:
         run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
       - name: Upload cypress screenshots and logs 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         if: failure()
         with:
             name: cypress-screenshots
@@ -104,7 +104,7 @@ jobs:
     environment: publishVersion
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     
       - name: Job  status
         run: | 
@@ -117,7 +117,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v4
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
         with:
           path: |
             ~/.gradle/caches
@@ -148,7 +148,7 @@ jobs:
         run: ./CICD/github/launch_cypress_tests.sh 
 
       - name: Upload cypress screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         if: failure()
         with:
             name: cypress-screenshots
