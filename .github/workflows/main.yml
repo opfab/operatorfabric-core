@@ -79,7 +79,6 @@ jobs:
         # if variable is set in install step it is not accessible in this step 
         run: ./CICD/github/build.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -135,7 +134,6 @@ jobs:
         # if variable is set in install step it is not accessible in this step 
         run: ./CICD/github/build.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
