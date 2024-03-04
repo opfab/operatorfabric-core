@@ -477,7 +477,7 @@ describe ('Feed notification configuration tests',function () {
         // We go to settings screen, and we check mail option (no mail address filled)
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
-        settings.clickOnSendNotificationByEmail();
+        settings.clickOnSendNotificationByEmailAndSave();
 
         // We go back to feed notification configuration screen, and we check there is still no envelope icon
         opfab.navigateToNotificationConfiguration();
@@ -487,8 +487,8 @@ describe ('Feed notification configuration tests',function () {
         // We go to settings screen, and we uncheck mail option, and we fill the email address field
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
-        settings.clickOnSendNotificationByEmail();
-        settings.setEmailAddress('mail@test.com');
+        settings.clickOnSendNotificationByEmailAndSave();
+        settings.setEmailAddressAndSave('mail@test.com');
 
         // We go back to feed notification configuration screen, and we check there is still no envelope icon
         opfab.navigateToNotificationConfiguration();
@@ -498,7 +498,7 @@ describe ('Feed notification configuration tests',function () {
         // We go to settings screen, and we check mail option (the email address is already filled)
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
-        settings.clickOnSendNotificationByEmail();
+        settings.clickOnSendNotificationByEmailAndSave();
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
         opfab.navigateToNotificationConfiguration();

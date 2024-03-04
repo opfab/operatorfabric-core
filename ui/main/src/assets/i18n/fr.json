@@ -171,7 +171,8 @@
     "activityarea": "Zone d'activité",
     "useractionlogs": "Trace des actions utilisateurs",
     "newcardTooltip": "Créer une nouvelle carte",
-    "calendarTooltip": "Calendrier" 
+    "calendarTooltip": "Calendrier",
+    "settingsSaved": "Paramètres sauvegardés"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",

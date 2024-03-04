@@ -8,102 +8,165 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserConfiguration} from '@ofModel/external-devices.model';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {SettingsView} from 'app/business/view/settings/settings.view';
+import {FormControl, FormGroup} from '@angular/forms';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {Subject, takeUntil} from 'rxjs';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-settings',
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss']
+    styleUrls: ['./settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsComponent implements OnInit {
-    locales: string[];
-    hiddenSettings: string[];
-    externalDevicesEnabled: boolean;
-    playSoundForAlarmDefaultValue: boolean;
-    playSoundForActionDefaultValue: boolean;
-    playSoundForCompliantDefaultValue: boolean;
-    playSoundForInformationDefaultValue: boolean;
-    replayEnabledDefaultValue: boolean;
-    replayIntervalDefaultValue: number;
-    remoteLoggingEnabledDefaultValue: boolean;
-    systemNotificationAlarmDefaultValue: boolean;
-    systemNotificationActionDefaultValue: boolean;
-    systemNotificationCompliantDefaultValue: boolean;
-    systemNotificationInformationDefaultValue: boolean;
-    sendCardsByEmailDefaultValue: boolean;
-    emailToPlainTextDefaultValue: boolean;
-    sendDailyEmailDefaultValue: boolean;
+export class SettingsComponent implements OnInit, OnDestroy {
+    settingsForm: FormGroup;
+    settingsView = new SettingsView();
+    isExternalDeviceSettingVisible = false;
+    languageOptionList: {value: string; label: string}[];
+    languageSelectedOption = new Array();
+    languageMultiSelectConfig: MultiSelectConfig;
+    exitConfirmationModal: NgbModalRef;
+    settingsSavedModalRef: NgbModalRef;
+    saveSettingsInProgress = false;
+    private ngUnsubscribe$ = new Subject<void>();
+    canDeactivateSubject = new Subject<boolean>();
+    pendingModification: boolean;
+    @ViewChild('exitConfirmationPopup') exitConfirmationPopup: ElementRef;
+    @ViewChild('settingsSavedPopup') settingsSavedTemplate: ElementRef;
 
-    userConfiguration: UserConfiguration;
+    constructor(
+        private translateService: TranslateService,
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
+    ) {}
 
-    patternReplayInterval = '[0-9]*';
-
-    constructor(private translateService: TranslateService) {}
-
-    ngOnInit() {
-        this.locales = this.translateService.getLangs();
-        this.hiddenSettings = ConfigService.getConfigValue('settingsScreen.hiddenSettings');
-        this.externalDevicesEnabled = ConfigService.getConfigValue('externalDevicesEnabled');
-        this.playSoundForAlarmDefaultValue = ConfigService.getConfigValue('settings.playSoundForAlarm')
-            ? ConfigService.getConfigValue('settings.playSoundForAlarm')
-            : false;
-        this.playSoundForActionDefaultValue = ConfigService.getConfigValue('settings.playSoundForAction')
-            ? ConfigService.getConfigValue('settings.playSoundForAction')
-            : false;
-        this.playSoundForCompliantDefaultValue = ConfigService.getConfigValue('settings.playSoundForCompliant')
-            ? ConfigService.getConfigValue('settings.playSoundForCompliant')
-            : false;
-        this.playSoundForInformationDefaultValue = ConfigService.getConfigValue('settings.playSoundForInformation')
-            ? ConfigService.getConfigValue('settings.playSoundForInformation')
-            : false;
-        this.replayEnabledDefaultValue = ConfigService.getConfigValue('settings.replayEnabled')
-            ? ConfigService.getConfigValue('settings.replayEnabled')
-            : false;
-        this.replayIntervalDefaultValue = ConfigService.getConfigValue('settings.replayInterval')
-            ? ConfigService.getConfigValue('settings.replayInterval')
-            : 5;
-        this.remoteLoggingEnabledDefaultValue = ConfigService.getConfigValue('settings.remoteLoggingEnabled')
-            ? ConfigService.getConfigValue('settings.remoteLoggingEnabled')
-            : false;
-        this.systemNotificationAlarmDefaultValue = ConfigService.getConfigValue('settings.systemNotificationAlarm')
-            ? ConfigService.getConfigValue('settings.systemNotificationAlarm')
-            : false;
-        this.systemNotificationActionDefaultValue = ConfigService.getConfigValue('settings.systemNotificationAction')
-            ? ConfigService.getConfigValue('settings.systemNotificationAction')
-            : false;
-        this.systemNotificationCompliantDefaultValue = ConfigService.getConfigValue(
-            'settings.systemNotificationCompliant'
-        )
-            ? ConfigService.getConfigValue('settings.systemNotificationCompliant')
-            : false;
-        this.systemNotificationInformationDefaultValue = ConfigService.getConfigValue(
-            'settings.systemNotificationInformation'
-        )
-            ? ConfigService.getConfigValue('settings.systemNotificationInformation')
-            : false;
-        this.sendCardsByEmailDefaultValue = ConfigService.getConfigValue('settings.sendCardsByEmail')
-            ? ConfigService.getConfigValue('settings.sendCardsByEmail')
-            : false;
-        this.emailToPlainTextDefaultValue = ConfigService.getConfigValue('settings.emailToPlainText')
-            ? ConfigService.getConfigValue('settings.emailToPlainText')
-            : false;
-        this.sendDailyEmailDefaultValue = ConfigService.getConfigValue('settings.sendDailyEmail')
-            ? ConfigService.getConfigValue('settings.sendDailyEmail')
-            : false;
-        const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
-
-        if (this.externalDevicesEnabled)
-            ExternalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {
-                this.userConfiguration = result;
-            });
+    ngOnInit(): void {
+        this.getExternalDeviceSettingVisibility();
+        this.initForm();
+        this.listenToFormChanges();
     }
 
-    isExternalDeviceConfiguredForUser(): boolean {
-        return this.userConfiguration?.externalDeviceIds?.length > 0;
+    private getExternalDeviceSettingVisibility() {
+        this.settingsView.isExternalDeviceSettingVisible().then((result) => {
+            this.isExternalDeviceSettingVisible = result;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    private initForm() {
+        const settings = [
+            'playSoundForAlarm',
+            'playSoundForAction',
+            'playSoundForCompliant',
+            'playSoundForInformation',
+            'replayEnabled',
+            'playSoundOnExternalDevice',
+            'replayInterval',
+            'systemNotificationAlarm',
+            'systemNotificationAction',
+            'systemNotificationCompliant',
+            'systemNotificationInformation',
+            'locale',
+            'sendCardsByEmail',
+            'emailToPlainText',
+            'sendDailyEmail',
+            'email',
+            'remoteLoggingEnabled'
+        ];
+
+        const formGroupConfig = {};
+        settings.forEach((setting) => {
+            formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
+        });
+
+        this.settingsForm = new FormGroup(formGroupConfig, {updateOn: 'change'});
+        this.initLocaleMultiselect();
+    }
+
+    private initLocaleMultiselect() {
+        this.languageMultiSelectConfig = {
+            labelKey: 'settings.locale',
+            multiple: false,
+            search: false,
+            sortOptions: true
+        };
+
+        const locales = this.translateService.getLangs();
+        this.languageOptionList = locales.map((locale) => ({value: locale, label: locale}));
+        this.languageSelectedOption[0] = this.settingsView.getSetting('locale');
+    }
+
+    private listenToFormChanges() {
+        Object.keys(this.settingsForm.controls).forEach((key) => {
+            this.settingsForm
+                .get(key)
+                .valueChanges.pipe(takeUntil(this.ngUnsubscribe$))
+                .subscribe((value) => {
+                    this.settingsView.setSetting(key, value);
+                });
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
+
+    openConfirmSaveSettingsModal(content: TemplateRef<any>) {
+        this.exitConfirmationModal = this.modalService.open(content, {centered: true, backdrop: 'static'});
+    }
+
+    saveSettings() {
+        if (this.exitConfirmationModal) this.exitConfirmationModal.close();
+        if (this.saveSettingsInProgress) return; // avoid multiple clicks
+        this.saveSettingsInProgress = true;
+        this.settingsView.saveSettings().then((result) => {
+            this.saveSettingsInProgress = false;
+            if (result.status === ServerResponseStatus.OK)
+                this.settingsSavedModalRef = this.modalService.open(this.settingsSavedTemplate, {
+                    centered: true,
+                    backdrop: 'static'
+                });
+        });
+    }
+
+    closeConfirmation() {
+        this.settingsSavedModalRef.close();
+        this.canDeactivateSubject.next(true);
+    }
+
+    canDeactivate() {
+        if (this.settingsView.doesSettingsNeedToBeSaved()) {
+            this.exitConfirmationModal = this.modalService.open(this.exitConfirmationPopup, {
+                centered: true,
+                backdrop: 'static'
+            });
+            return this.canDeactivateSubject;
+        }
+        return true;
+    }
+
+    cancelNavigation() {
+        this.exitConfirmationModal.close();
+        this.canDeactivateSubject.next(false);
+    }
+
+    doNotConfirmSaveSettings() {
+        this.exitConfirmationModal.close();
+        this.canDeactivateSubject.next(true);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,7 @@ describe('Session ended test', function () {
         checkSessionIsActive();
         goSevenDaysInTheFuture();
         checkSessionIsClosed();
+        cy.tick(10); // necessary to trigger the sound   
         sound.checkNumberOfEmittedSoundIs(1);
     });
 
@@ -73,6 +74,7 @@ describe('Session ended test', function () {
     function configureOneSound() {
         opfab.navigateToSettings();
         settings.clickOnSeverity('alarm');
-        settings.clickOnReplaySound(); // set no replay for sound
+        settings.clickOnReplaySoundAndSave(); // set no replay for sound
+        cy.wait(500); // need to wait due to the fact that we use clock after (no explanation found)
     }
 });

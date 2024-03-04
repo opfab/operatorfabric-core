@@ -14,6 +14,7 @@ import {Observable, ReplaySubject} from 'rxjs';
 export class SettingsServerMock implements SettingsServer {
     public userIdPatch = '';
     public settingsPatch = {};
+    public numberOfCallsToPatchUserSettings = 0;
 
     private patchUserSettings$: ReplaySubject<ServerResponse<any>>;
 
@@ -30,6 +31,7 @@ export class SettingsServerMock implements SettingsServer {
     patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>> {
         this.userIdPatch = userId;
         this.settingsPatch = settings;
+        this.numberOfCallsToPatchUserSettings++;
         return this.patchUserSettings$.asObservable();
     }
 }
