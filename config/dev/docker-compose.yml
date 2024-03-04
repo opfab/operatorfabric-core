@@ -9,7 +9,7 @@ services:
       - "15674:15674"
   mongodb:
     container_name: mongodb
-    image: mongo:5.0.24-focal
+    image: mongo:5.0.25-focal
     ports:
       - "27017:27017"
     environment:
