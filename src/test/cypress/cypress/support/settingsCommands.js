@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,38 +15,39 @@ export class SettingsCommands extends OpfabCommands {
         super.init('SETTINGS');
     }
 
-    clickOnSeverity = function(severity) {
-        cy.intercept('PATCH', '/users/**').as('saved');
-        cy.get('#opfab-checkbox-setting-form-' + severity).click();
-        cy.wait('@saved'); // wait for settings to be saved
-    }
+    save = function () {
+        cy.get('#opfab-settings-btn-save').click();
+        cy.get('#opfab-settings-btn-yes').click();
+    };
 
-    clickOnReplaySound = function () {
-        cy.intercept('PATCH', '/users/**').as('saved');
-        cy.get('#opfab-checkbox-setting-form-replay').click();
-        cy.wait('@saved'); // wait for settings to be saved
-    }
+    clickOnSeverity = function (severity) {
+        cy.get('#opfab-setting-input-sev-' + severity).click();
+    };
 
-    setReplayIntervalTo = function (interval) {
-        cy.intercept('PATCH', '/users/**').as('saved');
-        cy.get('#opfab-setting-replayInterval').clear();
-        cy.wait('@saved'); // wait for settings to be saved
-        cy.get('#opfab-setting-replayInterval').type(interval);
-        cy.wait('@saved'); // wait for settings to be saved
-    }
+    clickOnSeverityAndSave = function (severity) {
+        this.clickOnSeverity(severity);
+        this.save();
+    };
 
-    clickOnSendNotificationByEmail = function () {
-        cy.intercept('PATCH', '/users/**').as('saved');
-        cy.get('#opfab-checkbox-setting-form-sendCardsByEmail').click();
-        cy.wait('@saved'); // wait for settings to be saved
-    }
+    clickOnReplaySoundAndSave = function () {
+        cy.get('#opfab-setting-input-replayEnabled').click();
+        this.save();
+    };
 
-    setEmailAddress = function (email) {
-        cy.intercept('PATCH', '/users/**').as('saved');
-        cy.get('#opfab-setting-email').clear();
-        cy.wait('@saved'); // wait for settings to be saved
-        cy.intercept('PATCH', '/users/**').as('saved2');
-        cy.get('#opfab-setting-email').type(email);
-        cy.wait('@saved2'); // wait for settings to be saved
-    }
+    setReplayIntervalToAndSave = function (interval) {
+        cy.get('#opfab-setting-input-replayInterval').clear();
+        cy.get('#opfab-setting-input-replayInterval').type(interval);
+        this.save();
+    };
+
+    clickOnSendNotificationByEmailAndSave = function () {
+        cy.get('#opfab-setting-input-sendCardsByEmail').click();
+        this.save();
+    };
+
+    setEmailAddressAndSave = function (email) {
+        cy.get('#opfab-setting-input-email').clear();
+        cy.get('#opfab-setting-input-email').type(email);
+        this.save();
+    };
 }

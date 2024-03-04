@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,13 @@ describe('Sound notification test', function () {
     const feed = new FeedCommands();
 
     before('Reset UI configuration file ', function () {
-        //script.loadTestConf(); //Avoid to launch it as it is time consuming
+
+        // WARNING : 
+        // We avoid to launch the configuration load  as it is time consuming
+        // Activate the following line to load it if you just launch the test for the first time manually 
+
+        //script.loadTestConf(); 
+
         script.resetUIConfigurationFiles();
     });
 
@@ -37,7 +43,7 @@ describe('Sound notification test', function () {
             sound.stubPlaySound();
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            settings.clickOnSeverityAndSave('alarm');  // set severity alarm to be notified by sound
             opfab.navigateToFeed();
             sendCardWithSeverityAlarm();
             sound.checkNumberOfEmittedSoundIs(1);
@@ -45,19 +51,19 @@ describe('Sound notification test', function () {
             sound.checkNumberOfEmittedSoundIs(1); // no new sound
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('alarm'); // set severity alarm to NOT be notified by sound
+            settings.clickOnSeverityAndSave('alarm'); // set severity alarm to NOT be notified by sound
             opfab.navigateToFeed();
             sendCardWithSeverityAlarm();
             sound.checkNumberOfEmittedSoundIs(1); // No new sound
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('action'); // set severity action to be notified by sound
+            settings.clickOnSeverityAndSave('action'); // set severity action to be notified by sound
             opfab.navigateToArchives(); //even if user is in archives screen sound are activated
             sendCardWithSeverityAction();
             sound.checkNumberOfEmittedSoundIs(2); // One new sound
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('information'); // set severity information  to be notified by sound
+            settings.clickOnSeverityAndSave('information'); // set severity information  to be notified by sound
             opfab.navigateToArchives(); //even if user is in archives screen sound are activated
             sendCardWithSeverityAlarm();
             sendCardWithSeverityInformation();
@@ -69,8 +75,10 @@ describe('Sound notification test', function () {
             opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
-            settings.clickOnSeverity('information'); 
+            settings.clickOnSeverityAndSave('information'); 
+            cy.wait(100); // need to wait due to the fact that we use clock after (no explanation found)
             opfab.navigateToFeed();
+
 
             // Use cypress time simulation
             cy.clock(new Date());
@@ -104,8 +112,9 @@ describe('Sound notification test', function () {
             opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
-            settings.setReplayIntervalTo('20');
-            settings.clickOnSeverity('information'); 
+            settings.setReplayIntervalToAndSave('20');
+            settings.clickOnSeverityAndSave('information'); 
+            cy.wait(100); // need to wait due to the fact that we use clock after (no explanation found)
             opfab.navigateToFeed();
 
             cy.clock(new Date());
@@ -135,7 +144,8 @@ describe('Sound notification test', function () {
             opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
-            settings.clickOnSeverity('information');
+            settings.clickOnSeverityAndSave('information');
+            cy.wait(100); // need to wait due to the fact that we use clock after (no explanation found)
             opfab.navigateToFeed();
 
             // Use cypress time simulation
@@ -168,7 +178,8 @@ describe('Sound notification test', function () {
             sound.stubPlaySound();
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            settings.clickOnSeverityAndSave('alarm');  // set severity alarm to be notified by sound
+            cy.wait(100); // need to wait due to the fact that we use clock after (no explanation found)
             opfab.navigateToFeed();
             // Use cypress time simulation
             cy.clock(new Date());
@@ -184,7 +195,8 @@ describe('Sound notification test', function () {
             sound.stubPlaySound();
 
             opfab.navigateToSettings();
-            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            settings.clickOnSeverityAndSave('alarm');  // set severity alarm to be notified by sound
+            cy.wait(100); // need to wait due to the fact that we use clock after (no explanation found)
             opfab.navigateToFeed();
 
             cy.clock(new Date());

@@ -171,7 +171,8 @@
     "activityarea": "Activiteitengebied",
     "useractionlogs": "Logboek",
     "newcardTooltip": "Maak een nieuwe kaart",
-    "calendarTooltip": "Kalender" 
+    "calendarTooltip": "Kalender",
+    "settingsSaved": "Instellingen bewaard"
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",

@@ -9,6 +9,7 @@
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {ScriptCommands} from "../support/scriptCommands";
+import {SettingsCommands} from "../support/settingsCommands";
 
 describe('Test translations', function () {
     const ENGLISH = 'en';
@@ -21,6 +22,7 @@ describe('Test translations', function () {
 
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
+    const settings = new SettingsCommands();
 
     function changeLanguage(newLanguage, useClock) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -34,12 +36,9 @@ describe('Test translations', function () {
         cy.get("#opfab-setting-locale").click();
         if (useClock) cy.tick(1000);
         cy.get("#opfab-setting-locale").find('[data-value="' +newLanguage + '"]' ).click();
+        if (useClock) cy.tick(1000);
 
-
-        // Wait for the language to be changed
-        if (useClock) {
-            cy.tick(5000);
-        }
+        settings.save();
 
         if (newLanguage == ENGLISH) {
             cy.get('.opfab-settings-title').should('have.text', ENGLISH_SETTINGS);
