@@ -35,6 +35,8 @@ import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
+import {PermissionEnum} from '@ofModel/permission.model';
+import {UserService} from 'app/business/services/users/user.service';
 
 export class ActionColumn {
     colId: any;
@@ -80,6 +82,9 @@ export abstract class AdminTableDirective implements OnDestroy {
     public gridApi;
     public rowData: any[];
     public page = 1;
+
+    ADMIN_PERMISSION: PermissionEnum = PermissionEnum.ADMIN;
+    BUSINESS_PROCESS_PERMISSION: PermissionEnum = PermissionEnum.ADMIN_BUSINESS_PROCESS;
 
     protected static defaultEditionModalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it
@@ -456,6 +461,10 @@ export abstract class AdminTableDirective implements OnDestroy {
             arrayAsString = arrayAsString.substring(1, arrayAsString.length - 1);
         }
         return arrayAsString;
+    }
+
+    hasAnyPermission(permissions: PermissionEnum[]) {
+        return UserService.hasCurrentUserAnyPermission(permissions);
     }
 }
 
