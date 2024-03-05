@@ -28,7 +28,7 @@
     "mongodb": "6.3.0",
     "rrule": "2.8.1",
     "saslprep": "1.0.3",
-    "winston": "3.11.0",
+    "winston": "3.12.0",
     "winston-daily-rotate-file": "5.0.0"
   },
   "devDependencies": {
