@@ -225,7 +225,7 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
 
-    it('GIVEN a user member of entity1 and entity2 WHEN user is currently connected to entity1 THEN entity1 line does not contains the current user login ', async () => {
+    it('GIVEN a user member of entity1 and entity2 WHEN user is currently connected to entity1 THEN entity1 line contains the current user login ', async () => {
         mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
@@ -238,7 +238,10 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['anotherUser']);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
+            'anotherUser',
+            'currentUser'
+        ]);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
@@ -378,7 +381,10 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['anotherUser']);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
+            'anotherUser',
+            'currentUser'
+        ]);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
 
@@ -390,7 +396,7 @@ describe('ActivityAreaView', () => {
 
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([]);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
@@ -417,7 +423,7 @@ describe('ActivityAreaView', () => {
 
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([]);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
 
@@ -427,7 +433,7 @@ describe('ActivityAreaView', () => {
         // should be set again set to new connected users
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([]);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
