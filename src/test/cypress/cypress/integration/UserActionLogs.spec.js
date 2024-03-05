@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,10 @@ describe('User action logs page', () => {
         script.deleteAllSettings();
         opfab.loginWithUser('operator1_fr');
         doSomeActionToBeTracedInUserActionLogs();
+    });
+
+    after('Clean export directory', function () {
+        script.cleanDownloadsDir();
     });
 
     it('Check logs not available for none admin user', () => {
@@ -70,22 +74,64 @@ describe('User action logs page', () => {
         cy.get('#opfab-useractionlogs-noResult').contains('Your search did not match any result.');
     });
 
-    it('Check card details is accessible', () => {
+    it('Check export', function () {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
         checkNumberOfResultsIs(14);
+        checkNumberOfLinesInTableIs(10);
+
+        clickOnExportButton();
+        cy.waitDefaultTime();
+
+        // check download folder contains the export file
+        cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+
+            // check file name
+            expect(files[0]).to.match(/^UserActionLogs_export_\d*\.xlsx/);
+            // check file content
+            cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
+                expect(rows.length).to.equal(14);
+
+                checkExportLineContains(rows[0], 'OPEN_SUBSCRIPTION', 'admin');
+                checkExportLineContains(rows[1], 'CLOSE_SUBSCRIPTION', 'admin');
+                checkExportLineContains(rows[2], 'OPEN_SUBSCRIPTION', 'admin');
+                checkExportLineContains(rows[3], 'CLOSE_SUBSCRIPTION', 'operator2_fr');
+                checkExportLineContains(rows[4], 'UNACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[5], 'SEND_RESPONSE', 'operator2_fr');
+                checkExportLineContains(rows[6], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[7], 'ACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[8], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[9], 'OPEN_SUBSCRIPTION', 'operator2_fr');
+                checkExportLineContains(rows[10], 'CLOSE_SUBSCRIPTION', 'operator1_fr');
+                checkExportLineContains(rows[11], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[12], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[13], 'OPEN_SUBSCRIPTION', 'operator1_fr');
+            });
+        });
+    });
+
+    it('Check card details is accessible', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToUserActionLogs();
+        clickOnSearchButton();
+        checkNumberOfResultsIs(16);
         clickOnLineNumber(0);
         cy.get('of-simplified-card-view').should('not.exist');
-        clickOnLineNumber(4);
+        clickOnLineNumber(6);
         cy.get('of-simplified-card-view').should('exist');
         closeCardDetail();
-        clickOnLineNumber(5);
+        clickOnLineNumber(7);
         cy.get('of-simplified-card-view').should('exist');
 
         // Check the response has been integrated in the template
         cy.get('#template_responses').find('tr').should('have.length', 2);
     });
+
+    function clickOnExportButton() {
+        cy.get('#opfab-useractionlogs-btn-exportToExcel').click();
+    }
 
     function doSomeActionToBeTracedInUserActionLogs() {
         sendQuestionCard();
@@ -145,6 +191,11 @@ describe('User action logs page', () => {
     function checkTableLineContains(index, action, user) {
         cy.get('.opfab-useractionlogs-table-line').eq(index).find('td').eq(1).should('have.text', action);
         cy.get('.opfab-useractionlogs-table-line').eq(index).find('td').eq(2).should('have.text', user);
+    }
+
+    function checkExportLineContains(row, action, user) {
+        expect(row['Action']).to.equal(action);
+        expect(row['Username']).to.equal(user);
     }
 
     function selectUsername(logins) {
