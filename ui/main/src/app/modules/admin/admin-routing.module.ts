@@ -8,7 +8,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateFn, RouterModule, RouterStateSnapshot, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {AdminComponent} from './admin.component';
 import {UsersTableComponent} from './components/table/users-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
@@ -17,18 +17,6 @@ import {PerimetersTableComponent} from './components/table/perimeters-table.comp
 import {ProcessesTableComponent} from './components/table/processes-table.component';
 import {BusinessDataTableComponent} from './components/table/businessData-table.component';
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
-import {UserService} from 'app/business/services/users/user.service';
-import {PermissionEnum} from '@ofModel/permission.model';
-
-const defaultPath = 'users';
-
-const canActivateAdmin: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
-};
-
-const canActivateAdminBusinessProcess: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.ADMIN_BUSINESS_PROCESS]);
-};
 
 const routes: Routes = [
     {
@@ -36,23 +24,23 @@ const routes: Routes = [
         component: AdminComponent,
         children: [
             {
+                path: '',
+                component: UsersTableComponent
+            },
+            {
                 path: 'users',
-                canActivate: [canActivateAdmin],
                 component: UsersTableComponent
             },
             {
                 path: 'entities',
-                canActivate: [canActivateAdmin],
                 component: EntitiesTableComponent
             },
             {
                 path: 'groups',
-                canActivate: [canActivateAdmin],
                 component: GroupsTableComponent
             },
             {
                 path: 'perimeters',
-                canActivate: [canActivateAdmin],
                 component: PerimetersTableComponent
             },
             {
@@ -61,15 +49,12 @@ const routes: Routes = [
             },
             {
                 path: 'businessData',
-                canActivate: [canActivateAdminBusinessProcess],
                 component: BusinessDataTableComponent
             },
             {
                 path: 'supervisedEntities',
-                canActivate: [canActivateAdmin],
                 component: SupervisedEntitiesTableComponent
-            },
-            {path: '**', redirectTo: defaultPath}
+            }
         ]
     }
 ];

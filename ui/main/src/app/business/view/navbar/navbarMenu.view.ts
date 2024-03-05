@@ -51,8 +51,9 @@ export class NavbarMenuView {
         )
             return false;
         if (!menuElementConfig.showOnlyForGroups || menuElementConfig.showOnlyForGroups.length === 0) return true;
-        const userGroups = UserService.getCurrentUserWithPerimeters().userData.groups;
-        return userGroups.some((group: string) => menuElementConfig.showOnlyForGroups.includes(group));
+
+        const userGroups = UserService.getCurrentUserWithPerimeters().userData?.groups;
+        return userGroups && userGroups.some((group: string) => menuElementConfig.showOnlyForGroups.includes(group));
     }
 
     private getUpperMenuElement(menuElementConfig: any): NavbarMenuElement | null {
