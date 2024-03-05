@@ -102,7 +102,6 @@ export class ActivityAreaView {
                 });
                 connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
                 connectedUsers.forEach((connectedUser) => {
-                    if (connectedUser.login === this.currentUserLogin) return;
                     const entitiesConnected = connectedUser.entitiesConnected;
                     if (entitiesConnected)
                         entitiesConnected.forEach((entityId) => {
