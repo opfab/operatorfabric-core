@@ -120,8 +120,11 @@ export class UserActionLogsComponent implements OnInit {
         this.userActionLogsResult = null;
         this.errorMessage = null;
         this.userActionLogsView.search().subscribe((result) => {
-            if (result.hasError) this.errorMessage = result.errorMessage;
-            else this.userActionLogsResult = result;
+            if (result.hasError) {
+                this.errorMessage = result.errorMessage;
+            } else {
+                this.userActionLogsResult = result;
+            }
             this.loadingInProgress = false;
             this.changeDetector.markForCheck();
         });
@@ -174,6 +177,10 @@ export class UserActionLogsComponent implements OnInit {
                 } else if (this.modalRef) this.modalRef.close();
             });
         }
+    }
+
+    export(): void {
+        this.userActionLogsView.initExportData();
     }
 
     reset() {

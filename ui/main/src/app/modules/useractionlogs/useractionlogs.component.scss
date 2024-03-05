@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,4 +13,15 @@
 
 td,th {
    padding: 10px; 
+}
+
+.opfab-useractionlogs-export-div {
+  width: 50%;
+  text-align: right;
+  padding-right: 8px;
+}
+.opfab-useractionlogs-export-btn {
+  float: right;
+  margin-right: 10px;
+  cursor: pointer;
 }

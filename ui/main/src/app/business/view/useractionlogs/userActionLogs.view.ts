@@ -23,6 +23,7 @@ import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './userActionLogLine';
 import {UserActionLogsResult} from './userActionLogsResult';
 import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
+import {ExcelExport} from '../../common/excel-export';
 
 export class UserActionLogsView {
     private userActionLogPage = new UserActionLogsPageDescription();
@@ -97,12 +98,12 @@ export class UserActionLogsView {
         this.pageNumber = pageNumber;
     }
 
-    public search(): Observable<UserActionLogsResult> {
+    public search(isForExport: boolean = false): Observable<UserActionLogsResult> {
         if (this.isInvalidDateRange()) {
             return of(this.buildErrorResult('shared.filters.toDateBeforeFromDate'));
         }
 
-        const filters = this.getFiltersForRequest();
+        const filters = this.getFiltersForRequest(isForExport);
         return this.userActionLogsServer.queryUserActionLogs(filters).pipe(
             map((serverResponse) => {
                 return this.buildUserActionLogsResult(serverResponse);
@@ -121,18 +122,26 @@ export class UserActionLogsView {
         return result;
     }
 
-    private getFiltersForRequest(): Map<string, Array<string>> {
+    private getFiltersForRequest(isForExport: boolean): Map<string, Array<string>> {
         const filters = new Map();
-        filters.set('size', ['10']);
+
+        if (!isForExport) {
+            filters.set('size', ['10']);
+        }
         if (this.selectedLogins) {
             filters.set('login', this.selectedLogins);
         }
         if (this.selectedActions) {
             filters.set('action', this.selectedActions);
         }
-        filters.set('page', [this.pageNumber.toString()]);
+
+        if (!isForExport) {
+            filters.set('page', [this.pageNumber.toString()]);
+        }
         filters.set('dateFrom', [this.dateFrom.toString()]);
-        if (this.dateTo) filters.set('dateTo', [this.dateTo.toString()]);
+        if (this.dateTo) {
+            filters.set('dateTo', [this.dateTo.toString()]);
+        }
         return filters;
     }
 
@@ -194,5 +203,33 @@ export class UserActionLogsView {
                 }
             })
         );
+    }
+
+    // EXPORT TO EXCEL
+    public initExportData(): void {
+        const exportUserActionLogsData = [];
+
+        const dateColumnName = this.userActionLogPage.columnTitle.date;
+        const actionColumnName = this.userActionLogPage.columnTitle.action;
+        const loginColumnName = this.userActionLogPage.columnTitle.login;
+        const entitiesColumnName = this.userActionLogPage.columnTitle.entities;
+        const cardUidColumnName = this.userActionLogPage.columnTitle.cardUid;
+        const commentColumnName = this.userActionLogPage.columnTitle.comment;
+
+        let userActionLogsForExportResult: UserActionLogsResult = null;
+        this.search(true).subscribe((result) => {
+            userActionLogsForExportResult = result;
+            userActionLogsForExportResult.data.content.forEach((line: UserActionLogLine) => {
+                exportUserActionLogsData.push({
+                    [dateColumnName]: line.date,
+                    [actionColumnName]: line.action,
+                    [loginColumnName]: line.login,
+                    [entitiesColumnName]: line.entities,
+                    [cardUidColumnName]: line.cardUid,
+                    [commentColumnName]: line.comment
+                });
+            });
+            ExcelExport.exportJsonToExcelFile(exportUserActionLogsData, 'UserActionLogs');
+        });
     }
 }
