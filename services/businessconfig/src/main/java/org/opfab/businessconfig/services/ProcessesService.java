@@ -438,6 +438,8 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException
      */
     public synchronized void delete(String id) throws IOException {
+
+         // this condition avoids path traversal security issues
         if (!defaultCache.containsKey(id)) {
             throw new FileNotFoundException("Unable to find a bundle with the given id");
         }
@@ -460,6 +462,8 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException
      */
     public synchronized void deleteVersion(String id, String version) throws IOException {
+
+        // this condition avoids path traversal security issues
         if (!completeCache.contains(id, version)) {
             throw new FileNotFoundException("Unable to find a bundle with the given id and version");
         }
