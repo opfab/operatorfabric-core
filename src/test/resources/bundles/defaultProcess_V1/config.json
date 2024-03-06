@@ -20,6 +20,7 @@
         "publisherList": [{"id":"ENTITY_FR", "levels":[1]}]
       },
       "templateName": "template",
+      "emailBodyTemplate": "templateMail",
       "styles": [
         "style"
       ],
