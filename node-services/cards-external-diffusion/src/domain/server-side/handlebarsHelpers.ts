@@ -9,6 +9,7 @@
 
 import * as Handlebars from 'handlebars';
 import moment from 'moment';
+import {JSDOM} from 'jsdom'
 
 export class HandlebarsHelper {
     public static init() {
@@ -36,6 +37,7 @@ export class HandlebarsHelper {
         HandlebarsHelper.registerPadStart();
         HandlebarsHelper.registerObjectContainsKey();
         HandlebarsHelper.registerFindObjectByProperty();
+        HandlebarsHelper.registerDeltaToHtml();
     }
 
     private static _locale: string;
@@ -318,6 +320,38 @@ export class HandlebarsHelper {
     private static registerNow() {
         Handlebars.registerHelper('now', function () {
             return moment().valueOf();
+        });
+    }
+
+    private static registerDeltaToHtml() {
+        Handlebars.registerHelper('deltaToHtml', (delta) => {
+            const fs = require('fs');
+            let quillFilePath = require.resolve('quill');
+            let quillMinFilePath = quillFilePath.replace('quill.js', 'quill.min.js');
+            
+            let quillLibrary = fs.readFileSync(quillMinFilePath);
+            const TEMPLATE =  `<div id="editor"></div>
+            <script>${quillLibrary}</script>
+            <script>
+              document.getSelection = function() {
+                return {
+                  getRangeAt: function() { }
+                };
+              };
+              document.execCommand = function (command, showUI, value) {
+                try {
+                    return document.execCommand(command, showUI, value);
+                } catch(e) {}
+                return false;
+              };
+            </script>`
+
+            const DOM = new JSDOM(TEMPLATE, { runScripts: 'dangerously', resources: 'usable' });
+            const quill = new DOM.window.Quill('#editor');
+ 
+            quill.setContents(JSON.parse(delta));            
+            const html = quill.root.innerHTML;
+            return html;
         });
     }
 }
