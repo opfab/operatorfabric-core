@@ -317,8 +317,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-group-users').find('.vscomp-option-text').eq(5).click({force: true});
         cy.get('#opfab-group-users').click();
 
-        cy.get('#opfab-realtime').check({force: true});
-
         cy.get('#opfab-admin-edit-btn-add').click();
 
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
@@ -328,7 +326,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
 
         // Edit previously created group
-        agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 7, 5, 'of-action-cell-renderer');
 
         cy.get('of-edit-group-modal').should('exist');
 
@@ -339,7 +337,6 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'READONLY');
-        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'be.checked');
 
         cy.get('#opfab-name').type(' updated');
 
@@ -362,8 +359,6 @@ describe('AdmininstrationPages', () => {
         // Select new permission
         cy.get('#opfab-permissions').find('.vscomp-option-text').eq(3).click({force: true});
         cy.get('#opfab-permissions').click();
-        // Deselect realtime parameter
-        cy.get('#opfab-realtime').uncheck({force: true});
 
         cy.get('#opfab-admin-user-btn-save').click();
 
@@ -379,10 +374,10 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
-        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'not.be.checked');
+
 
         // Delete previously created group
-        agGrid.clickCell('ag-grid-angular', 7, 7, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -397,7 +392,7 @@ describe('AdmininstrationPages', () => {
 
 
          // Edit RTE group to check users list
-         agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+         agGrid.clickCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
 
          cy.get('of-edit-group-modal').should('exist');
          cy.get('.modal-title').should('contain.text', 'RTE');
@@ -765,14 +760,12 @@ describe('AdmininstrationPages', () => {
                     expect(rows[0].DESCRIPTION).to.equal('The admin group');
                     expect(rows[0].TYPE).to.be.undefined;
                     expect(rows[0].PERIMETERS).to.be.undefined;
-                    expect(rows[0]['REAL TIME']).to.equal('NO');
 
                     expect(rows[2].ID).to.equal('Dispatcher');
                     expect(rows[2].NAME).to.equal('Dispatcher');
                     expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
                     expect(rows[2].TYPE).to.be.undefined;
                     expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,externalRecipent,gridCooperation,messageOrQuestionExample,question,supervisor,taskAdvancedExample,taskExample');
-                    expect(rows[2]['REAL TIME']).to.equal('YES');
                 })
             })
         })

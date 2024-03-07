@@ -36,7 +36,6 @@ Feature: Get Group details
     Then match response.id == group.id
     And match response.description == group.description
     And match response.name == group.name
-    And match response.realtime == false
     And assert response.permissions.length == 1
     And match response.permissions contains only ["READONLY"]
     And status 200

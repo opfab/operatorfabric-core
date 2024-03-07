@@ -11,7 +11,6 @@ export class Group {
     public constructor(
         readonly id: string,
         readonly name: string,
-        readonly description: string,
-        readonly realtime?: boolean
+        readonly description: string
     ) {}
 }

@@ -54,8 +54,8 @@ class GroupsServiceShould {
         Set<String> perimeter = new HashSet<>();
         perimeter.add("perimeter1");
 
-        Group group1 = new Group("group1", "groupName", null, perimeter, null, null);
-        Group groupAdmin = new Group("ADMIN", "admin", null, null, null, null);
+        Group group1 = new Group("group1", "groupName", null, perimeter, null);
+        Group groupAdmin = new Group("ADMIN", "admin", null, null, null);
         groupRepositoryStub.save(group1);
         groupRepositoryStub.save(groupAdmin);
         Set<String> groupForUser1 = new HashSet<>();
@@ -105,7 +105,7 @@ class GroupsServiceShould {
     class Create {
         @Test
         void GIVEN_An_Invalid_GroupId__WHEN_Creating_Group_THEN_Return_Bad_Request() {
-            Group group = new Group("invalid?id", "invalid id", null, null, null, null);
+            Group group = new Group("invalid?id", "invalid id", null, null, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -119,7 +119,7 @@ class GroupsServiceShould {
             perimeters.add("perimeter1");
             Set<PermissionEnum> permissions = new HashSet<>();
             permissions.add(PermissionEnum.READONLY);
-            Group group = new Group("newGroup", "newName", null, perimeters, permissions, null);
+            Group group = new Group("newGroup", "newName", null, perimeters, permissions);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isFalse();
@@ -138,7 +138,7 @@ class GroupsServiceShould {
             perimeters.add("perimeter1");
             Set<PermissionEnum> permissions = new HashSet<>();
             permissions.add(PermissionEnum.READONLY);
-            Group group = new Group("group1", "newGroupName", null, perimeters, permissions, null);
+            Group group = new Group("group1", "newGroupName", null, perimeters, permissions);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -156,7 +156,7 @@ class GroupsServiceShould {
             Set<String> perimeters = new HashSet<>();
             perimeters.add("perimeter1");
             perimeters.add("dummyPerimeter");
-            Group group = new Group("groupId", "dummyName", null, perimeters, null, null);
+            Group group = new Group("groupId", "dummyName", null, perimeters, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -168,7 +168,7 @@ class GroupsServiceShould {
         void GIVEN_A_Valid_Existing_Group_WHEN_Try_To_Update_Group_with_An_Already_Existing_Name_THEN_Return_Bad_Request() {
             Set<String> perimeters = new HashSet<>();
             perimeters.add("perimeter1");
-            Group group = new Group("ADMIN", "groupName", null, perimeters, null, null);
+            Group group = new Group("ADMIN", "groupName", null, perimeters, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -179,7 +179,7 @@ class GroupsServiceShould {
         void GIVEN_A_Valid_Group_WHEN_Update_Description_With_Same_Name_THEN_Group_Is_Updated() {
             Set<String> perimeters = new HashSet<>();
             perimeters.add("perimeter1");
-            Group group = new Group("group1", "groupName", "new description", perimeters, null, null);
+            Group group = new Group("group1", "groupName", "new description", perimeters, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -270,7 +270,7 @@ class GroupsServiceShould {
             void GIVEN_Existing_Users_WHEN_Adding_Them_To_Group_THEN_Succeed_And_Users_Are_Updated() {
 
                 groupRepositoryStub.insert(new Group(
-                        "testGroup", "myname", null, null, null, null));
+                        "testGroup", "myname", null, null, null));
 
                 ArrayList<String> users = new ArrayList<>();
                 users.add("user1");
@@ -290,7 +290,7 @@ class GroupsServiceShould {
             @Test
             void GIVEN_Existing_Users_WHEN_Adding_Them_To_Group_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
                 groupRepositoryStub.insert(new Group(
-                        "testGroup", "myname", null, null, null, null));
+                        "testGroup", "myname", null, null, null));
 
                 ArrayList<String> users = new ArrayList<>();
                 users.add("user1");
@@ -488,7 +488,7 @@ class GroupsServiceShould {
             void GIVEN_A_Group_With_One_Perimeter_WHEN_Fetch_Group_Perimeters_THEN_Return_Success_And_Perimeter() {
                 Set<String> perimeters = new HashSet<>();
                 perimeters.add("perimeter1");
-                Group group1 = new Group("group1", "groupName", null, perimeters, null, null);
+                Group group1 = new Group("group1", "groupName", null, perimeters, null);
                 groupRepositoryStub.insert(group1);
                 OperationResult<List<Perimeter>> result = groupsService.fetchGroupPerimeters("group1");
                 assertThat(result.isSuccess()).isTrue();
@@ -502,7 +502,7 @@ class GroupsServiceShould {
                 Set<String> perimeters = new HashSet<>();
                 perimeters.add("perimeter1");
                 perimeters.add("perimeter2");
-                Group group1 = new Group("group1", "groupName", null, perimeters, null, null);
+                Group group1 = new Group("group1", "groupName", null, perimeters, null);
                 groupRepositoryStub.insert(group1);
                 List<StateRight> states = new ArrayList<>();
                 states.add(new StateRight("perimeter", RightsEnum.Receive, true));

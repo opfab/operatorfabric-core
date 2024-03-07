@@ -22,7 +22,6 @@ Feature: CreateGroups
   "id" : "groupKarate1",
   "name" : "groupKarate1 name",
   "description" : "I Love Karate",
-  "realtime" : false,
   "permissions" : ["READONLY", "VIEW_ALL_ARCHIVED_CARDS"]
 }
 """
@@ -126,7 +125,6 @@ Feature: CreateGroups
     And match response.description == group.description
     And match response.name == group.name
     And match response.id == group.id
-    And match response.realtime == false
     And match response.permissions == '#notpresent'
 
   Scenario: Update my group
@@ -140,7 +138,6 @@ Feature: CreateGroups
     And match response.description == groupUpdated.description
     And match response.name == groupUpdated.name
     And match response.id == groupUpdated.id
-    And match response.realtime == groupUpdated.realtime
     And assert response.permissions.length == 2
     And match response.permissions contains only [ "READONLY","VIEW_ALL_ARCHIVED_CARDS"]
 
