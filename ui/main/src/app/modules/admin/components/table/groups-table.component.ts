@@ -27,20 +27,19 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
         new Field('name', 6),
         new Field('description', 5),
         new Field('perimeters', 8, 'perimetersCellRenderer'),
-        new Field('permissions', 6, 'arrayCellRenderer'),
-        new Field('realtime', 3, null, this.translateValue, 'realtimeColumn')
+        new Field('permissions', 6, 'arrayCellRenderer', null, 'permissionsColumn')
     ];
     idField = 'id';
     actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditGroupModalComponent;
 
     ngOnInit() {
-        this.gridOptions.columnTypes['realtimeColumn'] = {
+        this.gridOptions.columnTypes['permissionsColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
             wrapText: true,
             autoHeight: true,
-            flex: 4,
+            flex: 6,
             resizable: false
         };
         super.initCrudService();

@@ -33,8 +33,6 @@ public class Group {
     @Transient
     private Set<String> users;
 
-    private Boolean realtime = false;
-
     public Group(String id) {
         this.id = id;
     }
@@ -45,13 +43,12 @@ public class Group {
     }
 
     public Group(@NotNull String id, String name, String description, Set<String> perimeters,
-            Set<PermissionEnum> permissions, Boolean realtime) {
+            Set<PermissionEnum> permissions) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.perimeters = perimeters;
         this.permissions = permissions;
-        this.realtime = realtime;
     }
 
     public Group(Group groupData) {
@@ -66,7 +63,6 @@ public class Group {
             this.permissions = new HashSet<>();
         else
             this.permissions = new HashSet<>(groupData.permissions);
-        this.realtime = groupData.realtime;
     }
 
     public String getId() {
@@ -91,14 +87,6 @@ public class Group {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Boolean getRealtime() {
-        return realtime;
-    }
-
-    public void setRealtime(Boolean realtime) {
-        this.realtime = realtime;
     }
 
     public List<String> getPerimeters() {

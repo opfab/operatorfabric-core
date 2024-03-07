@@ -104,11 +104,6 @@ export class GroupsService {
         return idGroup;
     }
 
-    public static isRealtimeGroup(idGroup: string): boolean {
-        const found = GroupsService._groups.find((group) => group.id === idGroup);
-        return found?.realtime;
-    }
-
     public static getAll(): Observable<any[]> {
         return GroupsService.queryAllGroups();
     }

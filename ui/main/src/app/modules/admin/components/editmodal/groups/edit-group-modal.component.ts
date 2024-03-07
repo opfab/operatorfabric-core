@@ -37,7 +37,6 @@ export class EditGroupModalComponent implements OnInit {
         users: FormControl<{}[] | null>;
         perimeters: FormControl<{}[] | null>;
         permissions: FormControl<[] | null>;
-        realtime: FormControl<boolean | null>;
     }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -98,8 +97,7 @@ export class EditGroupModalComponent implements OnInit {
             description: new FormControl(''),
             users: new FormControl([]),
             perimeters: new FormControl([]),
-            permissions: new FormControl([]),
-            realtime: new FormControl<boolean | null>(false)
+            permissions: new FormControl([])
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -108,8 +106,8 @@ export class EditGroupModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {id, name, description, realtime} = this.row;
-            this.groupForm.patchValue({id, name, description, realtime}, {onlySelf: false});
+            const {id, name, description} = this.row;
+            this.groupForm.patchValue({id, name, description}, {onlySelf: false});
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupPermissions = this.row.permissions;
@@ -197,8 +195,6 @@ export class EditGroupModalComponent implements OnInit {
         if (this.description.value) {
             this.description.setValue(this.description.value.trim());
         }
-
-        this.realtime.setValue(this.realtime.value);
     }
 
     get id() {
@@ -219,10 +215,6 @@ export class EditGroupModalComponent implements OnInit {
 
     get permissions() {
         return this.groupForm.get('permissions');
-    }
-
-    get realtime() {
-        return this.groupForm.get('realtime');
     }
 
     dismissModal(reason: string): void {
