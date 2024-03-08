@@ -12,9 +12,9 @@ import {TranslationService} from 'app/business/services/translation/translation.
 export class TranslationServiceMock extends TranslationService {
     lang = 'en';
 
-    getTranslation(key: string, params?: Map<string, string>): string {
+    getTranslation(key: string, params?: Object): string {
         let translation = 'Translation (' + this.lang + ') of ' + key;
-        if (params) translation += ' with values=' + Array.from(params.values());
+        if (params) translation += ' with values=' + Array.from(Object.values(params));
         return translation;
     }
     setLang(lang: string) {

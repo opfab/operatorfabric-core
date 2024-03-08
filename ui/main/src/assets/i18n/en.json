@@ -691,6 +691,7 @@
   "errors" : {
     "notFound" : "Resource not found",
     "notAllowed" : "Action not allowed",
+    "badRequest" : "Invalid Request {{badRequestMessage}}",
     "pageNotAllowed": "You are not allowed to view this page"
   },
   "buildInTemplate" : {

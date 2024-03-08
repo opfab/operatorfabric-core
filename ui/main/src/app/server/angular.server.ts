@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,14 @@ export class AngularServer {
             map((data) => {
                 return new ServerResponse(data, ServerResponseStatus.OK, '');
             }),
-            catchError((error) => {
+            catchError((httpErrorResponse) => {
                 let serverStatus = ServerResponseStatus.UNKNOWN_ERROR;
-                if (error.status === 404) serverStatus = ServerResponseStatus.NOT_FOUND;
-                else if (error.status === 403) serverStatus = ServerResponseStatus.FORBIDDEN;
+                if (httpErrorResponse.status === 404) serverStatus = ServerResponseStatus.NOT_FOUND;
+                else if (httpErrorResponse.status === 403) serverStatus = ServerResponseStatus.FORBIDDEN;
+                else if (httpErrorResponse.status === 400) serverStatus = ServerResponseStatus.BAD_REQUEST;
 
-                return of(new ServerResponse(null, serverStatus, ''));
+                const errorMessage = httpErrorResponse.error?.message ?? '';
+                return of(new ServerResponse(null, serverStatus, errorMessage));
             })
         );
     }

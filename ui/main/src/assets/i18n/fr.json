@@ -515,7 +515,6 @@
         "name": "DONNÉES MÉTIER",
         "add": "AJOUTER UN FICHIER DE DONNÉES MÉTIER",
         "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
-
       },
       "supervisedEntity": {
         "entityId": "ENTITÉ",
@@ -683,7 +682,6 @@
     "november": "Nov", 
     "december": "Déc",
     "week": "sem",
-
     "placeholder": "AAAA-MM-JJ"
   },
   "reloadRequired" : {
@@ -693,6 +691,7 @@
   "errors" : {
     "notFound" : "Ressource non trouvée",
     "notAllowed" : "Action non autorisée",
+    "badRequest" : "Requête invalide {{badRequestMessage}}",
     "pageNotAllowed": "Vous n'êtes pas autorisé à voir cette page"
   },
   "buildInTemplate" : {

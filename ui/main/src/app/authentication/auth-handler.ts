@@ -103,7 +103,7 @@ export abstract class AuthHandler {
 
     protected handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
-        const params = new Map<string, string>();
+        const params = new Object();
         switch (errorResponse.status) {
             case 401:
                 message = 'Unable to authenticate the user';

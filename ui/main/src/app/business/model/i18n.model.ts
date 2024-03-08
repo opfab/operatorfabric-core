@@ -10,6 +10,6 @@
 export class I18n {
     constructor(
         readonly key: string,
-        readonly parameters?: Map<string, string>
+        readonly parameters?: Object
     ) {}
 }
