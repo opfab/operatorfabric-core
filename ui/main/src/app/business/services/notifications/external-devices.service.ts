@@ -62,16 +62,28 @@ export class ExternalDevicesService {
     static updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
         return ExternalDevicesService.externalDevicesServer.updateUserConfiguration(userconfigData).pipe(
             map((serverResponse) => {
-                if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data;
-                else return ErrorService.handleServerResponseError(serverResponse);
+                console.log('**********************serverResponse=', serverResponse);
+                if (serverResponse.status === ServerResponseStatus.OK) {
+                    return serverResponse.data;
+                } else return ErrorService.handleServerResponseError(serverResponse);
             })
         );
     }
 
     static enableDevice(deviceId: string): Observable<string> {
-        return ExternalDevicesService.externalDevicesServer
+        /*return ExternalDevicesService.externalDevicesServer
             .enableDevice(deviceId)
-            .pipe(map((serverResponse) => serverResponse.data));
+            .pipe(map((serverResponse) => serverResponse.data));*/
+        return ExternalDevicesService.externalDevicesServer.enableDevice(deviceId).pipe(
+            map((serverResponse) => {
+                console.log('**********************serverResponse=', serverResponse);
+                if (serverResponse.status === ServerResponseStatus.OK) {
+                    return serverResponse.data;
+                } else {
+                    throw new Error('toto');// ErrorService.handleServerResponseError(serverResponse);
+                }
+            })
+        );
     }
 
     static disableDevice(deviceId: string): Observable<string> {

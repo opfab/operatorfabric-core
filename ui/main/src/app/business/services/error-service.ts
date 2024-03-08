@@ -16,6 +16,7 @@ import {AlertMessageService} from './alert-message.service';
 
 export class ErrorService {
     public static handleServerResponseError(error: ServerResponse<any>) {
+        console.log('$$$$$$$$$$$$$$$$$$$$ error=', error);
         if (error.status === ServerResponseStatus.NOT_FOUND) {
             AlertMessageService.sendAlertMessage({
                 message: '',
@@ -26,6 +27,13 @@ export class ErrorService {
         if (error.status === ServerResponseStatus.FORBIDDEN) {
             AlertMessageService.sendAlertMessage({
                 message: '',
+                i18n: {key: 'errors.notAllowed'},
+                level: MessageLevel.ERROR
+            });
+        }
+        if (error.status === ServerResponseStatus.INTERNAL_SERVER_ERROR) {
+            AlertMessageService.sendAlertMessage({
+                message: error.message,
                 i18n: {key: 'errors.notAllowed'},
                 level: MessageLevel.ERROR
             });

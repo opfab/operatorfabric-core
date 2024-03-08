@@ -11,7 +11,8 @@ export class ServerResponse<responseDataType> {
     public constructor(
         readonly data: responseDataType,
         readonly status: ServerResponseStatus,
-        readonly statusMessage: string
+        readonly statusMessage: string,
+        readonly message?: string
     ) {}
 }
 
@@ -19,5 +20,6 @@ export enum ServerResponseStatus {
     OK,
     NOT_FOUND,
     UNKNOWN_ERROR,
-    FORBIDDEN
+    FORBIDDEN,
+    INTERNAL_SERVER_ERROR
 }
