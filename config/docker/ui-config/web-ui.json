@@ -81,7 +81,13 @@
       "zoomLevelWhenZoomToLocation": 14,
       "maxZoom": 11,
       "zoomDuration": 500,
-      "highlightPolygonStrokeWidth": 5
+      "highlightPolygonStrokeWidth": 5,
+      "layer": {
+        "geojson": {
+          "url": "assets/layers/geojson-layer.json"
+        }
+      }
+
     },
     "enableGroupedCards": false
   },
