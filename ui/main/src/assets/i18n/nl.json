@@ -514,7 +514,6 @@
         "name": "ZAKELIJKE GEGEVENS",
         "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
         "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
-
       },
       "supervisedEntity": {
         "entityId": "ENTITEIT",
@@ -691,6 +690,7 @@
   "errors" : {
     "notFound" : "Bron niet gevonden",
     "notAllowed" : "Actie niet toegestaan",
+    "badRequest" : "Ongeldige aanvraag {{badRequestMessage}}",
     "pageNotAllowed" : "Je mag deze pagina niet bekijken"
   } ,
   "buildInTemplate" : {

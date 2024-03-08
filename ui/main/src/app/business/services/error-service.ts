@@ -30,6 +30,15 @@ export class ErrorService {
                 level: MessageLevel.ERROR
             });
         }
+        if (error.status === ServerResponseStatus.BAD_REQUEST) {
+            const errorMessage = error.statusMessage ?? '';
+
+            AlertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'errors.badRequest', parameters: {badRequestMessage: errorMessage}},
+                level: MessageLevel.ERROR
+            });
+        }
         logger.error(error.status + ' ' + error.statusMessage);
         return throwError(() => error);
     }

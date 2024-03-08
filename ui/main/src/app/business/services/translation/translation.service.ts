@@ -8,7 +8,7 @@
  */
 
 export abstract class TranslationService {
-    abstract getTranslation(key: string, params?: Map<string, string>): string;
+    abstract getTranslation(key: string, params?: Object): string;
     abstract setLang(lang: string);
     abstract setTranslation(lang: string, translation: Object, shouldMerge: boolean);
 

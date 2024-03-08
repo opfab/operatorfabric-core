@@ -22,7 +22,13 @@ export class AngularTranslationService extends TranslationService {
         this.translateService.setTranslation(lang, translation, shouldMerge);
     }
 
-    getTranslation(key: string, params?: Map<string, string>): string {
+    /*
+    To use params in a translation string, the translation string should look like
+    "key": "This is an {{parameterKey}}"
+    and params should be an Object constructed like this
+    {parameterKey: 'example'}
+    */
+    getTranslation(key: string, params?: Object): string {
         if (!key) return '';
         return this.translateService.instant(key, params);
     }

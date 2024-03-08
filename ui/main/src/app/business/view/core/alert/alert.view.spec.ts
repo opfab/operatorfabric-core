@@ -58,7 +58,7 @@ describe('Alert view ', () => {
 
         const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(
-            new Message('', MessageLevel.DEBUG, new I18n('messageKey', new Map().set('param', 'value')))
+            new Message('', MessageLevel.DEBUG, new I18n('messageKey', {param: 'value'}))
         );
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();

@@ -149,7 +149,7 @@ export class EditEntityModalComponent implements OnInit {
         // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
         // user chose to perform an action (here, update the selected item).
         // This is important as code in the corresponding table components relies on the resolution of the
-        // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
+        // `NgbModalRef.result` promises to trigger a refresh of the data shown on the table.
         // Wait 100ms to let labels <tag-component> update pending values
         setTimeout(() => {
             this.crudService.update(this.entityForm.value).subscribe(() => {
