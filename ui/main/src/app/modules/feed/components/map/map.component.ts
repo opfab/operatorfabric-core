@@ -86,6 +86,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 'feed.geomap.highlightPolygonStrokeWidth',
                 2
             );
+            this.addGeoJSONLayer(GlobalStyleService.getStyle());
         }
     }
 
