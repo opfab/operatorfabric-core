@@ -7,25 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-import {MailHandlebarsHelper} from '../src/domain/server-side/mailHandlebarsHelpers';
+import {MailHandlebarsHelper} from '../domain/server-side/mailHandlebarsHelpers';
 import * as Handlebars from 'handlebars';
 
 describe('Handlebars Services', () => {
-
-
     beforeAll(() => {
         MailHandlebarsHelper.init();
     });
 
     describe('#executeTemplate', () => {
-
         it('deltaToHtml helper', async function () {
-            const richMessage = '{\\"ops\\":[{\\"attributes\\":{\\"bold\\":true},\\"insert\\":\\"test\\"},{\\"insert\\":\\"\\n\\"}]}';
-            const template = `{{{ deltaToHtml "${richMessage}" }}}`
+            const richMessage =
+                '{\\"ops\\":[{\\"attributes\\":{\\"bold\\":true},\\"insert\\":\\"test\\"},{\\"insert\\":\\"\\n\\"}]}';
+            const template = `{{{ deltaToHtml "${richMessage}" }}}`;
 
             const templateCompiler = Handlebars.compile(template);
-            const bodyHtml =  templateCompiler(richMessage);
+            const bodyHtml = templateCompiler(richMessage);
             expect(bodyHtml).toEqual('<p><strong>test</strong></p>');
         });
     });

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {Card} from './card';
+import {UserData, UserWithPerimeters} from './userWithPerimeter';
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class CardsRoutingUtilities {
-
-    public static shouldUserReceiveTheCard(userWithPerimeters: any, card: any): boolean {
+    public static shouldUserReceiveTheCard(userWithPerimeters: UserWithPerimeters, card: Card): boolean {
         if (!this.checkUserReadPerimeter(userWithPerimeters, card)) {
             return false;
         }
@@ -20,58 +22,81 @@ export default class CardsRoutingUtilities {
         return this.isCardSentToUserGroupOrEntityOrBoth(userWithPerimeters.userData, card);
     }
 
-    private static checkUserReadPerimeter(userWithPerimeters: any, card: any): boolean {
+    private static checkUserReadPerimeter(userWithPerimeters: UserWithPerimeters, card: Card): boolean {
         const perimeters = userWithPerimeters.computedPerimeters;
         const processPerimeters = perimeters.filter((perim: any) => {
-            return (perim.process === card.process && perim.state === card.state &&
+            return (
+                perim.process === card.process &&
+                perim.state === card.state &&
                 (perim.rights === 'Receive' || perim.rights === 'ReceiveAndWrite') &&
-                    CardsRoutingUtilities.checkIfMailNotifForThisProcessStateIsActivated(userWithPerimeters, card.process, perim.state) &&
-                    CardsRoutingUtilities.checkFilteringNotification(userWithPerimeters, card.process, perim)
-                );
-        })
-
+                CardsRoutingUtilities.checkIfMailNotifForThisProcessStateIsActivated(
+                    userWithPerimeters,
+                    card.process,
+                    perim.state as string
+                ) &&
+                CardsRoutingUtilities.checkFilteringNotification(userWithPerimeters, card.process, perim)
+            );
+        });
 
         return processPerimeters.length > 0;
     }
 
-    private static checkIfMailNotifForThisProcessStateIsActivated(userWithPerimeters: any, process: string, state: string): boolean {
-        if (!userWithPerimeters.processesStatesNotifiedByEmail || userWithPerimeters.processesStatesNotifiedByEmail.length === 0) {
+    private static checkIfMailNotifForThisProcessStateIsActivated(
+        userWithPerimeters: any,
+        process: string,
+        state: string
+    ): boolean {
+        if (
+            userWithPerimeters.processesStatesNotifiedByEmail == null ||
+            userWithPerimeters.processesStatesNotifiedByEmail.length === 0
+        ) {
             return false;
         }
         return userWithPerimeters.processesStatesNotifiedByEmail[process]?.includes(state);
     }
 
-    private static checkFilteringNotification(userWithPerimeters: any, process: string, perimeter: any): boolean {
-        if (!perimeter.filteringNotificationAllowed
-            || !userWithPerimeters.processesStatesNotNotified
-            || userWithPerimeters.processesStatesNotNotified.length == 0) {
+    private static checkFilteringNotification(
+        userWithPerimeters: UserWithPerimeters,
+        process: string,
+        perimeter: any
+    ): boolean {
+        if (
+            perimeter.filteringNotificationAllowed == null ||
+            userWithPerimeters.processesStatesNotNotified == null ||
+            userWithPerimeters.processesStatesNotNotified.length === 0
+        ) {
             return true;
         }
-        return !userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
+        const isNotNodify = userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
+        return isNotNodify === false || isNotNodify === undefined;
     }
 
-    private static checkUserRecipients(user: any, card: any): boolean {
-        return card.userRecipients && card.userRecipients.length > 0 && card.userRecipients.includes(user.userData.login);
+    private static checkUserRecipients(user: UserWithPerimeters, card: Card): boolean {
+        return (
+            card.userRecipients != null &&
+            card.userRecipients.length > 0 &&
+            card.userRecipients.includes(user.userData.login)
+        );
     }
 
-    private static isCardSentToUserGroupOrEntityOrBoth(user: any, card: any): boolean {
+    private static isCardSentToUserGroupOrEntityOrBoth(user: UserData, card: Card): boolean {
         if (
-            card.groupRecipients &&
+            card.groupRecipients != null &&
             card.groupRecipients.length > 0 &&
-            this.getArraysIntersection(card.groupRecipients, user.groups).length == 0
+            this.getArraysIntersection(card.groupRecipients, user.groups).length === 0
         )
             return false;
 
         if (
-            card.entityRecipients &&
+            card.entityRecipients != null &&
             card.entityRecipients.length > 0 &&
-            this.getArraysIntersection(card.entityRecipients, user.entities).length == 0
+            this.getArraysIntersection(card.entityRecipients, user.entities).length === 0
         )
             return false;
 
         return !(
-            (!card.groupRecipients || card.groupRecipients.length == 0) &&
-            (!card.entityRecipients || card.entityRecipients.length == 0)
+            (card.groupRecipients == null || card.groupRecipients.length === 0) &&
+            (card.entityRecipients == null || card.entityRecipients.length === 0)
         );
     }
 

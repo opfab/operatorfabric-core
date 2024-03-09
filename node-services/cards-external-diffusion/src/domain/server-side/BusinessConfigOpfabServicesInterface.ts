@@ -13,56 +13,56 @@ import GetResponse from '../../common/server-side/getResponse';
 import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import {MailHandlebarsHelper} from './mailHandlebarsHelpers';
 
-export default class BusinessConfigOpfabServicesInterface
-    extends OpfabServicesInterface
-    implements EventListener
-{
-    private static configCache: Map<string, any> = new Map();
-    private static templateCompilerCache: Map<string, Map<string, Function> | undefined> = new Map();
+export default class BusinessConfigOpfabServicesInterface extends OpfabServicesInterface implements EventListener {
+    private static configCache = new Map<string, any>();
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    private static templateCompilerCache = new Map<string, Map<string, Function> | undefined>();
 
-    private listener: EventBusListener;
+    private readonly listener: EventBusListener;
 
     constructor() {
         super();
         this.listener = new EventBusListener().addListener(this);
         HandlebarsHelper.init();
+        MailHandlebarsHelper.init();
     }
 
-    async onMessage(message: any) {
+    async onMessage(message: any): Promise<void> {
         const businessconfigMessage: string = message.content.toString();
         this.logger.info('EventBusListener received businessconfig update event: ' + businessconfigMessage);
-        if (businessconfigMessage == 'BUSINESS_CONFIG_CHANGE') {
+        if (businessconfigMessage === 'BUSINESS_CONFIG_CHANGE') {
             this.clearBusinessConfigCache();
         }
     }
 
-    public clearBusinessConfigCache() {
+    public clearBusinessConfigCache(): void {
         BusinessConfigOpfabServicesInterface.templateCompilerCache = new Map();
         BusinessConfigOpfabServicesInterface.configCache = new Map();
     }
 
-    public setEventBusConfiguration(eventBusConfig: any) {
+    public setEventBusConfiguration(eventBusConfig: any): this {
         this.listener
-            .setHost(eventBusConfig.host)
-            .setPort(eventBusConfig.port)
-            .setUsername(eventBusConfig.username)
-            .setPassword(eventBusConfig.password)
+            .setHost(eventBusConfig.host as string)
+            .setPort(eventBusConfig.port as number)
+            .setUsername(eventBusConfig.username as string)
+            .setPassword(eventBusConfig.password as string)
             .setQueue('process', '', {exclusive: true, autoDelete: true});
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         this.listener.setLogger(logger);
         return this;
     }
 
-    public startListener() {
+    public startListener(): void {
         this.listener.start();
     }
 
-    public stopListener() {
+    public stopListener(): void {
         this.listener.stop();
     }
 
@@ -71,22 +71,18 @@ export default class BusinessConfigOpfabServicesInterface
         if (!BusinessConfigOpfabServicesInterface.configCache.has(key)) {
             const cardConfigResponse = await this.getProcessConfig(processId, version);
             if (cardConfigResponse.isValid()) {
-                BusinessConfigOpfabServicesInterface.configCache.set(
-                    key,
-                    cardConfigResponse.getData()
-                );
+                BusinessConfigOpfabServicesInterface.configCache.set(key, cardConfigResponse.getData());
             }
         }
         return BusinessConfigOpfabServicesInterface.configCache.get(key);
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     public async fetchTemplate(processId: string, emailBodyTemplate: string, version: string): Promise<Function> {
         const key = processId + '.' + version;
-        let cachedMap: Map<string, Function> | undefined = new Map();
-
-        if (BusinessConfigOpfabServicesInterface.templateCompilerCache.has(key)) {
-            cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
-            if (!cachedMap?.has(emailBodyTemplate)) {
+        const cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
+        if (cachedMap != null) {
+            if (!cachedMap.has(emailBodyTemplate)) {
                 await this.addTemplateToCache(processId, emailBodyTemplate, version, key);
             }
         } else {
@@ -94,19 +90,26 @@ export default class BusinessConfigOpfabServicesInterface
         }
 
         const compiler = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key)?.get(emailBodyTemplate);
-        if (compiler) {
+        if (compiler != null) {
             return compiler;
         } else {
-            return (
-                () => {return null;}
-            );
+            return () => {
+                return null;
+            };
         }
     }
 
-    private async addTemplateToCache( processId: string, emailBodyTemplate: string, version: string, key: string): Promise<void> {
-        let cachedMap: Map<string, Function> | undefined = new Map();
+    private async addTemplateToCache(
+        processId: string,
+        emailBodyTemplate: string,
+        version: string,
+        key: string
+    ): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        const cachedMap: Map<string, Function> | undefined = new Map();
         const templateResponse = await this.getTemplate(processId, emailBodyTemplate, version);
         if (templateResponse.isValid()) {
+            // eslint-disable-next-line @typescript-eslint/ban-types
             const cachedCompiler: Function = Handlebars.compile(templateResponse.getData());
             cachedMap.set(emailBodyTemplate, cachedCompiler);
             BusinessConfigOpfabServicesInterface.templateCompilerCache.set(key, cachedMap);
@@ -117,7 +120,7 @@ export default class BusinessConfigOpfabServicesInterface
         try {
             await this.getToken();
             const response = await this.sendGetProcessConfigRequest(id, version);
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
             } else {
                 this.logger.warn('No process config defined in HTTP response');
@@ -133,7 +136,7 @@ export default class BusinessConfigOpfabServicesInterface
         try {
             await this.getToken();
             const response = await this.sendGetTemplateRequest(processId, templateName, version);
-            if (response?.data) {
+            if (response?.data != null) {
                 return new GetResponse(response.data, true);
             } else {
                 this.logger.warn('No template defined in HTTP response');
@@ -145,28 +148,28 @@ export default class BusinessConfigOpfabServicesInterface
         }
     }
 
-    sendGetProcessConfigRequest(processId: string, version: string): Promise<any> {
+    async sendGetProcessConfigRequest(processId: string, version: string): Promise<any> {
         let url = this.opfabBusinessconfigUrl + '/businessconfig/processes/' + processId;
-        if (version) {
+        if (version != null) {
             url = url + '?version=' + version;
         }
         return this.sendRequest({
             method: 'get',
-            url: url,
+            url,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
         });
     }
 
-    sendGetTemplateRequest(processId: string, templateName: string, version: string): Promise<any> {
+    async sendGetTemplateRequest(processId: string, templateName: string, version: string): Promise<any> {
         let url = this.opfabBusinessconfigUrl + '/businessconfig/processes/' + processId + '/templates/' + templateName;
-        if (version) {
+        if (version != null) {
             url = url + '?version=' + version;
         }
         return this.sendRequest({
             method: 'get',
-            url: url,
+            url,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }

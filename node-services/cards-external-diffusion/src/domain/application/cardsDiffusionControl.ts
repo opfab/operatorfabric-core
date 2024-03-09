@@ -13,7 +13,6 @@ import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDi
 import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
 
 export default class CardsDiffusionControl {
-
     protected opfabUrlInMailContent: any;
     protected cardsExternalDiffusionOpfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
     protected businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface;
@@ -22,57 +21,57 @@ export default class CardsDiffusionControl {
     protected mailService: SendMailService;
     protected from: string;
 
-    public setOpfabUrlInMailContent(opfabUrlInMailContent: any) {
+    public setOpfabUrlInMailContent(opfabUrlInMailContent: any): this {
         this.opfabUrlInMailContent = opfabUrlInMailContent;
         return this;
     }
 
     public setOpfabServicesInterface(
         cardsExternalDiffusionOpfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface
-    ) {
+    ): this {
         this.cardsExternalDiffusionOpfabServicesInterface = cardsExternalDiffusionOpfabServicesInterface;
         return this;
     }
 
     public setOpfabBusinessConfigServicesInterface(
         businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface
-    ) {
+    ): this {
         this.businessConfigOpfabServicesInterface = businessConfigOpfabServicesInterface;
         return this;
     }
 
     public setCardsExternalDiffusionDatabaseService(
         cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService
-    ) {
+    ): this {
         this.cardsExternalDiffusionDatabaseService = cardsExternalDiffusionDatabaseService;
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public setMailService(mailservice: SendMailService) {
+    public setMailService(mailservice: SendMailService): this {
         this.mailService = mailservice;
         return this;
     }
 
-    public setFrom(from: string) {
+    public setFrom(from: string): this {
         this.from = from;
         return this;
     }
 
     protected isEmailSettingEnabled(userWithPerimeters: any): boolean {
-        return userWithPerimeters.sendCardsByEmail && userWithPerimeters.email;
+        return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.email;
     }
 
     protected shouldEmailBePlainText(userWithPerimeters: any): boolean {
-        return userWithPerimeters.emailToPlainText ? userWithPerimeters.emailToPlainText : false;
+        return userWithPerimeters.emailToPlainText ?? false;
     }
 
     protected removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
-        if (arrayToDelete && arrayToDelete.length > 0) {
+        if (arrayToDelete != null && arrayToDelete.length > 0) {
             const elementsToDeleteSet = new Set(arrayToDelete);
             const newArray = arrayToFilter.filter((name) => {
                 return !elementsToDeleteSet.has(name);
@@ -83,8 +82,8 @@ export default class CardsDiffusionControl {
         }
     }
 
-    protected escapeHtml(text: string): string {
-        if (!text) return text;
+    protected escapeHtml(text: string | undefined): string {
+        if (text == null) return '';
         return text
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -93,8 +92,8 @@ export default class CardsDiffusionControl {
             .replace(/'/g, '&#39;');
     }
 
-    protected getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
-        if (!epochDate) return '';
+    protected getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
+        if (epochDate == null) return '';
         const date = new Date(epochDate);
 
         return (

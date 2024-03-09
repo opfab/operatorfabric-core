@@ -8,9 +8,9 @@
  */
 
 import 'jest';
-import RealTimeCardsDiffusionControl from '../src/domain/application/realTimeCardsDiffusionControl';
-import Logger from '../src/common/server-side/logger';
-import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
+import RealTimeCardsDiffusionControl from '../domain/application/realTimeCardsDiffusionControl';
+import Logger from '../common/server-side/logger';
+import CardsDiffusionRateLimiter from '../domain/application/cardsDiffusionRateLimiter';
 import {
     OpfabServicesInterfaceStub,
     OpfabBusinessConfigServicesInterfaceStub,
@@ -38,7 +38,7 @@ describe('Cards external diffusion', function () {
 
     // Using this setup function instead of beforeEach hook because it was not working correctly
     // after making CardsExternalDiffusionOpfabServicesInterface extend OpfabServicesInterface
-    function setup() {
+    function setup(): void {
         opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
         opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
         databaseServiceStub = new DatabaseServiceStub();

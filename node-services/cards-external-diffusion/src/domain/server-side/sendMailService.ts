@@ -7,35 +7,41 @@
  * This file is part of the OperatorFabric project.
  */
 
-import nodemailer, {Transporter} from 'nodemailer';
-const {htmlToText} = require('html-to-text');
+import nodemailer, {TransportOptions, Transporter} from 'nodemailer';
+import {htmlToText} from 'html-to-text';
 
 export default class SendMailService {
     logger: any;
     transporter: Transporter;
 
     constructor(smtpConfig: any) {
-        this.transporter = nodemailer.createTransport(smtpConfig);
+        this.transporter = nodemailer.createTransport(smtpConfig as TransportOptions);
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public async sendMail(subject: string, body: string, from: string, to: string, emailToPlainText: boolean) {
+    public async sendMail(
+        subject: string,
+        body: string,
+        from: string,
+        to: string,
+        emailToPlainText: boolean
+    ): Promise<any> {
         if (emailToPlainText) {
             return await this.transporter.sendMail({
-                from: from,
-                to: to,
-                subject: subject,
+                from,
+                to,
+                subject,
                 text: htmlToText(body)
             });
         } else {
             return await this.transporter.sendMail({
-                from: from,
-                to: to,
-                subject: subject,
+                from,
+                to,
+                subject,
                 html: body
             });
         }

@@ -10,6 +10,8 @@
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
 import CardsDiffusionControl from './cardsDiffusionControl';
+import {UserWithPerimeters} from './userWithPerimeter';
+import {Card} from './card';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
@@ -19,32 +21,32 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
     protected dailyEmailTitle: string;
     protected titlePrefix: string;
 
-    public setDailyEmailTitle(dailyEmailTitle: string) {
+    public setDailyEmailTitle(dailyEmailTitle: string): this {
         this.dailyEmailTitle = dailyEmailTitle;
         return this;
     }
 
-    public setConfiguration(updated: ConfigDTO) {
+    public setConfiguration(updated: ConfigDTO): void {
         this.from = updated.mailFrom;
         this.dailyEmailTitle = updated.dailyEmailTitle;
     }
 
-    public async checkCardsOfTheDay(limitDateForRecap: number = Date.now()) {
+    public async checkCardsOfTheDay(limitDateForRecap: number = Date.now()): Promise<void> {
         const users = this.cardsExternalDiffusionOpfabServicesInterface.getUsers();
         const userLogins = users.map((u) => u.login);
 
         const dateFrom = limitDateForRecap - MILLISECONDS_IN_A_DAY;
-        const cards = await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom);
+        const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as Card[];
         for (const login of userLogins) {
             try {
                 const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(
-                    login
+                    login as string
                 );
                 if (resp.isValid()) {
-                    const userWithPerimeters = resp.getData();
+                    const userWithPerimeters = resp.getData() as UserWithPerimeters;
                     if (userWithPerimeters.sendDailyEmail) {
                         const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
-                        const visibleCards = cards.filter((card: any) =>
+                        const visibleCards = cards.filter((card: Card) =>
                             CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card)
                         );
                         if (visibleCards.length > 0) {
@@ -54,21 +56,22 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
                     }
                 }
             } catch (error) {
-                this.logger.error(`Failed to send daily recap email to user ${login}. Error: ` + error);
+                this.logger.error(`Failed to send daily recap email to user ${login}. Error: ` + JSON.stringify(error));
             }
         }
     }
 
-    async sendDailyRecap(cards: any, userEmailAdress: string, emailToPlainText: boolean) {
+    async sendDailyRecap(cards: Card[], userEmailAdress: string | undefined, emailToPlainText: boolean): Promise<void> {
+        if (userEmailAdress == null) return;
         const emailBody = this.dailyFormat(cards);
-        this.mailService.sendMail(this.dailyEmailTitle, emailBody, this.from, userEmailAdress, emailToPlainText);
+        await this.mailService.sendMail(this.dailyEmailTitle, emailBody, this.from, userEmailAdress, emailToPlainText);
     }
 
-    dailyFormat(cards: any): string {
+    dailyFormat(cards: Card[]): string {
         let body = '';
         for (const card of cards) {
             body += this.getFormattedDateAndTimeFromEpochDate(card.startDate) + ' - ';
-            if (card.endDate) body += this.getFormattedDateAndTimeFromEpochDate(card.endDate) + ' - ';
+            if (card.endDate != null) body += this.getFormattedDateAndTimeFromEpochDate(card.endDate) + ' - ';
             body +=
                 card.severity +
                 ' - ' +

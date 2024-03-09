@@ -11,8 +11,9 @@ import * as Handlebars from 'handlebars';
 import moment from 'moment';
 import {JSDOM} from 'jsdom'
 
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 export class HandlebarsHelper {
-    public static init() {
+    public static init(): void {
         HandlebarsHelper.registerPreserveSpace();
         HandlebarsHelper.registerNumberFormat();
         HandlebarsHelper.registerDateFormat();
@@ -42,20 +43,22 @@ export class HandlebarsHelper {
 
     private static _locale: string;
 
-    private static registerJson() {
+    private static registerJson(): void {
         Handlebars.registerHelper('json', function (obj) {
             return new Handlebars.SafeString(JSON.stringify(obj));
         });
     }
 
-    private static registerBool() {
+    private static registerBool(): void {
         Handlebars.registerHelper('bool', function (v1, operator, v2) {
             switch (operator) {
                 case '==':
+                    // eslint-disable-next-line eqeqeq
                     return v1 == v2;
                 case '===':
                     return v1 === v2;
                 case '!=':
+                    // eslint-disable-next-line eqeqeq
                     return v1 != v2;
                 case '!==':
                     return v1 !== v2;
@@ -68,29 +71,29 @@ export class HandlebarsHelper {
                 case '>=':
                     return v1 >= v2;
                 case '&&':
-                    return v1 && v2;
+                    return Boolean(v1) && v2;
                 case '||':
-                    return v1 || v2;
+                    return Boolean(v1) || v2;
                 default:
                     return true;
             }
         });
     }
 
-    private static registerArrayAtIndexLength() {
+    private static registerArrayAtIndexLength(): void {
         Handlebars.registerHelper('arrayAtIndexLength', function (value, index) {
             return value[index].length;
         });
     }
 
-    private static registerSplit() {
+    private static registerSplit(): void {
         Handlebars.registerHelper('split', function (...args: any[]) {
             if (args.length === 3) return args[0].split(args[1]);
             if (args.length === 4) return args[0].split(args[1])[args[2]];
         });
     }
 
-    private static registerMath() {
+    private static registerMath(): void {
         Handlebars.registerHelper('math', function (lvalue, operator, rvalue) {
             let result;
             switch (operator) {
@@ -114,19 +117,19 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerArrayAtIndex() {
+    private static registerArrayAtIndex(): void {
         Handlebars.registerHelper('arrayAtIndex', function (value, index) {
             return value[index];
         });
     }
 
-    private static registerObjectContainsKey() {
+    private static registerObjectContainsKey(): void {
         Handlebars.registerHelper('objectContainsKey', function (obj, key) {
             return key in obj;
         });
     }
 
-    private static registerSlice() {
+    private static registerSlice(): void {
         Handlebars.registerHelper('slice', function () {
             const args = [];
             for (let index = 0; index < arguments.length - 1; index++) {
@@ -143,25 +146,25 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerPreserveSpace() {
+    private static registerPreserveSpace(): void {
         Handlebars.registerHelper('preserveSpace', function (value) {
             return value.replace(/ /g, '\u00A0');
         });
     }
 
-    private static registerArrayContains() {
+    private static registerArrayContains(): void {
         Handlebars.registerHelper('arrayContains', function (arr, value) {
             return arr?.includes(value);
         });
     }
 
-    private static registerArrayContainsOneOf() {
+    private static registerArrayContainsOneOf(): void {
         Handlebars.registerHelper('arrayContainsOneOf', function (arr1, arr2) {
             return arr1.some((ai: any) => arr2.includes(ai));
         });
     }
 
-    private static registerTimes() {
+    private static registerTimes(): void {
         Handlebars.registerHelper('times', function (n, block) {
             let accum = '';
             for (let i = 0; i < n; ++i) accum += block.fn(i);
@@ -169,7 +172,7 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerToBreakage() {
+    private static registerToBreakage(): void {
         Handlebars.registerHelper('toBreakage', function (word, breakage) {
             switch (breakage) {
                 case 'lowercase':
@@ -183,7 +186,9 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerKeyValue() {
+    /* eslint-disable */
+    // Need so work to solve the eslint issues
+    private static registerKeyValue(): void {
         Handlebars.registerHelper('keyValue', function (obj, options) {
             if (Object.keys(obj).length === 0) {
                 return options.fn({value: false});
@@ -206,9 +211,10 @@ export class HandlebarsHelper {
             return buffer;
         });
     }
+    /* eslint-enable */
 
-    private static registerKeepSpacesAndEndOfLine() {
-        Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value) {
+    private static registerKeepSpacesAndEndOfLine(): void {
+        Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value: string) {
             let result = Handlebars.escapeExpression(value);
             result = result.replace(/\n/g, '<br/>');
             result = result.replace(/\s\s/g, '&nbsp;&nbsp;');
@@ -216,45 +222,52 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerMergeArrays() {
+    private static registerMergeArrays(): void {
         Handlebars.registerHelper('mergeArrays', function (arr1, arr2) {
             return arr1.concat(arr2);
         });
     }
 
-    private static registerReplace() {
+    private static registerReplace(): void {
         Handlebars.registerHelper('replace', function (find, replace, string) {
             return string.replaceAll(find, replace);
         });
     }
 
-    private static registerPadStart() {
-        Handlebars.registerHelper('padStart', function (stringToPad, targetLength, characterForPadding) {
-            return String(stringToPad).padStart(targetLength, characterForPadding);
-        });
+    private static registerPadStart(): void {
+        Handlebars.registerHelper(
+            'padStart',
+            function (stringToPad, targetLength: number, characterForPadding: string) {
+                return String(stringToPad).padStart(targetLength, characterForPadding);
+            }
+        );
     }
 
-    private static registerConditionalAttribute() {
+    private static registerConditionalAttribute(): void {
         Handlebars.registerHelper('conditionalAttribute', function (condition, attribute) {
+            /* eslint-disable */
             return condition ? attribute : '';
+            /* eslint-enable */
         });
     }
 
-    private static registerFindObjectByProperty() {
+    private static registerFindObjectByProperty(): void {
+        /* eslint-disable */
         Handlebars.registerHelper('findObjectByProperty', function (list, propertyName, propertyValue) {
-            return list.find((obj: { [x: string]: any; }) => obj[propertyName] === propertyValue);
+            return list.find((obj: {[x: string]: any}) => obj[propertyName] === propertyValue);
         });
+        /* eslint-enable */
     }
 
-    public static changeLocale(locale: string) {
-        if (locale) {
+    public static changeLocale(locale: string): void {
+        if (locale != null) {
             HandlebarsHelper._locale = locale;
         } else {
             HandlebarsHelper._locale = 'en';
         }
     }
-
-    private static registerSort() {
+    /* eslint-disable */
+    private static registerSort(): void {
         Handlebars.registerHelper('sort', function () {
             const args = [];
             for (let index = 0; index < arguments.length - 1; index++) {
@@ -298,26 +311,27 @@ export class HandlebarsHelper {
             return arrayToSort;
         });
     }
+    /* eslint-enable */
 
-    private static registerDateFormat() {
-        Handlebars.registerHelper('dateFormat', (value, options) => {
-            if (typeof value == 'string') {
+    private static registerDateFormat(): void {
+        Handlebars.registerHelper('dateFormat', (value: string | number, options) => {
+            if (typeof value === 'string') {
                 value = parseInt(value);
             }
             const m = moment(new Date(value));
             m.locale(HandlebarsHelper._locale);
-            return m.format(options.hash.format);
+            return m.format(options.hash.format as string);
         });
     }
 
-    private static registerNumberFormat() {
-        Handlebars.registerHelper('numberFormat', (value, options) => {
-            const formatter = new Intl.NumberFormat(HandlebarsHelper._locale, options.hash);
+    private static registerNumberFormat(): void {
+        Handlebars.registerHelper('numberFormat', (value: number | bigint, options) => {
+            const formatter = new Intl.NumberFormat(HandlebarsHelper._locale, options.hash as Intl.NumberFormatOptions);
             return formatter.format(value);
         });
     }
 
-    private static registerNow() {
+    private static registerNow(): void {
         Handlebars.registerHelper('now', function () {
             return moment().valueOf();
         });
@@ -357,7 +371,8 @@ export class HandlebarsHelper {
 }
 
 function sortOnKey(key: string) {
-    return function (a: { [x: string]: number; }, b: { [x: string]: number; }) {
+    /* eslint-disable */
+    return function (a: {[x: string]: number}, b: {[x: string]: number}) {
         if (typeof a[key] === 'string' && typeof b[key] === 'string') {
             if (a[key] < b[key]) return -1;
             else if (a[key] > b[key]) return 1;
@@ -367,4 +382,5 @@ function sortOnKey(key: string) {
         }
         return 0;
     };
+    /* eslint-enable */
 }
