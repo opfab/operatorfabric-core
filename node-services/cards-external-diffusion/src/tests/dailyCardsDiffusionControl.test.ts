@@ -8,8 +8,8 @@
  */
 
 import 'jest';
-import DailyCardsDiffusionControl from '../src/domain/application/dailyCardsDiffusionControl';
-import Logger from '../src/common/server-side/logger';
+import DailyCardsDiffusionControl from '../domain/application/dailyCardsDiffusionControl';
+import Logger from '../common/server-side/logger';
 import {
     DatabaseServiceStub,
     OpfabBusinessConfigServicesInterfaceStub,
@@ -39,7 +39,7 @@ describe('Cards external diffusion', function () {
 
     // Using this setup function instead of beforeEach hook because it was not working correctly
     // after making CardsExternalDiffusionOpfabServicesInterface extend OpfabServicesInterface
-    function setup() {
+    function setup(): void {
         opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
         opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
         databaseServiceStub = new DatabaseServiceStub();
@@ -56,7 +56,7 @@ describe('Cards external diffusion', function () {
             .setOpfabUrlInMailContent('http://localhost');
     }
 
-    function initConfig() {
+    function initConfig(): void {
         opfabServicesInterfaceStub.allUsers = [
             {login: 'operator_1', entities: ['ENTITY1']},
             {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}

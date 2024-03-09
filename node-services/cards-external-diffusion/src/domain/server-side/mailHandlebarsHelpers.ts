@@ -8,21 +8,21 @@
  */
 
 import * as Handlebars from 'handlebars';
-import {JSDOM} from 'jsdom'
+import {JSDOM} from 'jsdom';
+import fs from 'fs';
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MailHandlebarsHelper {
-
     private static quill: any;
 
-    public static init() {
-        const fs = require('fs');
+    public static init(): void {
         const quillFilePath = require.resolve('quill');
         const quillMinFilePath = quillFilePath.replace('quill.js', 'quill.min.js');
-        
+
         const quillLibrary = fs.readFileSync(quillMinFilePath);
-    
-        const TEMPLATE =  `<div id="editor"></div>
-        <script>${quillLibrary}</script>
+
+        const TEMPLATE = `<div id="editor"></div>
+        <script>${quillLibrary.toString()}</script>
         <script>
           document.getSelection = function() {
             return {
@@ -35,22 +35,22 @@ export class MailHandlebarsHelper {
             } catch(e) {}
             return false;
           };
-        </script>`
+        </script>`;
 
-        const DOM = new JSDOM(TEMPLATE, { runScripts: 'dangerously', resources: 'usable' });
+        const DOM = new JSDOM(TEMPLATE, {runScripts: 'dangerously', resources: 'usable'});
         MailHandlebarsHelper.quill = new DOM.window.Quill('#editor');
         MailHandlebarsHelper.registerDeltaToHtml();
     }
 
-    private static registerDeltaToHtml() {
-        Handlebars.registerHelper('deltaToHtml', (delta) => {
+    private static registerDeltaToHtml(): void {
+        Handlebars.registerHelper('deltaToHtml', (delta: string) => {
             try {
-                MailHandlebarsHelper.quill.setContents(JSON.parse(delta));            
+                MailHandlebarsHelper.quill.setContents(JSON.parse(delta));
             } catch (error) {
+                console.log(new Date().toISOString() + ' : Error while parsing delta: ', error);
                 return '';
             }
             return MailHandlebarsHelper.quill.root.innerHTML;
         });
     }
 }
-

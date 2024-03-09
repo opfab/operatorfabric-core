@@ -7,27 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import ConfigDTO from "./configDTO";
+import ConfigDTO from './configDTO';
 
-
-const fs = require('fs');
-
+import fs from 'fs';
 
 export default class ConfigService {
-
     config: ConfigDTO;
     configFilePath: string | null;
     logger: any;
 
     constructor(defaultConfig: any, configFilePath: string | null, logger: any) {
-
-
-
         this.configFilePath = configFilePath;
         this.logger = logger;
 
         try {
-            if (configFilePath && fs.existsSync(configFilePath)) {
+            if (configFilePath != null && fs.existsSync(configFilePath)) {
                 this.loadFromFile();
             } else {
                 this.config = new ConfigDTO();
@@ -37,51 +31,52 @@ export default class ConfigService {
                 this.config.minuteToSendDailyEmail = defaultConfig.minuteToSendDailyEmail;
                 this.config.dailyEmailTitle = defaultConfig.dailyEmailTitle;
                 this.config.subjectPrefix = defaultConfig.subjectPrefix;
-                this.config.bodyPrefix =  defaultConfig.bodyPrefix;
+                this.config.bodyPrefix = defaultConfig.bodyPrefix;
                 this.config.opfabUrlInMailContent = defaultConfig.opfabUrlInMailContent;
                 this.config.windowInSecondsForCardSearch = defaultConfig.windowInSecondsForCardSearch;
-                this.config.secondsAfterPublicationToConsiderCardAsNotRead = defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead;
-                this.config.checkPeriodInSeconds =  defaultConfig.checkPeriodInSeconds;
+                this.config.secondsAfterPublicationToConsiderCardAsNotRead =
+                    defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead;
+                this.config.checkPeriodInSeconds = defaultConfig.checkPeriodInSeconds;
                 this.config.activateCardsDiffusionRateLimiter = defaultConfig.activateCardsDiffusionRateLimiter;
                 this.config.sendRateLimit = defaultConfig.sendRateLimit;
                 this.config.sendRateLimitPeriodInSec = defaultConfig.sendRateLimitPeriodInSec;
                 this.save();
             }
-          } catch(err) {
-            this.logger.error(err)
-          }
-
+        } catch (err) {
+            this.logger.error(err);
+        }
     }
 
-    private loadFromFile() {
-        let rawdata = fs.readFileSync(this.configFilePath);
-        this.config = JSON.parse(rawdata);
+    private loadFromFile(): void {
+        if (this.configFilePath != null) {
+            const rawdata = fs.readFileSync(this.configFilePath);
+            this.config = JSON.parse(rawdata.toString());
+        }
     }
 
-    private save() {
-      if (this.configFilePath) {
-        let data = JSON.stringify(this.config);
-        fs.writeFileSync(this.configFilePath, data);
-      }
+    private save(): void {
+        if (this.configFilePath != null) {
+            const data = JSON.stringify(this.config);
+            fs.writeFileSync(this.configFilePath, data);
+        }
     }
 
-    getConfig() : ConfigDTO {
+    getConfig(): ConfigDTO {
         return this.config;
     }
 
-    public patch(update: any) : ConfigDTO {
+    public patch(update: object): ConfigDTO {
         try {
-            for (const [key, value] of Object.entries(update)) {          
-              if (this.config.hasOwnProperty(key) && value != null && value != undefined) {
-                (this.config as any)[key] = value;
-              }
+            for (const [key, value] of Object.entries(update)) {
+                if (Object.prototype.hasOwnProperty.call(this.config, key) && value != null) {
+                    (this.config as any)[key] = value;
+                }
             }
             this.save();
-          } catch (error) {
+        } catch (error) {
             this.logger.error(error);
-          }
+        }
 
         return this.config;
-
     }
 }

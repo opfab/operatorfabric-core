@@ -16,17 +16,16 @@ import ConfigDTO from './configDTO';
 import DailyCardsDiffusionControl from '../application/dailyCardsDiffusionControl';
 import RealTimeCardsDiffusionControl from '../application/realTimeCardsDiffusionControl';
 
-
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
 export default class CardsExternalDiffusionService {
-    private dailyCardsDiffusionControl: DailyCardsDiffusionControl;
-    private realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
+    private readonly dailyCardsDiffusionControl: DailyCardsDiffusionControl;
+    private readonly realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
     private checkPeriodInSeconds: number;
-    private hourToSendDailyEmail: number;
-    private minuteToSendDailyEmail: number;
+    private readonly hourToSendDailyEmail: number;
+    private readonly minuteToSendDailyEmail: number;
     private active = false;
-    private logger: any;
+    private readonly logger: any;
 
     constructor(
         opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface,
@@ -48,8 +47,8 @@ export default class CardsExternalDiffusionService {
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
             .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
-            .setDailyEmailTitle(serviceConfig.dailyEmailTitle)
-            .setFrom(serviceConfig.mailFrom);
+            .setDailyEmailTitle(serviceConfig.dailyEmailTitle as string)
+            .setFrom(serviceConfig.mailFrom as string);
 
         this.realTimeCardsDiffusionControl = new RealTimeCardsDiffusionControl()
             .setLogger(logger)
@@ -58,18 +57,18 @@ export default class CardsExternalDiffusionService {
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
             .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
-            .setFrom(serviceConfig.mailFrom)
-            .setSubjectPrefix(serviceConfig.subjectPrefix)
-            .setBodyPrefix(serviceConfig.bodyPrefix)
-            .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch)
+            .setFrom(serviceConfig.mailFrom as string)
+            .setSubjectPrefix(serviceConfig.subjectPrefix as string)
+            .setBodyPrefix(serviceConfig.bodyPrefix as string)
+            .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(
-                serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead
+                serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead as number
             );
 
-        if (serviceConfig.activateCardsDiffusionRateLimiter) {
+        if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
-                .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec)
-                .setSendRateLimit(serviceConfig.sendRateLimit);
+                .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec as number)
+                .setSendRateLimit(serviceConfig.sendRateLimit as number);
             this.realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
             this.realTimeCardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
         }
@@ -78,19 +77,19 @@ export default class CardsExternalDiffusionService {
         this.checkDaily();
     }
 
-    setConfiguration(serviceConfig: ConfigDTO) {
-        if (serviceConfig.checkPeriodInSeconds) this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
+    setConfiguration(serviceConfig: ConfigDTO): this {
+        if (serviceConfig.checkPeriodInSeconds != null) this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
 
         this.realTimeCardsDiffusionControl.setConfiguration(serviceConfig);
         this.dailyCardsDiffusionControl.setConfiguration(serviceConfig);
         return this;
     }
 
-    public start() {
+    public start(): void {
         this.active = true;
     }
 
-    public stop() {
+    public stop(): void {
         this.active = false;
     }
 
@@ -98,54 +97,66 @@ export default class CardsExternalDiffusionService {
         return this.active;
     }
 
-    private checkRegularly() {
+    private checkRegularly(): void {
         if (this.active) {
             this.logger.info('Check regularly');
             this.realTimeCardsDiffusionControl
                 .checkUnreadCards()
                 .catch((error) => this.logger.error('error during periodic check' + error))
-                .finally(() => setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000));
-        } else setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
+                .finally(() =>
+                    setTimeout(() => {
+                        this.checkRegularly();
+                    }, this.checkPeriodInSeconds * 1000)
+                );
+        } else
+            setTimeout(() => {
+                this.checkRegularly();
+            }, this.checkPeriodInSeconds * 1000);
     }
 
-    private checkDaily() {
+    private checkDaily(): void {
         if (this.active) {
             this.logger.info('Daily email scheduler launch');
             const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingDailyEmail();
-            
+
             setTimeout(() => {
-                this.sendDailyRecap();
-                setInterval(() => {
-                    this.dailyCardsDiffusionControl.checkCardsOfTheDay();
-                }, 24 * 60 * 60 * 1000);
+                this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
+                setInterval(
+                    () => {
+                        this.dailyCardsDiffusionControl
+                            .checkCardsOfTheDay()
+                            .catch((error) => this.logger.error('error during daily email sending' + error));
+                    },
+                    24 * 60 * 60 * 1000
+                );
             }, millisBeforeSendingDailyEmail);
         }
     }
 
     private getMillisBeforeSendingDailyEmail(): number {
         const now = new Date();
-            const configHour = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                this.hourToSendDailyEmail,
-                this.minuteToSendDailyEmail,
-                0,
-                0
-            );
+        const configHour = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            this.hourToSendDailyEmail,
+            this.minuteToSendDailyEmail,
+            0,
+            0
+        );
         let millisTillConfigHour = configHour.getTime() - now.getTime();
-            if (millisTillConfigHour < 0) {
-                millisTillConfigHour += MILLISECONDS_IN_A_DAY;
-            }
+        if (millisTillConfigHour < 0) {
+            millisTillConfigHour += MILLISECONDS_IN_A_DAY;
+        }
         return millisTillConfigHour;
     }
 
-    public async sendDailyRecap() {
-        this.logger.info("Sending daily recap emails");
+    public async sendDailyRecap(): Promise<void> {
+        this.logger.info('Sending daily recap emails');
         try {
             await this.dailyCardsDiffusionControl.checkCardsOfTheDay();
         } catch (error) {
-            this.logger.error("Could not send daily recap emails, " + error);
+            this.logger.error('Could not send daily recap emails, ' + JSON.stringify(error));
         }
     }
 }

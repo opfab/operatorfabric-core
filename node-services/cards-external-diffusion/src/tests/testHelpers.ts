@@ -8,28 +8,27 @@
  */
 
 import 'jest';
-import SendMailService from '../src/domain/server-side/sendMailService';
-import GetResponse from '../src/common/server-side/getResponse';
+import SendMailService from '../domain/server-side/sendMailService';
+import GetResponse from '../common/server-side/getResponse';
 import Handlebars from 'handlebars';
-import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
-import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/cardsExternaDiffusionDatabaseService';
-import BusinessConfigOpfabServicesInterface from '../src/domain/server-side/BusinessConfigOpfabServicesInterface';
-
+import CardsExternalDiffusionOpfabServicesInterface from '../domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
+import CardsExternalDiffusionDatabaseService from '../domain/server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from '../domain/server-side/BusinessConfigOpfabServicesInterface';
 
 export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
     public isResponseValid = true;
 
     card: any;
-    allUsers: Array<any> = new Array();
-    connectedUsers: Array<any> = new Array();
+    allUsers = new Array<any>();
+    connectedUsers = new Array<any>();
 
-    usersWithPerimeters: Array<any> = new Array();
+    usersWithPerimeters = new Array<any>();
 
-    async getCard() {
+    async getCard(): Promise<GetResponse> {
         return new GetResponse(this.card, this.isResponseValid);
     }
 
-    public getUsers() {
+    public getUsers(): any[] {
         return this.allUsers;
     }
 
@@ -48,54 +47,51 @@ export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfa
     config: any;
     template: string;
 
-    async fetchProcessConfig() {
+    async fetchProcessConfig(): Promise<GetResponse> {
         return this.config;
     }
 
-    async fetchTemplate() {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    async fetchTemplate(): Promise<Function> {
         return Handlebars.compile(this.template);
     }
 }
 
 export class SendMailServiceStub extends SendMailService {
     numberOfMailsSent = 0;
-    sent: Array<any> = [];
+    sent: any[] = [];
 
-    public async sendMail(subject: string, body: string, from: string, to: string) {
+    public async sendMail(subject: string, body: string, from: string, to: string): Promise<any> {
         if (to.indexOf('@') > 0) {
             this.numberOfMailsSent++;
 
             this.sent.push({
                 fromAddress: from,
                 toAddress: to,
-                subject: subject,
-                body: body
+                subject,
+                body
             });
 
-            return Promise.resolve({messageId: 'msg1234'});
-        } else return Promise.reject(new Error());
+            return {messageId: 'msg1234'};
+        } else throw new Error();
     }
 }
 
 export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
-    sent: Array<any> = [];
-    cards: Array<any> = new Array();
+    sent: any[] = [];
+    cards = new Array<any>();
 
-    public async getCards() {
-        return this.cards;
+    public async getCards(publishDate: number): Promise<any[]> {
+        return this.cards.filter((card) => card.publishDate >= publishDate);
     }
 
-    public async getSentMail(cardUid: string, email: string) {
-        const found = this.sent.find((sentmail) => sentmail.cardUid == cardUid && sentmail.email == email);
-        return Promise.resolve(found);
+    public async getSentMail(cardUid: string, email: string): Promise<any> {
+        return this.sent.find((sentmail) => sentmail.cardUid === cardUid && sentmail.email === email);
     }
 
     public async persistSentMail(cardUid: string, email: string): Promise<void> {
-        this.sent.push({cardUid: cardUid, email: email, date: Date.now()});
-        return Promise.resolve();
+        this.sent.push({cardUid, email, date: Date.now()});
     }
 
-    public async deleteMailsSentBefore(dateLimit: number) {
-        return Promise.resolve();
-    }
+    public async deleteMailsSentBefore(dateLimit: number): Promise<void> {}
 }

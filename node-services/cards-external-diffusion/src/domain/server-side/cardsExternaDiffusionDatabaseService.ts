@@ -16,34 +16,36 @@ export default class CardsExternalDiffusionDatabaseService {
     mongoConfig: any;
     retryInterval = 5000; // Retry every 5 seconds
 
-    public setMongoDbConfiguration(mongoConfig: any) {
+    public setMongoDbConfiguration(mongoConfig: any): this {
         this.mongoConfig = mongoConfig;
-        this.mongoClient = new MongoClient(mongoConfig.uri);
+        this.mongoClient = new MongoClient(mongoConfig.uri as string);
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public async connectToMongoDB() {
+    public async connectToMongoDB(): Promise<void> {
         await this.connectWithRetry();
     }
 
-    private async connectWithRetry() {
+    private async connectWithRetry(): Promise<void> {
         while (true) {
             try {
                 this.logger.info('Try to open database ' + this.mongoConfig.database);
-                this.mongoClient = await MongoClient.connect(this.mongoConfig.uri);
+                this.mongoClient = await MongoClient.connect(this.mongoConfig.uri as string);
                 this.logger.info('Connection to mongo DB opened for database ' + this.mongoConfig.database);
-                this.mongoDB = this.mongoClient.db(this.mongoConfig.database);
+                this.mongoDB = this.mongoClient.db(this.mongoConfig.database as string);
 
                 this.mongoClient.on('close', () => {
                     this.logger.error('MongoDB connection closed unexpectedly');
                     // Attempt to reconnect after a delay
                     setTimeout(() => {
-                        this.connectWithRetry();
+                        this.connectWithRetry().catch((err) => {
+                            this.logger.error('Failed to reconnect to MongoDB: ' + JSON.stringify(err));
+                        });
                     }, this.retryInterval);
                 });
                 this.mongoClient.on('error', (err) => {
@@ -60,58 +62,61 @@ export default class CardsExternalDiffusionDatabaseService {
     public async getSentMail(cardUid: string, email: string): Promise<any> {
         let sent = null;
         try {
-            sent = await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').findOne({cardUid: cardUid, email: email});
+            sent = await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').findOne({cardUid, email});
         } catch (error) {
-            this.logger.error('Mongo error finding sent mail' + error);
+            this.logger.error('Mongo error finding sent mail' + JSON.stringify(error));
         }
-        return Promise.resolve(sent);
+        return sent;
     }
 
     public async persistSentMail(cardUid: string, email: string): Promise<void> {
         try {
-            await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').insertOne({cardUid: cardUid, email: email, date: Date.now()});
+            await this.mongoDB
+                .collection('cardsExternalDiffusion-mailsAlreadySent')
+                .insertOne({cardUid, email, date: Date.now()});
         } catch (error) {
-            this.logger.error('Mongo error saving sent mail' + error);
+            this.logger.error('Mongo error saving sent mail' + JSON.stringify(error));
         }
-        return Promise.resolve();
     }
 
-
     public async deleteMailsSentBefore(limitDate: number): Promise<void> {
-
         try {
-            await this.mongoDB.collection('cardsExternalDiffusion-mailsAlreadySent').deleteMany({date: {$lte: limitDate}});
+            await this.mongoDB
+                .collection('cardsExternalDiffusion-mailsAlreadySent')
+                .deleteMany({date: {$lte: limitDate}});
         } catch (error) {
-            this.logger.error('Mongo error saving sent mail' + error);
+            this.logger.error('Mongo error saving sent mail' + JSON.stringify(error));
         }
-        return Promise.resolve();
     }
 
     public async getCards(publishDate: number): Promise<any[]> {
-        let cards = new Array();
+        let cards: any[] = [];
         try {
-            cards = await this.mongoDB.collection('cards').find({publishDate: {$gte: new Date(publishDate)}}).project({
-                id: '$_id',
-                uid: 1,
-                processVersion: 1,
-                process: 1,
-                state: 1,
-                titleTranslated: 1,
-                summaryTranslated: 1,
-                publishDate: 1,
-                usersReads: 1,
-                startDate: 1,
-                endDate: 1,
-                userRecipients: 1,
-                groupRecipients: 1,
-                entityRecipients: 1 ,
-                severity: 1,
-                _id: 0
-            }).toArray();
+            cards = await this.mongoDB
+                .collection('cards')
+                .find({publishDate: {$gte: new Date(publishDate)}})
+                .project({
+                    id: '$_id',
+                    uid: 1,
+                    processVersion: 1,
+                    process: 1,
+                    state: 1,
+                    titleTranslated: 1,
+                    summaryTranslated: 1,
+                    publishDate: 1,
+                    usersReads: 1,
+                    startDate: 1,
+                    endDate: 1,
+                    userRecipients: 1,
+                    groupRecipients: 1,
+                    entityRecipients: 1,
+                    severity: 1,
+                    _id: 0
+                })
+                .toArray();
         } catch (error) {
-            this.logger.error('Mongo error finding cards' + error);
+            this.logger.error('Mongo error finding cards' + JSON.stringify(error));
         }
-        return Promise.resolve(cards);
+        return cards;
     }
-
 }

@@ -8,13 +8,13 @@
  */
 
 import 'jest';
-import Logger from '../src/common/server-side/logger';
-import ConfigService from '../src/domain/client-side/configService';
-import ConfigDTO from '../src/domain/client-side/configDTO';
+import Logger from '../common/server-side/logger';
+import ConfigService from '../domain/client-side/configService';
+import ConfigDTO from '../domain/client-side/configDTO';
 
 const logger = Logger.getLogger();
 
-function getDefaultConfig() {
+function getDefaultConfig(): ConfigDTO {
     const defaultConfig = new ConfigDTO();
     defaultConfig.checkPeriodInSeconds = 30;
     defaultConfig.subjectPrefix = 'Mail subject prefix';
@@ -29,28 +29,26 @@ describe('config service', function () {
         expect(configService.getConfig().checkPeriodInSeconds).toEqual(30);
         expect(configService.getConfig().subjectPrefix).toEqual('Mail subject prefix');
 
-        const confUpdate = {"checkPeriodInSeconds": 60}
-        
+        const confUpdate = {checkPeriodInSeconds: 60};
+
         configService.patch(confUpdate);
         expect(configService.getConfig().checkPeriodInSeconds).toEqual(60);
         expect(configService.getConfig().subjectPrefix).toEqual('Mail subject prefix');
 
-
-        const updateSubjexctPrefix = {"subjectPrefix": "NEW Mail subject prefix"}
+        const updateSubjexctPrefix = {subjectPrefix: 'NEW Mail subject prefix'};
         configService.patch(updateSubjexctPrefix);
         expect(configService.getConfig().checkPeriodInSeconds).toEqual(60);
         expect(configService.getConfig().subjectPrefix).toEqual('NEW Mail subject prefix');
-    })
+    });
 
     it('Wrong config params are ignored', async function () {
         const defaultConfig = getDefaultConfig();
         const configService = new ConfigService(defaultConfig, null, logger);
 
-        const confUpdate = {"checkPeriodInSeconds": 10, "wrongParam": 5};
-        
+        const confUpdate = {checkPeriodInSeconds: 10, wrongParam: 5};
+
         configService.patch(confUpdate);
         expect(configService.getConfig().checkPeriodInSeconds).toEqual(10);
         expect(configService.getConfig().subjectPrefix).toEqual('Mail subject prefix');
-
-    })
-})
+    });
+});
