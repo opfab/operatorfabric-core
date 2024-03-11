@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.utilities;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -22,10 +22,14 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-
 class PathUtilsShould {
 
-  private static final Path basePath = Paths.get("build","test-data");
+  private static final Path basePath = Paths.get("build", "test-data");
+
+  @BeforeEach
+  void setBasePath() {
+    PathUtils.setApplicationBasePath("/");
+  }
 
   @AfterAll
   static void dispose() {
@@ -39,6 +43,14 @@ class PathUtilsShould {
     assertThat(basePath.resolve("target-copy-dir").resolve("empty.file")).exists();
   }
 
+  @Test 
+  void testCopyThrowsIOExceptionIfPathIsOutsideOfBasePath() {
+    PathUtils.setApplicationBasePath("/opfab");
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
+      PathUtils.copy(basePath.resolve("dir"), basePath.resolve("target-copy-dir"));
+    });
+  }
+
   @Test
   void move() throws IOException {
     PathUtils.moveDir(basePath.resolve("moveable-dir"), basePath.resolve("target-move-dir"));
@@ -48,15 +60,32 @@ class PathUtilsShould {
   }
 
   @Test
+  void moveThrowsIOExceptionIfPathIsOutsideOfBasePath() {
+    PathUtils.setApplicationBasePath("/opfab");
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
+      PathUtils.moveDir(basePath.resolve("moveable-dir"), basePath.resolve("target-move-dir"));
+    });
+  }
+
+  @Test
   void delete() {
     PathUtils.silentDelete(basePath.resolve("deleteable-dir"));
     assertThat(basePath.resolve("deleteable-dir")).doesNotExist();
   }
 
+
   @Test
   void copyFile() throws IOException {
     PathUtils.copy(basePath.resolve("empty.file"), basePath.resolve("copied.file"));
     assertThat(basePath.resolve("copied.file")).exists();
+  }
+
+  @Test
+  void copyFileThrowsIOExceptionIfPathIsOutsideOfBasePath() {
+    PathUtils.setApplicationBasePath("/opfab");
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
+      PathUtils.copy(basePath.resolve("empty.file"), basePath.resolve("copied.file"));
+    });
   }
 
   @Test
@@ -66,7 +95,15 @@ class PathUtilsShould {
   }
 
   @Test
-  void getPath(){
+  void deleteFileThrowsIOExceptionIfPathIsOutsideOfBasePath() {
+    PathUtils.setApplicationBasePath("/opfab");
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
+      PathUtils.delete(basePath.resolve("deleteable.file"));
+    });
+  }
+
+  @Test
+  void getPath() {
     File f = basePath.toFile();
     Path result = PathUtils.getPath(f);
     assertThat(result.normalize().toAbsolutePath()).hasToString(f.getAbsolutePath());
@@ -76,9 +113,8 @@ class PathUtilsShould {
   void unTarGz() throws IOException {
 
     PathUtils.unTarGz(
-       Files.newInputStream(basePath.resolve("archive.tar.gz")),
-       basePath.resolve("archive-out")
-    );
+        Files.newInputStream(basePath.resolve("archive.tar.gz")),
+        basePath.resolve("archive-out"));
     assertThat(basePath.resolve("archive-out")).exists();
     assertThat(basePath.resolve("archive-out").resolve("dir")).exists();
     assertThat(basePath.resolve("archive-out").resolve("dir")).isDirectory();
@@ -88,35 +124,27 @@ class PathUtilsShould {
     assertThat(basePath.resolve("archive-out").resolve("empty.file")).isRegularFile();
   }
 
-  @Test 
-  void isLinuxPathSafe() {
-    assertThat(PathUtils.isLinuxPathSafe("/rootPath")).isFalse();
-    assertThat(PathUtils.isLinuxPathSafe("~/homePath")).isFalse();
-    assertThat(PathUtils.isLinuxPathSafe("pathTraversal/../")).isFalse();
-    assertThat(PathUtils.isLinuxPathSafe("correctPath/dir/file")).isTrue();
-  }
-
   @Test
-  void handleErrorOnCopy(){
-    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
+  void handleErrorOnCopy() {
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.copy(
-         basePath.resolve("dir").resolve("empty.file"),
-         basePath.resolve("already-existing").resolve("empty.file"));
+          basePath.resolve("dir").resolve("empty.file"),
+          basePath.resolve("already-existing").resolve("empty.file"));
     });
-    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.copy(basePath.resolve("turlututu"), basePath.resolve("turlututu-copy"));
     });
   }
 
   @Test
-  void handleErrorOnDelete(){
-    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
+  void handleErrorOnDelete() {
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.delete(
-         basePath.resolve("dir2").resolve("empty.file"));
+          basePath.resolve("dir2").resolve("empty.file"));
     });
-    assertThatExceptionOfType(IOException.class).isThrownBy(()->{
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.deleteDir(
-         basePath.resolve("dir2"));
+          basePath.resolve("dir2"));
     });
   }
 

@@ -77,6 +77,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
     @PostConstruct
     private void init() {
+        PathUtils.setApplicationBasePath(storagePath);
         loadCache();
         loadProcessGroupsCache();
         loadRealTimeScreensCache();
