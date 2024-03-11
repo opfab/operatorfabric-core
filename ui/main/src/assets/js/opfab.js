@@ -186,7 +186,7 @@ class QuillEditor extends HTMLElement {
     constructor() {
         super();
         this.init();
-        this.EMPTY_REGEXP = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/gm;
+        this.EMPTY_REGEXP = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/m;
 
         const toolbarOptions = [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
