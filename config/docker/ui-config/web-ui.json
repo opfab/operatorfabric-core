@@ -84,7 +84,7 @@
       "highlightPolygonStrokeWidth": 5,
       "layer": {
         "geojson": {
-          "url": "assets/layers/geojson-layer.json"
+          "url": ["assets/layers/geojson-layer.json","assets/layers/geojson-layer2.json"]
         }
       }
 
