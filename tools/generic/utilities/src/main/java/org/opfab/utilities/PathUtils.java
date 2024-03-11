@@ -7,10 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.utilities;
-
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,21 +21,30 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Path manipulation utility
- *  <br> <br> 
+ * <br>
+ * <br>
  * <b>WARNING :</b>
- * methods do not check for path manipulation vulnerabilities
- * , please check path values before calling the methods
+ * The methods check for path manipulation vulnerabilities via the use of
+ * an application base path.
+ * IF THE APPLICATION BASE PATH IS NOT SET, THE
+ * METHODS WILL NOT CHECK FOR PATH MANIPULATION VULNERABILITIES.
  */
 @Slf4j
 public class PathUtils {
 
+  private static String applicationBasePath = "/";
 
-  private PathUtils(){
+  private PathUtils() {
   }
 
+  public static void setApplicationBasePath(String applicationBasePath) {
+    log.info("PathUtils : Set application base path to {} for security checks", applicationBasePath);
+    PathUtils.applicationBasePath = Paths.get(applicationBasePath).toAbsolutePath().toString();
+  }
 
   /**
    * Extract absolute path from file
+   * 
    * @param f source file
    * @return an absolute Path
    */
@@ -49,9 +55,6 @@ public class PathUtils {
   /**
    * move directory targeted by path
    * 
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path values before calling the method
    * @param source origin directory
    * @param target target directory
    * @throws IOException if an I/O error occurs
@@ -64,26 +67,33 @@ public class PathUtils {
   /**
    * copy directory targeted by path
    * 
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path values before calling the method
    * @param source origin directory
    * @param target target directory
    * @throws IOException if an I/O error occurs
    */
   public static void copyDir(Path source, Path target) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(target);
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(source);
     Files.walkFileTree(source, new CopyDir(source, target));
+  }
+
+  private static void throwExceptionIfPathIsOutsideOfApplicationBasePath(Path path) throws IOException {
+    if (isPathOutsideOfApplicationBasePath(path))
+      throw new IOException("Path " + path.toString() + " is not in application base path " + applicationBasePath);
+  }
+
+  public static boolean isPathOutsideOfApplicationBasePath(Path file) {
+    return !file.toAbsolutePath().startsWith(applicationBasePath);
   }
 
   /**
    * delete directory targeted by path
-  * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path value before calling the method
+   * 
    * @param source directoru to delete
    * @throws IOException if an I/O error occurs
    */
   public static void deleteDir(Path source) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(source);
     if (source.toFile().exists())
       Files.walkFileTree(source, new DeleteDir());
     else
@@ -92,14 +102,14 @@ public class PathUtils {
 
   /**
    * copy file targeted by path
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path values before calling the method
+   * 
    * @param source origin file
    * @param target target file
    * @throws IOException if an I/O error occurs
    */
   public static void copy(Path source, Path target) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(target);
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(source);
     if (source.toFile().isDirectory())
       copyDir(source, target);
     else
@@ -107,21 +117,24 @@ public class PathUtils {
   }
 
   /**
-   * Delete the file or directory targeted by source path. Logging exception instead of throwing them
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path value before calling the method
+   * Delete the file or directory targeted by source path. Logging exception
+   * instead of throwing them
+   * 
    * @param source target path
    * @return true if target was deleted, false otherwise
    */
   public static boolean silentDelete(Path source) {
+    if (isPathOutsideOfApplicationBasePath(source)) {
+      log.error("Source " + source.toString() + " is not in application base path");
+      return false;
+    }
     try {
-      if(source.toFile().exists()){
+      if (source.toFile().exists()) {
         delete(source);
       }
       return true;
     } catch (IOException e) {
-      log.warn("Unable to silent delete "+source.toString(),e);
+      log.warn("Unable to silent delete " + source.toString(), e);
       return false;
     }
   }
@@ -129,15 +142,14 @@ public class PathUtils {
   /**
    * Delete the file or directory targeted by source path
    * 
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path value before calling the method
+   * 
    * @param source target path
    * @throws IOException if an I/O error occurs
    */
   public static void delete(Path source) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(source);
     if (!source.toFile().exists())
-      throw new FileNotFoundException(source.toAbsolutePath().toString()+" does not exist");
+      throw new FileNotFoundException(source.toAbsolutePath().toString() + " does not exist");
     if (source.toFile().isDirectory())
       deleteDir(source);
     else {
@@ -149,34 +161,27 @@ public class PathUtils {
   /**
    * Unpack tar.gz file
    * 
-   * <br> <br> 
-   * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-   * , please check path value before calling the method
-   * @param is tar.gz inputstream
+   * 
+   * @param is      tar.gz inputstream
    * @param outPath output folder
    * @throws IOException if an I/O error occurs
    */
   public static void unTarGz(InputStream is, Path outPath) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(outPath);
     createDirIfNeeded(outPath);
     try (BufferedInputStream bis = new BufferedInputStream(is);
-         GzipCompressorInputStream gzis = new GzipCompressorInputStream(bis);
-         TarArchiveInputStream tis = new TarArchiveInputStream(gzis)) {
+        GzipCompressorInputStream gzis = new GzipCompressorInputStream(bis);
+        TarArchiveInputStream tis = new TarArchiveInputStream(gzis)) {
       TarArchiveEntry entry;
-      //loop over tar entries
+      // loop over tar entries
       while ((entry = tis.getNextTarEntry()) != null) {
         String fileName = entry.getName();
-          /** This code assume we are executing the code on a linux machine
-          *  which is the case because the application is provided in containers
-          */
-        if (!isLinuxPathSafe(fileName)) {
-          log.error("Invalid path in tar.gz file : ", fileName );
-          break;
-        }
+        throwExceptionIfPathIsOutsideOfApplicationBasePath(outPath.resolve(fileName));
         if (entry.isDirectory()) {
-          //create empty folders
+          // create empty folders
           createDirIfNeeded(outPath.resolve(fileName));
         } else {
-          //copy entry to files
+          // copy entry to files
           Path curPath = outPath.resolve(fileName);
           createDirIfNeeded(curPath.getParent());
           Files.copy(tis, curPath);
@@ -185,17 +190,9 @@ public class PathUtils {
     }
   }
 
-
-  public static boolean isLinuxPathSafe(String path) {
-    if (path.contains("/../")) return false ;
-    if (path.startsWith("/")) return false;
-    if (path.startsWith("~/")) return false;
-    return true;
-
-  }
-
   /**
    * create directory if it does not exist
+   * 
    * @param dir directory to create
    * @throws IOException if an I/O error occurs
    */
@@ -205,21 +202,18 @@ public class PathUtils {
     }
   }
 
-  /** 
-  * <b>WARNING :</b> The  method does not check for path manipulation vulnerabilities
-  * , please check path value before calling the method
-  **/
+
   public static void copyInputStreamToFile(InputStream is, String outPath) throws IOException {
+    throwExceptionIfPathIsOutsideOfApplicationBasePath(Paths.get(outPath));
 
     File targetFile = new File(outPath);
 
     java.nio.file.Files.copy(
-            is,
-            targetFile.toPath(),
-            StandardCopyOption.REPLACE_EXISTING);
+        is,
+        targetFile.toPath(),
+        StandardCopyOption.REPLACE_EXISTING);
   }
 
-  
 }
 
 /**
@@ -234,7 +228,7 @@ class CopyDir extends SimpleFileVisitor<Path> {
 
   @Override
   public FileVisitResult preVisitDirectory(Path dir,
-                                           BasicFileAttributes attributes) {
+      BasicFileAttributes attributes) {
     Path newDir = targetDir.resolve(sourceDir.relativize(dir));
     try {
       Files.createDirectories(newDir);

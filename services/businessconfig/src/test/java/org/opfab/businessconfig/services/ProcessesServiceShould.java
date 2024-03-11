@@ -51,6 +51,7 @@ class ProcessesServiceShould {
 
     @BeforeEach
     void prepare() throws IOException {
+        PathUtils.setApplicationBasePath("/");
         // Delete and recreate bundle directory to start with clean data
         restoreBundleDirectory();
         service.loadCache();
