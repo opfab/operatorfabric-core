@@ -106,7 +106,7 @@ a|card time display mode in the feed. Values :
 |feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialZoom|1|no| Initial zoom level of the map.
-|feed.geomap.layer.geojson.url|null|no|Add a GeoJSON layer to the map. Example: "https://localhost:8000/service-area.geojson"
+|feed.geomap.layer.geojson.url|null|no|List of GeoJSON layers to add to the map. Example: ["https://localhost:8000/service-area.geojson","https://localhost:8000/network-lines.geojson"]
 |feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
 |feed.geomap.popupContent|publishDateAndTitle|no| Define the content of the geomap popup. Possible values are : `publishDateAndTitle` (default value) or `summary`.
 |feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.

@@ -86,7 +86,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 'feed.geomap.highlightPolygonStrokeWidth',
                 2
             );
-            this.addGeoJSONLayer(GlobalStyleService.getStyle());
         }
     }
 
@@ -233,8 +232,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private addGeoJSONLayer(style) {
         if (this.map) {
-            const geojsonUrl = ConfigService.getConfigValue('feed.geomap.layer.geojson.url', null);
-            if (geojsonUrl) {
+            const geojsonUrls = ConfigService.getConfigValue('feed.geomap.layer.geojson.url', []);
+            geojsonUrls.forEach((geojsonUrl) => {
                 let colorStroke = 'rgba(0, 0, 0, 0.6)';
                 let colorFill = 'rgba(0, 0, 0, 0.05)';
                 if (style === GlobalStyleService.NIGHT) {
@@ -260,7 +259,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 });
                 this.map.removeLayer(vectorLayer);
                 this.map.addLayer(vectorLayer);
-            }
+            });
         }
     }
 
