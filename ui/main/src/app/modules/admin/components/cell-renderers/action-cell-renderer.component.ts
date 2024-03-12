@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,8 +26,8 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     private actionIconsMapping = {
         edit: 'fas fa-pen',
         delete: 'far fa-trash-alt',
-        download:'fas fa-download',
-        update:'fas fa-file-pen'
+        download: 'fas fa-download',
+        update: 'fas fa-file-pen'
     };
 
     agInit(params: any): void {
@@ -54,7 +54,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     onFileSelectedForUpdate(event, resourceName?) {
         const file: File = event.target.files[0];
         if (file) {
-            this.params.context.componentParent.uploadFile(file, resourceName)
+            this.params.context.componentParent.uploadFile(file, resourceName);
         }
     }
 }

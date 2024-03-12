@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,19 +10,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SettingsService} from 'app/business/services/users/settings.service';
 
 @Component({
     selector: 'of-multi-settings',
     templateUrl: './multi-settings.component.html'
 })
 export class MultiSettingsComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-    constructor(
-        protected settingsService: SettingsService
-    ) {
-        super(settingsService);
-    }
-
     initFormGroup() {
         const validators = this.computeMultiValidators();
         return new FormGroup(

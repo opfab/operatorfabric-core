@@ -66,6 +66,34 @@ Feature: postCardWithRRuleRecurrence
 }
 """
 
+
+      * def cardWithRRuleObjectButDurationInMinutesNegative =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process_cardWithRRuleObject",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "ALARM",
+	"startDate" : 1583943924000,
+	"endDate" : 1584943924000,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message" : "a message with RRule recurrence object"},
+	"rRule": {
+		"freq" : "WEEKLY",
+		"count" : 10,
+		"byweekday" : ["TU", "FR"],
+		"byminute" : [10, 30],
+		"byhour" : [14, 16],
+		"bymonth" : [1, 12],
+        "durationInMinutes" : -120
+    }
+}
+"""
+
     * def perimeter =
 """
 {
@@ -206,6 +234,15 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.rRule.tzid == 'Europe/London'
     And match response.card.rRule.durationInMinutes == 90
     And def cardUid = response.card.uid
+
+# Push card to test BAD REQUEST in case of durationInMinutes negative
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
+    And request cardWithRRuleObjectButDurationInMinutesNegative
+    When method post
+    Then status 400
+    And match response.message == 'Constraint violation in the request'
+    And match response.errors[0] == 'constraint violation : RRule.durationInMinutes: must be greater than or equal to 0'
 
 #delete perimeter created previously
     Given url opfabUrl + 'users/perimeters/perimeter'

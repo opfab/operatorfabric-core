@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ import {MapComponent} from './components/map/map.component';
 import {FeedSearchComponent} from './components/card-list/filters/feed-search/feed-search.component';
 import {FeedFilterComponent} from './components/card-list/filters/feed-filter/feed-filter.component';
 import {FeedFilterAndSortIconsComponent} from './components/card-list/filters/feed-filter-and-sort-icons/feed-filter-and-sort-icons.component';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
     imports: [
@@ -45,7 +46,8 @@ import {FeedFilterAndSortIconsComponent} from './components/card-list/filters/fe
         DatetimeFilterModule,
         FeedRoutingModule,
         LightCardModule,
-        TimelineButtonsModule
+        TimelineButtonsModule,
+        MultiSelectModule
     ],
     declarations: [
         CardListComponent,

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,13 +8,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {RouterService} from 'app/business/server/router.service';
+import {ApplicationRouter} from 'app/business/server/application-router';
 import {Router} from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularRouterService extends RouterService {
+export class AngularRouterService extends ApplicationRouter {
     constructor(private router: Router) {
         super();
     }

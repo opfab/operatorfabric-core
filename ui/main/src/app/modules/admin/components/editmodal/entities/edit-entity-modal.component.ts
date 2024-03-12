@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,14 +12,16 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from 'app/business/services/crud-service';
+import {CrudService} from 'app/business/services/admin/crud-service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, of} from 'rxjs';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-edit-entity-modal',
@@ -29,22 +31,29 @@ import {Observable, of} from 'rxjs';
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{
-        id: FormControl<string | null>,
-        name: FormControl<string | null>,
-        description: FormControl<string | null>,
-        entityAllowedToSendCard: FormControl<boolean | null>,
-        labels: FormControl<[] | null>,
-        parents: FormControl<[] | null>
+        id: FormControl<string | null>;
+        name: FormControl<string | null>;
+        description: FormControl<string | null>;
+        roles: FormControl<[] | null>;
+        labels: FormControl<[] | null>;
+        parents: FormControl<[] | null>;
     }>;
 
     @Input() row: any;
     @Input() type: AdminItemType;
 
     entities: Entity[];
-    entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
+    entityParentsMultiSelectOptions: Array<MultiSelectOption> = [];
+    entityRolesMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedEntities = [];
-    entitiesMultiSelectConfig: MultiSelectConfig = {
+    selectedRoles = [];
+    entityParentsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.entity.parents',
+        placeholderKey: 'admin.input.selectEntityText',
+        sortOptions: true
+    };
+    entityRolesMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.entity.roles',
         placeholderKey: 'admin.input.selectEntityText',
         sortOptions: true
     };
@@ -55,6 +64,7 @@ export class EditEntityModalComponent implements OnInit {
     private crudService: CrudService;
 
     constructor(
+        private translationService: TranslationService,
         private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
@@ -64,11 +74,11 @@ export class EditEntityModalComponent implements OnInit {
     ngOnInit() {
         const uniqueEntityIdValidator = [];
         const uniqueEntityNameValidator = [];
-        if (!this.row){
+        if (!this.row) {
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
         }
         uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
-            // modal used for creating a new entity
+        // modal used for creating a new entity
 
         this.entityForm = new FormGroup({
             id: new FormControl(
@@ -76,13 +86,9 @@ export class EditEntityModalComponent implements OnInit {
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new FormControl(
-                '',
-                [Validators.required], 
-                uniqueEntityNameValidator
-            ),
+            name: new FormControl('', [Validators.required], uniqueEntityNameValidator),
             description: new FormControl(''),
-            entityAllowedToSendCard: new FormControl<boolean | null>(false),
+            roles: new FormControl([]),
             labels: new FormControl([]),
             parents: new FormControl([])
         });
@@ -92,9 +98,13 @@ export class EditEntityModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
+            this.selectedRoles = this.row.roles;
 
-            UserService.getAll().subscribe(users => {
-                this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
+            UserService.getAll().subscribe((users) => {
+                this.entityUsers = users
+                    .filter((usr) => this.isUserInCurrentEntity(usr))
+                    .map((usr) => usr.login)
+                    .join(', ');
                 this.changeDetector.markForCheck();
             });
         }
@@ -103,7 +113,7 @@ export class EditEntityModalComponent implements OnInit {
             this.labelsPlaceholder = translation;
         });
 
-        // Initialize value lists for Entities
+        // Initialize the value list for parent Entities
         this.entities = EntitiesService.getEntities();
         this.entities.forEach((entity) => {
             const id = entity.id;
@@ -112,13 +122,18 @@ export class EditEntityModalComponent implements OnInit {
                 if (!itemName) {
                     itemName = id;
                 }
-                this.entitiesMultiSelectOptions.push(new MultiSelectOption(id, itemName));
+                this.entityParentsMultiSelectOptions.push(new MultiSelectOption(id, itemName));
             }
         });
+
+        for (const role in RolesEnum) {
+            const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.' + role);
+            this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation));
+        }
     }
 
-    private isUserInCurrentEntity(usr: User) :boolean {
-        return usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
+    private isUserInCurrentEntity(usr: User): boolean {
+        return usr.entities && usr.entities.findIndex((g) => g === this.row.id) >= 0;
     }
 
     update() {
@@ -137,41 +152,43 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length)
-            return false;
+        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length) return false;
         else return true;
     }
 
     uniqueEntityIdValidatorFn(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> =>
-        {
-            const err : ValidationErrors = {'uniqueEntityIdViolation': true};
-            return this.isUniqueEntityId(this.entityForm.controls["id"].value)? of(null) : of(err)
-        }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueEntityIdViolation: true};
+            return this.isUniqueEntityId(this.entityForm.controls['id'].value) ? of(null) : of(err);
+        };
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (entityName && EntitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (
+            entityName &&
+            EntitiesService.getEntities().filter(
+                (entity) => entity.name === entityName.trim() && entity.id !== this.row?.id
+            ).length
+        )
             return false;
         else return true;
     }
 
     uniqueEntityNameValidatorFn(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors> =>
-            {
-                const err : ValidationErrors = {'uniqueEntityNameViolation': true};
-                return this.isUniqueEntityName(this.entityForm.controls["name"].value)? of(null) : of(err)
-            }
+        return (control: AbstractControl): Observable<ValidationErrors> => {
+            const err: ValidationErrors = {uniqueEntityNameViolation: true};
+            return this.isUniqueEntityName(this.entityForm.controls['name'].value) ? of(null) : of(err);
+        };
     }
 
     private cleanForm() {
         if (this.row) {
             this.entityForm.value['id'] = this.row.id;
         }
-        this.id.setValue((this.id.value as string).trim());
-        this.name.setValue((this.name.value as string).trim());
-        this.description.setValue((this.description.value as string).trim());
-        this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value as boolean);
+        this.id.setValue(this.id.value.trim());
+        this.name.setValue(this.name.value.trim());
+        this.description.setValue(this.description.value.trim());
+        this.roles.setValue(this.roles.value);
     }
 
     get id() {
@@ -186,8 +203,8 @@ export class EditEntityModalComponent implements OnInit {
         return this.entityForm.get('description');
     }
 
-    get entityAllowedToSendCard() {
-        return this.entityForm.get('entityAllowedToSendCard');
+    get roles() {
+        return this.entityForm.get('roles');
     }
 
     get labels() {

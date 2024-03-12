@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,24 +38,25 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     }
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
-        return  this.processHttpResponse(this.httpClient.get(`${this.configUrl}`, {responseType: 'text'}).pipe(
-            map((config) => {
-                try {
-                    config = JSON.parse(config);
-                } catch (error) {
-                    console.error('Invalid web-ui.json file:', error);
-                }
-                return config;
-            })
-        ));
+        return this.processHttpResponse(
+            this.httpClient.get(`${this.configUrl}`, {responseType: 'text'}).pipe(
+                map((config) => {
+                    try {
+                        config = JSON.parse(config);
+                    } catch (error) {
+                        console.error('Invalid web-ui.json file:', error);
+                    }
+                    return config;
+                })
+            )
+        );
     }
 
     getMenuConfiguration(): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient
-            .get<UIMenuFile>(this.menuUrl));
+        return this.processHttpResponse(this.httpClient.get<UIMenuFile>(this.menuUrl));
     }
 
-    getMonitoringConfiguration():Observable<ServerResponse<MonitoringConfig>> {
+    getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>> {
         return this.processHttpResponse(this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl));
     }
 
@@ -64,6 +65,6 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     }
 
     getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>> {
-        return this.processHttpResponse(this.httpClient.get<RealTimeScreens>(`${this.realTimeScreensUrl}`))
+        return this.processHttpResponse(this.httpClient.get<RealTimeScreens>(`${this.realTimeScreensUrl}`));
     }
 }

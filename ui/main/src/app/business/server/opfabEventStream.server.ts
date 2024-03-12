@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ import {ServerResponse} from './serverResponse';
 
 export abstract class OpfabEventStreamServer {
     abstract initStream();
-    abstract getStreamInitDone():Observable<void>;
+    abstract getStreamInitDone(): Observable<void>;
     abstract closeStream();
     abstract getEvents(): Observable<any>;
     abstract getStreamStatus(): Observable<any>;
-    abstract setBusinessPeriod(StartDate:number,EndDate: number): Observable<ServerResponse<any>>;
+    abstract setBusinessPeriod(StartDate: number, EndDate: number): Observable<ServerResponse<any>>;
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,7 +133,6 @@ describe('User Card ', function () {
 
     it('Recipients should not be displayed in IT incident user card but set via template code', () => {
 
-      script.setPropertyInConf('usercard.displayConnectionCirclesInPreview','web-ui','\\"true\\"');
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -145,8 +144,8 @@ describe('User Card ', function () {
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
       // Check circles for connected entities
       cy.get('#opfab-entity-recipients').get('.badge').should('have.length', 2);
-      cy.get('#opfab-entity-recipients').get('.bg-success').should('have.length', 1);
-      cy.get('#opfab-entity-recipients').get('.bg-danger').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-primary').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-secondary').should('have.length', 1);
       script.resetUIConfigurationFiles();
     })
 
@@ -582,9 +581,9 @@ describe('User Card ', function () {
   })
 
 
-  describe('Show responses in card preview when keepChildCards=true ', function () {
+  describe('Show responses in card preview when card has KEEP_CHILD_CARDS action', function () {
 
-    it('Send User card with keepChildCards=true', () => {
+    it('Send User card with KEEP_CHILD_CARDS action', () => {
       
       script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
@@ -1197,17 +1196,17 @@ describe('User Card ', function () {
       usercard.selectState('Message');
       cy.get('#message').find('div').eq(0).should('be.visible').type('test message');
       // We check all entities are proposed in the dropdown list
-      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 15);
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 16);
 
       usercard.selectRecipient('Control Center FR North');
       usercard.selectRecipientForInformation('Control Center FR West');
       usercard.selectRecipientForInformation('Control Center FR East');
       usercard.preview();
 
-      cy.get("#opfab-entity-recipients").find('span').should('have.length', 2);
+      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 1);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
 
-      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 3);
+      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 2);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR East");
 
@@ -1246,11 +1245,11 @@ describe('User Card ', function () {
       usercard.preview();
 
       // We check Control Center FR East is displayed in 'Recipients' section and not in 'Recipients for information'
-      cy.get("#opfab-entity-recipients").find('span').should('have.length', 3);
+      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 2);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
 
-      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 2);
+      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 1);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
 
       usercard.sendCard();
@@ -1305,12 +1304,12 @@ describe('User Card ', function () {
       cy.get('#usercard_message_input').find('div').eq(0).type('Hello');
       usercard.preview();
 
-      cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);
+      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 3);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR South");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
 
-      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 3);
+      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 2);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
       usercard.checkEntityRecipientsForInformationInPreviewContains("IT SUPERVISION CENTER");
 
@@ -1380,6 +1379,7 @@ describe('User Card ', function () {
 
       cy.waitDefaultTime();
       cy.get('#opfab-sev-information').check(); // we set severity different from default value
+      cy.get('#usercard_message_title').type('Test title for copy card feature');
       cy.get('#usercard_message_input').find('div').eq(0).type('Test for copy card feature');
 
       usercard.selectEmitter('Control Center FR West');
@@ -1399,6 +1399,7 @@ describe('User Card ', function () {
       usercard.checkSelectedProcessIs('Message or question');
       usercard.checkSelectedStateIs('Message');
       usercard.checkSelectedSeverityIs('INFORMATION');
+      cy.get('#usercard_message_title').should('have.value', 'Test title for copy card feature');
       cy.get('#usercard_message_input').should('contain.text', 'Test for copy card feature');
       usercard.checkNumberOfRecipientsIs(1);
       usercard.checkRecipientsContain('Control Center FR South');

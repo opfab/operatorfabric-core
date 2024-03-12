@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -81,7 +81,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             noOptionsText: this.translateService.instant('multiSelect.noOptionsText'),
             noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText'),
             hideClearButton: !this.getValueOrDefault(this.config.multiple, true),
-            enableSecureText: true,  // Do not remove this important security control to avoid script injection see #3826
+            enableSecureText: true, // Do not remove this important security control to avoid script injection see #3826
             allowNewOption: allowNewOption,
             autoSelectFirstOption: autoSelectFirstOption
         });
@@ -94,7 +94,6 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             });
             if (this.disabled) this.virtualSelectComponent.disable();
         }
-
     }
 
     private setSelectedOptionsToParentForm() {
@@ -113,7 +112,6 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         }
     }
 
-
     private sortOptionListByLabel() {
         this.options.sort((a, b) => {
             if (!(<any>a).label) return a;
@@ -123,10 +121,11 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private setSelectedOptions() {
-        if (this.selectedOptions && this.virtualSelectComponent) this.virtualSelectComponent.setValue(this.selectedOptions);
+        if (this.selectedOptions && this.virtualSelectComponent)
+            this.virtualSelectComponent.setValue(this.selectedOptions);
     }
 
-    private getValueOrDefault(value : any, defaultValue : any) : any {
+    private getValueOrDefault(value: any, defaultValue: any): any {
         if (value !== undefined) return value;
         else return defaultValue;
     }
@@ -138,9 +137,9 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         }
     }
 
-    private hasSelectectedOrOptionListChanged() : boolean {
-        if (!_.isEqual(this.oldOptions,this.options)) return true;
-        if (!_.isEqual(this.oldSelectedOptions,this.selectedOptions)) return true;
+    private hasSelectectedOrOptionListChanged(): boolean {
+        if (!_.isEqual(this.oldOptions, this.options)) return true;
+        if (!_.isEqual(this.oldSelectedOptions, this.selectedOptions)) return true;
     }
 
     ngOnDestroy() {

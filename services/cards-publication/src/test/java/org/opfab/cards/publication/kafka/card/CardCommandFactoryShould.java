@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
-import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.I18n;
+import org.opfab.cards.publication.model.SeverityEnum;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -40,7 +40,7 @@ class CardCommandFactoryShould {
     void createResponseCard() {
         ReflectionTestUtils.setField(cut, "objectMapper", new CardObjectMapper());
 
-        CardPublicationData cardPublicationData = createCardPublicationData();
+        Card cardPublicationData = createCardPublicationData();
         CardCommand cardCommand = cut.createResponseCard(cardPublicationData);
 
         assertThat (cardCommand.getCommand(), is (CommandType.RESPONSE_CARD));
@@ -58,11 +58,11 @@ class CardCommandFactoryShould {
         assertThat(cardCommand.getCommand(), is(nullValue()));
     }
 
-    private CardPublicationData createCardPublicationData() {
-        return CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+    private Card createCardPublicationData() {
+        return Card.builder().publisher("PUBLISHER_1").processVersion("O")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
+                .title(new I18n("title",null))
+                .summary(new I18n("summary",null))
                 .startDate(Instant.now())
                 .process("process5")
                 .state("state5")

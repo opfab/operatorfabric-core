@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,20 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.externaldevices.repositories;
 
-import org.opfab.externaldevices.model.SignalMappingData;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * Mongo {@link SignalMappingData} repository
- */
-@Repository
-public interface SignalMappingRepository extends MongoRepository<SignalMappingData,String> {
+import org.opfab.externaldevices.model.SignalMapping;
 
+public interface SignalMappingRepository {
 
+    public void insert(SignalMapping signalMapping);
 
+    public Optional<SignalMapping> findById(String id);
+
+    public void deleteById(String id);
+
+    public void deleteAll();
+
+    public List<SignalMapping> findAll();
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ export class TaskCardTemplate extends HTMLElement {
     private setHTMLContent() {
         this.innerHTML = `
 
-        <h2> ${opfab.utils.getTranslation("buildInTemplate.taskCard.taskToDo")} :  </h2>
+        <h2> ${opfab.utils.getTranslation('buildInTemplate.taskCard.taskToDo')} :  </h2>
         <br/>
         <br/>
         <center>
@@ -33,10 +33,10 @@ export class TaskCardTemplate extends HTMLElement {
         ${this.taskCardTemplateView.getTaskDescription()}
 
         <br/>
-        ${opfab.utils.getTranslation("buildInTemplate.taskCard.duration")}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation("buildInTemplate.taskCard.minutes")} <br/>
+        ${opfab.utils.getTranslation('buildInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('buildInTemplate.taskCard.minutes')} <br/>
         <br/> 
 
-        ${opfab.utils.getTranslation("buildInTemplate.taskCard.at")} ${this.taskCardTemplateView.getByHour()}:${this.taskCardTemplateView.getByMinute()}
+        ${opfab.utils.getTranslation('buildInTemplate.taskCard.at')} ${this.taskCardTemplateView.getByHour()}:${this.taskCardTemplateView.getByMinute()}
         <span id="bysetpos"></span><span id="byweekday"></span><br/>
         <br/>
         <span id="bymonthday"></span>
@@ -48,16 +48,12 @@ export class TaskCardTemplate extends HTMLElement {
         `;
     }
 
-        fetchCardData() {
-              
+    fetchCardData() {
+        const fillingTexts = this.taskCardTemplateView.fillTexts();
 
-              let fillingTexts = this.taskCardTemplateView.fillTexts();
-
-              document.getElementById("bysetpos").innerHTML = fillingTexts?.textForBysetpos;
-              document.getElementById("byweekday").innerHTML = fillingTexts?.textForByWeekday;
-              document.getElementById("bymonthday").innerHTML = fillingTexts?.textForBymonthday;
-              document.getElementById("bymonth").innerHTML = fillingTexts?.textForBymonth;
-
-        }
-  }
-
+        document.getElementById('bysetpos').innerHTML = fillingTexts?.textForBysetpos;
+        document.getElementById('byweekday').innerHTML = fillingTexts?.textForByWeekday;
+        document.getElementById('bymonthday').innerHTML = fillingTexts?.textForBymonthday;
+        document.getElementById('bymonth').innerHTML = fillingTexts?.textForBymonth;
+    }
+}

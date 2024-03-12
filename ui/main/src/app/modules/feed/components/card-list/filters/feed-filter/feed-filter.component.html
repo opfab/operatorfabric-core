@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -61,6 +61,36 @@
 
     <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
     
+    <div *ngIf="!hideProcessFilter" style="margin-top:-5px;">
+
+        <div class="row opfab-filter-header">
+            <span id='opfab-feed-filter-process-title' translate>feed.filters.process.label</span>
+        </div>
+
+        <form [formGroup]="processFilterForm" id="opfab-process-filter-form" style="padding-left: 7px;">
+
+            <div style="margin-left:2px; margin-top:20px; width:280px">
+                <div class="form-group" id="opfab-process">
+
+                    <of-multi-select id="opfab-process-select" [multiSelectId]="processMultiSelect.id" [parentForm]="processFilterForm"
+                        [config]="processMultiSelect.config" [options]="processMultiSelect.options"
+                        [selectedOptions]="processMultiSelect.selectedOptions">
+                    </of-multi-select>
+                </div>
+            </div>
+            <div *ngIf="!hideProcessFilter && stateMultiSelect?.options?.length > 0" style="margin-left:2px; margin-top:20px; width:280px">
+                <div class="form-group" id="opfab-state">
+
+                    <of-multi-select id="opfab-state-select" [multiSelectId]="stateMultiSelect.id" [parentForm]="processFilterForm"
+                        [config]="stateMultiSelect.config" [options]="stateMultiSelect.options"
+                        [selectedOptions]="stateMultiSelect.selectedOptions">
+                    </of-multi-select>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+
     <div *ngIf="!(hideTimerTags)" style="margin-top:-5px;">
 
         <div class="row opfab-filter-header">
@@ -71,7 +101,7 @@
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top: 20px;width:200px">
                 <div class="form-group" id="opfab-start">
-                    <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
+                    <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (dateTimeChange)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
                       [maxDate]="startMaxDate"  labelKey="feed.filters.time." [timeSpinners]="false"></of-datetime-filter>
                 </div>
             </div>
@@ -79,7 +109,7 @@
             <div style="margin-left: 2px; margin-right: 2px;margin-top:20px;width:200px;">
                 <div class="form-group" id="opfab-end">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
-                    [minDate]="endMinDate"  labelKey="feed.filters.time." [timeSpinners]="false" (change)="onDateTimeChange($event)"></of-datetime-filter>
+                    [minDate]="endMinDate"  labelKey="feed.filters.time." [timeSpinners]="false" (dateTimeChange)="onDateTimeChange($event)"></of-datetime-filter>
                 </div>
 
             </div>

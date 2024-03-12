@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -26,12 +26,10 @@ export class FiltersComponent implements OnInit {
 
     loadingInProgress = false;
 
-    constructor(private lightCardsStoreService: LightCardsStoreService) {}
-
     ngOnInit() {
         this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
     }

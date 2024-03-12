@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import {TaskCardTemplate} from './task/card/taskCardTemplate';
 import {TaskUserCardTemplate} from './task/usercard/taskUserCardTemplate';
 import {MessageOrQuestionListCardTemplate} from './message-or-question-list/card/message-or-question-listCardTemplate';
 import {MessageOrQuestionListUserCardTemplate} from './message-or-question-list/usercard/message-or-question-listUserCardTemplate';
-
 
 export const loadBuildInTemplates = () => {
     customElements.define('opfab-message-card', MessageCardTemplate);

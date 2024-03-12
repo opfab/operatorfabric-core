@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,12 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {
-    FormControl,
-    UntypedFormControl,
-    UntypedFormGroup,
-    Validators
-} from '@angular/forms';
+import {FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
@@ -32,12 +27,9 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditPerimeterModalComponent implements OnInit {
-
- 
     constructor(
         private activeModal: NgbActiveModal,
         private changeDetector: ChangeDetectorRef
-
     ) {
         Object.keys(RightsEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
@@ -57,11 +49,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     perimeterForm = new UntypedFormGroup({
-        id: new FormControl('', [
-            Validators.required,
-            Validators.minLength(2),
-            Validators.pattern(/^[A-Za-z\d\-_]+$/)
-        ]),
+        id: new FormControl('', [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)]),
         process: new FormControl('')
     });
 
@@ -145,7 +133,7 @@ export class EditPerimeterModalComponent implements OnInit {
                 this.addStateRightControl(stateRight.state, stateRight.right, stateRight.filteringNotificationAllowed);
             });
         }
-        this.perimeterForm.valueChanges.subscribe(()=> this.changeDetector.markForCheck());
+        this.perimeterForm.valueChanges.subscribe(() => this.changeDetector.markForCheck());
     }
 
     initProcessOptions(): void {
@@ -174,9 +162,9 @@ export class EditPerimeterModalComponent implements OnInit {
                     .filter((processDef) => processDef.id === process)
                     .flatMap((processDef: Process) => {
                         const statesToShow = [];
-                        processDef.states.forEach( (value, stateId) => {
+                        processDef.states.forEach((value, stateId) => {
                             statesToShow.push({value: stateId, label: value.name});
-                        })
+                        });
                         return statesToShow;
                     });
             }
@@ -212,19 +200,27 @@ export class EditPerimeterModalComponent implements OnInit {
         });
     }
 
-    private computeFieldsForRequest(): {id: string, process: string, stateRights: {state: string, right: RightsEnum}[]} {
+    private computeFieldsForRequest(): {
+        id: string;
+        process: string;
+        stateRights: {state: string; right: RightsEnum}[];
+    } {
         const stateRights = [];
         this.stateRightControlsIndexes.forEach((index) => {
             const stateKey = 'state' + index;
             const rightKey = 'right' + index;
             const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + index;
-            stateRights.push({state: this.perimeterForm.value[stateKey],
-                              right: this.perimeterForm.value[rightKey],
-                              filteringNotificationAllowed: this.perimeterForm.value[filteringNotificationAllowedKey]});
+            stateRights.push({
+                state: this.perimeterForm.value[stateKey],
+                right: this.perimeterForm.value[rightKey],
+                filteringNotificationAllowed: this.perimeterForm.value[filteringNotificationAllowedKey]
+            });
         });
-        return {id: this.perimeterForm.value['id'],
-                process: this.perimeterForm.value['process'],
-                stateRights: stateRights};
+        return {
+            id: this.perimeterForm.value['id'],
+            process: this.perimeterForm.value['process'],
+            stateRights: stateRights
+        };
     }
 
     onSavesuccess() {

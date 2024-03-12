@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,132 +7,64 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {navigationRoutes} from '../../router/app-routing.module';
-import {CustomMenu} from '@ofModel/menu.model';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {Route, Router} from '@angular/router';
-import {ConfigService} from 'app/business/services/config.service';
-import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {MenuService} from 'app/business/services/menu.service';
-import {Observable} from 'rxjs';
-import {RouterStore} from 'app/business/store/router.store';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
+import {NavbarView} from 'app/business/view/navbar/navbar.view';
+import {NavbarMenuElement, NavbarPage} from 'app/business/view/navbar/navbarPage';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {TranslationService} from 'app/business/services/translation/translation.service';
+import {NavbarMenuView} from 'app/business/view/navbar/navbarMenu.view';
 
 @Component({
     selector: 'of-navbar',
     templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.scss']
+    styleUrls: ['./navbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarComponent implements OnInit {
-
-    navbarCollapsed = true;
-    navigationRoutes: Route[] = [];
-    navigationRoutesMap: Map<string, Route>;
-    currentRoute = '';
-    businessconfigMenus: CustomMenu[];
-    businessconfigMenusMap: Map<string, CustomMenu>;
+export class NavbarComponent {
     openDropdownPopover: NgbPopover;
-    currentDropdownHovered;
-    showDropdownMenuEvenIfOnlyOneEntry = false;
-    navigationBar: any[];
-
-    modalRef: NgbModalRef;
     @ViewChild('userCard') userCardTemplate: ElementRef;
-
     @ViewChild('about') aboutTemplate: ElementRef;
 
-    displayAdmin: boolean;
-    displayActivityArea: boolean;
-    displayFeedConfiguration: boolean;
-    displayRealTimeUsers: boolean;
-    displayExternalDevicesConfiguration: boolean;
-    displayUserActionLogs: boolean;
-    displayCreateUserCard: boolean;
-    displayCalendar: boolean;
-    displaySettings: boolean;
-    displayAbout: boolean;
-    displayLogOut: boolean;
-    displayChangePassword: boolean;
-    displayEnvironmentName = false;
-    environmentName: string;
-    environmentColor: string;
-    nightDayMode = false;
+    currentMenuId = '';
     logoutInProgress = false;
 
-    styleMode : Observable<string>;
+    navbarMenuView: NavbarMenuView;
+    navbarPage: NavbarPage;
+    upperMenuElements: NavbarMenuElement[];
+    rightMenuElements: NavbarMenuElement[];
+    rightMenuCollapsedElements: NavbarMenuElement[];
 
     constructor(
         private router: Router,
         private modalService: NgbModal,
-        private sessionManager: SessionManagerService
+        private sessionManager: SessionManagerService,
+        private domSanitizationService: DomSanitizer,
+        private translationService: TranslationService,
+        private changeDetector: ChangeDetectorRef
     ) {
-    }
-
-    ngOnInit() {
-
-        RouterStore.getCurrentRouteEvent().subscribe((route)=> {
-            this.currentRoute = route.split('/')[1];
+        this.navbarPage = new NavbarView().getNavbarPage();
+        this.navbarMenuView = new NavbarMenuView(this.translationService);
+        this.upperMenuElements = this.navbarMenuView.getNavbarMenu().upperMenuElements;
+        this.rightMenuElements = this.navbarMenuView.getNavbarMenu().rightMenuElements;
+        this.rightMenuCollapsedElements = this.navbarMenuView.getNavbarMenu().rightMenuCollapsedElements;
+        this.navbarMenuView.setCurrentSelectedMenuEntryListener((menuEntryId) => {
+            this.currentMenuId = menuEntryId;
         });
-
-        this.businessconfigMenus = MenuService.getCurrentUserCustomMenus(ConfigService.getMenus());
-
-        this.showDropdownMenuEvenIfOnlyOneEntry = ConfigService.getShowDropdownMenuEvenIfOnlyOneEntry();
-
-
-        const visibleCoreMenus = MenuService.computeVisibleCoreMenusForCurrentUser();
-        visibleCoreMenus.forEach(visibleCoreMenu => {
-            const route = navigationRoutes.find(route => route.path === visibleCoreMenu);
-
-            if (route) {
-                this.navigationRoutes.push(route);
-            }
+        this.navbarMenuView.setMenuChangeListener(() => {
+            this.upperMenuElements = this.navbarMenuView.getNavbarMenu().upperMenuElements;
+            this.rightMenuElements = this.navbarMenuView.getNavbarMenu().rightMenuElements;
+            this.changeDetector.markForCheck();
         });
-
-        this.displayAdmin = visibleCoreMenus.includes('admin');
-        this.displayActivityArea = visibleCoreMenus.includes('activityarea');
-        this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
-        this.displayRealTimeUsers = visibleCoreMenus.includes('realtimeusers');
-        this.displayExternalDevicesConfiguration = visibleCoreMenus.includes('externaldevicesconfiguration');
-        this.displayUserActionLogs = visibleCoreMenus.includes('useractionlogs');
-        this.displayCreateUserCard = visibleCoreMenus.includes('usercard');
-        this.displayCalendar = visibleCoreMenus.includes('calendar');
-        this.displaySettings = visibleCoreMenus.includes('settings');
-        this.displayAbout = visibleCoreMenus.includes('about');
-        this.displayLogOut = visibleCoreMenus.includes('logout');
-        this.displayChangePassword = visibleCoreMenus.includes('changepassword');
-        this.nightDayMode = visibleCoreMenus.includes('nightdaymode');
-
-        this.environmentName = ConfigService.getConfigValue('environmentName');
-        this.environmentColor = ConfigService.getConfigValue('environmentColor', 'blue');
-        if (this.environmentName) this.displayEnvironmentName = true;
-
-        this.styleMode = GlobalStyleService.getStyleChange();
-
-        this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
-        this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
-        this.navigationBar = ConfigService.getNavigationBar();
     }
 
-    logOut() {
-        this.logoutInProgress = true;
-        this.sessionManager.logout();
-    }
-
-    toggleMenu(menu, p): void {
+    toggleMenu(newDropdownPopover): void {
         if (this.openDropdownPopover) {
             this.openDropdownPopover.close();
         }
-        this.openDropdownPopover = p;
-        this.currentDropdownHovered = menu;
-    }
-
-    switchToNightMode() {
-        GlobalStyleService.switchToNightMode()
-    }
-
-    switchToDayMode() {
-        GlobalStyleService.switchToDayMode()
+        this.openDropdownPopover = newDropdownPopover;
     }
 
     openCardCreation() {
@@ -154,18 +86,31 @@ export class NavbarComponent implements OnInit {
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
 */
-        if (this.currentRoute === 'feed')  this.router.navigate(['/feed']);
+        if (this.currentMenuId === 'feed') this.router.navigate(['/feed']);
 
         const options: NgbModalOptions = {
             size: 'usercard',
             backdrop: 'static'
         };
-        this.modalRef = this.modalService.open(this.userCardTemplate, options);
+        this.modalService.open(this.userCardTemplate, options);
     }
 
-    showAbout() {
-        this.modalService.open(this.aboutTemplate, {centered: true});
+    public clickOnMenu(menu: NavbarMenuElement, openInNewTab: boolean = false): void {
+        switch (menu.id) {
+            case 'about':
+                this.modalService.open(this.aboutTemplate, {centered: true});
+                break;
+            case 'logout':
+                this.logoutInProgress = true;
+                this.sessionManager.logout();
+                break;
+            default:
+                this.navbarMenuView.onMenuClick(menu, openInNewTab);
+        }
+    }
+
+    public getImage(): SafeUrl {
+        return this.domSanitizationService.bypassSecurityTrustUrl(this.navbarPage.logo.base64Image); //NOSONAR
+        // No security issue here as the image is provided by a configuration file
     }
 }
-
-

@@ -100,6 +100,42 @@
       "october":"October",
       "november":"November",
       "december":"December"
+    },
+    "ordinal": {
+      "suffix": {
+        "1": "st",
+        "2": "nd",
+        "3": "rd",
+        "4": "th",
+        "5": "th",
+        "6": "th",
+        "7": "th",
+        "8": "th",
+        "9": "th",
+        "10": "th",
+        "11": "th",
+        "12": "th",
+        "13": "th",
+        "14": "th",
+        "15": "th",
+        "16": "th",
+        "17": "th",
+        "18": "th",
+        "19": "th",
+        "20": "th",
+        "21": "st",
+        "22": "nd",
+        "23": "rd",
+        "24": "th",
+        "25": "th",
+        "26": "th",
+        "27": "th",
+        "28": "th",
+        "29": "th",
+        "30": "th",
+        "31": "st",
+        "default": "th"
+      }
     }
   },
   "global":{
@@ -123,16 +159,16 @@
     "monitoring": "Monitoring",
     "processmonitoring": "Monitoring processus",
     "logout": "Logout",
-    "changePassword": "Change password",
+    "changepassword": "Change password",
     "settings": "Settings",
-    "feedConfiguration": "Notification configuration",
+    "feedconfiguration": "Notification configuration",
     "about": "About",
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
     "switchToDayMode": "Day mode",
-    "realTimeUsers": "Real time users",
-    "externalDevicesConfiguration": "External devices configuration",
-    "activityArea": "Activity area",
+    "realtimeusers": "Real time users",
+    "externaldevicesconfiguration": "External devices configuration",
+    "activityarea": "Activity area",
     "useractionlogs": "User action logs",
     "newcardTooltip": "Create a new card",
     "calendarTooltip": "Calendar" 
@@ -194,6 +230,9 @@
       },
       "applyFiltersToTimeLine" : {
         "label" : "Apply filters to timeline"
+      },
+      "process": {
+        "label": "Process"
       }
     },
     "sort": {
@@ -210,7 +249,8 @@
       "hasAResponseFromYourEntity" : "Your entity has already responded.",
       "loadingInProgress": "Card loading in progress",
       "seeGroupedCards": "Open this card to see grouped cards",
-      "expirationDate": "Expiration date"
+      "expirationDate": "Expiration date",
+      "seeGeolocation": "See geolocation"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",
@@ -281,7 +321,8 @@
     "systemNotificationCompliant": "Compliant",
     "systemNotificationInformation": "Information",
     "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified.",
-    "sendCardsByEmail" : "Send notification by email",
+    "sendCardsByEmail": "Send notification by email",
+    "emailToPlainText": "Send emails in plain text",
     "email": "Email"
   },
   "archive": {
@@ -317,7 +358,8 @@
   "activityArea": {
     "title": "ACTIVITY AREA",
     "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA",
-    "savingInProgress": "Saving in progress..."
+    "savingInProgress": "Saving in progress...",
+    "noAreaAvailable": "No activity area available"
   },
   "feedConfiguration": {
     "title": "NOTIFICATION CONFIGURATION",
@@ -423,12 +465,18 @@
         "description": "DESCRIPTION",
         "labels": "LABELS",
         "users": "USERS",
-        "entityAllowedToSendCard": "CARD SENDING ALLOWED",
         "confirmDelete": "Do you really want to delete entity",
         "add": "ADD NEW ENTITY",
         "true": "YES",
         "false": "NO",
-        "addLabel": "Add label"
+        "addLabel": "Add label",
+        "roles": "ROLES",
+        "roleValues": {
+          "ACTIVITY_AREA": "Activity Area",
+          "ACTIVITY_AREA_GROUP": "Activity Area Group",
+          "CARD_SENDER": "Card Sender",
+          "CARD_RECEIVER": "Card Receiver"
+        }
       },
       "perimeter": {
         "id": "ID",
@@ -631,18 +679,20 @@
       "message" : "You received a message : "
     },
     "messageUserCard": {
-      "noMessageError":"You must provide a message",
-      "textareaLabel" :"MESSAGE"
+      "noMessageError": "You must provide a message",
+      "messageTitleLabel": "MESSAGE TITLE",
+      "textareaLabel": "MESSAGE"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "RESPONSE",
-      "responsesReceivedLabel":"Responses received :",
-      "entityColumnLabel":"Entity",
-      "responseColumnLabel":"Response"
+      "responsesReceivedLabel": "Responses received :",
+      "entityColumnLabel": "Entity",
+      "responseColumnLabel": "Response",
+      "dateColumnLabel": "Date"
     },
     "questionUserCard": {
-      "noQuestionError":"You must provide a question",
-      "textareaLabel":"QUESTION"
+      "noQuestionError": "You must provide a question",
+      "textareaLabel": "QUESTION"
     },
     "taskCard": {
       "taskToDo": "You have the following task to do ",
@@ -658,10 +708,12 @@
       "on": "on",
       "firstDayOfTheMonth": "The first day of the month",
       "lastDayOfTheMonth": "The last day of the month",
+      "daysBeforeEndOfTheMonth": "days before the end of the month",
       "dayOfTheMonth": "day of the month",
       "in": "in"
     },
     "taskUserCard": {
+      "taskTitleLabel": "TASK TITLE",
       "taskDescriptionLabel": "TASK DESCRIPTION",
       "dailyFreq": "Daily frequency",
       "monthlyFreq": "Monthly frequency",
@@ -682,7 +734,8 @@
       "youMustProvideAnOccurrenceNumberAndAWeekday": "You must provide an occurrence number and a weekday.",
       "youMustProvideAtLeastOneNthDay": "You must provide at least one nth day.",
       "youMustProvideAtLeastOneWeekday": "You must provide at least one weekday.",
-      "youMustProvideAtLeastOneMonth": "You must provide at least one month."
+      "youMustProvideAtLeastOneMonth": "You must provide at least one month.",
+      "the": "The"
     }, 
     "message-or-question-listCard": {
       "answers": "Answers",
@@ -695,8 +748,18 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITLE",
+      "summaryLabel": "SUMMARY",
       "messageLabel": "MESSAGE",
       "emptyMessage": "You can't send an empty message"
+    }
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "RICH TEXT CONVERTER",
+      "richTextEditor": "RICH TEXT",
+      "convert": "Convert",
+      "result": "CONVERSION RESULT",
+      "copy": "Copy to clipboard"
     }
   }
 }

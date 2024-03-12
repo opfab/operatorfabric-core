@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {Process} from '@ofModel/processes.model';
 
 /** This class contains functions to get the list of process and states for filters in UI */
 
@@ -19,31 +20,45 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
     providedIn: 'root'
 })
 export class ProcessStatesMultiSelectOptionsService {
-    constructor(
-        private translate: TranslateService
-    ) {}
+    constructor(private translate: TranslateService) {}
 
-    getStatesMultiSelectOptionsPerProcess(isAdminModeAndUserHasRightToSeeAllStates: boolean, hideChildStates: boolean): any[] {
+    getStatesMultiSelectOptionsPerProcess(
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        hideChildStates: boolean
+    ): any[] {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
         ProcessesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
-            stateOptions.options = [];
-            process.states.forEach((state, stateid) => {
-                if (
-                    this.doesStateHaveToBeDisplayedInFilters(
-                        hideChildStates,
-                        state.isOnlyAChildState,
-                        process.id,
-                        stateid,
-                        isAdminModeAndUserHasRightToSeeAllStates
-                    )
-                ) {
-                    stateOptions.options.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
-                }
-            });
+            stateOptions.options = this.getStatesMultiSelectOptionsPerSingleProcess(
+                process,
+                isAdminModeAndUserHasRightToSeeAllStates,
+                hideChildStates
+            );
             if (stateOptions.options.length > 0) statesMultiSelectOptionsPerProcess.push(stateOptions);
         });
         return statesMultiSelectOptionsPerProcess;
+    }
+
+    getStatesMultiSelectOptionsPerSingleProcess(
+        process: Process,
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        hideChildStates: boolean
+    ): any[] {
+        const stateOptions: Array<MultiSelectOption> = [];
+        process.states.forEach((state, stateid) => {
+            if (
+                this.doesStateHaveToBeDisplayedInFilters(
+                    hideChildStates,
+                    state.isOnlyAChildState,
+                    process.id,
+                    stateid,
+                    isAdminModeAndUserHasRightToSeeAllStates
+                )
+            ) {
+                stateOptions.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
+            }
+        });
+        return stateOptions;
     }
 
     private doesStateHaveToBeDisplayedInFilters(
@@ -55,11 +70,15 @@ export class ProcessStatesMultiSelectOptionsService {
     ): boolean {
         return (
             !(hideChildStates && isOnlyAChildState) &&
-            (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcessAndState(processId, stateId))
+            (isAdminModeAndUserHasRightToSeeAllStates ||
+                UserService.isReceiveRightsForProcessAndState(processId, stateId))
         );
     }
 
-    getProcessesWithoutProcessGroupMultiSelectOptions(isAdminModeAndUserHasRightToSeeAllStates: boolean, processesFilter?: string[]): any[] {
+    getProcessesWithoutProcessGroupMultiSelectOptions(
+        isAdminModeAndUserHasRightToSeeAllStates: boolean,
+        processesFilter?: string[]
+    ): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
         ProcessesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {

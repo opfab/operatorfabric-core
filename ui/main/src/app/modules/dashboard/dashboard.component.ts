@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,12 +8,12 @@
  */
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {Router} from '@angular/router';
+import {ConfigService} from 'app/business/services/config.service';
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
@@ -22,29 +22,33 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
-    public dashboardPage : DashboardPage
+    public dashboardPage: DashboardPage;
     public dashboard: Dashboard;
     public modalRef: NgbModalRef;
     public openPopover: NgbPopover;
     public currentCircleHovered;
     public popoverTimeOut;
+    private hideProcessFilter: boolean;
+    private hideStateFilter: boolean;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private modalService: NgbModal,
+        private router: Router
     ) {
-        this.dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        this.dashboard = new Dashboard();
     }
 
     ngOnInit(): void {
-      this.dashboard.getDashboardPage().subscribe( (dashboardPage) => this.dashboardPage = dashboardPage  );
+        this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
+        this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
+        this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
     }
 
     ngOnDestroy() {
         if (this.modalRef) {
             this.modalRef.close();
         }
+        this.dashboard.destroy();
     }
 
     selectCard(info) {
@@ -79,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     onCircleClick(circle) {
         this.openPopover?.close();
-        if (circle.numberOfCards == 1) {
+        if (circle.numberOfCards === 1) {
             const cardId = circle.cards[0].id;
             this.selectCard(cardId);
         }
@@ -87,5 +91,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
+    }
+
+    onProcessClick(processId: string) {
+        if (!this.hideProcessFilter) this.router.navigate(['/feed'], {queryParams: {processFilter: processId}});
+    }
+
+    onStateClick(processId: string, stateId: string) {
+        if (!this.hideProcessFilter && !this.hideStateFilter)
+            this.router.navigate(['/feed'], {queryParams: {processFilter: processId, stateFilter: stateId}});
     }
 }

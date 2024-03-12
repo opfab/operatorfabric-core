@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,21 +9,12 @@
 
 package org.opfab.cards.consultation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
-import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class CardSubscriptionDto implements Subscription {
-    private Instant rangeStart;
-    private Instant rangeEnd;
-    private Instant publishFrom;
+import org.springframework.validation.annotation.Validated;
 
-}
+import jakarta.validation.Valid;
+
+@Validated
+public record CardSubscriptionDto(@Valid Instant rangeStart, @Valid Instant rangeEnd, Instant publishFrom) {}
+

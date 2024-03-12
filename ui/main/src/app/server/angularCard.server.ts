@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ServerResponse} from "app/business/server/serverResponse";
+import {ServerResponse} from 'app/business/server/serverResponse';
 
-import {Observable} from "rxjs";
-import {AngularServer} from "./angular.server";
+import {Observable} from 'rxjs';
+import {AngularServer} from './angular.server';
 import {HttpClient} from '@angular/common/http';
-import {environment} from "@env/environment";
-import {Injectable} from "@angular/core";
-import {CardServer} from "app/business/server/card.server";
-import {CardsFilter} from "@ofModel/cards-filter.model";
-import {CardForPublishing, Card, CardData, CardCreationReportData} from "@ofModel/card.model";
-import {FieldToTranslate} from "@ofModel/field-to-translate.model";
-import {LightCard} from "@ofModel/light-card.model";
-import {Page} from "@ofModel/page.model";
+import {environment} from '@env/environment';
+import {Injectable} from '@angular/core';
+import {CardServer} from 'app/business/server/card.server';
+import {CardsFilter} from '@ofModel/cards-filter.model';
+import {CardForPublishing, Card, CardData, CardCreationReportData} from '@ofModel/card.model';
+import {FieldToTranslate} from '@ofModel/field-to-translate.model';
+import {LightCard} from '@ofModel/light-card.model';
+import {Page} from '@ofModel/page.model';
 
 @Injectable({
     providedIn: 'root'
@@ -33,9 +33,9 @@ export class AngularCardServer extends AngularServer implements CardServer {
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.cardConsultationUrl = `${environment.url}/cards/cards`; 
+        this.cardConsultationUrl = `${environment.url}/cards/cards`;
         this.archivesUrl = `${environment.url}/cards/archives`;
-        this.cardPublicationUrl = `${environment.url}/cardspub/cards`; 
+        this.cardPublicationUrl = `${environment.url}/cardspub/cards`;
         this.userCardReadUrl = `${environment.url}/cardspub/cards/userCardRead`;
         this.userCardUrl = `${environment.url}/cardspub/cards/userCard`;
     }
@@ -57,7 +57,9 @@ export class AngularCardServer extends AngularServer implements CardServer {
     }
 
     postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
-        return this.processHttpResponse(this.httpClient.post<CardCreationReportData>(`${this.cardPublicationUrl}/userCard`, card));
+        return this.processHttpResponse(
+            this.httpClient.post<CardCreationReportData>(`${this.cardPublicationUrl}/userCard`, card)
+        );
     }
 
     deleteCard(card: Card): Observable<ServerResponse<any>> {
@@ -73,13 +75,16 @@ export class AngularCardServer extends AngularServer implements CardServer {
     }
 
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post<FieldToTranslate>(`${this.cardPublicationUrl}/translateCardField`, fieldToTranslate, {
-            observe: 'response'
-        }));
+        return this.processHttpResponse(
+            this.httpClient.post<FieldToTranslate>(`${this.cardPublicationUrl}/translateCardField`, fieldToTranslate, {
+                observe: 'response'
+            })
+        );
     }
 
     fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>> {
-        return this.processHttpResponse(this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard)); 
+        return this.processHttpResponse(
+            this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard)
+        );
     }
-
 }

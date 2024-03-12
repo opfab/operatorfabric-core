@@ -1,0 +1,108 @@
+// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.1.0 to release 4.2.0
+
+
+== Deletion of parameter displayConnectionCirclesInPreview
+
+The parameter `displayConnectionCirclesInPreview` has been deleted. Now, in the usercard preview, users will see
+which recipients entities are connected or not via badges : a blue badge if connected and a gray one if not.
+This feature is provided for all users.
+So you have to remove this parameter from the configuration file `web-ui.json`.
+
+== Configuration files of the realtime users screen
+
+Previously, to configure this screen, the json file had to fit the following structure :
+
+[source,json]
+----
+{
+  "realTimeScreens": [
+    {
+      "screenName": <Name of the screen>,
+      "screenColumns": [
+        {
+          "entitiesGroups": [
+            {
+              "name": <Name of a group of entities>,
+              "entities": [
+                <entity1 id>,
+                <entity2 id>
+              ]
+            },
+            {
+              "name": <Name of another group of entities>,
+              "entities": [
+                <entity3 id>,
+                <entity4 id>
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+Now entities shouldn't be grouped in the configuration file anymore. Instead entities are grouped by a shared parent entity. The configuration file needs to be changed to the following structure:
+
+[source,json]
+----
+{
+  "realTimeScreens": [
+    {
+      "screenName": <Name of the screen>,
+      "screenColumns": [
+        {
+          "entitiesGroups": ["<parent entity 1 id>","<parent entity 2 id>"]
+        }
+      ]
+    }
+  ]
+}
+----
+
+
+With this parent entity 1 and parent entity 2 need to be declared and the name of the parent entities will be the name of the groups. 
+
+
+== Updating the entity roles in the database
+
+In this release the "roles" attribute has been added to the entity object. It defines the utility of an entity. It absorbs and broaden the logic of the attribute "entityAllowedToSendCard" which becomes deprecated.
+To update the entities in your mongo database, you can execute the following script located in `OF_HOME/src/tooling/migration-entity-roles` : 
+
+`./launchMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
+
+This script will assign the roles "ACTIVITY_AREA", "CARD_RECEIVER" and "CARD_SENDER" to all the entities that have "entityAllowedToSendCard = true" and the role "CARD_RECEIVER" to the others. Please refer to the documentation to see the other possible roles and their effect.
+
+After successful execution of the previous script you should execute the following script to cleanup the database removing the deprecated attribute "entityAllowedToSendCard":
+
+`./cleanMongoAfterMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
+
+
+== Deletion of deprecated functions in templateGateway/usercardTemplateGateway
+
+Functions in templateGateway/usercardTemplateGateway do not exist anymore, you can refer to the
+migration documentation to opfab 4.0 to know which functions you have to use.
+
+== Card keepChildCards
+
+The card field `keepChildCards` is now deprecated, use the new `actions` field (string array) including "KEEP_CHILD_CARDS" action instead.
+
+
+== Feed process and state filter
+
+New filters have been added to feed filters to allow filtering by card process and state.
+It is possible to hide the process filter by setting `feed.card.hideProcessFilter` to `true` in `web-ui.json` config file. When process filter is hidden than also state filter is hidden.
+It is possible to hide just the the state filter by setting `feed.card.hideStateFilter` to `true` in `web-ui.json` config file.
+
+== User settings
+
+A new setting to send emails in plain text instead of HTML has been added in the settings screen of the user.
+This setting can be hidden in the configuration file of the web-ui by the field "settings.settingsScreen.hiddenSettings" by adding the value "emailToPlainText".

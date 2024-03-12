@@ -5,6 +5,9 @@ plugins {
 }
 
 npmInstall {
+    // Important: Use 'npm ci' instead of 'npm install' to ensure consistent dependencies.
+    // 'npm ci' uses the exact versions from package-lock.json, preventing unexpected changes.
+    npmCommand = ['ci'] 
     inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
@@ -12,6 +15,18 @@ npmInstall {
     outputs.dir('build')
 
 }
+
+task runLint(type:NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    outputs.dir('build')
+    args = ['run','lint']
+
+    dependsOn npmInstall
+}
+
 
 task runBuild(type: NpmTask) {
     inputs.files(fileTree('src'))
@@ -21,7 +36,7 @@ task runBuild(type: NpmTask) {
 
     outputs.dir('build')
 
-    dependsOn npmInstall
+    dependsOn npmInstall, runLint
     args = ['run', 'build']
 }
 
@@ -31,6 +46,8 @@ task test(type: NpmTask) {
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('jest.config.js')
+
+    outputs.dir('build')
 
     dependsOn runBuild
     args = ['run', 'test']
@@ -59,13 +76,11 @@ docker {
 				from('.') {
 					include 'startSupervisor.sh'
 					include 'package.json'
+                    include 'package-lock.json'
+					include 'node_modules/**'
 					into '.'
 				}
 			}
-    files( "bin", "package.json", "config")
-    buildArgs([
-                'https_proxy'    : proxy.https
-                ])
     dockerfile file("docker/Dockerfile")
 }
 
@@ -75,4 +90,13 @@ build.dependsOn(runBuild)
 clean.dependsOn(deleteRuntimeConfigFile)
 
 assemble.dependsOn(runBuild)
-tasks.dockerPrepare.dependsOn test
+tasks.dockerPrepare.dependsOn build
+
+tasks.named("docker") {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('config'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    outputs.dir("build/docker")
+}

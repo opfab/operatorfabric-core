@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.opfab.avro.CardCommand;
-import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
 import org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer;
 import org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer;
 import org.opfab.cards.publication.model.*;
+
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -37,33 +37,31 @@ class KafkaSerializeDeserializeShould {
         CardCommandFactory cardCommandFactory = new CardCommandFactory(new CardObjectMapper());
         CardCommand cardCommand = cardCommandFactory.createResponseCard(createCardPublicationData());
 
-        KafkaAvroWithoutRegistrySerializer<CardCommand> kafkaAvroSerializer = new KafkaAvroWithoutRegistrySerializer<>();
-        byte[] byteResult = kafkaAvroSerializer.serialize("TOPIC",cardCommand);
+        byte[] byteResult;
+        try (KafkaAvroWithoutRegistrySerializer<CardCommand> kafkaAvroSerializer = new KafkaAvroWithoutRegistrySerializer<>()) {
+            byteResult = kafkaAvroSerializer.serialize("TOPIC", cardCommand);
+        }
 
-        KafkaAvroWithoutRegistryDeserializer kafkaAvroDeSerializer = new KafkaAvroWithoutRegistryDeserializer();
-        CardCommand cardResult = kafkaAvroDeSerializer.deserialize("TOPIC", byteResult);
-        assertThat(cardResult, is(cardCommand));
+        try (KafkaAvroWithoutRegistryDeserializer kafkaAvroDeSerializer = new KafkaAvroWithoutRegistryDeserializer()) {
+            CardCommand cardResult = kafkaAvroDeSerializer.deserialize("TOPIC", byteResult);
+            assertThat(cardResult, is(cardCommand));
+        }
     }
 
-    private CardPublicationData createCardPublicationData() {
-        return CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+    private Card createCardPublicationData() {
+        return Card.builder().publisher("PUBLISHER_1").processVersion("O")
                 .id("124454")
                 .uid("uid293454")
                 .parentCardId("myParent1234")
-                .timeSpans(List.of(TimeSpanPublicationData.builder()
-                                .start(Instant.now())
-                                .end(Instant.now().plus(2, ChronoUnit.HOURS))
-                                .recurrence(RecurrencePublicationData.builder()
-                                        .hoursAndMinutes(HoursAndMinutesPublicationData.builder()
-                                                .hours(10)
-                                                .minutes(3)
-                                                .build())
-                                        .daysOfWeek(List.of(3,4))
-                                        .build())
-                        .build()))
+                .timeSpans(List.of(new TimeSpan(
+                        Instant.now(),
+                        Instant.now().plus(2, ChronoUnit.HOURS),
+                        new Recurrence(null, List.of(3, 4),
+                                new HoursAndMinutes(10, 3),
+                                null, null))))
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
+                .title(new I18n("title", null))
+                .summary(new I18n("summary", null))
                 .startDate(Instant.now())
                 .process("process5")
                 .state("state5")

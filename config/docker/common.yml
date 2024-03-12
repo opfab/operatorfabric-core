@@ -21,7 +21,8 @@ operatorfabric:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
-
+    jwt:
+      login-claim: preferred_username
 
 ### activate the following if you want to the groups or entities to come from the token and not mongo DB
 #    jwt:

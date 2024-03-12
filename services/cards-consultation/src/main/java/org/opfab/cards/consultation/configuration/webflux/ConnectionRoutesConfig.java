@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.cards.consultation.configuration.webflux;
 
 import org.opfab.cards.consultation.model.Connection;
-import org.opfab.cards.consultation.model.ConnectionData;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,27 +36,27 @@ public class ConnectionRoutesConfig implements UserExtractor {
     @Bean
     public RouterFunction<ServerResponse> connectionRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/connections"),subscriptionManagementRoute());
+                .route(RequestPredicates.GET("/connections"), subscriptionManagementRoute());
     }
 
     private HandlerFunction<ServerResponse> subscriptionManagementRoute() {
         return request -> ok().bodyValue(getSubscriptions());
     }
 
-    private List<Connection> getSubscriptions()  {
+    private List<Connection> getSubscriptions() {
         List<Connection> connectionsData = new ArrayList<>();
-        cardSubscriptionService.getSubscriptions().forEach( subscription -> {
-            ConnectionData connection = ConnectionData.builder()
-                            .login(subscription.getUserLogin())
-                            .build();
+        cardSubscriptionService.getSubscriptions().forEach(subscription -> {
+            Connection connection;
             if (subscription.getCurrentUserWithPerimeters().getUserData() != null) {
-                connection.setEntitiesConnected(subscription.getCurrentUserWithPerimeters().getUserData().getEntities());
-                connection.setGroups(subscription.getCurrentUserWithPerimeters().getUserData().getGroups());
+                connection = new Connection(subscription.getUserLogin(),
+                        subscription.getCurrentUserWithPerimeters().getUserData().getEntities(),
+                        subscription.getCurrentUserWithPerimeters().getUserData().getGroups());
+            } else {
+                connection = new Connection(subscription.getUserLogin(), null, null);
             }
             connectionsData.add(connection);
         });
         return connectionsData;
     }
-    
 
 }

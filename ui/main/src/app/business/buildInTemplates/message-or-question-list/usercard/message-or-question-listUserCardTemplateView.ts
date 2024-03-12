@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,61 +7,88 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 declare const opfab;
 
 export class MessageOrQuestionListUserCardTemplateView {
-
-    
     messageOrQuestionList;
     selectedMessage;
+    selectedEmitter;
 
-    public getMessage() {
-        let message = opfab.currentCard.getCard()?.data?.message;
-        if (message) message = opfab.utils.escapeHtml(message);
-        else message = '';
+    public getRichMessage() {
+        let message = opfab.currentCard.getCard()?.data?.richMessage;
+
+        if (message) {
+            message = opfab.utils.escapeHtml(message);
+        } else {
+            message = '';
+        }
         return message;
+    }
+
+    public getSummary() {
+        let summary = opfab.currentCard.getCard()?.data?.summary;
+
+        if (summary) {
+            summary = opfab.utils.escapeHtml(summary);
+        } else {
+            summary = '';
+        }
+        return summary;
     }
 
     public getTitleId() {
         const titleId = opfab.currentCard.getCard()?.data?.id;
-        return titleId
+        return titleId;
     }
 
-    public getSpecificCardInformation(message: string) {
-        message = message.trim();
-        if (message.length === 0) {
+    public getPublisher() {
+        return opfab.currentCard.getCard()?.publisher;
+    }
+
+    public getSpecificCardInformation(quillEditor: any, summary: string) {
+        summary = summary.trim();
+
+        if (quillEditor.isEmpty()) {
             return {
-                valid:false,
-                errorMsg : opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage') 
-            }
+                valid: false,
+                errorMsg: opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage')
+            };
         }
 
         const title = this.selectedMessage.title.trim();
         const id = this.selectedMessage.id;
         const question = this.selectedMessage.question;
-        let severity = 'INFORMATION';
+        let severity = question ? 'ACTION' : 'INFORMATION';
+        if (this.selectedMessage.severity) {
+            severity = this.selectedMessage.severity;
+        }
+
         let entitiesAllowedToRespond;
 
         if (this.selectedMessage.question) {
-            severity = 'ACTION';
-            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
+            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients
+                ? this.selectedMessage?.possibleRecipients
+                : '';
         } else {
             entitiesAllowedToRespond = [];
         }
 
         const card = {
-		title : {key : "message_or_question_list.title", parameters : {"messageTitle" : title} },
-            summary: {key : "message_or_question_list.summary"},
+            title: {key: 'message_or_question_list.title', parameters: {messageTitle: title}},
+            summary: {
+                key: 'message_or_question_list.summary',
+                parameters: {summary: summary.length ? ' : ' + summary : ''}
+            },
             startDate: new Date().valueOf(),
             data: {
                 id: id,
                 title: title,
-                message: message,
+                summary: summary,
+                richMessage: quillEditor.getContents(),
                 question: question
             },
             severity: severity,
-            entitiesAllowedToRespond: entitiesAllowedToRespond,
+            entitiesAllowedToRespond: entitiesAllowedToRespond
         };
 
         return {
@@ -74,25 +101,17 @@ export class MessageOrQuestionListUserCardTemplateView {
         this.messageOrQuestionList = await opfab.businessconfig.businessData.get(businessDataName);
 
         opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
-        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(this.messageOrQuestionList.possibleRecipients);
-        const titlesOptions = [];
-
-        this.messageOrQuestionList.messagesList.forEach( (message) => {
-            const option = {
-                label: message.title,
-                value: message.id
-            };
-            titlesOptions.push(option);
-        })
-        return titlesOptions;
+        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(
+            this.messageOrQuestionList.possibleRecipients
+        );
     }
 
     public getMessageOrQuestion(messageId: string) {
-        this.messageOrQuestionList.messagesList.forEach( (message) => {
+        this.messageOrQuestionList.messagesList.forEach((message) => {
             if (message.id === messageId) {
-                this.selectedMessage = message
+                this.selectedMessage = message;
             }
-        })
+        });
         return this.selectedMessage;
     }
 
@@ -100,6 +119,47 @@ export class MessageOrQuestionListUserCardTemplateView {
         opfab.currentUserCard.setSelectedRecipients(selectedRecipients);
         opfab.currentUserCard.setSelectedRecipientsForInformation(selectedRecipientsForInformation);
     }
-    
 
+    getSelectedEmitter() {
+        return this.selectedEmitter;
+    }
+
+    setSelectedEmitter(entity: string) {
+        this.selectedEmitter = entity;
+    }
+
+    getMessageListOptions() {
+        const titlesOptions = [];
+        if (this.messageOrQuestionList)
+            this.messageOrQuestionList.messagesList.forEach((message) => {
+                if (
+                    !message.publishers ||
+                    message.publishers.length === 0 ||
+                    message.publishers.includes(this.selectedEmitter)
+                ) {
+                    const option = {
+                        label: message.title,
+                        value: message.id
+                    };
+                    titlesOptions.push(option);
+                }
+            });
+        return titlesOptions;
+    }
+
+    getInitialSelectedOption() {
+        let selectedOption = this.getMessageListOptions()[0].value;
+        if (['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
+            const titleId = this.getTitleId();
+            if (titleId) selectedOption = titleId;
+        }
+        return selectedOption;
+    }
+
+    setRichTextContent(quillEditor: any, message: any) {
+        const delta = message.richMessage
+            ? JSON.stringify(message.richMessage)
+            : opfab.richTextEditor.getDeltaFromText(opfab.utils.escapeHtml(message.message));
+        quillEditor.setContents(delta);
+    }
 }

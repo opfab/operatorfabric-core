@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 package org.opfab.businessconfig.services;
 
@@ -17,14 +16,12 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.model.Process;
-import org.opfab.businessconfig.model.ProcessGroupData;
-import org.opfab.businessconfig.model.ProcessGroupsData;
+import org.opfab.businessconfig.model.ProcessGroup;
+import org.opfab.businessconfig.model.ProcessGroups;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,7 +39,7 @@ import static org.opfab.utilities.PathUtils.copy;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class})
+@SpringBootTest(classes = { IntegrationTestApplication.class })
 @Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProcessesServiceShould {
@@ -54,19 +51,19 @@ class ProcessesServiceShould {
 
     @BeforeEach
     void prepare() throws IOException {
-        // Delete and recreate bundle directory to start with clean data 
+        // Delete and recreate bundle directory to start with clean data
         restoreBundleDirectory();
         service.loadCache();
         service.loadProcessGroupsCache();
     }
 
     @AfterAll
-    void restoreBundleDirectory() throws IOException{
-        if (Files.exists(testDataDir))  Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
+    void restoreBundleDirectory() throws IOException {
+        if (Files.exists(testDataDir))
+            Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
         copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
 
     }
-
 
     @Test
     void listProcesses() {
@@ -77,12 +74,12 @@ class ProcessesServiceShould {
     void listProcessHistory() {
         List<Process> processHistory = service.listProcessHistory("first");
         assertThat(processHistory).hasSize(3);
-        assertThat(processHistory.get(0).getId()).isEqualTo("first");
-        assertThat(processHistory.get(0).getVersion()).isEqualTo("0.1");
-        assertThat(processHistory.get(1).getId()).isEqualTo("first");
-        assertThat(processHistory.get(1).getVersion()).isEqualTo("0.5");
-        assertThat(processHistory.get(2).getId()).isEqualTo("first");
-        assertThat(processHistory.get(2).getVersion()).isEqualTo("v1");
+        assertThat(processHistory.get(0).id()).isEqualTo("first");
+        assertThat(processHistory.get(0).version()).isEqualTo("0.1");
+        assertThat(processHistory.get(1).id()).isEqualTo("first");
+        assertThat(processHistory.get(1).version()).isEqualTo("0.5");
+        assertThat(processHistory.get(2).id()).isEqualTo("first");
+        assertThat(processHistory.get(2).version()).isEqualTo("v1");
     }
 
     @Test
@@ -171,41 +168,36 @@ class ProcessesServiceShould {
 
     @Test
     void fetchResourceError() {
-        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("what",
-                        TEMPLATE,
-                        "0.1",
-                        "template"));
-        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("first",
-                        TEMPLATE,
-                        "0.2",
-                        "template"));
-        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("first",
-                        CSS,
-                        "0.1",
-                        "styleWhat"));
-        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
-                service.fetchResource("first",
-                        TEMPLATE,
-                        "0.1",
-                        "template1")
-                        .getInputStream()
-        );
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> service.fetchResource("what",
+                TEMPLATE,
+                "0.1",
+                "template"));
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> service.fetchResource("first",
+                TEMPLATE,
+                "0.2",
+                "template"));
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> service.fetchResource("first",
+                CSS,
+                "0.1",
+                "styleWhat"));
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> service.fetchResource("first",
+                TEMPLATE,
+                "0.1",
+                "template1")
+                .getInputStream());
     }
 
     @Test
     void testCheckNoDuplicateProcessInUploadedFile() {
 
-        ProcessGroupData gp1 = ProcessGroupData.builder().id("gp1").processes(Arrays.asList("process1", "process2")).build();
-        ProcessGroupData gp2 = ProcessGroupData.builder().id("gp2").processes(Arrays.asList("process3", "process4")).build();
-        ProcessGroupData gp3 = ProcessGroupData.builder().id("gp3").processes(Arrays.asList("process5", "process4")).build();
-        ProcessGroupData gp4 = ProcessGroupData.builder().id("gp4").processes(Arrays.asList("process7", "process8", "process7")).build();
+        ProcessGroup gp1 = new ProcessGroup("gp1","gp1",Arrays.asList("process1", "process2"));
+        ProcessGroup gp2 = new ProcessGroup("gp2","gp2",Arrays.asList("process3", "process4"));
+        ProcessGroup gp3 = new ProcessGroup("gp3","gp3",Arrays.asList("process5", "process4"));
+        ProcessGroup gp4 = new ProcessGroup("gp4","gp4",Arrays.asList("process7", "process8", "process7"));
 
-        ProcessGroupsData groups_without_duplicate = ProcessGroupsData.builder().groups(Arrays.asList(gp1, gp2)).build();
-        ProcessGroupsData groups_with_duplicate = ProcessGroupsData.builder().groups(Arrays.asList(gp2, gp3)).build();
-        ProcessGroupsData groups_with_duplicate_in_the_same_group = ProcessGroupsData.builder().groups(Arrays.asList(gp1, gp4)).build();
+        ProcessGroups groups_without_duplicate = new ProcessGroups(Arrays.asList(gp1, gp2));
+        ProcessGroups groups_with_duplicate = new ProcessGroups(Arrays.asList(gp2, gp3));
+        ProcessGroups groups_with_duplicate_in_the_same_group = new ProcessGroups(Arrays.asList(gp1, gp4));
 
         assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_without_duplicate)).isTrue();
         assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_with_duplicate)).isFalse();
@@ -221,9 +213,9 @@ class ProcessesServiceShould {
                 Process process = service.updateProcess(is);
                 assertThat(process).hasFieldOrPropertyWithValue("id", "second");
                 assertThat(process).hasFieldOrPropertyWithValue("version", "2.0");
-                assertThat(process.getStates()).hasSize(1);
-                assertThat(process.getStates().get("firstState").getTemplateName()).isEqualTo("template");
-                assertThat(process.getStates().get("firstState").getResponse().getExternalRecipients()).hasSize(2);
+                assertThat(process.states()).hasSize(1);
+                assertThat(process.states().get("firstState").templateName()).isEqualTo("template");
+                assertThat(process.states().get("firstState").response().externalRecipients()).hasSize(2);
                 assertThat(service.listProcesses(null)).hasSize(3);
             } catch (IOException e) {
                 log.trace("rethrowing exception");
@@ -240,9 +232,11 @@ class ProcessesServiceShould {
 
             @BeforeEach
             void prepare() throws IOException {
-                // This will also delete the businessconfig-storage root folder, but in this case it's needed as
+                // This will also delete the businessconfig-storage root folder, but in this
+                // case it's needed as
                 // the following copy would fail if the folder already existed.
-                if (Files.exists(testDataDir)) Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
+                if (Files.exists(testDataDir))
+                    Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
                 copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
                 service.loadCache();
             }
@@ -253,11 +247,11 @@ class ProcessesServiceShould {
                 Path bundleVersionDir = bundleDir.resolve("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName,"0.1");
+                service.deleteVersion(bundleName, "0.1");
                 Assertions.assertNull(service.fetch(bundleName, "0.1"));
                 Process process = service.fetch(bundleName);
                 Assertions.assertNotNull(process);
-                assertThat(process.getVersion()).isNotEqualTo("0.1");
+                assertThat(process.version()).isNotEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
             }
@@ -266,17 +260,18 @@ class ProcessesServiceShould {
             void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
                 Path bundleDir = bundleDataDir.resolve(bundleName);
                 Process process = service.fetch(bundleName);
-                assertThat(process.getVersion()).isEqualTo("v1");
+                assertThat(process.version()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.1");
-                FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
+                FileUtils.touch(bundleNewDefaultVersionDir.toFile());// this is to be sure this version is the last
+                                                                     // modified
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName,"v1");
+                service.deleteVersion(bundleName, "v1");
                 Assertions.assertNull(service.fetch(bundleName, "v1"));
                 process = service.fetch(bundleName);
                 Assertions.assertNotNull(process);
-                assertThat(process.getVersion()).isEqualTo("0.1");
+                assertThat(process.version()).isEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
                 Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -288,17 +283,18 @@ class ProcessesServiceShould {
             void deleteBundleByNameAndVersionWhichBeingDefault2() throws Exception {
                 Path bundleDir = bundleDataDir.resolve(bundleName);
                 final Process process = service.fetch(bundleName);
-                assertThat(process.getVersion()).isEqualTo("v1");
+                assertThat(process.version()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.5");
-                FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
+                FileUtils.touch(bundleNewDefaultVersionDir.toFile());// this is to be sure this version is the last
+                                                                     // modified
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName,"v1");
+                service.deleteVersion(bundleName, "v1");
                 Assertions.assertNull(service.fetch(bundleName, "v1"));
                 Process _process = service.fetch(bundleName);
                 Assertions.assertNotNull(_process);
-                assertThat(_process.getVersion()).isEqualTo("0.5");
+                assertThat(_process.version()).isEqualTo("0.5");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
                 Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -308,20 +304,25 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichNotExisting() {
-                Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion(bundleName,"impossible_someone_really_so_crazy_to_give_this_name_to_a_version");});
+                Assertions.assertThrows(FileNotFoundException.class, () -> {
+                    service.deleteVersion(bundleName,
+                            "impossible_someone_really_so_crazy_to_give_this_name_to_a_version");
+                });
             }
 
             @Test
             void deleteBundleByNameWhichNotExistingAndVersion() {
-                Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion("impossible_someone_really_so_crazy_to_give_this_name_to_a_bundle","1.0");});
+                Assertions.assertThrows(FileNotFoundException.class, () -> {
+                    service.deleteVersion("impossible_someone_really_so_crazy_to_give_this_name_to_a_bundle", "1.0");
+                });
             }
 
             @Test
             void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
                 Path bundleDir = bundleDataDir.resolve("deletetest");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
-                service.deleteVersion("deletetest","2.1");
-                Assertions.assertNull(service.fetch("deletetest","2.1"));
+                service.deleteVersion("deletetest", "2.1");
+                Assertions.assertNull(service.fetch("deletetest", "2.1"));
                 Assertions.assertNull(service.fetch("deletetest"));
                 Assertions.assertFalse(Files.isDirectory(bundleDir));
             }

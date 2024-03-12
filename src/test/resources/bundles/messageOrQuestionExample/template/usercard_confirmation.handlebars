@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -39,8 +39,7 @@
 
 
         changeLabelInEditionMode: function() {
-            // keep deprecated method for cypress test only
-            if (usercardTemplateGateway.getEditionMode() == 'EDITION') {
+            if (opfab.currentUserCard.getEditionMode() == 'EDITION') {
                 const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
             }
         },
@@ -53,8 +52,7 @@
             opfab.currentUserCard.setInitialStartDate(mystartDate.getTime());
             opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
 
-            // keep deprecated method for cypress test only
-            usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
+            opfab.currentUserCard.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
         },
 
         showCurrentUserResponse: function(){
@@ -66,8 +64,7 @@
                     document.getElementById('yes').selected=false;
                     document.getElementById('no').selected=true;
                 }
-                // keep deprecated method for cypress test only
-                document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
+                document.getElementById('message').value=opfab.currentUserCard.getUserEntityChildCard().data.message;
             }
         },
 

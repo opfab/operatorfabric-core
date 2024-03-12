@@ -61,7 +61,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -92,7 +92,7 @@ jobs:
         run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
       - name: Upload cypress screenshots and logs 
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
             name: cypress-screenshots
@@ -117,7 +117,7 @@ jobs:
           echo "Opfab Version : ${OF_VERSION}"
           echo "---------------------------"
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -148,7 +148,7 @@ jobs:
         run: ./CICD/github/launch_cypress_tests.sh 
 
       - name: Upload cypress screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
             name: cypress-screenshots

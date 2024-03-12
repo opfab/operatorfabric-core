@@ -4,15 +4,21 @@ operatorfabric:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+    jwt:
+      login-claim: preferred_username
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+  mongodb:
+    database: "operator-fabric"
+    uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"
   servicesUrls:
     authToken: "http://127.0.0.1:2002/auth/token"
     users: "http://127.0.0.1:2103"
     cardsConsultation: "http://127.0.0.1:2104"
+    businessconfig: "http://127.0.0.1:2100"
   internalAccount:
     login: opfab
     password: test
@@ -37,3 +43,6 @@ operatorfabric:
       windowInSecondsForCardSearch: 360
       secondsAfterPublicationToConsiderCardAsNotRead: 60
       checkPeriodInSeconds: 10
+      activateCardsDiffusionRateLimiter: true
+      sendRateLimit: 100
+      sendRateLimitPeriodInSec : 3600

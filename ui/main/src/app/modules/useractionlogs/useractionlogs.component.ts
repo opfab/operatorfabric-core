@@ -7,113 +7,183 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ViewChild} from "@angular/core";
-import {FormControl, FormGroup} from "@angular/forms";
-import {PermissionEnum} from "@ofModel/permission.model";
-import {UserActionLog} from "@ofModel/user-action-log.model";
-import {ServerResponseStatus} from "app/business/server/serverResponse";
-import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
-import {UserService} from "app/business/services/users/user.service";
-import moment from "moment";
-import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
-
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {Card} from '@ofModel/card.model';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
+import {TranslationService} from 'app/business/services/translation/translation.service';
+import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
+import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
+import {UserActionLogsPageDescription} from 'app/business/view/useractionlogs/userActionLogsPageDescription';
 
 @Component({
     selector: 'of-useractionlogs',
     templateUrl: './useractionlogs.component.html',
-    styleUrls: ['./useractionlogs.component.scss']
+    styleUrls: ['./useractionlogs.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserActionLogsComponent {
+export class UserActionLogsComponent implements OnInit {
+    userActionLogsView: UserActionLogsView;
+    userActionLogsPage: UserActionLogsPageDescription;
+    userActionLogsResult: UserActionLogsResult;
 
-    userActions: UserActionLog[];
+    userActionLogsForm: FormGroup;
+    loginMultiSelectConfig: MultiSelectConfig;
+    actionsMultiSelectConfig: MultiSelectConfig;
 
-    userActionLogsForm = new FormGroup({
-        login: new FormControl([]),
-        action: new FormControl([]),
-        dateFrom: new FormControl<string | null>(null),
-        dateTo: new FormControl('')
-    });
-
-    @ViewChild('filters') filtersTemplate: UserActionLogsFiltersComponent;
-
-    size = 10;
-    page = 1;
-    hasResult = false;
-    firstQueryHasBeenDone = false;
+    logins: Array<MultiSelectOption> = [];
+    actions = [];
+    loginsSelected = [];
+    actionsSelected = [];
+    loginListLoaded = false;
     loadingInProgress = false;
-    technicalError = false;
-    totalPages: number;
-    totalElements: number;
+    initialDateFrom;
+    errorMessage;
+    currentResultPage = 1;
 
-    defaultMinDate : {year: number; month: number; day: number} = null;
-    isUserAllowed: boolean;
+    // View card
+    modalRef: NgbModalRef;
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
+    cardLoadingInProgress = false;
+    selectedCard: Card;
+    selectedChildCards: Card[];
 
-    constructor(private userActionLogsServer: UserActionLogsServer) {
-        this.isUserAllowed = UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
-
-        this.setDefaultPublishDateFilter();
+    constructor(
+        translationService: TranslationService,
+        userActionLogsServer: UserActionLogsServer,
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
+    ) {
+        this.userActionLogsView = new UserActionLogsView(translationService, userActionLogsServer);
+        this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }
 
-    setDefaultPublishDateFilter() {
-        const defaultPublishDateInterval = 10;
-        const min = moment(Date.now());
-        min.subtract(defaultPublishDateInterval, 'day');
-        const minDate = min.toDate();
-        this.defaultMinDate = {
-            day: minDate.getDate(),
-            month: minDate.getMonth() + 1,
-            year: minDate.getFullYear()
+    ngOnInit() {
+        this.initForm();
+        this.setInitialDateFrom();
+        this.initActionMultiselect();
+        this.initLoginMultiselect();
+    }
+
+    private initForm() {
+        this.userActionLogsForm = new FormGroup({
+            login: new FormControl([]),
+            action: new FormControl([]),
+            dateFrom: new FormControl<string | null>(null),
+            dateTo: new FormControl('')
+        });
+    }
+
+    private setInitialDateFrom() {
+        const initDate = this.userActionLogsPage.initialFromDate;
+        this.initialDateFrom = {
+            day: initDate.getDate(),
+            month: initDate.getMonth() + 1,
+            year: initDate.getFullYear()
         };
     }
 
-    sendQuery(): void {
-        const {value} = this.userActionLogsForm;
-        this.filtersTemplate.transformFiltersListToMap(value);
-        this.filtersTemplate.filters.set('size', [this.size.toString()]);
-        this.page = 1;
-        this.getResults(0);
+    private initLoginMultiselect() {
+        this.loginMultiSelectConfig = {
+            labelKey: 'useractionlogs.filters.login',
+            placeholderKey: 'useractionlogs.login',
+            sortOptions: true,
+            nbOfDisplayValues: 1
+        };
+        this.userActionLogsView.getAllUserLogins().subscribe((loginList) => {
+            loginList.forEach((login) => this.logins.push(new MultiSelectOption(login, login)));
+            this.loginListLoaded = true;
+            this.changeDetector.markForCheck();
+        });
     }
 
-    private getResults(page_number: number): void {
+    private initActionMultiselect() {
+        this.actionsMultiSelectConfig = {
+            labelKey: 'useractionlogs.filters.action',
+            placeholderKey: 'useractionlogs.action',
+            sortOptions: true,
+            nbOfDisplayValues: 1
+        };
+        this.userActionLogsPage.actionList.forEach((action) =>
+            this.actions.push(new MultiSelectOption(action, action))
+        );
+    }
 
-        this.filtersTemplate.filters.set('page', [page_number]);
-        this.hasResult = false;
+    search(page) {
+        this.setViewParametersFromForm(page);
         this.loadingInProgress = true;
-
-        this.userActionLogsServer.queryUserActionLogs(this.filtersTemplate.filters)
-        .subscribe({ next: (actionPageServerResponse) => {
-            if (actionPageServerResponse.status === ServerResponseStatus.OK) {
-                this.userActions = actionPageServerResponse.data.content;
-                this.totalPages = actionPageServerResponse.data.totalPages;
-                this.totalElements = actionPageServerResponse.data.totalElements;
-
-                this.loadingInProgress = false;
-                this.firstQueryHasBeenDone = true;
-                this.hasResult = actionPageServerResponse.data.content.length > 0;
-            } else {
-                this.firstQueryHasBeenDone = false;
-                this.loadingInProgress = false;
-                this.technicalError = true;
-            }
-
-        },});
+        this.userActionLogsResult = null;
+        this.errorMessage = null;
+        this.userActionLogsView.search().subscribe((result) => {
+            if (result.hasError) this.errorMessage = result.errorMessage;
+            else this.userActionLogsResult = result;
+            this.loadingInProgress = false;
+            this.changeDetector.markForCheck();
+        });
     }
 
-    pageChange(currentPage: number) {
-        this.getResults(currentPage -1);
-        this.page = currentPage;
+    private setViewParametersFromForm(page) {
+        const logins = this.userActionLogsForm.get('login').value;
+        const actions = this.userActionLogsForm.get('action').value;
+        const dateFrom = this.extractDateAndTime(this.userActionLogsForm.get('dateFrom'));
+        const dateTo = this.extractDateAndTime(this.userActionLogsForm.get('dateTo'));
+        this.userActionLogsView.setSelectedLogins(logins);
+        this.userActionLogsView.setSelectedActions(actions);
+        this.userActionLogsView.setDateFrom(dateFrom);
+        this.userActionLogsView.setDateTo(dateTo);
+        if (page) {
+            this.userActionLogsView.setPageNumber(page);
+            this.currentResultPage = page + 1;
+        } else {
+            this.userActionLogsView.setPageNumber(0);
+            this.currentResultPage = 1;
+        }
     }
 
-    resetForm(): void {
-        this.firstQueryHasBeenDone = false;
-        this.loadingInProgress = false;
+    private extractDateAndTime(form: AbstractControl) {
+        const val = form.value;
+        if (!val || val === '') {
+            return null;
+        }
+        const hour = val.time?.hour ?? 0;
+        const minute = val.time?.minute ?? 0;
+        const second = val.time?.second ?? 0;
+
+        const converter = new DateTimeNgb(val.date, {hour, minute, second});
+        return converter.convertToNumber();
+    }
+
+    changePage(page) {
+        this.search(page - 1);
+    }
+
+    clickOnCard(cardUid) {
+        if (cardUid) {
+            this.cardLoadingInProgress = true;
+            this.userActionLogsView.getCard(cardUid).subscribe((card) => {
+                this.cardLoadingInProgress = false;
+                if (card) {
+                    this.selectedCard = card.card;
+                    this.selectedChildCards = card.childCards;
+
+                    const options: NgbModalOptions = {
+                        size: 'fullscreen'
+                    };
+                    if (this.modalRef) this.modalRef.close();
+                    this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+                } else if (this.modalRef) this.modalRef.close();
+            });
+        }
+    }
+
+    reset() {
         this.userActionLogsForm.reset();
-        this.userActions = [];
-        this.totalElements = 0;
-        this.totalPages = 0;
-        this.page = 1;
-        this.hasResult = false;
-        this.setDefaultPublishDateFilter();
+        this.loginsSelected = [];
+        this.actionsSelected = [];
+        this.userActionLogsResult = null;
+        this.errorMessage = null;
     }
-
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,16 @@
 import {Component, OnDestroy} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {filter, Subject, takeUntil} from 'rxjs';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-responses-cell-renderer',
     templateUrl: './responses-cell-renderer.component.html'
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {
-    constructor(private lightCardsStoreService: LightCardsStoreService) {}
-
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
     private params: any;
@@ -36,9 +34,9 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
         this.params = params;
         this.api = params.api;
         this.cardUid = params.data.cardUid;
-        this.childCards = this.lightCardsStoreService.getChildCards(params.data.cardId);
+        this.childCards = OpfabStore.getLightCardStore().getChildCards(params.data.cardId);
         this.checkEntitiesResponses();
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),

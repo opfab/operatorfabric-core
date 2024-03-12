@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,6 +133,20 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
+    filterByProcess = function (process) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-process-filter-form').should('exist');
+        cy.get("#opfab-process-select").find('[data-value="' + process + '"]' ).click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    filterByState = function (state) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-process-filter-form').should('exist');
+        cy.get("#opfab-state-select").find('[data-value="' + state + '"]' ).click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
     checkFilterIsActive= function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-active');
     }
@@ -147,6 +161,10 @@ export class FeedCommands extends OpfabCommands {
 
     checkFilterIsOpenAndActive= function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-open-active');
+    }
+
+    toggleFiltersOpen() {
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
     resetAllFilters() {

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -44,20 +44,23 @@
             <label for="opfab-description" translate>admin.input.description</label>
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
-
           <div class="opfab-edit-row">
-            <label for="opfab-entity-allowed-to-send-card" class="opfab-checkbox "> <span class="" translate> admin.input.entity.entityAllowedToSendCard </span>
-              <input formControlName="entityAllowedToSendCard" name="entityAllowedToSendCard" id="opfab-entity-allowed-to-send-card" type="checkbox">
-              <span class="opfab-checkbox-checkmark"></span>
-            </label>
+            <of-multi-select 
+            id="opfab-roles"
+            multiSelectId="roles"
+            [parentForm]="entityForm"
+            [config] = "entityRolesMultiSelectConfig"
+            [options]="entityRolesMultiSelectOptions"
+            [selectedOptions]="selectedRoles">    
+            </of-multi-select>
           </div>
           <div class="opfab-edit-row">
             <of-multi-select 
             id="opfab-parents"
             multiSelectId="parents"
             [parentForm]="entityForm"
-            [config] = "entitiesMultiSelectConfig"
-            [options]="entitiesMultiSelectOptions"
+            [config] = "entityParentsMultiSelectConfig"
+            [options]="entityParentsMultiSelectOptions"
             [selectedOptions]="selectedEntities">    
             </of-multi-select>
           </div>

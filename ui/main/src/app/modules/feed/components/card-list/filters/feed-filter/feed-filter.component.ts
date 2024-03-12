@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,14 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
+import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 
 @Component({
     selector: 'of-feed-filter',
@@ -31,6 +36,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
     @Input() defaultAcknowledgmentFilter: string;
     @Input() hideResponseFilter: boolean;
+    @Input() hideProcessFilter: boolean;
+    @Input() hideStateFilter: boolean;
+    @Input() processFilter: string = '';
+    @Input() stateFilter: string = '';
 
     @Input() defaultSorting: string;
 
@@ -62,19 +71,30 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         timeLineControl: FormControl<boolean | null>;
     }>;
 
+    processFilterForm: FormGroup<{
+        process: FormControl<string | null>;
+        state: FormControl<string | null>;
+    }>;
+
     endMinDate: {year: number; month: number; day: number} = null;
     startMaxDate: {year: number; month: number; day: number} = null;
 
-    private dateFilterType = FilterType.PUBLISHDATE_FILTER;
+    processMultiSelect: MultiSelect;
+    processList = [];
+    selectedProcess: string;
+    stateMultiSelect: MultiSelect;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-    ) {
+    private dateFilterType = FilterType.PUBLISHDATE_FILTER;
+    private filteredLightCardStore: FilteredLightCardsStore;
+
+    constructor(private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
         this.timeFilterForm = this.createDateTimeForm();
         this.responseFilterForm = this.createResponseFormGroup();
         this.timeLineFilterForm = this.createTimeLineFormGroup();
+        this.processFilterForm = this.createProcessForm();
     }
 
     private createFormGroup() {
@@ -124,6 +144,46 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         });
     }
 
+    private createProcessForm() {
+        return new FormGroup(
+            {
+                process: new FormControl<string | null>(''),
+                state: new FormControl<string | null>('')
+            },
+            {updateOn: 'change'}
+        );
+    }
+
+    private initializeProcessMultiSelect() {
+        this.processMultiSelect = {
+            id: 'process',
+            options: [],
+            config: {
+                labelKey: 'shared.filters.process',
+                placeholderKey: 'shared.filters.selectProcessText',
+                sortOptions: true,
+                nbOfDisplayValues: 4,
+                multiple: false
+            },
+            selectedOptions: []
+        };
+    }
+
+    private initializeStateMultiSelect() {
+        this.stateMultiSelect = {
+            id: 'state',
+            options: [],
+            config: {
+                labelKey: 'shared.filters.state',
+                placeholderKey: 'shared.filters.selectStateText',
+                sortOptions: true,
+                nbOfDisplayValues: 4,
+                multiple: false
+            },
+            selectedOptions: []
+        };
+    }
+
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
@@ -144,6 +204,74 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideApplyFiltersToTimeLineChoice) {
             this.initTimeLineFilter();
         }
+
+        if (!this.hideProcessFilter) {
+            this.initializeProcessMultiSelect();
+            this.initProcessFilter();
+            if (!this.hideStateFilter) {
+                this.initializeStateMultiSelect();
+            }
+            this.setInitialSelectedProcess();
+            this.setInitialSelectedState();
+        }
+    }
+
+    private setInitialSelectedProcess() {
+        if (this.processMultiSelect && this.processFilter) {
+            this.processMultiSelect.selectedOptions = [this.processFilter];
+            this.processFilterForm.get('process').setValue(this.processFilter, {emitEvent: true});
+        }
+    }
+
+    private setInitialSelectedState() {
+        if (this.stateMultiSelect && this.stateFilter) {
+            this.stateMultiSelect.selectedOptions = [this.processFilter + '.' + this.stateFilter];
+            this.processFilterForm
+                .get('state')
+                .setValue(this.processFilter + '.' + this.stateFilter, {emitEvent: true});
+        }
+    }
+
+    private loadVisibleProcessesForCurrentUser() {
+        ProcessesService.getAllProcesses().forEach((process) => {
+            if (UserService.isReceiveRightsForProcess(process.id)) {
+                this.processList.push(process);
+            }
+        });
+    }
+
+    private loadVisibleStatesForCurrentUserAndProcess() {
+        this.stateMultiSelect.options = [];
+        if (this.selectedProcess?.length > 0) {
+            const selected = this.processList.find((process) => process.id === this.selectedProcess);
+            const stateOptions = this.processStatesDropdownListService.getStatesMultiSelectOptionsPerSingleProcess(
+                selected,
+                false,
+                true
+            );
+            this.stateMultiSelect.options.push(new MultiSelectOption('', ''));
+            stateOptions.forEach((option) => this.stateMultiSelect.options.push(option));
+        }
+    }
+
+    private initProcessFilter() {
+        this.loadVisibleProcessesForCurrentUser();
+        this.processMultiSelect.options.push(new MultiSelectOption('', ''));
+        this.processList.forEach((process) =>
+            this.processMultiSelect.options.push(new MultiSelectOption(process.id, process.name))
+        );
+        this.processFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
+            this.filterActiveChange.next(this.isFilterActive());
+            const selectedProcessChanged = form.process !== this.selectedProcess;
+            this.selectedProcess = form.process;
+            if (!this.hideStateFilter && selectedProcessChanged) {
+                this.loadVisibleStatesForCurrentUserAndProcess();
+            }
+            return this.filteredLightCardStore.updateFilter(FilterType.PROCESS_FILTER, true, {
+                process: form.process,
+                state: form.state
+            });
+        });
     }
 
     private initTypeFilter() {
@@ -162,7 +290,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
         this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
 
-        this.lightCardsFeedFilterService.updateFilter(
+        this.filteredLightCardStore.updateFilter(
             FilterType.TYPE_FILTER,
             alarmUnset || actionUnset || compliantUnset || informationUnset,
             {alarm: !alarmUnset, action: !actionUnset, compliant: !compliantUnset, information: !informationUnset}
@@ -182,7 +310,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 UserPreferencesService.setPreference('opfab.feed.filter.type.compliant', form.compliant);
                 UserPreferencesService.setPreference('opfab.feed.filter.type.information', form.information);
                 this.filterActiveChange.next(this.isFilterActive());
-                return this.lightCardsFeedFilterService.updateFilter(
+                return this.filteredLightCardStore.updateFilter(
                     FilterType.TYPE_FILTER,
                     !(form.alarm && form.action && form.compliant && form.information),
                     form
@@ -197,13 +325,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
 
         if (responseValue) {
-            this.lightCardsFeedFilterService.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
+            this.filteredLightCardStore.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
         }
 
         this.responseFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.response', form.responseControl);
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(
+            return this.filteredLightCardStore.updateFilter(
                 FilterType.RESPONSE_FILTER,
                 !form.responseControl,
                 form.responseControl
@@ -218,13 +346,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (timeLineValue && timeLineValue !== 'true') timeLineFiltered = false;
 
         this.timeLineFilterForm.get('timeLineControl').setValue(timeLineFiltered, {emitEvent: false});
-        this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
+        this.filteredLightCardStore.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
 
         this.timeLineFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.applyToTimeLine', form.timeLineControl);
-            this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
+            this.filteredLightCardStore.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
             this.filterActiveChange.next(this.isFilterActive());
-
         });
     }
 
@@ -232,41 +359,43 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         this.initAckFilterValues(ackValue ? ackValue : this.defaultAcknowledgmentFilter);
 
-
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             const active = !form.ackControl || !form.notAckControl;
-            const ack = (!form.ackControl && !form.notAckControl) ? null : active && form.ackControl;
-            UserPreferencesService.setPreference('opfab.feed.filter.ack', this.getAckPreference(form.ackControl, form.notAckControl));
+            const ack = !form.ackControl && !form.notAckControl ? null : active && form.ackControl;
+            UserPreferencesService.setPreference(
+                'opfab.feed.filter.ack',
+                this.getAckPreference(form.ackControl, form.notAckControl)
+            );
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
+            return this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
         });
     }
 
-    private initAckFilterValues(ackValue : string) {
+    private initAckFilterValues(ackValue: string) {
         if (ackValue === 'ack') {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
         } else if (ackValue === 'notack') {
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
-        } else  if (ackValue === 'all') {
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
+        } else if (ackValue === 'all') {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-        } else  if (ackValue === 'none'){
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+        } else if (ackValue === 'none') {
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
         }
     }
 
-    private getAckPreference(ack: boolean, notAck: boolean) : string {
+    private getAckPreference(ack: boolean, notAck: boolean): string {
         if (ack && notAck) return 'all';
         else if (!ack && !notAck) return 'none';
         else return ack ? 'ack' : 'notack';
@@ -279,10 +408,14 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
         if (savedStart) {
-            this.timeFilterForm.get('dateTimeFrom').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
+            this.timeFilterForm
+                .get('dateTimeFrom')
+                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
         }
         if (savedEnd) {
-            this.timeFilterForm.get('dateTimeTo').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
+            this.timeFilterForm
+                .get('dateTimeTo')
+                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
         }
 
         this.setNewFilterValue();
@@ -335,7 +468,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             };
         }
 
-        this.lightCardsFeedFilterService.updateFilter(this.dateFilterType, true, status);
+        this.filteredLightCardStore.updateFilter(this.dateFilterType, true, status);
         this.filterActiveChange.next(this.isFilterActive());
     }
 
@@ -368,7 +501,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.responseFilterForm.get('responseControl').value ||
             !this.ackFilterForm.get('notAckControl').value ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            this.processFilterForm.get('process').value.length > 0
         );
     }
 
@@ -379,9 +513,14 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.typeFilterForm.get('compliant').value ||
             !this.typeFilterForm.get('information').value ||
             !this.responseFilterForm.get('responseControl').value ||
-            this.defaultAcknowledgmentFilter !== this.getAckPreference(this.ackFilterForm.get('ackControl').value, this.ackFilterForm.get('notAckControl').value) ||
+            this.defaultAcknowledgmentFilter !==
+                this.getAckPreference(
+                    this.ackFilterForm.get('ackControl').value,
+                    this.ackFilterForm.get('notAckControl').value
+                ) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            this.processFilterForm.get('process').value.length > 0
         );
     }
 
@@ -403,6 +542,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         }
         if (!this.hideApplyFiltersToTimeLineChoice) {
             this.timeLineFilterForm.get('timeLineControl').setValue(true, {emitEvent: true});
+        }
+        if (!this.hideProcessFilter) {
+            this.processMultiSelect.selectedOptions = [];
         }
     }
 

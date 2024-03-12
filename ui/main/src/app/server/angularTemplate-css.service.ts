@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {TemplateCssServer} from 'app/business/server/template-css.server';
 @Injectable({
     providedIn: 'root'
 })
-export class AngularTemplateCssServer extends AngularServer implements TemplateCssServer{
+export class AngularTemplateCssServer extends AngularServer implements TemplateCssServer {
     private processesUrl;
     private urlCleaner: HttpUrlEncodingCodec;
 
@@ -30,7 +30,7 @@ export class AngularTemplateCssServer extends AngularServer implements TemplateC
 
     loadCssFile(process: string, version: string, styleFileName: string): Observable<ServerResponse<string>> {
         const url = this.computeBusinessconfigCssUrl(process, styleFileName, version);
-        return this.processHttpResponse(this.httpClient.get(url,{responseType:'text'}));
+        return this.processHttpResponse(this.httpClient.get(url, {responseType: 'text'}));
     }
 
     computeBusinessconfigCssUrl(process: string, styleName: string, version: string): string {

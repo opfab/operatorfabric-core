@@ -10,6 +10,13 @@ Feature: uploadRealTimeScreens
     * def authTokenAsTSO = signInAsTSO.authToken
 
 
+  Scenario: Post empty realtime screens configuration file
+    Given url opfabUrl + '/businessconfig/realtimescreens'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = { read: 'resources/emptyRealtimescreens.json' }
+    When method post
+    And status 201
+
   Scenario: Check that realtime screens configuration does not exist
     Given url opfabUrl + '/businessconfig/realtimescreens'
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -51,8 +58,7 @@ Feature: uploadRealTimeScreens
     Then match response.realTimeScreens[0].onlyDisplayUsersInGroups[0] == 'group1'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 3
-    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'French Control Centers'
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 4
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0] == 'ENTITY_FR'
 
 
   Scenario: Post a new realtime screens configuration file
@@ -72,8 +78,7 @@ Feature: uploadRealTimeScreens
     Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
-    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0] == 'EUROPEAN_SUPERVISION_CENTERS'
 
 
   Scenario: Get realtime screens configuration without authentication
@@ -84,5 +89,4 @@ Feature: uploadRealTimeScreens
     Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
-    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0] == 'EUROPEAN_SUPERVISION_CENTERS'

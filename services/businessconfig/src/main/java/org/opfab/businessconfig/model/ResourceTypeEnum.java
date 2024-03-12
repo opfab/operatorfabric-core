@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,36 +7,28 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.businessconfig.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.opfab.businessconfig.services.ProcessesService;
-
-/**
- * Models Businessconfig resource type, used to generalize {@link ProcessesService} code
- * <dl>
- *     <dt>CSS</dt><dd>cascading style sheet resource type</dd>
- *     <dt>TEMPLATE</dt><dd>Card template resource type</dd>
- *     <dt>I18N</dt><dd>i18n file resource type</dd>
- * </dl>
- *
- */
-@Getter
-@AllArgsConstructor
 public enum ResourceTypeEnum {
   CSS("css", ".css"),
   TEMPLATE("template", ".handlebars"),
   I18N(".", ".json");
 
+  ResourceTypeEnum(String folder, String suffix) {
+    this.folder = folder;
+    this.suffix = suffix;
+  } 
   /**
    * containing files subfolder name
    */
   private final String folder;
-  /**
-   * usual suffix if any
-   */
   private final String suffix;
+
+  public String getFolder() {
+    return folder;
+  }
+
+  public String getSuffix() {
+    return suffix;
+  }
 }

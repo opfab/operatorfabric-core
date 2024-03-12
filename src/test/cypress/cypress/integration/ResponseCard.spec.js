@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -410,7 +410,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check response for operator1_fr is still present after update of card with keepChildCard=true re-logging', function () {
+    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function () {
         script.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -449,7 +449,7 @@ describe('Response card tests', function () {
         card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
     });
 
-    it('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging', function () {
+    it('Check response for  operator1_fr  is not present after update of card without KEEP_CHILD_CARDS action re-logging', function () {
         script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -481,7 +481,7 @@ describe('Response card tests', function () {
         // operator1_fr should see 3 archived cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
 
-        // open card detail for card with keepChildCards=false and check there are no responses
+        // open card detail for card without KEEP_CHILD_CARDS action and check there are no responses
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');
@@ -494,7 +494,7 @@ describe('Response card tests', function () {
         // close card detail
         cy.get('#opfab-archives-card-detail-close').click();
 
-        // open card detail for card with keepChildCards=true and check it should have 3 child cards
+        // open card detail for card with KEEP_CHILD_CARDS action and check it should have 3 child cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(1).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');
@@ -661,5 +661,43 @@ describe('Response card tests', function () {
         .should('have.text', ' YES ')
         .next()
         .should('have.text', ' Cypress test for response publisher ');
+    });
+
+    it('Check read and acknowledgment when response actions contains PROPAGATE_READ_ACK_TO_PARENT_CARD', () => {
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples');
+        usercard.selectProcess('Message or question');
+        usercard.selectState('Confirmation');
+        cy.get('#question').invoke('val', 'question');
+        cy.get('#message').invoke('val', 'Cypress test for PROPAGATE_READ_ACK_TO_PARENT_CARD');
+        usercard.selectRecipient('Control Center FR North');
+        usercard.selectRecipient('Control Center FR South');
+        usercard.previewThenSendCard();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        feed.openFirstCard();
+        card.acknowledge();
+
+        //acknowledged card is not visible in the feed
+        feed.checkNumberOfDisplayedCardsIs(0);
+        opfab.logout();
+
+        opfab.loginWithUser('operator2_fr');
+        feed.openFirstCard();
+        cy.get('#opfab-div-card-template-processed');
+        cy.get('#confirmation-response');
+
+        card.sendResponse();
+        opfab.logout();
+
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(1);
+        //Check card is unread
+        cy.get('of-light-card').eq(0).find('.card-title, .card-title').should('have.css', 'font-weight')
+            .and('match', /700|bold/);
+
+        //Check is not acknowledged
+        cy.get('of-light-card').eq(0).find('.fa-check').should('not.exist')
     });
 });

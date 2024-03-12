@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,12 +8,12 @@
  */
 
 import {Observable} from 'rxjs';
-import {CrudService} from '../crud-service';
+import {CrudService} from './crud-service';
 import {AdminProcessesService} from '../businessconfig/adminprocess.service';
 
 export class CrudProcessesService extends CrudService {
     getAll(): Observable<Array<any>> {
-        return AdminProcessesService.getAll()
+        return AdminProcessesService.getAll();
     }
 
     update(data: any): Observable<any> {
@@ -25,6 +25,6 @@ export class CrudProcessesService extends CrudService {
     }
 
     getCachedValues(): Array<any> {
-        throw new Error("getCachedValue not implemented");
+        throw new Error('getCachedValue not implemented');
     }
 }

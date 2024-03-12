@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.ArchivedCard;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.users.model.User;
@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CardRepositoryMock implements CardRepository {
 
-    Map<String, CardPublicationData> cardsById = new HashMap<>();
-    Map<String, CardPublicationData> cardsByUid = new HashMap<>();
-    Map<String, ArchivedCardPublicationData> archiveCardsByUid = new HashMap<>();
+    Map<String, Card> cardsById = new HashMap<>();
+    Map<String, Card> cardsByUid = new HashMap<>();
+    Map<String, ArchivedCard> archiveCardsByUid = new HashMap<>();
 
     public CardRepositoryMock() {
     }
@@ -41,8 +41,8 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public Optional<CardPublicationData> findByUid(String uid) {
-        CardPublicationData card = cardsByUid.get(uid);
+    public Optional<Card> findByUid(String uid) {
+        Card card = cardsByUid.get(uid);
         if (card == null)
             return Optional.empty();
         return Optional.of(card);
@@ -50,44 +50,44 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public Optional<ArchivedCardPublicationData> findArchivedCardByUid(String uid) {
-        ArchivedCardPublicationData card = archiveCardsByUid.get(uid);
+    public Optional<ArchivedCard> findArchivedCardByUid(String uid) {
+        ArchivedCard card = archiveCardsByUid.get(uid);
         if (card == null)
             return Optional.empty();
         return Optional.of(card);
     }
 
     @Override
-    public void saveCard(CardPublicationData card) {
+    public void saveCard(Card card) {
         cardsById.put(card.getId(), card);
         cardsByUid.put(card.getUid(), card);
         return;
     }
 
     @Override
-    public void saveCardToArchive(ArchivedCardPublicationData card) {
-        archiveCardsByUid.put(card.getId(), card);
+    public void saveCardToArchive(ArchivedCard card) {
+        archiveCardsByUid.put(card.id(), card);
     }
 
     @Override
-    public void deleteCard(CardPublicationData cardToDelete) {
+    public void deleteCard(Card cardToDelete) {
         cardsById.remove(cardToDelete.getId());
         cardsByUid.remove(cardToDelete.getUid());
     }
 
     @Override
-    public void updateArchivedCard(ArchivedCardPublicationData card) {
-        archiveCardsByUid.put(card.getUid(), card);
+    public void setArchivedCardAsDeleted(String process, String processInstanceId, Instant deletionDate) {
+        return;
     }
 
     @Override
-    public CardPublicationData findCardById(String id) {
+    public Card findCardById(String id) {
         return cardsById.get(id);
     }
 
     @Override
-    public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
-        List<CardPublicationData> children = new ArrayList<CardPublicationData>();
+    public Optional<List<Card>> findChildCard(Card card) {
+        List<Card> children = new ArrayList<Card>();
         if (card != null)
             cardsById.values().stream().forEach(child -> {
                 if ((child.getParentCardId() != null) && child.getParentCardId().equals(card.getId()))
@@ -98,32 +98,28 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
+        throw new UnsupportedOperationException("Unimplemented method 'addUserAck'");
     }
 
     @Override
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
     }
 
     @Override
-    public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
-        // TODO Auto-generated method stub
+    public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks) {
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserAck'");
     }
 
     @Override
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserRead'");
     }
 
     @Override
-    public List<CardPublicationData> deleteCardsByEndDateBefore(Instant endDateBefore) {
+    public List<Card> deleteCardsByEndDateBefore(Instant endDateBefore) {
 
-        List<CardPublicationData> cards = new ArrayList<CardPublicationData>();
+        List<Card> cards = new ArrayList<Card>();
         cardsById.values().stream().forEach(card -> {
 
             if (((card.getEndDate() != null) && card.getEndDate().getNano() < endDateBefore.getNano())
@@ -139,8 +135,8 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate) {
-        List<CardPublicationData> cards = new ArrayList<CardPublicationData>();
+    public List<Card> findCardsByExpirationDate(Instant expirationDate) {
+        List<Card> cards = new ArrayList<Card>();
         cardsById.values().stream().forEach(card -> {
             if (((card.getExpirationDate() != null)
                     && (card.getExpirationDate().toEpochMilli() < expirationDate.toEpochMilli()))) {
@@ -159,7 +155,7 @@ public class CardRepositoryMock implements CardRepository {
         return archiveCardsByUid.size();
     }
 
-    public List<CardPublicationData> findAll() {
+    public List<Card> findAll() {
         return cardsById.values().stream().toList();
     }
 

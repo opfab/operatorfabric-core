@@ -81,25 +81,61 @@
       "technicalError" : "Erreur technique"
     },    
     "calendar": {
-      "monday":"Lundi",
-      "tuesday":"Mardi",
-      "wednesday":"Mercredi",
-      "thursday":"Jeudi",
-      "friday":"Vendredi",
-      "saturday":"Samedi",
-      "sunday":"Dimanche",
-      "january":"Janvier",
-      "february":"Février",
-      "march":"Mars",
-      "april":"Avril",
-      "may":"Mai",
-      "june":"Juin",
-      "july":"Juillet",
-      "august":"Août",
-      "september":"Septembre",
-      "october":"Octobre",
-      "november":"Novembre",
-      "december":"Décembre"
+      "monday":"lundi",
+      "tuesday":"mardi",
+      "wednesday":"mercredi",
+      "thursday":"jeudi",
+      "friday":"vendredi",
+      "saturday":"samedi",
+      "sunday":"dimanche",
+      "january":"janvier",
+      "february":"février",
+      "march":"mars",
+      "april":"avril",
+      "may":"mai",
+      "june":"juin",
+      "july":"juillet",
+      "august":"août",
+      "september":"septembre",
+      "october":"octobre",
+      "november":"novembre",
+      "december":"décembre"
+    },
+    "ordinal": {
+      "suffix": {
+        "1": "er",
+        "2": "nd",
+        "3": "ème",
+        "4": "ème",
+        "5": "ème",
+        "6": "ème",
+        "7": "ème",
+        "8": "ème",
+        "9": "ème",
+        "10": "ème",
+        "11": "ème",
+        "12": "ème",
+        "13": "ème",
+        "14": "ème",
+        "15": "ème",
+        "16": "ème",
+        "17": "ème",
+        "18": "ème",
+        "19": "ème",
+        "20": "ème",
+        "21": "ème",
+        "22": "ème",
+        "23": "ème",
+        "24": "ème",
+        "25": "ème",
+        "26": "ème",
+        "27": "ème",
+        "28": "ème",
+        "29": "ème",
+        "30": "ème",
+        "31": "ème",
+        "default": "ème"
+      }
     }
   },
   "global":{
@@ -123,16 +159,16 @@
     "monitoring": "Monitoring",
     "processmonitoring": "Monitoring processus",
     "logout": "Déconnexion",
-    "changePassword": "Modifier votre mot de passe",
+    "changepassword": "Modifier votre mot de passe",
     "settings": "Paramètres",
-    "feedConfiguration": "Configuration des notifications",
+    "feedconfiguration": "Configuration des notifications",
     "about": "À propos",
     "usercard": "Création de cartes",
     "switchToNightMode": "Mode nuit",
     "switchToDayMode": "Mode jour",
-    "realTimeUsers": "Utilisateurs temps réel",
-    "externalDevicesConfiguration": "Configuration des périphériques externes",
-    "activityArea": "Zone d'activité",
+    "realtimeusers": "Utilisateurs temps réel",
+    "externaldevicesconfiguration": "Configuration des périphériques externes",
+    "activityarea": "Zone d'activité",
     "useractionlogs": "Trace des actions utilisateurs",
     "newcardTooltip": "Créer une nouvelle carte",
     "calendarTooltip": "Calendrier" 
@@ -194,6 +230,9 @@
       },
       "applyFiltersToTimeLine" : {
         "label" : "Appliquer les filtres à la timeline"
+      },
+      "process": {
+        "label": "Processus"
       }
     },
     "sort": {
@@ -210,7 +249,8 @@
       "hasAResponseFromYourEntity" : "Votre entité a déjà répondu.",
       "loadingInProgress": "Chargement de cartes en cours",
       "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées",
-      "expirationDate": "Date d'expiration"
+      "expirationDate": "Date d'expiration",
+      "seeGeolocation": "Voir la géolocalisation"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
@@ -275,13 +315,15 @@
     "playSoundOnExternalDevice": "Jouer le son sur un appareil externe",
     "replayInterval": "DÉLAI ENTRE LES RÉPÉTITIONS (EN SECONDES)",
     "remoteLoggingEnabled": "Journalisation à distance activée",
-    "notificationOnOperatingSystem": "NOTIFICATIONS SYSTEM POUR LES CARTES DE TYPE",
+    "notificationOnOperatingSystem": "NOTIFICATIONS SYSTÈME POUR LES CARTES DE TYPE",
     "systemNotificationAlarm": "Alarme",
     "systemNotificationAction": "Action",
     "systemNotificationCompliant": "Conforme",
     "systemNotificationInformation": "Information",
     "systemNotificationsDisabledInBrowser": "Les notifications du système d'exploitation sont désactivées dans votre navigateur, vous ne serez pas notifié.",
-    "sendCardsByEmail" : "Envoi des notifications par mail",
+    "sendCardsByEmail": "Envoi des notifications par mail",
+    "emailToPlainText": "Envoi des mails en texte brut",
+
     "email": "Email"
   },
   "archive": {
@@ -317,7 +359,8 @@
   "activityArea": {
     "title": "ZONE D'ACTIVITÉ",
     "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ",
-    "savingInProgress": "Enregistrement en cours..."
+    "savingInProgress": "Enregistrement en cours...",
+    "noAreaAvailable": "Pas de zone d'activité disponible"
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS",
@@ -423,12 +466,18 @@
         "description": "DESCRIPTION",
         "labels": "ÉTIQUETTES",
         "users": "UTILISATEURS",
-        "entityAllowedToSendCard": "ENVOI DE CARTE AUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"AJOUTER UNE NOUVELLE ENTITÉ",
         "true": "OUI",
         "false": "NON",
-        "addLabel": "Ajouter une étiquette"
+        "addLabel": "Ajouter une étiquette",
+        "roles": "ROLES",
+        "roleValues": {
+          "ACTIVITY_AREA": "Zone d'Activité",
+          "ACTIVITY_AREA_GROUP": "Groupe de Zones d'Activité",
+          "CARD_SENDER": "Expéditeur de Cartes",
+          "CARD_RECEIVER": "Destinataire de Cartes"
+        }
       },
       "perimeter": {
         "id": "ID",
@@ -458,8 +507,8 @@
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
       "businessData": {
-        "name": "DONNEES METIER",
-        "add": "AJOUTER UN FICHIER DE DONNEES METIER",
+        "name": "DONNÉES MÉTIER",
+        "add": "AJOUTER UN FICHIER DE DONNÉES MÉTIER",
         "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
 
       },
@@ -634,17 +683,19 @@
     },
     "messageUserCard": {
       "noMessageError":"Vous ne pouvez pas envoyer un message vide",
+      "messageTitleLabel": "TITRE DU MESSAGE",
       "textareaLabel":"MESSAGE"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "REPONSE",
-      "responsesReceivedLabel":"Réponses reçues :",
-      "entityColumnLabel":"Entité",
-      "responseColumnLabel":"Réponse"
+      "responsesReceivedLabel": "Réponses reçues :",
+      "entityColumnLabel": "Entité",
+      "responseColumnLabel": "Réponse",
+      "dateColumnLabel": "Date"
     },
     "questionUserCard": {
-      "noQuestionError":"Vous devez fournir une question",
-      "textareaLabel":"QUESTION"
+      "noQuestionError": "Vous devez fournir une question",
+      "textareaLabel": "QUESTION"
     },
     "taskCard": {
       "taskToDo": "Vous avez la tâche suivante à faire",
@@ -656,14 +707,16 @@
       "third": "troisième",
       "fourth": "quatrième",
       "last": "dernier",
-      "the": "Le",
-      "on": "le",
+      "the": "Le(s)",
+      "on": "le(s)",
       "firstDayOfTheMonth": "Le premier jour du mois",
       "lastDayOfTheMonth": "Le dernier jour du mois",
+      "daysBeforeEndOfTheMonth": "jours avant la fin du mois",
       "dayOfTheMonth": "jour du mois",
       "in": "en"
    },
     "taskUserCard": {
+      "taskTitleLabel": "TITRE DE LA TÂCHE",
       "taskDescriptionLabel": "DESCRIPTION DE LA TÂCHE",
       "dailyFreq": "Répétition quotidienne",
       "monthlyFreq": "Répétition mensuelle",
@@ -684,7 +737,8 @@
       "youMustProvideAnOccurrenceNumberAndAWeekday": "Vous devez fournir un numéro d'ocurrence et un jour de la semaine.",
       "youMustProvideAtLeastOneNthDay": "Vous devez fournir au moins un numéro de jour.",
       "youMustProvideAtLeastOneWeekday": "Vous devez fournir au moins un jour de la semaine.",
-      "youMustProvideAtLeastOneMonth": "Vous devez fournir au moins un mois."
+      "youMustProvideAtLeastOneMonth": "Vous devez fournir au moins un mois.",
+      "the": "Le"
     }, 
     "message-or-question-listCard": {
       "answers": "Réponses",
@@ -697,8 +751,18 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITRE",
+      "summaryLabel": "RÉSUMÉ",
       "messageLabel": "MESSAGE",
       "emptyMessage": "Vous ne pouvez pas envoyer un message vide"
     } 
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "CONVERTISSEUR DE TEXTE RICHE",
+      "richTextEditor": "TEXTE RICHE",
+      "convert": "Convertir",
+      "result": "RÉSULTAT DE LA CONVERSION",
+      "copy": "Copier dans le presse-papiers"
+    }
   }
 }

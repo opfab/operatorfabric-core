@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,10 @@ import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +37,8 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-public class DevicesController implements DevicesApi {
+@RequestMapping("/devices")
+public class DevicesController {
 
     private static final String CONNECT_FAILED_DUE_TO_CONFIG = "Could not connect to device %1$s due to a configuration issue.";
     private static final String CONNECT_FAILED = "Connection to device %1$s failed.";
@@ -46,7 +51,7 @@ public class DevicesController implements DevicesApi {
 
     @Autowired
     public DevicesController(DevicesService devicesService,
-                             ConfigService configService) {
+            ConfigService configService) {
         this.devicesService = devicesService;
         this.configService = configService;
 
@@ -55,23 +60,24 @@ public class DevicesController implements DevicesApi {
         if (deviceConfigurationList != null) {
             deviceConfigurationList.forEach(deviceConfiguration -> {
                 try {
-                    if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
-                        this.devicesService.enableDevice(deviceConfiguration.getId());
-                        log.info("External device id={} connected to opfab", deviceConfiguration.getId());
+                    if (Boolean.TRUE.equals(deviceConfiguration.isEnabled)) {
+                        this.devicesService.enableDevice(deviceConfiguration.id);
+                        log.info("External device id={} connected to opfab", deviceConfiguration.id);
                     }
                 } catch (ExternalDeviceConfigurationException e) {
-                    log.warn(String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceConfiguration.getId()));
+                    log.warn(String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceConfiguration.id));
                 } catch (ExternalDeviceDriverException e) {
-                    log.warn(String.format(CONNECT_FAILED, deviceConfiguration.getId()));
-                }catch (UnknownExternalDeviceException e) {
-                    log.warn(String.format(UNKNOWN_DRIVER, deviceConfiguration.getId()));
+                    log.warn(String.format(CONNECT_FAILED, deviceConfiguration.id));
+                } catch (UnknownExternalDeviceException e) {
+                    log.warn(String.format(UNKNOWN_DRIVER, deviceConfiguration.id));
                 }
             });
         }
     }
 
-    @Override
-    public Void enableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) throws ExternalDeviceDriverException {
+    @PostMapping(value = "/{deviceId}/enable", produces = { "application/json" })
+    public Void enableDevice(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("deviceId") String deviceId) throws ExternalDeviceDriverException {
         log.info("Enable device {}", deviceId);
         try {
             configService.enableDevice(deviceId);
@@ -85,35 +91,34 @@ public class DevicesController implements DevicesApi {
         return null;
     }
 
-    @Override
-    public Void disableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) throws ExternalDeviceDriverException{
+    @PostMapping(value = "/{deviceId}/disable", produces = { "application/json" })
+    public Void disableDevice(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("deviceId") String deviceId) throws ExternalDeviceDriverException {
         log.info("Disable device {}", deviceId);
         try {
             configService.disableDevice(deviceId);
             this.devicesService.disableDevice(deviceId);
-        } 
-        catch (UnknownExternalDeviceException e) {
+        } catch (UnknownExternalDeviceException e) {
             return throwApiException(e, HttpStatus.NOT_FOUND, String.format(UNKNOWN_DRIVER, deviceId));
         }
         response.setStatus(200);
         return null;
     }
 
-    @Override
-    public Device getDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
+    @GetMapping(value = "/{deviceId}", produces = { "application/json" })
+    public Device getDevice(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("deviceId") String deviceId) {
         response.setStatus(200);
         return this.devicesService.getDevice(deviceId)
                 .orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(DEVICE_NOT_FOUND_MSG,deviceId))
-                                .build()
-                )
-        );
+                        () -> new ApiErrorException(
+                                ApiError.builder()
+                                        .status(HttpStatus.NOT_FOUND)
+                                        .message(String.format(DEVICE_NOT_FOUND_MSG, deviceId))
+                                        .build()));
     }
 
-    @Override
+    @GetMapping(produces = { "application/json" })
     public List<Device> getDevices(HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(200);
         return this.devicesService.getDevices();

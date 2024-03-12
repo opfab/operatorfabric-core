@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -117,7 +117,7 @@ response by returning it in the method registered by `opfab.currentCard.register
 For the user to response you need to define the response form in the template with standard HTML syntax   
 
 To enable OperatorFabric to send the response, you need to implement a javascript function in your template 
-which returns an object containing four fields :
+which returns an object containing the following fields :
 
 - valid (_boolean_) : true if the user input is valid
 - errorMsg (_string_) : message in case of invalid user input. If valid is true this field is not necessary.
@@ -125,6 +125,8 @@ which returns an object containing four fields :
 - responseState : name of the response state to use. This field is not mandatory, if it is not set the state defined in
 `config.json` will be used for the response.
 - publisher (_string_) : the id of the Entity to be used as publisher of the response. This field is not mandatory, if it is not set the publisher will be the user entity, in case the user belongs to a single entity, or it will be choosen by the user between his available entities.  
+- actions (_string array_) : an optional field used to define a set of predetermined actions that will be executed upon receiving the response card. The available actions include:
+      * PROPAGATE_READ_ACK_TO_PARENT_CARD : when receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 
 
 This method is to be registered via `opfab.currentCard.registerFunctionToGetUserResponse`, the method will be called by OperatorFabric when the user clicks on the button to send the response.
@@ -184,7 +186,7 @@ entities allowed to respond to the card. If the user is not in the entity, he wi
 
 NOTE: By default, OperatorFabric considers that if the parent card (question card) is modified, then the child cards
 are deleted. If you want to keep the child cards when the parent card is changed, then you must add in the parent
-card the field "keepChildCards" and set it to true.
+card the field "actions" as a string array containing the "KEEP_CHILD_CARDS" action.
 
 The header in the card details will list the entities from which a response is expected, color-coding them depending
 on whether they've already responded (green) or not (orange).

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import 'src/scss/_variables.scss';
+@import '../../../../../../../../src/scss/_variables.scss';
 
 
 .opfab-icon-filter {
@@ -18,7 +18,7 @@
     margin-right: 10px;
     margin-left: 10px;
     border-width: 0px;
-    background: var(--opfab-navbar-color-hover);
+    background: var(--opfab-text-color-stronger);
     mask: url(../../../../../../../assets/images/icons/filter.svg);
 }
 
@@ -30,7 +30,7 @@
     margin-right: 10px;
     margin-left: 10px;
     border-width: 0px;
-    background: var(--opfab-navbar-color-hover);
+    background: var(--opfab-text-color-stronger);
     mask: url(../../../../../../../assets/images/icons/filter-open.svg);
 }
 

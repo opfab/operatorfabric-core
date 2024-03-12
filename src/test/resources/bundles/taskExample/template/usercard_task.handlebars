@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -120,17 +120,14 @@
         },
 
         initSeverity: function() {
-            // keep deprecated method for cypress test only
-            usercardTemplateGateway.setInitialSeverity('ACTION');
+            opfab.currentUserCard.setInitialSeverity('ACTION');
         },
 
         initInitialDates: function() {
             const mystartDate = new Date();
             mystartDate.setTime(mystartDate.getTime());
-            // keep deprecated method for cypress test only
-            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
-            // keep deprecated method for cypress test only
-            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 3600000 + 7 * 24 * 3600000);
+            opfab.currentUserCard.setInitialStartDate(mystartDate.getTime() + 3600000);
+            opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 3600000 + 7 * 24 * 3600000);
         },
 
         initTimeForRecurrence: function() {
@@ -201,8 +198,8 @@
                 };
 
                 const timeSpans = [{
-                    startDate: usercardTemplateGateway.getStartDate(), // keep deprecated method for cypress test only
-                    endDate: usercardTemplateGateway.getEndDate(), // keep deprecated method for cypress test only
+                    startDate: opfab.currentUserCard.getStartDate(),
+                    endDate: opfab.currentUserCard.getEndDate(),
                     recurrence: recurrence
                 }]
                 

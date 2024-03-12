@@ -1,6 +1,6 @@
 FROM nginx:1.25.3-alpine
 VOLUME /tmp
-RUN apk add bash curl logrotate --no-cache
+RUN apk add bash logrotate --no-cache
 # del unused lib for security reason 
 RUN apk del nginx-module-image-filter
 COPY distribution /usr/share/nginx/html/

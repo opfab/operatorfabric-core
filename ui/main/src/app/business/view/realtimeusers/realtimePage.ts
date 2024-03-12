@@ -24,7 +24,7 @@ export class RealtimePageScreen {
 }
 
 export class RealtimePageScreenColumn {
-    entitiesGroups: RealtimePageEntityGroup[] = [];
+    entityPages: RealtimePageEntityGroup[] = [];
 }
 
 export class RealtimePageEntityGroup {

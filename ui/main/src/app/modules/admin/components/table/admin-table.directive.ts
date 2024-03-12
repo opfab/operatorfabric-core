@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,19 +8,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectorRef, Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, Injectable, OnDestroy} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
-import {CrudService} from 'app/business/services/crud-service';
+import {CrudService} from 'app/business/services/admin/crud-service';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
 import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
+import {RoleCellRendererComponent} from '../cell-renderers/role-cell-renderer.component';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
@@ -35,26 +36,25 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 
-
 export class ActionColumn {
     colId: any;
     type: any;
     headerClass: any;
     cellStyle: any;
     maxWidth: any;
-    cellClassRules:any;
-    constructor( colId: string) {
+    cellClassRules: any;
+    constructor(colId: string) {
         this.colId = colId;
-        this.type= 'actionColumn';
-        this.headerClass= 'action-cell-column-header';
-        this.cellStyle= {'padding-left': '0', 'padding-right': '0'};
-        this.maxWidth= 50;
+        this.type = 'actionColumn';
+        this.headerClass = 'action-cell-column-header';
+        this.cellStyle = {'padding-left': '0', 'padding-right': '0'};
+        this.maxWidth = 50;
     }
 }
 
 @Directive()
 @Injectable()
-export abstract class AdminTableDirective implements OnInit, OnDestroy {
+export abstract class AdminTableDirective implements OnDestroy {
     actionButtonsDisplayed: any;
     showAddButton = true;
     processesDefinition: Process[];
@@ -110,6 +110,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
+                roleCellRenderer: RoleCellRendererComponent,
                 idCellRenderer: IdCellRendererComponent,
                 entityNameCellRenderer: EntityNameCellRendererComponent
             },
@@ -133,6 +134,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     filter: true,
                     wrapText: true,
                     autoHeight: true,
+                    maxWidth: 400,
                     flex: 4
                 }
             },
@@ -150,7 +152,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         };
     }
 
-    ngOnInit() {
+    initCrudService() {
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
     }
 
@@ -188,8 +190,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         // if provided, i18nPrefixForHeader should have trailing dot
 
         // Create data columns from fields
-        let columnDefs: ColDef[];
-        columnDefs = new Array(fields.length);
+        const columnDefs: ColDef[] = new Array(fields.length);
 
         fields.forEach((field: Field, index: number) => {
             const columnDef = {
@@ -213,7 +214,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     params.data.id.toLowerCase() === 'admin')
         };
 
-        // Add action columns 
+        // Add action columns
         const edit_col = new ActionColumn('edit');
         const delete_col = new ActionColumn('delete');
         delete_col.cellClassRules = deleteActionCellClassRules;
@@ -272,14 +273,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         }
         if (columnId === 'download') {
             const fileName = params.data[this.idField];
-            BusinessDataService.getBusinessData(fileName).then(
-                resource =>{
-                    const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
-                        type: 'application/json;charset=UTF-8'
-                    });
-                    saveAs(fileToSave, fileName);
-                }
-            );
+            BusinessDataService.getBusinessData(fileName).then((resource) => {
+                const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                    type: 'application/json;charset=UTF-8'
+                });
+                saveAs(fileToSave, fileName);
+            });
         }
         if (columnId === 'update') {
             this.updateItem();
@@ -311,7 +310,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
     createNewItem(): void {
         if (this.tableType === AdminItemType.BUSINESSDATA) {
-            document.getElementById("fileUploader").click()
+            document.getElementById('fileUploader').click();
         } else {
             const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
             modalRef.componentInstance.type = this.tableType;
@@ -332,33 +331,32 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     updateItem(): void {
-        document.getElementById("fileUpdater").click()
+        document.getElementById('fileUpdater').click();
     }
 
     onFileSelected(event) {
         const file: File = event.target.files[0];
         if (file) {
-            this.uploadFile(file)
+            this.uploadFile(file);
         }
     }
 
     uploadFile(file: File, resourceName?: string) {
         const read = new FileReader();
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append('file', file);
         read.readAsBinaryString(file);
         let fileName = file.name;
 
         if (resourceName !== undefined) {
             fileName = resourceName;
-        } 
-
-        read.onload = (e) => {
-            BusinessDataService.updateBusinessData(fileName, formData).subscribe( () => {
-                this.refreshData();
-            });
         }
 
+        read.onload = (e) => {
+            BusinessDataService.updateBusinessData(fileName, formData).subscribe(() => {
+                this.refreshData();
+            });
+        };
     }
 
     refreshData() {
@@ -438,10 +436,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
             if (cellRenderer.itemType) {
-                     const found = this.dataHandlingService
+                const found = this.dataHandlingService
                     .resolveCrudServiceDependingOnType(cellRenderer.itemType)
-                    .getCachedValues().find(e => e.id === id);
-                    return found?.name ? found.name : id;
+                    .getCachedValues()
+                    .find((e) => e.id === id);
+                return found?.name ? found.name : id;
             }
         }
         return id;

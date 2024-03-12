@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,8 +13,8 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.ArchivedCard;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.users.model.User;
@@ -45,44 +45,43 @@ public class CardRepositoryImpl implements CardRepository {
         this.template = template;
     }
 
-    public Optional<CardPublicationData> findByUid(String uid) {
+    public Optional<Card> findByUid(String uid) {
         Query query = new Query();
         query.addCriteria(Criteria.where("uid").is(uid));
-        return Optional.ofNullable(template.findOne(query, CardPublicationData.class));
+        return Optional.ofNullable(template.findOne(query, Card.class));
     }
 
-    public Optional<ArchivedCardPublicationData> findArchivedCardByUid(String uid) {
+    public Optional<ArchivedCard> findArchivedCardByUid(String uid) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(uid));
-        return Optional.ofNullable(template.findOne(query, ArchivedCardPublicationData.class));
+        return Optional.ofNullable(template.findOne(query, ArchivedCard.class));
     }
 
-    public void saveCard(CardPublicationData card) {
+    public void saveCard(Card card) {
         log.debug("preparing to write {}", card.toString());
         template.save(card);
     }
 
-    public void saveCardToArchive(ArchivedCardPublicationData card) {
-        // Update deletionDate on previous version of this card in archives
-        Query query = new Query();
-        query.addCriteria(new Criteria().andOperator(
-                where("process").is(card.getProcess()),
-                where("processInstanceId").is(card.getProcessInstanceId()),
-                where("deletionDate").isNull()));
-        template.updateFirst(query, Update.update("deletionDate", card.getPublishDate()),
-                ArchivedCardPublicationData.class);
+    public void saveCardToArchive(ArchivedCard card) {
         this.template.insert(card);
     }
 
-    public void deleteCard(CardPublicationData cardToDelete) {
+    public void deleteCard(Card cardToDelete) {
         this.template.remove(cardToDelete);
     }
 
-    public void updateArchivedCard(ArchivedCardPublicationData card) {
-        this.template.save(card);
+    public void setArchivedCardAsDeleted(String process, String processInstanceId, Instant deletionDate) {
+        Query query = new Query();
+        query.addCriteria(new Criteria().andOperator(
+                where("process").is(process),
+                where("processInstanceId").is(processInstanceId),
+                where("deletionDate").isNull()));
+        template.updateFirst(query, Update.update("deletionDate", deletionDate),
+                ArchivedCard.class);
     }
 
-    public CardPublicationData findCardById(String id) {
+
+    public Card findCardById(String id) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
          * excludes data which can be unpredictably huge depending on publisher needs.
@@ -91,17 +90,17 @@ public class CardRepositoryImpl implements CardRepository {
         findCardByIdWithoutDataField.fields().exclude("data");
         findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(id));
 
-        return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
+        return this.template.findOne(findCardByIdWithoutDataField, Card.class);
     }
 
-    public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
+    public Optional<List<Card>> findChildCard(Card card) {
         if (Objects.isNull(card))
             return Optional.empty();
 
         Query findCardByParentCardIdWithoutDataField = new Query();
         findCardByParentCardIdWithoutDataField.fields().exclude("data");
         findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.getId()));
-        return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
+        return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, Card.class));
     }
 
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
@@ -113,7 +112,7 @@ public class CardRepositoryImpl implements CardRepository {
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update,
-                CardPublicationData.class);
+                Card.class);
         log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -121,15 +120,18 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().addToSet(USERS_READS, name), CardPublicationData.class);
+                new Update().addToSet(USERS_READS, name), Card.class);
         log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
 
-    public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
+    public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks) {
+        Update update = new Update().pull(USERS_ACKS, userName);
+        if (entitiesAcks != null) 
+            update = update.pullAll(ENTITIES_ACKS, entitiesAcks.toArray());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull(USERS_ACKS, userName), CardPublicationData.class);
+                update, Card.class);
         log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -137,7 +139,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull(USERS_READS, userName), CardPublicationData.class);
+                new Update().pull(USERS_READS, userName), Card.class);
         log.debug("removed {} occurrence of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -153,7 +155,7 @@ public class CardRepositoryImpl implements CardRepository {
         return res;
     }
 
-    public List<CardPublicationData> deleteCardsByEndDateBefore(Instant endDateBefore) {
+    public List<Card> deleteCardsByEndDateBefore(Instant endDateBefore) {
         Query findCardByEndDateBefore = new Query();
         Criteria endDateCriteria = new Criteria().andOperator(Criteria.where(END_DATE).ne(null),
                 Criteria.where(END_DATE).lt(endDateBefore));
@@ -161,23 +163,23 @@ public class CardRepositoryImpl implements CardRepository {
                 Criteria.where("startDate").lt(endDateBefore));
         findCardByEndDateBefore.addCriteria(new Criteria().orOperator(endDateCriteria, startDateCriteria));
         findCardByEndDateBefore.fields().exclude("data");
-        List<CardPublicationData> toDelete = template.find(findCardByEndDateBefore, CardPublicationData.class);
-        template.remove(findCardByEndDateBefore, CardPublicationData.class);
+        List<Card> toDelete = template.find(findCardByEndDateBefore, Card.class);
+        template.remove(findCardByEndDateBefore, Card.class);
         return toDelete;
     }
 
-    public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate) {
+    public List<Card> findCardsByExpirationDate(Instant expirationDate) {
         Query findCardByExpirationDate = new Query();
         Criteria expirationDateCriteria = new Criteria().andOperator(Criteria.where("expirationDate").ne(null),
                 Criteria.where("expirationDate").lt(expirationDate));
         findCardByExpirationDate.fields().exclude("data");
         findCardByExpirationDate.addCriteria(expirationDateCriteria);
-        return template.find(findCardByExpirationDate, CardPublicationData.class);
+        return template.find(findCardByExpirationDate, Card.class);
     }
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().unset(USERS_ACKS).unset(USERS_READS).set(ENTITIES_ACKS,new LinkedList<String>()).set("publishDate", Instant.now()), CardPublicationData.class);
+                new Update().unset(USERS_ACKS).unset(USERS_READS).set(ENTITIES_ACKS,new LinkedList<String>()).set("publishDate", Instant.now()), Card.class);
         log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);

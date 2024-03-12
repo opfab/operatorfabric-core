@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,9 @@ import {MonitoringFiltersComponent} from './components/monitoring-filters/monito
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-monitoring',
@@ -47,9 +47,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     isThereProcessStateToDisplay: boolean;
     selectedCardId: string;
 
-    constructor(
-        private lightCardsStoreService: LightCardsStoreService
-    ) {
+    constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             if (process.uiVisibility?.monitoring) {
@@ -62,7 +60,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringResult$ = combineLatest([
             this.monitoringFilters$.asObservable(),
             this.responseFilter$.asObservable(),
-            this.lightCardsStoreService.getLightCards()
+            OpfabStore.getLightCardStore().getLightCards()
         ]).pipe(
             debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
@@ -86,13 +84,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         );
         this.monitoringResult$.subscribe((lines) => (this.result = lines));
         this.applyResponseFilter();
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
 
-        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(
+            (selectedCardId) => (this.selectedCardId = selectedCardId)
+        );
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
@@ -151,17 +151,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             entityIdsAllowedOrRequiredToRespond
         );
 
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(
+            (entity) => entity.id
+        );
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         if (!card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map((entity) => entity.id);
     }
 
     private cardToResult(card: LightCard): LineOfMonitoringResult {

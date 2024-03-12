@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,8 @@ import org.opfab.users.services.CurrentUserWithPerimetersService;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UserSettingsService;
 import org.opfab.users.services.UsersService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,23 +31,26 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping({ "/UserWithPerimeters" })
 
-public class UserWithPerimetersController implements UserWithPerimetersApi {
+public class UserWithPerimetersController {
 
     private CurrentUserWithPerimetersService currentUserWithPerimetersService;
 
     public UserWithPerimetersController(UserRepository userRepository, GroupRepository groupRepository,
-            PerimeterRepository perimeterRepository, EntityRepository entityRepository, UserSettingsRepository userSettingsRepository, EventBus eventBus) {
-        
-                NotificationService notificationService = new NotificationService(userRepository,eventBus);
-        UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,notificationService);
-        UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService);
+            PerimeterRepository perimeterRepository, EntityRepository entityRepository,
+            UserSettingsRepository userSettingsRepository, EventBus eventBus) {
+
+        NotificationService notificationService = new NotificationService(userRepository, eventBus);
+        UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
+                perimeterRepository, notificationService);
+        UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService,
+                notificationService);
         this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService, userSettingsService,
                 entityRepository);
     }
 
-    @Override
+    @GetMapping(value = "/{login}", produces = { "application/json" })
     public CurrentUserWithPerimeters fetchUserWithPerimeters(HttpServletRequest request,
-            HttpServletResponse response, String login) throws Exception {
+            HttpServletResponse response, @PathVariable("login") String login) {
 
         return currentUserWithPerimetersService.fetchUserWithPerimeters(login);
     }

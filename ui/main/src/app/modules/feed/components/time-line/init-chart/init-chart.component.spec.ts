@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,12 +22,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
-import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -64,12 +63,12 @@ describe('InitChartComponent', () => {
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
-                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
                 {provide: OpfabEventStreamServer, useClass: OpfabEventStreamServerMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
 
+        OpfabEventStreamService.setEventStreamServer(new OpfabEventStreamServerMock());
         fixture = TestBed.createComponent(InitChartComponent);
         component = fixture.componentInstance;
 

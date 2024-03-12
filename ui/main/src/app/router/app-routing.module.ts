@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PreloadAllModules,RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../modules/core/application-loading/login/login.component';
 import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
 import {CalendarComponent} from '../modules/calendar/calendar.component';
@@ -17,13 +17,13 @@ import {DashboardComponent} from 'app/modules/dashboard/dashboard.component';
 import {ArchivesComponent} from '../modules/archives/archives.component';
 import {LoggingComponent} from '../modules/logging/logging.component';
 import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
+import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
 
 const defaultPath = '/feed';
 
-
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
-//  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode 
+//  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode
 
 const routes: Routes = [
     {
@@ -40,7 +40,7 @@ const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: DashboardComponent,
+        component: DashboardComponent
     },
     {
         path: 'logging',
@@ -86,7 +86,8 @@ const routes: Routes = [
     },
     {
         path: 'changepassword',
-        loadChildren: () => import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
+        loadChildren: () =>
+            import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
     },
     {
         path: 'externaldevicesconfiguration',
@@ -99,6 +100,10 @@ const routes: Routes = [
         path: 'useractionlogs',
         component: UserActionLogsComponent
     },
+    {
+        path: 'devtools/richtext',
+        component: RichTextComponent
+    },
     {path: '**', redirectTo: defaultPath}
 ];
 const startIndex = 0;
@@ -108,25 +113,23 @@ const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
 export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisibleElements);
 
-
-
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-    enableTracing: false,
-    preloadingStrategy: PreloadAllModules,
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-     */
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-     */
-    initialNavigation: 'disabled',
-    
-    // required to reload external application when user click again on the same link
-    // see https://github.com/opfab/operatorfabric-core/issues/4509
-    onSameUrlNavigation: 'reload'
-})
+            enableTracing: false,
+            preloadingStrategy: PreloadAllModules,
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            initialNavigation: 'disabled',
+
+            // required to reload external application when user click again on the same link
+            // see https://github.com/opfab/operatorfabric-core/issues/4509
+            onSameUrlNavigation: 'reload'
+        })
     ],
     exports: [RouterModule]
 })

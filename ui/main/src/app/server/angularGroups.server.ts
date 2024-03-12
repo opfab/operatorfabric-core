@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Observable} from 'rxjs';
 import {Group} from '@ofModel/group.model';
-import {GroupsServer} from 'app/business/server/groups.server'
+import {GroupsServer} from 'app/business/server/groups.server';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -25,7 +25,7 @@ export class AngularGroupsServer extends AngularServer implements GroupsServer {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor( private httpClient: HttpClient) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.groupsUrl = `${environment.url}/users/groups`;
     }

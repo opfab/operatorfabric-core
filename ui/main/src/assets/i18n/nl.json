@@ -100,6 +100,42 @@
       "october":"Oktober",
       "november":"November",
       "december":"December"
+    },
+    "ordinal": {
+      "suffix": {
+        "1": "ste",
+        "2": "de",
+        "3": "de",
+        "4": "de",
+        "5": "de",
+        "6": "de",
+        "7": "de",
+        "8": "ste",
+        "9": "de",
+        "10": "de",
+        "11": "de",
+        "12": "de",
+        "13": "de",
+        "14": "de",
+        "15": "de",
+        "16": "de",
+        "17": "de",
+        "18": "de",
+        "19": "de",
+        "20": "ste",
+        "21": "ste",
+        "22": "ste",
+        "23": "ste",
+        "24": "ste",
+        "25": "ste",
+        "26": "ste",
+        "27": "ste",
+        "28": "ste",
+        "29": "ste",
+        "30": "ste",
+        "31": "ste",
+        "default": "ste"
+      }
     }
   },
   "global":{
@@ -123,16 +159,16 @@
     "monitoring": "Bewaking",
     "processmonitoring": "Monitoring processus",
     "logout": "Uitloggen",
-    "changePassword": "Wachtwoord wijzigen",
+    "changepassword": "Wachtwoord wijzigen",
     "settings": "Instellingen",
-    "feedConfiguration": "Notificatie configuratie",
+    "feedconfiguration": "Notificatie configuratie",
     "about": "Over",
     "usercard": "Kaart maken",
     "switchToNightMode": "Nacht modus",
     "switchToDayMode": "Dag modus",
-    "realTimeUsers": "Realtime gebruikers",
-    "externalDevicesConfiguration": "Extern apparaat configuratie",
-    "activityArea": "Activiteitengebied",
+    "realtimeusers": "Realtime gebruikers",
+    "externaldevicesconfiguration": "Extern apparaat configuratie",
+    "activityarea": "Activiteitengebied",
     "useractionlogs": "Logboek",
     "newcardTooltip": "Maak een nieuwe kaart",
     "calendarTooltip": "Kalender" 
@@ -194,6 +230,9 @@
       },
       "applyFiltersToTimeLine" : {
         "label" : "Filters toepassen op tijdlijn"
+      },
+      "process": {
+        "label": "Proces"
       }
     },
     "sort": {
@@ -210,7 +249,8 @@
       "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
       "loadingInProgress": "Kaart wordt geladen",
       "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
-      "expirationDate": "Vervaldatum"
+      "expirationDate": "Vervaldatum",
+      "seeGeolocation": "Zie geolocatie"
     },
     "acknowledgeAllCards": {
       "label": "Bevestig alle kaarten",
@@ -281,7 +321,8 @@
     "systemNotificationCompliant": "Conform",
     "systemNotificationInformation": "Informatie",
     "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
-    "sendCardsByEmail" : "Kaartmeldingen per e-mail versturen",
+    "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
+    "emailToPlainText": "De e-mails versturen in platte tekst",
     "email": "Email"
   },
   "archive": {
@@ -317,7 +358,8 @@
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",
     "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
-    "savingInProgress": "aan het opslaan..."
+    "savingInProgress": "aan het opslaan...",
+    "noAreaAvailable": "Geen activiteitengebied beschikbaar"
   },
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE",
@@ -423,12 +465,18 @@
         "description": "OMSCHRIJVING",
         "labels": "LABELS",
         "users": "GEBRUIKERS",
-        "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
         "confirmDelete": "Wilt u de entiteit echt verwijderen",
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
         "true": "JA",
         "false": "NEE",
-        "addLabel": "Voeg label toe"
+        "addLabel": "Voeg label toe",
+        "roles": "ROLLEN",
+        "roleValues": {
+          "ACTIVITY_AREA": "Activiteitengebied",
+          "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
+          "CARD_SENDER": "Kaartverzender",
+          "CARD_RECEIVER": "Kaartontvanger"
+        }
       },
       "perimeter": {
         "id": "ID",
@@ -633,17 +681,19 @@
     },
     "messageUserCard": {
       "noMessageError":"U moet een bericht opgeven",
+      "messageTitleLabel": "BERICHT TITEL",
       "textareaLabel":"BERICHT"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "ANTWOORD",
-      "responsesReceivedLabel":"Ontvangen reacties :",
-      "entityColumnLabel":"Entiteit",
-      "responseColumnLabel":"Antwoord"
+      "responsesReceivedLabel": "Ontvangen reacties :",
+      "entityColumnLabel": "Entiteit",
+      "responseColumnLabel": "Antwoord",
+      "dateColumnLabel": "Datum"
     },
     "questionUserCard": {
-      "noQuestionError":"U moet een vraag opgeven",
-      "textareaLabel":"VRAAG"
+      "noQuestionError": "U moet een vraag opgeven",
+      "textareaLabel": "VRAAG"
     },
     "taskCard": {
       "taskToDo": "U heeft de volgende taak te doen",
@@ -659,11 +709,13 @@
       "on": "op",
       "firstDayOfTheMonth": "De eerste dag van de maand",
       "lastDayOfTheMonth": "De laatste dag van de maand",
+      "daysBeforeEndOfTheMonth": "dagen voor het einde van de maand",
       "dayOfTheMonth": "dag van de maand",
       "in": "in"
    },
     "taskUserCard": {
-      "taskDescriptionLabel": "TAAKBESCHRIJVING",
+      "taskTitleLabel": "TAAK TITEL",
+      "taskDescriptionLabel": "TAAK BESCHRIJVING",
       "dailyFreq": "Dagelijkse frequentie",
       "monthlyFreq": "Maandelijkse frequentie",
       "Repeat": "HERHAAL ELKE",
@@ -683,7 +735,8 @@
       "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
       "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
       "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
-      "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven."
+      "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven.",
+      "the": "De"
     },
     "message-or-question-listCard": {
       "answers": "Antwoorden",
@@ -696,9 +749,19 @@
     },
     "message-or-question-listUserCard": {
       "titleLabel": "TITEL",
+      "summaryLabel": "OVERZICHT",
       "messageLabel": "BERICHT",
       "emptyMessage": "U kunt geen leeg bericht verzenden"
     }
 
+  },
+  "devtools": {
+    "richTextComposer": {
+      "title": "RIJKE TEKST CONVERTER",
+      "richTextEditor": "RIJKE TEKST",
+      "convert": "Converteer",
+      "result": "CONVERSIERESULTAAT",
+      "copy": "Kopiëren naar klembord"
+    }
   }
 }

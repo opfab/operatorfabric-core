@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,10 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {AngularServer} from './angular.server';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
 
-
 @Injectable({
     providedIn: 'root'
 })
-export class AngularSupervisedEntitiesServer extends AngularServer implements SupervisedEntitiesServer{
+export class AngularSupervisedEntitiesServer extends AngularServer implements SupervisedEntitiesServer {
     readonly supervisedEntitiesUrl: string;
     protected _entities: SupervisedEntity[];
     /**
@@ -38,10 +37,12 @@ export class AngularSupervisedEntitiesServer extends AngularServer implements Su
     }
 
     queryAllSupervisedEntities(): Observable<ServerResponse<SupervisedEntity[]>> {
-        return this.processHttpResponse(this.httpClient.get<SupervisedEntity[]>(`${this.supervisedEntitiesUrl}`))
+        return this.processHttpResponse(this.httpClient.get<SupervisedEntity[]>(`${this.supervisedEntitiesUrl}`));
     }
 
     updateSupervisedEntity(supervisedEntityData: SupervisedEntity): Observable<ServerResponse<SupervisedEntity>> {
-        return this.processHttpResponse(this.httpClient.post<SupervisedEntity>(`${this.supervisedEntitiesUrl}`, supervisedEntityData))
+        return this.processHttpResponse(
+            this.httpClient.post<SupervisedEntity>(`${this.supervisedEntitiesUrl}`, supervisedEntityData)
+        );
     }
 }

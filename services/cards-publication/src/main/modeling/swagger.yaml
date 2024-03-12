@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 4.1.0.RELEASE
+  version: 4.2.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -37,10 +37,14 @@ definitions:
       * ADD - Operation lists cards object to be added
       * UPDATE - Operation lists cards object to be updated
       * DELETE - Operation lists card ids to be deleted
+      * ACK - Operation lists card ids to be acknowledged
+      * UNACK - Operation lists card ids to be unacknowledged
     enum:
       - ADD
       - UPDATE
       - DELETE
+      - ACK
+      - UNACK
     example: ADD
   SeverityEnum:
     type: string
@@ -191,6 +195,7 @@ definitions:
       durationInMinutes:
         description: Duration in minutes of the event
         type: integer
+        minimum: 0
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -229,6 +234,7 @@ definitions:
       durationInMinutes:
         description: Duration in minutes of the event
         type: integer
+        minimum: 0
     required:
       - hoursAndMinutes
   HoursAndMinutes:
@@ -239,6 +245,16 @@ definitions:
         type: integer
       minutes:
         type: integer
+  CardActionEnum:
+    type: string
+    description: |-
+      Defines the action to be executed on card reception >
+      * PROPAGATE_READ_ACK_TO_PARENT_CARD
+      * KEEP_CHILD_CARDS
+    enum:
+      - PROPAGATE_READ_ACK_TO_PARENT_CARD
+      - KEEP_CHILD_CARDS
+    example: PROPAGATE_READ_ACK_TO_PARENT_CARD
   Card:
     type: object
     description: >-
@@ -263,7 +279,7 @@ definitions:
         readOnly: true
       keepChildCards:
         type: boolean
-        description: Is true if OperatorFabric must not delete child cards when their parent card is updated
+        description: Is true if OperatorFabric must not delete child cards when their parent card is updated (deprecated).  Use 'actions' field including 'KEEP_CHILD_CARDS' action instead
       publisher:
         type: string
         description: Unique ID of the entity or service publishing the card
@@ -404,9 +420,14 @@ definitions:
         description: Contains projection ex. 'EPSG:4326'
       secondsBeforeTimeSpanForReminder:
         type: integer
+        minimum: 0
       toNotify:
         type: boolean
         description: Is false if the card must not be displayed in the feed and in monitoring screen
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/CardActionEnum'
     required:
       - publisher
       - process
@@ -871,7 +892,7 @@ paths:
           description: rate limiter reset
         '400':
           description: bad request
-  /logs :
+  /logs:
     post:
       summary: sends remote logs
       produces:
@@ -1071,9 +1092,10 @@ paths:
       - in: body
         name: entitiesAcks
         description: List of user entities for which the card will be acknowledged
-        type: array
-        items:
-          type: string
+        schema:
+          type: array
+          items:
+            type: string
     post:
       operationId: postUserAcknowledgement
       tags:
@@ -1089,7 +1111,21 @@ paths:
           description: No action done, the item already exists
         '404':
           description: Try to remove item from unexisting card
-    delete:
+  '/cards/cancelUserAcknowledgement/{uid}':
+    parameters:
+      - in: path
+        name: uid
+        type: string
+        required: true
+        description: "The card uid"
+      - in: body
+        name: entitiesAcks
+        description: List of user entities for which the card will be acknowledged
+        schema:
+          type: array
+          items:
+            type: string
+    post:
       operationId: deleteUserAcknowledgement
       tags:
         - cards

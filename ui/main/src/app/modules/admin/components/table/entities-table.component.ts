@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         new Field('id', 3, 'idCellRenderer'),
         new Field('name', 3),
         new Field('description', 5),
-        new Field('entityAllowedToSendCard', 4, null, this.translateValue, 'entityAllowedToSendCardColumn'),
+        new Field('roles', 4, 'roleCellRenderer', null, 'rolesColumn'),
         new Field('parents', 5, 'entityCellRenderer', null, 'parentsColumn')
     ];
     idField = 'id';
@@ -34,9 +34,8 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
     editModalComponent = EditEntityModalComponent;
 
     ngOnInit() {
-        this.gridOptions.columnTypes['entityAllowedToSendCardColumn'] = {
-            sortable: true,
-            filter: 'agTextColumnFilter',
+        this.gridOptions.columnTypes['rolesColumn'] = {
+            sortable: false,
             wrapText: true,
             autoHeight: true,
             flex: 4
@@ -60,8 +59,9 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
-        super.ngOnInit();
+        super.initCrudService();
     }
 }

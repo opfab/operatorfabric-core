@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.opfab.users.model.Entity;
-import org.opfab.users.model.EntityData;
 import org.opfab.users.repositories.EntityRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,23 +26,23 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     public List<Entity> findAll() {
-        return mongoEntityRepository.findAll().stream().map(Entity.class::cast).toList();
+        return mongoEntityRepository.findAll();
     }
 
     public Entity insert(Entity entity) {
-        return mongoEntityRepository.insert((EntityData) entity);
+        return mongoEntityRepository.insert(entity);
     }
 
     public Entity save(Entity entity) {
-        return mongoEntityRepository.save((EntityData) entity);
+        return mongoEntityRepository.save(entity);
     }
 
     public Optional<Entity> findById(String id) {
-        return mongoEntityRepository.findById(id).map(Entity.class::cast);
+        return mongoEntityRepository.findById(id);
     }
 
     public void delete(Entity entity) {
-        mongoEntityRepository.delete((EntityData) entity);
+        mongoEntityRepository.delete(entity);
     }
 
     public void deleteAll() {
@@ -51,7 +50,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     public List<Entity> findByParentsContaining(String entityId) {
-        return mongoEntityRepository.findByParentsContaining(entityId).stream().map(Entity.class::cast).toList();
+        return mongoEntityRepository.findByParentsContaining(entityId);
     }
 
 }

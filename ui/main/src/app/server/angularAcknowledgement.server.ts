@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,23 +20,21 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 })
 export class AngularAcknowledgeServer extends AngularServer implements AcknowledgeServer {
     readonly userAckUrl: string;
+    readonly cancelUserAckUrl: string;
 
-    constructor(
-        private httpClient: HttpClient,
-    ) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.userAckUrl = `${environment.url}/cardspub/cards/userAcknowledgement`;
+        this.cancelUserAckUrl = `${environment.url}/cardspub/cards/cancelUserAcknowledgement`;
     }
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
+        return this.processHttpResponse(this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks));
+    }
+
+    deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
         return this.processHttpResponse(
-            this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks)
-            );
+            this.httpClient.post<void>(`${this.cancelUserAckUrl}/${cardUid}`, entitiesAcks)
+        );
     }
-
-    deleteUserAcknowledgement(cardUid: string): Observable<ServerResponse<void>> {
-        return this.processHttpResponse(this.httpClient.delete<void>(`${this.userAckUrl}/${cardUid}`));
-    }
-
-
 }

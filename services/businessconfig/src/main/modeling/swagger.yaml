@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 4.1.0.RELEASE
+  version: 4.2.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -581,6 +581,10 @@ definitions:
               description: >-
                 Name of the template to use
               type: string
+            emailBodyTemplate:
+              description: >-
+                Name of the template to use for the body of the associated email
+              type: string
             styles:
               description: >-
                 Name of the css files to apply
@@ -766,14 +770,6 @@ definitions:
   ScreenColumn:
     properties:
       entitiesGroups:
-        type: array
-        items:
-          $ref: '#/definitions/EntitiesGroups'
-  EntitiesGroups:
-    properties:
-      name:
-        type: string
-      entities:
         type: array
         items:
           type: string

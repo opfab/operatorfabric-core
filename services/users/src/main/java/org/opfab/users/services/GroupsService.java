@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@ import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.User;
-import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -121,7 +120,7 @@ public class GroupsService {
         List<User> foundUsers = userRepository.findByGroupSetContaining(idGroup);
         if (foundUsers != null && !foundUsers.isEmpty()) {
             for (User userData : foundUsers) {
-                ((UserData) userData).deleteGroup(idGroup);
+                userData.deleteGroup(idGroup);
                 userRepository.save(userData);
                 notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
@@ -137,7 +136,7 @@ public class GroupsService {
         if (foundUsersResult.isSuccess()) {
             List<User> foundUsers = foundUsersResult.getResult();
             for (User userData : foundUsers) {
-                ((UserData) userData).addGroup(groupId);
+                userData.addGroup(groupId);
                 userRepository.save(userData);
                 notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
@@ -156,7 +155,7 @@ public class GroupsService {
             List<User> formerlyBelongs = userRepository.findByGroupSetContaining(groupId);
             formerlyBelongs.forEach(user -> {
                 if (!users.contains(user.getLogin())) {
-                    ((UserData)user).deleteGroup(groupId);
+                    user.deleteGroup(groupId);
                     userRepository.save(user);
                     notificationService.publishUpdatedUserMessage(user.getLogin());
                 }
@@ -208,7 +207,7 @@ public class GroupsService {
                     String.format(USER_NOT_FOUND_MSG, login));
         }
 
-        ((UserData) foundUser.get()).deleteGroup(groupId);
+        foundUser.get().deleteGroup(groupId);
         userRepository.save(foundUser.get());
         notificationService.publishUpdatedUserMessage(foundUser.get().getLogin());
 

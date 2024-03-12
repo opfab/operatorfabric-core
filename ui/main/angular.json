@@ -41,8 +41,6 @@
             "scripts": [
               "node_modules/virtual-select-plugin/dist/virtual-select.min.js",
               "node_modules/tooltip-plugin/dist/tooltip.min.js",
-              "src/assets/js/templateGateway.js",
-              "src/assets/js/usercardTemplateGateway.js",
               "node_modules/chart.js/dist/chart.umd.js",
               "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
               "src/assets/js/opfab.js",
@@ -141,8 +139,6 @@
               "src/shared/css/opfab-application.css"
             ],
             "scripts": [
-              "src/assets/js/templateGateway.js",
-              "src/assets/js/usercardTemplateGateway.js",
               "src/assets/js/opfab.js",
               "src/shared/js/opfab-application.js"
             ],
@@ -157,6 +153,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
+              "src/**/*.js",
               "src/**/*.ts",
               "src/**/*.html"
             ]

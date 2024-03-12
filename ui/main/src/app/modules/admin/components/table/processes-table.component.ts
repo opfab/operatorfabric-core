@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,11 +22,18 @@ import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 export class ProcessesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PROCESS;
     fields = [
-        new Field('id', 6, 'idCellRenderer'), 
-        new Field('name', 6, null), 
-        new Field('version', 6, null)
+        new Field('id', 6, 'idCellRenderer'),
+        new Field('name', 6, null),
+        new Field('version', 6, null, null, 'versionColumn')
     ];
     idField = 'id';
     showAddButton = false;
     actionButtonsDisplayed = [ActionButton.DELETE];
+
+    ngOnInit() {
+        this.gridOptions.columnTypes['versionColumn'] = {
+            resizable: false
+        };
+        super.initCrudService();
+    }
 }

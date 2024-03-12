@@ -1,134 +1,17 @@
+<!-- Copyright (c) 2024, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 <div id="apogee-contingencies">
     <input type="text" id="inputContingencies" onkeyup="findContingenciesAndConstraints()"
            placeholder="Search defaults ..">
     <input type="text" id="inputConstraints" onkeyup="findContingenciesAndConstraints()"
            placeholder="Search constraints..">
     <br/>
-
-    {{#if card.data.networkLimitViolationsN }}
-        <div>
-
-            <button class="accordion">Constraints in N</button>
-
-            <div class="panel" style="display:block">
-                <br>
-                <table class="darkTable">
-                    <thead>
-                    </tr>
-                    <th style="width:440px">Constraints</th>
-                    {{#card.data.networkLimitViolationsN.0.networkContexts}}
-
-                        <th style="width:100px">
-
-                            <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
-                                <span class="tooltiptext">
-                          Type:  {{detail.type}} <br/>
-                          Computation date: {{dateFormat detail.computationDate format="HH:mm"}} <br/>
-                          Network date :{{dateFormat date format="HH:mm"}} <br/>
-                       </span>
-                            </div>
-                        </th>
-
-                    {{/card.data.networkLimitViolationsN.0.networkContexts}}
-
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-                    {{#card.data.networkLimitViolationsN}}
-
-                        <tr>
-                            <td style="width:440px">
-                                {{name}} {{#if detail.cDisplayExists}} ({{detail.constraintDisplayLabel}}) {{else}}
-                                ({{detail.constraintDisplayLabel}} {{detail.acceptableDuration}} {{#if detail.acceptableDuration }} s {{/if }}) {{/if}}
-                            </td>
-
-                            {{#values}}
-
-                                <td style="width:100px">
-                                    <div class="tooltipApogee" {{#if detail.worstConstraint}} style="font-weight:bold" {{/if }}>  {{#if value}} {{value}} {{/if}}
-                                        <table class="tooltiptext">
-
-                                            <tr>
-                                                <td>Asset</td>
-                                                <td>{{../name}}</td>
-                                            </tr>
-
-                                            {{#if detail.cDisplayExistsValue}}
-                                               <tr>
-                                                  <td>Constraint</td>
-                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} </td>
-                                               </tr>
-                                             {{else}}
-                                                <tr>
-                                                  <td>Constraint</td>
-                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} {{ detail.acceptableDurationValue}} {{#if detail.acceptableDurationValue}} s {{/if}}
-                                                   </td>
-                                                </tr>
-                                            {{/if}}
-
-                                            {{#if detail.sideValue}}
-                                                <tr>
-                                                    <td>Side</td>
-                                                    {{#if (bool detail.sideValue '==' 'ONE')}}
-                                                        <td>Origin</td>
-                                                    {{else}}
-                                                        <td>Extremity</td>
-                                                    {{/if}}
-                                                    <td/>
-                                                </tr>
-                                            {{/if}}
-
-                                            {{#if detail.limit}}
-                                                <tr>
-                                                    <td>Limit</td>
-                                                    <td>{{numberFormat detail.limit maximumFractionDigits="0"}} A</td>
-                                                    <td/>
-                                                </tr>
-                                            {{/if}}
-
-                                            {{#if detail.preValue}}
-                                                <tr>
-                                                    <td> Pre-default value</td>
-                                                    <td>{{numberFormat detail.preValue maximumFractionDigits="0"}} A</td>
-                                                    {{#if detail.preValueMw}}
-                                                        <td>{{numberFormat detail.preValueMw maximumFractionDigits="0"}} MW</td>
-                                                    {{else}}
-                                                        <td/>
-                                                    {{/if}}
-                                                </tr>
-                                            {{/if}}
-
-                                            {{#if detail.value}}
-                                                <tr>
-                                                    <td>Value</td>
-                                                    <td>{{numberFormat detail.value maximumFractionDigits="0"}} A</td>
-                                                    {{#if detail.valueMw}}
-                                                        <td>{{numberFormat detail.valueMw maximumFractionDigits="0"}} MW</td>
-                                                    {{else}}
-                                                        <td/>
-                                                    {{/if}}
-                                                </tr>
-                                            {{/if}}
-
-                                        </table>
-                                    </div>
-
-                                </td>
-                            {{/values}}
-                        </tr>
-                    {{/card.data.networkLimitViolationsN}}
-
-                    </tbody>
-
-                </table>
-                <br>
-            </div>
-            <br/>
-        </div>
-    {{/if }}
-
 
     {{#card.data.networkContingencies}}
 
@@ -150,10 +33,10 @@
                             <th style="width:100px">
                                 <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
                                     <span class="tooltiptext">
-                          Type:  {{detail.type}} <br/>
-                          Computation date: {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
-                          Network date :{{dateFormat date format="HH:mm"}} <br/>
-                        </span>
+                                        Type:  {{detail.type}} <br/>
+                                        Computation date: {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
+                                        Network date: {{dateFormat date format="HH:mm"}} <br/>
+                                    </span>
                                 </div>
                             </th>
 
@@ -268,10 +151,10 @@
                                 <th>
                                     <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
                                         <span class="tooltiptext">
-                     Type:  {{detail.type}} <br/>
-                     Computing date : {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
-                         Network  date :{{dateFormat   date   format="HH:mm"}} <br/>
-                   </span>
+                                            Type:  {{detail.type}} <br/>
+                                            Computing date : {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
+                                            Network  date :{{dateFormat   date   format="HH:mm"}} <br/>
+                                        </span>
                                     </div>
                                 </th>
                             {{/networkLimitViolations.0.networkContexts}}

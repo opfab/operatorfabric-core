@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -142,8 +142,8 @@ describe('AdmininstrationPages', () => {
         // Check first page has 10 rows
         agGrid.countTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 15 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 15');
+        // Pagination should display ' Results number  : 16 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
 
         // Add new entity
         cy.get('#add-item').click();
@@ -165,9 +165,11 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type('entity description');
 
-        cy.get('#opfab-entity-allowed-to-send-card').check({force: true});
-
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+
+        cy.get('#opfab-roles').click();
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
+        cy.get('#opfab-roles').click();
 
         cy.get('#opfab-parents').click();
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
@@ -181,16 +183,15 @@ describe('AdmininstrationPages', () => {
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        agGrid.countTableRows('ag-grid-angular', 6);
+        agGrid.countTableRows('ag-grid-angular', 7);
 
-        agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
-        agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name');
-        agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description');
-        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'be.checked');
-        agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR North');
+        agGrid.cellShould('ag-grid-angular', 6, 0, 'have.text', 'entityId');
+        agGrid.cellShould('ag-grid-angular', 6, 1, 'have.text', 'entity name');
+        agGrid.cellShould('ag-grid-angular', 6, 2, 'have.text', 'entity description');
+        agGrid.cellShould('ag-grid-angular', 6, 4, 'have.text', 'Control Center FR North');
 
         // Edit previously created entity
-        agGrid.clickCell('ag-grid-angular', 5, 5, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 6, 5, 'of-action-cell-renderer');
 
         cy.get('of-edit-entity-modal').should('exist');
 
@@ -204,8 +205,12 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type(' updated');
 
-        cy.get('#opfab-entity-allowed-to-send-card').should('be.checked');
-        cy.get('#opfab-entity-allowed-to-send-card').uncheck({force: true});
+        cy.get('#opfab-roles').click();
+        // Deselect old parents
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
+        // Select new parent
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-roles').click();
 
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
@@ -229,20 +234,19 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-entity-btn-save').click();
 
         // Check entity is updated
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        agGrid.countTableRows('ag-grid-angular', 6);
+        agGrid.countTableRows('ag-grid-angular', 7);
 
-        agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
-        agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name updated');
-        agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description updated');
-        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'not.be.checked');
-        agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR South');
+        agGrid.cellShould('ag-grid-angular', 6, 0, 'have.text', 'entityId');
+        agGrid.cellShould('ag-grid-angular', 6, 1, 'have.text', 'entity name updated');
+        agGrid.cellShould('ag-grid-angular', 6, 2, 'have.text', 'entity description updated');
+        agGrid.cellShould('ag-grid-angular', 6, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created entity
-        agGrid.clickCell('ag-grid-angular', 5, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 6, 6, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -251,9 +255,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check entity was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 15');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
 
-        agGrid.countTableRows('ag-grid-angular', 5);
+        agGrid.countTableRows('ag-grid-angular', 6);
 
         // Edit ENTITY2_FR entity to check users list
         cy.get('ngb-pagination').find('.page-link').eq(1).click();
@@ -629,7 +633,11 @@ describe('AdmininstrationPages', () => {
     describe('Check export files', function () {
 
 
-        beforeEach('Clean export directory', function () {
+        before('Clean export directory', function () {
+            script.cleanDownloadsDir();
+        });
+
+        afterEach('Clean export directory', function () {
             script.cleanDownloadsDir();
         });
 
@@ -683,7 +691,7 @@ describe('AdmininstrationPages', () => {
             cy.get('#opfab-tabs').find('li').eq(1).click();
 
             // Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 15');
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
 
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -698,18 +706,16 @@ describe('AdmininstrationPages', () => {
                 expect(files[0]).to.match(/^entity_export_\d*\.xlsx/);
                 // check file content
                 cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
-                    expect(rows.length).to.equal(15);
+                    expect(rows.length).to.equal(16);
 
                     expect(rows[0].ID).to.equal('ENTITY1_FR');
                     expect(rows[0].NAME).to.equal('Control Center FR North');
                     expect(rows[0].DESCRIPTION).to.equal('Control Center FR North');
-                    expect(rows[0]['CARD SENDING ALLOWED']).to.equal('YES');
                     expect(rows[0]['PARENT ENTITIES']).to.equal('French Control Centers');
 
                     expect(rows[4].ID).to.equal('ENTITY_FR');
                     expect(rows[4].NAME).to.equal('French Control Centers');
                     expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
-                    expect(rows[4]['CARD SENDING ALLOWED']).to.equal('NO');
                     expect(rows[4]['PARENT ENTITIES']).to.be.undefined;
                 })
             })

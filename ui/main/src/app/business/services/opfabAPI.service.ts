@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,34 +7,33 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {BusinessDataService} from './businessconfig/businessdata.service';
 import {TranslationService} from './translation/translation.service';
 import {EntitiesService} from './users/entities.service';
 
 declare const opfab: any;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class OpfabAPIService {
-    public currentCard;
-    public currentUserCard;
+    public static currentCard;
+    public static currentUserCard;
 
-    public templateInterface: any;
-    public userCardTemplateInterface: any;
+    public static templateInterface: any;
+    public static userCardTemplateInterface: any;
 
+    private static translationService: TranslationService;
 
-    constructor(
-        private translationService: TranslationService
-    ) {
-        this.initCurrentCard();
-        this.initCurrentUserCard();
+    public static setTranslationService(translationService: TranslationService) {
+        OpfabAPIService.translationService = translationService;
     }
 
-    public initCurrentCard() {
+    public static init() {
+        OpfabAPIService.initCurrentCard();
+        OpfabAPIService.initCurrentUserCard();
+    }
+
+    public static initCurrentCard() {
         const self = this;
-        this.currentCard = {
+        OpfabAPIService.currentCard = {
             card: null,
             childCards: [],
             isUserAllowedToRespond: false,
@@ -52,8 +51,8 @@ export class OpfabAPIService {
         };
     }
 
-    public initCurrentUserCard() {
-        this.currentUserCard = {
+    public static initCurrentUserCard() {
+        OpfabAPIService.currentUserCard = {
             editionMode: null,
             endDate: null,
             expirationDate: null,
@@ -74,8 +73,8 @@ export class OpfabAPIService {
         };
     }
 
-    public initTemplateInterface() {
-        this.templateInterface = {
+    public static initTemplateInterface() {
+        OpfabAPIService.templateInterface = {
             lockAnswer: function () {},
             unlockAnswer: function () {},
             // OpFab calls this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
@@ -105,8 +104,8 @@ export class OpfabAPIService {
         };
     }
 
-    public initUserCardTemplateInterface() {
-        this.userCardTemplateInterface = {
+    public static initUserCardTemplateInterface() {
+        OpfabAPIService.userCardTemplateInterface = {
             setEntityUsedForSendingCard: function (senderEntity) {},
 
             getSpecificCardInformation: function () {
@@ -119,14 +118,13 @@ export class OpfabAPIService {
         };
     }
 
-    public initAPI() {
-        const self = this;
+    public static initAPI() {
         opfab.businessconfig.businessData.get = async function (resourceName) {
             const resource = await BusinessDataService.getBusinessData(resourceName);
             return resource;
         };
 
-        opfab.navigate.redirectToBusinessMenu = function (menuId, menuItemId, urlExtension) {
+        opfab.navigate.redirectToBusinessMenu = function (menuId, urlExtension) {
             const urlSplit = document.location.href.split('#');
             // WARNING : HACK
             //
@@ -138,28 +136,22 @@ export class OpfabAPIService {
             //
             // To solve the problem we encode two times the url before giving it to the browser
             // so we always have a unique case : a double encoded url
-            let newUrl =
-                urlSplit[0] +
-                '#/businessconfigparty/' +
-                encodeURIComponent(encodeURIComponent(menuId)) +
-                '/' +
-                encodeURIComponent(encodeURIComponent(menuItemId)) +
-                '/';
+            let newUrl = urlSplit[0] + '#/businessconfigparty/' + encodeURIComponent(encodeURIComponent(menuId)) + '/';
 
             if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
             document.location.href = newUrl;
         };
 
         opfab.utils.getTranslation = function (key, params) {
-            return self.translationService.getTranslation(key, params);
+            return OpfabAPIService.translationService.getTranslation(key, params);
         };
 
-        this.initUserApi();
-        this.initCurrentCardApi();
-        this.initCurrentUserCardApi();
+        OpfabAPIService.initUserApi();
+        OpfabAPIService.initCurrentCardApi();
+        OpfabAPIService.initCurrentUserCardApi();
     }
 
-    private initUserApi() {
+    private static initUserApi() {
         opfab.users.entities.getEntityName = function (entityId: string) {
             return EntitiesService.getEntityName(entityId);
         };
@@ -178,7 +170,7 @@ export class OpfabAPIService {
         Object.freeze(opfab.users);
     }
 
-    private initCurrentCardApi() {
+    private static initCurrentCardApi() {
         const self = this;
 
         opfab.currentCard.displayLoadingSpinner = function () {
@@ -203,7 +195,8 @@ export class OpfabAPIService {
             return self.currentCard.entitiesAllowedToRespond;
         };
         opfab.currentCard.getEntityUsedForUserResponse = function () {
-            console.warn(new Date().toISOString(),
+            console.warn(
+                new Date().toISOString(),
                 ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
             );
             return self.currentCard.entityUsedForUserResponse;
@@ -264,7 +257,7 @@ export class OpfabAPIService {
         Object.freeze(opfab.currentCard);
     }
 
-    private initCurrentUserCardApi() {
+    private static initCurrentUserCardApi() {
         const self = this;
 
         opfab.currentUserCard.getEditionMode = function () {

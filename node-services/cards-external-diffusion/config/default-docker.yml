@@ -5,10 +5,13 @@ operatorfabric:
     port: 5672
     username: guest
     password: guest
+  mongodb:
+    database: "operator-fabric"
   servicesUrls:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsConsultation: "http://cards-consultation:2104"
+    businessconfig: "http://businessconfig:2100"
   internalAccount:
     login: opfab
   logConfig:
@@ -25,3 +28,6 @@ operatorfabric:
       windowInSecondsForCardSearch: 360
       secondsAfterPublicationToConsiderCardAsNotRead: 60
       checkPeriodInSeconds: 10
+      activateCardsDiffusionRateLimiter: true
+      sendRateLimit: 100
+      sendRateLimitPeriodInSec : 3600

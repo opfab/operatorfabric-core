@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,12 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
-import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.UserSettings;
-import org.opfab.users.model.UserSettingsData;
 import org.opfab.users.stubs.UserRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
 import org.opfab.users.stubs.UserSettingsRepositoryStub;
@@ -47,10 +44,15 @@ public class UserSettingsServiceShould {
         void clear() {
                 userSettingsRepositoryStub.deleteAll();
                 userRepositoryStub.deleteAll();
-                UserSettings settings1 = UserSettingsData.builder().login("user1").locale("fr")
-                                .build();
-                UserSettings settings2 = UserSettingsData.builder().login("user2").locale("fr")
-                                .build();
+                UserSettings settings1 = new UserSettings();
+                settings1.setLogin("user1");
+                settings1.setLocale("fr");
+                settings1.setProcessesStatesNotNotified(new HashMap<>());
+
+                UserSettings settings2 = new UserSettings();
+                settings2.setLogin("user2");
+                settings2.setLocale("fr");
+
                 userSettingsRepositoryStub.save(settings1);
                 userSettingsRepositoryStub.save(settings2);
 
@@ -64,19 +66,19 @@ public class UserSettingsServiceShould {
         private void initPerimetersPerUsers() {
                 usersServiceStub.clearPerimetersPerUser();
 
-                StateRight stateRight1 = new StateRightData();
+                StateRight stateRight1 = new StateRight();
                 stateRight1.setState("state1");
-                stateRight1.setRight(RightsEnum.RECEIVE);
-                StateRight stateRight2 = new StateRightData();
+                stateRight1.setRight(RightsEnum.Receive);
+                StateRight stateRight2 = new StateRight();
                 stateRight2.setState("state2");
-                stateRight2.setRight(RightsEnum.RECEIVEANDWRITE);
+                stateRight2.setRight(RightsEnum.ReceiveAndWrite);
                 stateRight2.setFilteringNotificationAllowed(true);
-                StateRight stateRightNotFilterable = new StateRightData();
+                StateRight stateRightNotFilterable = new StateRight();
                 stateRightNotFilterable.setState("stateRightNotFilterable");
-                stateRightNotFilterable.setRight(RightsEnum.RECEIVE);
+                stateRightNotFilterable.setRight(RightsEnum.Receive);
                 stateRightNotFilterable.setFilteringNotificationAllowed(false);
 
-                PerimeterData perimeter1 = new PerimeterData();
+                Perimeter perimeter1 = new Perimeter();
                 perimeter1.setId("perimeter1");
                 perimeter1.setProcess("process1");
                 List<StateRight> stateRights1 = new ArrayList<>();
@@ -84,7 +86,7 @@ public class UserSettingsServiceShould {
                 stateRights1.add(stateRight2);
                 perimeter1.setStateRights(stateRights1);
 
-                PerimeterData perimeter2 = new PerimeterData();
+                Perimeter perimeter2 = new Perimeter();
                 List<StateRight> stateRights3 = new ArrayList<>();
                 stateRights3.add(stateRight1);
                 stateRights3.add(stateRight2);
@@ -127,9 +129,10 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_Settings_THEN_Settings_Are_Updated() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                        .locale("newLocale")
-                                        .build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -142,9 +145,10 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_None_Existing_Settings_WHEN_Patch_Settings_THEN_Settings_Are_Created() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user3")
-                                        .locale("nl")
-                                        .build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user3");
+                        newSettings.setLocale("nl");
+
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user3",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -157,8 +161,10 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Patch_With_Filtering_Notification_THEN_Settings_Are_Updated() {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -175,8 +181,10 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Patch_With_Filtering_Notification_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -190,8 +198,10 @@ public class UserSettingsServiceShould {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
                         processesStatesNotNotified.put("process2", Arrays.asList("stateRightNotFilterable"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isFalse();
@@ -208,8 +218,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_With_SendCardsByEmail_THEN_Settings_Are_Updated() {
                         boolean sendCardsByEmail = true;
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .sendCardsByEmail(sendCardsByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setSendCardsByEmail(sendCardsByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -222,8 +233,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_With_SendCardsByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         boolean sendCardsByEmail = true;
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .sendCardsByEmail(sendCardsByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setSendCardsByEmail(sendCardsByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -234,8 +246,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_Settings_Are_Updated() {
                         String email = "john.doe@test.com";
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .email(email).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setEmail(email);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -248,8 +261,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         String email = "john.doe@test.com";
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .email(email).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setEmail(email);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -261,8 +275,9 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Patch_With_ProcessesStatesNotifiedByEmail_THEN_Settings_Are_Updated() {
                         Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
                         processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setProcessesStatesNotifiedByEmail(processesStatesNotifiedByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -278,8 +293,9 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Patch_With_ProcessesStatesNotifiedByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
                         processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setProcessesStatesNotifiedByEmail(processesStatesNotifiedByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -295,8 +311,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_Settings_THEN_Settings_Are_Updated() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -309,9 +326,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_None_Existing_Settings_WHEN_Update_Settings_THEN_Settings_Are_Created() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user3")
-                                        .locale("nl")
-                                        .build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user3");
+                        newSettings.setLocale("nl");
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user3",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -323,8 +340,10 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Update_With_Filtering_Notification_THEN_Settings_Are_Updated() {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -341,8 +360,10 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Update_With_Filtering_Notification_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -353,8 +374,9 @@ public class UserSettingsServiceShould {
 
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_With_No_Filtering_Notification_THEN_A_Notification_Is_Sent_To_Other_Services() {
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",newSettings);
                         assertThat(settings.isSuccess()).isTrue();
                         String[] expectedMessageSent1 = { "user", "user1" };
@@ -367,8 +389,10 @@ public class UserSettingsServiceShould {
                         Map<String, List<String>> processesStatesNotNotified = new HashMap<String, List<String>>();
                         processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
                         processesStatesNotNotified.put("process2", Arrays.asList("stateRightNotFilterable"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                        .processesStatesNotNotified(processesStatesNotNotified).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isFalse();
@@ -384,8 +408,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_With_SendCardsByEmail_THEN_Settings_Are_Updated() {
                         boolean sendCardsByEmail = true;
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .sendCardsByEmail(sendCardsByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setSendCardsByEmail(sendCardsByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -397,8 +422,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_With_SendCardsByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         boolean sendCardsByEmail = true;
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .sendCardsByEmail(sendCardsByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setSendCardsByEmail(sendCardsByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -409,8 +435,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_Settings_Are_Updated() {
                         String email = "john.doe@test.com";
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .email(email).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setEmail(email);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -422,8 +449,9 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         String email = "john.doe@test.com";
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .email(email).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setEmail(email);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -435,8 +463,9 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Update_With_ProcessesStatesNotifiedByEmail_THEN_Settings_Are_Updated() {
                         Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
                         processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
-                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        UserSettings newSettings = new UserSettings();newSettings.setLogin("user1");
+                        newSettings.setLocale("newLocale");
+                        newSettings.setProcessesStatesNotifiedByEmail(processesStatesNotifiedByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();
@@ -452,8 +481,9 @@ public class UserSettingsServiceShould {
                 void GIVEN_Existing_Settings_WHEN_Update_With_ProcessesStatesNotifiedByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
                         Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
                         processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
-                        UserSettings newSettings = UserSettingsData.builder().login("user1")
-                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setProcessesStatesNotifiedByEmail(processesStatesNotifiedByEmail);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();

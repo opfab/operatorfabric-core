@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,20 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 import {SupervisedEntity} from '@ofModel/supervised-entity.model';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
-
+import {LoggerService} from '../logs/logger.service';
 
 export class SupervisedEntitiesService {
     protected static _entities: SupervisedEntity[];
     private static ngUnsubscribe$ = new Subject<void>();
     private static supervisedEntitiesServer: SupervisedEntitiesServer;
-
 
     public static setSupervisedEntitiesServer(supervisedEntitiesServer: SupervisedEntitiesServer) {
         SupervisedEntitiesService.supervisedEntitiesServer = supervisedEntitiesServer;
@@ -29,7 +27,7 @@ export class SupervisedEntitiesService {
     public static deleteById(id: string) {
         return SupervisedEntitiesService.supervisedEntitiesServer.deleteById(id).pipe(
             tap((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     SupervisedEntitiesService.deleteFromCachedEntities(id);
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
@@ -39,20 +37,22 @@ export class SupervisedEntitiesService {
     }
 
     private static deleteFromCachedEntities(id: string): void {
-        SupervisedEntitiesService._entities = SupervisedEntitiesService._entities.filter((entity) => entity.entityId !== id);
+        SupervisedEntitiesService._entities = SupervisedEntitiesService._entities.filter(
+            (entity) => entity.entityId !== id
+        );
     }
 
     public static queryAllSupervisedEntities(): Observable<SupervisedEntity[]> {
         return SupervisedEntitiesService.supervisedEntitiesServer.queryAllSupervisedEntities().pipe(
             map((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     return entitiesResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
                     return [];
                 }
             })
-            );
+        );
     }
 
     public static updateSupervisedEntity(entityData: SupervisedEntity): Observable<SupervisedEntity> {
@@ -70,7 +70,6 @@ export class SupervisedEntitiesService {
         );
     }
 
-
     public static getAll(): Observable<any[]> {
         return SupervisedEntitiesService.queryAllSupervisedEntities();
     }
@@ -79,9 +78,10 @@ export class SupervisedEntitiesService {
         return SupervisedEntitiesService.updateSupervisedEntity(data);
     }
 
-
     private static updateCachedEntity(entityData: SupervisedEntity): void {
-        const updatedEntities = SupervisedEntitiesService._entities.filter((entity) => entity.entityId !== entityData.entityId);
+        const updatedEntities = SupervisedEntitiesService._entities.filter(
+            (entity) => entity.entityId !== entityData.entityId
+        );
         updatedEntities.push(entityData);
         SupervisedEntitiesService._entities = updatedEntities;
     }
@@ -93,7 +93,7 @@ export class SupervisedEntitiesService {
                 next: (entities) => {
                     if (entities) {
                         SupervisedEntitiesService._entities = entities;
-                        console.log(new Date().toISOString(), 'List of entities loaded');
+                        LoggerService.info('List of entities loaded');
                     }
                 },
                 error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
@@ -101,7 +101,7 @@ export class SupervisedEntitiesService {
         );
     }
 
-    public static getSupervisedEntity(entityId) : SupervisedEntity {
+    public static getSupervisedEntity(entityId): SupervisedEntity {
         const entity = SupervisedEntitiesService._entities.find((entity) => entity.entityId === entityId);
         return entity;
     }
@@ -113,6 +113,4 @@ export class SupervisedEntitiesService {
     public static getCachedValues(): Array<SupervisedEntity> {
         return SupervisedEntitiesService.getSupervisedEntities();
     }
-
-
 }

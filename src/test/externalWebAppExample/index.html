@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -13,18 +13,17 @@
     <script src="/shared/js/opfab-application.js"></script>
     <script language="javascript">
         window.addEventListener('load', function () {
-            opfabStyle.init();
 
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             const theme = urlParams.get('opfab_theme');
             switch (theme) {
                 case 'NIGHT':
-                    opfabStyle.setCss(opfabStyle.NIGHT_STYLE);
+                    opfabStyle.setOpfabTheme(opfabStyle.NIGHT_THEME);
                     break;
                 case 'DAY':
                 default:
-                    opfabStyle.setCss(opfabStyle.DAY_STYLE);
+                    opfabStyle.setOpfabTheme(opfabStyle.DAY_THEME);
             }
         });
     </script>

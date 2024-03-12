@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
-import {SettingsService} from 'app/business/services/users/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
@@ -18,20 +17,13 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
     templateUrl: './list-setting.component.html'
 })
 export class ListSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-    @Input() values:  string [];
+    @Input() values: string[];
     optionList: {value: string; label: string}[];
     selectedOption = new Array();
-    multiSelectConfig : MultiSelectConfig;
-
-
-    constructor(
-        protected settingsService: SettingsService
-    ) {
-        super(settingsService);
-    }
+    multiSelectConfig: MultiSelectConfig;
 
     ngOnInit() {
-        this.multiSelectConfig =  {
+        this.multiSelectConfig = {
             labelKey: 'settings.' + this.settingPath,
             multiple: false,
             search: false,
@@ -49,7 +41,7 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     initFormGroup() {
         return new FormGroup(
             {
-                setting: new FormControl('',  [Validators.required])
+                setting: new FormControl('', [Validators.required])
             },
             {updateOn: 'change'}
         );
@@ -62,6 +54,4 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     protected isEqual(formA, formB): boolean {
         return formA.setting === formB.setting;
     }
-
-
 }

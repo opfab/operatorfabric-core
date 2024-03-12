@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {SupervisedEntitiesService} from '../users/supervised-entities.service';
 
 export class CrudSupervisedEntitiesService {
     getAll(): Observable<Array<any>> {
-        return SupervisedEntitiesService.getAll()
+        return SupervisedEntitiesService.getAll();
     }
 
     update(data: any): Observable<any> {
@@ -26,5 +26,4 @@ export class CrudSupervisedEntitiesService {
     getCachedValues(): Array<any> {
         return SupervisedEntitiesService.getCachedValues();
     }
-
 }

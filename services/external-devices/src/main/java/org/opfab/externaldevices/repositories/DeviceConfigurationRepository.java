@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,22 +7,29 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.externaldevices.repositories;
 
-import org.opfab.externaldevices.model.DeviceConfigurationData;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.opfab.externaldevices.model.DeviceConfiguration;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Mongo {@link DeviceConfigurationData} repository
- */
-@Repository
-public interface DeviceConfigurationRepository extends MongoRepository<DeviceConfigurationData,String> {
+public interface DeviceConfigurationRepository {
 
-    List<DeviceConfigurationData> findBySignalMappingId(String signalMappingId);
+    Optional<DeviceConfiguration> findById(String id);
+
+    List<DeviceConfiguration> findAll();
+
+    void deleteById(String id);
+
+    void deleteAll();
+
+    void insert(DeviceConfiguration deviceConfiguration);
+
+    void save(DeviceConfiguration deviceConfiguration);
+
+    void saveAll(List<DeviceConfiguration> deviceConfigurations);
+
+    List<DeviceConfiguration> findBySignalMappingId(String signalMappingId);
 
 }

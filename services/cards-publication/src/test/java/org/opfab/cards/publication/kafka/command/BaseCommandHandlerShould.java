@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
-import org.opfab.cards.publication.model.CardPublicationData;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -51,7 +50,7 @@ class BaseCommandHandlerShould {
         objectMapper = mock(CardObjectMapper.class);
         cut = new BaseCommandHandler();
         ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
-        CardPublicationData cardPublicationData = CardPublicationData.builder()
+        org.opfab.cards.publication.model.Card cardPublicationData = org.opfab.cards.publication.model.Card.builder()
                 .build();
 
         cardCommand = mock(CardCommand.class);
@@ -64,7 +63,7 @@ class BaseCommandHandlerShould {
     @Test
     void testBuildCardPublicationData_withoutDataProperty() throws JsonProcessingException {
         when(card.getData()).thenReturn(null);
-        CardPublicationData result = cut.buildCardPublicationData(cardCommand);
+        org.opfab.cards.publication.model.Card result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
         Assertions.assertThat(data).isEmpty();
     }
@@ -75,7 +74,7 @@ class BaseCommandHandlerShould {
         Map<String, Object> cardData = Collections.singletonMap(DATA_KEY, DATA_VALUE);
         when(card.getData()).thenReturn(cardDataAsString);
         when(objectMapper.readJSONValue(anyString())).thenReturn(cardData);
-        CardPublicationData result = cut.buildCardPublicationData(cardCommand);
+        org.opfab.cards.publication.model.Card result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
         Assertions.assertThat(data)
             .hasSize(1)

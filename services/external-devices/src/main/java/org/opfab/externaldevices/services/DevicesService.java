@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import jakarta.annotation.PreDestroy;
 
@@ -69,7 +68,7 @@ public class DevicesService {
         log.info("Try to add device {} to connected devices", deviceId);
         DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
 
-        String resolvedAddress = deviceConfiguration.getHost();
+        String resolvedAddress = deviceConfiguration.host;
 
         try {
             resolvedAddress = InetAddress.getByName(resolvedAddress).toString();
@@ -79,30 +78,31 @@ public class DevicesService {
         }
         
 
-        Device device = DeviceData.builder()
-                .id(deviceConfiguration.getId())
-                .resolvedAddress(resolvedAddress)
-                .port(deviceConfiguration.getPort())
-                .isConnected(true)
-                .build();
+        Device device = new Device();
+        device.id = deviceConfiguration.id;
+        device.resolvedAddress = resolvedAddress;
+        device.port = deviceConfiguration.port;
+        device.isConnected = true;
+
+        
 
         String driverId = getDriverIdFromDevice(device);
         if (!driversPool.containsKey(driverId)) {
             log.info("No driver in pool , try to add driver {} ", driverId);
-            ExternalDeviceDriver driver = externalDeviceDriverFactory.create(deviceConfiguration.getHost(),
-                    deviceConfiguration.getPort());
+            ExternalDeviceDriver driver = externalDeviceDriverFactory.create(deviceConfiguration.host,
+                    deviceConfiguration.port);
             driversPool.put(driverId, driver);
             log.info("Driver {}  added in pool", driverId);
 
         } else
             log.info("Driver {} already in pool", driverId);
         devices.put(deviceId, device);
-        log.info("Device {} added to connected devices", device.toString());
+        log.info("Device {} added to connected devices", device.id);
 
     }
 
     private String getDriverIdFromDevice(Device device) {
-        return device.getResolvedAddress() + ":" + Integer.toString(device.getPort());
+        return device.resolvedAddress + ":" + Integer.toString(device.port);
     }
 
 
@@ -152,17 +152,17 @@ public class DevicesService {
             } catch (ExternalDeviceConfigurationException e) {
                 exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
                         resolvedConfiguration.getSignalId(), userLogin,
-                        resolvedConfiguration.getDeviceConfiguration().getId(), "due to a configuration error");
+                        resolvedConfiguration.getDeviceConfiguration().id, "due to a configuration error");
                 log.warn(exceptionMessage, e);
             } catch (ExternalDeviceDriverException e) {
                 exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
                         resolvedConfiguration.getSignalId(), userLogin,
-                        resolvedConfiguration.getDeviceConfiguration().getId(), "due to an external driver error");
+                        resolvedConfiguration.getDeviceConfiguration().id, "due to an external driver error");
                 log.warn(exceptionMessage, e);
             } catch (ExternalDeviceAvailableException e) {
                 exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
                         resolvedConfiguration.getSignalId(), userLogin,
-                        resolvedConfiguration.getDeviceConfiguration().getId(), "as device is disabled");
+                        resolvedConfiguration.getDeviceConfiguration().id, "as device is disabled");
                 log.warn(exceptionMessage);
             }
         }
@@ -174,7 +174,7 @@ public class DevicesService {
             throws ExternalDeviceException, ExternalDeviceDriverException, ExternalDeviceConfigurationException,
             ExternalDeviceAvailableException {
 
-        String deviceId = resolvedConfiguration.getDeviceConfiguration().getId();
+        String deviceId = resolvedConfiguration.getDeviceConfiguration().id;
         int signalId = resolvedConfiguration.getSignalId();
         log.info("Try to send signal " + signalId + " for device " + deviceId);
 

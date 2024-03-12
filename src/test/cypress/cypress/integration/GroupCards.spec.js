@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * Ther Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with ther
@@ -45,7 +45,7 @@ describe('Group Cards tests', function () {
     });
 
     it('Card grouping disabled -> all cards should be visible in the feed', function () {
-        script.setPropertyInConf('feed.enableGroupedCards','web-ui', false);
+        script.setPropertyInConf('feed.enableGroupedCards', false);
         opfab.loginWithUser('operator1_fr');
 
 
@@ -63,7 +63,7 @@ describe('Group Cards tests', function () {
     });
 
     it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function () {
-        script.setPropertyInConf('feed.enableGroupedCards','web-ui', true);
+        script.setPropertyInConf('feed.enableGroupedCards', true);
         opfab.loginWithUser('operator1_fr');
 
         // Operator1 should see 4 cards in her feed

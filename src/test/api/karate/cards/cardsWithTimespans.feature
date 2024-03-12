@@ -90,6 +90,80 @@ Feature: Cards with timespans
 }
 """
 
+
+    * def cardToTestBadRequest4 =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"secondsBeforeTimeSpanForReminder" :1000,
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,3],
+						"hoursAndMinutes": {"hours":10,"minutes":20},
+						"durationInMinutes": -10
+					}
+		},
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[4,5],
+						"hoursAndMinutes": {"hours":12,"minutes":22}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
+
+    * def cardToTestBadRequest5 =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"secondsBeforeTimeSpanForReminder" :-1000,
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,3],
+						"hoursAndMinutes": {"hours":10,"minutes":20},
+						"durationInMinutes": 10
+					}
+		},
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[4,5],
+						"hoursAndMinutes": {"hours":12,"minutes":22}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
   Scenario: Post a card with timepans and recurrence
 
     * def card =
@@ -303,6 +377,8 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
       | cardToTestBadRequest1 | "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled"                     |
       | cardToTestBadRequest2 | "constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7"  |
       | cardToTestBadRequest3 | "constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11"     |
+      | cardToTestBadRequest4 | "constraint violation : TimeSpan.Recurrence.durationInMinutes: must be greater than or equal to 0" |
+      | cardToTestBadRequest5 | "secondsBeforeTimeSpanForReminder: must be greater than or equal to 0" |
 
 
   Scenario: delete perimeter created previously

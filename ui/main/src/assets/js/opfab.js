@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 const opfab = {};
 
 opfab.multiSelect = {
-    // these value is to be provided at startup by opfab angular application
+    // these values are to be provided at launch by opfab angular application
     // it is done in i18n.service.ts
     searchPlaceholderText: '',
     clearButtonText: 'test',
@@ -92,7 +92,7 @@ opfab.users = {
 
 opfab.navigate = {
     showCardInFeed: function (cardId) {},
-    redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {}
+    redirectToBusinessMenu: function (menuId, urlExtension) {}
 };
 
 opfab.currentCard = {
@@ -171,19 +171,22 @@ opfab.richTextEditor = {
         }
         return null;
 
+    },
+
+    getDeltaFromText(message) {
+        const delta ={ops: [{ insert: message }] };
+        return JSON.stringify(delta);
     }
 
 };
 
-
-
 class QuillEditor extends HTMLElement {
 
-    emptyRexp = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/gm;
 
     constructor() {
         super();
         this.init();
+        this.EMPTY_REGEXP = /^<p>(<br>|<br\/>|<br\s\/>|\s+|)<\/p>$/m;
 
         const toolbarOptions = [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -202,7 +205,7 @@ class QuillEditor extends HTMLElement {
             theme: 'snow',
             sanitize: true
         });
-
+        this.setDefaultLinkPlaceholder('');
     }
 
     init() {
@@ -230,6 +233,12 @@ class QuillEditor extends HTMLElement {
           Quill.register(CustomLinkSanitizer, true);
     }
 
+    setDefaultLinkPlaceholder(placeholder) {
+        const tooltip = this.quill.theme.tooltip;
+        const input = tooltip.root.querySelector("input[data-link]");
+        input.dataset.link = placeholder;
+    }
+
     setContents(value) {
         this.quill.setContents(opfab.richTextEditor.getJson(value));
     }
@@ -243,7 +252,7 @@ class QuillEditor extends HTMLElement {
     }
 
     isEmpty() {
-        return this.emptyRexp.test(this.quill.root.innerHTML);
+        return this.EMPTY_REGEXP.test(this.quill.root.innerHTML);
     }
 
     // Lifecycle method: called when the element is added to the DOM

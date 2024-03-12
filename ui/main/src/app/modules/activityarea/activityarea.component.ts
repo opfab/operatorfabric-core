@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/users/settings.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
 
@@ -37,17 +35,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
 
-    constructor(
-        private modalService: NgbModal,
-        private settingsService: SettingsService,
-        private lightCardStoreService: LightCardsStoreService
-    ) {}
+    constructor(private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.activityAreaView = new ActivityAreaView(
-            this.settingsService,
-            this.lightCardStoreService
-        );
+        this.activityAreaView = new ActivityAreaView();
         this.activityAreaView.getActivityAreaPage().subscribe((page) => {
             this.activityAreaPage = page;
             this.initForm();
@@ -57,12 +48,14 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     private initForm() {
         const lines = {};
-        this.activityAreaPage.lines.forEach((line) => {
-            if (line.isUserConnected) {
-                lines[line.entityId] = new FormControl<boolean | null>(true);
-            } else {
-                lines[line.entityId] = new FormControl<boolean | null>(false);
-            }
+        this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+            cluster.lines.forEach((line) => {
+                if (line.isUserConnected) {
+                    lines[line.entityId] = new FormControl<boolean | null>(true);
+                } else {
+                    lines[line.entityId] = new FormControl<boolean | null>(false);
+                }
+            });
         });
         this.activityAreaForm = new FormGroup(lines);
     }
@@ -71,7 +64,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
-        if (this.confirmationPopup) this.confirmationPopup.close(); // we close the confirmation popup
+        if (this.confirmationPopup) this.confirmationPopup.close();
 
         for (const entityId of Object.keys(this.activityAreaForm.controls)) {
             const control = this.activityAreaForm.get(entityId);
@@ -91,16 +84,17 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     doNotConfirmSaveSettings() {
-        // The modal must not be closed until the settings has been saved in the back
+        // The modal must not be closed until the settings have been saved in the back
         // If not, with slow network, when user goes to the feed before the end of the request
-        // it ends up with nothing in the feed
-        // This happens because method this.lightCardStoreService.removeAllLightCards();
+        // it results with nothing in the feed
+        // This happens because the method this.LightCardsStoreService.removeAllLightCards();
         // is called too late (in activityAreaView)
         if (!this.saveSettingsInProgress) this.confirmationPopup.close();
     }
 
     openConfirmSaveSettingsModal(content) {
-        if (this.askConfirmation) this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
+        if (this.askConfirmation)
+            this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
         else this.confirmSaveSettings();
     }
 

@@ -10,15 +10,14 @@ Feature: getBusinessconfigTemplate
     * def templateVersion = 2
 
 
-Scenario: Check template
+  Scenario: Check template
 
     # Check template
-Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + templateName + '?version='+ templateVersion
-And header Authorization = 'Bearer ' + authToken
-When method GET
-Then status 200
-And match response contains '{{card.data.message}}'
-
+    Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + templateName + '?version='+ templateVersion
+    And header Authorization = 'Bearer ' + authToken
+    When method GET
+    Then status 200
+    And match response contains '{{card.data.message}}'
 
   Scenario: Check template without authentication
 

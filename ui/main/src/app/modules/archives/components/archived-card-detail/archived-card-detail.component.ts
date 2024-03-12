@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from "@angular/core";
-import {TranslateService} from "@ngx-translate/core";
-import {Card} from "@ofModel/card.model";
-import {DisplayContext} from "@ofModel/template.model";
-import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
-import {EntitiesService} from "app/business/services/users/entities.service";
-import {Utilities} from "../../../../business/common/utilities";
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {Card} from '@ofModel/card.model';
+import {DisplayContext} from '@ofModel/template.model';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {Utilities} from '../../../../business/common/utilities';
 
 @Component({
     selector: 'of-archived-card-detail',
@@ -21,8 +21,7 @@ import {Utilities} from "../../../../business/common/utilities";
     styleUrls: ['./archived-card-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArchivedCardDetailComponent implements OnInit{
-
+export class ArchivedCardDetailComponent implements OnInit {
     fromEntityOrRepresentativeSelectedCard = null;
     entityRecipientsForFooter = '';
     entityRecipientsForInformationForFooter = '';
@@ -32,10 +31,7 @@ export class ArchivedCardDetailComponent implements OnInit{
     @Input() card: Card;
     @Input() childCards: Card[];
 
-    constructor(
-        private translate: TranslateService
-    ) {
-    }
+    constructor(private translate: TranslateService) {}
 
     ngOnInit() {
         this.computeFromEntity();
@@ -43,12 +39,9 @@ export class ArchivedCardDetailComponent implements OnInit{
         this.computeEntityRecipientsForInformationForFooter();
     }
 
-
     private computeFromEntity() {
         if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentativeSelectedCard = EntitiesService.getEntityName(
-                this.card.publisher
-            );
+            this.fromEntityOrRepresentativeSelectedCard = EntitiesService.getEntityName(this.card.publisher);
 
             if (this.card.representativeType && this.card.representative) {
                 const representative =
@@ -66,20 +59,23 @@ export class ArchivedCardDetailComponent implements OnInit{
         this.entityRecipientsForFooter = '';
 
         if (this.card.entityRecipients) {
-            const entityRecipientsForFooter = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
+            const entityRecipientsForFooter = Utilities.removeElementsFromArray(
+                this.card.entityRecipients,
+                this.card.entityRecipientsForInformation
+            );
 
             entityRecipientsForFooter.forEach((entityRecipient) => {
                 listOfEntityRecipients.push(EntitiesService.getEntityName(entityRecipient));
             });
         }
-        listOfEntityRecipients.sort((a, b) => (a.localeCompare(b)));
+        listOfEntityRecipients.sort((a, b) => a.localeCompare(b));
 
         listOfEntityRecipients.forEach((entityRecipient) => {
             this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
         });
         if (this.entityRecipientsForFooter.length > 0) {
-            this.entityRecipientsForFooter = this.translate.instant('feed.entityRecipients') +
-                this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
+            this.entityRecipientsForFooter =
+                this.translate.instant('feed.entityRecipients') + this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
         }
     }
 
@@ -92,13 +88,14 @@ export class ArchivedCardDetailComponent implements OnInit{
                 listOfEntityRecipientsForInformation.push(EntitiesService.getEntityName(entityRecipientForInformation));
             });
         }
-        listOfEntityRecipientsForInformation.sort((a, b) => (a.localeCompare(b)));
+        listOfEntityRecipientsForInformation.sort((a, b) => a.localeCompare(b));
 
         listOfEntityRecipientsForInformation.forEach((entityRecipientForInformation) => {
             this.entityRecipientsForInformationForFooter += ' ' + entityRecipientForInformation + ',';
         });
         if (this.entityRecipientsForInformationForFooter.length > 0) {
-            this.entityRecipientsForInformationForFooter = this.translate.instant('feed.entityRecipientsForInformation') +
+            this.entityRecipientsForInformationForFooter =
+                this.translate.instant('feed.entityRecipientsForInformation') +
                 this.entityRecipientsForInformationForFooter.slice(0, -1); // we remove the last comma
         }
     }
@@ -114,5 +111,4 @@ export class ArchivedCardDetailComponent implements OnInit{
     getFormattedTime(date: number): any {
         return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
-
 }

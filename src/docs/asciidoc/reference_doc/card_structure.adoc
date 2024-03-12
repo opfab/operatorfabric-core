@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -165,6 +165,11 @@ The specifications of the Well-known Text Representation of coordinate reference
 can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
 
 NOTE: Only the POINT and POLYGON are supported.
+
+==== Actions (`actions`)
+A list of predetermined actions that will be executed upon receiving the card. The available actions include:
+- KEEP_CHILD_CARDS : used to keep child cards when the parent card is modified.
+- PROPAGATE_READ_ACK_TO_PARENT_CARD : used only for response cards. When receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 
 === Business period 
 

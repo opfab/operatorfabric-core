@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.opfab.users.model.Entity;
-import org.opfab.users.model.EntityData;
 import org.opfab.users.repositories.EntityRepository;
 
 public class EntityRepositoryStub implements EntityRepository {
@@ -29,7 +28,7 @@ public class EntityRepositoryStub implements EntityRepository {
     }
 
     @Override
-    public EntityData insert(Entity entity) {
+    public Entity insert(Entity entity) {
         entities.put(entity.getId(), cloneEntity(entity));
         return null;
     }
@@ -75,7 +74,7 @@ public class EntityRepositoryStub implements EntityRepository {
     // test code modifying repository data directly (without calling repository
     // methods)
     private Entity cloneEntity(Entity entity) {
-        return (new EntityData((EntityData) entity));
+        return (new Entity((Entity) entity));
     }
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ import {takeUntil, tap, map} from 'rxjs/operators';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
+import {LoggerService} from '../logs/logger.service';
 
 export class GroupsService {
     private static _groups: Group[];
@@ -24,7 +25,7 @@ export class GroupsService {
         GroupsService.groupsServer = groupsServer;
     }
 
-   public static deleteById(id: string) {
+    public static deleteById(id: string) {
         return GroupsService.groupsServer.deleteById(id).pipe(
             tap((groupsResponse) => {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
@@ -66,10 +67,10 @@ export class GroupsService {
                 next: (groups) => {
                     if (groups) {
                         GroupsService._groups = groups;
-                        console.log(new Date().toISOString(), 'List of groups loaded');
+                        LoggerService.info('List of groups loaded');
                     }
                 },
-                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                error: (error) => LoggerService.error('an error occurred when loading groups' + error)
             })
         );
     }

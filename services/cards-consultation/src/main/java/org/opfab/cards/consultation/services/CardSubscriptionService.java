@@ -174,6 +174,7 @@ public class CardSubscriptionService implements EventListener {
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),clientId);
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
                 .currentUserWithPerimeters(currentUserWithPerimeters)
+                .userServiceCache(userServiceCache)
                 .clientId(clientId);
         CardSubscription cardSubscription;
         cardSubscription = cardSubscriptionBuilder.build();
@@ -181,7 +182,6 @@ public class CardSubscriptionService implements EventListener {
         cardSubscription.initSubscription(sendReload, () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
-        cardSubscription.userServiceCache = this.userServiceCache;
 
         logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, null);
 

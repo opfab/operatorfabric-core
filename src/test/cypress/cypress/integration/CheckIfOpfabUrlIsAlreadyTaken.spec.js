@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ describe('Check the behaviour of OpFab when URL is already in use', function () 
         localStorage.setItem(DISCONNECTED_BY_NEW_USER_USING_SAME_URL, disconnectionSignal);
     }
     before('Init web-ui.json', function () {
-        script.setPropertyInConf('checkIfUrlIsLocked','web-ui',true);
+        script.setPropertyInConf('checkIfUrlIsLocked',true);
     })
 
     beforeEach('Set up configuration', function () {

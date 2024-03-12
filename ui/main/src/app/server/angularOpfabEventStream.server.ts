@@ -94,7 +94,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
             if (!this.isHeartbeatRunning) {
                 this.sendHeartBeat();
             }
-            console.log(new Date().toISOString(), `EventStreamServer - Open card subscription`);
+            logger.info(`EventStreamServer - Open card subscription`);
         };
     }
 

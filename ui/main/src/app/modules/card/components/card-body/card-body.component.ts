@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,6 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/template.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -40,6 +39,8 @@ import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {Utilities} from '../../../../business/common/utilities';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
+import {CardAction} from '@ofModel/light-card.model';
 
 @Component({
     selector: 'of-card-body',
@@ -66,7 +67,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public isResponseLocked = false;
     public fullscreen = false;
     public showMaxAndReduceButton = false;
-    public showDetailCardHeader= true;
+    public showDetailCardHeader = true;
     public htmlTemplateContent: SafeHtml;
     public templateOffset = 15;
     public truncatedTitle: string;
@@ -81,11 +82,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public user: User;
     private userWithPerimeters: UserWithPerimeters;
 
-    constructor(
-        private router: Router,
-        private lightCardsStoreService: LightCardsStoreService,
-        private opfabAPIService: OpfabAPIService
-    ) {
+    constructor(private router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
@@ -95,12 +92,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this.integrateChildCardsInRealTime();
         const pageType = RouterStore.getCurrentPageType();
-        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
-        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
+        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD)
+            this.templateOffset = 35;
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD)
+            this.showMaxAndReduceButton = true;
     }
 
     private integrateChildCardsInRealTime() {
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -117,7 +116,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             )
             .subscribe();
 
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getDeletedChildCardsIds()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -138,10 +137,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
-            this.opfabAPIService.currentCard.childCards = this.childCards;
-            this.opfabAPIService.currentCard.applyChildCards();
+            OpfabAPIService.currentCard.childCards = this.childCards;
+            OpfabAPIService.currentCard.applyChildCards();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
-            if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
+            if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
         });
     }
 
@@ -159,20 +158,23 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.lockResponseIfOneUserEntityHasAlreadyRespond();
-        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) this.opfabAPIService.templateInterface.unlockAnswer();
-        this.opfabAPIService.currentCard.childCards = this.childCards;
-        this.opfabAPIService.currentCard.applyChildCards();
+        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        if (!this.isResponseLocked) OpfabAPIService.templateInterface.unlockAnswer();
+        OpfabAPIService.currentCard.childCards = this.childCards;
+        OpfabAPIService.currentCard.applyChildCards();
     }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
-        this.opfabAPIService.templateInterface.unlockAnswer();
+        OpfabAPIService.templateInterface.unlockAnswer();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
-            if (changes.card) this.opfabAPIService.currentCard.card = this.card;
+            if (changes.card) {
+                this.computeCardHasBeenRead();
+                OpfabAPIService.currentCard.card = this.card;
+            }
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
@@ -190,6 +192,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    private computeCardHasBeenRead() {
+        this.card = {...this.card, hasBeenRead: OpfabStore.getLightCardStore().isLightCardHasBeenRead(this.card)};
+    }
+
     private computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
         let entityIdsAllowedOrRequiredToRespond = [];
         if (this.card.entitiesAllowedToRespond)
@@ -204,9 +210,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const entitiesAllowedOrRequiredToRespond = EntitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
-        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
-            .map((entity) => entity.id);
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards =
+            EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(
+                (entity) => entity.id
+            );
 
         logger.debug(
             `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
@@ -221,7 +228,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
-    
     private computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) {
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
@@ -230,9 +236,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
         const entitiesRequiredToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
 
-        const entityIdsRequiredToRespondAndAllowedToSendCards = EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond)
-            .map((entity) => entity.id);
+        const entityIdsRequiredToRespondAndAllowedToSendCards = EntitiesService.resolveEntitiesAllowedToSendCards(
+            entitiesRequiredToRespond
+        ).map((entity) => entity.id);
 
         const userEntitiesRequiredToRespondAndAllowedToSendCards =
             entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
@@ -245,7 +251,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             (this.cardState.showDetailCardHeader === undefined || this.cardState.showDetailCardHeader === true) &&
             this.cardState.response != null &&
             this.cardState.response !== undefined;
-        
     }
 
     private markAsReadIfNecessary() {
@@ -265,11 +270,19 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             CardService.postUserCardRead(this.card.uid).subscribe();
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
+
+        if (this.childCards) {
+            this.childCards.forEach((child) => {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
+                    CardService.postUserCardRead(child.uid).subscribe();
+                }
+            });
+        }
     }
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
+            OpfabStore.getLightCardStore().setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }
@@ -296,16 +309,16 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private setOpfabApiVariables() {
-        this.opfabAPIService.currentCard.childCards = this.childCards;
-        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        this.opfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
-        this.opfabAPIService.currentCard.entitiesAllowedToRespond =
+        OpfabAPIService.currentCard.childCards = this.childCards;
+        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        OpfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
+        OpfabAPIService.currentCard.entitiesAllowedToRespond =
             this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
-        this.opfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
-        }
+        OpfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
+        OpfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
+    }
 
     private stopRegularlyCheckLttd() {
         this.regularlyLttdCheckActive = false;
@@ -313,7 +326,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public afterTemplateRendering() {
-        if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
+        if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
         this.startRegularlyCheckLttd();
     }
 
@@ -326,7 +339,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
             if (this.isLttdExpired()) {
                 this.lttdExpiredIsTrue = true;
-                this.opfabAPIService.templateInterface.setLttdExpired(true);
+                OpfabAPIService.templateInterface.setLttdExpired(true);
             } else setTimeout(() => this.regularlyCheckLttd(), 500);
         }
     }
@@ -337,12 +350,12 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public isThereEnoughSpaceToShowCard() {
         const domElement = document.getElementsByTagName('of-card-body');
-        const cardWidth =  domElement.item(0).getBoundingClientRect().width;
+        const cardWidth = domElement.item(0).getBoundingClientRect().width;
 
-        if (cardWidth === 0) //Full screen
-            return window.innerWidth > 1300
-        else
-            return cardWidth > 485 || window.innerWidth > 1300;
+        if (cardWidth === 0)
+            //Full screen
+            return window.innerWidth > 1300;
+        else return cardWidth > 485 || window.innerWidth > 1300;
     }
 
     public setFullScreen(active) {

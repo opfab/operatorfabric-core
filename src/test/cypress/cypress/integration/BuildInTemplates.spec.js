@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,13 +36,13 @@ describe('User Card ', function () {
     });
 
     it('Send User card with question from operator1_fr', () => {
-
       opfab.loginWithUser('operator1_fr');
       feed.checkNumberOfDisplayedCardsIs(0);
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');
       usercard.selectState('Message or question list');
+
       cy.get('#message-select').click();
       cy.get('#message-select').find('.vscomp-search-input').type('Confirmation the issues have been fixed');
       cy.get('#message-select').find('.vscomp-option-text').eq(0).click();
@@ -54,7 +54,7 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator2_fr');
       feed.checkNumberOfDisplayedCardsIs(1);
       feed.openFirstCard();
-      cy.get("#message").contains("Please confirm the issues in your area have been fixed");
+      cy.get("#richMessage").contains("Please confirm the issues in your area have been fixed");
       cy.get("#comment").type("My answer")
       cy.get("#opfab-card-details-btn-response").click();
       cy.get("#childs-div").contains("My answer");

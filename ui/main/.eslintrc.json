@@ -6,13 +6,16 @@
   "env": {
     "es6":true
   },
+
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
   "overrides": [
     {
       "files": [
         "*.ts"
       ],
       "parserOptions": {
-        "ecmaVersion": 2017,
         "project": [
           "tsconfig.json"
         ],
@@ -20,7 +23,8 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -42,8 +46,7 @@
         "eqeqeq": [2, "smart"],
         "prefer-const": 2,
         "no-trailing-spaces": "error",
-        "keyword-spacing": ["error"],
-        "@typescript-eslint/no-inferrable-types": 2
+        "keyword-spacing": ["error"]
       }
     },
     {

@@ -13,7 +13,8 @@ Feature: CreateEntities
   "id" : "entityKarate1",
   "name" : "entityKarate1 name",
   "description" : "Karate is driving me crazy",
-  "labels" : ["Label1"]
+  "labels" : ["Label1"],
+  "roles" : ["ACTIVITY_AREA_GROUP"]
 }
 """
     * def entityUpdated =
@@ -23,7 +24,7 @@ Feature: CreateEntities
   "name" : "entityKarate1 name",
   "description" : "I Love Karate",
   "labels" : ["Label2", "Label3"],
-  "entityAllowedToSendCard" : false
+  "roles" : ["ACTIVITY_AREA_GROUP"]
 }
 """
     * def wrongEntity =
@@ -113,9 +114,10 @@ Feature: CreateEntities
     And match response.description == entity.description
     And match response.name == entity.name
     And match response.id == entity.id
-    And match response.entityAllowedToSendCard == true
     And assert response.labels.length == 1
     And match response.labels[0] == 'Label1'
+    And assert response.roles.length == 1
+    And match response.roles[0] == 'ACTIVITY_AREA_GROUP'
 
   Scenario: Update my entity
 
@@ -128,9 +130,10 @@ Feature: CreateEntities
     And match response.description == entityUpdated.description
     And match response.name == entityUpdated.name
     And match response.id == entity.id
-    And match response.entityAllowedToSendCard == false
     And assert response.labels.length == 2
-    And match response.labels contains ['Label2', 'Label3'] 
+    And match response.labels contains ['Label2', 'Label3']
+    And assert response.roles.length == 1
+    And match response.roles[0] == 'ACTIVITY_AREA_GROUP' 
 
   Scenario: create without admin role
     #Forbidden without admin role, expected response 403

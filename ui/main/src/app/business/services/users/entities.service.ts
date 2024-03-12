@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -16,13 +15,12 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {LoggerService as logger} from '../logs/logger.service';
 import {ErrorService} from '../error-service';
+import {RolesEnum} from '@ofModel/roles.model';
 
-
-export class EntitiesService{
+export class EntitiesService {
     protected static _entities: Entity[];
     private static ngUnsubscribe$ = new Subject<void>();
     private static entitiesServer: EntitiesServer;
-
 
     public static setEntitiesServer(entitiesServer: EntitiesServer) {
         EntitiesService.entitiesServer = entitiesServer;
@@ -31,7 +29,7 @@ export class EntitiesService{
     public static deleteById(id: string) {
         return EntitiesService.entitiesServer.deleteById(id).pipe(
             tap((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     EntitiesService.deleteFromCachedEntities(id);
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
@@ -47,14 +45,14 @@ export class EntitiesService{
     public static queryAllEntities(): Observable<Entity[]> {
         return EntitiesService.entitiesServer.queryAllEntities().pipe(
             map((entitiesResponse) => {
-                if (entitiesResponse.status === ServerResponseStatus.OK){
+                if (entitiesResponse.status === ServerResponseStatus.OK) {
                     return entitiesResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(entitiesResponse);
                     return [];
                 }
             })
-            );
+        );
     }
 
     public static updateEntity(entityData: Entity): Observable<Entity> {
@@ -92,15 +90,15 @@ export class EntitiesService{
                 next: (entities) => {
                     if (entities) {
                         EntitiesService._entities = entities;
-                        console.log(new Date().toISOString(), 'List of entities loaded');
+                        logger.info('List of entities loaded');
                     }
                 },
-                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+                error: (error) => logger.error('An error occurred when loading entities' + error)
             })
         );
     }
 
-    public static getEntity(entityId) : Entity {
+    public static getEntity(entityId): Entity {
         const entity = EntitiesService._entities.find((entity) => entity.id === entityId);
         return entity;
     }
@@ -126,7 +124,7 @@ export class EntitiesService{
 
     public static isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = EntitiesService._entities.find((entity) => entity.id === idEntity);
-        return found?.entityAllowedToSendCard;
+        return found?.roles?.includes(RolesEnum.CARD_SENDER);
     }
 
     /** Given a list of entities that might contain parent entities, EntitiesService method returns the list of entities
@@ -135,7 +133,7 @@ export class EntitiesService{
     public static resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
         const allowed = new Set<Entity>();
         selected.forEach((entity) => {
-            if (entity.entityAllowedToSendCard) {
+            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) {
                 allowed.add(entity);
             } else {
                 const children = EntitiesService._entities.filter((child) => child.parents?.includes(entity.id));
@@ -161,8 +159,7 @@ export class EntitiesService{
             } else {
                 if (!resolvedEntities.find((o) => o.id === r.id)) {
                     const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
-                    if (entity)
-                        resolvedEntities.push(entity);
+                    if (entity) resolvedEntities.push(entity);
                     else logger.info('Entity not found : ' + r.id);
                 }
             }

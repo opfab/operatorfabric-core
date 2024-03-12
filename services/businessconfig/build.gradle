@@ -1,6 +1,4 @@
 dependencies {
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
-    swaggerUI generator.swaggerUI
     implementation boot.starterSecurity
     implementation misc.jsonSmart
     implementation spring.securityOauthResource, spring.securityOauthJose
@@ -124,4 +122,4 @@ copyMonitoringFile.dependsOn prepareTestDataDir
 test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyRealTimeScreensFile,copyMonitoringFile
 bootRun.dependsOn createDevData
 
-// <<<<< Test data tasks
+

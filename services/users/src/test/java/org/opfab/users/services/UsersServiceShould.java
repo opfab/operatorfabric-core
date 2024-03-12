@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,15 +21,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
-import org.opfab.users.model.EntityData;
-import org.opfab.users.model.GroupData;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
-import org.opfab.users.model.StateRightData;
+import org.opfab.users.model.StateRight;
 import org.opfab.users.model.User;
-import org.opfab.users.model.UserData;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
@@ -46,7 +43,7 @@ public class UsersServiceShould {
     private UsersService usersService;
     private EventBusSpy eventBusSpy;
 
-    PerimeterData perimeter1, perimeter2;
+    Perimeter perimeter1, perimeter2;
 
     @BeforeEach
     void clear() {
@@ -61,56 +58,61 @@ public class UsersServiceShould {
 
     private void initPerimeterRepository() {
 
-        perimeter1 = PerimeterData.builder()
-                .id("perimeter1")
-                .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true),
-                        new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
-                .build();
+        perimeter1 = new Perimeter();
+        perimeter1.setId("perimeter1");
+        perimeter1.setProcess("process1");
+        StateRight state1 = new StateRight("state1", RightsEnum.Receive, true);
+        StateRight state2 = new StateRight("state2", RightsEnum.ReceiveAndWrite, true);
+        List<StateRight> stateRights = new ArrayList<>();
+        stateRights.add(state1);
+        stateRights.add(state2);
+        perimeter1.setStateRights(stateRights);
 
-        perimeter2 = PerimeterData.builder()
-                .id("perimeter2")
-                .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                        new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
-                .build();
 
+
+        perimeter2 = new Perimeter();
+        perimeter2.setId("perimeter2");
+        perimeter2.setProcess("process1");
+        StateRight state3 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+        StateRight state4 = new StateRight("state2", RightsEnum.ReceiveAndWrite, true);
+        List<StateRight> stateRights2 = new ArrayList<>();
+        stateRights2.add(state3);
+        stateRights2.add(state4);
+        perimeter2.setStateRights(stateRights2);
+
+        
         perimeterRepositoryStub.insert(perimeter1);
         perimeterRepositoryStub.insert(perimeter2);
 
     }
 
     private void initGroupRepository() {
-        GroupData g1, g2, g3;
-        g1 = GroupData.builder()
-                .id("group1")
-                .name("Group 1")
-                .description("Group 1 description")
-                .build();
+        Group g1, g2;
+        g1 = new Group("group1");
+        g1.setName("Group 1");
+        g1.setDescription("Group 1 description");
         List<String> p1 = new ArrayList<>(Arrays.asList("perimeter1", "perimeter2"));
         g1.setPerimeters(p1);
-        g2 = GroupData.builder()
-                .id("group2")
-                .name("Group 2")
-                .description("Group 2 description")
-                .build();
+
+        g2 = new Group("group2");
+        g2.setName("Group 2");
+        g2.setDescription("Group 2 description");
         List<String> p2 = new ArrayList<>(Arrays.asList("perimeter1"));
         g2.setPerimeters(p2);
+
         groupRepositoryStub.insert(g1);
         groupRepositoryStub.insert(g2);
 
     }
 
     private void initEntityRepository() {
-        EntityData e1, e2;
-        e1 = EntityData.builder()
-                .id("entity1")
-                .name("Entity 1")
-                .build();
-        e2 = EntityData.builder()
-                .id("entity2")
-                .name("Entity 2")
-                .build();
+        Entity e1, e2;
+        e1 = new Entity();
+        e1.setId("entity1");
+        e1.setName("Entity 1");
+        e2 = new Entity();
+        e2.setId("entity2");
+        e2.setName("Entity 2");
         entityRepositoryStub.insert(e1);
         entityRepositoryStub.insert(e2);
 
@@ -118,28 +120,30 @@ public class UsersServiceShould {
 
     private void initUserRepository() {
         userRepositoryStub.deleteAll();
-        UserData u1, u2, u3;
+        User u1, u2, u3;
 
-        u1 = UserData.builder()
-                .login("user1")
-                .firstName("user1FirstName")
-                .lastName("user1LastName")
-                .comment("comment")
-                .group("group1").group("group2")
-                .build();
-        u2 = UserData.builder()
-                .login("user2")
-                .firstName("user2FirstName")
-                .lastName("user2LastName")
-                .group("group2")
-                .entity("entity1").entity("entity2")
-                .build();
-        u3 = UserData.builder()
-                .login("user3")
-                .firstName("user3FirstName")
-                .lastName("user3LastName")
-                .entity("entity1")
-                .build();
+        u1 = new User();
+        u1.setLogin("user1");
+        u1.setFirstName("user1FirstName");
+        u1.setLastName("user1LastName");
+        u1.setComment("comment");
+        u1.addGroup("group1");
+        u1.addGroup("group2");
+        
+        u2 = new User();
+        u2.setLogin("user2");
+        u2.setFirstName("user2FirstName");
+        u2.setLastName("user2LastName");
+        u2.addGroup("group2");
+        u2.addEntity("entity1");
+        u2.addEntity("entity2");
+            
+        u3 = new User();
+        u3.setLogin("user3");
+        u3.setFirstName("user3FirstName");
+        u3.setLastName("user3LastName");
+        u3.addEntity("entity1");
+
         userRepositoryStub.insert(u1);
         userRepositoryStub.insert(u2);
         userRepositoryStub.insert(u3);
@@ -180,12 +184,13 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_Valid_User_WHEN_Create_User_THEN_Return_Created_User() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isFalse();
@@ -198,12 +203,13 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_Valid_User_With_Login_In_UpperCase_WHEN_Create_User_THEN_Login_Is_Saved_In_LowerCase() {
 
-            UserData user = UserData.builder()
-                    .login("newUser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .build();
+            User user = new User();
+            user.setLogin("newUser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isFalse();
@@ -213,12 +219,12 @@ public class UsersServiceShould {
 
         @Test
         void GIVEN_A_Valid_User_WHEN_Create_An_Already_Existing_User_THEN_User_Is_Updated() {
-            UserData user = UserData.builder()
-                    .login("user1")
-                    .firstName("newFirstName")
-                    .lastName("user1LastName")
-                    .group("group1")
-                    .build();
+            User user = new User();
+            user.setLogin("user1");
+            user.setFirstName("newFirstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
@@ -232,12 +238,13 @@ public class UsersServiceShould {
         @Test
         void GIVEN_The_Admin_User_WHEN_Update_User_Without_Admin_Group_THEN_Return_Bad_Request() {
 
-            UserData user = UserData.builder()
-                    .login("admin")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .build();
+            User user = new User();
+            user.setLogin("admin");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -247,12 +254,14 @@ public class UsersServiceShould {
         @Test
         void GIVEN_The_Admin_User_WHEN_Update_User_With_Admin_Group_THEN_Return_Success() {
 
-            UserData user = UserData.builder()
-                    .login("admin")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("ADMIN")
-                    .build();
+            User user = new User();
+            user.setLogin("admin");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("ADMIN");
+
+            
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("admin").get().getFirstName()).isEqualTo("firstName");
@@ -331,12 +340,13 @@ public class UsersServiceShould {
         @Test
         void GIVEN_The_Admin_User_WHEN_UpdateOrCreate_User_Without_Admin_Group_THEN_Return_Bad_Request() {
 
-            UserData user = UserData.builder()
-                    .login("admin")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .build();
+            User user = new User();
+            user.setLogin("admin");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -346,13 +356,16 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_And_Entities_true_THEN_User_Is_Created() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -368,13 +381,16 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_True_And_UpdateEntities_False_THEN_User_Is_Created_With_No_Entities() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, false, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -389,13 +405,15 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_False_And_UpdateEntities_True_THEN_User_Is_Created_With_No_Groups() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -410,13 +428,18 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_Invalid_Groups_THEN_User_Is_Created_Without_The_Invalid_Groups() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2").group("invalid1").group("invalid2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addGroup("invalid1");
+            user.addGroup("invalid2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -432,13 +455,17 @@ public class UsersServiceShould {
         @Test
         void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_Invalid_Entities_THEN_User_Is_Created_Without_The_Invalid_Entities() {
 
-            UserData user = UserData.builder()
-                    .login("newuser")
-                    .firstName("firstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2").entity("dummy1").entity("dummy2")
-                    .build();
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+            user.addEntity("dummy1");
+            user.addEntity("dummy2");
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -454,13 +481,15 @@ public class UsersServiceShould {
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_And_Entities_true_THEN_User_Is_Updated() {
 
-            UserData user = UserData.builder()
-                    .login("user3")
-                    .firstName("newFirstName")
-                    .lastName("newLastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("user3");
+            user.setFirstName("newFirstName");
+            user.setLastName("newLastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("user3");
@@ -477,13 +506,15 @@ public class UsersServiceShould {
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_User_Is_Updated_And_Notification_Is_Sent_To_Other_Services() {
 
-            UserData user = UserData.builder()
-                    .login("user3")
-                    .firstName("newFirstName")
-                    .lastName("newLastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("user3");
+            user.setFirstName("newFirstName");
+            user.setLastName("newLastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
@@ -496,13 +527,14 @@ public class UsersServiceShould {
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_Same_Value_THEN_Notification_Is_Not_Sent_To_Other_Services() {
 
-           UserData user2Clone = UserData.builder()
-                    .login("user2")
-                    .firstName("user2FirstName")
-                    .lastName("user2LastName")
-                    .group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user2Clone = new User();
+            user2Clone.setLogin("user2");
+            user2Clone.setFirstName("user2FirstName");
+            user2Clone.setLastName("user2LastName");
+            user2Clone.addGroup("group2");
+            user2Clone.addEntity("entity1");
+            user2Clone.addEntity("entity2");
+
             OperationResult<User> result = usersService.updateOrCreateUser(user2Clone, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(eventBusSpy.getMessagesSent()).isEmpty();
@@ -511,13 +543,15 @@ public class UsersServiceShould {
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_True_And_UpdateEntities_False_THEN_User_Is_Update_Without_Entities_Update() {
 
-            UserData user = UserData.builder()
-                    .login("user3")
-                    .firstName("newFirstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1").entity("entity2")
-                    .build();
+            User user = new User();
+            user.setLogin("user3");
+            user.setFirstName("newFirstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            user.addEntity("entity2");
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, false, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("user3");
@@ -532,13 +566,14 @@ public class UsersServiceShould {
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_False_And_UpdateEntities_True_THEN_User_Is_Update_Without_Groups_Update() {
 
-            UserData user = UserData.builder()
-                    .login("user2")
-                    .firstName("newFirstName")
-                    .lastName("user1LastName")
-                    .group("group1").group("group2")
-                    .entity("entity1")
-                    .build();
+            User user = new User();
+            user.setLogin("user2");
+            user.setFirstName("newFirstName");
+            user.setLastName("user1LastName");
+            user.addGroup("group1");
+            user.addGroup("group2");
+            user.addEntity("entity1");
+            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("user2");

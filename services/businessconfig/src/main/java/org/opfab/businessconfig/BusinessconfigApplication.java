@@ -13,6 +13,7 @@ package org.opfab.businessconfig;
 
 
 import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
+import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +23,8 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableOperatorFabricOAuth2
-@Import(RabbitEventBus.class)
+@Import({RabbitEventBus.class, UserServiceCacheImpl.class})
+
 public class BusinessconfigApplication {
 
     public static void main(String[] args) {

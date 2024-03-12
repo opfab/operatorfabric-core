@@ -22,12 +22,12 @@ import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {ConfigService} from 'app/business/services/config.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -80,8 +80,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     constructor(
         private translationService: TranslationService,
-        private modalService: NgbModal,
-        private lightCardsStoreService: LightCardsStoreService
+        private modalService: NgbModal
     ) {
         this.monitoringConfig = ConfigService.getMonitoringConfig();
 
@@ -119,7 +118,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    width: 150
+                    width: 150,
+                    resizable: false
                 },
                 emitterColumn: {
                     sortable: true,
@@ -150,14 +150,16 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 18
+                    maxWidth: 18,
+                    resizable: false
                 },
                 answerColumn: {
                     sortable: false,
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 30
+                    width: 30,
+                    resizable: false
                 }
             },
             ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
@@ -274,7 +276,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     getResponses(cardId: string, entities: string[]) {
         return this.getEntitiesNames(
-            this.getEntitiesResponses(this.lightCardsStoreService.getChildCards(cardId), entities)
+            this.getEntitiesResponses(OpfabStore.getLightCardStore().getChildCards(cardId), entities)
         );
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,10 +30,22 @@
     border-collapse: separate;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.opfab-activityarea-checkbox {
+    width: auto;
+    font-weight: bold; 
+    margin-left: 30px; 
+    overflow-x: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
 }
 
 .opfab-activityarea-badge {
     margin-bottom: 12px;
+    margin-left: 30px;
 }
 
 .modal-body {
@@ -44,4 +56,53 @@
 .modal-header {
     background-color: var(--opfab-bgcolor);
     color: var(--opfab-textcolor);
+}
+
+.opfab-activityarea-cluster-name {
+    padding-bottom: 10px;
+    font-weight: bold;
+    display: block;
+    font-size: 20px;
+}
+
+.opfab-activityarea-clusters {
+    background-color: var(--opfab-bgcolor-darker);
+    border-radius: 8px;
+    margin-left: 15px;
+    margin-top: 20px;
+    padding: 10px;
+    width: 530px;
+}
+
+.opfab-realtimeusers-entitiesgroups-title {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.badge-pill {
+    color: var(--opfab-text-color-stronger);
+}
+
+.opfab-group-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.opfab-activityarea-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: -18px;
+}
+
+.opfab-table-line {
+    min-width: 250px;
+    width: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

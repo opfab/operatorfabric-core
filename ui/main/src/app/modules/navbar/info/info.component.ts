@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,18 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-info',
     templateUrl: './info.component.html',
-    styleUrls: ['./info.component.scss']
+    styleUrls: ['./info.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoComponent implements OnInit {
     userName: string;
@@ -27,9 +29,7 @@ export class InfoComponent implements OnInit {
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
-    constructor(
-        private applicationEventsService: ApplicationEventsService
-    ) {}
+    constructor(private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.updateTime();
@@ -40,7 +40,7 @@ export class InfoComponent implements OnInit {
 
         if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
-            this.applicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
+            ApplicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
         }
     }
 
@@ -48,6 +48,7 @@ export class InfoComponent implements OnInit {
         this.timeToDisplay = DateTimeFormatterService.getFormattedTimeFromEpochDate(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
+            this.changeDetector.markForCheck();
         }, 1000);
     }
 
@@ -57,7 +58,7 @@ export class InfoComponent implements OnInit {
             this.userEntities = [];
             const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
-                if (entity.entityAllowedToSendCard) {
+                if (entity.roles?.includes(RolesEnum.ACTIVITY_AREA)) {
                     // this avoids to display entities used only for grouping
                     this.userEntities.push(entity.name);
                 }
@@ -65,13 +66,13 @@ export class InfoComponent implements OnInit {
             this.userEntitiesToDisplay = this.userEntities.join(', ');
             this.trimTooLongEntitiesString();
         }
+        this.changeDetector.markForCheck();
     }
 
     trimTooLongEntitiesString() {
         if (this.userEntitiesToDisplay.length > 20) {
             this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0, 17) + '...';
             this.userEntitiesToDisplayTrimmed = true;
-        }
-        else this.userEntitiesToDisplayTrimmed = false;
+        } else this.userEntitiesToDisplayTrimmed = false;
     }
 }

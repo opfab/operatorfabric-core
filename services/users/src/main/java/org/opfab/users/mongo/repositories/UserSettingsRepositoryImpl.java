@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package org.opfab.users.mongo.repositories;
 import java.util.Optional;
 
 import org.opfab.users.model.UserSettings;
-import org.opfab.users.model.UserSettingsData;
 import org.opfab.users.repositories.UserSettingsRepository;
 
 public class UserSettingsRepositoryImpl implements UserSettingsRepository {
@@ -25,20 +24,18 @@ public class UserSettingsRepositoryImpl implements UserSettingsRepository {
 
     @Override
     public UserSettings save(UserSettings userSettings) {
-        return mongoUserSettingsRepository.save((UserSettingsData) userSettings);
+        return mongoUserSettingsRepository.save(userSettings);
     }
 
     @Override
     public Optional<UserSettings> findById(String id) {
-        return mongoUserSettingsRepository.findById(id).map(UserSettings.class::cast);
+        return mongoUserSettingsRepository.findById(id);
     }
 
     @Override
     public void deleteAll() {
         mongoUserSettingsRepository.deleteAll();
-        
+
     }
 
-
-    
 }

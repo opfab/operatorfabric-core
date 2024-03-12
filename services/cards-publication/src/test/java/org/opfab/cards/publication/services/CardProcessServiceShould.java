@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,19 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.mocks.I18NRepositoryMock;
+import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
+import org.opfab.cards.publication.model.ArchivedCard;
+import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.HoursAndMinutes;
-import org.opfab.cards.publication.model.HoursAndMinutesPublicationData;
-import org.opfab.cards.publication.model.I18nPublicationData;
+import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
-import org.opfab.cards.publication.model.RecurrencePublicationData;
-import org.opfab.cards.publication.model.TimeSpanPublicationData;
-import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
-import org.opfab.springtools.configuration.oauth.ProcessesCache;
+import org.opfab.cards.publication.model.Recurrence;
+import org.opfab.cards.publication.model.SeverityEnum;
+import org.opfab.cards.publication.model.TimeSpan;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.ComputedPerimeter;
@@ -45,6 +44,8 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import jakarta.validation.ConstraintViolationException;
 
 import java.net.URI;
@@ -52,10 +53,12 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -77,10 +80,6 @@ class CardProcessServiceShould {
 
         @Autowired
         private ExternalAppService externalAppService;
-        @Autowired
-        private I18nProcessesCache i18nProcessesCache;
-        @Autowired
-        private ProcessesCache processesCache;
 
         private CardProcessingService cardProcessingService;
         private CardTranslationService cardTranslationService;
@@ -90,25 +89,57 @@ class CardProcessServiceShould {
         @Autowired
         private CardRepositoryMock cardRepositoryMock;
 
+        private I18NRepositoryMock i18NRepositoryMock;
+        private ProcessRepositoryMock processRepositoryMock;
+
         private MockRestServiceServer mockServer;
 
         private User user;
         private CurrentUserWithPerimeters currentUserWithPerimeters;
         private Optional<Jwt> token = Optional.empty();
-
+ 
         @BeforeEach
         public void init() {
+                initI18NRepositoryMock();
+                initProcessRepositoryMock();
                 eventBusSpy = new EventBusSpy();
-                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
-                cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBusSpy);
+                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);                
+                cardTranslationService = new CardTranslationService(i18NRepositoryMock);
+                CardValidationService cardValidationService = new CardValidationService(cardRepositoryMock,processRepositoryMock);
                 cardProcessingService = new CardProcessingService(cardNotificationService,
                                 cardRepositoryMock, externalAppService,
-                                cardTranslationService, processesCache, true, true,
+                                cardTranslationService,cardValidationService, true, true,
                                 false, 1000, 3600, true);
                 initCurrentUser();
                 cardRepositoryMock.clear();
                 eventBusSpy.clearMessageSent();
                 mockServer = MockRestServiceServer.createServer(restTemplate);
+        }
+
+        public void initI18NRepositoryMock() {
+                i18NRepositoryMock = new I18NRepositoryMock();
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("title", "Title translated");
+                node.put("summary", "Summary translated {{arg1}}");
+                i18NRepositoryMock.setJsonNode(node);
+        }
+
+        public void initProcessRepositoryMock() {
+                processRepositoryMock = new ProcessRepositoryMock();
+                String process1 = "{\"id\":\"process1\",\"states\":{\"state1\":{\"name\":\"state1\"}}}";
+                String process2 = "{\"id\":\"process2\",\"states\":{\"state2\":{\"name\":\"state1\"}}}";
+                String process3 = "{\"id\":\"process3\",\"states\":{\"state3\":{\"name\":\"state1\"}}}";
+                String process4 = "{\"id\":\"process4\",\"states\":{\"state4\":{\"name\":\"state1\"}}}";
+                String process5 = "{\"id\":\"process5\",\"states\":{\"state5\":{\"name\":\"state1\"}}}";
+                String processCardUser = "{\"id\":\"PROCESS_CARD_USER\",\"states\":{\"state1\":{\"name\":\"state1\"}}}";
+                processRepositoryMock.setProcessAsString(process1,"0");
+                processRepositoryMock.setProcessAsString(process2,"0");
+                processRepositoryMock.setProcessAsString(process3,"0");
+                processRepositoryMock.setProcessAsString(process4,"0");
+                processRepositoryMock.setProcessAsString(process5,"0");
+                processRepositoryMock.setProcessAsString(processCardUser,"0");
+                    
         }
 
         public void initCurrentUser() {
@@ -132,13 +163,13 @@ class CardProcessServiceShould {
                 ComputedPerimeter c3 = new ComputedPerimeter();
                 c1.setProcess("PROCESS_CARD_USER");
                 c1.setState("state1");
-                c1.setRights(RightsEnum.RECEIVEANDWRITE);
+                c1.setRights(RightsEnum.ReceiveAndWrite);
                 c2.setProcess("PROCESS_CARD_USER");
                 c2.setState("state2");
-                c2.setRights(RightsEnum.RECEIVE);
+                c2.setRights(RightsEnum.Receive);
                 c3.setProcess("PROCESS_CARD_USER");
                 c3.setState("state3");
-                c3.setRights(RightsEnum.RECEIVEANDWRITE);
+                c3.setRights(RightsEnum.ReceiveAndWrite);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(c1);
                 list.add(c2);
@@ -146,68 +177,66 @@ class CardProcessServiceShould {
                 currentUserWithPerimeters.setComputedPerimeters(list);
         }
 
-        private CardPublicationData generateOneCard() {
+        private Card generateOneCard() {
                 return generateOneCard("entity2");
         }
 
-        private CardPublicationData generateOneCard(String publisher) {
-                return CardPublicationData.builder().publisher(publisher).processVersion("0")
+        private Card generateOneCard(String publisher) {
+                return Card.builder().publisher(publisher).processVersion("0")
                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                .title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").build())
+                                .title(new I18n("title",null))
+                                .summary(new I18n("summary",null))
                                 .startDate(Instant.now())
-                                .timeSpan(TimeSpanPublicationData.builder()
-                                                .start(Instant.ofEpochMilli(123L)).build())
+                                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
                                 .process("PROCESS_CARD_USER")
                                 .state("state1")
                                 .build();
         }
 
-        private List<CardPublicationData> generateFiveCards() {
-                ArrayList<CardPublicationData> cards = new ArrayList<>();
+        private List<Card> generateFiveCards() {
+                ArrayList<Card> cards = new ArrayList<>();
                 cards.add(
-                                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
+                                Card.builder().publisher("PUBLISHER_1").processVersion("0")
                                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
-                                                .timeSpan(TimeSpanPublicationData.builder()
-                                                                .start(Instant.ofEpochMilli(123l)).build())
+                                                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
                                                 .process("process1")
                                                 .state("state1")
                                                 .build());
                 cards.add(
-                                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("0")
+                                Card.builder().publisher("PUBLISHER_2").processVersion("0")
                                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
                                                 .process("process2")
                                                 .state("state2")
                                                 .build());
                 cards.add(
-                                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("0")
+                                Card.builder().publisher("PUBLISHER_2").processVersion("0")
                                                 .processInstanceId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
                                                 .process("process3")
                                                 .state("state3")
                                                 .build());
                 cards.add(
-                                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
+                                Card.builder().publisher("PUBLISHER_1").processVersion("0")
                                                 .processInstanceId("PROCESS_2").severity(SeverityEnum.INFORMATION)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
                                                 .process("process4")
                                                 .state("state4")
                                                 .build());
                 cards.add(
-                                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
+                                Card.builder().publisher("PUBLISHER_1").processVersion("0")
                                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
                                                 .process("process5")
                                                 .state("state5")
@@ -225,7 +254,7 @@ class CardProcessServiceShould {
                 }
         }
 
-        private boolean checkCardPublisherId(CardPublicationData card) {
+        private boolean checkCardPublisherId(Card card) {
                 if (user.getEntities().contains(card.getPublisher())) {
                         return true;
                 } else {
@@ -282,7 +311,7 @@ class CardProcessServiceShould {
                         throws URISyntaxException {
                 ArrayList<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
-                CardPublicationData card = generateOneCard("newPublisherId");
+                Card card = generateOneCard("newPublisherId");
                 card.setExternalRecipients(externalRecipients);
                 mockServer.expect(ExpectedCount.once(),
                                 requestTo(new URI(EXTERNALAPP_URL)))
@@ -300,7 +329,7 @@ class CardProcessServiceShould {
         void GIVEN_a_user_card_with_wrong_publisher_WHEN_sending_card_THEN_card_is_rejected()
                         throws URISyntaxException {
 
-                CardPublicationData card = generateOneCard("PUBLISHER_X");
+                Card card = generateOneCard("PUBLISHER_X");
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
                                 .isInstanceOf(IllegalArgumentException.class)
@@ -312,20 +341,20 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_a_parent_card_WHEN_sending_a_child_card_THEN_card_is_accepted_and_saved() throws URISyntaxException {
 
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 cardProcessingService.processCard(card);
 
                 ArrayList<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
-                CardPublicationData childCard = CardPublicationData.builder().publisher("newPublisherId")
+                Card childCard = Card.builder().publisher("newPublisherId")
                                 .processVersion("0")
                                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                                 .process("PROCESS_CARD_USER")
                                 .parentCardId(card.getId())
                                 .initialParentCardUid(card.getUid())
-                                .title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").build())
+                                .title(new I18n("title",null))
+                                .summary(new I18n("summary",null))
                                 .startDate(Instant.now())
                                 .externalRecipients(externalRecipients)
                                 .state("state1")
@@ -352,16 +381,16 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_a_parent_card_and_a_child_card_WHEN_deleting_the_parent_card_THEN_child_card_is_deleted()
                         throws URISyntaxException {
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 cardProcessingService.processCard(card);
-                CardPublicationData childCard = CardPublicationData.builder().publisher("newPublisherId")
+                Card childCard = Card.builder().publisher("newPublisherId")
                                 .processVersion("0")
                                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                                 .process("PROCESS_CARD_USER")
                                 .parentCardId(card.getId())
                                 .initialParentCardUid(card.getUid())
-                                .title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").build())
+                                .title(new I18n("title",null))
+                                .summary(new I18n("summary",null))
                                 .startDate(Instant.now())
                                 .state("state1")
                                 .build();
@@ -375,7 +404,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_an_invalid_card_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData wrongCard = CardPublicationData.builder().publisher("PUBLISHER_1")
+                Card wrongCard = Card.builder().publisher("PUBLISHER_1")
                                 .processVersion("0").processInstanceId("PROCESS_1").build();
                 Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(wrongCard))
                                 .isInstanceOf(ConstraintViolationException.class);
@@ -385,7 +414,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_forbidden_characters_in_processInstanceId_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcessInstanceId("processinstance" + "#123");
 
                 Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
@@ -413,7 +442,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_forbidden_characters_in_process_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcess("process" + "#123");
 
                 Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
@@ -444,10 +473,10 @@ class CardProcessServiceShould {
 
                 Instant start = Instant.ofEpochMilli(Instant.now().toEpochMilli()).plusSeconds(3600);
 
-                LinkedHashMap data = new LinkedHashMap();
+                LinkedHashMap<String, Object> data = new LinkedHashMap<>();
                 data.put("int", 123);
                 data.put("string", "test");
-                LinkedHashMap subdata = new LinkedHashMap();
+                LinkedHashMap<String, Object> subdata = new LinkedHashMap<>();
                 subdata.put("int", 456);
                 subdata.put("string", "test2");
                 data.put("object", subdata);
@@ -462,22 +491,21 @@ class CardProcessServiceShould {
                 months.add(2);
                 months.add(3);
                 Integer duration = 15;
-                HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2, 10);
-                RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone", daysOfWeek,
+                HoursAndMinutes hoursAndMinutes = new HoursAndMinutes(2, 10);
+                Recurrence recurrence = new Recurrence("timezone", daysOfWeek,
                                 hoursAndMinutes,
                                 duration, months);
 
-                CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
+                HashMap<String, String> parameters = new HashMap<>();
+                parameters.put("arg1", "value1");
+                Card newCard = Card.builder().publisher("publisher(")
                                 .processVersion("0").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                .startDate(start).title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
-                                                .build())
+                                .startDate(start).title(new I18n("title",null))
+                                .summary(new I18n("summary",parameters))
                                 .endDate(start.plusSeconds(60)).lttd(start.minusSeconds(600))
                                 .tag("tag1").tag("tag2").data(data)
                                 .entityRecipients(entityRecipients)
-                                .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l))
-                                                .recurrence(recurrence)
-                                                .build())
+                                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, recurrence))
                                 .process("process1")
                                 .state("state1")
                                 .publisherType(PublisherTypeEnum.EXTERNAL)
@@ -488,47 +516,47 @@ class CardProcessServiceShould {
                                 .secondsBeforeTimeSpanForReminder(Integer.valueOf(1000))
                                 .build();
                 cardProcessingService.processCard(newCard);
-                CardPublicationData persistedCard = cardRepositoryMock.findCardById(newCard.getId());
+                Card persistedCard = cardRepositoryMock.findCardById(newCard.getId());
                 assertThat(persistedCard).isEqualTo(newCard);
                 assertThat(persistedCard.getTitleTranslated()).isEqualTo("Title translated");
                 assertThat(persistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
-                ArchivedCardPublicationData archivedPersistedCard = cardRepositoryMock
+                ArchivedCard archivedPersistedCard = cardRepositoryMock
                                 .findArchivedCardByUid(newCard.getUid())
                                 .get();
                 assertThat(archivedPersistedCard).usingRecursiveComparison().ignoringFields("uid", "id",
                                 "actions", "timeSpans", "deletionDate", "entitiesAcks").isEqualTo(newCard);
-                assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
-                assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
-                assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
+                assertThat(archivedPersistedCard.id()).isEqualTo(newCard.getUid());
+                assertThat(archivedPersistedCard.titleTranslated()).isEqualTo("Title translated");
+                assertThat(archivedPersistedCard.summaryTranslated()).isEqualTo("Summary translated value1");
                 assertThat(eventBusSpy.getMessagesSent()).hasSize(1);
         }
 
         @Test
         void GIVEN_an_existing_card_WHEN_deleting_card_with_id_provided_THEN_card_is_removed_from_database() {
 
-                List<CardPublicationData> cards = generateFiveCards();
+                List<Card> cards = generateFiveCards();
                 cards.forEach(card -> cardProcessingService.processCard(card));
 
-                CardPublicationData firstCard = cards.get(0);
+                Card firstCard = cards.get(0);
                 String id = firstCard.getId();
                 cardProcessingService.deleteCard(id, token);
 
-                /* one card should be deleted(the first one) */
-                Assertions.assertThat(checkCardCount(4)).isTrue();
+                // one card should be deleted(the first one)
+                 Assertions.assertThat(checkCardCount(4)).isTrue();
         }
 
         @Test
         void GIVEN_an_existing_card_WHEN_deleting_card_with_no_id_provided_THEN_card_is_removed_from_database() {
 
-                List<CardPublicationData> cards = generateFiveCards();
+                List<Card> cards = generateFiveCards();
 
                 cards.forEach(card -> cardProcessingService.processCard(card));
-                CardPublicationData firstCard = cards.get(0);
+                Card firstCard = cards.get(0);
                 firstCard.setId(null);
                 cardProcessingService.prepareAndDeleteCard(firstCard);
 
-                /* one card should be deleted(the first one) */
+                // one card should be deleted(the first one)
                 Assertions.assertThat(checkCardCount(4)).isTrue();
         }
 
@@ -536,7 +564,7 @@ class CardProcessServiceShould {
         void GIVEN_an_existing_card_with_external_recipient_WHEN_deleting_the_card_THEN_card_is_deleted_and_delete_is_send_to_external_recipient()
                         throws URISyntaxException {
 
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 List<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
                 card.setExternalRecipients(externalRecipients);
@@ -555,7 +583,7 @@ class CardProcessServiceShould {
         void GIVEN_an_existing_card_with_invalid_external_recipient_WHEN_deleting_the_card_THEN_card_is_deleted_and_delete_is_not_send_to_external_recipient()
                         throws URISyntaxException {
 
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 List<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add("invalidRecipient");
                 card.setExternalRecipients(externalRecipients);
@@ -569,7 +597,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_existing_cards_WHEN_try_to_delete_card_with_none_existing_id_THEN_no_card_is_delete() {
-                List<CardPublicationData> cards = generateFiveCards();
+                List<Card> cards = generateFiveCards();
                 cards.forEach(card -> cardProcessingService.processCard(card));
                 cardProcessingService.deleteCard("dummyID", token);
                 Assertions.assertThat(checkCardCount(5)).isTrue();
@@ -578,16 +606,15 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_a_child_card_with_none_existent_parentCardId_WHEN_sending_card_THEN_card_is_rejected() {
 
-                CardPublicationData childCard = CardPublicationData.builder()
+                Card childCard = Card.builder()
                                 .parentCardId("id_1")
                                 .publisher("PUBLISHER_1").processVersion("0")
                                 .process("PROCESS_1")
                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                .title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").build())
+                                .title(new I18n("title",null))
+                                .summary(new I18n("summary",null))
                                 .startDate(Instant.now())
-                                .timeSpan(TimeSpanPublicationData.builder()
-                                                .start(Instant.ofEpochMilli(123l)).build())
+                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))
                                 .build();
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
@@ -601,29 +628,26 @@ class CardProcessServiceShould {
         void GIVEN_a_child_card_with_none_existent_initialParentCardUid_WHEN_sending_card_THEN_card_is_rejected() {
 
                 cardProcessingService.processCard(
-                                CardPublicationData.builder()
+                                Card.builder()
                                                 .uid("uid_1")
                                                 .publisher("PUBLISHER_1").processVersion("0")
                                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                                .title(I18nPublicationData.builder().key("title").build())
-                                                .summary(I18nPublicationData.builder().key("summary").build())
+                                                .title(new I18n("title",null))
+                                                .summary(new I18n("summary",null))
                                                 .startDate(Instant.now())
-                                                .timeSpan(TimeSpanPublicationData.builder()
-                                                                .start(Instant.ofEpochMilli(123l)).build())
-                                                .process("process1")
+                                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))                                                .process("process1")
                                                 .state("state1")
                                                 .build());
 
-                CardPublicationData childCard = CardPublicationData.builder()
+                Card childCard = Card.builder()
                                 .parentCardId("process1.PROCESS_1")
                                 .initialParentCardUid("initialParentCardUidNotExisting")
                                 .publisher("PUBLISHER_1").processVersion("0")
                                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                                .title(I18nPublicationData.builder().key("title").build())
-                                .summary(I18nPublicationData.builder().key("summary").build())
+                                .title(new I18n("title",null))
+                                .summary(new I18n("summary",null))
                                 .startDate(Instant.now())
-                                .timeSpan(TimeSpanPublicationData.builder()
-                                                .start(Instant.ofEpochMilli(123l)).build())
+                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))
                                 .process("process2")
                                 .state("state2")
                                 .build();
@@ -638,19 +662,19 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_KeepChidCards_null_WHEN_sending_card_THEN_card_is_saved_with_KeepChildCard_set_to_false() {
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 card.setParentCardId(null);
                 card.setInitialParentCardUid(null);
                 card.setKeepChildCards(null);
                 cardProcessingService.processCard(card);
-                CardPublicationData cardSaved = cardRepositoryMock.findCardById(card.getId());
+                Card cardSaved = cardRepositoryMock.findCardById(card.getId());
                 Assertions.assertThat(cardSaved.getKeepChildCards()).isNotNull();
                 Assertions.assertThat(cardSaved.getKeepChildCards()).isFalse();
         }
 
         @Test
         void GIVEN_5_cards_with_two_cards_expiration_date_in_the_past_WHEN_delete_cards_by_expirationDate_set_to_now_THEN_2_cards_are_deleted() {
-                List<CardPublicationData> cards = generateFiveCards();
+                List<Card> cards = generateFiveCards();
                 Instant ref = Instant.now();
                 cards.get(0).setExpirationDate(null);
                 cards.get(1).setExpirationDate(null);
@@ -665,7 +689,7 @@ class CardProcessServiceShould {
 
                 // 5 add message and 2 delete messages
                 Assertions.assertThat(eventBusSpy.getMessagesSent()).hasSize(7);
-                /* 2 cards should be removed */
+                // 2 cards should be removed 
                 Assertions.assertThat(cardRepositoryMock.count()).isEqualTo(3);
         }
 
@@ -679,7 +703,7 @@ class CardProcessServiceShould {
                 CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
                 wrongUser.setUserData(user);
 
-                CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                Card card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
                 Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token))
@@ -698,12 +722,12 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                cp.setRights(RightsEnum.ReceiveAndWrite);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
                 caseDifferentUser.setComputedPerimeters(list);
 
-                CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                Card card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
 
@@ -721,7 +745,7 @@ class CardProcessServiceShould {
                 wrongUser.setUserData(user);
                 wrongUser.setComputedPerimeters(currentUserWithPerimeters.getComputedPerimeters());
 
-                CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                Card card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
 
@@ -744,7 +768,7 @@ class CardProcessServiceShould {
                 CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
                 wrongUser.setUserData(user);
 
-                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                Card card = generateOneCard("IGNORED_PUBLISHER");
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
@@ -766,12 +790,12 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                cp.setRights(RightsEnum.ReceiveAndWrite);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
                 caseDifferentUser.setComputedPerimeters(list);
 
-                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                Card card = generateOneCard("IGNORED_PUBLISHER");
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
@@ -791,7 +815,7 @@ class CardProcessServiceShould {
                 CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
                 wrongUser.setUserData(user);
 
-                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                Card card = generateOneCard("IGNORED_PUBLISHER");
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
@@ -809,7 +833,7 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_an_existing_card_WHEN_update_with_another_publisher_of_the_same_entity_THEN_card_is_updated() {
 
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
 
                 List<String> entitiesAllowedToEdit = new ArrayList<>();
                 entitiesAllowedToEdit.add("entityAllowed");
@@ -819,7 +843,7 @@ class CardProcessServiceShould {
                 cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
 
-                CardPublicationData newCard = generateOneCard("newPublisherId");
+                Card newCard = generateOneCard("newPublisherId");
                 currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entity2", "newPublisherId"));
 
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
@@ -831,14 +855,14 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_an_existing_card_WHEN_update_with_another_entity_allowed_to_edit_THEN_card_is_updated() {
 
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 List<String> entitiesAllowedToEdit = new ArrayList<>();
                 entitiesAllowedToEdit.add("entityAllowed");
                 card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
                 cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
 
-                CardPublicationData newCard = generateOneCard("entityAllowed");
+                Card newCard = generateOneCard("entityAllowed");
                 currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entityAllowed"));
 
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
@@ -851,14 +875,14 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_an_existing_card_WHEN_update_with_another_entity_not_allowed_to_edit_THEN_card_is_not_updated() {
 
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 List<String> entitiesAllowedToEdit = new ArrayList<>();
                 entitiesAllowedToEdit.add("entityAllowed");
                 card.setEntitiesAllowedToEdit(entitiesAllowedToEdit);
                 cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
 
-                CardPublicationData newCard = generateOneCard("entityNotAllowed");
+                Card newCard = generateOneCard("entityNotAllowed");
                 currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("entityNotAllowed"));
 
                 Assertions.assertThatThrownBy(
@@ -871,7 +895,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_an_unexisting_process__WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcess("dummyProcess");
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -882,7 +906,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_an_unexisting_state_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setState("dummyState");
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -893,7 +917,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_an_unexisting_process_version_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcessVersion("99");
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -905,7 +929,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_publisher_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setPublisher(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -917,7 +941,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_process_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcess(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -929,7 +953,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_processVersion_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcessVersion(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -941,7 +965,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_state_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setState(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -953,7 +977,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_processInstanceId_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setProcessInstanceId(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -964,7 +988,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_severity_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setSeverity(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -975,7 +999,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_title_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setTitle(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -986,7 +1010,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_summary_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setSummary(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -997,7 +1021,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_with_no_startDate_WHEN_sending_card_THEN_card_is_rejected() {
-                CardPublicationData card = generateOneCard("entity2");
+                Card card = generateOneCard("entity2");
                 card.setStartDate(null);
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
@@ -1016,9 +1040,9 @@ class CardProcessServiceShould {
                 ComputedPerimeter c1 = new ComputedPerimeter();
                 c1.setProcess("PROCESS_CARD_USER");
                 c1.setState("state1");
-                c1.setRights(RightsEnum.RECEIVE);
+                c1.setRights(RightsEnum.Receive);
 
-                CardPublicationData card = generateOneCard("dummyUser");
+                Card card = generateOneCard("dummyUser");
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(c1);
                 testCurrentUserWithPerimeters.setComputedPerimeters(list);
@@ -1041,9 +1065,9 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                cp.setRights(RightsEnum.ReceiveAndWrite);
 
-                CardPublicationData card = generateOneCard("dummyUser");
+                Card card = generateOneCard("dummyUser");
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
                 testCurrentUserWithPerimeters.setComputedPerimeters(list);
@@ -1055,7 +1079,7 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_card_WHEN_reset_reads_and_acks_THEN_card_event_UPDATE_is_sent_to_eventBus() {
-                CardPublicationData card = generateOneCard();
+                Card card = generateOneCard();
                 cardProcessingService.processCard(card);
                 cardProcessingService.resetReadAndAcks(card.getUid());
                 Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");

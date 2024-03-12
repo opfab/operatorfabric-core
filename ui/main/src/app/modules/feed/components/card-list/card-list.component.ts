@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
+import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -23,9 +23,10 @@ import {GroupedCardsService} from 'app/business/services/lightcards/grouped-card
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-card-list',
@@ -36,6 +37,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
+    @Input() processFilter: string;
+    @Input() stateFilter: string;
 
     @Output() showFilters = new Subject<boolean>();
 
@@ -46,28 +49,29 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     hideResponseFilter: boolean;
     hideTimerTags: boolean;
+    hideProcessFilter: boolean;
+    hideStateFilter: boolean;
     hideApplyFiltersToTimeLineChoice: boolean;
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
 
-
     filterActive: boolean;
     filterOpen: boolean;
 
+    private filteredLightCardStore: FilteredLightCardsStore;
+
     constructor(
         private modalService: NgbModal,
-        private groupedCardsService: GroupedCardsService,
-        private router: Router,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService,
+        private router: Router
     ) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {
         this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
-        this.lightCardsFeedFilterService.setSortBy(this.defaultSorting);
+        this.filteredLightCardStore.setSortBy(this.defaultSorting);
 
         this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (
@@ -79,6 +83,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
         this.hideTimerTags = ConfigService.getConfigValue('feed.card.hideTimeFilter', false);
         this.hideResponseFilter = ConfigService.getConfigValue('feed.card.hideResponseFilter', false);
+        this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
+        this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
         this.hideApplyFiltersToTimeLineChoice = ConfigService.getConfigValue(
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false
@@ -87,8 +93,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         this.hideAckAllCardsFeature = ConfigService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
         this.initFilterActive();
     }
-
-
 
     ngAfterViewChecked() {
         this.adaptFrameHeight();
@@ -129,19 +133,26 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         const ackSet = ackValue && (ackValue === 'ack' || ackValue === 'none');
 
-
         const savedStart = UserPreferencesService.getPreference('opfab.feed.filter.start');
         const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
-        this.filterActive = alarmUnset || actionUnset || compliantUnset || informationUnset || responseUnset || ackSet || !!savedStart || !!savedEnd;
+        this.filterActive =
+            alarmUnset ||
+            actionUnset ||
+            compliantUnset ||
+            informationUnset ||
+            responseUnset ||
+            ackSet ||
+            !!savedStart ||
+            !!savedEnd;
     }
 
     acknowledgeAllVisibleCardsInTheFeed() {
         this.lightCards.forEach((lightCard) => {
             this.acknowledgeVisibleCardInTheFeed(lightCard);
-            this.groupedCardsService
-                .getChildCardsByTags(lightCard.tags)
-                .forEach((groupedCard) => this.acknowledgeVisibleCardInTheFeed(groupedCard));
+            GroupedCardsService.getChildCardsByTags(lightCard.tags).forEach((groupedCard) =>
+                this.acknowledgeVisibleCardInTheFeed(groupedCard)
+            );
         });
     }
 
@@ -150,33 +161,41 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
-            AcknowledgeService.isAcknowledgmentAllowed(
-                this.currentUserWithPerimeters,
-                lightCard,
-                processDefinition
-            )
+            AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)
         ) {
             try {
                 const entitiesAcks = [];
-                const entities = EntitiesService.getEntitiesFromIds(
-                    this.currentUserWithPerimeters.userData.entities
-                );
+                const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
                 entities.forEach((entity) => {
-                    if (entity.entityAllowedToSendCard)
+                    if (entity.roles?.includes(RolesEnum.CARD_SENDER))
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
                 AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
-                        this.lightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
+                        OpfabStore.getLightCardStore().setLightCardAcknowledgment(lightCard.id, true);
+                        this.handleChildCardsUserAcknowledgement(lightCard.id, entitiesAcks);
                     } else {
-                        throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
+                        throw new Error(
+                            'the remote acknowledgement endpoint returned an error status(' + resp.status + ')'
+                        );
                     }
                 });
             } catch (err) {
                 console.error(err);
                 this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
             }
+        }
+    }
+
+    private handleChildCardsUserAcknowledgement(cardId, entitiesAcks) {
+        const childCards = OpfabStore.getLightCardStore().getChildCards(cardId);
+        if (childCards) {
+            childCards.forEach((child) => {
+                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
+                    AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
+                }
+            });
         }
     }
 
@@ -204,7 +223,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     isCardInGroup(selected: string, id: string) {
-        return this.groupedCardsService.isCardInGroup(selected, id);
+        return GroupedCardsService.isCardInGroup(selected, id);
     }
 
     onFilterActiveChange(active: boolean) {

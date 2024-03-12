@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,8 @@ import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -22,7 +23,6 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
     styleUrls: ['./timeline-buttons.component.scss']
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
-
     private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     public hideTimeLine = false;
@@ -45,9 +45,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private isDestroyed = false;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
-    ) {}
+    private filteredLightCardStore: FilteredLightCardsStore;
+
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         this.loadDomainConfiguration();
@@ -84,14 +86,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', [
-            'TR',
-            'J',
-            '7D',
-            'W',
-            'M',
-            'Y'
-        ]);
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['TR', 'J', '7D', 'W', 'M', 'Y']);
         this.buttonList = [];
         domainsConf.map((domain) => {
             if (Object.keys(domains).includes(domain)) {
@@ -201,7 +196,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param endDomain new end of domain
      */
     setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false): void {
-        if (this.currentDomainId == 'W') {
+        if (this.currentDomainId === 'W') {
             /*
              * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
@@ -234,7 +229,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: startDomain,
             end: endDomain,
             domainId: this.currentDomainId
@@ -404,12 +399,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         // shift domain one minute before change of cycle
         if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-            let startDomain = moment(currentDate + 60 * 1000)
+            const startDomain = moment(currentDate + 60 * 1000)
                 .hours(0)
                 .minutes(0)
                 .second(0)
                 .millisecond(0);
-            let endDomain = moment(currentDate + 60 * 1000)
+            const endDomain = moment(currentDate + 60 * 1000)
                 .hours(0)
                 .minutes(0)
                 .second(0)

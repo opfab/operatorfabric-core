@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -12,30 +12,57 @@
 </div>
 
 <of-spinner *ngIf="!isScreenLoaded"></of-spinner>
-
-<div *ngIf="activityAreaPage?.lines?.length">
+<div *ngIf="activityAreaPage?.activityAreaClusters?.length === 0">
+    <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>activityArea.noAreaAvailable</div>
+</div>
+<div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length">
     <form [formGroup]="activityAreaForm">
-        <div class="opfab-activityarea-entitieslist">
-            <table aria-describedby="activity area table" class="opfab-activityarea-table">
-                
-                <tr *ngFor="let line of activityAreaPage.lines;">
-                    <td>
-                        <label style="font-weight: bold" class="opfab-checkbox">{{line.entityName}}
-                            <input type="checkbox" [formControlName]=line.entityId [checked]="true">
-                            <span class="opfab-checkbox-checkmark"></span>
-                        </label>
-                    </td>
-                    <td  style="padding-left: 100px">
-                        <ng-template #connected>
-                                <span class="badge rounded-pill bg-success opfab-activityarea-badge">{{line.connectedUsers.length}}
-                                </span>&nbsp;({{line.connectedUsersText}})
-                        </ng-template>
-                        <ng-template #disconnected><span class="badge rounded-pill bg-danger opfab-activityarea-badge">0</span></ng-template>
-                        <span *ngIf="line.connectedUsers.length>0;then connected else disconnected"></span>
-                    </td>
-                </tr>
-            </table>
+        <div class="opfab-activityarea-container" >
+            <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
+                <span *ngIf="cluster.name !== ' '" >
+                    <span class="opfab-activityarea-cluster-name">{{cluster.name}} &nbsp;</span>
+                    <table class ="opfab-activityarea-table" aria-describedby="activity area table">
+                        <tr *ngFor="let line of cluster.lines;">
+                            <th class ="opfab-table-line" >
+                                <label class="opfab-checkbox opfab-activityarea-checkbox">
+                                    <input type="checkbox" [formControlName]=line.entityId [checked]="true">{{line.entityName}}
+                                    <span class="opfab-checkbox-checkmark"></span>
+                                </label>
+                            </th>
+                            <td>
+                                <ng-template #connected >
+                                    <span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{line.connectedUsers.length}}
+                                    </span>&nbsp;&nbsp;{{line.connectedUsersText}}
+                                </ng-template>
+                                <ng-template #disconnected><span class="badge rounded-pill bg-secondary opfab-activityarea-badge">0</span></ng-template>
+                                <span *ngIf="line.connectedUsers.length>0;then connected else disconnected"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+                <span *ngIf="cluster.name === ' '" >
+                    <table class ="opfab-activityarea-table" aria-describedby="activity area table">
+                        <tr *ngFor="let line of cluster.lines;">
+                            <th class ="opfab-table-line" >
+                                <label class="opfab-checkbox opfab-activityarea-checkbox">{{line.entityName}}
+                                    <input type="checkbox" [formControlName]=line.entityId [checked]="true">
+                                    <span class="opfab-checkbox-checkmark"></span>
+                                </label>
+                            </th>
+                            <td>
+                                <ng-template #connected >
+                                    <span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{line.connectedUsers.length}}
+                                    </span>&nbsp;&nbsp;{{line.connectedUsersText}}
+                                </ng-template>
+                                <ng-template #disconnected><span class="badge rounded-pill bg-secondary opfab-activityarea-badge">0</span></ng-template>
+                                <span *ngIf="line.connectedUsers.length>0;then connected else disconnected"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+            </div>
         </div>
+
         <br />
 
         <div *ngIf="displaySendResultError">

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 import {UserConfiguration, Notification} from '@ofModel/external-devices.model';
 import {Observable} from 'rxjs';
@@ -21,5 +20,4 @@ export abstract class ExternalDevicesServer {
     abstract enableDevice(deviceId: string): Observable<ServerResponse<any>>;
     abstract disableDevice(deviceId: string): Observable<ServerResponse<any>>;
     abstract deleteByUserLogin(login: string): Observable<ServerResponse<any>>;
-
 }

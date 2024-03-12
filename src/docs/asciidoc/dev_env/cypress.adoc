@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -63,7 +63,6 @@ The `generateUIConfigForCypress.sh` script performs this adaptation to create th
 This will create the following files under `config/cypress/ui-config`:
 
 * ui-menu.json
-* ui-menu-base.json
 * web-ui.json
 * web-ui-base.json
 
@@ -71,8 +70,8 @@ Where `XXX-base.json` and `XXX.json` are created by copying the corresponding `X
 configuration (found under `config/docker/ui-config`) and making the necessary adaptations needed for the cypress instance to
 work well for the tests (changing the authentication mode, making all features visible, etc.).
 
-Then, during the course of the cypress tests, the `XXX.json` files will be modified to test specific features
-(for example, hiding a feature, defining a new menu, etc.). They are reset with the content of `XXX-base.json`
+Then, during the course of the cypress tests, the `web-ui.json` file will be modified to test specific features
+(for example, hiding a feature, defining a new menu, etc.). It is reset with the content of `web-ui-base.json`
 before each test or series of test.
 
 The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.

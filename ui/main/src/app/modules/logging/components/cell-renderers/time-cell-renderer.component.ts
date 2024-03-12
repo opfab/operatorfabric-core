@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,9 +23,8 @@ export class TimeCellRendererComponent implements ICellRendererAngularComp {
     timestamp: string;
 
     agInit(params: any): void {
-        this.timestamp = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(params.value)
+        this.timestamp = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(params.value);
     }
-
 
     // noinspection JSUnusedLocalSymbols
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,15 +56,14 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
-        private mapService: MapService,
         private translateService: TranslateService
     ) {}
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
-        this.groupedCardsService.computeEvent
+        GroupedCardsService.computeEvent
+            .pipe(takeUntil(this.ngUnsubscribe))
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
@@ -72,28 +71,21 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeLttdParams();
         this.computeDisplayedExpirationDate();
         this.truncatedTitle = Utilities.sliceForFormat(this.lightCard.titleTranslated, 130);
-        this.hasGeoLocation =
-            this.lightCard.wktGeometry === undefined ||
-            this.lightCard.wktGeometry == null ||
-            this.lightCard.wktGeometry.length <= 0
-                ? false
-                : true;
+        this.hasGeoLocation = !!this.lightCard?.wktGeometry?.length;
         this.isGeoMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
     }
 
     computeLttdParams() {
-        ProcessesService
-            .queryProcess(this.lightCard.process, this.lightCard.processVersion)
-            .subscribe((process) => {
-                const state = process.states.get((this.lightCard.state));
-                if (state.type === TypeOfStateEnum.FINISHED) {
-                    this.showExpiredIcon = false;
-                    this.showExpiredLabel = false;
-                } else if (state.response) {
-                    this.showExpiredIcon = false;
-                    this.expiredLabel = 'feed.responsesClosed';
-                }
-            });
+        ProcessesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe((process) => {
+            const state = process.states.get(this.lightCard.state);
+            if (state.type === TypeOfStateEnum.FINISHED) {
+                this.showExpiredIcon = false;
+                this.showExpiredLabel = false;
+            } else if (state.response) {
+                this.showExpiredIcon = false;
+                this.expiredLabel = 'feed.responsesClosed';
+            }
+        });
     }
 
     computeFromEntity() {
@@ -130,12 +122,13 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     private computeGroupedCardsIcon() {
-        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard)
-        && this.groupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
+        this.showGroupedCardsIcon =
+            GroupedCardsService.isParentGroupCard(this.lightCard) &&
+            GroupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {
-        return this.groupedCardsService.getChildCardsByTags(this.lightCard.tags);
+        return GroupedCardsService.getChildCardsByTags(this.lightCard.tags);
     }
 
     handleDate(timeStamp: number): string {
@@ -146,13 +139,17 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         this.soundNotificationService.clearOutstandingNotifications();
-        if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
+        if (this.open && GroupedCardsService.isParentGroupCard(this.lightCard)) {
             this.groupedCardsVisible = !this.groupedCardsVisible;
         } else {
             this.groupedCardsVisible = true;
         }
-        if (this.displayContext != DisplayContext.PREVIEW)
-            this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1], 'cards', this.lightCard.id]);
+        if (this.displayContext !== DisplayContext.PREVIEW)
+            this.router.navigate([
+                '/' + RouterStore.getCurrentRoute().split('/')[1].split('?')[0],
+                'cards',
+                this.lightCard.id
+            ]);
     }
 
     get i18nPrefix(): string {
@@ -166,7 +163,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     highlightOnMap(highlight: boolean) {
         if (this.isGeoMapEnabled) {
-            this.mapService.highlightOnMap(highlight, this.lightCard);
+            MapService.highlightOnMap(highlight, this.lightCard);
         }
     }
 
@@ -174,6 +171,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         this.soundNotificationService.clearOutstandingNotifications();
-        this.mapService.zoomToLocation(this.lightCard);
+        MapService.zoomToLocation(this.lightCard);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
+import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 
 @Component({
     selector: 'of-externaldevices',
@@ -17,7 +18,6 @@ import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externa
     styleUrls: ['../externaldevicesconfiguration.component.scss']
 })
 export class UsersTableComponent extends ExternalDevicesConfigurationDirective {
-
     fields = [
         new Field('userLogin'),
         new Field('externalDeviceIds'),
@@ -28,6 +28,6 @@ export class UsersTableComponent extends ExternalDevicesConfigurationDirective {
     canAddItems = true;
 
     queryData(): Observable<any[]> {
-        return this.externalDevicesService.queryAllUserConfigurations();
+        return ExternalDevicesService.queryAllUserConfigurations();
     }
 }

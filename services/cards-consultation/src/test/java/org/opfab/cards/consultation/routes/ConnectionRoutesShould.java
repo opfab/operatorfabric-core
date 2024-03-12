@@ -21,7 +21,6 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.ConnectionRoutesConfig;
 import org.opfab.cards.consultation.services.CardSubscription;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
-import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
@@ -39,8 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class, ConnectionRoutesConfig.class,
-                CardSubscriptionService.class,
-                UserServiceCacheTestApplication.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+                CardSubscriptionService.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Slf4j
 class ConnectionRoutesShould {
@@ -145,9 +143,9 @@ class ConnectionRoutesShould {
                         service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
                         service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
 
-                        String[] expectedUsers = {"{\"login\":\"testuser\",\"entitiesConnected\":null,\"groups\":[\"testgroup1\"]}",
-                                                  "{\"login\":\"testuser2\",\"entitiesConnected\":null,\"groups\":[\"testgroup1\"]}",
-                                                  "{\"login\":\"testuser3\",\"entitiesConnected\":null,\"groups\":[\"testgroup1\"]}"};
+                        String[] expectedUsers = {"{\"login\":\"testuser\",\"entitiesConnected\":null,\"groups\":null}",
+                                                  "{\"login\":\"testuser2\",\"entitiesConnected\":null,\"groups\":null}",
+                                                  "{\"login\":\"testuser3\",\"entitiesConnected\":null,\"groups\":null}"};
 
                         webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
 

@@ -11,15 +11,14 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {ConfigServer} from 'app/business/server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import { RealTimeScreens } from '@ofModel/real-time-screens.model';
+import {RealTimeScreens} from '@ofModel/real-time-screens.model';
 
 export class ConfigServerMock implements ConfigServer {
-
     private webUiConf = new ReplaySubject<ServerResponse<any>>();
     private menuConf = new ReplaySubject<ServerResponse<any>>();
-    private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>;
+    private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>();
     private locale = new ReplaySubject<ServerResponse<any>>();
-    private realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>;
+    private realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>();
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();
@@ -41,11 +40,11 @@ export class ConfigServerMock implements ConfigServer {
         return this.realtimescreenconfiguration.asObservable();
     }
 
-    setResponseForWebUIConfiguration(webuiConf:ServerResponse<any>) {
+    setResponseForWebUIConfiguration(webuiConf: ServerResponse<any>) {
         this.webUiConf.next(webuiConf);
     }
 
-    setResponseForMenuConfiguration(menuConf:ServerResponse<any>) {
+    setResponseForMenuConfiguration(menuConf: ServerResponse<any>) {
         this.menuConf.next(menuConf);
     }
 
@@ -53,7 +52,7 @@ export class ConfigServerMock implements ConfigServer {
         this.monitoringConf.next(monitoringConf);
     }
 
-    setResponseForRealTimeScreenConfiguration(realtimeScreenConf:ServerResponse<any>) {
+    setResponseForRealTimeScreenConfiguration(realtimeScreenConf: ServerResponse<any>) {
         this.realtimescreenconfiguration.next(realtimeScreenConf);
     }
 }

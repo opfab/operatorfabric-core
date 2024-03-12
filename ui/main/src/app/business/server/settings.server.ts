@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
 export abstract class SettingsServer {
     abstract getUserSettings(userId: string): Observable<ServerResponse<any>>;
-    abstract patchUserSettings(userId: string, settings: any):Observable<ServerResponse<any>>;
+    abstract patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>>;
 }
-

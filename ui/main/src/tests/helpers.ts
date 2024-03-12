@@ -8,303 +8,119 @@
  */
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Process, State} from '@ofModel/processes.model';
-import {CustomMenu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
-import {Page} from '@ofModel/page.model';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {Type} from '@angular/core';
-import SpyObj = jasmine.SpyObj;
 import {TestBed} from '@angular/core/testing';
+import {Guid} from 'guid-typescript';
+import SpyObj = jasmine.SpyObj;
 
+const NB_SECONDS_IN_ONE_MINUTE = 60;
+const NB_MILLIS_IN_ONE_SECOND = 1000;
 
-export function getOneRandomMenu(): CustomMenu {
-    const entries: MenuEntry[] = [];
-    const entryCount = getPositiveRandomNumberWithinRange(2, 5);
-    for (let j = 0; j < entryCount; j++) {
-        entries.push(
-            new MenuEntry(
-                getRandomAlphanumericValue(3, 10),
-                getRandomAlphanumericValue(3, 10),
-                getRandomAlphanumericValue(3, 10),
-                MenuEntryLinkTypeEnum.BOTH
-            )
-        );
-    }
-    return new CustomMenu(getRandomAlphanumericValue(3, 10), getRandomAlphanumericValue(3, 10), entries);
-}
-
-export function getRandomMenus(): CustomMenu[] {
-    const result: CustomMenu[] = [];
-    const menuCount = getPositiveRandomNumberWithinRange(2, 4);
-    for (let i = 0; i < menuCount; i++) {
-        result.push(getOneRandomMenu());
-    }
-    return result;
-}
-
-export function getOneRandomProcess(processTemplate?: any): Process {
-    processTemplate = processTemplate ? processTemplate : {};
-    const states = new Map();
-    const stateCount = getPositiveRandomNumberWithinRange(1, 3);
-
-    for (let j = 0; j < stateCount; j++) {
-        const templateName = 'template1';
-        states.set(getRandomAlphanumericValue(3, 10), new State(templateName, ['style1', 'style2']));
-    }
-
-    return new Process(
-        processTemplate.id ? processTemplate.id : getRandomAlphanumericValue(3, 10),
-        processTemplate.version ? processTemplate.version : getRandomAlphanumericValue(3, 10),
-        processTemplate.name ? processTemplate.name : getRandomAlphanumericValue(3, 10),
-        processTemplate.locales ? processTemplate.locales : undefined,
-        processTemplate.states ? processTemplate.states : states
-    );
-}
-
-// fully random without any control
-export function getOneRandomAddCardOperation(): CardOperation {
-    const numberOfCards = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(5);
-    const now = new Date().getTime();
-    return new CardOperation(
-        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(768),
-        now,
-        CardOperationType.ADD,
-        getSeveralRandomLightCards(numberOfCards)[0]
-    );
-}
-
-// heavily based on enum implementation
-export function pickARandomItemOfAnEnum<E>(currentEnum: E): E {
-    const keys = Object.keys(currentEnum).filter((k) => {
-        const parsedInt = parseInt(k);
-        return !isNaN(parsedInt);
-    });
-    const randomIndex = getRandomIndex(keys);
-    const key = keys[randomIndex];
-    return currentEnum[key];
-}
-
-export function getRandomIndex<E>(array: E[]) {
-    if (array && array.length > 0) {
-        return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(0, array.length);
-    } else {
-        return 0;
-    }
-}
-
-export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
-    lightCardTemplate = lightCardTemplate ? lightCardTemplate : {};
+export function getOneLightCard(lightCardTemplate?: any): LightCard {
+    lightCardTemplate = lightCardTemplate ?? {};
     const today = new Date().getTime();
-    const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
+    const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
     return new LightCard(
-        getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.id ? lightCardTemplate.id : getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publisher ? lightCardTemplate.publisher : 'testPublisher',
-        lightCardTemplate.publisherVersion ? lightCardTemplate.publisherVersion : getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publishDate ? lightCardTemplate.publishDate : today,
-        lightCardTemplate.startDate ? lightCardTemplate.startDate : startTime,
-        lightCardTemplate.endDate
-            ? lightCardTemplate.endDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        lightCardTemplate.expirationDate
-            ? lightCardTemplate.expirationDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
-        lightCardTemplate.hasBeenAcknowledged ? lightCardTemplate.hasBeenAcknowledged : false,
-        lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
-        lightCardTemplate.hasChildCardFromCurrentUserEntity
-            ? lightCardTemplate.hasChildCardFromCurrentUserEntity
-            : false,
-        getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.lttd
-            ? lightCardTemplate.lttd
-            : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
-        getRandomI18nData(),
-        getRandomI18nData(),
-        getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.tags ? lightCardTemplate.tags : null,
-        lightCardTemplate.timeSpans ? lightCardTemplate.timeSpans : null,
-        lightCardTemplate.rrule ? lightCardTemplate.rrule : null,
-        lightCardTemplate.process ? lightCardTemplate.process : 'testProcess',
-        lightCardTemplate.state ? lightCardTemplate.state : 'testState'
+        Guid.create().toString(),
+        lightCardTemplate.id ?? 'testId',
+        lightCardTemplate.publisher ?? 'testPublisher',
+        lightCardTemplate.publisherVersion ?? 'testPublisherVersion',
+        lightCardTemplate.publishDate ?? today,
+        lightCardTemplate.startDate ?? startTime,
+        lightCardTemplate.endDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
+        lightCardTemplate.expirationDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
+        lightCardTemplate.severity ?? Severity.ALARM,
+        lightCardTemplate.hasBeenAcknowledged ?? false,
+        lightCardTemplate.hasBeenRead ?? false,
+        lightCardTemplate.hasChildCardFromCurrentUserEntity ?? false,
+        'testProcessInstanceId',
+        lightCardTemplate.lttd ?? 5000,
+        getI18nData('testTitle'),
+        getI18nData('testSummary'),
+        'testTitleTranslated',
+        'testSummaryTranslated',
+        lightCardTemplate.tags ?? null,
+        lightCardTemplate.timeSpans ?? null,
+        lightCardTemplate.rrule ?? null,
+        lightCardTemplate.process ?? 'testProcess',
+        lightCardTemplate.state ?? 'testState'
     );
 }
 
-export function getRandomSeverity(): Severity {
-    const severities: Severity[] = [Severity.ALARM, Severity.ACTION, Severity.COMPLIANT, Severity.INFORMATION];
-    return severities[getPositiveRandomNumberWithinRange(0, 3)];
-}
-
-export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
-    const lightCards = getSeveralRandomLightCards(totalElements);
-    return new Page<LightCard>(totalPages, totalElements, lightCards);
-}
-
-export function getOneRandomCard(cardTemplate?: any): Card {
-    cardTemplate = cardTemplate ? cardTemplate : {};
+export function getOneCard(cardTemplate?: any): Card {
+    cardTemplate = cardTemplate ?? {};
     const today = new Date().getTime();
-    const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
+    const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
     return new Card(
-        getRandomAlphanumericValue(3, 24),
-        cardTemplate.id ? cardTemplate.id : getRandomAlphanumericValue(3, 24),
-        cardTemplate.publisher ? cardTemplate.publisher : getRandomAlphanumericValue(3, 24),
-        cardTemplate.processVersion ? cardTemplate.processVersion : getRandomAlphanumericValue(3, 24),
-        cardTemplate.publishDate ? cardTemplate.publishDate : today,
-        cardTemplate.startDate ? cardTemplate.startDate : startTime,
-        cardTemplate.endDate
-            ? cardTemplate.endDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        cardTemplate.expirationDate
-            ? cardTemplate.expirationDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
-        cardTemplate.hasBeenAcknowledged ? cardTemplate.hasBeenAcknowledged : false,
+        Guid.create().toString(),
+        cardTemplate.id ?? 'testId',
+        cardTemplate.publisher ?? 'testPublisher',
+        cardTemplate.processVersion ?? 'testProcessVersion',
+        cardTemplate.publishDate ?? today,
+        cardTemplate.startDate ?? startTime,
+        cardTemplate.endDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
+        cardTemplate.expirationDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
+        cardTemplate.severity ?? Severity.ALARM,
+        cardTemplate.hasBeenAcknowledged ?? false,
         false,
         false,
-        cardTemplate.process ? cardTemplate.process : 'testProcess',
-        cardTemplate.processInstanceId ? cardTemplate.processInstanceId : getRandomAlphanumericValue(3, 24),
-        cardTemplate.state ? cardTemplate.state : getRandomAlphanumericValue(3, 24),
-        cardTemplate.lttd ? cardTemplate.lttd : null,
-        getRandomI18nData(),
-        getRandomI18nData(),
-        getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
-        cardTemplate.data ? cardTemplate.data : {data: 'data'},
-        cardTemplate.userRecipients ? cardTemplate.userRecipients : null,
-        cardTemplate.groupRecipients ? cardTemplate.groupRecipients : null,
-        cardTemplate.entityRecipients ? cardTemplate.entityRecipients : null,
+        cardTemplate.process ?? 'testProcess',
+        cardTemplate.processInstanceId ?? 'testProcessInstanceId',
+        cardTemplate.state ?? 'testState',
+        cardTemplate.lttd ?? null,
+        getI18nData('testTitle'),
+        getI18nData('testSummary'),
+        cardTemplate.titleTranslated ?? 'testTitleTranslated',
+        cardTemplate.summaryTranslated ?? 'testSummaryTranslated',
+        cardTemplate.data ?? {data: 'data'},
+        cardTemplate.userRecipients ?? null,
+        cardTemplate.groupRecipients ?? null,
+        cardTemplate.entityRecipients ?? null,
         undefined,
         undefined,
-        cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
-        cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
-        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null,
-        cardTemplate.parentCardId ? cardTemplate.parentCardId : null,
-        cardTemplate.initialParentCardUid ? cardTemplate.initialParentCardUid : null,
-        cardTemplate.keepChildCards ? cardTemplate.keepChildCards : null,
-        cardTemplate.publisherType ? cardTemplate.publisherType : null,
-        cardTemplate.representative ? cardTemplate.representative : null,
-        cardTemplate.representativeType ? cardTemplate.representativeType : null,
-        cardTemplate.tags ? cardTemplate.tags : null,
-        cardTemplate.wktGeometry ? cardTemplate.wktGeometry : null,
-        cardTemplate.wktProjection ? cardTemplate.wktProjection : null,
-        cardTemplate.secondsBeforeTimeSpanForReminder ? cardTemplate.secondsBeforeTimeSpanForReminder : null,
-        cardTemplate.timeSpans ? cardTemplate.timeSpans : null,
-        cardTemplate.entitiesAcks ? cardTemplate.entitiesAcks : null
+        cardTemplate.entitiesAllowedToRespond ?? null,
+        cardTemplate.entitiesRequiredToRespond ?? null,
+        cardTemplate.entitiesAllowedToEdit ?? null,
+        cardTemplate.parentCardId ?? null,
+        cardTemplate.initialParentCardUid ?? null,
+        cardTemplate.keepChildCards ?? null,
+        cardTemplate.publisherType ?? null,
+        cardTemplate.representative ?? null,
+        cardTemplate.representativeType ?? null,
+        cardTemplate.tags ?? null,
+        cardTemplate.wktGeometry ?? null,
+        cardTemplate.wktProjection ?? null,
+        cardTemplate.secondsBeforeTimeSpanForReminder ?? null,
+        cardTemplate.timeSpans ?? null,
+        cardTemplate.entitiesAcks ?? null,
+        undefined,
+        cardTemplate.rRule ?? null
     );
 }
 
-export function generateRandomArray<T>(func: () => T, min = 1, max = 2): Array<T> {
-    const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
-    const array = [];
-    for (let i = 0; i < size; ++i) {
-        array[i] = func();
-    }
-
-    return array;
-}
-
-export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?: any): LightCard[] {
+export function getSeveralLightCards(numberOfCards = 1, cardTemplate?: any): LightCard[] {
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
     const lightCards: LightCard[] = new Array(finalNumberOfCards);
     for (let i = 0; i < finalNumberOfCards; ++i) {
-        lightCards[i] = getOneRandomLightCard(cardTemplate);
+        lightCards[i] = getOneLightCard(cardTemplate);
     }
     return lightCards;
 }
 
-export function getRandomI18nData(): I18n {
-    const paramNumber = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4);
+export function getI18nData(key: string): I18n {
     const parameters: Map<string, string> = new Map();
-    for (let i = 0; i < paramNumber; ++i) {
-        parameters[`param${i}`] = getRandomAlphanumericValue(4, 13);
-    }
-    return new I18n(getRandomAlphanumericValue(4, 7), parameters);
-}
+    parameters['param1'] = 'value1';
+    parameters['param2'] = 'value2';
 
-export function getRandomAlphanumericValue(min = 1, max?: number): string {
-    const finalLength = getPositiveRandomNumberWithinRange(min, max);
-    return getFixedLengthAlphanumericValue(finalLength);
-}
-
-export function getPositiveRandomNumberWithinRange(min = 1, max?: number): number {
-    const minimum = forcePositiveAndOneMinimum(min);
-    const maximum = handleMaxAgainstMin(minimum, max);
-    return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(minimum, maximum);
-}
-
-export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1): number {
-    const minimum = forcePositiveAndOneMinimum(min);
-    const maximum = handleMaxAgainstMin(minimum, max);
-    return Math.floor(Math.random() * (maximum - minimum) + minimum);
-}
-
-export function getRandomBoolean(): boolean {
-    return Math.random() >= 0.5;
+    return new I18n(key, parameters);
 }
 
 function forcePositiveAndOneMinimum(min: number): number {
     return min < 0 ? 1 : min;
-}
-
-function handleMaxAgainstMin(min: number, max: number) {
-    const minimum = forcePositiveAndOneMinimum(min);
-    return !max || max < minimum ? minimum : max;
-}
-
-export function getFixedLengthAlphanumericValue(length = 1): string {
-    const finalLength = forcePositiveAndOneMinimum(length);
-    return appendFixedLengthAlphanumericValue(finalLength);
-}
-
-export function appendFixedLengthAlphanumericValue(length = 1, base = ''): string {
-    const finalLength = forcePositiveAndOneMinimum(length);
-    const numericBase = 36; // number as string encoded with all figures and all letters in lower case
-    const indexOfTheRandomNumberToTrim0AndDot = 2; // random  numbers begin with '0.'
-    const intermediateResult = Math.random().toString(numericBase).substring(indexOfTheRandomNumberToTrim0AndDot);
-
-    const stringSize = intermediateResult.length;
-    if (stringSize >= finalLength) {
-        const remainingString = intermediateResult.substring(0, finalLength);
-        return base + remainingString;
-    } else {
-        const nextLength = finalLength - stringSize;
-        return base + appendFixedLengthAlphanumericValue(nextLength, intermediateResult);
-    }
-}
-
-export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<T> {
-    const workingArray = Object.assign([], array);
-    let currentLengthOfRemainingArrayToShuffle = array.length;
-    let valueHolderForPermutation: T;
-    let currentIndex: number;
-    // need a new array otherwise the old one behave weirdly
-    const result = Array<T>(currentLengthOfRemainingArrayToShuffle);
-    while (currentLengthOfRemainingArrayToShuffle) {
-        currentIndex = Math.floor(Math.random() * currentLengthOfRemainingArrayToShuffle--);
-        valueHolderForPermutation = workingArray[currentLengthOfRemainingArrayToShuffle];
-        result[currentLengthOfRemainingArrayToShuffle] = workingArray[currentIndex];
-        workingArray[currentIndex] = valueHolderForPermutation;
-    }
-    return result;
-}
-
-export function generateBusinessconfigWithVersion(
-    businessconfigName?: string,
-    versions?: Set<string>
-): Map<string, Set<string>> {
-    const result = new Map<string, Set<string>>();
-    const businessconfig = businessconfigName ? businessconfigName : getRandomAlphanumericValue(3, 5);
-    function getSomeVersions() {
-        return getRandomAlphanumericValue(3, 8);
-    }
-    const versionValues = versions ? versions : new Set(generateRandomArray(getSomeVersions, 3, 6));
-    result[businessconfig] = versionValues;
-    return result;
 }
 
 export class BusinessconfigI18nLoader implements TranslateLoader {

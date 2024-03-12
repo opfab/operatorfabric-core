@@ -54,6 +54,8 @@
         "display": "BUSINESS"
       },
       "hideResponseFilter": false,
+      "hideProcessFilter": false,
+      "hideStateFilter": false,
       "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
       "hideAckAllCardsFeature": false,
@@ -77,7 +79,8 @@
       "initialZoom": 6,
       "zoomLevelWhenZoomToLocation": 14,
       "maxZoom": 11,
-      "zoomDuration": 500
+      "zoomDuration": 500,
+      "highlightPolygonStrokeWidth": 5
     },
     "enableGroupedCards": false
   },
@@ -113,9 +116,7 @@
     "replayEnabled": true
   },
   "settingsScreen": {
-    "hiddenSettings": [
-      "description"
-    ]
+    "hiddenSettings": []
   },
   "about": {
     "firstapplication": {
@@ -134,8 +135,7 @@
     }
   },
   "usercard": {
-    "useDescriptionFieldForEntityList": false,
-    "displayConnectionCirclesInPreview": false
+    "useDescriptionFieldForEntityList": false
   },
   "processMonitoring": [
     { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},

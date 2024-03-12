@@ -1,3 +1,4 @@
     admin/getPrometheusMonitoring.feature \
     admin/loggersApi.feature \
+    admin/postMessageToSubscriptions.feature \
 

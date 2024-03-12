@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     view: MessageOrQuestionListUserCardTemplateView;
     titleOptions;
     previousTitleId;
+    initialSetting = true;
 
     constructor() {
         super();
@@ -32,64 +33,106 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         <br/>
 
         <div class="opfab-textarea">
-            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')} </label>
-            <textarea id="message" name="message" style="width:100%" rows="3">${this.view.getMessage()}</textarea>
+            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.summaryLabel')} </label>
+            <textarea id="summary" name="summary" style="width:100%" rows="1">${this.view.getSummary()}</textarea>
+        </div>
+
+        <br/>
+
+        <div class="opfab-textarea">
+        <label>${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')}</label>
+            <opfab-richtext-editor id="message">${this.view.getRichMessage()}</opfab-richtext-editor>
         </div>
 
         <br/>
         `;
+        this.listenToEntityUsedForSendingCardChange();
+        this.view
+            .initRecipientsAndMessageList(this.getAttribute('businessData'))
+            .then(() => this.handleInitialSettings());
         this.initMultiSelect();
         this.previousTitleId = this.view.getTitleId();
     }
 
     getSpecificCardInformation() {
-        const message = (<HTMLInputElement>document.getElementById('message')).value;
-        return this.view.getSpecificCardInformation(message);
+        const quillEditor = <HTMLInputElement>document.getElementById('message');
+        const summary = (<HTMLInputElement>document.getElementById('summary')).value;
+        return this.view.getSpecificCardInformation(quillEditor, summary);
     }
 
-    async initMultiSelect() {
+    initMultiSelect() {
         this.messageSelect = opfab.multiSelect.init({
-            id: "message-select",
+            id: 'message-select',
             multiple: false,
             search: true
         });
 
-        await this.view.initRecipientsAndMessageList(this.getAttribute('businessData')).then( (titlesOptions) => {
-            this.titleOptions = titlesOptions;
-        });
-        
-        this.messageSelect.setOptions(this.titleOptions);
+        const that = this;
 
-        if (['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
-            let titleId = this.view.getTitleId();
-            if (titleId) {
-                this.messageSelect.setSelectedValues(titleId)
-            } else {
-                this.messageSelect.setSelectedValues(this.titleOptions[0].value)
-            }
-        }
-
-        let that = this; 
-
-        document.querySelector('#message-select').addEventListener('change', ()=> {
+        document.querySelector('#message-select').addEventListener('change', () => {
             that.fillTextAndRecipientFields();
         });
+    }
 
-        if (opfab.currentUserCard.getEditionMode() == 'CREATE') {
-            this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+    fillTextAndRecipientFields() {
+        const messageId = this.messageSelect.getSelectedValues();
+        const message = this.view.getMessageOrQuestion(messageId);
+
+        if (this.previousTitleId !== messageId || opfab.currentUserCard.getEditionMode() === 'CREATE') {
+            const quill = document.getElementById('message');
+            this.view.setRichTextContent(quill, message);
+
+            const summaryArea = document.getElementById('summary') as HTMLTextAreaElement;
+            summaryArea.value = message?.summary ?? '';
+
+            this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
+            this.previousTitleId = messageId;
         }
     }
 
-    fillTextAndRecipientFields () {
-        const messageId = this.messageSelect.getSelectedValues();
-        const message = this.view.getMessageOrQuestion(messageId)
-        if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
-            const messageArea =  document.getElementById("message") as HTMLTextAreaElement;
-            messageArea.value  = message?.message;
-            this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
-            this.previousTitleId = messageId;
-        } 
-        
+    private listenToEntityUsedForSendingCardChange() {
+        opfab.currentUserCard.listenToEntityUsedForSendingCard((entity) => {
+            this.updateSelectedEmitter(entity);
+        });
     }
 
+    private handleInitialSettings() {
+        const initialSelectedEmitter = this.view.getPublisher() ?? this.view.getSelectedEmitter();
+
+        if (initialSelectedEmitter) {
+            this.view.setSelectedEmitter(initialSelectedEmitter);
+            this.loadInitialSetting();
+            this.initialSetting = false;
+        }
+    }
+
+    private updateSelectedEmitter(entity) {
+        this.view.setSelectedEmitter(entity);
+
+        if (!this.initialSetting || !['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
+            const previousSelectedOption = this.messageSelect.getSelectedValues();
+            this.setMessageListOptions(previousSelectedOption);
+        }
+
+        this.initialSetting = false;
+    }
+
+    private loadInitialSetting() {
+        this.setMessageListOptions();
+        this.messageSelect.setSelectedValues(this.view.getInitialSelectedOption());
+    }
+
+    private setMessageListOptions(selected?) {
+        this.titleOptions = this.view.getMessageListOptions();
+
+        if (this.titleOptions?.length > 0) {
+            this.messageSelect.setOptions(this.titleOptions);
+
+            if (selected && this.titleOptions.find((t) => t.value === selected)) {
+                this.messageSelect.setSelectedValues(selected);
+            } else {
+                this.messageSelect.setSelectedValues(this.titleOptions[0].value);
+            }
+        }
+    }
 }

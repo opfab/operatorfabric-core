@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
 import org.opfab.externaldevices.drivers.*;
+import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.Device;
-import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
 
 import java.net.InetAddress;
@@ -48,8 +48,8 @@ class DevicesServiceShould {
     @Mock
     private ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
 
-    private DeviceConfigurationData deviceConfigurationData;
-    private DeviceConfigurationData deviceConfigurationData2;
+    private DeviceConfiguration deviceConfigurationData;
+    private DeviceConfiguration deviceConfigurationData2;
     private final ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
     private final ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);;
 
@@ -83,10 +83,10 @@ class DevicesServiceShould {
         Optional<Device> result = devicesService.getDevice(TEST_DEVICE_ID);
         Assertions.assertThat(result).isPresent();
         Device device = result.get();
-        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
-        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/" + FAKE_HOST);
-        Assertions.assertThat(device.getPort()).isEqualTo(1234);
-        Assertions.assertThat(device.getIsConnected()).isTrue();
+        Assertions.assertThat(device.id).isEqualTo(TEST_DEVICE_ID);
+        Assertions.assertThat(device.resolvedAddress).isEqualTo("/" + FAKE_HOST);
+        Assertions.assertThat(device.port).isEqualTo(1234);
+        Assertions.assertThat(device.isConnected).isTrue();
 
     }
 
@@ -114,10 +114,10 @@ class DevicesServiceShould {
         List<Device> deviceList = devicesService.getDevices();
         Assertions.assertThat(deviceList).isNotNull().hasSize(1);
         Device device = deviceList.get(0);
-        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
-        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/" + FAKE_HOST);
-        Assertions.assertThat(device.getPort()).isEqualTo(1234);
-        Assertions.assertThat(device.getIsConnected()).isTrue();
+        Assertions.assertThat(device.id).isEqualTo(TEST_DEVICE_ID);
+        Assertions.assertThat(device.resolvedAddress).isEqualTo("/" + FAKE_HOST);
+        Assertions.assertThat(device.port).isEqualTo(1234);
+        Assertions.assertThat(device.isConnected).isTrue();
 
     }
 
@@ -372,7 +372,7 @@ class DevicesServiceShould {
         final int CUSTOM_SIGNAL_ID = 4;
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        DeviceConfigurationData deviceConfigurationData3 = buildDeviceConfiguration(1234, TEST_DEVICE_ID_2, true);
+        DeviceConfiguration deviceConfigurationData3 = buildDeviceConfiguration(1234, TEST_DEVICE_ID_2, true);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData3);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
@@ -449,14 +449,14 @@ class DevicesServiceShould {
 
     }
 
-    private DeviceConfigurationData buildDeviceConfiguration(int port, String deviceId, boolean isEnabled) {
-        return DeviceConfigurationData.builder()
-                .id(deviceId)
-                .host(FAKE_HOST)
-                .port(port)
-                .signalMappingId("testSignalMapping")
-                .isEnabled(isEnabled)
-                .build();
+    private DeviceConfiguration buildDeviceConfiguration(int port, String deviceId, boolean isEnabled) {
+        DeviceConfiguration deviceConfigurationData = new DeviceConfiguration();
+        deviceConfigurationData.setId(deviceId);
+        deviceConfigurationData.setHost(FAKE_HOST);
+        deviceConfigurationData.setPort(port);
+        deviceConfigurationData.setSignalMappingId("testSignalMapping");
+        deviceConfigurationData.setIsEnabled(isEnabled);
+        return deviceConfigurationData;
     }
 
 }

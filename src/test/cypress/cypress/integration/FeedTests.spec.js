@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -304,6 +304,34 @@ describe('FeedScreen tests', function () {
 
     });
 
+    it('Check filter by process', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/chart.json');
+        script.sendCard('defaultProcess/question.json');
+        script.sendCard('cypress/feed/customEvent.json');
+
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(3);
+
+        feed.filterByProcess('cypress');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+        feed.filterByProcess('defaultProcess');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(2);
+
+        feed.filterByState('defaultProcess.questionState');
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+
+
+        feed.filterByProcess('');
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(3);
+    });
+
     it('Check apply filters to timeline', function () {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/chart.json');
@@ -329,7 +357,6 @@ describe('FeedScreen tests', function () {
         checkTimelineCircles(2);
 
     });
-
 
     it('Check reset all filters', function () {
         opfab.loginWithUser('operator1_fr');
@@ -364,6 +391,20 @@ describe('FeedScreen tests', function () {
 
         // Check there are 5 cards in the feed (acknowledged card is not visible)
         feed.checkNumberOfDisplayedCardsIs(5);
+        feed.checkFilterIsOpenAndNotActive();
+        feed.toggleFiltersOpen();
+
+        script.sendCard('cypress/feed/customEvent.json');
+
+        feed.checkNumberOfDisplayedCardsIs(6);
+
+        feed.filterByProcess('cypress');
+        cy.waitDefaultTime();
+        feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        feed.resetAllFilters();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(6);
         feed.checkFilterIsOpenAndNotActive();
         checkResetAllFiltersLinkDoesNotExists();
     });

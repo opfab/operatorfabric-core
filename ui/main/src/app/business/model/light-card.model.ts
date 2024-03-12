@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,8 @@ export class LightCard {
         readonly entitiesRequiredToRespond?: string[],
         readonly entitiesAllowedToEdit?: string[],
         readonly publisherType?: PublisherType | string,
-        readonly secondsBeforeTimeSpanForReminder?: number
+        readonly secondsBeforeTimeSpanForReminder?: number,
+        readonly actions?: CardAction[]
     ) {}
 }
 
@@ -88,4 +89,9 @@ export enum Day {
     FR = 'FR',
     SA = 'SA',
     SU = 'SU'
+}
+
+export enum CardAction {
+    PROPAGATE_READ_ACK_TO_PARENT_CARD = 'PROPAGATE_READ_ACK_TO_PARENT_CARD',
+    KEEP_CHILD_CARDS = 'KEEP_CHILD_CARDS'
 }

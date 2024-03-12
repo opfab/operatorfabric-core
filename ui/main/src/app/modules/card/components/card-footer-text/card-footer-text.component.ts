@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,14 +16,15 @@ import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
+import {CardOperationType} from '@ofModel/card-operation.model';
 
 @Component({
     selector: 'of-card-footer-text',
     templateUrl: './card-footer-text.component.html',
-    styleUrls:['./card-footer-text.component.scss']
+    styleUrls: ['./card-footer-text.component.scss']
 })
-export class CardFooterTextComponent implements OnChanges,OnInit {
+export class CardFooterTextComponent implements OnChanges, OnInit {
     @Input() card: Card;
     @Input() childCards: Card[];
     public formattedPublishDate = '';
@@ -36,21 +37,18 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(
-        private lightCardsStoreService: LightCardsStoreService
-    ) {
+    constructor() {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
-
-        this.lightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {
                 if (receivedAck.cardUid === this.card.uid) {
-                    this.addAckFromSubscription(receivedAck.entitiesAcks);
+                    this.updateAckFromSubscription(receivedAck.entitiesAcks, receivedAck.operation);
                 }
             });
     }
@@ -96,15 +94,19 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
             // We compute the entities recipients of the card, taking into account parent entities
             const entityRecipients = EntitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = EntitiesService
-                .resolveEntitiesAllowedToSendCards(entityRecipients)
-                .map((entity) => entity.id);
+            const entityRecipientsAllowedToSendCards = EntitiesService.resolveEntitiesAllowedToSendCards(
+                entityRecipients
+            ).map((entity) => entity.id);
 
             const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
                 entityRecipientsAllowedToSendCards.includes(entityId)
             );
             userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                addressedTo.push({id: entityId, entityName: EntitiesService.getEntityName(entityId), acknowledged: this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
+                addressedTo.push({
+                    id: entityId,
+                    entityName: EntitiesService.getEntityName(entityId),
+                    acknowledged: this.card.entitiesAcks ? this.card.entitiesAcks.includes(entityId) : false
+                });
             });
 
             addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
@@ -112,18 +114,19 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
         this.listEntitiesAcknowledged = addressedTo;
     }
 
-    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
+    private updateAckFromSubscription(entitiesAcksToUpdate: string[], operation: CardOperationType) {
         if (this.listEntitiesAcknowledged?.length > 0) {
-            entitiesAcksToAdd.forEach((entityAckToAdd) => {
+            entitiesAcksToUpdate.forEach((entityAckToUpdate) => {
                 const indexToUpdate = this.listEntitiesAcknowledged.findIndex(
-                    (entityToAck) => entityToAck.id === entityAckToAdd
+                    (entityToAck) => entityToAck.id === entityAckToUpdate
                 );
                 if (indexToUpdate !== -1) {
-                    this.listEntitiesAcknowledged[indexToUpdate].acknowledged = true;
+                    this.listEntitiesAcknowledged[indexToUpdate].acknowledged = operation === CardOperationType.ACK;
                 }
             });
         }
     }
+
     private getLastResponse(): Card {
         if (this.childCards?.length > 0) {
             return [...this.childCards].sort((a, b) => (a.publishDate < b.publishDate ? 1 : -1))[0];

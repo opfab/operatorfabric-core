@@ -1,10 +1,7 @@
 dependencies {
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
-    swaggerUI generator.swaggerUI
     implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
-    implementation cloud.starterFeign
     implementation boot.starterMongo
     implementation misc.jsonSmart
     implementation misc.collections4
@@ -30,3 +27,4 @@ bootJar {
         )
     }
 }
+

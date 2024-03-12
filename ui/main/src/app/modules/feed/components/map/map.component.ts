@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
@@ -32,6 +32,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Router} from '@angular/router';
 import {DateTimeFormatterService} from '../../../../business/services/date-time-formatter.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 let self;
 
@@ -46,13 +47,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private vectorLayer: VectorLayer<VectorSource<any>>;
     private graphChart = null;
     public lightCardsToDisplay: LightCard[];
+    private filteredLightCardStore: FilteredLightCardsStore;
+    private popupContent: string;
+    private static highlightPolygonStrokeWidth: number;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private mapService: MapService,
         private translate: TranslateService,
         private router: Router
-    ) {}
+    ) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         self = this;
@@ -60,7 +64,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (ConfigService.getConfigValue('feed.geomap.enableMap', false)) {
             const enableGraph = ConfigService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
-            this.lightCardsFeedFilterService
+            this.filteredLightCardStore
                 .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {
@@ -70,14 +74,18 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                     }
                 });
             this.updateMapWhenGlobalStyleChange();
-            this.mapService.highlightCardEvent
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(({lightCardId, highLight}) => {
-                    this.highlightFeature(lightCardId, highLight);
-                });
-            this.mapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
+            MapService.highlightCardEvent.pipe(takeUntil(this.unsubscribe$)).subscribe(({lightCardId, highLight}) => {
+                this.highlightFeature(lightCardId, highLight);
+            });
+            MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
                 this.zoomToLocation(lightCardId);
             });
+
+            this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', 'publishDateAndTitle');
+            MapComponent.highlightPolygonStrokeWidth = ConfigService.getConfigValue(
+                'feed.geomap.highlightPolygonStrokeWidth',
+                2
+            );
         }
     }
 
@@ -260,8 +268,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     displayCardDetailsOnButton(lightCard: LightCard): string {
-        const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
-        return `${publishDate} : ${lightCard.titleTranslated}`;
+        if (this.popupContent === 'summary') {
+            return `${lightCard.summaryTranslated}`;
+        } else {
+            const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+            return `${publishDate} : ${lightCard.titleTranslated}`;
+        }
     }
 
     private getExtentWithMargin() {
@@ -363,7 +375,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             case 'Polygon':
                 return MapComponent.polygonStyle(severity, highlight);
             default:
-                console.log('ERROR: Unsupported geo type: ' + type);
+                logger.error('Unsupported geo type: ' + type);
         }
     }
 
@@ -420,10 +432,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private static polygonStyle(severity: Severity, highlight: boolean) {
         const fillOpacity = highlight ? 0.6 : 0.1;
+        const strokeWidth = highlight ? this.highlightPolygonStrokeWidth : 2;
         return new Style({
             stroke: new Stroke({
                 color: MapComponent.severityToColorMap(0.8)[severity],
-                width: 2
+                width: strokeWidth
             }),
             fill: new Fill({
                 color: MapComponent.severityToColorMap(fillOpacity)[severity] // 'rgba(0, 0, 255, 0.1)'
@@ -462,7 +475,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 plugins: {
                     datalabels: {
                         display: function (context) {
-                            return context.dataset.data[context.dataIndex] > 0;
+                            return Number(context.dataset.data[context.dataIndex]) > 0;
                         },
                         color: 'rgb(38, 47, 61, 0.8)',
                         font: {

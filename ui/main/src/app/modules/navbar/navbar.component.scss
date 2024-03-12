@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,6 +6,21 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+ .opfab-logo {
+	background-color: #f8f9fa;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.opfab-icon-link {
+    color: var(--opfab-navbar-color);
+    text-decoration: none;
+    padding-left: 0.5rem;
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
 
 .opfab-navbar {
     padding-left: 20px;
@@ -63,12 +78,10 @@
 }
 
 .opfab-dropdown-menu-item {
-    color: var(--opfab-navbar-color);
     margin-left: 10px;
     margin-right: 10px;
     font-size: 16px;
     line-height: 30px;
-    letter-spacing: normal;
     cursor: pointer;
 
     &:hover,
@@ -87,15 +100,14 @@
     margin-bottom: -10px;
     padding-top: 10px;
     letter-spacing: normal;
+    padding-bottom: 20px
 }
 
 .opfab-right-menu-item {
-    color: var(--opfab-navbar-color);
     margin-left: 20px;
     margin-right: 20px;
     font-size: 16px;
     line-height: 40px;
-    letter-spacing: normal;
     cursor: pointer;
 
     &:hover,
@@ -110,7 +122,6 @@
     color: var(--opfab-navbar-color);
     align-items: center;
     text-decoration: none;
-    font-size: 16px;
 
     &:hover,
     &:focus {
@@ -123,15 +134,27 @@
     height: 18px;
     width: 18px;
     margin-right: 5px;
-    background: var(--opfab-navbar-color-hover);
+    background: var(--opfab-navbar-color);
     mask-size: cover;
 }
 
-.opfab-menu-icon-parameters {
+.opfab-menu-icon-settings {
     mask: url(../../../assets/images/icons/parameters.svg);
 }
 
-.opfab-menu-icon-notification {
+.opfab-menu-icon-realtimeusers {
+    mask: url(../../../assets/images/icons/clock.svg);
+}
+
+.opfab-menu-icon-activityarea {
+    mask: url(../../../assets/images/icons/user-gear.svg);
+}
+
+.opfab-menu-icon-externaldevicesconfiguration {
+    mask: url(../../../assets/images/icons/volume-high.svg);
+}
+
+.opfab-menu-icon-feedconfiguration {
     mask: url(../../../assets/images/icons/notification.svg);
 }
 
@@ -143,10 +166,11 @@
     mask: url(../../../assets/images/icons/about.svg);
 }
 
-.opfab-menu-icon-change-password {
+.opfab-menu-icon-changepassword {
     mask: url(../../../assets/images/icons/change-password.svg);
 }
 
+// a space is added to the logout icon
 .opfab-menu-icon-logout {
     mask: url(../../../assets/images/icons/logout.svg);
 }
@@ -155,9 +179,24 @@
     mask: url(../../../assets/images/icons/administration.svg);
 }
 
-.opfab-menu-icon-dark-light {
+.opfab-menu-icon-nightdaymode {
     mask: url(../../../assets/images/icons/dark-light.svg);
 }
+
+.opfab-right-menu-item:hover .opfab-menu-icon-admin,
+.opfab-right-menu-item:hover .opfab-menu-icon-settings,
+.opfab-right-menu-item:hover .opfab-menu-icon-realtimeusers,
+.opfab-right-menu-item:hover .opfab-menu-icon-externaldevicesconfiguration,
+.opfab-right-menu-item:hover .opfab-menu-icon-activityarea,
+.opfab-right-menu-item:hover .opfab-menu-icon-feedconfiguration,
+.opfab-right-menu-item:hover .opfab-menu-icon-useractionlogs,
+.opfab-right-menu-item:hover .opfab-menu-icon-about,
+.opfab-right-menu-item:hover .opfab-menu-icon-nightdaymode,
+.opfab-right-menu-item:hover .opfab-menu-icon-changepassword,
+.opfab-right-menu-item:hover .opfab-menu-icon-logout {
+    background: var(--opfab-navbar-color-hover);
+}
+
 
 .opfab-menu-icon-newcard {
     display: inline-block;

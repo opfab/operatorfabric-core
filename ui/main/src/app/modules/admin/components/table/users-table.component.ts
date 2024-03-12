@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,7 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
             },
             wrapText: true,
             autoHeight: true,
+            maxWidth: 500,
             flex: 4
         };
         this.gridOptions.columnTypes['entitiesColumn'] = {
@@ -69,8 +70,9 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
-        super.ngOnInit();
+        super.initCrudService();
     }
 }

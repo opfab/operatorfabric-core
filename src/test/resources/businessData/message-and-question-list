@@ -16,8 +16,14 @@
     "messagesList": [{
         "id": "Warning",
         "title": "Warning about the state of the grid",
-        "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
+        "summary": "Warning about the state of the grid : a problem has been detected",
+        "richMessage": {"ops":[{"attributes":{"color":"#e60000","bold":true},"insert":"A problem has been detected"},{"insert":", please put maintenance work on hold and be on stand by"},{"attributes":{"header":2},"insert":"\n"}]},
         "question": false,
+        "severity": "ALARM",
+        "publishers":  [
+            "ENTITY2_FR",
+            "ENTITY3_FR"
+       ],
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",
@@ -33,6 +39,7 @@
         "title": "Confirmation the issues have been fixed",
         "message": "Please confirm the issues in your area have been fixed",
         "question": true,
+        "severity": "ACTION",
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",
@@ -46,8 +53,13 @@
     {
         "id": "Situation_solved",
         "title": "Situation solved",
+        "summary": "Situation solved : all the problems have been dealt with",
         "message": "All the problems have been dealt with, please resume normal operations",
         "question": false,
+        "publishers":  [
+            "ENTITY2_FR",
+            "ENTITY3_FR"
+       ],
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",

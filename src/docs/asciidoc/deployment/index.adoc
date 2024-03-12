@@ -124,24 +124,26 @@ include::users_groups_admin.adoc[leveloffset=+1]
 
 include::port_table.adoc[leveloffset=+1]
 
-== Rate limiter for card sendings
+== Rate limiter for card sending
 
 External publishers are monitored by this module which limits how many cards they can send
 ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
  in a period of time
 ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
 .
 This is to avoid potential overloading due to external apps stuck in a card sending loop.
 It can be disabled / enabled with
 ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>].
-It also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g. POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
+ifndef::single-page-doc[<</documentation/current/deployment/#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+.
+It is also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g.
+POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
 
 == Restricted operations (administration)
 
-Some operations are restricted to users with the **ADMIN** role, either because they are administration
+Some operations are restricted to users with administrative roles, either because they are administration
 operations with the potential to impact the OperatorFabric instance as a whole, or because they
 give access to information that should be private to a user.
 
@@ -151,17 +153,20 @@ Below is a quick recap of these restricted operations.
 Any action (read, create/update or delete) regarding a single user's data (their personal info such as their first and
 last name, as well as their settings) can be performed either by the user in question or by a user with the ADMIN role.
 
-Any action on a list of users or on the groups (or entities) (if authorization is managed in OperatorFabric) can only be performed by
-a user with the ADMIN role.
+Any action on users, groups, entities or perimeters lists (if authorization is managed in OperatorFabric) is restricted to users with the ADMIN role.
+
+Access to users action logs information is restricted to users with ADMIN role or VIEW_USER_ACTION_LOGS role.
 
 .Businessconfig Service
-Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role. As such,
+Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role or ADMIN_BUSINESS_PROCESS role. As such,
 administrators are responsible for the quality and security of the provided bundles.
 In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that
 there is no XSS risk.
 
-IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to card consultation (be they current or
-archived), so a user with the ADMIN role will only see cards that have been addressed to them (or to one of their
-groups (or entities)), just like any other user.
+.Cards consultation Service
+Users holding the ADMIN role are authorized to read all archived cards, regardless of the card's sender, recipients, or the user's assigned perimeters
+IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to current cards consultation so a user with the ADMIN role will only receive cards that have been addressed to them (or to one of their
+groups or entities), just like any other user.
 
-
+.External devices service
+Any action (read, create/update or delete) on external devices configuration is restricted to users with th ADMIN role.

@@ -1,4 +1,4 @@
-FROM node:21.2-alpine
+FROM node:20.11.0-alpine
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app
@@ -8,8 +8,7 @@ COPY dockerBuild ./build
 RUN mkdir -m777 config
 COPY dockerConfig/default-docker.yml ./config/base.yml
 COPY package.json ./
+COPY package-lock.json ./
 COPY startCardsReminder.sh ./
-RUN npm config set https-proxy $https_proxy
-RUN npm install --ignore-scripts
-RUN npm config delete https-proxy
+COPY node_modules ./node_modules
 ENTRYPOINT ["./startCardsReminder.sh"]

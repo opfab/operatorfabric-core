@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+
+import * as moment from 'moment/moment';
 
 declare const opfab;
 
@@ -19,14 +21,12 @@ export class QuestionCardTemplateView {
         return question;
     }
 
-
-    public setFunctionToGetResponseInput( getResponseInput: Function) {
+    public setFunctionToGetResponseInput(getResponseInput: Function) {
         opfab.currentCard.registerFunctionToGetUserResponse(() => {
-            const response  = getResponseInput();
+            const response = getResponseInput();
             return {valid: true, responseCardData: {response: response}};
         });
     }
-
 
     public listenToResponses(setResponses: Function) {
         opfab.currentCard.listenToChildCards((childCards) => {
@@ -35,7 +35,8 @@ export class QuestionCardTemplateView {
                 childCards?.forEach((element) => {
                     responses.push({
                         entityName: opfab.utils.escapeHtml(opfab.users.entities.getEntityName(element.publisher)),
-                        response: opfab.utils.escapeHtml(element.data?.response)
+                        response: opfab.utils.escapeHtml(element.data?.response),
+                        dateTime: moment(element.publishDate).format('HH:mm DD/MM/yyyy')
                     });
                 });
             }

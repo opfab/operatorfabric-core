@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -36,15 +36,13 @@ export class SettingsComponent implements OnInit {
     systemNotificationCompliantDefaultValue: boolean;
     systemNotificationInformationDefaultValue: boolean;
     sendCardsByEmailDefaultValue: boolean;
+    emailToPlainTextDefaultValue: boolean;
 
     userConfiguration: UserConfiguration;
 
     patternReplayInterval = '[0-9]*';
 
-    constructor(
-        private externalDevicesService: ExternalDevicesService,
-        private translateService: TranslateService
-    ) {}
+    constructor(private translateService: TranslateService) {}
 
     ngOnInit() {
         this.locales = this.translateService.getLangs();
@@ -77,25 +75,31 @@ export class SettingsComponent implements OnInit {
         this.systemNotificationActionDefaultValue = ConfigService.getConfigValue('settings.systemNotificationAction')
             ? ConfigService.getConfigValue('settings.systemNotificationAction')
             : false;
-        this.systemNotificationCompliantDefaultValue = ConfigService.getConfigValue('settings.systemNotificationCompliant')
+        this.systemNotificationCompliantDefaultValue = ConfigService.getConfigValue(
+            'settings.systemNotificationCompliant'
+        )
             ? ConfigService.getConfigValue('settings.systemNotificationCompliant')
             : false;
-        this.systemNotificationInformationDefaultValue = ConfigService.getConfigValue('settings.systemNotificationInformation')
+        this.systemNotificationInformationDefaultValue = ConfigService.getConfigValue(
+            'settings.systemNotificationInformation'
+        )
             ? ConfigService.getConfigValue('settings.systemNotificationInformation')
             : false;
         this.sendCardsByEmailDefaultValue = ConfigService.getConfigValue('settings.sendCardsByEmail')
             ? ConfigService.getConfigValue('settings.sendCardsByEmail')
             : false;
+        this.emailToPlainTextDefaultValue = ConfigService.getConfigValue('settings.emailToPlainText')
+            ? ConfigService.getConfigValue('settings.emailToPlainText')
+            : false;
         const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
 
         if (this.externalDevicesEnabled)
-            this.externalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {
+            ExternalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {
                 this.userConfiguration = result;
             });
     }
 
     isExternalDeviceConfiguredForUser(): boolean {
-        return  this.userConfiguration?.externalDeviceIds?.length > 0;
+        return this.userConfiguration?.externalDeviceIds?.length > 0;
     }
 }
-

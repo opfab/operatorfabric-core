@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,8 +13,7 @@ import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 
 export class OpfabEventStreamService {
-
-    private static opfabEventStreamServer: OpfabEventStreamServer
+    private static opfabEventStreamServer: OpfabEventStreamServer;
 
     public static initSubscription = new Subject<void>();
 
@@ -28,8 +27,6 @@ export class OpfabEventStreamService {
     private static businessDataChange = new Subject<void>();
 
     private static eventStreamClosed = false;
-
-
 
     public static setEventStreamServer(opfabEventStreamServer: OpfabEventStreamServer) {
         OpfabEventStreamService.opfabEventStreamServer = opfabEventStreamServer;
@@ -45,7 +42,7 @@ export class OpfabEventStreamService {
             OpfabEventStreamService.opfabEventStreamServer.closeStream();
             OpfabEventStreamService.eventStreamClosed = true;
         }
-    } 
+    }
 
     public static getCardOperationStream(): Observable<CardOperation> {
         return OpfabEventStreamService.opfabEventStreamServer.getEvents().pipe(
@@ -102,7 +99,10 @@ export class OpfabEventStreamService {
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (start < OpfabEventStreamService.startOfAlreadyLoadedPeriod && end > OpfabEventStreamService.endOfAlreadyLoadedPeriod) {
+        if (
+            start < OpfabEventStreamService.startOfAlreadyLoadedPeriod &&
+            end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
+        ) {
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
@@ -123,9 +123,15 @@ export class OpfabEventStreamService {
             LogOption.LOCAL_AND_REMOTE
         );
         OpfabEventStreamService.opfabEventStreamServer.setBusinessPeriod(start, end).subscribe(() => {
-            if (!OpfabEventStreamService.startOfAlreadyLoadedPeriod || start < OpfabEventStreamService.startOfAlreadyLoadedPeriod)
+            if (
+                !OpfabEventStreamService.startOfAlreadyLoadedPeriod ||
+                start < OpfabEventStreamService.startOfAlreadyLoadedPeriod
+            )
                 OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
-            if (!OpfabEventStreamService.endOfAlreadyLoadedPeriod || end > OpfabEventStreamService.endOfAlreadyLoadedPeriod)
+            if (
+                !OpfabEventStreamService.endOfAlreadyLoadedPeriod ||
+                end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
+            )
                 OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
         });
     }

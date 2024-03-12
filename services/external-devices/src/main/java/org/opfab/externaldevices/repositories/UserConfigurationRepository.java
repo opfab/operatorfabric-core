@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,23 +7,29 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.externaldevices.repositories;
 
-import org.opfab.externaldevices.model.DeviceConfigurationData;
-import org.opfab.externaldevices.model.UserConfigurationData;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.opfab.externaldevices.model.UserConfiguration;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Mongo {@link DeviceConfigurationData} repository
- */
-@Repository
-public interface UserConfigurationRepository extends MongoRepository<UserConfigurationData,String> {
+public interface UserConfigurationRepository {
 
-    List<UserConfigurationData> findByExternalDeviceIds(String externalDeviceId);
+    void insert(UserConfiguration userConfiguration);
+
+    void save(UserConfiguration userConfiguration);
+
+    void saveAll(List<UserConfiguration> userConfigurations);
+
+    List<UserConfiguration> findAll();
+
+    Optional<UserConfiguration> findById(String id);
+
+    void deleteById(String id);
+
+    void deleteAll();
+
+    List<UserConfiguration> findByExternalDeviceIds(String externalDeviceId);
 
 }

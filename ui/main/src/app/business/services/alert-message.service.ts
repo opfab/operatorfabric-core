@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@ import {Message} from '@ofModel/message.model';
 import {Observable, Subject} from 'rxjs';
 
 export class AlertMessageService {
-
     private static alertEvent = new Subject<Message>();
 
     public static sendAlertMessage(message: Message) {

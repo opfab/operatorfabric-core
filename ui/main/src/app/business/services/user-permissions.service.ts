@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
@@ -15,10 +14,9 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {User} from '@ofModel/user.model';
+import {LoggerService} from './logs/logger.service';
 
 export class UserPermissionsService {
- 
-
     public static isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (UserPermissionsService.isLttdExpired(card)) return false;
 
@@ -93,7 +91,11 @@ export class UserPermissionsService {
         return card.lttd != null && card.lttd - new Date().getTime() <= 0;
     }
 
-    public static getUserEntitiesAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): string[] {
+    public static getUserEntitiesAllowedToRespond(
+        user: UserWithPerimeters,
+        card: Card,
+        processDefinition: Process
+    ): string[] {
         let userEntitiesAllowedToRespond = [];
         let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
         if (card.entitiesAllowedToRespond)
@@ -117,14 +119,10 @@ export class UserPermissionsService {
                 .map((entity) => entity.id)
                 .filter((x) => x !== card.publisher || emittingEntityAllowedToRespond);
 
-            console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', allowed);
+            LoggerService.debug(' Detail card - entities allowed to respond = ' + allowed);
 
             userEntitiesAllowedToRespond = allowed.filter((x) => user.userData.entities.includes(x));
-            console.log(
-                new Date().toISOString(),
-                ' Detail card - users entities allowed to respond = ',
-                userEntitiesAllowedToRespond
-            );
+            LoggerService.debug(' Detail card - users entities allowed to respond = ' + userEntitiesAllowedToRespond);
         }
         return userEntitiesAllowedToRespond;
     }

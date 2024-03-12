@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -73,7 +73,7 @@ describe ('LoginPage',()=>{
 
     it('login is in french if settings.locale is set to fr in web-ui.json' , () => {
         //go to login page
-        script.setPropertyInConf('settings.locale','web-ui','\\"fr\\"');
+        script.setPropertyInConf('settings.locale','\\"fr\\"');
         cy.visit("/");
         cy.get('#opfab-login-btn-submit').contains("Se connecter");
     })

@@ -1,17 +1,12 @@
 subprojects {
 
-    /////// PLUGINS
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
     apply plugin: "com.palantir.docker"
-    apply plugin: 'org.hidetake.swagger.generator'
-
-    /////// DEPENDENCIES
 
     dependencies {
-        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         implementation boot.actuator
         implementation misc.micrometer
         annotationProcessor misc.lombok
@@ -27,8 +22,6 @@ subprojects {
 
         testImplementation boot.starterTest, testing_deps.assertJ
         testImplementation project(':tools:generic:test-utilities')
-        testImplementation testing_deps.awaitility
-        testImplementation group:'org.jeasy', name: 'easy-random-core', version: '5.0.0'
 
     }
 
@@ -37,44 +30,22 @@ subprojects {
         testImplementation.exclude module: "spring-boot-starter-tomcat"
     }
 
-    /////// COMPILATION
-
     sourceSets {
         main {
             java {
                 srcDir 'src/main/java'
-                srcDir 'build/swagger/src/main/java'
             }
             resources{
                 srcDir 'src/main/resources'
-                srcDir 'build/src/generated/resources'
             }
         }
     }
-
-    // Tests
 
     test {
         useJUnitPlatform()
 
         filter {
             includeTestsMatching "*Should"
-        }
-    }
-
-    swaggerSources {
-        endpoints {
-            inputFile = file('src/main/modeling/swagger.yaml')
-            code {
-                language = 'org.opfab.generators.OpfabSpringGenerator'
-                additionalProperties = [ignoreImportMappings:"false"]
-                configFile = file('src/main/modeling/config.json')
-                outputDir = file("./build/swagger")
-                templateDir = file('../src/main/resources/swagger-templates')
-            }
-            ui {
-                outputDir = file("./build/docs/api")
-            }
         }
     }
 
@@ -136,9 +107,7 @@ subprojects {
         }
     }
 
-    tasks.compileJava.dependsOn generateSwaggerCode
-    tasks.compileTestJava.dependsOn generateSwaggerCode
-    tasks.generateSwaggerCodeEndpoints.dependsOn ':tools:swagger-spring-generators:assemble'
+   
     tasks.docker.dependsOn copyWorkingDir
     tasks.docker.dependsOn build
     tasks.jacocoTestReport.dependsOn test

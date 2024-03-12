@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,14 +39,16 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             filter: 'agTextColumnFilter',
             filterParams: {
                 valueGetter: (params) => {
-                    const entity = this.entitiesDefinition
-                        .find((entityDefinition) => params.data.entityId === entityDefinition.id);
-                        
+                    const entity = this.entitiesDefinition.find(
+                        (entityDefinition) => params.data.entityId === entityDefinition.id
+                    );
+
                     return entity ? entity.name : params.data.entityId;
                 }
             },
             wrapText: true,
             autoHeight: true,
+            maxWidth: 500,
             flex: 3
         };
         this.gridOptions.columnTypes['supervisorsColumn'] = {
@@ -68,8 +70,9 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
-        super.ngOnInit();
+        super.initCrudService();
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ import {LoggerService as logger, LogOption} from 'app/business/services/logs/log
 import {RemoteLoggerService} from './logs/remote-logger.service';
 import {I18nService} from './translation/i18n.service';
 import {UserService} from './users/user.service';
-import {RouterService} from '../server/router.service';
 import {OpfabAPIService} from './opfabAPI.service';
 import {loadBuildInTemplates} from '../buildInTemplates/templatesLoader';
 import {GlobalStyleService} from './global-style.service';
@@ -29,12 +28,15 @@ import {BusinessDataService} from './businessconfig/businessdata.service';
 import {CardService} from './card/card.service';
 import {SupervisedEntitiesService} from './users/supervised-entities.service';
 import {SelectedCardLoaderService} from './card/selectedCardLoader.service';
+import {HandlebarsService} from './card/handlebars.service';
+import {ExternalDevicesService} from './notifications/external-devices.service';
+import {TemplateCssService} from './card/template-css.service';
+import {SettingsService} from './users/settings.service';
+import {RouterService} from './router.service';
 
 declare const opfab: any;
 export class ServicesConfig {
     private static loadDone = new Subject();
-    private static routerService: RouterService;
-    private static opfabApiService: OpfabAPIService;
 
     public static setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
@@ -42,8 +44,7 @@ export class ServicesConfig {
         I18nService.setConfigServer(servers.configServer);
         I18nService.setTranslationService(servers.translationService);
         UserService.setUserServer(servers.userServer);
-        ServicesConfig.routerService = servers.routerService;
-        ServicesConfig.opfabApiService = servers.opfabAPIService;
+        RouterService.setApplicationRouter(servers.routerService);
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
@@ -54,6 +55,10 @@ export class ServicesConfig {
         BusinessDataService.setBusinessDataServer(servers.businessDataServer);
         CardService.setCardServer(servers.cardServer);
         SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);
+        ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
+        TemplateCssService.setTemplatecssServer(servers.templateCssServer);
+        SettingsService.setSettingsServer(servers.settingsServer);
+        OpfabAPIService.setTranslationService(servers.translationService);
     }
 
     public static load(): Observable<any> {
@@ -107,17 +112,17 @@ export class ServicesConfig {
     }
 
     public static finalizeLoading() {
+        HandlebarsService.init();
         SelectedCardLoaderService.init();
         loadBuildInTemplates();
         ServicesConfig.initOpfabAPI();
     }
 
     private static initOpfabAPI(): void {
-        const that = this;
         opfab.navigate.showCardInFeed = function (cardId: string) {
-            that.routerService.navigateTo('feed/cards/' + cardId);
+            RouterService.navigateTo('feed/cards/' + cardId);
         };
 
-        ServicesConfig.opfabApiService.initAPI();
+        OpfabAPIService.initAPI();
     }
 }

@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 4.1.0.RELEASE
+  version: 4.2.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -125,23 +125,38 @@ definitions:
         type: array
         items:
           type: string
-      entityAllowedToSendCard:
-        type: boolean
       parents:
         type: array
         items:
           type: string
           uniqueItems: true
+      roles: 
+        type: array
+        items:
+          $ref: '#/definitions/RolesEnum'
     required:
        - id
     example:
       id: ENTITY1
       name: Control Room 1
       description: Control Room 1
+  RolesEnum:
+    type: string
+    description: |-
+      Different possible roles >
+      * ACTIVITY_AREA : Used to display an entity in the activity area screen
+      * ACTIVITY_AREA_GROUP : Used to group entities in the activity area screen
+      * CARD_SENDER : Allows an entity to send cards
+      * CARD_RECEIVER : Allows an entity to receive cards
+    enum:
+      - ACTIVITY_AREA
+      - ACTIVITY_AREA_GROUP
+      - CARD_SENDER
+      - CARD_RECEIVER
   RightsEnum:
     type: string
     description: |-
-      Different rights possible >
+      Different possible rights >
       * Receive: Only receive rights (receiving card)
       * ReceiveAndWrite: Receive and write rights (receiving card and creating new card)
     enum:
@@ -261,6 +276,10 @@ definitions:
         type: boolean
         description: |-
           If this is set to true, Opfab will send unread cards notification by email
+      emailToPlainText:
+        type: boolean
+        description: |-
+          If this is set to true, the emails' bodies will be plain text
       email:
         type: string
         description: Email address to use as recipient for email notifications
@@ -302,6 +321,10 @@ definitions:
         type: boolean
         description: |-
           If this is set to true, Opfab will send unread cards notification by email
+      emailToPlainText:
+        type: boolean
+        description: |-
+          If this is set to true, the emails' bodies will be plain text
       email:
         type: string
         description: Email address to use as recipient for email notifications

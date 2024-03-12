@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,12 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {
-    AsyncValidatorFn,
-    FormControl,
-    FormGroup,
-    Validators
-} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -32,13 +27,13 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 })
 export class EditUserModalComponent implements OnInit {
     userForm: FormGroup<{
-        login: FormControl<string | null>,
-        firstName: FormControl<string | null>,
-        lastName: FormControl<string | null>,
-        comment: FormControl<string | null>,
-        groups: FormControl<[] | null>,
-        entities: FormControl<[] | null>,
-        authorizedIPAddresses: FormControl<any>
+        login: FormControl<string | null>;
+        firstName: FormControl<string | null>;
+        lastName: FormControl<string | null>;
+        comment: FormControl<string | null>;
+        groups: FormControl<[] | null>;
+        entities: FormControl<[] | null>;
+        authorizedIPAddresses: FormControl<any>;
     }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -57,14 +52,12 @@ export class EditUserModalComponent implements OnInit {
         sortOptions: true
     };
 
-
     @Input() row: User;
-
 
     constructor(
         private activeModal: NgbActiveModal,
         private changeDetector: ChangeDetectorRef
-    ) { }
+    ) {}
 
     ngOnInit() {
         const uniqueLoginValidator = [];
@@ -83,9 +76,7 @@ export class EditUserModalComponent implements OnInit {
             comment: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
-            authorizedIPAddresses: new FormControl(
-                '',
-                [Validators.pattern(/^((\d+(\.\d+){3}),?\s?)+$/)] )
+            authorizedIPAddresses: new FormControl('', [Validators.pattern(/^((\d+(\.\d+){3}),?\s?)+$/)])
         });
 
         if (this.row) {
@@ -126,7 +117,10 @@ export class EditUserModalComponent implements OnInit {
     update() {
         this.cleanForm();
         const isAuthorizedIPAdressesAString = this.userForm.value['authorizedIPAddresses'];
-        const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
+        const ipList =
+            isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0
+                ? this.authorizedIPAddresses.value.split(',')
+                : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
         UserService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
@@ -155,11 +149,11 @@ export class EditUserModalComponent implements OnInit {
                 debounceTime(500),
                 distinctUntilChanged(),
                 switchMap((value) => {
-                    return this.isUniqueLogin(value)
+                    return this.isUniqueLogin(value);
                 }),
                 map((unique: boolean) => (unique ? null : {uniqueLoginViolation: true})),
                 first(),
-                tap( () => this.changeDetector.markForCheck())
+                tap(() => this.changeDetector.markForCheck())
             ); // important to make observable finite
     }
 
@@ -186,7 +180,7 @@ export class EditUserModalComponent implements OnInit {
     }
 
     get comment() {
-        return this.userForm.get('comment')
+        return this.userForm.get('comment');
     }
 
     get groups() {

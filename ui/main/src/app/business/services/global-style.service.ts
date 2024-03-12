@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,14 +23,12 @@ export class GlobalStyleService {
     private static styleChangeEvent: BehaviorSubject<string>;
 
     public static init() {
-        opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
         GlobalStyleService.setStyle('NIGHT');
     }
 
     public static loadUserStyle() {
-        const visibleCoreMenus = MenuService.computeVisibleCoreMenusForCurrentUser();
-        const nightDayMode = visibleCoreMenus.includes('nightdaymode');
+        const nightDayMode = MenuService.isNightDayModeMenuVisible();
 
         const settings = ConfigService.getConfigValue('settings');
         if (!nightDayMode) {
@@ -48,7 +46,7 @@ export class GlobalStyleService {
 
     public static setStyle(style: string) {
         GlobalStyleService.style = style;
-        opfabStyle.setCss(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_STYLE : opfabStyle.DAY_STYLE);
+        opfabStyle.setOpfabTheme(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_THEME : opfabStyle.DAY_THEME);
         GlobalStyleService.styleChanged();
     }
 

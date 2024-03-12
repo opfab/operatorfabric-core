@@ -71,6 +71,7 @@
       "name": "⚠️ Network Contingencies ⚠️",
       "description": "Contingencies state",
       "templateName": "contingencies",
+      "emailBodyTemplate": "contingenciesMail",
       "styles": [
         "contingencies"
       ],

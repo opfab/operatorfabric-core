@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-card-actions',
@@ -51,8 +52,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     constructor(
         private modalService: NgbModal,
         private router: Router
-    ) {
-    }
+    ) {}
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
@@ -157,7 +157,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
                 this.closeDetails();
                 this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
             } else {
-                console.log('Impossible to delete card , error status from service : ', status);
+                LoggerService.error('Impossible to delete card , error status from service : ' + status);
                 this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
             }
             this.deleteInProgress = false;

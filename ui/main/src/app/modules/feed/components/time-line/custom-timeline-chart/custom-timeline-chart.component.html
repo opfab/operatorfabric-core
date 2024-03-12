@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!--Copyright (c) 2023, Alliander (http://www.alliander.com)               -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -11,53 +11,33 @@
 <ngx-charts-chart
         [view]="[width, height]" xmlns:svg="http://www.w3.org/1999/svg"
         [showLegend]="false"
-        appMouseWheel
+        ofMouseWheel
         (mouseWheelUp)="onZoom($event, 'in')"
         (mouseWheelDown)="onZoom($event, 'out')"
         class="">
 
-
-
-
     <svg:g [attr.transform]="translateGraph" class="chart">
 
-        <svg:g *ngFor="let rectangle of weekRectangles">
+        <svg:g *ngFor="let rectangle of timeLineView.getDayRectangles()">
            <svg:rect *ngIf="rectangle.changeBgColor" [attr.x]="xScale(rectangle.start)"
                 [attr.width]="xScale(rectangle.end) - xScale(rectangle.start)" y="0" fill=var(--opfab-timeline-week-bgcolor)
-                [attr.height]="dims.height"></svg:rect> -->
+                [attr.height]="dims.height"></svg:rect> 
             <text *ngIf="rectangle.changeBgColor"
                 [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="53"
                 fill=var(--opfab-timeline-week-color) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
-                {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
+                {{rectangle.dateToDisplay}}</text>
             <text *ngIf="!rectangle.changeBgColor"
                 [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) /2" [attr.y]="53"
                 fill=var(--opfab-timeline-week-color2) text-anchor="middle" [attr.font-size]="15" stroke-width="0.5px">
-                {{getWeekFormatting(rectangle.start,rectangle.end)}}</text>
-        </svg:g>
-
-         <svg:g [attr.transform]="translateXTicksTwo">
-            <svg:g ngx-charts-x-axis-ticks
-                   *ngIf="prod"
-                   [scale]="xScale"
-                   [showGridLines]="true"
-                   [gridLineHeight]="dims.height"
-                   [tickFormatting]="getXTickTwoFormatting"
-                   [width]="dims.width"
-                   [tickValues]="xTicksTwo"
-                   (dimensionsChanged)="updateXAxisHeight($event)"
-                   fill=var(--opfab-timeline-grid-text-color)
-                   [attr.font-size]="13"
-            />
-        </svg:g> 
-        
+                {{rectangle.dateToDisplay}}</text>
+        </svg:g>        
         <svg:g ngx-charts-x-axis
-               *ngIf="prod"
                [xScale]="xScale"
                [dims]="dims"
                [showGridLines]="true"
-               [tickFormatting]="getXTickOneFormatting"
-               [ticks]="xTicksOne"
-               (dimensionsChanged)="updateXAxisHeight($event)"
+               [tickFormatting]="timeLineView.getXTickLabel"
+               [rotateTicks]="false"
+               [ticks]="timeLineView.getXTicks()"
                fill=var(--opfab-timeline-grid-text-color)
                >
         </svg:g>
@@ -66,7 +46,7 @@
         <svg:g ngx-charts-y-axis
                [yScale]="yScale"
                [dims]="dims"
-               [tickFormatting]="hideLabelsTicks"
+               [tickFormatting]="emptyLabel"
                [ticks]="[0,1,2,3,4,5]"
                [showGridLines]="true">
         </svg:g>
@@ -74,20 +54,20 @@
 
         <svg:rect [attr.x]="0" [attr.width]="2" y="0" fill=#B1B1B1 [attr.height]="dims.height"></svg:rect>
         
-        <svg:rect [attr.x]="xScale(xDomainForTimeLineGridDisplay[1])-2" [attr.width]="2" y="0" fill=#B1B1B1 [attr.height]="dims.height"></svg:rect>
+        <svg:rect [attr.x]="xScale(timeLineView.getTimeGridDomain()[1])-2" [attr.width]="2" y="0" fill=#B1B1B1 [attr.height]="dims.height"></svg:rect>
         
-        <svg:rect [attr.x]="0" [attr.width]="xScale(xDomainForTimeLineGridDisplay[1])" [attr.y]="dims.height-2" fill=#B1B1B1 [attr.height]="2">
+        <svg:rect [attr.x]="0" [attr.width]="xScale(timeLineView.getTimeGridDomain()[1])" [attr.y]="dims.height-2" fill=#B1B1B1 [attr.height]="2">
         </svg:rect>
 
 
         <!-- no rounded only up corner possible with svg so use two rectangles -->
-        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-18"
+        <svg:rect *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-18"
             fill=var(--opfab-timeline-realtimebar-color) [attr.height]="18" rx="10" ry="10"></svg:rect>
-        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-10"
+        <svg:rect *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)" [attr.x]="getRealTimeTextPosition()-50" [attr.width]="100" y="-10"
             fill=var(--opfab-timeline-realtimebar-color) [attr.height]="10"></svg:rect>
 
 
-        <text *ngIf="checkInsideDomain(xRealTimeLine)"
+        <text *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
               [attr.x]="getRealTimeTextPosition()"
               [attr.y]="-8" 
               fill=var(--opfab-timeline-text-color)
@@ -104,10 +84,10 @@
               text-anchor="middle" 
               [attr.font-size]="13" dy=".3em"
               id="opfab-timeline-title">
-              {{title}}              
+              {{timeLineView.getTitle()}}              
         </text>
 
-        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)"
+        <svg:rect *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
                   [attr.x]="xScale(xRealTimeLine)"
                   [attr.width]="2"
                   y="0"
@@ -116,7 +96,7 @@
         ></svg:rect>
 
 
-        <svg:g *ngFor="let circle of circles;let index = index;" type="button">
+        <svg:g *ngFor="let circle of circles$|async;let index = index;" type="button">
         <svg:g id="opfab-timelineCircle-{{index}}" 
             (click)="onCircleClick(circle)" 
             (mouseenter)="feedCircleHovered(circle, p1)"

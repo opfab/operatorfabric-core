@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {LightCardsFeedFilterService} from '../lightcards/lightcards-feed-filter.service';
-import {LightCardsStoreService} from '../lightcards/lightcards-store.service';
+import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
@@ -20,15 +19,14 @@ import {LogOption, LoggerService as logger} from '../logs/logger.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {SoundServer} from 'app/business/server/sound.server';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SoundNotificationService implements OnDestroy {
-
-
     private static RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
-    private static ERROR_MARGIN = 4000 // in milliseconds
+    private static ERROR_MARGIN = 4000; // in milliseconds
 
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
@@ -55,15 +53,12 @@ export class SoundNotificationService implements OnDestroy {
     private lastUserAction = new Date().valueOf();
 
     private isServiceActive = true;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private soundServer: SoundServer,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private externalDevicesService: ExternalDevicesService
-    ) {
+    constructor(private soundServer: SoundServer) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 
     public stopService() {
@@ -104,11 +99,12 @@ export class SoundNotificationService implements OnDestroy {
         ConfigService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
             this.replayEnabled = x;
         });
-        ConfigService
-            .getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
-            .subscribe((x) => {
-                this.replayInterval = Math.max(3, x);
-            });
+        ConfigService.getConfigValueAsObservable(
+            'settings.replayInterval',
+            SoundNotificationService.DEFAULT_REPLAY_INTERVAL
+        ).subscribe((x) => {
+            this.replayInterval = Math.max(3, x);
+        });
 
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
         this.initSoundPlayingForSessionEnd();
@@ -128,7 +124,9 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private listenForCardUpdate() {
-        this.lightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
+        OpfabStore.getLightCardStore()
+            .getNewLightCards()
+            .subscribe((card) => this.handleLoadedCard(card));
     }
 
     ngOnDestroy() {
@@ -151,11 +149,11 @@ export class SoundNotificationService implements OnDestroy {
         else {
             if (
                 !card.hasBeenRead &&
-                this.checkCardHasBeenPublishAfterLastUserAction(card)&&
+                this.checkCardHasBeenPublishAfterLastUserAction(card) &&
                 this.checkCardIsRecent(card)
             ) {
                 this.incomingCardOrReminder.next(card);
-                if (!this.lightCardsFeedFilterService.isCardVisibleInFeed(card))
+                if (!this.filteredLightCardStore.isCardVisibleInFeed(card))
                     AlertMessageService.sendAlertMessage({
                         message: null,
                         level: MessageLevel.BUSINESS,
@@ -173,11 +171,10 @@ export class SoundNotificationService implements OnDestroy {
 
     public lastSentCard(cardId: string) {
         this.lastSentCardId = cardId;
-
     }
 
     private checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
-        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction  > 0;
+        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction > 0;
     }
 
     private checkCardIsRecent(card: LightCard): boolean {
@@ -205,7 +202,7 @@ export class SoundNotificationService implements OnDestroy {
                 LogOption.LOCAL_AND_REMOTE
             );
             const notification = new Notification(severity.toString());
-            this.externalDevicesService.sendNotification(notification).subscribe();
+            ExternalDevicesService.sendNotification(notification).subscribe();
         } else {
             logger.debug('Play sound on browser with severity ' + severity + '.', LogOption.LOCAL_AND_REMOTE);
             this.playSoundOnBrowser(this.getSoundForSeverity(severity));
@@ -228,7 +225,7 @@ export class SoundNotificationService implements OnDestroy {
             // resets the replay timer.
             .pipe(this.processSignal(), takeUntil(this.ngUnsubscribe$))
             .subscribe((x) => {
-                console.log(new Date().toISOString(), ' Play sound');
+                logger.debug(' Play sound');
                 this.playSoundForSeverityEnabled(severity);
             });
     }
@@ -240,7 +237,7 @@ export class SoundNotificationService implements OnDestroy {
         )
             .pipe(this.processSignal(), takeUntil(this.ngUnsubscribe$))
             .subscribe((x) => {
-                console.log(new Date().toISOString(), ' Play sound for session end');
+                logger.debug(' Play sound for session end');
                 this.playSound(Severity.ALARM);
             });
     }
@@ -264,8 +261,7 @@ export class SoundNotificationService implements OnDestroy {
      * */
     private playSoundOnBrowser(sound: HTMLAudioElement) {
         sound.play().catch((error) => {
-            console.log(
-                new Date().toISOString(),
+            logger.warn(
                 `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`
             );
             /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */

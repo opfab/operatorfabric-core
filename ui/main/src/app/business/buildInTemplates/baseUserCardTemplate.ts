@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 declare const opfab;
 
 export abstract class BaseUserCardTemplate extends HTMLElement {
-
     private externalRecipients;
 
     constructor() {
         super();
         this.initRecipients();
-        this.registerFunctionToGetSpecificCardInformation()
+        this.registerFunctionToGetSpecificCardInformation();
     }
 
     private initRecipients() {
-
         const entityRecipientList = this.getAttribute('entityRecipientList');
         const initialSelectedRecipients = this.getAttribute('initialSelectedRecipients');
         const entityRecipientForInformationList = this.getAttribute('entityRecipientForInformationList');
@@ -39,7 +36,7 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
             try {
                 opfab.currentUserCard.setInitialSelectedRecipients(JSON.parse(initialSelectedRecipients));
             } catch (err) {
-                console.error('Invalid initialSelectedRecipients',initialSelectedRecipients, err);
+                console.error('Invalid initialSelectedRecipients', initialSelectedRecipients, err);
             }
         }
 
@@ -71,7 +68,7 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
             try {
                 this.externalRecipients = JSON.parse(externalRecipientsAttribute);
             } catch (err) {
-                console.error('Invalid externalRecipients',externalRecipientsAttribute, err);
+                console.error('Invalid externalRecipients', externalRecipientsAttribute, err);
             }
         }
     }
@@ -81,10 +78,9 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
         opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
             const info = that.getSpecificCardInformation();
             if (info.card && that.externalRecipients) {
-                if (!info.card.externalRecipients)  info.card.externalRecipients = that.externalRecipients;
+                if (!info.card.externalRecipients) info.card.externalRecipients = that.externalRecipients;
             }
             return info;
-
         });
     }
     abstract getSpecificCardInformation();

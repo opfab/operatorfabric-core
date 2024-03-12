@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -95,7 +95,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',true);
 
         cy.visit('');
 
@@ -116,7 +116,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-activityarea-title').should('have.text', ' CHOOSE YOUR ACTIVITY AREA\n');
 
         // We should have only one 'block'
-        cy.get('.opfab-activityarea-entitieslist').should('have.length', 1);
+        cy.get('.opfab-activityarea-clusters').should('have.length', 1);
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
@@ -186,7 +186,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
@@ -207,5 +207,14 @@ describe('ActivityAreaPage', () => {
         cy.waitDefaultTime();
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
+    });
+
+    it('Check message is displayed when user has no activity area', function () {
+        opfab.loginWithUser('opfab');
+        opfab.navigateToActivityArea();
+        cy.get('#opfab-no-activityarea').should('exist');
+        cy.get('#opfab-no-activityarea').contains('No activity area available').should('exist');
+        cy.get('#opfab-activity-areas').should('not.exist');
+        
     });
 });

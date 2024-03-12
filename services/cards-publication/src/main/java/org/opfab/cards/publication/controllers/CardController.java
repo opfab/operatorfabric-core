@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ package org.opfab.cards.publication.controllers;
 import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.cards.publication.configuration.Services;
-import org.opfab.cards.publication.model.CardCreationReportData;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.FieldToTranslateData;
+import org.opfab.cards.publication.model.CardCreationReport;
+import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.FieldToTranslate;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
@@ -58,7 +58,7 @@ public class CardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CardCreationReportData createCard( @RequestBody CardPublicationData card,
+    public CardCreationReport createCard( @RequestBody Card card,
             HttpServletResponse response, Principal principal) {
         // Overwrite eventual uid sent by client
         card.setUid(UUID.randomUUID().toString());
@@ -76,7 +76,7 @@ public class CardController {
                 card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
                 user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
 
-        return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
+        return new CardCreationReport(card.getId(),card.getUid());
     }
 
     @DeleteMapping
@@ -88,7 +88,7 @@ public class CardController {
 
     @PostMapping("/userCard")
     @ResponseStatus(HttpStatus.CREATED)
-    public CardCreationReportData createUserCard(@RequestBody CardPublicationData card,
+    public CardCreationReport createUserCard(@RequestBody Card card,
             Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
@@ -98,7 +98,7 @@ public class CardController {
         logUserAction(user.getUserData().getLogin(),
                 card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
                 user.getUserData().getEntities(), card.getUid(), null);
-        return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
+        return new CardCreationReport(card.getId(),card.getUid());
     }
 
     @DeleteMapping("/userCard/{id}")
@@ -107,7 +107,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         try {
-            Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user,
+            Optional<Card> deletedCard = cardProcessingService.deleteUserCard(id, user,
                     Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
                 response.setStatus(404);
@@ -127,7 +127,7 @@ public class CardController {
             user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
             token = jwtPrincipal.getToken();
         }
-        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user),
+        Optional<Card> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user),
                 Optional.ofNullable(token));
         if (!deletedCard.isPresent())
             response.setStatus(404);
@@ -178,7 +178,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardProcessingService.processUserRead(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.processUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -194,16 +194,17 @@ public class CardController {
     }
 
     /**
-     * DELETE userAcknowledgement for a card to updating that card
+     * POST cancelUserAcknowledgement for a card to updating that card
      *
      * @param cardUid Id to create publisher
      */
-    @DeleteMapping("/userAcknowledgement/{cardUid}")
+    @PostMapping("/cancelUserAcknowledgement/{cardUid}")
     public Void deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
+            @RequestBody List<String> entitiesAcks,
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, user, entitiesAcks);
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -228,7 +229,7 @@ public class CardController {
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserRead(cardUid, principal.getName());
+        UserBasedOperationResult result = cardProcessingService.deleteUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -254,17 +255,17 @@ public class CardController {
 
     @PostMapping("/translateCardField")
     public String translateCardField(HttpServletRequest request, HttpServletResponse response,
-            @Valid @RequestBody FieldToTranslateData fieldToTranslate) {
+            @Valid @RequestBody FieldToTranslate fieldToTranslate) {
 
-        if (fieldToTranslate == null || fieldToTranslate.getProcess().isEmpty()
-                || fieldToTranslate.getProcessVersion().isEmpty()
-                || fieldToTranslate.getI18nValue() == null || fieldToTranslate.getI18nValue().getKey().isEmpty()) {
+        if (fieldToTranslate == null || fieldToTranslate.process().isEmpty()
+                || fieldToTranslate.processVersion().isEmpty()
+                || fieldToTranslate.i18nValue() == null || fieldToTranslate.i18nValue().key().isEmpty()) {
             response.setStatus(400);
             return null;
         } else {
-            String translatedField = cardTranslationService.translateCardField(fieldToTranslate.getProcess(),
-                    fieldToTranslate.getProcessVersion(),
-                    fieldToTranslate.getI18nValue());
+            String translatedField = cardTranslationService.translateCardField(fieldToTranslate.process(),
+                    fieldToTranslate.processVersion(),
+                    fieldToTranslate.i18nValue());
             return "{\"translatedField\": \"" + translatedField + "\"}";
         }
     }

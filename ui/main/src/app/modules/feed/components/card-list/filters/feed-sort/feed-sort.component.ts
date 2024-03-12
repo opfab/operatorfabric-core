@@ -12,7 +12,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-feed-sort',
@@ -26,8 +27,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     sortForm: FormGroup<{
         sortControl: FormControl<string | null>;
     }>;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         this.sortForm = this.createFormGroup();
@@ -47,11 +51,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     initSort() {
         const sortChoice = this.getInitialSort();
         this.sortForm.get('sortControl').setValue(sortChoice);
-        this.lightCardsFeedFilterService.setSortBy(sortChoice);
+        this.filteredLightCardStore.setSortBy(sortChoice);
 
         this.sortForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.sort.type', form.sortControl);
-            this.lightCardsFeedFilterService.setSortBy(form.sortControl);
+            this.filteredLightCardStore.setSortBy(form.sortControl);
         });
     }
 

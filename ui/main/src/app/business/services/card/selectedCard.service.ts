@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,8 +59,7 @@ export class SelectedCardService {
     }
 
     public static setCardDeleted(cardId: string): void {
-        if (SelectedCardService.selectedCardId === cardId)
-            SelectedCardService.selectedCardDeleted.next(cardId);
+        if (SelectedCardService.selectedCardId === cardId) SelectedCardService.selectedCardDeleted.next(cardId);
     }
 
     public static getSelectedCardsDeleted(): Observable<any> {
@@ -73,10 +72,9 @@ export class SelectedCard {
     public readonly childCards: Card[];
     public readonly notFound: boolean;
 
-    constructor(card:Card,childCards: Card[],notFound: boolean) {
+    constructor(card: Card, childCards: Card[], notFound: boolean) {
         this.card = card;
         this.childCards = childCards;
         this.notFound = notFound;
     }
-
 }

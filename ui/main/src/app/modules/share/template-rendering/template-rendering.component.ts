@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,10 +69,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     constructor(
         private element: ElementRef,
-        private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
-        private templateCssService: TemplateCssService,
-        private opfabAPIService: OpfabAPIService,
         private changeDetector: ChangeDetectorRef
     ) {}
 
@@ -86,29 +83,28 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private informTemplateWhenGlobalStyleChange() {
         GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
-            .subscribe(() => this.opfabAPIService.templateInterface.setStyleChange());
+            .subscribe(() => OpfabAPIService.templateInterface.setStyleChange());
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.screenSize && this.templateLoaded)
-            this.opfabAPIService.templateInterface.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
         else this.render();
     }
 
     private render() {
         this.isLoadingSpinnerToDisplay = false;
-        this.opfabAPIService.initTemplateInterface();
+        OpfabAPIService.initTemplateInterface();
         this.enableSpinnerForTemplate();
         this.getUserContextAndRenderTemplate();
     }
 
     private enableSpinnerForTemplate() {
         const that = this;
-        this.opfabAPIService.currentCard.displayLoadingSpinner = function () {
+        OpfabAPIService.currentCard.displayLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = true;
             that.changeDetector.markForCheck();
         };
-        this.opfabAPIService.currentCard.hideLoadingSpinner = function () {
+        OpfabAPIService.currentCard.hideLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = false;
             that.changeDetector.markForCheck();
         };
@@ -134,7 +130,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         if (this.cardState.templateName) {
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
-            this.opfabAPIService.currentCard.displayContext = this.displayContext;
+            OpfabAPIService.currentCard.displayContext = this.displayContext;
 
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
@@ -168,7 +164,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private getHTMLFromTemplate(): Observable<SafeHtml> {
-        const htmlContent$ = this.handlebars.executeTemplate(
+        const htmlContent$ = HandlebarsService.executeTemplate(
             this.cardState.templateName,
             new DetailContext(this.card, this.userContext, this.cardState.response)
         );
@@ -181,11 +177,12 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private getCssFilesContent(): Observable<string> {
         const styles = this.cardState.styles;
-        return this.templateCssService.getCssFilesContent(this.card.process, this.card.processVersion, styles);
+        return TemplateCssService.getCssFilesContent(this.card.process, this.card.processVersion, styles);
     }
 
     private loadTemplateJSScripts(): void {
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
+        //bug eslint/prettier
+        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script'); // eslint-disable-line
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];
@@ -201,9 +198,9 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private callTemplateJsPostRenderingFunctions() {
         if (this.functionToCallAfterRendering) this.functionToCallAfterRendering.call(this.parentComponent);
-        this.opfabAPIService.templateInterface.setScreenSize(this.screenSize);
-        this.opfabAPIService.currentCard.applyChildCards();
-        setTimeout(() => this.opfabAPIService.templateInterface.setTemplateRenderingComplete(), 10);
+        OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
+        OpfabAPIService.currentCard.applyChildCards();
+        setTimeout(() => OpfabAPIService.templateInterface.setTemplateRenderingComplete(), 10);
     }
 
     public ngAfterViewChecked() {
@@ -228,7 +225,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     ngOnDestroy() {
         removeEventListener('resize', this.computeRenderingHeight);
-        this.opfabAPIService.initTemplateInterface();
+        OpfabAPIService.initTemplateInterface();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();
     }

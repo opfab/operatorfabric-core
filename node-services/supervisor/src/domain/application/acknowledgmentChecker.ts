@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,97 +9,100 @@
 
 import GetResponse from '../../common/server-side/getResponse';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import {Card} from './card';
 
 export default class AcknowledgementChecker {
-
     private opfabInterface: OpfabServicesInterface;
     private logger: any;
     private secondsAfterPublicationToConsiderCardAsNotAcknowledged: number;
     private processStatesFilter: any;
-    private windowInSecondsForCardSearch : number;
+    private windowInSecondsForCardSearch: number;
     private unackedCardTemplate: any = '';
-    private cardsAlreadySent = new Map();
+    private readonly cardsAlreadySent = new Map();
 
-
-    public setOpfabServicesInterface(opfabInterface: OpfabServicesInterface) {
+    public setOpfabServicesInterface(opfabInterface: OpfabServicesInterface): this {
         this.opfabInterface = opfabInterface;
         return this;
     }
 
-    public setLogger(logger: any) {
+    public setLogger(logger: any): this {
         this.logger = logger;
         return this;
     }
 
-    public setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(secondsAfterPublicationToConsiderCardAsNotAcknowledged: number) {
-        this.secondsAfterPublicationToConsiderCardAsNotAcknowledged = secondsAfterPublicationToConsiderCardAsNotAcknowledged;
+    public setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(
+        secondsAfterPublicationToConsiderCardAsNotAcknowledged: number
+    ): this {
+        this.secondsAfterPublicationToConsiderCardAsNotAcknowledged =
+            secondsAfterPublicationToConsiderCardAsNotAcknowledged;
         return this;
     }
 
-
-    public setWindowInSecondsForCardSearch (windowInSecondsForCardSearch : number) {
-        this.windowInSecondsForCardSearch  = windowInSecondsForCardSearch ;
+    public setWindowInSecondsForCardSearch(windowInSecondsForCardSearch: number): this {
+        this.windowInSecondsForCardSearch = windowInSecondsForCardSearch;
         return this;
     }
 
-    public setUnackedCardTemplate(unackedCardTemplate: any) {
+    public setUnackedCardTemplate(unackedCardTemplate: any): this {
         this.unackedCardTemplate = unackedCardTemplate;
         return this;
     }
 
-    public setProcessStatesToSupervise(processStates: any[]) {
+    public setProcessStatesToSupervise(processStates: any[]): this {
         const processStatesKeys: string[] = [];
         processStates.forEach((processStatesConfiguration: any) => {
             processStatesConfiguration.states.forEach((state: string) => {
-                 
                 processStatesKeys.push(processStatesConfiguration.process + '.' + state);
             });
         });
-            
-        this.processStatesFilter = {columnName : 'processStateKey', filter: processStatesKeys, matchType: 'IN' };
-            
+
+        this.processStatesFilter = {columnName: 'processStateKey', filter: processStatesKeys, matchType: 'IN'};
+
         return this;
     }
 
-    public resetState() {
+    public resetState(): void {
         this.cardsAlreadySent.clear();
     }
 
-    public async checkAcknowledgment() {
+    public async checkAcknowledgment(): Promise<void> {
         const cardFilters = [];
         cardFilters.push(this.processStatesFilter);
-        const now = Date.now(); 
-        const dateFrom = now - (this.windowInSecondsForCardSearch  * 1000);  
-        cardFilters.push({columnName : 'publishDateFrom', filter: [dateFrom], matchType: 'EQUALS' });
-
+        const now = Date.now();
+        const dateFrom = now - this.windowInSecondsForCardSearch * 1000;
+        cardFilters.push({columnName: 'publishDateFrom', filter: [dateFrom], matchType: 'EQUALS'});
 
         const GetResponse: GetResponse = await this.opfabInterface.getCards({adminMode: true, filters: cardFilters});
         if (!GetResponse.isValid()) return;
-        
+
         const retrievedCards = GetResponse.getData();
 
-        retrievedCards.forEach(async (card: any) => {
+        retrievedCards.forEach(async (card: Card) => {
             let recipients = card.entityRecipients;
-            if (recipients && card.entityRecipientsForInformation && card.entityRecipientsForInformation.length > 0)
+            if (recipients?.length > 0 && card.entityRecipientsForInformation?.length > 0)
                 recipients = this.removeElementsFromArray(recipients, card.entityRecipientsForInformation);
 
-            if (recipients && (!card.entitiesAcks || card.entitiesAcks.length < recipients.length) 
-                && card.publishDate < now - (this.secondsAfterPublicationToConsiderCardAsNotAcknowledged  * 1000)
-                && !this.cardsAlreadySent.has(card.uid)) {
-                    
+            if (
+                recipients?.length > 0 &&
+                (card.entitiesAcks == null || card.entitiesAcks.length < recipients.length) &&
+                card.publishDate < now - this.secondsAfterPublicationToConsiderCardAsNotAcknowledged * 1000 &&
+                !this.cardsAlreadySent.has(card.uid)
+            ) {
                 this.logger.info(card.uid + ' not ackmowledged');
 
                 const missingAcks = this.removeElementsFromArray(recipients, card.entitiesAcks).join(',');
 
-                this.sendUnacknowlegedCard(card, missingAcks).then(() => this.cardsAlreadySent.set(card.uid, now));
+                this.sendUnacknowlegedCard(card, missingAcks)
+                    .then(() => this.cardsAlreadySent.set(card.uid, now))
+                    .catch((err) => {
+                        this.logger.error('Error sending unacknowledged card ' + card.uid + ' : ' + err);
+                    });
             }
-            
         });
         this.cleanCardsAreadySent();
     }
 
-
-    private async sendUnacknowlegedCard(unackedCard: any, missingAcks: string) {
+    private async sendUnacknowlegedCard(unackedCard: any, missingAcks: string): Promise<any> {
         const card = {...this.unackedCardTemplate};
         card.startDate = new Date().valueOf();
         card.processInstanceId = unackedCard.id;
@@ -107,17 +110,37 @@ export default class AcknowledgementChecker {
             card.entityRecipients = [unackedCard.publisher];
         } else {
             card.userRecipients = [unackedCard.publisher];
-
         }
-        card.data = {cardId: unackedCard.id, title: unackedCard.titleTranslated, summary: unackedCard.summaryTranslated, missingAcks: missingAcks};
-        card.title = {key: 'acknowledgement.title', parameters: {cardId: unackedCard.id, title: unackedCard.titleTranslated, summary: unackedCard.summaryTranslated, missingAcks: missingAcks}};
-        card.summary = {key: 'acknowledgement.summary', parameters: {cardId: unackedCard.id, title: unackedCard.titleTranslated, summary: unackedCard.summaryTranslated, missingAcks: missingAcks}};
-        
-        return this.opfabInterface.sendCard(card);
+        card.data = {
+            cardId: unackedCard.id,
+            title: unackedCard.titleTranslated,
+            summary: unackedCard.summaryTranslated,
+            missingAcks
+        };
+        card.title = {
+            key: 'acknowledgement.title',
+            parameters: {
+                cardId: unackedCard.id,
+                title: unackedCard.titleTranslated,
+                summary: unackedCard.summaryTranslated,
+                missingAcks
+            }
+        };
+        card.summary = {
+            key: 'acknowledgement.summary',
+            parameters: {
+                cardId: unackedCard.id,
+                title: unackedCard.titleTranslated,
+                summary: unackedCard.summaryTranslated,
+                missingAcks
+            }
+        };
+
+        return await this.opfabInterface.sendCard(card);
     }
 
     private removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
-        if ((arrayToDelete) && (arrayToDelete.length > 0)) {
+        if (arrayToDelete?.length > 0) {
             const elementsToDeleteSet = new Set(arrayToDelete);
             const newArray = arrayToFilter.filter((name) => {
                 return !elementsToDeleteSet.has(name);
@@ -128,14 +151,12 @@ export default class AcknowledgementChecker {
         }
     }
 
-    private cleanCardsAreadySent() {
+                private cleanCardsAreadySent(): void {
         const dateLimit = Date.now() - this.windowInSecondsForCardSearch * 1000;
-        this.cardsAlreadySent.forEach((v,k) => {
+        this.cardsAlreadySent.forEach((v, k) => {
             if (v < dateLimit) {
                 this.cardsAlreadySent.delete(k);
-
             }
-        })
+        });
     }
-    
 }

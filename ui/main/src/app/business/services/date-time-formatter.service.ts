@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,10 @@ export class DateTimeFormatterService {
     private static dateFormat;
     private static dateTimeFormat;
 
-
-    public static  init() {
-        DateTimeFormatterService.timeFormat  = ConfigService.getConfigValue('settings.timeFormat', 'LT');
+    public static init() {
+        DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'LT');
         DateTimeFormatterService.dateFormat = ConfigService.getConfigValue('settings.dateFormat', 'L');
-        DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat')
+        DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat');
     }
 
     public static getFormattedDateFromEpochDate(epochDate: number): string {
@@ -30,7 +29,9 @@ export class DateTimeFormatterService {
     public static getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
         if (!epochDate) return '';
         return moment(epochDate).format(
-            DateTimeFormatterService.dateTimeFormat ? DateTimeFormatterService.dateTimeFormat : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`
+            DateTimeFormatterService.dateTimeFormat
+                ? DateTimeFormatterService.dateTimeFormat
+                : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`
         );
     }
 

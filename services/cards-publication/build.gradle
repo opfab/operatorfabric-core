@@ -1,6 +1,4 @@
 dependencies {
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
-    swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
     implementation misc.commonsLang
@@ -9,6 +7,7 @@ dependencies {
     implementation misc.guava
     implementation misc.snappy
     implementation cloud.avro
+    implementation misc.compress
 //End transitive dependencies
 
     implementation spring.securityOauthResource, spring.securityOauthJose
@@ -22,12 +21,12 @@ dependencies {
     testImplementation cloud.springKafkaTest
 
 
+
     implementation boot.starterWeb, boot.starterUndertow
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterSecurity
     implementation boot.starterValidation
     implementation boot.starterMongo
-    implementation cloud.starterFeign
     testImplementation spring.securityTest
     implementation project(':client:cards-client-data')
     implementation project(':client:users-client-data')
@@ -49,10 +48,3 @@ bootJar {
     }
 }
 
-swaggerSources {
-    endpoints {
-        code {
-            components = ['models']
-        }
-    }
-}

@@ -4,6 +4,8 @@ operatorfabric:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+    jwt:
+      login-claim: preferred_username
   mongodb:
     database: "operator-fabric"
     uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"

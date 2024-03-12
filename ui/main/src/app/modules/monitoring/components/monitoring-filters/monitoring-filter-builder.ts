@@ -11,7 +11,8 @@ import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Injectable({
     providedIn: 'root'
@@ -19,8 +20,11 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 export class MonitoringFilterBuilder {
     private typeOfStatesFilter: Filter;
     private processFilter: Filter;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     public setProcessList(processesId: string[]) {
         if (processesId.length > 0) {
@@ -72,7 +76,7 @@ export class MonitoringFilterBuilder {
     }
 
     public getFilters(): Array<Filter> {
-        const timelineFilter = this.lightCardsFeedFilterService.getBusinessDateFilter();
+        const timelineFilter = this.filteredLightCardStore.getBusinessDateFilter();
         return [timelineFilter, this.processFilter, this.typeOfStatesFilter];
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,15 @@ import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 })
 export class BusinessDataTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.BUSINESSDATA;
-    fields = [new Field('name', 6, 'idCellRenderer')];
+    fields = [new Field('name', 6, 'idCellRenderer', null, 'businessDataColumn')];
     idField = 'name';
     actionButtonsDisplayed = [ActionButton.UPDATE, ActionButton.DOWNLOAD, ActionButton.DELETE];
     showAddButton = true;
+
+    ngOnInit() {
+        this.gridOptions.columnTypes['businessDataColumn'] = {
+            resizable: false
+        };
+        super.initCrudService();
+    }
 }

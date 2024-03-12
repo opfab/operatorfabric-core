@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Utilities} from '../../../../business/common/utilities';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',
@@ -44,18 +45,17 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
                         stateName: currentProcessDef.states.get(stateRight.state).name,
                         stateRight: stateRight
                     });
-                else
-                    console.log(
-                        new Date().toISOString(),
-                        'The state ' +
-                            stateRight.state +
-                            ' of process ' +
-                            currentProcessDef.id +
-                            ' does not exist anymore'
+                else {
+                    LoggerService.warn(
+                        `The state ${stateRight.state} of process ${currentProcessDef.id} does not exist anymore`
                     );
+                }
             });
+
             this._stateRightsValues.sort((a, b) => Utilities.compareObj(a.stateName, b.stateName));
-        } else console.log(new Date().toISOString(), 'The process ' + params.data.process + ' does not exist anymore');
+        } else {
+            LoggerService.warn(`The process ${params.data.process} does not exist anymore`);
+        }
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2019-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2019-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {ProcessesTableComponent} from './components/table/processes-table.component';
 import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
+import {RoleCellRendererComponent} from './components/cell-renderers/role-cell-renderer.component';
 import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
 import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
 import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
@@ -41,7 +42,6 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
 import {EntityNameCellRendererComponent} from './components/cell-renderers/entity-name-cell-renderer.component';
 import {EditSupervisedEntityModalComponent} from './components/editmodal/supervised-entities/edit-supervised-entity-modal.component';
-
 
 @NgModule({
     declarations: [
@@ -65,6 +65,7 @@ import {EditSupervisedEntityModalComponent} from './components/editmodal/supervi
         EntityCellRendererComponent,
         PerimetersCellRendererComponent,
         StateRightsCellRendererComponent,
+        RoleCellRendererComponent,
         IdCellRendererComponent,
         EntityNameCellRendererComponent,
         ProcessCellRendererComponent

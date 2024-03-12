@@ -98,30 +98,26 @@
 
 
 <div *ngIf="displayPreview">
-    <ng-template #connected>
-        <span class="badge rounded-pill bg-success opfab-activityarea-badge" style ="transform: translate(0,-1px) scale(0.8);">&nbsp;</span>
-    </ng-template>
-    <ng-template #disconnected>
-        <span class="badge rounded-pill bg-danger opfab-activityarea-badge" style ="transform: translate(0,-1px) scale(0.8);">&nbsp;</span>
-    </ng-template>
     <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients">
-        <span translate>userCard.recipients</span>
+        <span translate>userCard.recipients</span>&nbsp;
         <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">
-            &nbsp; {{getEntityName(entityId)}}
-            <span *ngIf="this.displayConnectionCircles">
-                <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
-            </span>
+            <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
+            <ng-template #connected>&nbsp;<span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+            </ng-template>
+            <ng-template #disconnected>&nbsp;<span class="badge rounded-pill bg-secondary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+            </ng-template>
         </span>
     </div>
 
     <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients-for-information"
             *ngIf="!!card.entityRecipientsForInformation && card.entityRecipientsForInformation.length">
-        <span translate>userCard.recipientsForInformation</span>
+        <span translate>userCard.recipientsForInformation</span>&nbsp;
         <span *ngFor="let entityId of card.entityRecipientsForInformation" style="padding-right: 10px">
-            &nbsp; {{getEntityName(entityId)}}
-            <span *ngIf="this.displayConnectionCircles">
-                <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
-            </span>
+            <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
+            <ng-template #connected>&nbsp;<span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+            </ng-template>
+            <ng-template #disconnected>&nbsp;<span class="badge rounded-pill bg-secondary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+            </ng-template>
         </span>
     </div>
 

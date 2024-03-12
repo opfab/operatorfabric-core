@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,25 +51,25 @@ describe('Card detail', function () {
             cy.get('#opfab-currentCard-getEntitiesUsableForUserResponse').contains(/^ENTITY1_FR$/);
             cy.get('#opfab-currentCard-getDisplayContext').contains(/^realtime$/);
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=FR1 label'
+                'entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=FR1 label'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
+                'entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
+                'entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
+                'entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=undefined,labels=undefined'
+                'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,roles=ACTIVITY_AREA_GROUP,CARD_RECEIVER,parents=undefined,labels=undefined'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=undefined,labels=undefined'
+                'entity[6]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=EUROPEAN_SUPERVISION_CENTERS,labels=undefined'
             );
             cy.get('#opfab-users-entities-getEntity-ENTITY1_FR').contains(
-                /^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/
+                /^ENTITY1_FR,Control Center FR North,Control Center FR North,ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,ENTITY_FR,FR1 label$/
             );
             cy.get('#screenSize').contains('md');
             cy.get('#opfab-currentCard-onTemplateRenderingComplete').contains('ok');

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,16 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.DeviceConfiguration;
-import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
-import org.opfab.externaldevices.model.SignalMappingData;
 import org.opfab.externaldevices.model.UserConfiguration;
-import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
+import org.opfab.externaldevices.repositories.SettingsRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
-import org.opfab.springtools.configuration.oauth.UserServiceProxy;
 import org.opfab.users.model.UserSettings;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * {@link DevicesService}
@@ -54,20 +50,21 @@ public class ConfigService {
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
+    private final SettingsRepository settingsRepository;
 
-    private final UserServiceProxy userServiceProxy;
 
     public ConfigService(UserConfigurationRepository userConfigurationRepository,
                          DeviceConfigurationRepository deviceConfigurationRepository,
-                         SignalMappingRepository signalMappingRepository, UserServiceProxy userServiceProxy) {
+                         SignalMappingRepository signalMappingRepository,
+                         SettingsRepository settingsRepository) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
-        this.userServiceProxy = userServiceProxy;
+        this.settingsRepository = settingsRepository;
     }
 
     public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
-        deviceConfigurationRepository.insert(new DeviceConfigurationData(deviceConfiguration));
+        deviceConfigurationRepository.insert(deviceConfiguration);
     }
 
     public void enableDevice(String deviceId) throws UnknownExternalDeviceException {
@@ -75,9 +72,9 @@ public class ConfigService {
     }
 
     private void setDeviceEnabled(String deviceId, boolean isEnabled) throws UnknownExternalDeviceException {
-        Optional<DeviceConfigurationData> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
+        Optional<DeviceConfiguration> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
         if (deviceConfiguration.isPresent()) {
-            DeviceConfigurationData retrievedDeviceConfig = deviceConfiguration.get();
+            DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
             retrievedDeviceConfig.setIsEnabled(isEnabled);
             deviceConfigurationRepository.save(retrievedDeviceConfig);
         } else {
@@ -90,32 +87,32 @@ public class ConfigService {
     }
 
     public void insertSignalMapping(SignalMapping signalMapping) {
-        signalMappingRepository.insert(new SignalMappingData(signalMapping));
+        signalMappingRepository.insert(signalMapping);
     }
 
     public void saveUserConfiguration(UserConfiguration userConfiguration) {
-        userConfigurationRepository.save(new UserConfigurationData(userConfiguration));
+        userConfigurationRepository.save(userConfiguration);
     }
 
     public List<DeviceConfiguration> getDeviceConfigurations() {
-        return deviceConfigurationRepository.findAll().stream().collect(Collectors.toList());
+        return deviceConfigurationRepository.findAll().stream().toList();
     }
 
     public List<SignalMapping> getSignalMappings() {
-        return signalMappingRepository.findAll().stream().collect(Collectors.toList());
+        return signalMappingRepository.findAll().stream().toList();
     }
 
     public List<UserConfiguration> getUserConfigurations() {
-        return userConfigurationRepository.findAll().stream().collect(Collectors.toList());
+        return userConfigurationRepository.findAll().stream().toList();
     }
 
     public List<ResolvedConfiguration> getResolvedConfigurationList(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
             UserConfiguration userConfiguration = retrieveUserConfiguration(userLogin);
             ArrayList<ResolvedConfiguration> resolvedConfigurations = new ArrayList<>();
 
-            for(String currentId : userConfiguration.getExternalDeviceIds()) {
+            for(String currentId : userConfiguration.externalDeviceIds) {
                 DeviceConfiguration deviceConfiguration = retrieveDeviceConfiguration(currentId);
-                SignalMapping signalMapping = retrieveSignalMapping(deviceConfiguration.getSignalMappingId());
+                SignalMapping signalMapping = retrieveSignalMapping(deviceConfiguration.signalMappingId);
                 int signalId = computeSignalId(signalMapping,opFabSignalKey);
                 resolvedConfigurations.add(new ResolvedConfiguration(deviceConfiguration,signalId));
             }
@@ -128,7 +125,7 @@ public class ConfigService {
         if(deviceId == null || deviceId.isEmpty()) {
            throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, DEVICE_CONFIG));
         } else {
-            Optional<DeviceConfigurationData> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
+            Optional<DeviceConfiguration> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
             if(deviceConfiguration.isPresent()) {
                 DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
                 log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig.toString());
@@ -143,7 +140,7 @@ public class ConfigService {
         if(userLogin == null || userLogin.isEmpty()) {
             throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, USER_CONFIG));
         } else {
-            Optional<UserConfigurationData> userConfiguration = userConfigurationRepository.findById(userLogin);
+            Optional<UserConfiguration> userConfiguration = userConfigurationRepository.findById(userLogin);
             if(userConfiguration.isPresent()) {
                 UserConfiguration retrievedUserConfig = userConfiguration.get();
                 log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig.toString());
@@ -157,7 +154,7 @@ public class ConfigService {
         if(signalMappingId == null || signalMappingId.isEmpty()) {
             throw new ExternalDeviceConfigurationException(String.format(CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID, SIGNAL_CONFIG));
         }
-        Optional<SignalMappingData> signalMapping = signalMappingRepository.findById(signalMappingId);
+        Optional<SignalMapping> signalMapping = signalMappingRepository.findById(signalMappingId);
         if(signalMapping.isPresent()) {
             SignalMapping retrievedSignalMapping = signalMapping.get();
             log.debug("{} for signal {} : {}", DEBUG_RETRIEVED_CONFIG, signalMappingId, retrievedSignalMapping.toString());
@@ -174,11 +171,11 @@ public class ConfigService {
         retrieveDeviceConfiguration(deviceId);
 
         // First we need to remove it from the userConfigurations that were using it
-        List<UserConfigurationData> foundUserConfigurations = userConfigurationRepository.findByExternalDeviceIds(deviceId);
+        List<UserConfiguration> foundUserConfigurations = userConfigurationRepository.findByExternalDeviceIds(deviceId);
         if (foundUserConfigurations != null) {
-            for (UserConfigurationData userConfigurationData :  foundUserConfigurations) {
+            for (UserConfiguration userConfigurationData :  foundUserConfigurations) {
                 userConfigurationData.setExternalDeviceIds(null);
-                log.info(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.getUserLogin());
+                log.info(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.userLogin);
             }
             userConfigurationRepository.saveAll(foundUserConfigurations);
         }
@@ -194,11 +191,11 @@ public class ConfigService {
         retrieveSignalMapping(signalMappingId);
 
         // First we need to remove it from the deviceConfigurations that were using it
-        List<DeviceConfigurationData> foundDeviceConfigurations = deviceConfigurationRepository.findBySignalMappingId(signalMappingId);
+        List<DeviceConfiguration> foundDeviceConfigurations = deviceConfigurationRepository.findBySignalMappingId(signalMappingId);
         if (foundDeviceConfigurations != null) {
-            for (DeviceConfigurationData deviceConfigurationData : foundDeviceConfigurations) {
+            for (DeviceConfiguration deviceConfigurationData : foundDeviceConfigurations) {
                 deviceConfigurationData.setSignalMappingId(null);
-                log.info(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_CONFIG, deviceConfigurationData.getId());
+                log.info(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_CONFIG, deviceConfigurationData.id);
             }
             deviceConfigurationRepository.saveAll(foundDeviceConfigurations);
         }
@@ -219,15 +216,15 @@ public class ConfigService {
         UserSettings settings = new UserSettings();
         settings.setPlaySoundOnExternalDevice(false);
         settings.setLogin(userLogin);
-        String authToken = token.isPresent() ? "Bearer " + token.get().getTokenValue() : "";
-        userServiceProxy.patchUserSettings(authToken, userLogin, settings);
+        String authToken = token.isPresent() ? token.get().getTokenValue() : "";
+        settingsRepository.patchUserSettings(authToken, userLogin, settings);
     }
 
     private int computeSignalId(SignalMapping signalMapping, String opFabSignalKey) throws ExternalDeviceConfigurationException {
-        if(signalMapping.getSupportedSignals().containsKey(opFabSignalKey)) {
-            return signalMapping.getSupportedSignals().get(opFabSignalKey);
+        if(signalMapping.supportedSignals.containsKey(opFabSignalKey)) {
+            return signalMapping.supportedSignals.get(opFabSignalKey);
         } else {
-            throw new ExternalDeviceConfigurationException(String.format(UNSUPPORTED_SIGNAL,opFabSignalKey,signalMapping.getId()));
+            throw new ExternalDeviceConfigurationException(String.format(UNSUPPORTED_SIGNAL,opFabSignalKey,signalMapping.id));
         }
     }
 

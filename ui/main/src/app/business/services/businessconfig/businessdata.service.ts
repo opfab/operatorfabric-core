@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,18 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LogOption,LoggerService as logger} from '../logs/logger.service';
+import {LogOption, LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {ErrorService} from '../error-service';
 
-export class BusinessDataService{
+export class BusinessDataService {
     private static _cachedResources = new Map<string, string>();
-    private static businessDataServer: BusinessDataServer
+    private static businessDataServer: BusinessDataServer;
 
     public static setBusinessDataServer(businessDataServer: BusinessDataServer) {
         BusinessDataService.businessDataServer = businessDataServer;
@@ -65,7 +64,7 @@ export class BusinessDataService{
         return Array.from(BusinessDataService._cachedResources.keys());
     }
 
-    public static  getAll(): Observable<any[]> {
+    public static getAll(): Observable<any[]> {
         return BusinessDataService.queryAllBusinessData().pipe(
             map((data) => {
                 const businessDataList = [];
@@ -90,11 +89,11 @@ export class BusinessDataService{
         );
     }
 
-    public static  update(data: any): Observable<any> {
+    public static update(data: any): Observable<any> {
         return null;
     }
 
-    public static  updateBusinessData(resourceName: string, data: FormData): Observable<any> {
+    public static updateBusinessData(resourceName: string, data: FormData): Observable<any> {
         return BusinessDataService.businessDataServer.updateBusinessData(resourceName, data).pipe(
             map((responseBusinessData) => {
                 if (responseBusinessData.status === ServerResponseStatus.OK) {

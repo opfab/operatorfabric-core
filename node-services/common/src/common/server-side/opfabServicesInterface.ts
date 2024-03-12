@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 import GetResponse from './getResponse';
-import JwtTokenUtils from './jwtTokenUtils'
+import JwtTokenUtils from './jwtTokenUtils';
 
 
 export default class OpfabServicesInterface {
@@ -22,6 +22,7 @@ export default class OpfabServicesInterface {
     opfabUsersUrl: string = '';
     opfabCardsConsultationUrl: string = '';
     opfabCardsPublicationUrl: string = '';
+    opfabBusinessconfigUrl: string = '';
     opfabGetTokenUrl: string = '';
 
 
@@ -59,6 +60,11 @@ export default class OpfabServicesInterface {
         this.opfabCardsPublicationUrl = opfabCardsPublicationUrl;
         return this;
     }
+    
+    public setopfabBusinessconfigUrl(opfabBusinessconfigUrl: string) {
+        this.opfabBusinessconfigUrl = opfabBusinessconfigUrl;
+        return this;
+    }
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -74,7 +80,7 @@ export default class OpfabServicesInterface {
                 return new GetResponse(response.data, true);
             }
             else {
-                this.logger.warn("No data in HTTP response")
+                this.logger.warn("No user defined in HTTP response")
                 return new GetResponse([], false);
             }
         } catch (e) {
@@ -92,7 +98,7 @@ export default class OpfabServicesInterface {
                 return new GetResponse(response.data, true);
             }
             else {
-                this.logger.warn("No data in HTTP response")
+                this.logger.warn("No users defined in HTTP response")
                 return new GetResponse([], false);
             }
         } catch (e) {
@@ -110,7 +116,7 @@ export default class OpfabServicesInterface {
                 return new GetResponse(response.data, true);
             }
             else {
-                this.logger.warn("No data in HTTP response")
+                this.logger.warn("No connected users defined in HTTP response")
                 return new GetResponse(null, false);
             }
         } catch (e) {
@@ -120,7 +126,26 @@ export default class OpfabServicesInterface {
        
     }
 
-    public async getCards(filter: any) {
+    public async getCard(cardId: string): Promise<GetResponse> {
+        try {
+            await this.getToken();
+            const response = await this.sendGetCardRequest(cardId);
+            
+            if (response?.data) {
+                const card = response.data.card
+                return new GetResponse(card, true);
+            }
+            else {
+                this.logger.warn("No card defined in HTTP response")
+                return new GetResponse(null, false);
+            }
+        } catch (e) {
+            this.logger.warn(`Impossible to get card with id : ${cardId} `, e);
+            return new GetResponse(null, false);
+        }
+    }
+
+    public async getCards(filter: any): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendGetCardsRequest(filter);
@@ -132,7 +157,7 @@ export default class OpfabServicesInterface {
                 return new GetResponse(cards, true);
             }
             else {
-                this.logger.warn("No data in HTTP response")
+                this.logger.warn("No cards defined in HTTP response")
                 return new GetResponse(null, false);
             }
         } catch (e) {
@@ -141,7 +166,7 @@ export default class OpfabServicesInterface {
         }
     }
 
-    public async getUserWithPerimeters(userToken: string | null) {
+    public async getUserWithPerimeters(userToken: string | null): Promise<GetResponse> {
 
         try {
             const response = await this.sendRequest({
@@ -155,7 +180,7 @@ export default class OpfabServicesInterface {
                 return new GetResponse(response?.data, true);
             }
             else {
-                this.logger.warn("No data in HTTP response")
+                this.logger.warn("No user with perimeters defined in HTTP response")
                 return new GetResponse(null, false);
             }
         } catch (e) {
@@ -165,6 +190,23 @@ export default class OpfabServicesInterface {
 
     }
 
+    public async getEntity(id: string): Promise<GetResponse> {
+        try {
+            await this.getToken();
+            const response = await this.sendGetEntityRequest(id);
+            if (response?.data) {
+                return new GetResponse(response.data, true);
+            }
+            else {
+                this.logger.warn("No entity defined in HTTP response")
+                return new GetResponse([], false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get entity ' + id, e);
+            return new GetResponse([], false);
+        }
+       
+    }
 
     async getToken() {
         if (!this.jwtToken.validateToken(this.token, this.tokenExpirationMargin)) {
@@ -178,7 +220,7 @@ export default class OpfabServicesInterface {
         }
     }
 
-    sendUsersConnectedRequest() {
+    sendUsersConnectedRequest(): Promise<any> {
         return this.sendRequest({
             method: 'get',
             url: this.opfabCardsConsultationUrl + '/connections',
@@ -188,7 +230,7 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetUserRequest(login: string) {
+    sendGetUserRequest(login: string): Promise<any> {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/users/' + login,
@@ -198,10 +240,20 @@ export default class OpfabServicesInterface {
         });
     }
 
-    sendGetAllUsersRequest() {
+    sendGetAllUsersRequest(): Promise<any> {
         return this.sendRequest({
             method: 'get',
             url: this.opfabUsersUrl + '/users',
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
+    sendGetCardRequest(cardId: string) {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabCardsConsultationUrl + '/cards/' + cardId,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
@@ -219,8 +271,18 @@ export default class OpfabServicesInterface {
         });
     }
 
+    private sendGetEntityRequest(id: string): Promise<any> {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabUsersUrl + '/entities/' + id,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
 
-    public async sendCard(card: any) {
+
+    public async sendCard(card: any): Promise<any> {
         try {
             await this.getToken();
             const request = {
@@ -238,33 +300,6 @@ export default class OpfabServicesInterface {
     }
 
 
-    public async getEntity(id: string): Promise<GetResponse> {
-        try {
-            await this.getToken();
-            const response = await this.sendGetEntityRequest(id);
-            if (response?.data) {
-                return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse([], false);
-            }
-        } catch (e) {
-            this.logger.warn('Impossible to get entity ' + id, e);
-            return new GetResponse([], false);
-        }
-       
-    }
-
-    private sendGetEntityRequest(id: string) {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabUsersUrl + '/entities/' + id,
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
 
     sendRequest(request: any) {
         // Cast to <Promise<any>> required for testing, to be able to stub the call

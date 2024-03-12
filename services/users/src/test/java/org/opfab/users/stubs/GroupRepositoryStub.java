@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.opfab.users.model.Group;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.repositories.GroupRepository;
 
 public class GroupRepositoryStub implements GroupRepository {
@@ -80,6 +79,6 @@ public class GroupRepositoryStub implements GroupRepository {
     // Use this method to create copy of a group to avoid 
     // test code modifying repository data directly (without calling repository methods)
     private Group cloneGroup(Group group) {
-        return (new GroupData((GroupData) group)); 
+        return (new Group((Group) group)); 
     } 
 }

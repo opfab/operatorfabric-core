@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {Router} from '@angular/router';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-card',
@@ -44,38 +45,37 @@ export class CardComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        SelectedCardService
-            .getSelectCard()
+        SelectedCardService.getSelectCard()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((selectedCard: SelectedCard) => {
                 if (selectedCard.card) {
                     this.cardNotFound = false;
-                    ProcessesService
-                        .queryProcess(selectedCard.card.process, selectedCard.card.processVersion)
-                        .subscribe({
-                            next: (businessconfig) => {
-                                this.card = selectedCard.card;
-                                this.childCards = selectedCard.childCards;
-                                this.cardLoadingInProgress = false;
-                                if (businessconfig) {
-                                    this.cardState = businessconfig.states.get(selectedCard.card.state);
-                                    if (!this.cardState) {
-                                        console.log(
-                                            new Date().toISOString(),
-                                            `WARNING state ${selectedCard.card.state} does not exist for process ${selectedCard.card.process}`
-                                        );
-                                        this.cardState = new State();
-                                    }
-                                } else {
+                    ProcessesService.queryProcess(
+                        selectedCard.card.process,
+                        selectedCard.card.processVersion
+                    ).subscribe({
+                        next: (businessconfig) => {
+                            this.card = selectedCard.card;
+                            this.childCards = selectedCard.childCards;
+                            this.cardLoadingInProgress = false;
+                            if (businessconfig) {
+                                this.cardState = businessconfig.states.get(selectedCard.card.state);
+                                if (!this.cardState) {
+                                    LoggerService.warn(
+                                        `State ${selectedCard.card.state} does not exist for process ${selectedCard.card.process}`
+                                    );
                                     this.cardState = new State();
                                 }
+                            } else {
+                                this.cardState = new State();
                             }
-                        });
+                        }
+                    });
                 } else {
                     if (selectedCard.notFound) {
                         this.cardNotFound = true;
                         this.cardLoadingInProgress = false;
-                        console.log(new Date().toISOString(), 'WARNING card not found.');
+                        LoggerService.warn('Card not found.');
                     }
                 }
             });
@@ -85,8 +85,7 @@ export class CardComponent implements OnInit, OnDestroy {
 
     // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        SelectedCardService
-            .getSelectCardIdChanges()
+        SelectedCardService.getSelectCardIdChanges()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
                 // a new card has been selected and will be downloaded
@@ -107,10 +106,9 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     checkForCardDeleted() {
-        SelectedCardService
-            .getSelectedCardsDeleted()
+        SelectedCardService.getSelectedCardsDeleted()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(cardId => {
+            .subscribe((cardId) => {
                 setTimeout(() => {
                     if (!this.detailClosed) {
                         const modalOptions: NgbModalOptions = {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,26 +9,24 @@
 
 declare const opfab;
 
-
-
 export function initOpfabApiMock() {
-
     opfab.users = {
         entities: {
-            getEntityName: function (entityId) {return entityId + " name"},
+            getEntityName: function (entityId) {
+                return entityId + ' name';
+            },
             getEntity: function (entityId) {},
             getAllEntities: function () {}
         }
     };
-    
+
     opfab.navigate = {
         showCardInFeed: function (cardId) {},
-        redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {}
+        redirectToBusinessMenu: function (menuId, urlExtension) {}
     };
 
-
     opfab.currentCard = {
-        getCard: function() {},
+        getCard: function () {},
         isUserAllowedToRespond: function () {},
         isUserMemberOfAnEntityRequiredToRespond: function () {},
         getEntitiesAllowedToRespond: function () {},
@@ -48,7 +46,7 @@ export function initOpfabApiMock() {
         listenToTemplateRenderingComplete(listener) {},
         listenToChildCards(listener) {}
     };
-    
+
     opfab.currentUserCard = {
         getEditionMode: function () {},
         getEndDate: function () {},
@@ -75,10 +73,7 @@ export function initOpfabApiMock() {
         setInitialStartDate: function (startDate) {}
     };
 
-    opfab.utils.getTranslation = function(key,values) {
-        return "Translation of " + key;
-    }
-
+    opfab.utils.getTranslation = function (key, values) {
+        return 'Translation of ' + key;
+    };
 }
-
-

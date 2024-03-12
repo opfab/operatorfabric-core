@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,6 +8,9 @@
  */
 
 import CardsDiffusionControl from '../application/cardsDiffusionControl';
+import CardsDiffusionRateLimiter from '../application/cardsDiffusionRateLimiter';
+import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
@@ -21,12 +24,17 @@ export default class CardsExternalDiffusionService {
     private logger: any;
 
 
-    constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface, mailService: SendMailService, serviceConfig: any, logger: any) {
+    constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface,
+            opfabBusinessConfigServicesInterface: BusinessConfigOpfabServicesInterface,
+            cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService, 
+            mailService: SendMailService, serviceConfig: any, logger: any) {
         this.logger = logger;
         this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
         this.cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterface)
+            .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
+            .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
             .setFrom(serviceConfig.mailFrom)
             .setSubjectPrefix(serviceConfig.subjectPrefix)
@@ -34,6 +42,14 @@ export default class CardsExternalDiffusionService {
             .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead);
+
+        if (serviceConfig.activateCardsDiffusionRateLimiter) {
+            const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
+                .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec)
+                .setSendRateLimit(serviceConfig.sendRateLimit);
+            this.cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+            this.cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
+        }
 
         this.checkRegularly();
     }
@@ -60,7 +76,7 @@ export default class CardsExternalDiffusionService {
 
     private checkRegularly() {
         if (this.active) {
-            this.logger.info('checkRegularly');
+            this.logger.info('Check regularly');
             this.cardsDiffusionControl
                 .checkUnreadCards()
                 .catch((error) => this.logger.error('error during periodic check' + error))

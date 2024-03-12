@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,14 @@ import {
     AbstractControl,
     ControlContainer,
     ControlValueAccessor,
-    NG_VALUE_ACCESSOR, FormControl, FormGroup
+    NG_VALUE_ACCESSOR,
+    FormControl,
+    FormGroup
 } from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';;
+import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 
 const i18nPrefix = 'datePicker.';
@@ -83,8 +85,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     @Input() labelKey: string;
     @Input() filterPath: string;
     @Input() defaultDate: NgbDateStruct;
-    @Input() defaultTime: {hour: number; minute: number;};
-    @Output() change = new EventEmitter();
+    @Input() defaultTime: {hour: number; minute: number};
+    @Output() dateTimeChange = new EventEmitter();
     @Input() minDate: {year: number; month: number; day: number};
     @Input() maxDate: {year: number; month: number; day: number};
     @Input() timeSpinners = true;
@@ -169,7 +171,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             // this was causing an infinite loop in usercard-dates-form.component.ts
             if (val !== this.previousDateValue) {
                 this.previousDateValue = val;
-                this.change.emit();
+                this.dateTimeChange.emit();
             }
         });
         this.timeInput.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((val) => {
@@ -178,9 +180,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             }
             // avoid having null value for time field
             // when user erases values in input field
-            else this.timeInput.setValue({hour:0 ,minute:0,second:0});
-            
-            this.change.emit();
+            else this.timeInput.setValue({hour: 0, minute: 0, second: 0});
+
+            this.dateTimeChange.emit();
         });
     }
 

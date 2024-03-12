@@ -1,11 +1,8 @@
 dependencies {
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
-    swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterMongo
-    implementation cloud.starterFeign
     implementation boot.starterSecurity
     implementation boot.starterValidation
 
@@ -13,13 +10,13 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     implementation boot.starterWebflux
-    implementation project(':client:cards-client-data')
     implementation project(':client:users-client-data')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:user-action-tracing')
     testImplementation testing_deps.reactor
     testImplementation project(':tools:spring:spring-test-utilities')
+    testImplementation project(':tools:spring:spring-oauth2-utilities')
 }
 
 bootJar {
@@ -33,18 +30,6 @@ bootJar {
     }
 }
 
-swaggerSources {
-    endpoints {
-        inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
-        code {
-            language = 'org.opfab.generators.OpfabSpringGenerator'
-            configFile = file('src/main/modeling/config.json')
-            outputDir = file("./build/swagger")
-            templateDir = file('../src/main/resources/swagger-templates')
-            components = ['models']
-        }
-        ui {
-            outputDir = file("./build/docs/api")
-        }
-    }
-}
+
+
+

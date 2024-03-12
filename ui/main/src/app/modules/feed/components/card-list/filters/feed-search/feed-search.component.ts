@@ -11,7 +11,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-feed-search',
@@ -22,18 +23,18 @@ export class FeedSearchComponent implements OnInit {
     @Input() showSearchFilter: boolean;
 
     searchControl = new FormControl();
-    placeholder : string;
+    placeholder: string;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private translateService: TranslateService
-    ) {}
+    constructor(private translateService: TranslateService) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         this.placeholder = this.translateService.instant('feed.searchPlaceholderText');
-        this.lightCardsFeedFilterService.setSearchTermForTextFilter("");
-        this.searchControl.valueChanges.subscribe(searchTerm => {
-            this.lightCardsFeedFilterService.setSearchTermForTextFilter(searchTerm);
-        })
+        this.filteredLightCardStore.setSearchTermForTextFilter('');
+        this.searchControl.valueChanges.subscribe((searchTerm) => {
+            this.filteredLightCardStore.setSearchTermForTextFilter(searchTerm);
+        });
     }
 }

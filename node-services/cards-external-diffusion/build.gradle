@@ -5,6 +5,9 @@ plugins {
 }
 
 npmInstall {
+    // Important: Use 'npm ci' instead of 'npm install' to ensure consistent dependencies.
+    // 'npm ci' uses the exact versions from package-lock.json, preventing unexpected changes.
+    npmCommand = ['ci'] 
     inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
@@ -60,13 +63,11 @@ docker {
 				from('.') {
 					include 'startCardsExternalDiffusion.sh'
 					include 'package.json'
+                    include 'package-lock.json'
+					include 'node_modules/**'
 					into '.'
 				}
 			}
-    files( "bin", "package.json", "config")
-    buildArgs([
-                'https_proxy'    : proxy.https
-                ])
     dockerfile file("docker/Dockerfile")
 }
 
@@ -79,3 +80,7 @@ clean.dependsOn(deleteRuntimeConfigFile)
 
 assemble.dependsOn(runBuild)
 tasks.dockerPrepare.dependsOn test
+
+tasks.named("dockerPrepare") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}

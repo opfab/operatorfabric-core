@@ -1,6 +1,6 @@
 plugins {
-    id "com.github.node-gradle.node" version "7.0.1"
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "com.github.node-gradle.node" version "7.0.2"
+    id "org.asciidoctor.jvm.convert" version "4.0.2"
     id "maven-publish"
     id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
@@ -30,22 +30,18 @@ ext {
             starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
             starterTest             : "org.springframework.boot:spring-boot-starter-test:$springBoot",
             starterValidation       : "org.springframework.boot:spring-boot-starter-validation:$springBoot",
-            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:$springBoot",
-            devTools                : "org.springframework.boot:spring-boot-devtools:$springBoot"
+            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:$springBoot"
     ]
-
 
 
     spring = [
             securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:$springSecurity",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:$springSecurity",
             securityTest            : "org.springframework.security:spring-security-test:$springSecurity",
-            webflux                 : "org.springframework:spring-webflux:$springWebflux",
-            retry                   : "org.springframework.retry:spring-retry:$springRetry"
+            webflux                 : "org.springframework:spring-webflux:$springWebflux"
     ]
 
     cloud = [
-            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign:$springOpenFeign",
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
@@ -58,7 +54,6 @@ ext {
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
             assertJ         : "org.assertj:assertj-core:$assertj",
             reactor         : "io.projectreactor:reactor-test:$reactor",
-            awaitility      : "org.awaitility:awaitility-kotlin:$awaitility",
             karate          : "com.intuit.karate:karate-junit5:$karate"
     ]
 
@@ -67,11 +62,7 @@ ext {
             slf4j          : "org.slf4j:slf4j-api:$slf4j",
             lombok         : "org.projectlombok:lombok:$lombok",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
-            feignMock      : "io.github.openfeign:feign-mock:$feign",
-            feignJackson   : "io.github.openfeign:feign-jackson:$feign",
-            feignCore      : "io.github.openfeign:feign-core:$feign",
-            feignOkhttp      : "io.github.openfeign:feign-okhttp:$feign",
-            guava          : "com.google.guava:guava:32.1.3-jre",
+            guava          : "com.google.guava:guava:33.0.0-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
@@ -116,9 +107,16 @@ sonar {
         property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/supervisor,node-services/common'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
-        property 'sonar.javascript.lcov.reportPaths','node-services/**/coverage/lcov.info'
+        property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,node-services/**/coverage/lcov.info'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','**/config*/**/*,**/ui/**/*,**/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*,tools/generic/test-utilities/**,tools/swagger-spring-generators/**'
+        property 'sonar.coverage.exclusions','config*/**/*,ui/**/*.spec.ts,ui/main/src/app/modules/**,\
+                                              ui/main/src/app/server/**,ui/main/src/app/authentication/**,\
+                                              ui/main/src/app/services/**,ui/main/src/app/router/**,ui/main/src/tests/**,\
+                                              **/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*,\
+                                              node-services/**/server-side/**,**/*config.js,**/*.conf.js,\
+                                              client/**,**/spring-test-utilities/**,tools/spring/spring-mongo-utilities,\
+                                              tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**,\
+                                              tools/generic/test-utilities/**,tools/swagger-spring-generators/**'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'

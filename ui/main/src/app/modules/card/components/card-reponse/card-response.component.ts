@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, 
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card, CardForPublishing} from '@ofModel/card.model';
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -32,8 +32,9 @@ class FormResult {
     valid: boolean;
     errorMsg: string;
     responseCardData: any;
-    publisher?: string
+    publisher?: string;
     responseState?: string;
+    actions?: CardAction[];
 }
 
 const enum ResponseI18nKeys {
@@ -80,11 +81,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public btnUnlockLabel = 'response.btnUnlock';
     isReadOnlyUser: boolean;
 
-    constructor(
-        private modalService: NgbModal,
-        private opfabAPIService: OpfabAPIService
-
-    ) {
+    constructor(private modalService: NgbModal) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
@@ -127,12 +124,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
     private disablePopUpButtonIfNoEntitySelected(): void {
         this.selectEntitiesForm.get('entities').valueChanges.subscribe((selectedEntities) => {
             this.isEntityFormFilled = selectedEntities.length >= 1;
-        })
+        });
     }
 
     private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        if(this.userEntitiesAllowedToRespond) {
+        if (this.userEntitiesAllowedToRespond) {
             this.userEntitiesAllowedToRespond.forEach((entityId) => {
                 const entity = EntitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
@@ -142,7 +139,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
@@ -155,16 +152,19 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
 
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
             if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
-                logger.error("Response card publisher not allowed : " + publisherEntity);
+                logger.error('Response card publisher not allowed : ' + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }
+
+            const entityRecipients = [...this.card.entityRecipients];
+            this.addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients);
 
             const card: CardForPublishing = {
                 publisher: publisherEntity,
@@ -177,7 +177,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 endDate: this.card.endDate,
                 expirationDate: this.card.expirationDate,
                 severity: Severity.INFORMATION,
-                entityRecipients: this.card.entityRecipients,
+                entityRecipients: entityRecipients,
                 userRecipients: this.card.userRecipients,
                 groupRecipients: this.card.groupRecipients,
                 externalRecipients: this.cardState.response.externalRecipients,
@@ -185,26 +185,31 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 summary: this.card.summary,
                 data: responseData.responseCardData,
                 parentCardId: this.card.id,
-                initialParentCardUid: this.card.uid
+                initialParentCardUid: this.card.uid,
+                actions: responseData.actions
             };
             this.sendingResponseInProgress = true;
-            CardService.postCard(card).subscribe(
-                (resp) => {
-                    this.sendingResponseInProgress = false;
-                    if (resp.status !== ServerResponseStatus.OK) {
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(resp);
-                    } else {
-                        this.isResponseLocked = true;
-                        this.opfabAPIService.templateInterface.lockAnswer();
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                    }
+            CardService.postCard(card).subscribe((resp) => {
+                this.sendingResponseInProgress = false;
+                if (resp.status !== ServerResponseStatus.OK) {
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                    console.error(resp);
+                } else {
+                    this.isResponseLocked = true;
+                    OpfabAPIService.templateInterface.lockAnswer();
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 }
-            );
+            });
         } else {
             responseData.errorMsg && responseData.errorMsg !== ''
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
+        }
+    }
+
+    private addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients: Array<string>) {
+        if (this.card.publisherType === 'ENTITY' && !entityRecipients?.includes(this.card.publisher)) {
+            entityRecipients.push(this.card.publisher);
         }
     }
 

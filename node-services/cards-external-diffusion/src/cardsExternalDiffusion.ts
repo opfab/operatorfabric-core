@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,8 @@ import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
 import ConfigService from './domain/client-side/configService';
+import CardsExternalDiffusionDatabaseService from './domain/server-side/cardsExternaDiffusionDatabaseService';
+import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
 
 const app = express();
 app.disable("x-powered-by");
@@ -56,6 +58,17 @@ const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface(
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
+    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
+    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
+    .setLogger(logger);
+
+const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInterface()
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
+    .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
+    .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
@@ -64,7 +77,9 @@ opfabServicesInterface.loadUsersData().catch(error =>
     logger.error("error during loadUsersData", error)
 );
 
-
+const cardsExternalDiffusionDatabaseService = new CardsExternalDiffusionDatabaseService()
+    .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
+    .setLogger(logger);
 
 const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
@@ -73,8 +88,7 @@ const authorizationService = new AuthorizationService()
 
 const serviceConfig = configService.getConfig();
 
-const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, mailService, serviceConfig, logger);
-
+const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, opfabBusinessConfigServicesInterface, cardsExternalDiffusionDatabaseService, mailService, serviceConfig, logger);
 
 app.get('/status', (req, res) => {
 
@@ -143,10 +157,18 @@ app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
 
-opfabServicesInterface.startListener();
 
-if (activeOnStartUp) {
-    cardsExternalDiffusionService.start();
+
+
+async function start() {
+    await cardsExternalDiffusionDatabaseService.connectToMongoDB();
+    opfabServicesInterface.startListener();
+    opfabBusinessConfigServicesInterface.startListener();
+
+    if (activeOnStartUp) {
+        cardsExternalDiffusionService.start();
+    }
+    logger.info('Application started');
 }
 
-logger.info('Application started');
+start();

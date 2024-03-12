@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,45 +13,32 @@ package org.opfab.cards.consultation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
-import org.jetbrains.annotations.NotNull;
 import org.opfab.cards.consultation.model.*;
-import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.Charset.forName;
 
 @Slf4j
 public class TestUtilities {
 
     private static DateTimeFormatter ZONED_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
-    @NotNull
     public static String format(Instant now) {
         return ZONED_FORMATTER.format(now);
     }
 
-    @NotNull
     public static String format(Long now) {
         return ZONED_FORMATTER.format(Instant.ofEpochMilli(now));
     }
 
-    // as date are stored in millis in mongo , we should not used nanos otherwise 
+    // as date are stored in millis in mongo , we should not use nanos otherwise
     // we will have different results when comparing date send and date stored 
     // resulting  in failed test 
     public static Instant roundingToMillis(Instant instant) {
@@ -61,39 +48,79 @@ public class TestUtilities {
 
     /* Utilities regarding Cards */
 
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, null, null, null);
-    }
-    
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String[] userAcks, String[] userReads) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, userAcks, userReads, null);
-    }
-
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,null, null, null);
-    }
-    
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities, String[] userAcks, String[] userReads, String[] entitiesAcks) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities, userAcks, userReads, entitiesAcks);
-    }
-    
-    public static CardConsultationData createSimpleCard(String processSuffix
-            , Instant publication
-            , Instant start
-            , Instant end
-            , String login, String[] groups, String[] entities) {
-    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null, null, null);
+    public static Card createSimpleCard(int processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null,
+                null, null, null, null);
     }
 
-    public static CardConsultationData createSimpleCard(String processSuffix
-            , Instant publication
-            , Instant start
-            , Instant end
-            , String login, String[] groups, String[] entities
-            , String[] userAcks
-            , String[] userReads
-            , String[] entitiesAcks) {
-        CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
+    public static Card createSimpleCardWithOtherProcessState(int processSuffix,
+                                                                             Instant publication,
+                                                                             Instant start,
+                                                                             Instant end) {
+        return createSimpleCardWithOtherProcessState(Integer.toString(processSuffix), publication, start, end, null, null,
+                null, null, null, null);
+    }
+    
+    public static Card createSimpleCard(int processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end,
+                                                        String[] userAcks,
+                                                        String[] userReads) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null,
+                null, userAcks, userReads, null);
+    }
+
+    public static Card createSimpleCard(int processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end,
+                                                        String login,
+                                                        String[] groups,
+                                                        String[] entities) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,
+                null, null, null);
+    }
+    
+    public static Card createSimpleCard(int processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end,
+                                                        String login,
+                                                        String[] groups,
+                                                        String[] entities,
+                                                        String[] userAcks,
+                                                        String[] userReads,
+                                                        String[] entitiesAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,
+                userAcks, userReads, entitiesAcks);
+    }
+    
+    public static Card createSimpleCard(String processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end,
+                                                        String login,
+                                                        String[] groups,
+                                                        String[] entities) {
+    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null,
+                null, null);
+    }
+
+    public static Card createSimpleCard(String processSuffix,
+                                                        Instant publication,
+                                                        Instant start,
+                                                        Instant end,
+                                                        String login,
+                                                        String[] groups,
+                                                        String[] entities,
+                                                        String[] userAcks,
+                                                        String[] userReads,
+                                                        String[] entitiesAcks) {
+        Card.CardBuilder cardBuilder = Card.builder()
                 .process("PROCESS")
                 .processInstanceId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
@@ -102,8 +129,8 @@ public class TestUtilities {
                 .startDate(start)
                 .endDate(end != null ? end : null)
                 .severity(SeverityEnum.ALARM)
-                .title(I18nConsultationData.builder().key("title").build())
-                .summary(I18nConsultationData.builder().key("summary").build())
+                .title(new I18n("title",null))
+                .summary(new I18n("summary",null))
                 .usersAcks(userAcks != null ? Arrays.asList(userAcks) : null)
                 .usersReads(userReads != null ? Arrays.asList(userReads) : null)
                 .entitiesAcks(entitiesAcks != null ? Arrays.asList(entitiesAcks) : null);
@@ -114,22 +141,61 @@ public class TestUtilities {
             cardBuilder.entityRecipients(Arrays.asList(entities));
         if (login != null)
             cardBuilder.userRecipient(login);
-        CardConsultationData card = cardBuilder.build();
+        Card card = cardBuilder.build();
+        prepareCard(card, publication);
+        return card;
+    }
+
+    public static Card createSimpleCardWithOtherProcessState(String processSuffix,
+                                                                             Instant publication,
+                                                                             Instant start,
+                                                                             Instant end,
+                                                                             String login,
+                                                                             String[] groups,
+                                                                             String[] entities,
+                                                                             String[] userAcks,
+                                                                             String[] userReads,
+                                                                             String[] entitiesAcks) {
+        Card.CardBuilder cardBuilder = Card.builder()
+                .process("A_PROCESS")
+                .processInstanceId("A_PROCESS" + processSuffix)
+                .publisher("PUBLISHER")
+                .processVersion("0")
+                .state("A_State")
+                .startDate(start)
+                .endDate(end != null ? end : null)
+                .severity(SeverityEnum.ALARM)
+                .title(new I18n("title",null))
+                .summary(new I18n("summary",null))
+                .usersAcks(userAcks != null ? Arrays.asList(userAcks) : null)
+                .usersReads(userReads != null ? Arrays.asList(userReads) : null)
+                .entitiesAcks(entitiesAcks != null ? Arrays.asList(entitiesAcks) : null)
+                .externalRecipients(Arrays.asList("externalRecipient1", "externalRecipient2"))
+                .hasBeenAcknowledged(false)
+                .hasBeenRead(false);
+
+        if (groups != null && groups.length > 0)
+            cardBuilder.groupRecipients(Arrays.asList(groups));
+        if (entities != null && entities.length > 0)
+            cardBuilder.entityRecipients(Arrays.asList(entities));
+        if (login != null)
+            cardBuilder.userRecipient(login);
+        Card card = cardBuilder.build();
         prepareCard(card, publication);
         return card;
     }
 
     public static CardOperation readCardOperation(ObjectMapper mapper, String s) {
         try {
-            return mapper.readValue(s, CardOperationConsultationData.class);
+            return mapper.readValue(s, CardOperation.class);
         } catch (IOException e) {
-            log.error(String.format("Unable to delinearize %s", CardOperationConsultationData.class.getSimpleName()), e);
+            log.error(String.format("Unable to delinearize %s", CardOperation.class.getSimpleName()), e);
             return null;
         }
     }
 
 
-    public static void prepareCard(CardConsultationData card, Instant publishDate) {
+    public static void prepareCard(Card card, Instant publishDate) {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
         card.setId(card.getProcess() + "." + card.getProcessInstanceId());
@@ -138,33 +204,54 @@ public class TestUtilities {
 
 
     public static void logCardOperation(CardOperation o) {
-        log.info("op publication: " + format(o.getCard().getPublishDate()));
-        if (o.getCard() != null)
-            log.info(String.format("card [%s]: %s", o.getCard().getId(), format(o.getCard().getStartDate())));
+        log.info("op publication: " + format(o.card().getPublishDate()));
+        if (o.card() != null)
+            log.info(String.format("card [%s]: %s", o.card().getId(), format(o.card().getStartDate())));
     }
 
     /* Utilities regarding archived Cards */
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end) {
+    public static ArchivedCard createSimpleArchivedCard(int processSuffix,
+                                                                        String publisher,
+                                                                        Instant publication,
+                                                                        Instant start,
+                                                                        Instant end) {
         return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, null, null, null);
     }
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
+    public static ArchivedCard createSimpleArchivedCard(int processSuffix,
+                                                                        String publisher,
+                                                                        Instant publication,
+                                                                        Instant start,
+                                                                        Instant end,
+                                                                        String login,
+                                                                        String[] groups,
+                                                                        String[] entities) {
         return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, login, groups, entities);
     }
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
-        ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
+    public static ArchivedCard createSimpleArchivedCard(String processSuffix,
+                                                                        String publisher,
+                                                                        Instant publishDate,
+                                                                        Instant start,
+                                                                        Instant end,
+                                                                        String login,
+                                                                        String[] groups,
+                                                                        String[] entities) {
+        ArchivedCard.ArchivedCardBuilder archivedCardBuilder = ArchivedCard.builder()
+                .id(UUID.randomUUID().toString())
                 .processInstanceId("PROCESS" + processSuffix)
                 .process("PROCESS")
+                .publishDate(publishDate)
                 .publisher(publisher)
                 .processVersion("0")
                 .startDate(start)
                 .state("anyState")
+                .processStateKey("PROCESS.anyState")
                 .endDate(end != null ? end : null)
                 .severity(SeverityEnum.ALARM)
-                .title(I18nConsultationData.builder().key("title").build())
-                .summary(I18nConsultationData.builder().key("summary").build())
+                .title(new I18n("title",null))
+                .summary(new I18n("summary",null))
                 .publisherType(PublisherTypeEnum.EXTERNAL)
                 ;
 
@@ -174,16 +261,9 @@ public class TestUtilities {
             archivedCardBuilder.entityRecipients(Arrays.asList(entities));
         if (login != null)
             archivedCardBuilder.userRecipient(login);
-        ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
-        prepareArchivedCard(archivedCard, publication);
-        return archivedCard;
+        return archivedCardBuilder.build();
     }
 
-    public static void prepareArchivedCard(ArchivedCardConsultationData archivedCard, Instant publishDate) {
-        archivedCard.setId(UUID.randomUUID().toString());
-        archivedCard.setPublishDate(publishDate);
-        archivedCard.setProcessStateKey(archivedCard.getProcess() + "." + archivedCard.getState());
-    }
 
     public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
 
@@ -222,8 +302,6 @@ public class TestUtilities {
             }
             return true;
         }
-
-
     }
 
     public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCard> page, Predicate<LightCard> criteria) {
@@ -240,26 +318,7 @@ public class TestUtilities {
         }
     }
 
-    /**
-     * Returns true if <code>listA</code> contains any of the items in <code>listB</code> :
-     *
-     * @param listA only cards published earlier than this will be fetched
-     * @param listB start of search range
-     * @return boolean indicating whether listA contains any of the items in listB
-     */
-    public static boolean checkIfContainsAny(List<String> listA, List<String> listB) {
-        if (listA == null || listA.isEmpty() || listB == null || listB.isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < listB.size(); i++) {
-            if (listA.contains(listB.get(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card,
+    public static Card configureRecipientReferencesAndStartDate(Card card,
                                                                                 String user,
                                                                                 Instant startDate,
                                                                                 String[] groups,
@@ -279,44 +338,10 @@ public class TestUtilities {
         return card;
     }
 
-    public static List<CardConsultationData> instantiateCardConsultationData(EasyRandom generator,
-                                                               int cardNumber) {
-        return generator.objects(CardConsultationData.class, cardNumber).collect(Collectors.toList());
-    }
-
-    public static List<CardConsultationData> instantiateSeveralCardConsultationData(int cardNumber){
-        return instantiateCardConsultationData(instantiateEasyRandom(),cardNumber);
-    }
-
-    public static CardConsultationData instantiateOneCardConsultationData(){
-        return instantiateSeveralCardConsultationData(1).get(0);
-    }
-
-    @NotNull
-    public static EasyRandom instantiateEasyRandom() {
-        LocalDate today = LocalDate.now();
-        LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
-
-        LocalTime nine = LocalTime.of(9, 0);
-        LocalTime fifteen = LocalTime.of(17, 0);
-
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .seed(5467L)
-                .objectPoolSize(100)
-                .randomizationDepth(3)
-                .charset(forName("UTF-8"))
-                .timeRange(nine, fifteen)
-                .dateRange(today, tomorrow)
-                .stringLengthRange(5, 50)
-                .collectionSizeRange(1, 10)
-                .excludeField(FieldPredicates.named("data"))
-                .scanClasspathForConcreteTypes(true)
-                .overrideDefaultInitialization(false)
-                .ignoreRandomizationErrors(true)
-                .excludeField(predicate->predicate.getName().equals("usersAcks"))
-                .excludeField(predicate->predicate.getName().equals("usersReads"))
-                .excludeField(predicate->predicate.getName().equals("entitiesAcks"));
-
-        return new EasyRandom(parameters);
+    public static Card instantiateOneCardConsultationData(){
+        return createSimpleCardWithOtherProcessState(1,
+                Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                Instant.now().plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS),
+                Instant.now().plus(2, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS));
     }
 }

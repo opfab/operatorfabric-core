@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@ package org.opfab.users.services;
 
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
-import org.opfab.users.model.CurrentUserWithPerimetersData;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,7 +31,7 @@ public class CurrentUserWithPerimetersService {
     }
 
     public CurrentUserWithPerimeters fetchUserWithPerimeters(String login) {
-        CurrentUserWithPerimeters currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
+        CurrentUserWithPerimeters currentUserWithPerimetersData = new CurrentUserWithPerimeters();
 
         Optional<User> userResp = usersService.fetchUserByLogin(login);
         if (userResp.isPresent()) {
@@ -41,7 +41,7 @@ public class CurrentUserWithPerimetersService {
     }
 
     public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(User user) {
-        CurrentUserWithPerimetersData currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
+        CurrentUserWithPerimeters currentUserWithPerimetersData = new CurrentUserWithPerimeters();
         if (user != null) {
             currentUserWithPerimetersData.setUserData(user);
             handleUserSettings(user, currentUserWithPerimetersData);
@@ -51,7 +51,7 @@ public class CurrentUserWithPerimetersService {
         return currentUserWithPerimetersData;
     }
 
-    protected void handleGroups(User userData, CurrentUserWithPerimetersData userWithPerimeterData) {
+    protected void handleGroups(User userData, CurrentUserWithPerimeters userWithPerimeterData) {
         List<String> userGroups = userData.getGroups(); // First, we recover the groups to which the user belongs
 
         if ((userGroups != null) && (!userGroups.isEmpty())) { // Then, we recover the groups data
@@ -75,7 +75,7 @@ public class CurrentUserWithPerimetersService {
         }
     }
 
-    protected void handleUserSettings(User userData, CurrentUserWithPerimetersData userWithPerimeterData) {
+    protected void handleUserSettings(User userData, CurrentUserWithPerimeters userWithPerimeterData) {
         // We recover the user_settings to have the process/state filters defined by the
         // user, for his feed
         OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
@@ -84,6 +84,7 @@ public class CurrentUserWithPerimetersService {
             userWithPerimeterData.setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
             userWithPerimeterData.setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
             userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
+            userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
             userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
         }
     }

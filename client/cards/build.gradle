@@ -22,16 +22,6 @@ swaggerSources {
 
     model {
         inputFile = file("../../services/cards-publication/src/main/modeling/swagger.yaml")
-        code {
-            language = 'org.opfab.generators.OpfabClientGenerator'
-            configFile = file('src/main/modeling/config.json')
-            outputDir = file("./build/swagger")
-            templateDir = file('../src/main/resources/swagger-templates')
-            components = ['models']
-        }
-        ui {
-            outputDir = file("./build/docs/api")
-        }
     }
 }
 

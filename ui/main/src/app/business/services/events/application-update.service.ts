@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,12 +25,6 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
     providedIn: 'root'
 })
 export class ApplicationUpdateService {
-    constructor(
-        private handlebarsService: HandlebarsService,
-        private templateCssService: TemplateCssService,
-        private applicationEventsService: ApplicationEventsService
-    ) {}
-
     init() {
         this.listenForBusinessConfigUpdate();
         this.listenForUserConfigUpdate();
@@ -38,14 +32,13 @@ export class ApplicationUpdateService {
     }
 
     private listenForBusinessConfigUpdate() {
-        OpfabEventStreamService
-            .getBusinessConfigChangeRequests()
+        OpfabEventStreamService.getBusinessConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 map(() => {
                     logger.info('Update business config');
-                    this.handlebarsService.clearCache();
-                    this.templateCssService.clearCache();
+                    HandlebarsService.clearCache();
+                    TemplateCssService.clearCache();
                     ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
                     ProcessesService.loadAllProcessesWithAllVersions().subscribe();
                     ProcessesService.loadProcessGroups().subscribe();
@@ -59,8 +52,7 @@ export class ApplicationUpdateService {
     }
 
     private listenForUserConfigUpdate() {
-        OpfabEventStreamService
-            .getUserConfigChangeRequests()
+        OpfabEventStreamService.getUserConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 switchMap(() => {
@@ -72,7 +64,7 @@ export class ApplicationUpdateService {
                     logger.info('Update user perimeter, entities and groups', LogOption.LOCAL_AND_REMOTE);
                     return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$);
                 }),
-                map(() => this.applicationEventsService.setUserConfigChange()),
+                map(() => ApplicationEventsService.setUserConfigChange()),
                 catchError((error, caught) => {
                     logger.error('Error in update user config ', error);
                     return caught;

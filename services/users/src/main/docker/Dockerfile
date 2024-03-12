@@ -1,7 +1,7 @@
 FROM azul/zulu-openjdk-alpine:17.0.9-jre
 VOLUME /tmp
 ARG JAR_FILE
-RUN apk add bash curl --no-cache
+RUN apk add bash --no-cache
 ENV SPRING_CONFIG_NAME common,application,users
 ENV SPRING_CONFIG_LOCATION classpath:/application.yml,./config/,./external-config/
 COPY add-certificates.sh /add-certificates.sh

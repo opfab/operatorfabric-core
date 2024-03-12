@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,7 +101,7 @@ public class CardOperationsController {
                 } else {
                     log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
-                return CardSubscriptionDto.builder().publishFrom(p.getPublishFrom()).rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
+                return new CardSubscriptionDto(p.getRangeStart(),p.getRangeEnd(),p.getPublishFrom());
             } catch (IllegalArgumentException e) {
                 log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(

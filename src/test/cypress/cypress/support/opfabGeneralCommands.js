@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -115,7 +115,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
 
     navigateToNotificationConfiguration = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        cy.get('#opfab-navbar-right-menu-feedconfiguration').click();
     }
 
     openExternalDevices = function ()  {
@@ -139,7 +139,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
 
     switchToDayMode = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-day-mode').click();
+        cy.get('#opfab-navbar-right-menu-nightdaymode').click();
     }
 
     checkUrlDisplayedIs = function (url) {

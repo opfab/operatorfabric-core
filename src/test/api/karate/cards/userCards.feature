@@ -201,7 +201,7 @@ Feature: UserCards tests
 	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
 	"state": "messageState",
-    "groupRecipients": ["Dispatcher"],
+  "groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,

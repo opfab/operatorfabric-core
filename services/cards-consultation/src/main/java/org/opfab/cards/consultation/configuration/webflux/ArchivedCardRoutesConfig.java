@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ package org.opfab.cards.consultation.configuration.webflux;
 
 import java.util.List;
 
-import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
-import org.opfab.cards.consultation.model.ArchivedCardData;
+import org.opfab.cards.consultation.model.ArchivedCard;
+import org.opfab.cards.consultation.model.ArchivedCardWithChildCards;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
@@ -74,11 +74,11 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
                         .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(archivedCardRepository.findByParentCard(userCardT2.getT2()).collectList()))
                         .flatMap(t2 -> {
                             
-                            ArchivedCardConsultationData card = t2.getT1().getT2();
-                            List<ArchivedCardConsultationData> childCards = t2.getT2();
+                            ArchivedCard card = t2.getT1().getT2();
+                            List<ArchivedCard> childCards = t2.getT2();
                             return ok()
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .body(fromValue(ArchivedCardData.builder().card(card).childCards(childCards).build()));
+                                    .body(fromValue(new ArchivedCardWithChildCards(card, childCards)));
 
                         })
                         .switchIfEmpty(notFound().build());

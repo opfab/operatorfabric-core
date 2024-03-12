@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogLevel, LoggerService, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -21,7 +21,6 @@ import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-lo
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ApplicationUpdateService} from 'app/business/services/events/application-update.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -46,6 +45,10 @@ import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 import {BusinessDataServer} from 'app/business/server/businessData.server';
 import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
+import {TemplateCssServer} from '../../../business/server/template-css.server';
+import {SettingsServer} from '../../../business/server/settings.server';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 declare const opfab: any;
 @Component({
@@ -73,12 +76,9 @@ export class ApplicationLoadingComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private configServer: ConfigServer,
-        private settingsService: SettingsService,
-        private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
-        private opfabAPIService: OpfabAPIService,
         private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
         private userServer: UserServer,
@@ -91,8 +91,13 @@ export class ApplicationLoadingComponent implements OnInit {
         private acknowledgeServer: AcknowledgeServer,
         private businessDataServer: BusinessDataServer,
         private cardServer: CardServer,
-        private supervisedEntitiesServer: SupervisedEntitiesServer
-    ) {}
+        private supervisedEntitiesServer: SupervisedEntitiesServer,
+        private externalDevicesServer: ExternalDevicesServer,
+        private templateCssServer: TemplateCssServer,
+        private settingsServer: SettingsServer
+    ) {
+        LoggerService.setLogLevel(LogLevel.DEBUG);
+    }
 
     ngOnInit() {
         ServicesConfig.setServers({
@@ -101,7 +106,6 @@ export class ApplicationLoadingComponent implements OnInit {
             translationService: this.translationService,
             userServer: this.userServer,
             routerService: this.routerService,
-            opfabAPIService: this.opfabAPIService,
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,
@@ -111,11 +115,14 @@ export class ApplicationLoadingComponent implements OnInit {
             acknowledgeServer: this.acknowledgeServer,
             businessDataServer: this.businessDataServer,
             cardServer: this.cardServer,
-            supervisedEntitiesServer: this.supervisedEntitiesServer
+            supervisedEntitiesServer: this.supervisedEntitiesServer,
+            externalDevicesServer: this.externalDevicesServer,
+            templateCssServer: this.templateCssServer,
+            settingsServer: this.settingsServer
         });
 
-
         this.loadUIConfiguration();
+        OpfabAPIService.init();
     }
 
     private loadUIConfiguration() {
@@ -197,8 +204,8 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadSettings() {
-        this.settingsService.getUserSettings().subscribe({
-            next: ({ status, data }) => {
+        SettingsService.getUserSettings().subscribe({
+            next: ({status, data}) => {
                 switch (status) {
                     case ServerResponseStatus.OK:
                         logger.info('Settings loaded ' + JSON.stringify(data));
@@ -268,7 +275,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.loadingInProgress = false;
             this.applicationLoaded = true;
         });
-        this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
+        OpfabStore.init(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
         this.systemNotificationService.initSystemNotificationService();
         ServicesConfig.finalizeLoading();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@ describe('Alert view ', () => {
     it('GIVEN an alertView WHEN no message is sent THEN no message is display ', async () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         await delay();
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
@@ -56,13 +56,13 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(
             new Message('', MessageLevel.DEBUG, new I18n('messageKey', new Map().set('param', 'value')))
         );
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
-        expect(alertView.getAlertPage().message).toEqual('{TranslationMock : key=messageKey;values=value}');
+        expect(alertView.getAlertPage().message).toEqual('Translation (en) of messageKey with values=value');
     });
 
     it('GIVEN a message WHEN message is DEBUG level THEN message background color is blue (#0070da) ', async () => {
@@ -81,7 +81,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.INFO));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -93,7 +93,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ERROR));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -105,7 +105,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(  translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -119,7 +119,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -133,7 +133,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -147,7 +147,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -164,7 +164,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(  translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -184,7 +184,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -209,7 +209,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -233,7 +233,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -267,19 +267,17 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
     });
 
     it('Given a message of level BUSINESS WHEN hideBusinessMessages is not set THEN message should appear', async () => {
-        configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({}, ServerResponseStatus.OK, null)
-        );
+        configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const alertView = new AlertView( translationService);
+        const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 import {HttpClient} from '@angular/common/http';
 import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
@@ -20,16 +19,13 @@ import {Injectable} from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-export class AngularExternalDevicesServer extends AngularServer implements ExternalDevicesServer{
-
+export class AngularExternalDevicesServer extends AngularServer implements ExternalDevicesServer {
     readonly externalDevicesUrl: string;
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
     readonly devicesUrl: string;
 
-    constructor(
-        private httpClient: HttpClient,
-    ) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.externalDevicesUrl = `${environment.url}/externaldevices`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
@@ -38,13 +34,13 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     }
 
     sendNotification(notification: Notification): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient
-            .post<Notification>(`${this.notificationsUrl}`, notification));
-
+        return this.processHttpResponse(this.httpClient.post<Notification>(`${this.notificationsUrl}`, notification));
     }
 
     fetchUserConfiguration(login: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`));
+        return this.processHttpResponse(
+            this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`)
+        );
     }
 
     queryAllUserConfigurations(): Observable<ServerResponse<any>> {
@@ -56,23 +52,25 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     }
 
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient
-            .post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData));
+        return this.processHttpResponse(
+            this.httpClient.post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData)
+        );
     }
 
     enableDevice(deviceId: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient
-            .post<string>(`${this.devicesUrl}/${deviceId}/enable`, deviceId));
+        return this.processHttpResponse(
+            this.httpClient.post<string>(`${this.devicesUrl}/${deviceId}/enable`, deviceId)
+        );
     }
 
     disableDevice(deviceId: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient
-            .post<string>(`${this.devicesUrl}/${deviceId}/disable`, deviceId));
+        return this.processHttpResponse(
+            this.httpClient.post<string>(`${this.devicesUrl}/${deviceId}/disable`, deviceId)
+        );
     }
 
     deleteByUserLogin(login: string): Observable<ServerResponse<any>> {
         const url = `${this.configurationsUrl}/users/${login}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
-
 }

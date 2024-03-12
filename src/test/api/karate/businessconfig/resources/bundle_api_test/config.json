@@ -9,11 +9,13 @@
 	"states": {
 		"messageState" : {
 			"templateName" : "template",
+			"emailBodyTemplate" : "email_template",
 			"description": "Message",
 			"styles" : [ "style" ]
 		},
 		"mailState" : {
 			"templateName" : "template",
+			"emailBodyTemplate" : "email_template",
 			"description": "Mail",
 			"styles" : [ "style" ]
 		},

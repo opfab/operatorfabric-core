@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,22 @@
 
 import {RemoteLoggerService} from './remote-logger.service';
 
+export enum LogOption {
+    LOCAL,
+    REMOTE,
+    LOCAL_AND_REMOTE
+}
+
+export enum LogLevel {
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR
+}
+
 export class LoggerService {
+    // Default value ERROR so we do not pollute unit test
+    private static logLevel: LogLevel = LogLevel.ERROR;
 
     private static log(log: string, logLevel: string, logOption: LogOption) {
         const logLine = new Date().toISOString() + ' ' + logLevel + ' ' + log;
@@ -27,25 +42,23 @@ export class LoggerService {
         }
     }
 
+    public static setLogLevel(logLevel: LogLevel) {
+        LoggerService.logLevel = logLevel;
+    }
+
     public static debug(log: string, logOption: LogOption = LogOption.LOCAL) {
-        LoggerService.log(log, 'DEBUG', logOption);
+        if (LoggerService.logLevel === LogLevel.DEBUG) LoggerService.log(log, 'DEBUG', logOption);
     }
 
     public static info(log: string, logOption: LogOption = LogOption.LOCAL) {
-        LoggerService.log(log, 'INFO', logOption);
+        if (LoggerService.logLevel < LogLevel.WARNING) LoggerService.log(log, 'INFO', logOption);
     }
 
     public static warn(log: string, logOption: LogOption = LogOption.LOCAL) {
-        LoggerService.log(log, 'WARNING', logOption);
+        if (LoggerService.logLevel < LogLevel.ERROR) LoggerService.log(log, 'WARNING', logOption);
     }
 
     public static error(log: string, logOption: LogOption = LogOption.LOCAL) {
         LoggerService.log(log, 'ERROR', logOption);
     }
-}
-
-export enum LogOption {
-    LOCAL,
-    REMOTE,
-    LOCAL_AND_REMOTE
 }

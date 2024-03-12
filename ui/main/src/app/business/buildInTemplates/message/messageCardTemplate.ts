@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,20 +14,17 @@ export class MessageCardTemplate extends HTMLElement {
         super();
 
         let messageHeader = this.getAttribute('message-header');
-        if (!messageHeader) messageHeader = opfab.utils.getTranslation("buildInTemplate.messageCard.message");
-        let richMessage = opfab.currentCard.getCard()?.data?.richMessage;
+        if (!messageHeader) messageHeader = opfab.utils.getTranslation('buildInTemplate.messageCard.message');
+        const richMessage = opfab.utils.escapeHtml(opfab.currentCard.getCard()?.data?.richMessage);
 
-        this.innerHTML= `
+        this.innerHTML = `
         <div style="font-size:28px"> ${messageHeader}  </div>
         <br/>
         <br/>
         <div id="richMessage" style="text-align: justify;font-size: 24px">
         ${richMessage} 
         </div>
-        <script>
-            opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
-        </script>
-
         `;
+        opfab.richTextEditor.showRichMessage(document.getElementById('richMessage'));
     }
 }

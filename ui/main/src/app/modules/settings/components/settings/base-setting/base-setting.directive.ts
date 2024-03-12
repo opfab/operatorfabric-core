@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive,Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, skip, takeUntil} from 'rxjs/operators';
 import {UntypedFormGroup} from '@angular/forms';
@@ -30,10 +30,6 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     protected ignoreFirstUpdate = false;
 
-    protected constructor(
-        protected settingsService: SettingsService
-    ) {}
-
     ngOnInit() {
         this.form = this.initFormGroup();
         if (!this.form) {
@@ -44,7 +40,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         this.setting$.pipe(first()).subscribe(() =>
             this.form.valueChanges
                 .pipe(
-                    skip( this.ignoreFirstUpdate ? 1 : 0), // skip first update to avoid patching settings on init (used for list-setting with virtual select)
+                    skip(this.ignoreFirstUpdate ? 1 : 0), // skip first update to avoid patching settings on init (used for list-setting with virtual select)
                     takeUntil(this.ngUnsubscribe$),
                     filter(() => this.form.valid),
                     distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
@@ -82,9 +78,9 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
         ConfigService.setConfigValue('settings.' + this.settingPath, value.setting);
-        this.settingsService.patchUserSettings(settings).subscribe({
-                next : (res) => logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
-                error:  (error) => logger.error("Error in patching settings" + JSON.stringify(error))
+        SettingsService.patchUserSettings(settings).subscribe({
+            next: (res) => logger.debug('Receive response for patch settings' + JSON.stringify(res)),
+            error: (error) => logger.error('Error in patching settings' + JSON.stringify(error))
         });
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-
-
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -40,15 +39,13 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = true;
 
-    constructor(
-        private opfabAPIService: OpfabAPIService
-    ) {
+    constructor() {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
-        this.opfabAPIService.currentCard.card = this.card;
+        OpfabAPIService.currentCard.card = this.card;
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }
@@ -65,39 +62,36 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return EntitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-            .map((entity) => entity.id);
+        return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map((entity) => entity.id);
     }
 
     private getTemplateAndStyle() {
-        ProcessesService
-            .queryProcess(this.card.process, this.card.processVersion)
+        ProcessesService.queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (businessconfig) => {
                     if (businessconfig) {
-                        this.cardState = businessconfig.states.get((this.card.state));
+                        this.cardState = businessconfig.states.get(this.card.state);
                         this.isLoading = false;
                     }
                 },
                 error: (error) =>
-                    console.log(
-                        `something went wrong while trying to fetch process for ${this.card.process}` +
+                    LoggerService.error(
+                        `Something went wrong while trying to fetch process for ${this.card.process}` +
                             ` with ${this.card.processVersion} version, error = ${error}`
                     )
             });
     }
 
     public beforeTemplateRendering() {
-        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
+        OpfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            this.opfabAPIService.templateInterface.lockAnswer();
+            OpfabAPIService.templateInterface.lockAnswer();
         }
     }
 
