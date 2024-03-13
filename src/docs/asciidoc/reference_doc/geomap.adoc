@@ -1,0 +1,47 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+[[geomap]]
+= Geographical map
+
+The geographical map is a feature that allows you to display the geographical location of cards on a map on the feed screen.
+
+To activate the geographical map feature, set the `feed.enableMap` property to `true` in the `web-ui.json` configuration file.
+
+The geographical location of the cards is determined by the `wktGeometry` and `wktProjection` fields in the card's metadata. If a card has a defined `wktGeometry`, its location will be highlighted on the card. The system supports two geometrical shapes: `POINT` and `POLYGON`. A `POINT` will display as a circle on the map, while a `POLYGON` will outline the specified area. 
+
+For instance, to display a circle at a specific location, use:
+
+
+```
+"wktGeometry": "POINT (5.8946407 51.9848624)",
+"wktProjection": "EPSG:4326",
+```
+
+To outline a polygonal area, use:
+
+```
+"wktGeometry": "POLYGON ((5.5339097 52.0233042,  5.7162495 51.7603784, 5.0036701 51.573684, 4.8339214 52.3547498, 5.5339097 52.0233042))",
+"wktProjection": "EPSG:4326",
+```
+
+The specifications of the Well-known Text Representation of coordinate reference systems
+can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
+
+
+You can customize the map by setting parameters in the `web-ui.json` configuration file. For example:
+
+- The map uses OpenStreetMap tiles by default, but you can specify different tiles using the `feed.geomap.bglayer.xyz` parameters.
+- You can add GeoJSON layers to the map using the `feed.geomap.layer.geojson.url` parameter.
+
+Refer to the 
+ifdef::single-page-doc[<<ui_properties, web-ui configuration>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#ui_properties, web-ui configuration>>]
+section for more information and additional customization options.
+
+

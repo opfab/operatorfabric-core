@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -39,6 +39,8 @@ include::business_data.adoc[leveloffset=+1]
 include::ui_api.adoc[leveloffset=+1]
 
 include::archives.adoc[leveloffset=+1]
+
+include::geomap.adoc[leveloffset=+1]
 
 include::monitoring.adoc[leveloffset=+1]
 
