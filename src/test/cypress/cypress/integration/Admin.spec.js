@@ -120,9 +120,8 @@ describe('AdmininstrationPages', () => {
         // Delete previously created user
         agGrid.clickCell('ag-grid-angular', 8, 6, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
 
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
@@ -248,9 +247,7 @@ describe('AdmininstrationPages', () => {
         // Delete previously created entity
         agGrid.clickCell('ag-grid-angular', 6, 6, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
@@ -379,9 +376,7 @@ describe('AdmininstrationPages', () => {
         // Delete previously created group
         agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
@@ -535,9 +530,7 @@ describe('AdmininstrationPages', () => {
         // Delete previously created perimeter
         agGrid.clickCell('ag-grid-angular', 1, 4, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
@@ -571,9 +564,7 @@ describe('AdmininstrationPages', () => {
         // Delete first process
         agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
@@ -609,9 +600,7 @@ describe('AdmininstrationPages', () => {
         // Delete first business data file
         agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-
-        cy.get('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 

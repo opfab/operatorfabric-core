@@ -15,11 +15,12 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
-import {Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
-import {ConfirmationDialogService} from '../../admin/services/confirmation-dialog.service';
 import {ExternaldevicesconfigurationModalComponent} from '../editModal/externaldevicesconfiguration-modal.component';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Directive()
 @Injectable()
@@ -44,7 +45,6 @@ export abstract class ExternalDevicesConfigurationDirective {
     private isLoadingData = true;
 
     constructor(
-        protected confirmationDialogService: ConfirmationDialogService,
         protected translateService: TranslateService,
         protected modalService: NgbModal
     ) {
@@ -207,28 +207,21 @@ export abstract class ExternalDevicesConfigurationDirective {
             this.openDeleteConfirmationDialog(params.data);
         }
     }
-
     openDeleteConfirmationDialog(row: any): any {
-        this.confirmationDialogService
-            .confirm(
-                this.translateService.instant('externalDevicesConfiguration.input.confirm'),
-                this.translateService.instant('externalDevicesConfiguration.input.confirmDelete') +
-                    ' ' +
-                    row['userLogin'] +
-                    ' ?',
-                'OK',
-                this.translateService.instant('admin.input.cancel')
-            )
-            .then((confirmed) => {
-                if (confirmed) {
-                    // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
-                    // handled first
-                    ExternalDevicesService.deleteByUserLogin(row['userLogin']).subscribe(() => {
-                        this.refreshData();
-                    });
-                }
-            })
-            .catch((error) => throwError(() => error));
+        const confirmDeleteUserMessage = `${this.translateService.instant('externalDevicesConfiguration.input.confirmDelete')} ${row['userLogin']} ?`;
+
+        ModalService.openConfirmationModal(
+            new I18n('externalDevicesConfiguration.input.confirm'),
+            confirmDeleteUserMessage
+        ).then((confirmed) => {
+            if (confirmed) {
+                // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
+                // handled first
+                ExternalDevicesService.deleteByUserLogin(row['userLogin']).subscribe(() => {
+                    this.refreshData();
+                });
+            }
+        });
     }
 
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

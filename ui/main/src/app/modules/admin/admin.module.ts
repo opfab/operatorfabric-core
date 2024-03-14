@@ -14,7 +14,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AdminComponent} from './admin.component';
 import {AdminRoutingModule} from './admin-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
-import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
 import {UsersTableComponent} from './components/table/users-table.component';
 import {EditUserModalComponent} from './components/editmodal/users/edit-user-modal.component';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
@@ -55,7 +54,6 @@ import {EditSupervisedEntityModalComponent} from './components/editmodal/supervi
         SupervisedEntitiesTableComponent,
         EditSupervisedEntityModalComponent,
         EditUserModalComponent,
-        ConfirmationDialogComponent,
         EditEntityModalComponent,
         EditGroupModalComponent,
         EditPerimeterModalComponent,

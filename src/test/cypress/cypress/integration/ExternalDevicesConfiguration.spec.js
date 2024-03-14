@@ -152,8 +152,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Delete previously created row
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 4);
     });
 
@@ -208,9 +207,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Delete previously created configurations
         for (let j = 18; j > 4; j--) {
             agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
-
-            cy.get('of-confirmation-dialog').should('exist');
-            cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+            cy.get('#opfab-btn-ok').click();
             cy.waitDefaultTime();
         }
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 4);
@@ -240,9 +237,7 @@ describe('ExternalDevicesconfigurationPage', () => {
 
         // Delete device and confirm
         agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
-
-        cy.get('of-confirmation-dialog').should('exist');
-        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
         cy.waitDefaultTime();
 
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 3);
@@ -251,8 +246,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
-        cy.get('of-confirmation-dialog').should('exist');
-        cy.get('of-confirmation-dialog').find('#opfab-admin-confirmation-btn-ok').click();
+        cy.get('#opfab-btn-ok').click();
 
 
     });

@@ -37,25 +37,9 @@
       </div>
 
       <div *ngIf="! hideAckAllCardsFeature && !!lightCards && lightCards.length" class="opfab-ack-all-cards">
-        <a id="opfab-feed-ack-all-link" (click)="open(confirmationPopup)"><span translate> feed.acknowledgeAllCards.label </span></a>
+        <a id="opfab-feed-ack-all-link" (click)="clickOnAckAll()"><span translate> feed.acknowledgeAllCards.label </span></a>
       </div>
     </div>
   </div>
 </div>
 
-
-
-
-<ng-template #confirmationPopup let-modal>
-  <div class="modal-header">
-    <div translate> feed.acknowledgeAllCards.popup.title </div>
-    <div class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </div>
-  </div>
-  <div class="modal-body text-center">
-    <p translate>feed.acknowledgeAllCards.popup.doYouReallyWant</p>
-    <button id="opfab-ack-all-btn-cancel" type="button" class="opfab-btn-cancel" (click)="declineAckAllCards()" translate>button.cancel</button>
-    <button id="opfab-ack-all-btn-confirm" type="button" class="opfab-btn" (click)="confirmAckAllCards()" translate>button.ok</button>
-  </div>
-</ng-template>

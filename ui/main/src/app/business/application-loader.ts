@@ -39,6 +39,7 @@ import {SystemNotificationService} from './services/notifications/system-notific
 import {ApplicationLoadingComponent} from './application-loading-component';
 import {ServerResponseStatus} from './server/serverResponse';
 import {Utilities} from './common/utilities';
+import {ModalService} from './services/modal.service';
 
 declare const opfab: any;
 
@@ -76,6 +77,8 @@ export class ApplicationLoader {
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         SettingsService.setSettingsServer(servers.settingsServer);
+        ModalService.setModalServer(servers.modalServer);
+        ModalService.setTranslationService(servers.translationService);
         OpfabAPIService.setTranslationService(servers.translationService);
 
         this.opfabEventStreamServer = servers.opfabEventStreamServer;

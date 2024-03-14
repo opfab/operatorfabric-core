@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -28,23 +28,6 @@
     </a>
 </div>
 
-
-<ng-template #deleteCardConfirmation let-modal>
-    <div class="modal-header">
-        <span translate> userCard.deleteCard.title </span>
-        <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </div>
-    </div>
-    <div class="modal-body text-center">
-        <p translate> userCard.deleteCard.doYouReallyWant </p>
-        <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel"
-            (click)="declineDeleteCard()" translate>button.cancel</button>
-        <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn" (click)="confirmDeleteCard()"
-            translate>button.delete</button>
-    </div>
-</ng-template>
 
 <ng-template #userCardEdition let-modal>
     <div class="modal-header">

@@ -148,7 +148,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-ack-all-link').click();
 
         // Do not confirm (cancel )
-        cy.get('#opfab-ack-all-btn-cancel').click();
+        cy.get('#opfab-btn-cancel').click();
 
         // Check icon is not present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check').should('not.exist');
@@ -157,7 +157,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-ack-all-link').click();
 
         // Confirm
-        cy.get('#opfab-ack-all-btn-confirm').click();
+        cy.get('#opfab-btn-ok').click();
 
         // Check that all cards except one are acknowledged
         cy.get('#opfab-feed-light-card-cypress-message1 .fa-check');
@@ -712,7 +712,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-ack-all-link').click();
 
         // Confirm
-        cy.get('#opfab-ack-all-btn-confirm').click();
+        cy.get('#opfab-btn-ok').click();
         //There are 6 pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 

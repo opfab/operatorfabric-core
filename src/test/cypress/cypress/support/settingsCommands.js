@@ -17,7 +17,7 @@ export class SettingsCommands extends OpfabCommands {
 
     save = function () {
         cy.get('#opfab-settings-btn-save').click();
-        cy.get('#opfab-settings-btn-yes').click();
+        cy.get('#opfab-btn-ok').click();
     };
 
     clickOnSeverity = function (severity) {

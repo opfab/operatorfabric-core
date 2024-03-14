@@ -12,8 +12,7 @@ import {ChangeDetectorRef, Directive, Injectable, OnDestroy} from '@angular/core
 import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import {Subject, throwError} from 'rxjs';
-import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
+import {Subject} from 'rxjs';
 import {CrudService} from 'app/business/services/admin/crud-service';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
@@ -37,6 +36,8 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 export class ActionColumn {
     colId: any;
@@ -98,7 +99,6 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     constructor(
         protected translateService: TranslateService,
-        protected confirmationDialogService: ConfirmationDialogService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
         private changeDetector: ChangeDetectorRef
@@ -289,19 +289,11 @@ export abstract class AdminTableDirective implements OnDestroy {
             this.updateItem();
         }
     }
-
     openDeleteConfirmationDialog(row: any): any {
-        this.confirmationDialogService
-            .confirm(
-                this.translateService.instant('admin.input.confirm'),
-                this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') +
-                    ' ' +
-                    row[this.idField] +
-                    ' ?',
-                'OK',
-                this.translateService.instant('admin.input.cancel')
-            )
-            .then((confirmed) => {
+        const confirmDeleteMessage = `${this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete')} ${row[this.idField]} ?`;
+
+        ModalService.openConfirmationModal(new I18n('userCard.deleteCard.title'), confirmDeleteMessage).then(
+            (confirmed) => {
                 if (confirmed) {
                     // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
                     // handled first
@@ -309,8 +301,8 @@ export abstract class AdminTableDirective implements OnDestroy {
                         this.refreshData();
                     });
                 }
-            })
-            .catch((error) => throwError(() => error));
+            }
+        );
     }
 
     createNewItem(): void {
