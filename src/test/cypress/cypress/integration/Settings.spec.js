@@ -33,13 +33,13 @@ describe('Settings', function () {
         opfab.navigateToSettings();
         settings.clickOnSeverity('alarm');
         cy.get('#opfab-navbar-menu-archives').click();
-        cy.get('#opfab-settings-btn-cancel').click();
+        cy.get('#opfab-btn-cancel').click();
     }
 
     function checkExitWithoutSaving() {
         cy.get('#opfab-setting-input-email').type('test@test.fr');
         cy.get('#opfab-navbar-menu-archives').click();
-        cy.get('#opfab-settings-btn-no').click();
+        cy.get('#opfab-btn-doNotSave').click();
         cy.get('of-archives').should('exist');
         opfab.navigateToSettings();
         cy.get('#opfab-setting-input-email').should('have.value', '');
@@ -48,8 +48,8 @@ describe('Settings', function () {
     function checkAcceptSaving() {
         cy.get('#opfab-setting-input-email').type('test@test.fr');
         cy.get('#opfab-navbar-menu-archives').click();
-        cy.get('#opfab-settings-btn-yes').click();
-        cy.get('#opfab-settings-btn-yes').click();
+        cy.get('#opfab-btn-save').click();
+        cy.get('#opfab-btn-ok').click();
         cy.get('of-archives').should('exist');
         opfab.navigateToSettings();
         cy.get('#opfab-setting-input-email').should('have.value', 'test@test.fr');

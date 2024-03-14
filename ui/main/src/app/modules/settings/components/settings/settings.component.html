@@ -157,25 +157,3 @@
     (click)='saveSettings()' style="text-align: center;min-width: 243px;"
     translate>shared.confirmSettings</button>
 </div>
-
-<ng-template #settingsSavedPopup let-modal>
-  <div class="modal-body text-center">
-    <div translate> settings.settingsSaved</div>
-    <br/>
-    <button id="opfab-settings-btn-yes" type="button" class="opfab-btn" (click)="closeConfirmation()"
-      translate>button.ok</button>
-  </div>
-</ng-template>
-
-
-<ng-template #exitConfirmationPopup let-modal >
-    <div class="modal-header" >
-        <div translate> shared.popup.title </div>
-    </div>
-    <div class="modal-body text-center" >
-        <p translate>feedConfiguration.modificationToSave</p>
-        <button id="opfab-settings-btn-no" type="button" class="opfab-btn-cancel opfab-small-button" (click)="doNotConfirmSaveSettings()" translate>button.dontSave</button>
-        <button id="opfab-settings-btn-cancel" type="button" class="opfab-btn-cancel opfab-small-button" (click)="cancelNavigation()" translate>button.cancel</button>
-        <button id="opfab-settings-btn-yes" type="button" ngbAutofocus class="opfab-btn opfab-small-button" (click)="saveSettings()" translate>button.save</button>
-    </div>
-</ng-template>

@@ -84,6 +84,9 @@ import {ProcessmonitoringModule} from './modules/processmonitoring/processmonito
 import {AngularSupervisedEntitiesServer} from './server/angularSupervisedEntities.server';
 import {SupervisedEntitiesServer} from './business/server/supervised-entities.server';
 import {RichTextModule} from './modules/devtools/richtext/richtext.module';
+import {ModalServer} from './business/server/modal.server';
+import {NgbModalServer} from './server/ngbModal.server';
+import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.component';
 
 @NgModule({
     imports: [
@@ -125,7 +128,8 @@ import {RichTextModule} from './modules/devtools/richtext/richtext.module';
         AppLoadedInAnotherTabComponent,
         ApplicationLoadingComponent,
         ReloadRequiredComponent,
-        LoadingInProgressComponent
+        LoadingInProgressComponent,
+        OpfabNgbModalComponent
     ],
 
     providers: [
@@ -157,7 +161,8 @@ import {RichTextModule} from './modules/devtools/richtext/richtext.module';
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
         {provide: CardServer, useClass: AngularCardServer},
         {provide: SoundServer, useClass: AngularSoundServer},
-        {provide: TranslationService, useClass: AngularTranslationService}
+        {provide: TranslationService, useClass: AngularTranslationService},
+        {provide: ModalServer, useClass: NgbModalServer}
     ],
     bootstrap: [AppComponent]
 })

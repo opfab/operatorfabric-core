@@ -8,23 +8,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnDestroy,
-    OnInit,
-    TemplateRef,
-    ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {SettingsView} from 'app/business/view/settings/settings.view';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-settings',
@@ -39,18 +31,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
     languageOptionList: {value: string; label: string}[];
     languageSelectedOption = new Array();
     languageMultiSelectConfig: MultiSelectConfig;
-    exitConfirmationModal: NgbModalRef;
-    settingsSavedModalRef: NgbModalRef;
     saveSettingsInProgress = false;
     private ngUnsubscribe$ = new Subject<void>();
     canDeactivateSubject = new Subject<boolean>();
     pendingModification: boolean;
-    @ViewChild('exitConfirmationPopup') exitConfirmationPopup: ElementRef;
-    @ViewChild('settingsSavedPopup') settingsSavedTemplate: ElementRef;
-
     constructor(
         private translateService: TranslateService,
-        private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {}
 
@@ -126,47 +112,35 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe$.complete();
     }
 
-    openConfirmSaveSettingsModal(content: TemplateRef<any>) {
-        this.exitConfirmationModal = this.modalService.open(content, {centered: true, backdrop: 'static'});
-    }
-
     saveSettings() {
-        if (this.exitConfirmationModal) this.exitConfirmationModal.close();
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
         this.settingsView.saveSettings().then((result) => {
             this.saveSettingsInProgress = false;
             if (result.status === ServerResponseStatus.OK)
-                this.settingsSavedModalRef = this.modalService.open(this.settingsSavedTemplate, {
-                    centered: true,
-                    backdrop: 'static'
+                ModalService.openInformationModal(new I18n('settings.settingsSaved')).then(() => {
+                    this.canDeactivateSubject.next(true);
                 });
         });
     }
 
-    closeConfirmation() {
-        this.settingsSavedModalRef.close();
-        this.canDeactivateSubject.next(true);
-    }
-
     canDeactivate() {
         if (this.settingsView.doesSettingsNeedToBeSaved()) {
-            this.exitConfirmationModal = this.modalService.open(this.exitConfirmationPopup, {
-                centered: true,
-                backdrop: 'static'
+            ModalService.openSaveBeforeExitModal().then((result) => {
+                switch (result) {
+                    case 'save':
+                        this.saveSettings();
+                        break;
+                    case 'cancel':
+                        this.canDeactivateSubject.next(false);
+                        break;
+                    default:
+                        this.canDeactivateSubject.next(true);
+                        break;
+                }
             });
             return this.canDeactivateSubject;
         }
         return true;
-    }
-
-    cancelNavigation() {
-        this.exitConfirmationModal.close();
-        this.canDeactivateSubject.next(false);
-    }
-
-    doNotConfirmSaveSettings() {
-        this.exitConfirmationModal.close();
-        this.canDeactivateSubject.next(true);
     }
 }

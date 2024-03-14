@@ -1,0 +1,18 @@
+<!-- Copyright (c) 2024, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+<div class="modal-header" *ngIf="modalConfig.title?.length>0">
+  <div>{{ modalConfig.title }}</div>
+</div>
+<div class="modal-body text-center">
+  <p>{{ modalConfig.message }}</p>
+  <span *ngFor="let button of modalConfig.buttons">
+    <button id="opfab-btn-{{ button.id }}" type="button"
+      [ngClass]="button.isSelected ? 'opfab-btn opfab-small-button' : 'opfab-btn-cancel opfab-small-button'" (click)="close(button.id)">{{ button.label
+      }}</button>
+  </span>
+</div>

@@ -358,7 +358,7 @@
     "no": "NEE",
     "search" : "ZOEK",
     "save": "OPSLAAN",
-    "dontSave": "NIET OPSLAAN"
+    "doNotSave": "NIET OPSLAAN"
   },
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",

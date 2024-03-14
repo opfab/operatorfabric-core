@@ -9,9 +9,11 @@
 
 import {Component} from '@angular/core';
 import {MessageLevel} from '@ofModel/message.model';
-import {Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-externaldevices',
@@ -71,25 +73,19 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
     }
 
     openDeleteConfirmationDialog(row: any): any {
-        this.confirmationDialogService
-            .confirm(
-                this.translateService.instant('externalDevicesConfiguration.input.confirm'),
-                this.translateService.instant('externalDevicesConfiguration.input.confirmDeleteDevice') +
-                    ' ' +
-                    row['id'] +
-                    ' ?',
-                'OK',
-                this.translateService.instant('admin.input.cancel')
-            )
-            .then((confirmed) => {
-                if (confirmed) {
-                    // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
-                    // handled first
-                    ExternalDevicesService.deleteDevice(row['id']).subscribe(() => {
-                        this.refreshData();
-                    });
-                }
-            })
-            .catch((error) => throwError(() => error));
+        const confirmDeleteDeviceMessage = `${this.translateService.instant('externalDevicesConfiguration.input.confirmDeleteDevice')} ${row['id']} ?`;
+
+        ModalService.openConfirmationModal(
+            new I18n('externalDevicesConfiguration.input.confirm'),
+            confirmDeleteDeviceMessage
+        ).then((confirmed) => {
+            if (confirmed) {
+                // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
+                // handled first
+                ExternalDevicesService.deleteDevice(row['id']).subscribe(() => {
+                    this.refreshData();
+                });
+            }
+        });
     }
 }

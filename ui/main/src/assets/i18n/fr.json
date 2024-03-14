@@ -358,7 +358,7 @@
     "no": "NON",
     "search": "RECHERCHER",
     "save": "SAUVEGARDER",
-    "dontSave": "NE PAS SAUVEGARDER"
+    "doNotSave": "NE PAS SAUVEGARDER"
   },
   "activityArea": {
     "title": "ZONE D'ACTIVITÉ",

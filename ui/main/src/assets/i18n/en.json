@@ -358,7 +358,7 @@
     "no": "NO",
     "search" : "SEARCH",
     "save": "SAVE",
-    "dontSave": "DON'T SAVE"
+    "doNotSave": "DON'T SAVE"
   },
   "activityArea": {
     "title": "ACTIVITY AREA",

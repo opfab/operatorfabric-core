@@ -10,8 +10,6 @@
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
 import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -27,6 +25,8 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RolesEnum} from '@ofModel/roles.model';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-card-list',
@@ -42,7 +42,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     @Output() showFilters = new Subject<boolean>();
 
-    modalRef: NgbModalRef;
     hideAckAllCardsFeature: boolean;
     ackAllCardsDemandTimestamp: number;
     currentUserWithPerimeters: UserWithPerimeters;
@@ -60,10 +59,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router
-    ) {
+    constructor(private router: Router) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
@@ -207,19 +203,19 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
-    open(content) {
+    clickOnAckAll() {
+        ModalService.openConfirmationModal(
+            new I18n('feed.acknowledgeAllCards.popup.title'),
+            new I18n('feed.acknowledgeAllCards.popup.doYouReallyWant')
+        ).then((confirm) => {
+            if (confirm) this.confirmAckAllCards();
+        });
         this.ackAllCardsDemandTimestamp = Date.now();
-        this.modalRef = this.modalService.open(content, {centered: true});
     }
 
     confirmAckAllCards() {
-        this.modalRef.close();
         this.acknowledgeAllVisibleCardsInTheFeed();
         this.router.navigate(['/feed']);
-    }
-
-    declineAckAllCards(): void {
-        this.modalRef.dismiss();
     }
 
     isCardInGroup(selected: string, id: string) {

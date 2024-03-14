@@ -22,6 +22,8 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-card-actions',
@@ -40,7 +42,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
     private editModal: NgbModalRef;
-    private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
     public showDeleteButton = false;
     public showCreateCopyButton = false;
@@ -140,17 +141,18 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     public openDeleteConfirmationModal() {
-        const modalOptions = {centered: true};
-        this.deleteConfirmationModal = this.modalService.open(this.deleteCardConfirmationTemplate, modalOptions);
+        ModalService.openConfirmationModal(
+            new I18n('userCard.deleteCard.title'),
+            new I18n('userCard.deleteCard.doYouReallyWant')
+        ).then((confirm) => {
+            if (confirm) {
+                this.deleteCard();
+            }
+        });
     }
 
-    public declineDeleteCard(): void {
-        this.deleteConfirmationModal.dismiss();
-    }
-
-    public confirmDeleteCard(): void {
+    public deleteCard(): void {
         this.deleteInProgress = true;
-        if (this.deleteConfirmationModal) this.deleteConfirmationModal.close();
         CardService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {
@@ -169,7 +171,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.deleteConfirmationModal) this.deleteConfirmationModal.dismiss();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

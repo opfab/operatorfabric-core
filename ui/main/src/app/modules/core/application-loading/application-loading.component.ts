@@ -35,6 +35,7 @@ import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
+import {ModalServer} from 'app/business/server/modal.server';
 
 declare const opfab: any;
 @Component({
@@ -73,7 +74,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private supervisedEntitiesServer: SupervisedEntitiesServer,
         private externalDevicesServer: ExternalDevicesServer,
         private templateCssServer: TemplateCssServer,
-        private settingsServer: SettingsServer
+        private settingsServer: SettingsServer,
+        private modalServer: ModalServer
     ) {
         LoggerService.setLogLevel(LogLevel.DEBUG);
     }
@@ -98,7 +100,8 @@ export class ApplicationLoadingComponent implements OnInit {
             supervisedEntitiesServer: this.supervisedEntitiesServer,
             externalDevicesServer: this.externalDevicesServer,
             templateCssServer: this.templateCssServer,
-            settingsServer: this.settingsServer
+            settingsServer: this.settingsServer,
+            modalServer: this.modalServer
         });
         setTimeout(() => this.loadApplication(), 0);
     }
