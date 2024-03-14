@@ -70,7 +70,7 @@
         <form [formGroup]="processFilterForm" id="opfab-process-filter-form" style="padding-left: 7px;">
 
             <div style="margin-left:2px; margin-top:20px; width:280px">
-                <div class="form-group" id="opfab-process">
+                <div id="opfab-process">
 
                     <of-multi-select id="opfab-process-select" [multiSelectId]="processMultiSelect.id" [parentForm]="processFilterForm"
                         [config]="processMultiSelect.config" [options]="processMultiSelect.options"
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div *ngIf="!hideProcessFilter && stateMultiSelect?.options?.length > 0" style="margin-left:2px; margin-top:20px; width:280px">
-                <div class="form-group" id="opfab-state">
+                <div id="opfab-state">
 
                     <of-multi-select id="opfab-state-select" [multiSelectId]="stateMultiSelect.id" [parentForm]="processFilterForm"
                         [config]="stateMultiSelect.config" [options]="stateMultiSelect.options"
@@ -97,10 +97,10 @@
             <span id='opfab-feed-filter-date-title' translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
         </div>
 
-        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form" style="padding-left: 7px;">
+        <form [formGroup]="timeFilterForm" id="opfab-time-filter-form" style="padding-left: 7px;">
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top: 20px;width: 210px;min-width: 210px">
-                <div class="form-group nopaddingrow opfab-input" id="opfab-start">
+                <div class="nopaddingrow opfab-input" id="opfab-start">
                     <label for="opfab-feed-filter-dateTimeFrom" translate>feed.filters.time.start.label</label>
                     <input
                             type="datetime-local"
@@ -112,7 +112,7 @@
             </div>
 
             <div style="margin-left: 2px; margin-right: 2px;margin-top:20px;width: 210px;min-width: 210px">
-                <div class="form-group nopaddingrow opfab-input" id="opfab-end">
+                <div class="nopaddingrow opfab-input" id="opfab-end">
                     <label for="opfab-feed-filter-dateTimeTo" translate>feed.filters.time.end.label</label>
                     <input
                             type="datetime-local"
