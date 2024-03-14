@@ -15,8 +15,8 @@ The admin rights will be set only if user is member of a group with ADMIN permis
 IMPORTANT: Before initiating the migration process, ensure that all users with administrative privileges are members of a group that has been explicitly granted the 'ADMIN' permission. Failing to do so may result in loss of the ability to administrate operator fabric
 
 == Map multiple GeoJSON layers
-It is now possible to add more than one GeoJSON layer to the map. To allow the configuration of multiple layers the `feed.geomap.layer.geojson.url` configuration parameter in web-ui.json is now an array.
-You should change your configuration for geoJSON layer url to configure it as an array, for example:
+It is now possible to add more than one GeoJSON layer to the map. To allow the configuration of multiple layers the `feed.geomap.layer.geojson` configuration parameter in web-ui.json is now an array. for each layer it is possible to specify the url and an optional style. The style object can have styling properties for stroke, fill, image, and text styles as defined in OpenLayer flat style (https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html)
+You should change your configuration for geoJSON layer to configure it as an array, for example:
 
 ....
 
@@ -32,8 +32,30 @@ should be changed to:
 ....
 
       "layer": {
-        "geojson": {
-          "url": ["assets/layers/geojson-layer.json"]
-        }
+        "geojson": [
+          {
+            "url": "assets/layers/geojson-layer.json"
+          }
+        ]
       }
 ....
+
+Or adding the style:
+
+....
+
+      "layer": {
+        "geojson": [
+          {
+            "url": "assets/layers/geojson-layer.json",
+            "style": {
+              "stroke-color": "blue",
+              "stroke-width": 1.5,
+              "fill-color": "rgba(39, 245, 164, 0.4)"
+            }
+          }
+        ]
+      }
+....
+
+If no style is defined the layer will be rendered with default Opfab style.

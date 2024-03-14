@@ -37,7 +37,8 @@ can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
 You can customize the map by setting parameters in the `web-ui.json` configuration file. For example:
 
 - The map uses OpenStreetMap tiles by default, but you can specify different tiles using the `feed.geomap.bglayer.xyz` parameters.
-- You can add GeoJSON layers to the map using the `feed.geomap.layer.geojson.url` parameter.
+- You can add GeoJSON layers to the map using the `feed.geomap.layer.geojson` parameter in web-ui.json. For each layer it is possible to specify the url and an optional style. The style object can have styling properties for stroke, fill, image, and text styles as defined in OpenLayer flat style (https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html)
+
 
 Refer to the 
 ifdef::single-page-doc[<<ui_properties, web-ui configuration>>]
