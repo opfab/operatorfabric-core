@@ -222,10 +222,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             const featureArray = [];
             if (self.map.hasFeatureAtPixel(evt.pixel)) {
                 self.map.getFeaturesAtPixel(evt.pixel).forEach((feature) => {
-                    featureArray.push(feature.get('lightCard'));
+                    if (feature.get('lightCard')) featureArray.push(feature.get('lightCard'));
                 });
-                overlay.setPosition(evt.coordinate);
-                self.lightCardsToDisplay = featureArray;
+                if (featureArray.length > 0) {
+                    overlay.setPosition(evt.coordinate);
+                    self.lightCardsToDisplay = featureArray;
+                }
             }
         }
     }
