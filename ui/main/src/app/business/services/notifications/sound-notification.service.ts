@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
@@ -24,7 +23,7 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 @Injectable({
     providedIn: 'root'
 })
-export class SoundNotificationService implements OnDestroy {
+export class SoundNotificationService {
     private static RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
     private static ERROR_MARGIN = 4000; // in milliseconds
 
@@ -37,37 +36,38 @@ export class SoundNotificationService implements OnDestroy {
 
     private static DEFAULT_REPLAY_INTERVAL = 5; // in seconds
     private static SECONDS_TO_MILLISECONDS = 1000;
-    private replayInterval: number;
+    private static replayInterval: number;
 
-    private soundConfigBySeverity: Map<Severity, SoundConfig>;
-    private soundEnabled: Map<Severity, boolean>;
-    private playSoundOnExternalDevice: boolean;
-    private replayEnabled: boolean;
-    private playSoundWhenSessionEnd = false;
+    private static soundConfigBySeverity: Map<Severity, SoundConfig>;
+    private static soundEnabled: Map<Severity, boolean>;
+    private static playSoundOnExternalDevice: boolean;
+    private static replayEnabled: boolean;
+    private static playSoundWhenSessionEnd = false;
 
-    private incomingCardOrReminder = new Subject();
-    private sessionEnd = new Subject();
-    private clearSignal = new Subject();
-    private ngUnsubscribe$ = new Subject<void>();
-    private lastSentCardId: string;
-    private lastUserAction = new Date().valueOf();
+    private static incomingCardOrReminder = new Subject();
+    private static sessionEnd = new Subject();
+    private static clearSignal = new Subject();
+    private static ngUnsubscribe$ = new Subject<void>();
+    private static lastSentCardId: string;
+    private static lastUserAction = new Date().valueOf();
 
-    private isServiceActive = true;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private static isServiceActive = true;
 
-    constructor(private soundServer: SoundServer) {
-        // use to have access from cypress to the current object for stubbing method playSound
-        if (window['Cypress']) window['soundNotificationService'] = this;
-        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    private static soundServer: SoundServer;
+
+    public static setSoundServer(soundServer: SoundServer) {
+        SoundNotificationService.soundServer = soundServer;
     }
 
-    public stopService() {
+    public static stopService() {
         this.isServiceActive = false;
         logger.info('Stopping sound service', LogOption.LOCAL_AND_REMOTE);
         this.clearOutstandingNotifications();
     }
 
-    public initSoundService() {
+    public static initSoundService() {
+        // use to have access from cypress to the current object for stubbing method playSound
+        if (window['Cypress']) window['soundNotificationService'] = this;
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {
             soundFileName: 'alarm.mp3',
@@ -112,38 +112,33 @@ export class SoundNotificationService implements OnDestroy {
         this.listenForCardUpdate();
     }
 
-    public getPlaySoundOnExternalDevice(): boolean {
+    public static getPlaySoundOnExternalDevice(): boolean {
         return ConfigService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
     }
 
-    private setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated() {
+    private static setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated() {
         this.playSoundWhenSessionEnd = false;
         for (const soundEnabled of this.soundEnabled.values()) {
             if (soundEnabled) this.playSoundWhenSessionEnd = true;
         }
     }
 
-    private listenForCardUpdate() {
+    private static listenForCardUpdate() {
         OpfabStore.getLightCardStore()
             .getNewLightCards()
             .subscribe((card) => this.handleLoadedCard(card));
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe$.next();
-        this.ngUnsubscribe$.complete();
-    }
-
-    public clearOutstandingNotifications() {
+    public static clearOutstandingNotifications() {
         this.clearSignal.next(null);
         this.lastUserAction = new Date().valueOf();
     }
 
-    public handleRemindCard(card: LightCard) {
+    public static handleRemindCard(card: LightCard) {
         this.incomingCardOrReminder.next(card);
     }
 
-    public handleLoadedCard(card: LightCard) {
+    public static handleLoadedCard(card: LightCard) {
         if (card.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no sound as the card was sent by the current user
         else {
@@ -153,7 +148,7 @@ export class SoundNotificationService implements OnDestroy {
                 this.checkCardIsRecent(card)
             ) {
                 this.incomingCardOrReminder.next(card);
-                if (!this.filteredLightCardStore.isCardVisibleInFeed(card))
+                if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
                     AlertMessageService.sendAlertMessage({
                         message: null,
                         level: MessageLevel.BUSINESS,
@@ -163,29 +158,29 @@ export class SoundNotificationService implements OnDestroy {
         }
     }
 
-    public handleSessionEnd() {
+    public static handleSessionEnd() {
         if (this.playSoundWhenSessionEnd) {
             this.sessionEnd.next(null);
         }
     }
 
-    public lastSentCard(cardId: string) {
+    public static lastSentCard(cardId: string) {
         this.lastSentCardId = cardId;
     }
 
-    private checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
+    private static checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
         return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction > 0;
     }
 
-    private checkCardIsRecent(card: LightCard): boolean {
+    private static checkCardIsRecent(card: LightCard): boolean {
         return new Date().getTime() - card.publishDate <= SoundNotificationService.RECENT_THRESHOLD;
     }
 
-    private getSoundForSeverity(severity: Severity): HTMLAudioElement {
+    private static getSoundForSeverity(severity: Severity): HTMLAudioElement {
         return this.soundServer.getSound(this.soundConfigBySeverity.get(severity).soundFileName);
     }
 
-    private playSoundForSeverityEnabled(severity: Severity) {
+    private static playSoundForSeverityEnabled(severity: Severity) {
         if (this.soundEnabled.get(severity)) this.playSound(severity);
         else
             logger.debug(
@@ -194,7 +189,7 @@ export class SoundNotificationService implements OnDestroy {
             );
     }
 
-    private playSound(severity: Severity) {
+    private static playSound(severity: Severity) {
         if (!this.isServiceActive) return;
         if (ConfigService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
             logger.debug(
@@ -209,7 +204,7 @@ export class SoundNotificationService implements OnDestroy {
         }
     }
 
-    private initSoundPlayingForSeverity(severity: Severity) {
+    private static initSoundPlayingForSeverity(severity: Severity) {
         merge(
             this.incomingCardOrReminder.pipe(
                 filter((card: LightCard) => card.severity === severity),
@@ -230,7 +225,7 @@ export class SoundNotificationService implements OnDestroy {
             });
     }
 
-    private initSoundPlayingForSessionEnd() {
+    private static initSoundPlayingForSessionEnd() {
         merge(
             this.sessionEnd.pipe(map((x) => SignalType.NOTIFICATION)),
             this.clearSignal.pipe(map((x) => SignalType.CLEAR))
@@ -242,7 +237,7 @@ export class SoundNotificationService implements OnDestroy {
             });
     }
 
-    private processSignal() {
+    private static processSignal() {
         return switchMap((x: SignalType) => {
             if (x === SignalType.CLEAR) {
                 return EMPTY;
@@ -259,7 +254,7 @@ export class SoundNotificationService implements OnDestroy {
     /* There is no need to limit the frequency of calls to playSound because if a given sound XXXX is already
      * playing when XXXX.play() is called, nothing happens.
      * */
-    private playSoundOnBrowser(sound: HTMLAudioElement) {
+    private static playSoundOnBrowser(sound: HTMLAudioElement) {
         sound.play().catch((error) => {
             logger.warn(
                 `Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).`
@@ -268,7 +263,7 @@ export class SoundNotificationService implements OnDestroy {
         });
     }
 
-    public isAtLeastOneSoundActivated(): boolean {
+    public static isAtLeastOneSoundActivated(): boolean {
         let activated = false;
         this.soundEnabled.forEach((soundForSeverity) => {
             if (soundForSeverity) activated = true;

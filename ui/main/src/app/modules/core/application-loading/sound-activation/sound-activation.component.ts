@@ -29,20 +29,17 @@ export class SoundActivationComponent implements OnInit {
 
     private modalRef: NgbModalRef;
 
-    constructor(
-        private soundNotificationService: SoundNotificationService,
-        private modalService: NgbModal
-    ) {}
+    constructor(private modalService: NgbModal) {}
 
     ngOnInit(): void {
-        this.soundNotificationService.initSoundService();
+        SoundNotificationService.initSoundService();
         this.activateSoundIfNotActivated();
     }
 
     private activateSoundIfNotActivated() {
         setTimeout(() => {
-            const playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
-            if (!playSoundOnExternalDevice && this.soundNotificationService.isAtLeastOneSoundActivated()) {
+            const playSoundOnExternalDevice = SoundNotificationService.getPlaySoundOnExternalDevice();
+            if (!playSoundOnExternalDevice && SoundNotificationService.isAtLeastOneSoundActivated()) {
                 const context = new AudioContext();
                 if (context.state !== 'running') {
                     context.resume();

@@ -21,10 +21,7 @@ import {SoundNotificationService} from './notifications/sound-notification.servi
 export class SessionManagerService {
     private endSessionEvent = new Subject<string>();
 
-    constructor(
-        private soundNotificationService: SoundNotificationService,
-        private authService: AuthService
-    ) {
+    constructor(private authService: AuthService) {
         this.subscribeToSessionWillSoonExpire();
         this.subscribeToSessionExpired();
         this.subscribeToSessionClosedByNewUser();
@@ -36,7 +33,7 @@ export class SessionManagerService {
             // this lets the time for the UI to call external-devices services to send alarm
             // otherwise the call for alarm would be reject as token will have expired
             logger.info('Session will soon expire ', LogOption.REMOTE);
-            this.soundNotificationService.handleSessionEnd();
+            SoundNotificationService.handleSessionEnd();
             this.endSessionEvent.next('SessionEnd');
         });
     }
@@ -46,8 +43,8 @@ export class SessionManagerService {
             logger.info('Session expired');
             // If session is expired, all requests to external devices will fail
             // so we can stop sending request to external devices
-            if (this.soundNotificationService.getPlaySoundOnExternalDevice())
-                this.soundNotificationService.clearOutstandingNotifications();
+            if (SoundNotificationService.getPlaySoundOnExternalDevice())
+                SoundNotificationService.clearOutstandingNotifications();
             OpfabEventStreamService.closeEventStream();
         });
     }
@@ -55,7 +52,7 @@ export class SessionManagerService {
     private subscribeToSessionClosedByNewUser() {
         OpfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
             if (isDisconnected) {
-                this.soundNotificationService.stopService();
+                SoundNotificationService.stopService();
                 this.endSessionEvent.next('DisconnectedByNewUser');
             }
         });
@@ -67,7 +64,7 @@ export class SessionManagerService {
 
     public logout() {
         logger.info('Logout : end session ', LogOption.REMOTE);
-        this.soundNotificationService.stopService();
+        SoundNotificationService.stopService();
         OpfabEventStreamService.closeEventStream();
         this.authService.logout();
     }
