@@ -136,8 +136,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private sanitizer: DomSanitizer,
-        private element: ElementRef,
-        protected soundNotificationService: SoundNotificationService
+        private element: ElementRef
     ) {
         this.setDefaultDateFormValues();
     }
@@ -925,7 +924,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         if (this.usePublishDateForStartDate) this.card.startDate = new Date().valueOf();
 
         // Exclude card from sound and system notifications before publishing to avoid synchronization problems
-        this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+        SoundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
         SystemNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
         const selectedProcess = ProcessesService.getProcess(this.selectedProcessId);
 

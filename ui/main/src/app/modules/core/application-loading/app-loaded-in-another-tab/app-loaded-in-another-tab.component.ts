@@ -47,8 +47,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
 
     constructor(
         private urlLockService: UrlLockService,
-        private modalService: NgbModal,
-        private soundNotificationService: SoundNotificationService
+        private modalService: NgbModal
     ) {
         super();
     }
@@ -92,7 +91,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
         this.urlLockService.setDisconnectSignalListener(() => {
             this.isDisconnectedByAnotherTab = true;
             this.isApplicationActive = false;
-            this.soundNotificationService.stopService();
+            SoundNotificationService.stopService();
             OpfabEventStreamService.closeEventStream();
             const login = UserService.getCurrentUserWithPerimeters().userData.login;
             logger.info(

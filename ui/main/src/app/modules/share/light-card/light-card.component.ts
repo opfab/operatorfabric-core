@@ -56,7 +56,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private soundNotificationService: SoundNotificationService,
         private translateService: TranslateService
     ) {}
 
@@ -138,7 +137,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     public select($event) {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
-        this.soundNotificationService.clearOutstandingNotifications();
+        SoundNotificationService.clearOutstandingNotifications();
         if (this.open && GroupedCardsService.isParentGroupCard(this.lightCard)) {
             this.groupedCardsVisible = !this.groupedCardsVisible;
         } else {
@@ -170,7 +169,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     zoomToLocation($event) {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
-        this.soundNotificationService.clearOutstandingNotifications();
+        SoundNotificationService.clearOutstandingNotifications();
         MapService.zoomToLocation(this.lightCard);
     }
 }

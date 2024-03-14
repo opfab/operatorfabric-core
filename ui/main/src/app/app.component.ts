@@ -66,11 +66,10 @@ export class AppComponent {
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
         const pageType = RouterStore.getCurrentPageType();
-        if (pageType === PageType.FEED) this.soundNotificationService.clearOutstandingNotifications();
+        if (pageType === PageType.FEED) SoundNotificationService.clearOutstandingNotifications();
     }
 
     constructor(
-        private soundNotificationService: SoundNotificationService,
         private routerNavigationService: RouterNavigationService // put it here to have it injected and started a startup
     ) {}
 
