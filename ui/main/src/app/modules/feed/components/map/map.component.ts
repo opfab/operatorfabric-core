@@ -234,31 +234,35 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private addGeoJSONLayer(style) {
         if (this.map) {
-            const geojsonUrls = ConfigService.getConfigValue('feed.geomap.layer.geojson.url', []);
-            geojsonUrls.forEach((geojsonUrl) => {
-                let colorStroke = 'rgba(0, 0, 0, 0.6)';
-                let colorFill = 'rgba(0, 0, 0, 0.05)';
-                if (style === GlobalStyleService.NIGHT) {
-                    colorStroke = 'rgba(255, 255, 255, 0.6)';
-                    colorFill = 'rgba(255, 255, 255, 0.05)';
-                }
-                const vectorLayer = new VectorLayer({
-                    source: new VectorSource({
-                        format: new GeoJSON(),
-                        url: geojsonUrl
-                    }),
-                    style: [
-                        new Style({
-                            stroke: new Stroke({
-                                color: colorStroke,
-                                width: 1.5
-                            }),
-                            fill: new Fill({
-                                color: colorFill
-                            })
-                        })
-                    ]
+            let colorStroke = 'rgba(0, 0, 0, 0.6)';
+            let colorFill = 'rgba(0, 0, 0, 0.05)';
+            if (style === GlobalStyleService.NIGHT) {
+                colorStroke = 'rgba(255, 255, 255, 0.6)';
+                colorFill = 'rgba(255, 255, 255, 0.05)';
+            }
+            const defaultStyle = new Style({
+                stroke: new Stroke({
+                    color: colorStroke,
+                    width: 1.5
+                }),
+                fill: new Fill({
+                    color: colorFill
+                })
+            });
+
+            const geojsonLayers = ConfigService.getConfigValue('feed.geomap.layer.geojson', []);
+
+            geojsonLayers.forEach((geojson) => {
+                const layerSource = new VectorSource({
+                    format: new GeoJSON(),
+                    url: geojson.url
                 });
+
+                const vectorLayer = new VectorLayer({
+                    source: layerSource,
+                    style: geojson.style ?? defaultStyle
+                });
+
                 this.map.removeLayer(vectorLayer);
                 this.map.addLayer(vectorLayer);
             });

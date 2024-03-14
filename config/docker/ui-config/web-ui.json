@@ -83,9 +83,19 @@
       "zoomDuration": 500,
       "highlightPolygonStrokeWidth": 5,
       "layer": {
-        "geojson": {
-          "url": ["assets/layers/geojson-layer.json","assets/layers/geojson-layer2.json"]
-        }
+        "geojson": [
+          {
+            "url": "assets/layers/geojson-layer.json",
+            "style": {
+              "stroke-color": "blue",
+              "stroke-width": 1.5,
+              "fill-color": "rgba(39, 245, 164, 0.4)"
+              }
+          },
+          {
+            "url": "assets/layers/geojson-layer2.json"
+          }
+        ]
       }
 
     },
