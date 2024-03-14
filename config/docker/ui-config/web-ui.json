@@ -85,11 +85,9 @@
       "layer": {
         "geojson": [
           {
-            "url": "assets/layers/geojson-layer.json",
+            "url": "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/lignes-aeriennes-rte-nv/exports/geojson?lang=fr&refine=tension%3A%22400kV%22&facet=facet(name%3D%22tension%22%2C%20disjunctive%3Dtrue)&timezone=Europe%2FBerlin",
             "style": {
-              "stroke-color": "blue",
-              "stroke-width": 1.5,
-              "fill-color": "rgba(39, 245, 164, 0.4)"
+              "stroke-color": "red"
               }
           },
           {
