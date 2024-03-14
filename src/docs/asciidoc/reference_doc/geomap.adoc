@@ -46,3 +46,4 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#ui_pro
 section for more information and additional customization options.
 
 
+The example configuration references a GeoJSON layer from  Opendata Réseau Énergies (https://odre.opendatasoft.com/) published under open licence v2.0 https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf 
