@@ -36,6 +36,7 @@ import {ExternalDevicesServer} from 'app/business/server/external-devices.server
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
 import {ModalServer} from 'app/business/server/modal.server';
+import {SoundServer} from 'app/business/server/sound.server';
 
 declare const opfab: any;
 @Component({
@@ -75,7 +76,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private externalDevicesServer: ExternalDevicesServer,
         private templateCssServer: TemplateCssServer,
         private settingsServer: SettingsServer,
-        private modalServer: ModalServer
+        private modalServer: ModalServer,
+        private soundServer: SoundServer
     ) {
         LoggerService.setLogLevel(LogLevel.DEBUG);
     }
@@ -102,7 +104,8 @@ export class ApplicationLoadingComponent implements OnInit {
             templateCssServer: this.templateCssServer,
             settingsServer: this.settingsServer,
             modalServer: this.modalServer,
-            authService: this.authService
+            authService: this.authService,
+            soundServer: this.soundServer
         });
         setTimeout(() => this.loadApplication(), 0);
     }

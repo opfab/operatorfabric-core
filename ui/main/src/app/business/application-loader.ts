@@ -41,6 +41,7 @@ import {ServerResponseStatus} from './server/serverResponse';
 import {Utilities} from './common/utilities';
 import {ModalService} from './services/modal.service';
 import {SessionManagerService} from './services/session-manager.service';
+import {SoundNotificationService} from './services/notifications/sound-notification.service';
 
 declare const opfab: any;
 
@@ -82,6 +83,7 @@ export class ApplicationLoader {
         ModalService.setTranslationService(servers.translationService);
         OpfabAPIService.setTranslationService(servers.translationService);
         SessionManagerService.init(servers.authService);
+        SoundNotificationService.setSoundServer(servers.soundServer);
 
         this.opfabEventStreamServer = servers.opfabEventStreamServer;
     }
@@ -251,6 +253,7 @@ export class ApplicationLoader {
         OpfabStore.init(); // this will effectively open the http stream connection
         ApplicationUpdateService.init();
         SystemNotificationService.initSystemNotificationService();
+        SoundNotificationService.initSoundService();
         HandlebarsService.init();
         SelectedCardLoaderService.init();
     }
