@@ -68,7 +68,8 @@ describe('Session ended test', function () {
     }
 
     function checkSessionIsClosed() {
-        cy.get('#opfab-sessionEnd');
+        cy.get('#opfab-modal-body').should('exist');
+        cy.get('#opfab-modal-body').should('contain', 'Your session has expired');
     }
 
     function configureOneSound() {
