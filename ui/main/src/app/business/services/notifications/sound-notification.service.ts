@@ -19,6 +19,8 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {SoundServer} from 'app/business/server/sound.server';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {ModalService} from '../modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Injectable({
     providedIn: 'root'
@@ -106,10 +108,30 @@ export class SoundNotificationService {
             this.replayInterval = Math.max(3, x);
         });
 
+        this.activateBrowserSoundIfNotActivated();
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
         this.initSoundPlayingForSessionEnd();
 
         this.listenForCardUpdate();
+    }
+
+    // Some browsers have an autoplay policy that prevents sounds from playing until the user interacts with the app.
+    // This method is designed to circumvent this restriction by opening a modal, thereby forcing user interaction.
+    // Once the user interacts with the modal, the sound can be activated even if the user hasn't interacted with the rest of the app.
+    private static activateBrowserSoundIfNotActivated() {
+        setTimeout(() => {
+            const playSoundOnExternalDevice = SoundNotificationService.getPlaySoundOnExternalDevice();
+            if (!playSoundOnExternalDevice && SoundNotificationService.isAtLeastOneSoundActivated()) {
+                const context = new AudioContext();
+                if (context.state !== 'running') {
+                    context.resume();
+                    logger.info('Sound not activated', LogOption.REMOTE);
+                    ModalService.openInformationModal(new I18n('global.activateSoundText')).then(() => {
+                        logger.info('Sound activated', LogOption.REMOTE);
+                    });
+                }
+            }
+        }, 3000);
     }
 
     public static getPlaySoundOnExternalDevice(): boolean {

@@ -31,7 +31,6 @@ import {TokenInjector} from 'app/server/interceptors.service';
 import {ActivityareaModule} from './modules/activityarea/activityarea.module';
 import {AlertComponent} from './modules/core/alert/alert.component';
 import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
-import {SoundActivationComponent} from './modules/core/application-loading/sound-activation/sound-activation.component';
 import {SessionEndComponent} from './modules/core/session-end/session-end.component';
 import {ActivityAreaChoiceAfterLoginComponent} from './modules/core/application-loading/activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AccountAlreadyUsedComponent} from './modules/core/application-loading/account-already-used/account-already-used.component';
@@ -121,7 +120,6 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         LoginComponent,
         AlertComponent,
         ConnectionLostComponent,
-        SoundActivationComponent,
         SessionEndComponent,
         ActivityAreaChoiceAfterLoginComponent,
         AccountAlreadyUsedComponent,
