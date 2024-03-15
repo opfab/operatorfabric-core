@@ -40,7 +40,6 @@ export class NavbarComponent {
     constructor(
         private router: Router,
         private modalService: NgbModal,
-        private sessionManager: SessionManagerService,
         private domSanitizationService: DomSanitizer,
         private translationService: TranslationService,
         private changeDetector: ChangeDetectorRef
@@ -102,7 +101,7 @@ export class NavbarComponent {
                 break;
             case 'logout':
                 this.logoutInProgress = true;
-                this.sessionManager.logout();
+                SessionManagerService.logout();
                 break;
             default:
                 this.navbarMenuView.onMenuClick(menu, openInNewTab);

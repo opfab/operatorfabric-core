@@ -40,6 +40,7 @@ import {ApplicationLoadingComponent} from './application-loading-component';
 import {ServerResponseStatus} from './server/serverResponse';
 import {Utilities} from './common/utilities';
 import {ModalService} from './services/modal.service';
+import {SessionManagerService} from './services/session-manager.service';
 
 declare const opfab: any;
 
@@ -80,6 +81,7 @@ export class ApplicationLoader {
         ModalService.setModalServer(servers.modalServer);
         ModalService.setTranslationService(servers.translationService);
         OpfabAPIService.setTranslationService(servers.translationService);
+        SessionManagerService.init(servers.authService);
 
         this.opfabEventStreamServer = servers.opfabEventStreamServer;
     }
