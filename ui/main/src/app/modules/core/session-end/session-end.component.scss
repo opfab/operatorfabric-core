@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,4 @@
     background-color: rgba(0, 0, 0, 0.6);
     color: white;
     font-size: 1.5em;
-}
-
-.opfab-session-end-modal {
-    z-index: 5000 !important; /* sit on top of everything */
 }

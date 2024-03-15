@@ -7,22 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {I18n} from '@ofModel/i18n.model';
+import {ModalService} from 'app/business/services/modal.service';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-session-end',
     styleUrls: ['./session-end.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    templateUrl: './session-end.component.html'
+    templateUrl: './session-end.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionEndComponent implements OnInit {
     public isDisconnectedByNewUser = false;
-    private modalRef: NgbModalRef;
-    @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
 
-    constructor(private modalService: NgbModal) {}
+    constructor(private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.subscribeToSessionEnd();
@@ -32,19 +31,12 @@ export class SessionEndComponent implements OnInit {
         SessionManagerService.getEndSessionEvent().subscribe((event) => {
             if (event === 'DisconnectedByNewUser') {
                 this.isDisconnectedByNewUser = true;
+                this.changeDetector.markForCheck();
             } else {
-                this.modalRef = this.modalService.open(this.sessionEndPopupRef, {
-                    centered: true,
-                    backdrop: 'static',
-                    backdropClass: 'opfab-session-end-modal',
-                    windowClass: 'opfab-session-end-modal'
+                ModalService.openInformationModal(new I18n('global.sessionExpiredText')).then(() => {
+                    SessionManagerService.logout();
                 });
             }
         });
-    }
-
-    public logout() {
-        this.modalRef.close();
-        SessionManagerService.logout();
     }
 }
