@@ -47,6 +47,7 @@ export class FeedCommands extends OpfabCommands {
     deleteCurrentCard= function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-btn-ok').click();
+        cy.get('#opfab-close-alert').click();
     }
 
     editCurrentCard= function () {
