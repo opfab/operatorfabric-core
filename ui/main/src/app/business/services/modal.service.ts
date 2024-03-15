@@ -38,7 +38,10 @@ export class ModalService {
                 }
             ]
         };
-        return this.modalServer.openModal(modalConfig).then(() => undefined);
+        return this.modalServer
+            .openModal(modalConfig)
+            .then(() => undefined)
+            .catch(() => undefined); // in case of modal closed via Esc key
     }
 
     private static getTranslatedValue(value: string | I18n): string {
@@ -70,7 +73,7 @@ export class ModalService {
         return this.modalServer
             .openModal(modalConfig)
             .then((result) => result === 'ok')
-            .catch(() => false);
+            .catch(() => false); // in case of modal closed via Esc key
     }
 
     public static openSaveBeforeExitModal(): Promise<string> {
@@ -93,6 +96,9 @@ export class ModalService {
                 }
             ]
         };
-        return this.modalServer.openModal(modalConfig);
+        return this.modalServer
+            .openModal(modalConfig)
+            .then((result) => result)
+            .catch(() => 'cancel'); // in case of modal closed via Esc key
     }
 }

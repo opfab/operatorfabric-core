@@ -7,16 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {State} from '@ofModel/processes.model';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {Router} from '@angular/router';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {ModalService} from 'app/business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-card',
@@ -26,9 +28,6 @@ import {LoggerService} from 'app/business/services/logs/logger.service';
 export class CardComponent implements OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
-
-    modalRef: NgbModalRef;
-    @ViewChild('cardDeleted') cardDeleted: ElementRef;
 
     card: Card;
     childCards: Card[];
@@ -111,16 +110,7 @@ export class CardComponent implements OnInit, OnDestroy {
             .subscribe((cardId) => {
                 setTimeout(() => {
                     if (!this.detailClosed) {
-                        const modalOptions: NgbModalOptions = {
-                            centered: true,
-                            backdrop: 'static', // Modal shouldn't close even if we click outside it
-                            size: 'sm'
-                        };
-                        this.modalRef = this.modalService.open(this.cardDeleted, modalOptions);
-
-                        // Close card detail modal is dismissed by pressing escape key
-                        this.modalRef.dismissed.subscribe(() => {
-                            this.modalRef = null;
+                        ModalService.openInformationModal(new I18n('feed.selectedCardDeleted')).then(() => {
                             this.closeDeletedCard();
                         });
                     }
@@ -129,8 +119,7 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     closeDeletedCard() {
-        this.closeDetails();
-
+        this.detailClosed = true;
         if (this.parentModalRef) {
             this.parentModalRef.close();
             SelectedCardService.clearSelectedCardId();
@@ -142,7 +131,6 @@ export class CardComponent implements OnInit, OnDestroy {
 
     closeDetails() {
         this.detailClosed = true;
-        if (this.modalRef) this.modalRef.dismiss();
     }
 
     public isSmallscreen() {
