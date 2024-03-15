@@ -101,7 +101,8 @@ export class ApplicationLoadingComponent implements OnInit {
             externalDevicesServer: this.externalDevicesServer,
             templateCssServer: this.templateCssServer,
             settingsServer: this.settingsServer,
-            modalServer: this.modalServer
+            modalServer: this.modalServer,
+            authService: this.authService
         });
         setTimeout(() => this.loadApplication(), 0);
     }

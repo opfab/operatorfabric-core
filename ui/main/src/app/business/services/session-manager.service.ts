@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {AuthService} from 'app/authentication/auth.service';
 import {Observable, Subject} from 'rxjs';
 import {CurrentUserStore} from '../store/current-user.store';
@@ -15,19 +14,18 @@ import {OpfabEventStreamService} from './events/opfabEventStream.service';
 import {LogOption, LoggerService as logger} from './logs/logger.service';
 import {SoundNotificationService} from './notifications/sound-notification.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class SessionManagerService {
-    private endSessionEvent = new Subject<string>();
+    private static endSessionEvent = new Subject<string>();
+    private static authService: AuthService;
 
-    constructor(private authService: AuthService) {
+    public static init(authService: AuthService) {
+        this.authService = authService;
         this.subscribeToSessionWillSoonExpire();
         this.subscribeToSessionExpired();
         this.subscribeToSessionClosedByNewUser();
     }
 
-    private subscribeToSessionWillSoonExpire() {
+    private static subscribeToSessionWillSoonExpire() {
         CurrentUserStore.getSessionWillSoonExpire().subscribe(() => {
             // We inform the user that session is end before it really ends
             // this lets the time for the UI to call external-devices services to send alarm
@@ -38,7 +36,7 @@ export class SessionManagerService {
         });
     }
 
-    private subscribeToSessionExpired() {
+    private static subscribeToSessionExpired() {
         CurrentUserStore.getSessionExpired().subscribe(() => {
             logger.info('Session expired');
             // If session is expired, all requests to external devices will fail
@@ -49,7 +47,7 @@ export class SessionManagerService {
         });
     }
 
-    private subscribeToSessionClosedByNewUser() {
+    private static subscribeToSessionClosedByNewUser() {
         OpfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
             if (isDisconnected) {
                 SoundNotificationService.stopService();
@@ -58,11 +56,11 @@ export class SessionManagerService {
         });
     }
 
-    public getEndSessionEvent(): Observable<string> {
+    public static getEndSessionEvent(): Observable<string> {
         return this.endSessionEvent.asObservable();
     }
 
-    public logout() {
+    public static logout() {
         logger.info('Logout : end session ', LogOption.REMOTE);
         SoundNotificationService.stopService();
         OpfabEventStreamService.closeEventStream();

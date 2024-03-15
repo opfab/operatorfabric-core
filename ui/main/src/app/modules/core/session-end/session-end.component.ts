@@ -22,17 +22,14 @@ export class SessionEndComponent implements OnInit {
     private modalRef: NgbModalRef;
     @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
 
-    constructor(
-        private sessionManager: SessionManagerService,
-        private modalService: NgbModal
-    ) {}
+    constructor(private modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.subscribeToSessionEnd();
     }
 
     private subscribeToSessionEnd() {
-        this.sessionManager.getEndSessionEvent().subscribe((event) => {
+        SessionManagerService.getEndSessionEvent().subscribe((event) => {
             if (event === 'DisconnectedByNewUser') {
                 this.isDisconnectedByNewUser = true;
             } else {
@@ -48,6 +45,6 @@ export class SessionEndComponent implements OnInit {
 
     public logout() {
         this.modalRef.close();
-        this.sessionManager.logout();
+        SessionManagerService.logout();
     }
 }

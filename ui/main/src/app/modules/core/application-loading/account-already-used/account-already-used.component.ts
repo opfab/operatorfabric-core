@@ -26,10 +26,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingComponent {
 
     private questionModal: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private sessionManager: SessionManagerService
-    ) {
+    constructor(private modalService: NgbModal) {
         super();
     }
 
@@ -58,7 +55,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingComponent {
     public logoutBecauseAccountIsAlreadyUsed() {
         logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
         this.questionModal.close();
-        this.sessionManager.logout();
+        SessionManagerService.logout();
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {
