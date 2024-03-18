@@ -91,27 +91,25 @@ export class EditUserModalComponent implements OnInit {
             if (this.row.authorizedIPAddresses) {
                 this.userForm.patchValue({authorizedIPAddresses: this.row.authorizedIPAddresses.join(',')});
             }
+
             // Otherwise, we use the selectedItems property of the of-multiselect component
+            UserService.getUser(login).subscribe((user) => {
+                this.selectedEntities = user.entities;
+                this.changeDetector.markForCheck();
+            });
             this.selectedGroups = this.row.groups;
-            this.selectedEntities = this.row.entities;
         }
 
         // Initialize value lists for Entities and Groups inputs
         EntitiesService.getEntities().forEach((entity) => {
             const id = entity.id;
-            let itemName = entity.name;
-            if (!itemName) {
-                itemName = id;
-            }
+            const itemName = entity.name ?? id;
             this.entitiesMultiSelectOptions.push(new MultiSelectOption(id, itemName));
         });
 
         GroupsService.getGroups().forEach((group) => {
             const id = group.id;
-            let itemName = group.name;
-            if (!itemName) {
-                itemName = id;
-            }
+            const itemName = group.name ?? id;
             this.groupsMultiSelectOptions.push(new MultiSelectOption(id, itemName));
         });
     }

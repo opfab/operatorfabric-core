@@ -666,7 +666,7 @@ describe('AdmininstrationPages', () => {
                     expect(rows[0]['FIRST NAME']).to.be.undefined;
                     expect(rows[0]['LAST NAME']).to.be.undefined;
                     expect(rows[0].GROUPS).to.equal('ADMINISTRATORS');
-                    expect(rows[0].ENTITIES).to.equal('Control Center FR North,Control Center FR South');
+                    expect(rows[0].ENTITIES).to.equal('Control Center FR North, Control Center FR South');
 
 
                     expect(rows[1].LOGIN).to.equal('operator1_fr');
@@ -712,7 +712,7 @@ describe('AdmininstrationPages', () => {
                     expect(rows[4].ID).to.equal('ENTITY_FR');
                     expect(rows[4].NAME).to.equal('French Control Centers');
                     expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
-                    expect(rows[4]['PARENT ENTITIES']).to.be.undefined;
+                    expect(rows[4]['PARENT ENTITIES']).to.equal('');
                 })
             })
         })

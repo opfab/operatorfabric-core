@@ -7,12 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {SupervisedEntitiesService} from '../users/supervised-entities.service';
+import {CrudUtilities} from './crudUtils';
+import {EntitiesService} from '../users/entities.service';
 
 export class CrudSupervisedEntitiesService {
     getAll(): Observable<Array<any>> {
-        return SupervisedEntitiesService.getAll();
+        return SupervisedEntitiesService.getAll().pipe(
+            map((supervisedEntities) => {
+                return supervisedEntities.map((supervisedEntity) => ({
+                    entityId: supervisedEntity.entityId,
+                    entityName: EntitiesService.getEntityName(supervisedEntity.entityId),
+                    supervisors: CrudUtilities.formatEntityIdsToNames(supervisedEntity.supervisors)
+                }));
+            })
+        );
     }
 
     update(data: any): Observable<any> {
@@ -24,6 +34,11 @@ export class CrudSupervisedEntitiesService {
     }
 
     getCachedValues(): Array<any> {
-        return SupervisedEntitiesService.getCachedValues();
+        const supervisedEntities = SupervisedEntitiesService.getCachedValues();
+        return supervisedEntities.map((supervisedEntity) => ({
+            entityId: supervisedEntity.entityId,
+            entityName: EntitiesService.getEntityName(supervisedEntity.entityId),
+            supervisors: CrudUtilities.formatEntityIdsToNames(supervisedEntity.supervisors)
+        }));
     }
 }

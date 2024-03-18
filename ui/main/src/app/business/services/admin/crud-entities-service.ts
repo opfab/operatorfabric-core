@@ -7,12 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {EntitiesService} from '../users/entities.service';
+import {CrudUtilities} from './crudUtils';
 
 export class CrudEntitiesService {
     getAll(): Observable<Array<any>> {
-        return EntitiesService.getAll();
+        return EntitiesService.getAll().pipe(
+            map((entities) => {
+                return entities.map((entity) => ({
+                    ...entity,
+                    parents: CrudUtilities.formatEntityIdsToNames(entity.parents)
+                }));
+            })
+        );
     }
 
     update(data: any): Observable<any> {
@@ -24,6 +32,10 @@ export class CrudEntitiesService {
     }
 
     getCachedValues(): Array<any> {
-        return EntitiesService.getCachedValues();
+        const entities = EntitiesService.getCachedValues();
+        return entities.map((entity) => ({
+            ...entity,
+            parents: CrudUtilities.formatEntityIdsToNames(entity.parents)
+        }));
     }
 }

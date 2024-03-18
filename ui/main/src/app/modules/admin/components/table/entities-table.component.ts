@@ -27,7 +27,7 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         new Field('name', 3),
         new Field('description', 5),
         new Field('roles', 4, 'roleCellRenderer', null, 'rolesColumn'),
-        new Field('parents', 5, 'entityCellRenderer', null, 'parentsColumn')
+        new Field('parents', 5, null, null, 'parentsColumn')
     ];
     idField = 'id';
     actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
@@ -42,23 +42,9 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         };
         this.gridOptions.columnTypes['parentsColumn'] = {
             sortable: true,
-            filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    let text = '';
-                    if (params.data.parents) {
-                        params.data.parents.forEach((parent) => {
-                            text +=
-                                this.entitiesDefinition
-                                    .filter((entityDefinition) => parent === entityDefinition.id)
-                                    .map((entityDefinition) => entityDefinition.name) + ' ';
-                        });
-                    }
-                    return text;
-                }
-            },
             wrapText: true,
             autoHeight: true,
+            filter: 'agTextColumnFilter',
             flex: 4,
             resizable: false
         };

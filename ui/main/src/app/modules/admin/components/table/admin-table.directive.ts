@@ -15,7 +15,6 @@ import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {CrudService} from 'app/business/services/admin/crud-service';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
-import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
 import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
@@ -33,7 +32,6 @@ import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.compon
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {ModalService} from 'app/business/services/modal.service';
@@ -112,12 +110,10 @@ export abstract class AdminTableDirective implements OnDestroy {
                 actionCellRenderer: ActionCellRendererComponent,
                 arrayCellRenderer: ArrayCellRendererComponent,
                 groupCellRenderer: GroupCellRendererComponent,
-                entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
                 roleCellRenderer: RoleCellRendererComponent,
-                idCellRenderer: IdCellRendererComponent,
-                entityNameCellRenderer: EntityNameCellRendererComponent
+                idCellRenderer: IdCellRendererComponent
             },
             domLayout: 'autoHeight',
             rowHeight: 50,

@@ -14,8 +14,8 @@ import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
 
 @Component({
     selector: 'of-edit-supervised-entity-modal',
@@ -34,7 +34,7 @@ export class EditSupervisedEntityModalComponent implements OnInit {
 
     supervisedMultiSelectOptions: Array<MultiSelectOption> = [];
     entityIdMultiSelectConfig: MultiSelectConfig = {
-        labelKey: 'admin.input.supervisedEntity.entityId',
+        labelKey: 'admin.input.supervisedEntity.entityName',
         placeholderKey: 'admin.input.selectEntityText',
         multiple: false,
         sortOptions: true
@@ -51,13 +51,13 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     allEntitiesSupervised: boolean;
 
     constructor(
-        private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService
     ) {}
 
     ngOnInit() {
         this.entityForm = new FormGroup({
+            id: new FormControl(''),
             entityId: new FormControl<string | null>('', [Validators.required]),
             supervisors: new FormControl<string[] | null>([], [Validators.required])
         });
@@ -77,8 +77,8 @@ export class EditSupervisedEntityModalComponent implements OnInit {
 
     initializeForEdition() {
         this.entityForm.patchValue(this.row, {onlySelf: true});
-        this.selectedSupervisors = this.row.supervisors;
-        this.entityName = EntitiesService.getEntityName(this.row.entityId) ?? this.row.entityId;
+        this.selectedSupervisors = SupervisedEntitiesService.getSupervisedEntity(this.row.entityId).supervisors;
+        this.entityName = this.row.entityName;
     }
 
     isEntityAlreadySupervised(entityId: string) {

@@ -517,7 +517,7 @@
         "confirmDelete": "Do you really want to delete the business data file"
       },
       "supervisedEntity": {
-        "entityId": "ENTITY",
+        "entityName": "ENTITY",
         "supervisors": "SUPERVISORS",
         "add": "ADD NEW SUPERVISED ENTITY",
         "confirmDelete": "Do you really want to delete supervised entity",
