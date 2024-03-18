@@ -517,7 +517,7 @@
         "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
       },
       "supervisedEntity": {
-        "entityId": "ENTITÉ",
+        "entityName": "ENTITÉ",
         "supervisors": "SUPERVISEURS",
         "add": "AJOUTER UNE NOUVELLE ENTITÉ SUPERVISÉE",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité supervisée",

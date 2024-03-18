@@ -7,12 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {UserService} from '../users/user.service';
+import {CrudUtilities} from './crudUtils';
 
 export class CrudUserService {
     getAll(): Observable<Array<any>> {
-        return UserService.getAll();
+        return UserService.getAll().pipe(
+            map((users) => {
+                return users.map((user) => ({
+                    ...user,
+                    entities: CrudUtilities.formatEntityIdsToNames(user.entities)
+                }));
+            })
+        );
     }
 
     update(data: any): Observable<any> {

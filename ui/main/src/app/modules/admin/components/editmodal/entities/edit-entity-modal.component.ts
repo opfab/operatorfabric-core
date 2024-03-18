@@ -103,8 +103,9 @@ export class EditEntityModalComponent implements OnInit {
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
         if (this.row) {
             // If the modal is used for edition, initialize the modal with current data from this row
+            const rowEntity = EntitiesService.getEntity(this.row.id);
             this.entityForm.patchValue(this.row, {onlySelf: true});
-            this.selectedEntities = this.row.parents;
+            this.selectedEntities = rowEntity.parents;
             this.selectedRoles = this.row.roles;
         }
 

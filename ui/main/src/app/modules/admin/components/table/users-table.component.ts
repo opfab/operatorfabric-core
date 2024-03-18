@@ -27,7 +27,7 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         new Field('firstName', 3),
         new Field('lastName', 3),
         new Field('groups', 6, 'groupCellRenderer', null, 'groupsColumn'),
-        new Field('entities', 6, 'entityCellRenderer', null, 'entitiesColumn')
+        new Field('entities', 6, null, null, 'entitiesColumn')
     ];
     idField = 'login';
     actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
@@ -56,18 +56,6 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         this.gridOptions.columnTypes['entitiesColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    let text = '';
-                    params.data.entities.forEach((entity) => {
-                        text +=
-                            this.entitiesDefinition
-                                .filter((entityDefinition) => entity === entityDefinition.id)
-                                .map((entityDefinition) => entityDefinition.name) + ' ';
-                    });
-                    return text;
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4,

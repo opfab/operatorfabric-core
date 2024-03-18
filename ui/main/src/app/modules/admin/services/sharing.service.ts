@@ -86,7 +86,7 @@ export class SharingService implements OnDestroy {
 
 /** This enum defines the type of the data managed by an admin table or renderer. When adding a type to this list, please make sure
  * to also add the corresponding handling to the methods above.
- * */
+ **/
 
 export enum AdminItemType {
     USER = 'user',

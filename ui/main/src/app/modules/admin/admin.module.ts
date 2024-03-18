@@ -22,7 +22,6 @@ import {AgGridModule} from 'ag-grid-angular';
 import {ArrayCellRendererComponent} from './components/cell-renderers/array-cell-renderer.component';
 import {ActionCellRendererComponent} from './components/cell-renderers/action-cell-renderer.component';
 import {GroupCellRendererComponent} from './components/cell-renderers/group-cell-renderer.component';
-import {EntityCellRendererComponent} from './components/cell-renderers/entity-cell-renderer.component';
 import {PerimetersCellRendererComponent} from './components/cell-renderers/perimeters-cell-renderer.component';
 import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
@@ -39,7 +38,6 @@ import {IdCellRendererComponent} from './components/cell-renderers/id-cell-rende
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {BusinessDataTableComponent} from './components/table/businessData-table.component';
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
-import {EntityNameCellRendererComponent} from './components/cell-renderers/entity-name-cell-renderer.component';
 import {EditSupervisedEntityModalComponent} from './components/editmodal/supervised-entities/edit-supervised-entity-modal.component';
 
 @NgModule({
@@ -60,12 +58,10 @@ import {EditSupervisedEntityModalComponent} from './components/editmodal/supervi
         ActionCellRendererComponent,
         ArrayCellRendererComponent,
         GroupCellRendererComponent,
-        EntityCellRendererComponent,
         PerimetersCellRendererComponent,
         StateRightsCellRendererComponent,
         RoleCellRendererComponent,
         IdCellRendererComponent,
-        EntityNameCellRendererComponent,
         ProcessCellRendererComponent
     ],
 

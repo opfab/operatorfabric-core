@@ -517,7 +517,7 @@
         "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
       },
       "supervisedEntity": {
-        "entityId": "ENTITEIT",
+        "entityName": "ENTITEIT",
         "supervisors": "SUPERVISORS",
         "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
         "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",

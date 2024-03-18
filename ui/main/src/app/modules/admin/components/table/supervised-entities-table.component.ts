@@ -24,8 +24,8 @@ import {SupervisedEntitiesService} from 'app/business/services/users/supervised-
 export class SupervisedEntitiesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.SUPERVISED_ENTITY;
     fields = [
-        new Field('entityId', 3, 'entityNameCellRenderer', null, 'entityNameColumn'),
-        new Field('supervisors', 5, 'entityCellRenderer', null, 'supervisorsColumn')
+        new Field('entityName', 3, null, null, 'entityNameColumn'),
+        new Field('supervisors', 5, null, null, 'supervisorsColumn')
     ];
     idField = 'entityId';
     actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
@@ -37,15 +37,6 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
         this.gridOptions.columnTypes['entityNameColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    const entity = this.entitiesDefinition.find(
-                        (entityDefinition) => params.data.entityId === entityDefinition.id
-                    );
-
-                    return entity ? entity.name : params.data.entityId;
-                }
-            },
             wrapText: true,
             autoHeight: true,
             maxWidth: 500,
@@ -54,20 +45,6 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
         this.gridOptions.columnTypes['supervisorsColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    let text = '';
-                    if (params.data.supervisors) {
-                        params.data.supervisors.forEach((supervisor) => {
-                            text +=
-                                this.entitiesDefinition
-                                    .filter((entityDefinition) => supervisor === entityDefinition.id)
-                                    .map((entityDefinition) => entityDefinition.name) + ' ';
-                        });
-                    }
-                    return text;
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4,
