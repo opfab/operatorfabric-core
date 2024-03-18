@@ -366,7 +366,7 @@
     "savingInProgress": "Enregistrement en cours...",
     "noAreaAvailable": "Pas de zone d'activité disponible"
   },
-  "feedConfiguration": {
+  "notificationConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS",
     "information": "INFORMATION",
     "modificationToSave": "Des modifications sont en cours, voulez-vous les sauvegarder?",

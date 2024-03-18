@@ -13,7 +13,7 @@ import {Observable, ReplaySubject} from 'rxjs';
 
 export class SettingsServerMock implements SettingsServer {
     public userIdPatch = '';
-    public settingsPatch = {};
+    public settingsPatch: any = {};
     public numberOfCallsToPatchUserSettings = 0;
 
     private patchUserSettings$: ReplaySubject<ServerResponse<any>>;

@@ -366,7 +366,7 @@
     "savingInProgress": "aan het opslaan...",
     "noAreaAvailable": "Geen activiteitengebied beschikbaar"
   },
-  "feedConfiguration": {
+  "notificationConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE",
     "information": "INFORMATIE",
     "modificationToSave": "Er zijn wijzigingen in behandeling, wilt u deze opslaan?",

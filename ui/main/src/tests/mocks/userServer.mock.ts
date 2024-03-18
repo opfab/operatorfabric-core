@@ -18,6 +18,7 @@ export class UserServerMock implements UserServer {
     private userSubject: ReplaySubject<ServerResponse<User>>;
     private connectedUsersSubject: ReplaySubject<ServerResponse<any>>;
     private queryAllUsersSubject: ReplaySubject<ServerResponse<any>>;
+    public numberOfCallsToCurrentUserWithPerimeter = 0;
 
     setResponseForCurrentUserWithPerimeter(currentUserWithPerimeter: ServerResponse<UserWithPerimeters>) {
         this.currentUserWithPerimeterSubject = new ReplaySubject<ServerResponse<UserWithPerimeters>>();
@@ -53,6 +54,7 @@ export class UserServerMock implements UserServer {
         throw new Error('Method not implemented.');
     }
     currentUserWithPerimeters(): Observable<ServerResponse<UserWithPerimeters>> {
+        this.numberOfCallsToCurrentUserWithPerimeter++;
         return this.currentUserWithPerimeterSubject.asObservable();
     }
     queryAllUsers(): Observable<ServerResponse<User[]>> {

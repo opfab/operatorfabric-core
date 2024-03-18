@@ -80,7 +80,9 @@ const routes: Routes = [
     {
         path: 'feedconfiguration',
         loadChildren: () =>
-            import('../modules/feedconfiguration/feedconfiguration.module').then((m) => m.FeedconfigurationModule)
+            import('../modules/notificationconfiguration/notificationconfiguration.module').then(
+                (m) => m.NotificationConfigurationModule
+            )
     },
     {
         path: 'changepassword',
