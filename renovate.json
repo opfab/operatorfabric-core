@@ -31,6 +31,14 @@
   },
   "packageRules": [
     {
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+    {
       "groupName": "angular",
       "matchPackagePrefixes": [
         "@angular/",
