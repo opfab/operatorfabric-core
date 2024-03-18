@@ -11,11 +11,18 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateLoader} from '@ngx-translate/core';
-import {Observable, of} from 'rxjs';
+import {Observable, firstValueFrom, of} from 'rxjs';
 import {Type} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Guid} from 'guid-typescript';
 import SpyObj = jasmine.SpyObj;
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserServerMock} from './mocks/userServer.mock';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {UserService} from 'app/business/services/users/user.service';
+import {ProcessServerMock} from './mocks/processServer.mock';
+import {Process} from '@ofModel/processes.model';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -141,4 +148,27 @@ export function BusinessconfigI18nLoaderFactory(): TranslateLoader {
  * */
 export function injectedSpy<S>(service: Type<S>): SpyObj<S> {
     return TestBed.inject(service) as SpyObj<S>;
+}
+
+export async function setUserPerimeter(userWithPerimeters: UserWithPerimeters) {
+    const userServerMock = new UserServerMock();
+    UserService.setUserServer(userServerMock);
+    userServerMock.setResponseForCurrentUserWithPerimeter(
+        new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
+    );
+    await firstValueFrom(UserService.loadUserWithPerimetersData());
+}
+
+export async function setProcessConfiguration(processes: Process[], processGroups: any = {groups: []}) {
+    const processServerMock = new ProcessServerMock();
+    processServerMock.setResponseForAllProcessDefinition(new ServerResponse(processes, ServerResponseStatus.OK, null));
+    processServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
+    ProcessesService.setProcessServer(processServerMock);
+    await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+    await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
+    await firstValueFrom(ProcessesService.loadProcessGroups());
+}
+
+export async function waitForAllPromises() {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
