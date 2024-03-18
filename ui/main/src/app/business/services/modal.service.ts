@@ -79,7 +79,7 @@ export class ModalService {
     public static openSaveBeforeExitModal(): Promise<string> {
         const modalConfig: ModalConfig = {
             title: this.translationService.getTranslation('shared.popup.title'),
-            message: this.translationService.getTranslation('feedConfiguration.modificationToSave'),
+            message: this.translationService.getTranslation('notificationConfiguration.modificationToSave'),
             buttons: [
                 {
                     label: this.translationService.getTranslation('button.doNotSave'),

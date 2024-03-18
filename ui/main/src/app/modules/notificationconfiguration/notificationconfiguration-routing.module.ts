@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,16 +9,18 @@
 
 import {NgModule} from '@angular/core';
 import {CanDeactivateFn, RouterModule, Routes} from '@angular/router';
-import {FeedconfigurationComponent} from './feedconfiguration.component';
+import {NotificationConfigurationComponent} from './notificationconfiguration.component';
 
-const canDeactivate: CanDeactivateFn<FeedconfigurationComponent> = (component: FeedconfigurationComponent) => {
-    return component.canDeactivate ? component.canDeactivate() : true;
+const canDeactivate: CanDeactivateFn<NotificationConfigurationComponent> = (
+    component: NotificationConfigurationComponent
+) => {
+    return component.notificationConfigurationView.canUserExit();
 };
 
 const routes: Routes = [
     {
         path: '',
-        component: FeedconfigurationComponent,
+        component: NotificationConfigurationComponent,
         canDeactivate: [canDeactivate]
     }
 ];
@@ -27,4 +29,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class FeedconfigurationRoutingModule {}
+export class NotificationConfigurationRoutingModule {}

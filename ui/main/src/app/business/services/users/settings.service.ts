@@ -11,6 +11,7 @@ import {Observable} from 'rxjs';
 import {SettingsServer} from '../../server/settings.server';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {CurrentUserStore} from '../../store/current-user.store';
+import {ServerResponse} from 'app/business/server/serverResponse';
 
 export class SettingsService {
     private static userId: string;
@@ -25,7 +26,7 @@ export class SettingsService {
         return SettingsService.settingsServer.getUserSettings(this.userId);
     }
 
-    static patchUserSettings(settings: any): Observable<any> {
+    static patchUserSettings(settings: any): Observable<ServerResponse<any>> {
         logger.debug('Patch settings : ' + JSON.stringify(settings), LogOption.REMOTE);
         return SettingsService.settingsServer.patchUserSettings(this.userId, settings);
     }

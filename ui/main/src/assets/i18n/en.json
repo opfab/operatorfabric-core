@@ -366,7 +366,7 @@
     "savingInProgress": "Saving in progress...",
     "noAreaAvailable": "No activity area available"
   },
-  "feedConfiguration": {
+  "notificationConfiguration": {
     "title": "NOTIFICATION CONFIGURATION",
     "information": "INFORMATION",
     "modificationToSave": "There are pending modifications, do you want to save?",
