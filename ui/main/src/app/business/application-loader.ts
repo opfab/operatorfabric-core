@@ -42,6 +42,7 @@ import {Utilities} from './common/utilities';
 import {ModalService} from './services/modal.service';
 import {SessionManagerService} from './services/session-manager.service';
 import {SoundNotificationService} from './services/notifications/sound-notification.service';
+import {I18n} from '@ofModel/i18n.model';
 
 declare const opfab: any;
 
@@ -54,7 +55,6 @@ export class ApplicationLoader {
     public userLogin;
 
     private appLoadedInAnotherTabComponent: ApplicationLoadingComponent;
-    private accountAlreadyUsedComponent: ApplicationLoadingComponent;
     private activityAreaChoiceAfterLoginComponent: ApplicationLoadingComponent;
     private methodToAuthenticate: Function;
     private opfabEventStreamServer;
@@ -94,10 +94,6 @@ export class ApplicationLoader {
 
     public setMethodToAuthenticate(methodToAuthenticate: any) {
         this.methodToAuthenticate = methodToAuthenticate;
-    }
-
-    public setAccountAlreadyUsedComponent(accountAlreadyUsedComponent: ApplicationLoadingComponent) {
-        this.accountAlreadyUsedComponent = accountAlreadyUsedComponent;
     }
 
     public setActivityAreaChoiceAfterLoginComponent(
@@ -221,8 +217,26 @@ export class ApplicationLoader {
 
     private async isUserToBeDisconnectedBecauseLoginAlreadyInUse(): Promise<boolean> {
         this.loadingInProgress = false;
-        const isAccountAlreadyUsed = !(await this.accountAlreadyUsedComponent.execute());
-        if (isAccountAlreadyUsed) return true;
+        const isAccountAlreadyUsed = await firstValueFrom(
+            UserService.willNewSubscriptionDisconnectAnExistingSubscription()
+        );
+
+        if (isAccountAlreadyUsed) {
+            logger.info(`Login ${this.userLogin} is already connected`, LogOption.LOCAL_AND_REMOTE);
+            const confirmLogin = await ModalService.openConfirmationModal(
+                undefined,
+                new I18n('login.confirmationBecauseAccountIsAreadyUsed', {login: this.userLogin})
+            );
+            if (confirmLogin) {
+                logger.info(`Login as ${this.userLogin} even if account is already used`, LogOption.REMOTE);
+                return false;
+            } else {
+                logger.info(`Logout with user ${this.userLogin} because account already used`, LogOption.REMOTE);
+                SessionManagerService.logout();
+                return true;
+            }
+        }
+        logger.info(`Login ${this.userLogin} is not already used`, LogOption.LOCAL_AND_REMOTE);
         this.loadingInProgress = true;
         return false;
     }
