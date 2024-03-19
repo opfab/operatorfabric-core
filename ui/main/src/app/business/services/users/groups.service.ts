@@ -79,6 +79,11 @@ export class GroupsService {
         return GroupsService._groups;
     }
 
+    public static getGroup(groupId): Group {
+        const group = GroupsService._groups.find((group) => group.id === groupId);
+        return group;
+    }
+
     public static getCachedValues(): Array<Group> {
         return GroupsService.getGroups();
     }

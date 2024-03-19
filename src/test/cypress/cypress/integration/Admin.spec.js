@@ -7,13 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {AgGridCommands} from "../support/agGridCommands";
-import {ScriptCommands} from "../support/scriptCommands";
-
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {AgGridCommands} from '../support/agGridCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('AdmininstrationPages', () => {
-
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
@@ -86,7 +84,7 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-lastName').type(' updated');
 
-        cy.get('#opfab-comment').should('have.value', 'comment')
+        cy.get('#opfab-comment').should('have.value', 'comment');
 
         cy.get('#opfab-groups').click();
         // Deselect old group
@@ -119,7 +117,6 @@ describe('AdmininstrationPages', () => {
 
         // Delete previously created user
         agGrid.clickCell('ag-grid-angular', 8, 6, 'of-action-cell-renderer');
-
 
         cy.get('#opfab-btn-ok').click();
 
@@ -209,7 +206,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-roles').click();
 
-
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
         // Add Label2
         cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label2');
@@ -219,7 +215,6 @@ describe('AdmininstrationPages', () => {
         cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
         cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
 
-
         cy.get('#opfab-parents').click();
         // Deselect old parents
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
@@ -228,8 +223,11 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-parents').click();
 
         cy.get('#opfab-entity-users').find('.vscomp-option.selected').should('have.length', 1);
-        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator1_it');
- 
+        cy.get('#opfab-entity-users')
+            .find('.vscomp-option.selected')
+            .eq(0)
+            .should('have.attr', 'data-value', 'operator1_it');
+
         cy.get('#opfab-admin-entity-btn-save').click();
 
         // Check entity is updated
@@ -266,9 +264,18 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-entity-users').find('.vscomp-option.selected').should('have.length', 4);
         cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'admin');
-        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(1).should('have.attr', 'data-value', 'operator1_crisisroom');
-        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(2).should('have.attr', 'data-value', 'operator2_fr');
-        cy.get('#opfab-entity-users').find('.vscomp-option.selected').eq(3).should('have.attr', 'data-value', 'operator4_fr');
+        cy.get('#opfab-entity-users')
+            .find('.vscomp-option.selected')
+            .eq(1)
+            .should('have.attr', 'data-value', 'operator1_crisisroom');
+        cy.get('#opfab-entity-users')
+            .find('.vscomp-option.selected')
+            .eq(2)
+            .should('have.attr', 'data-value', 'operator2_fr');
+        cy.get('#opfab-entity-users')
+            .find('.vscomp-option.selected')
+            .eq(3)
+            .should('have.attr', 'data-value', 'operator4_fr');
     });
 
     it('List, add, edit, delete groups', () => {
@@ -340,7 +347,10 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-description').type(' updated');
 
         cy.get('#opfab-group-users').find('.vscomp-option.selected').should('have.length', 1);
-        cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator1_it');
+        cy.get('#opfab-group-users')
+            .find('.vscomp-option.selected')
+            .eq(0)
+            .should('have.attr', 'data-value', 'operator1_it');
 
         cy.get('#opfab-perimeters').click();
         // Deselect old perimeter
@@ -349,7 +359,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-perimeters').click();
 
-    
         cy.get('#opfab-permissions').click();
         // Deselect old permission
         cy.get('#opfab-permissions').find('.vscomp-option-text').eq(2).click({force: true});
@@ -372,7 +381,6 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
 
-
         // Delete previously created group
         agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
 
@@ -385,16 +393,20 @@ describe('AdmininstrationPages', () => {
 
         agGrid.countTableRows('ag-grid-angular', 7);
 
+        // Edit RTE group to check users list
+        agGrid.clickCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
 
-         // Edit RTE group to check users list
-         agGrid.clickCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
-
-         cy.get('of-edit-group-modal').should('exist');
-         cy.get('.modal-title').should('contain.text', 'RTE');
-         cy.get('#opfab-group-users').find('.vscomp-option.selected').should('have.length', 2);
-         cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(0).should('have.attr', 'data-value', 'operator3_fr');
-         cy.get('#opfab-group-users').find('.vscomp-option.selected').eq(1).should('have.attr', 'data-value', 'operator5_fr');
-
+        cy.get('of-edit-group-modal').should('exist');
+        cy.get('.modal-title').should('contain.text', 'RTE');
+        cy.get('#opfab-group-users').find('.vscomp-option.selected').should('have.length', 2);
+        cy.get('#opfab-group-users')
+            .find('.vscomp-option.selected')
+            .eq(0)
+            .should('have.attr', 'data-value', 'operator3_fr');
+        cy.get('#opfab-group-users')
+            .find('.vscomp-option.selected')
+            .eq(1)
+            .should('have.attr', 'data-value', 'operator5_fr');
     });
 
     it('List, add, edit, delete perimeters', () => {
@@ -504,7 +516,7 @@ describe('AdmininstrationPages', () => {
         // We still have 12 rows
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
 
-        agGrid.countTableRows('ag-grid-angular', 2);    // we are on the second page
+        agGrid.countTableRows('ag-grid-angular', 2); // we are on the second page
 
         // We check the perimeter is updated
         agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'testperimeter');
@@ -554,7 +566,6 @@ describe('AdmininstrationPages', () => {
 
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', '1');
 
-
         // Check the page has 9 rows
         agGrid.countTableRows('ag-grid-angular', 9);
 
@@ -592,7 +603,7 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
 
         // Upload test file
-        cy.get('#add-item').click()
+        cy.get('#add-item').click();
         cy.get('#fileUploader').selectFile('cypress/fixtures/businessDataTest', {force: true});
 
         cy.waitDefaultTime();
@@ -617,9 +628,9 @@ describe('AdmininstrationPages', () => {
             expect(files.length).to.equal(1);
             // check file name
             expect(files[0]).to.match(/^services.json/);
-            cy.readFile('./cypress/downloads/services.json').then(labels => {
-                expect(labels[0].label).to.eq("Group 1")
-                expect(labels[1].label).to.eq("Group 2")
+            cy.readFile('./cypress/downloads/services.json').then((labels) => {
+                expect(labels[0].label).to.eq('Group 1');
+                expect(labels[1].label).to.eq('Group 2');
             });
         });
 
@@ -627,8 +638,6 @@ describe('AdmininstrationPages', () => {
     });
 
     describe('Check export files', function () {
-
-
         before('Clean export directory', function () {
             script.cleanDownloadsDir();
         });
@@ -659,7 +668,7 @@ describe('AdmininstrationPages', () => {
                 // check file name
                 expect(files[0]).to.match(/^user_export_\d*\.xlsx/);
                 // check file content
-                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
                     expect(rows.length).to.equal(18);
 
                     expect(rows[0].LOGIN).to.equal('admin');
@@ -668,18 +677,16 @@ describe('AdmininstrationPages', () => {
                     expect(rows[0].GROUPS).to.equal('ADMINISTRATORS');
                     expect(rows[0].ENTITIES).to.equal('Control Center FR North, Control Center FR South');
 
-
                     expect(rows[1].LOGIN).to.equal('operator1_fr');
                     expect(rows[1]['FIRST NAME']).to.equal('John');
                     expect(rows[1]['LAST NAME']).to.equal('Doe');
-                    expect(rows[1].GROUPS).to.equal('Dispatcher,ReadOnly');
+                    expect(rows[1].GROUPS).to.equal('Dispatcher, ReadOnly');
                     expect(rows[1].ENTITIES).to.equal('Control Center FR North');
-                })
-            })
-        })
+                });
+            });
+        });
 
         it('Check entities export', function () {
-
             opfab.loginWithUser('admin');
             opfab.navigateToAdministration();
 
@@ -701,7 +708,7 @@ describe('AdmininstrationPages', () => {
                 // check file name
                 expect(files[0]).to.match(/^entity_export_\d*\.xlsx/);
                 // check file content
-                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
                     expect(rows.length).to.equal(16);
 
                     expect(rows[0].ID).to.equal('ENTITY1_FR');
@@ -713,12 +720,11 @@ describe('AdmininstrationPages', () => {
                     expect(rows[4].NAME).to.equal('French Control Centers');
                     expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
                     expect(rows[4]['PARENT ENTITIES']).to.equal('');
-                })
-            })
-        })
+                });
+            });
+        });
 
         it('Check groups export', function () {
-
             opfab.loginWithUser('admin');
             opfab.navigateToAdministration();
 
@@ -731,7 +737,6 @@ describe('AdmininstrationPages', () => {
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
 
-
             cy.waitDefaultTime();
 
             // check download folder contains the export file
@@ -741,26 +746,27 @@ describe('AdmininstrationPages', () => {
                 // check file name
                 expect(files[0]).to.match(/^group_export_\d*\.xlsx/);
                 // check file content
-                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
                     expect(rows.length).to.equal(7);
 
                     expect(rows[0].ID).to.equal('ADMIN');
                     expect(rows[0].NAME).to.equal('ADMINISTRATORS');
                     expect(rows[0].DESCRIPTION).to.equal('The admin group');
                     expect(rows[0].TYPE).to.be.undefined;
-                    expect(rows[0].PERIMETERS).to.be.undefined;
+                    expect(rows[0].PERIMETERS).to.equal('');
 
                     expect(rows[2].ID).to.equal('Dispatcher');
                     expect(rows[2].NAME).to.equal('Dispatcher');
                     expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
                     expect(rows[2].TYPE).to.be.undefined;
-                    expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,externalRecipent,gridCooperation,messageOrQuestionExample,question,supervisor,taskAdvancedExample,taskExample');
-                })
-            })
-        })
+                    expect(rows[2].PERIMETERS).to.equal(
+                        'conferenceAndITIncidentExample, cypress, defaultProcess, externalRecipent, gridCooperation, messageOrQuestionExample, question, supervisor, taskAdvancedExample, taskExample'
+                    );
+                });
+            });
+        });
 
         it('Check perimeters export', function () {
-
             opfab.loginWithUser('admin');
             opfab.navigateToAdministration();
 
@@ -782,18 +788,19 @@ describe('AdmininstrationPages', () => {
                 // check file name
                 expect(files[0]).to.match(/^perimeter_export_\d*\.xlsx/);
                 // check file content
-                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
                     expect(rows.length).to.equal(11);
 
                     expect(rows[0].ID).to.equal('conferenceAndITIncidentExample');
                     expect(rows[0].PROCESS).to.equal('conferenceAndITIncidentExample');
-                    expect(rows[0]['STATE RIGHTS']).to.equal('{"state":"Conference Call ☏","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"IT Incident","right":"ReceiveAndWrite","filteringNotificationAllowed":true}');
-                })
-            })
-        })
+                    expect(rows[0]['STATE RIGHTS']).to.equal(
+                        '{"state":"Conference Call ☏","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"IT Incident","right":"ReceiveAndWrite","filteringNotificationAllowed":true}'
+                    );
+                });
+            });
+        });
 
         it('Check business data export', function () {
-
             opfab.loginWithUser('admin');
             opfab.navigateToAdministration();
 
@@ -806,7 +813,6 @@ describe('AdmininstrationPages', () => {
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
 
-
             cy.waitDefaultTime();
 
             // check download folder contains the export file
@@ -816,13 +822,12 @@ describe('AdmininstrationPages', () => {
                 // check file name
                 expect(files[0]).to.match(/^businessData_export_\d*\.xlsx/);
                 // check file content
-                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
                     expect(rows.length).to.equal(2);
                     expect(rows[0]['BUSINESS DATA']).to.equal('services');
                     expect(rows[1]['BUSINESS DATA']).to.equal('message-and-question-list');
-                })
-            })
-        })
-    })
-
+                });
+            });
+        });
+    });
 });

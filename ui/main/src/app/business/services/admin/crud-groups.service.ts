@@ -7,12 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {GroupsService} from '../users/groups.service';
+import {CrudUtilities} from './crudUtils';
 
 export class CrudGroupsService {
     getAll(): Observable<Array<any>> {
-        return GroupsService.getAll();
+        return GroupsService.getAll().pipe(
+            map((groups) => {
+                return groups.map((group) => ({
+                    ...group,
+                    perimeters: CrudUtilities.formatArrayToString(group.perimeters),
+                    permissions: CrudUtilities.formatArrayToString(group.permissions)
+                }));
+            })
+        );
     }
 
     update(data: any): Observable<any> {
@@ -24,6 +33,11 @@ export class CrudGroupsService {
     }
 
     getCachedValues(): Array<any> {
-        return GroupsService.getCachedValues();
+        const groups = GroupsService.getCachedValues();
+        return groups.map((group) => ({
+            ...group,
+            perimeters: CrudUtilities.formatArrayToString(group.perimeters),
+            permissions: CrudUtilities.formatArrayToString(group.permissions)
+        }));
     }
 }

@@ -95,9 +95,9 @@ export class EditUserModalComponent implements OnInit {
             // Otherwise, we use the selectedItems property of the of-multiselect component
             UserService.getUser(login).subscribe((user) => {
                 this.selectedEntities = user.entities;
+                this.selectedGroups = user.groups;
                 this.changeDetector.markForCheck();
             });
-            this.selectedGroups = this.row.groups;
         }
 
         // Initialize value lists for Entities and Groups inputs

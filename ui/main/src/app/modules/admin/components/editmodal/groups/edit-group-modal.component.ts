@@ -42,7 +42,7 @@ export class EditGroupModalComponent implements OnInit {
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     usersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
-    selectedGroupPermissions = [];
+    selectedGroupPermissions: Array<PermissionEnum> = [];
     selectedUsers = [];
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
@@ -109,8 +109,9 @@ export class EditGroupModalComponent implements OnInit {
             const {id, name, description} = this.row;
             this.groupForm.patchValue({id, name, description}, {onlySelf: false});
             // Otherwise, we use the selectedItems property of the of-multiselect component
-            this.selectedPerimeters = this.row.perimeters;
-            this.selectedGroupPermissions = this.row.permissions;
+            const group = GroupsService.getGroup(id);
+            this.selectedPerimeters = group.perimeters;
+            this.selectedGroupPermissions = group.permissions;
         }
 
         UserService.getAll().subscribe((users) => {

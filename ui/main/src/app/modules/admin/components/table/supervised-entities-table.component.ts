@@ -24,7 +24,7 @@ import {SupervisedEntitiesService} from 'app/business/services/users/supervised-
 export class SupervisedEntitiesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.SUPERVISED_ENTITY;
     fields = [
-        new Field('entityName', 3, null, null, 'entityNameColumn'),
+        new Field('entityName', 3, 'idCellRenderer', null, 'entityNameColumn'),
         new Field('supervisors', 5, null, null, 'supervisorsColumn')
     ];
     idField = 'entityId';
