@@ -37,6 +37,7 @@ export class EditSupervisedEntityModalComponent implements OnInit {
         labelKey: 'admin.input.supervisedEntity.entityName',
         placeholderKey: 'admin.input.selectEntityText',
         multiple: false,
+        search: true,
         sortOptions: true
     };
     supervisorsMultiSelectOptions: Array<MultiSelectOption> = [];
