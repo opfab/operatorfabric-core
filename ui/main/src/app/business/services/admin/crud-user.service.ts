@@ -17,6 +17,7 @@ export class CrudUserService {
             map((users) => {
                 return users.map((user) => ({
                     ...user,
+                    groups: CrudUtilities.formatGroupIdsToNames(user.groups),
                     entities: CrudUtilities.formatEntityIdsToNames(user.entities)
                 }));
             })

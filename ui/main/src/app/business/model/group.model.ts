@@ -7,10 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {PermissionEnum} from './permission.model';
+
 export class Group {
     public constructor(
         readonly id: string,
         readonly name: string,
-        readonly description: string
+        readonly description: string,
+        readonly perimeters: string[],
+        readonly permissions: PermissionEnum[]
     ) {}
 }

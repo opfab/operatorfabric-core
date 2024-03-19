@@ -26,8 +26,8 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
         new Field('id', 4, 'idCellRenderer'),
         new Field('name', 6),
         new Field('description', 5),
-        new Field('perimeters', 8, 'perimetersCellRenderer'),
-        new Field('permissions', 6, 'arrayCellRenderer', null, 'permissionsColumn')
+        new Field('perimeters', 8),
+        new Field('permissions', 6, null, null, 'permissionsColumn')
     ];
     idField = 'id';
     actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];

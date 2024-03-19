@@ -15,7 +15,6 @@ import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {CrudService} from 'app/business/services/admin/crud-service';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
-import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
@@ -25,17 +24,15 @@ import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {saveAs} from 'file-saver-es';
-import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
-import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 
 export class ActionColumn {
     colId: any;
@@ -108,12 +105,9 @@ export abstract class AdminTableDirective implements OnDestroy {
             },
             components: {
                 actionCellRenderer: ActionCellRendererComponent,
-                arrayCellRenderer: ArrayCellRendererComponent,
-                groupCellRenderer: GroupCellRendererComponent,
-                perimetersCellRenderer: PerimetersCellRendererComponent,
+                idCellRenderer: IdCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
-                roleCellRenderer: RoleCellRendererComponent,
-                idCellRenderer: IdCellRendererComponent
+                roleCellRenderer: RoleCellRendererComponent
             },
             domLayout: 'autoHeight',
             rowHeight: 50,
@@ -397,7 +391,7 @@ export abstract class AdminTableDirective implements OnDestroy {
                                 ? this.translateService.instant(
                                       this.i18NPrefix + this.tableType + '.' + line.data[field.name]
                                   )
-                                : this.getNameFromId(line.data[field.name], field.cellRendererName);
+                                : line.data[field.name];
                 });
                 exportData.push(item);
             }
