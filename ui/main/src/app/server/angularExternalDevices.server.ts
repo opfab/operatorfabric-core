@@ -25,6 +25,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     readonly configurationsUrl: string;
     readonly devicesUrl: string;
     readonly devicesConfigurationsUrl: string;
+    readonly signalMappingUrl: string;
 
     constructor(private httpClient: HttpClient) {
         super();
@@ -33,6 +34,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
         this.devicesUrl = this.externalDevicesUrl + '/devices';
         this.devicesConfigurationsUrl = this.configurationsUrl + '/devices';
+        this.signalMappingUrl = this.configurationsUrl + '/signals';
     }
 
     sendNotification(notification: Notification): Observable<ServerResponse<any>> {
@@ -90,5 +92,17 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
 
     deleteDevice(deviceId: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.delete<string>(`${this.devicesConfigurationsUrl}/${deviceId}`));
+    }
+
+    updateSignalMapping(mapping: SignalMapping): Observable<ServerResponse<any>> {
+        const supportedSignals = {};
+
+        mapping.supportedSignals.forEach((v, k) => {
+            supportedSignals[k] = v;
+        });
+
+        return this.processHttpResponse(
+            this.httpClient.post<any>(`${this.signalMappingUrl}`, {id: mapping.id, supportedSignals: supportedSignals})
+        );
     }
 }

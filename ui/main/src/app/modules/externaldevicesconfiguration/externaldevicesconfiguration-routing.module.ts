@@ -14,6 +14,7 @@ import {DevicesTableComponent} from './table/devices.table.component';
 import {UsersTableComponent} from './table/users.table.component';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
+import {SignalMappingsTableComponent} from './table/signal-mappings.table.component';
 
 const defaultPath = 'devices';
 
@@ -36,7 +37,10 @@ const routes: Routes = [
                 path: 'users',
                 component: UsersTableComponent
             },
-
+            {
+                path: 'signal-mappings',
+                component: SignalMappingsTableComponent
+            },
             {path: '**', redirectTo: defaultPath}
         ]
     }

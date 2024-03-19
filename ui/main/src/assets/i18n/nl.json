@@ -615,6 +615,7 @@
       "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "addDevice": "NIEUW APPARAAT TOEVOEGEN",
+      "addSignalMapping": "NIEUW SIGNAALTOEWIJZINGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen",
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
@@ -625,15 +626,23 @@
       },
       "port": {
         "required": "Port is vereist."
+      },
+      "signalMapping": { 
+        "required": "Signaaltoewijzingen is vereist."
       }
     },
     "tabs": {
       "users": "Gebruikers Configuratie",
-      "devices": "Externe Apparaten"
+      "devices": "Externe Apparaten",
+      "signalMappings": "Signaaltoewijzingen"
     },
     "error": {
       "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
       "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
+    },
+    "signalMappings": {
+      "id": "ID",
+      "supportedSignals": "ONDERSTEUNDE SIGNALEN"
     },
     "userLogin": "GEBRUIKERSNAAM",
     "externalDeviceIds": "APPARATEN",

@@ -21,6 +21,8 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
 import {UsersTableComponent} from './table/users.table.component';
 import {DevicesTableComponent} from './table/devices.table.component';
 import {ExternaldevicesModalComponent} from './editModal/externaldevices-modal.component';
+import {SignalMappingsTableComponent} from './table/signal-mappings.table.component';
+import {SignalMappingsModalComponent} from './editModal/signal-mappings-modal.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +30,9 @@ import {ExternaldevicesModalComponent} from './editModal/externaldevices-modal.c
         ExternaldevicesconfigurationModalComponent,
         ExternaldevicesModalComponent,
         UsersTableComponent,
-        DevicesTableComponent
+        DevicesTableComponent,
+        SignalMappingsTableComponent,
+        SignalMappingsModalComponent
     ],
     imports: [
         FormsModule,

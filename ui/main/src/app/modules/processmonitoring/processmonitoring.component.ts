@@ -254,7 +254,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         });
         this.columnFilters = [];
         this.firstQueryHasBeenDone = false;
-        console.log('restForm');
         this.setDateFilterBounds();
     }
 

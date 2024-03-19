@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {DeviceConfiguration, Notification, UserConfiguration} from '@ofModel/external-devices.model';
+import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
@@ -52,6 +52,9 @@ export class ExternalDevicesServerMock implements ExternalDevicesServer {
         throw new Error('Method not implemented.');
     }
     deleteDevice(deviceId: string): Observable<ServerResponse<any>> {
+        throw new Error('Method not implemented.');
+    }
+    updateSignalMapping(mapping: SignalMapping): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');
     }
 }

@@ -615,6 +615,7 @@
       "add": "AJOUTER UNE NOUVELLE CONFIGURATION",
       "edit": "MODIFIER LA CONFIGURATION",
       "addDevice": "AJOUTER UN NOUVEAU PÉRIPHÉRIQUE",
+      "addSignalMapping": "AJOUTER UN NOUVEAU MAPPING DE SIGNAUX",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés.",
@@ -625,15 +626,23 @@
       },
       "port": {
         "required": "Port est obligatoire."
+      },
+      "signalMapping": { 
+        "required": "Mapping de signaux est obligatoire."
       }
     },
     "tabs": {
       "users": "Configuration des utilisateurs",
-      "devices": "Périphériques externes"
+      "devices": "Périphériques externes",
+      "signalMappings": "Mapping de signaux"
     },
     "error": {
       "errorWhenEnablingDevice": "Une erreur est survenue en essayant d'activer ce périphérique. Veuillez réessayer plus tard.",
       "errorWhenDisablingDevice": "Une erreur est survenue en essayant de désactiver ce périphérique. Veuillez réessayer plus tard."
+    },
+    "signalMappings": {
+      "id": "ID",
+      "supportedSignals": "SIGNAUX SUPPORTÉS"
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
