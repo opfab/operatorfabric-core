@@ -35,6 +35,7 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
 import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
 import {EditSupervisedEntityModalComponent} from './components/editmodal/supervised-entities/edit-supervised-entity-modal.component';
 import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
+import {SignalMappingsCellRendererComponent} from './components/cell-renderers/signal-mappings-cell-renderer.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import {IdCellRendererComponent} from './components/cell-renderers/id-cell-rende
         ActionCellRendererComponent,
         StateRightsCellRendererComponent,
         RoleCellRendererComponent,
-        IdCellRendererComponent
+        IdCellRendererComponent,
+        SignalMappingsCellRendererComponent
     ],
 
     imports: [

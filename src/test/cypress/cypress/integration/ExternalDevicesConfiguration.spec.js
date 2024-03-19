@@ -94,6 +94,38 @@ describe('ExternalDevicesconfigurationPage', () => {
 
     })
 
+    it('Add new signal mapping', () => {
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
+        // Go to the signal mapping screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-signal-mapping-tab').click();
+
+        agGrid.countTableRows('ag-grid-angular', 2);
+
+        cy.get('#addItem').click();
+        cy.get('of-signal-mappings-modal').should('exist');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-signalMappingId').type('test_signal_mapping');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-signal-mapping-alarm').type('1');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-signal-mapping-action').type('2');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-signal-mapping-information').type('3');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
+        cy.get('#opfab-signal-mapping-compliant').type('4');
+
+        cy.get('#opfab-admin-edit-btn-add').should('be.enabled');
+        cy.get('#opfab-admin-edit-btn-add').click();
+        cy.get('of-externaldevices-modal').should('not.exist');
+        agGrid.countTableRows('ag-grid-angular', 3);
+    })
+
     it('List, add, edit, delete user device configuration', () => {
         opfab.loginWithUser('admin');
         opfab.openExternalDevices();

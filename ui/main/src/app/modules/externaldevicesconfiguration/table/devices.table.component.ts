@@ -14,10 +14,11 @@ import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externa
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
 
 @Component({
     selector: 'of-externaldevices',
-    templateUrl: './externaldevices-directive.html',
+    templateUrl: './externaldevicesconfiguration-directive.html',
     styleUrls: ['../externaldevicesconfiguration.component.scss']
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {
@@ -28,6 +29,8 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
     ];
 
     canAddItems = true;
+    addItemLabel = 'externalDevicesConfiguration.input.addDevice';
+    addDeviceModalComponent = ExternaldevicesModalComponent;
 
     queryData(): Observable<any[]> {
         return ExternalDevicesService.queryAllDevices();

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -13,7 +13,7 @@
         <div *ngIf="canAddItems" [hidden]="this.isLoadingData">
             <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
                 <em class="fas fa-plus-circle"></em></a>
-                <span>&nbsp;<label for="addItem" translate> externalDevicesConfiguration.input.add </label></span>
+                <span>&nbsp;<label for="addItem" translate> {{addItemLabel}} </label></span>
             </div>
             <br>
         </div>

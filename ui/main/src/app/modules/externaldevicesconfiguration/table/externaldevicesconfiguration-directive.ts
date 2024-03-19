@@ -18,9 +18,9 @@ import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-r
 import {Observable} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
 import {ExternaldevicesconfigurationModalComponent} from '../editModal/externaldevicesconfiguration-modal.component';
-import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {SignalMappingsCellRendererComponent} from 'app/modules/admin/components/cell-renderers/signal-mappings-cell-renderer.component';
 
 @Directive()
 @Injectable()
@@ -31,7 +31,6 @@ export abstract class ExternalDevicesConfigurationDirective {
     public pageSize = 10;
     public page = 1;
     private columnDefs: ColDef[] = [];
-    addDeviceModalComponent = ExternaldevicesModalComponent;
     editModalComponent = ExternaldevicesconfigurationModalComponent;
     modalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it
@@ -42,6 +41,7 @@ export abstract class ExternalDevicesConfigurationDirective {
 
     protected fields: Field[];
     protected canAddItems: boolean;
+    protected addItemLabel = 'externalDevicesConfiguration.input.add';
     private isLoadingData = true;
 
     constructor(
@@ -59,7 +59,8 @@ export abstract class ExternalDevicesConfigurationDirective {
             },
             components: {
                 actionCellRenderer: ActionCellRendererComponent,
-                checkboxCellRenderer: CheckboxCellRendererComponent
+                checkboxCellRenderer: CheckboxCellRendererComponent,
+                signalMappingsCellRenderer: SignalMappingsCellRendererComponent
             },
             pagination: true,
             suppressCellFocus: true,
@@ -67,7 +68,7 @@ export abstract class ExternalDevicesConfigurationDirective {
             suppressPaginationPanel: true,
             suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
-            rowHeight: 45,
+            getRowHeight: this.getRowHeight,
             columnTypes: {
                 dataColumn: {
                     sortable: true,
@@ -94,6 +95,15 @@ export abstract class ExternalDevicesConfigurationDirective {
                     flex: 1,
                     cellRenderer: 'checkboxCellRenderer',
                     resizable: false
+                },
+                signalMappingsColumn: {
+                    field: '',
+                    sortable: false,
+                    filter: false,
+                    minWidth: 90,
+                    flex: 1,
+                    cellRenderer: 'signalMappingsCellRenderer',
+                    resizable: false
                 }
             },
             getLocaleText: function (params) {
@@ -106,6 +116,9 @@ export abstract class ExternalDevicesConfigurationDirective {
         };
     }
 
+    getRowHeight(): number {
+        return 45;
+    }
     public localizeHeader(parameters: ICellRendererParams): string {
         const headerIdentifier = parameters.colDef.headerName;
         return this.translateService.instant(this.i18NPrefix + headerIdentifier);
@@ -246,5 +259,6 @@ export class Field {
 export enum FieldType {
     DATA_COLUMN = 'dataColumn',
     ACTION_COLUMN = 'actionColumn',
-    CHECKBOX_COLUMN = 'checkboxColumn'
+    CHECKBOX_COLUMN = 'checkboxColumn',
+    SIGNAL_MAPPINGS = 'signalMappingsColumn'
 }

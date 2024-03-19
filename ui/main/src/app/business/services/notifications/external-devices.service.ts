@@ -9,7 +9,7 @@
 
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {DeviceConfiguration, Notification, UserConfiguration} from '@ofModel/external-devices.model';
+import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
 
 import {ErrorService} from 'app/business/services/error-service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
@@ -53,7 +53,7 @@ export class ExternalDevicesService {
             .pipe(map((serverResponse) => serverResponse.data));
     }
 
-    static queryAllSignalMappings(): Observable<DeviceConfiguration[]> {
+    static queryAllSignalMappings(): Observable<SignalMapping[]> {
         return ExternalDevicesService.externalDevicesServer
             .queryAllSignalMappings()
             .pipe(map((serverResponse) => serverResponse.data));
@@ -98,6 +98,12 @@ export class ExternalDevicesService {
     static updateDevice(device: DeviceConfiguration): Observable<DeviceConfiguration> {
         return ExternalDevicesService.externalDevicesServer
             .updateDevice(device)
+            .pipe(map((serverResponse) => serverResponse.data));
+    }
+
+    static updateSignalMappings(mapping: SignalMapping) {
+        return ExternalDevicesService.externalDevicesServer
+            .updateSignalMapping(mapping)
             .pipe(map((serverResponse) => serverResponse.data));
     }
 }
