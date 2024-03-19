@@ -33,7 +33,6 @@ import {AlertComponent} from './modules/core/alert/alert.component';
 import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
 import {SessionEndComponent} from './modules/core/session-end/session-end.component';
 import {ActivityAreaChoiceAfterLoginComponent} from './modules/core/application-loading/activityarea-choice-after-login/activityarea-choice-after-login.component';
-import {AccountAlreadyUsedComponent} from './modules/core/application-loading/account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading/app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
@@ -122,7 +121,6 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         ConnectionLostComponent,
         SessionEndComponent,
         ActivityAreaChoiceAfterLoginComponent,
-        AccountAlreadyUsedComponent,
         AppLoadedInAnotherTabComponent,
         ApplicationLoadingComponent,
         ReloadRequiredComponent,

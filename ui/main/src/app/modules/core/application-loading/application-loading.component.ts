@@ -11,7 +11,6 @@ import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {LogLevel, LoggerService, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {firstValueFrom, Subject, tap} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
-import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -49,7 +48,6 @@ export class ApplicationLoadingComponent implements OnInit {
 
     @ViewChild('activityAreaChoiceAfterLogin')
     activityAreaChoiceAfterLoginComponent: ActivityAreaChoiceAfterLoginComponent;
-    @ViewChild('accountAlreadyUsed') accountAlreadyUsedComponent: AccountAlreadyUsedComponent;
     @ViewChild('appLoadedInAnotherTab') appLoadedInAnotherTabComponent: AppLoadedInAnotherTabComponent;
 
     public applicationLoaded = false;
@@ -112,7 +110,6 @@ export class ApplicationLoadingComponent implements OnInit {
     private async loadApplication(): Promise<void> {
         try {
             this.applicationLoader.setAppLoadedInAnotherTabComponent(this.appLoadedInAnotherTabComponent);
-            this.applicationLoader.setAccountAlreadyUsedComponent(this.accountAlreadyUsedComponent);
             this.applicationLoader.setActivityAreaChoiceAfterLoginComponent(this.activityAreaChoiceAfterLoginComponent);
             this.applicationLoader.setMethodToAuthenticate(this.authenticate.bind(this));
             await this.applicationLoader.startOpfab();

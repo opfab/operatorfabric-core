@@ -9,7 +9,7 @@
 <div class="modal-header" *ngIf="modalConfig.title?.length>0">
   <div>{{ modalConfig.title }}</div>
 </div>
-<div class="modal-body text-center" id="opfab-modal-body">
+<div class="modal-body text-center" style="white-space: pre-wrap;" id="opfab-modal-body">
   <p>{{ modalConfig.message }}</p>
   <span *ngFor="let button of modalConfig.buttons">
     <button id="opfab-btn-{{ button.id }}" type="button"
