@@ -27,6 +27,13 @@ class SupervisorDatabaseServiceStub extends SupervisorDatabaseService {
         }
         this.supervisedEntities.push(supervisedEntity);
     }
+
+    public async deleteSupervisedEntity(id: string): Promise<void> {
+        const index = this.supervisedEntities.findIndex((entity) => entity.entityId === id);
+        if (index >= 0) {
+            this.supervisedEntities.splice(index);
+        }
+    }
 }
 
 function getDefaultConfig(): ConfigDTO {
@@ -98,6 +105,28 @@ describe('config service', function () {
         const configService = new ConfigService(supervisorDatabaseService, defaultConfig, null, logger);
 
         await configService.synchronizeWithMongoDb();
+        expect(configService.getSupervisorConfig().entitiesToSupervise).toEqual([
+            {entityId: 'ENTITY4', supervisors: ['ENTITY1']}
+        ]);
+    });
+
+    it('Delete supervised Entity', async function () {
+        const defaultConfig = getDefaultConfig();
+        const supervisorDatabaseService = new SupervisorDatabaseServiceStub();
+        supervisorDatabaseService.supervisedEntities = [
+            {entityId: 'ENTITY4', supervisors: ['ENTITY1']},
+            {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
+        ];
+
+        const configService = new ConfigService(supervisorDatabaseService, defaultConfig, null, logger);
+
+        await configService.synchronizeWithMongoDb();
+        expect(configService.getSupervisorConfig().entitiesToSupervise).toEqual([
+            {entityId: 'ENTITY4', supervisors: ['ENTITY1']},
+            {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
+        ]);
+
+        await configService.deleteSupervisedEntity('ENTITY3');
         expect(configService.getSupervisorConfig().entitiesToSupervise).toEqual([
             {entityId: 'ENTITY4', supervisors: ['ENTITY1']}
         ]);
