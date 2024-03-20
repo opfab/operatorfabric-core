@@ -10,6 +10,7 @@
 import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
 import {MongoConfig} from './MongoConfig';
+import {EntityToSupervise} from '../application/entityToSupervise';
 
 export default class SupervisorDatabaseService {
     logger: Logger;
@@ -65,7 +66,7 @@ export default class SupervisorDatabaseService {
         return await this.mongoDB.collection('supervisedEntities').find().toArray();
     }
 
-    public async saveSupervisedEntity(supervisedEntity: any): Promise<void> {
+    public async saveSupervisedEntity(supervisedEntity: EntityToSupervise): Promise<void> {
         try {
             const query = {entityId: supervisedEntity.entityId};
             const update = {
@@ -79,7 +80,7 @@ export default class SupervisorDatabaseService {
         }
     }
 
-    public async getSupervisedEntity(id: any): Promise<any> {
+    public async getSupervisedEntity(id: string): Promise<any> {
         try {
             return await this.mongoDB.collection('supervisedEntities').findOne({entityId: id});
         } catch (error) {
@@ -87,7 +88,7 @@ export default class SupervisorDatabaseService {
         }
     }
 
-    public async deleteSupervisedEntity(id: any): Promise<void> {
+    public async deleteSupervisedEntity(id: string): Promise<void> {
         try {
             await this.mongoDB.collection('supervisedEntities').deleteOne({entityId: id});
         } catch (error) {

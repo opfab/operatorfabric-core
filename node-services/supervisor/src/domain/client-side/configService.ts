@@ -94,12 +94,10 @@ export default class ConfigService {
         this.save();
     }
 
-    public async deleteSupervisedEntity(entityId: any): Promise<void> {
+    public async deleteSupervisedEntity(entityId: string): Promise<void> {
         await this.supervisorDatabaseService.deleteSupervisedEntity(entityId);
 
-        const index = this.supervisorConfig.entitiesToSupervise.findIndex(
-            (entity) => entity.entityId === entityId.entityId
-        );
+        const index = this.supervisorConfig.entitiesToSupervise.findIndex((entity) => entity.entityId === entityId);
         if (index >= 0) {
             this.supervisorConfig.entitiesToSupervise.splice(index);
         }
