@@ -1,4 +1,4 @@
-FROM nginx:1.25.4-alpine@sha256:6a2f8b28e45c4adea04ec207a251fd4a2df03ddc930f782af51e315ebc76e9a9
+FROM nginx:1.25.4-alpine@sha256:02d8d94023878cedf3e3acc55372932a9ba1478b6e2f3357786d916c2af743ba
 VOLUME /tmp
 RUN apk --no-cache add bash logrotate
 # del unused lib for security reason 
