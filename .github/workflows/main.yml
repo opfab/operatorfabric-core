@@ -43,6 +43,7 @@ on:
         description: 'Docker push - Latest'     
         required: false
         default: 'false'  
+permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -104,6 +105,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: publishVersion
+    permissions:
+      contents: write
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
