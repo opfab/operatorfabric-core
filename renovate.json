@@ -31,8 +31,10 @@
   },
   "packageRules": [
     {
-      "matchUpdateTypes": ["digest"],
-      "automerge": true
+      "matchPackagePatterns": ["*"],
+      "digest": {
+        "enabled": false
+      }
     },
     {
       "matchDepTypes": ["devDependencies"],
