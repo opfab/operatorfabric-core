@@ -55,12 +55,7 @@ services:
       - --import-realm
     ports:
       - "89:89"
-    deploy:
-      resources:
-        limits:
-          memory: 1.5G
-        reservations:
-          memory: 500M
+    mem_limit: 1g
   mailhog:
     image: mailhog/mailhog:v1.0.1
     ports:
