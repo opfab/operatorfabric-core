@@ -17,7 +17,7 @@ import {RouterStore} from 'app/business/store/router.store';
 import {Subject, skip, takeUntil} from 'rxjs';
 
 export class NavbarMenuView {
-    private static ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
+    private static ADMIN_MENUS = ['admin', 'externaldevicesconfiguration'];
     private static VISIBLE_RIGHT_MENUS_IN_COLLAPSED_MODE = ['settings', 'feedconfiguration', 'nightdaymode', 'logout'];
     private navbarMenu: NavbarMenu;
     private destroy$ = new Subject<void>();
@@ -48,6 +48,11 @@ export class NavbarMenuView {
         if (
             NavbarMenuView.ADMIN_MENUS.includes(menuElementConfig.opfabCoreMenuId) &&
             !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+        )
+            return false;
+        if (
+            menuElementConfig.opfabCoreMenuId === 'useractionlogs' &&
+            !UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_USER_ACTION_LOGS, PermissionEnum.ADMIN])
         )
             return false;
         if (!menuElementConfig.showOnlyForGroups || menuElementConfig.showOnlyForGroups.length === 0) return true;
