@@ -545,13 +545,12 @@ describe('NavbarMenuView', () => {
             expect(rightMenuElements[0].id).toEqual('realtimeusers');
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
         });
-        it('not visible if configured in ui-menu config with user not admin for admin feature admin, externaldevicesconfiguration,useractionlogs', async () => {
+        it('not visible if configured in ui-menu config with user not admin for admin feature admin, externaldevicesconfiguration', async () => {
             await stubConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'admin', visible: true},
-                    {opfabCoreMenuId: 'externaldevicesconfiguration', visible: true},
-                    {opfabCoreMenuId: 'useractionlogs', visible: true}
+                    {opfabCoreMenuId: 'externaldevicesconfiguration', visible: true}
                 ]
             });
             await stubCurrentUserData([]);
@@ -574,6 +573,27 @@ describe('NavbarMenuView', () => {
             expect(rightMenuElements[0].id).toEqual('admin');
             expect(rightMenuElements[1].id).toEqual('externaldevicesconfiguration');
             expect(rightMenuElements[2].id).toEqual('useractionlogs');
+        });
+
+        it('visible if configured in ui-menu config with user for admin feature useractionlogs', async () => {
+            await stubConfigLoading({
+                navigationBar: [],
+                topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
+            });
+            await stubCurrentUserData([], [PermissionEnum.VIEW_USER_ACTION_LOGS]);
+            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            expect(rightMenuElements.length).toEqual(1);
+            expect(rightMenuElements[0].id).toEqual('useractionlogs');
+        });
+
+        it('Action logs not visible if configured in ui-menu config with user without admin feature useractionlogs nor admin', async () => {
+            await stubConfigLoading({
+                navigationBar: [],
+                topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
+            });
+            await stubCurrentUserData([], []);
+            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            expect(rightMenuElements.length).toEqual(0);
         });
 
         it('only menu settings,feedconfiguration,nightdaymode,logout shall be available for collapsed menu', async () => {
