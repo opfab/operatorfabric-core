@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PathUtilsShould {
 
@@ -43,12 +45,25 @@ class PathUtilsShould {
     assertThat(basePath.resolve("target-copy-dir").resolve("empty.file")).exists();
   }
 
-  @Test 
+  @Test
   void testCopyThrowsIOExceptionIfPathIsOutsideOfBasePath() {
     PathUtils.setApplicationBasePath("/opfab");
     assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.copy(basePath.resolve("dir"), basePath.resolve("target-copy-dir"));
     });
+  }
+
+  @Test
+  void testPathOutsideOfBasePathWithTwoDots() {
+    PathUtils.setApplicationBasePath("/app/base/path");
+
+    // Test a path that goes outside the base path using "../"
+    Path testPath = Paths.get("/app/base/path/subdir/../..");
+    assertTrue(PathUtils.isPathOutsideOfApplicationBasePath(testPath));
+
+    // Test a path that stays within the base path using "../"
+    testPath = Paths.get("/app/base/path/subdir/..");
+    assertFalse(PathUtils.isPathOutsideOfApplicationBasePath(testPath));
   }
 
   @Test
@@ -72,7 +87,6 @@ class PathUtilsShould {
     PathUtils.silentDelete(basePath.resolve("deleteable-dir"));
     assertThat(basePath.resolve("deleteable-dir")).doesNotExist();
   }
-
 
   @Test
   void copyFile() throws IOException {
