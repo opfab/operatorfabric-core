@@ -98,12 +98,49 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        throw new UnsupportedOperationException("Unimplemented method 'addUserAck'");
+        Optional<Card> found = this.findByUid(cardUid);
+        if (found.isPresent()) {
+            Card card = found.get();
+
+            List<String> userAcks = new ArrayList<String>();
+            if (card.getUsersAcks() != null)
+                userAcks.addAll(card.getUsersAcks());
+            
+            userAcks.add(user.getLogin());
+            card.setUsersAcks(userAcks);
+
+
+            if (entitiesAcks != null) {
+                List<String> acks = new ArrayList<String>();
+
+                if (card.getEntitiesAcks() != null)
+                    acks.addAll(card.getEntitiesAcks());
+
+                acks.addAll(entitiesAcks);
+
+                card.setEntitiesAcks(acks);
+            }
+            return UserBasedOperationResult.cardFound().operationDone(true);
+        }
+        return UserBasedOperationResult.cardNotFound();
     }
 
     @Override
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
-        throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
+        Optional<Card> found = this.findByUid(cardUid);
+        if (found.isPresent()) {
+            Card card = found.get();
+            List<String> userReads = new ArrayList<String>();
+
+            if (card.getUsersReads() != null)
+                userReads.addAll(card.getUsersReads());
+            
+            userReads.add(name);
+            card.setUsersReads(userReads);
+            return UserBasedOperationResult.cardFound().operationDone(true);
+        }
+        return UserBasedOperationResult.cardNotFound();
+
     }
 
     @Override

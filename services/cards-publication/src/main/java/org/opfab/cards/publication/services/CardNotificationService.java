@@ -46,11 +46,13 @@ public class CardNotificationService {
 
             LightCard card = cardOperation.card();
             log.debug(
-                    "Card operation sent to eventbus, type={}, ids={}, cards={}, groupRecipients={}, entityRecipients={}, userRecipients={}",
+                    "Card operation sent to eventbus, type={}, ids={}, cards={}, groupRecipients={}, entityRecipients={}, userRecipients={}, usersReads={}, usersAcks={}",
                     cardOperation.type(), cardOperation.cardId(), (card != null ? card.toString() : ""),
                     (card != null && card.groupRecipients() != null) ? card.groupRecipients().toString() : "",
                     (card != null && card.entityRecipients() != null) ? card.entityRecipients().toString() : "",
-                    (card != null && card.userRecipients() != null) ? card.userRecipients().toString() : "");
+                    (card != null && card.userRecipients() != null) ? card.userRecipients().toString() : "",
+                    (card != null && card.usersReads() != null) ? card.usersReads().toString() : "",
+                    (card != null && card.usersAcks() != null) ? card.usersAcks().toString() : "");
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card to json on event bus");
         }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 package org.opfab.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -262,19 +263,34 @@ public class CardSubscriptionService implements EventListener {
 
         if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(cardOperation,
                 subscription.getCurrentUserWithPerimeters())) {
-            if (cardOperation.get("type").equals("UPDATE")) { //for the front an update is considered as an ADD
-                cardOperation.put("type", "ADD");
-                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
-            }
-            else subscription.publishDataIntoSubscription(cardOperationAsString);
+            publishCard(cardOperation, subscription);
         }
         else {
-            if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,subscription.getCurrentUserWithPerimeters())) { 
-                cardOperation.replace("type", "DELETE");
-                cardOperation.replace("card","");
-                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
-            } 
+            publishCardDelete(cardOperation, subscription);
         }
+    }
+
+    private void publishCard(JSONObject cardOperation, CardSubscription subscription) {
+        if (cardOperation.get("type").equals("UPDATE")) { //for the front an update is considered as an ADD
+            cardOperation.put("type", "ADD");
+
+            JSONObject cardObj = (JSONObject) cardOperation.get("card");
+            JSONArray usersAcks =(JSONArray) cardObj.get("usersAcks");
+            JSONArray usersReads =(JSONArray) cardObj.get("usersReads");
+            if (usersReads != null && usersReads.contains(subscription.getUserLogin()))
+                cardObj.put("hasBeenRead", "true");
+            if (usersAcks != null && usersAcks.contains(subscription.getUserLogin()))
+                cardObj.put("hasBeenAcknowledged", "true");
+        }
+        subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+    }
+
+    private void publishCardDelete(JSONObject cardOperation, CardSubscription subscription) {
+        if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,subscription.getCurrentUserWithPerimeters())) { 
+            cardOperation.replace("type", "DELETE");
+            cardOperation.replace("card","");
+            subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+        } 
     }
 
     public void postMessageToSubscriptions(String message) {

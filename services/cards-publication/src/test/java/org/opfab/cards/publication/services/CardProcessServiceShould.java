@@ -19,6 +19,7 @@ import org.opfab.cards.publication.mocks.I18NRepositoryMock;
 import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
 import org.opfab.cards.publication.model.ArchivedCard;
 import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.CardActionEnum;
 import org.opfab.cards.publication.model.HoursAndMinutes;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
@@ -1085,4 +1086,25 @@ class CardProcessServiceShould {
                 Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");
         }
 
+        @Test
+        void GIVEN_an_existing_card_WHEN_update_card_CONTAINS_KEEP_EXISTING_ACKS_AND_READS_THEN_acks_and_reads_are_kept() {
+                Card card = generateOneCard("entity2");
+                cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
+                cardProcessingService.processUserRead(card.getUid(), currentUserWithPerimeters.getUserData().getLogin());
+                cardProcessingService.processUserRead(card.getUid(), "user2");
+
+                List<String> entitiesAcks = List.of("entity2");
+                cardProcessingService.processUserAcknowledgement(card.getUid(), currentUserWithPerimeters, entitiesAcks);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+
+                Card newCard = generateOneCard("entity2");
+                newCard.setActions(List.of(CardActionEnum.KEEP_EXISTING_ACKS_AND_READS));
+                cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
+
+                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(updated.getUsersReads()).isEqualTo(List.of("dummyUser","user2"));
+                Assertions.assertThat(updated.getUsersAcks()).isEqualTo(List.of("dummyUser"));
+                Assertions.assertThat(updated.getEntitiesAcks()).isEqualTo(entitiesAcks);
+        }
 }

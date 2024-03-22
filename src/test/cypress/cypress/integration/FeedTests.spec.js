@@ -409,7 +409,56 @@ describe('FeedScreen tests', function () {
         checkResetAllFiltersLinkDoesNotExists();
     });
 
+    it('Check reads and acks are kept when update card has KEEP_EXISTING_ACKS_AND_READS action', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/message.json');
 
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        // Title and subtitle should be unread (bold) for all 6 cards
+        cy.get('of-light-card').find('.card-title, .card-title').eq(0)
+                        .should('have.css', 'font-weight')
+                        .and('match', /700|bold/);
+ 
+        acknowledgeCard('#opfab-feed-light-card-defaultProcess-process1');
+
+        feed.checkNumberOfDisplayedCardsIs(0);
+        // Acknowledged card is not anymore in the feed
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('not.exist');
+
+        feed.toggleFilterByAcknowledgementAck();
+        feed.checkFilterIsNotActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+        // Card is read
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('of-light-card').find('.card-title, .card-title').eq(0)
+        .should('have.css', 'font-weight')
+        .and('match', /400|normal/);
+
+        // Check acknowledged icon is present
+        cy.get('#opfab-feed-light-card-defaultProcess-process1 .fa-check');
+        feed.openFirstCard();
+        cy.get('#opfab-selected-card-summary').should('contain','Message received : France-England');
+
+        script.sendCard('defaultProcess/messageWithKeepAcksAndReads.json');
+        
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // check card was updated
+        cy.get('#opfab-selected-card-summary').should('contain','Message received : Update: France-England');
+        // Card is still read
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('of-light-card').find('.card-title, .card-title').eq(0)
+        .should('have.css', 'font-weight')
+        .and('match', /400|normal/);
+
+        // Check acknowledged icon is still present
+        cy.get('#opfab-feed-light-card-defaultProcess-process1 .fa-check');
+
+
+    });
 
     function respondToCard(cardId) {
         // Click on the card

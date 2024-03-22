@@ -90,7 +90,7 @@ export class SystemNotificationService {
         if (lightCard.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no system notification as the card was sent by the current user
         else {
-            if (this.checkCardIsRecent(lightCard)) {
+            if (!lightCard.hasBeenRead && this.checkCardIsRecent(lightCard)) {
                 this.incomingCardOrReminder.next(lightCard);
             }
         }
