@@ -144,8 +144,10 @@ public class CardProcessingService {
         }
 
         if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
-            if (oldCard != null)
+            if (oldCard != null) {
                 deleteChildCardsProcess(card, jwt);
+                processAcksAndReads(card, oldCard);
+            }
             cardRepository.saveCard(card);
             if (oldCard == null)
                 cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
@@ -177,10 +179,22 @@ public class CardProcessingService {
         return null;
     }
 
+    private void processAcksAndReads(Card card, Card oldCard) {
+        if (shouldKeepAcksAndReads(card)) {
+            card.setUsersAcks(oldCard.getUsersAcks());
+            card.setUsersReads(oldCard.getUsersReads());
+            card.setEntitiesAcks(oldCard.getEntitiesAcks());
+        }
+    }
+
     private boolean shouldKeepChildCards(Card card) {
         if (Boolean.TRUE.equals(card.getKeepChildCards()))
             log.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
         return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0);
+    }
+
+    private boolean shouldKeepAcksAndReads(Card card) {
+        return card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_EXISTING_ACKS_AND_READS) >= 0;
     }
 
     private void deleteCards(List<Card> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {
