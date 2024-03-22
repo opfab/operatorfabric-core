@@ -83,7 +83,7 @@ public class PathUtils {
   }
 
   public static boolean isPathOutsideOfApplicationBasePath(Path file) {
-    return !file.toAbsolutePath().startsWith(applicationBasePath);
+    return !file.toAbsolutePath().normalize().startsWith(applicationBasePath);
   }
 
   /**
