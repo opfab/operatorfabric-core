@@ -256,6 +256,7 @@ body {
 .opfab-input > input {
     background-color: var(--opfab-bgcolor-darker);
     color: var(--opfab-input-text-color);
+    caret-color: var(--opfab-input-text-color);
     padding: 10px;
     width: calc(100% - 4px);
     height: 42px;
