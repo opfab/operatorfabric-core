@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 OF_HOME=$(realpath $DIR/..)
 CURRENT_PATH=$(pwd)
 
-resetConfiguration=true
 services=( "users" "cards-consultation" "cards-publication" "businessconfig" "external-devices")
 offline=false
 waitForOpfabToStart=false
@@ -37,7 +36,6 @@ function display_usage() {
   echo -e "\thardstop: hard kill of the processes (with kill -9) \n"
 	echo -e "options:"
 	echo -e "\t-s, --services\t: list of comma separated services. Business services to run. Defaults to " $(join_by ","  "${services[@]}")
-	echo -e "\t-r, --reset\t: true or false. Resets service data. Defaults to $resetConfiguration."
 	echo -e "\t-o, --offline\t: true or false. When gradle is invoked, it will be invoked offline. Defaults to $offline.\n"
   echo -e "\t-w, --waitForOpfabToStart\t: true or false , if true the script exits only when opfab is up. Defaults to false.\n"
 }
@@ -46,11 +44,6 @@ while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
-    -r|--reset)
-    resetConfiguration="$2"
-    shift # past argument
-    shift # past value
-    ;;
     -s|--services)
     stringServices=$2
     services=(${stringServices//,/ })
@@ -134,13 +127,6 @@ startProject(){
 }
 
 startCommand() {
-
-    if [ "$resetConfiguration" = true ] ; then
-        cd $OF_HOME
-        echo "## Preparing business runtime data"
-        gradle copyWorkingDir $GRADLE_OPTIONS
-        cd $CURRENT_PATH
-    fi
 
     for ((i=0; i<${#dependentProjects[*]}; ));
     do
