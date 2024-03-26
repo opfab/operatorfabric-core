@@ -282,7 +282,7 @@ export class LightCardsStore {
             const children = this.childCards.get(card.parentCardId);
             if (children) {
                 const childIndex = children.findIndex((child) => child.id === card.id);
-                if (childIndex >= 0) children.splice(childIndex);
+                if (childIndex >= 0) children.splice(childIndex, 1);
                 children.push(card);
             } else {
                 this.childCards.set(card.parentCardId, [card]);
@@ -399,7 +399,7 @@ export class LightCardsStore {
         if (card?.entitiesAcks && entitiesAcksToRemove) {
             entitiesAcksToRemove.forEach((entityToRemove) => {
                 const indexToRemove = card.entitiesAcks.indexOf(entityToRemove);
-                if (indexToRemove >= 0) card.entitiesAcks.splice(indexToRemove);
+                if (indexToRemove >= 0) card.entitiesAcks.splice(indexToRemove, 1);
             });
             card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);

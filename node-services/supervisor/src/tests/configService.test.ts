@@ -17,13 +17,15 @@ class SupervisorDatabaseServiceStub extends SupervisorDatabaseService {
     public supervisedEntities: any[] = [];
 
     public async getSupervisedEntities(): Promise<any[]> {
-        return this.supervisedEntities;
+        const supervised: any[] = [];
+        this.supervisedEntities.forEach((entity) => supervised.push(entity));
+        return supervised;
     }
 
     public async saveSupervisedEntity(supervisedEntity: any): Promise<void> {
         const index = this.supervisedEntities.findIndex((entity) => entity.entityId === supervisedEntity.entityId);
         if (index >= 0) {
-            this.supervisedEntities.splice(index);
+            this.supervisedEntities.splice(index, 1);
         }
         this.supervisedEntities.push(supervisedEntity);
     }
@@ -31,7 +33,7 @@ class SupervisorDatabaseServiceStub extends SupervisorDatabaseService {
     public async deleteSupervisedEntity(id: string): Promise<void> {
         const index = this.supervisedEntities.findIndex((entity) => entity.entityId === id);
         if (index >= 0) {
-            this.supervisedEntities.splice(index);
+            this.supervisedEntities.splice(index, 1);
         }
     }
 }
@@ -124,9 +126,9 @@ describe('config service', function () {
             {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
         ]);
 
-        await configService.deleteSupervisedEntity('ENTITY3');
+        await configService.deleteSupervisedEntity('ENTITY4');
         expect(configService.getSupervisorConfig().entitiesToSupervise).toEqual([
-            {entityId: 'ENTITY4', supervisors: ['ENTITY1']}
+            {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
         ]);
     });
 });
