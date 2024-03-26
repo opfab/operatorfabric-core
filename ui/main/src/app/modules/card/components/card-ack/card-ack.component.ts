@@ -100,7 +100,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         if (lightcard?.entitiesAcks && entitiesAcksToRemove) {
             entitiesAcksToRemove.forEach((entityToRemove) => {
                 const indexToRemove = lightcard.entitiesAcks.indexOf(entityToRemove);
-                if (indexToRemove >= 0) lightcard.entitiesAcks.splice(indexToRemove);
+                if (indexToRemove >= 0) lightcard.entitiesAcks.splice(indexToRemove, 1);
             });
         }
         this.card = {
