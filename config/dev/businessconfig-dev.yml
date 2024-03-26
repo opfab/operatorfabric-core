@@ -2,4 +2,4 @@
 
 operatorfabric.businessconfig:
   storage:
-    path: "./config/dev/businessconfig-storage"
+    path: "config/dev/businessconfig-storage"

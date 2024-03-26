@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -79,11 +79,8 @@ for details.
 
 Per project configuration :
 
-* docker file : *[sub-project]/src/main/docker/Dockerfile*
-* docker-compose file : *[sub-project]/src/main/docker/docker-compose.yml*
-* runtime data : *[sub-project]/src/main/docker/volume* is copied to
-*[sub-project]/build/docker-volume/* by task *copyWorkingDir*. The latest
-can then be mounted as volume in docker containers.
+* docker file : *[sub-project]/Dockerfile*
+
 
 
 

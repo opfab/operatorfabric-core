@@ -36,12 +36,7 @@ services:
       - --import-realm
     ports:
       - "89:89"
-    deploy:
-      resources:
-        limits:
-          memory: 1.5G
-        reservations:
-          memory: 500M
+    mem_limit: 1g
   web-ui:
     container_name: web-ui
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
