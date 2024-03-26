@@ -88,7 +88,7 @@ export default class ConfigService {
             (entity) => entity.entityId === supervisedEntity.entityId
         );
         if (index >= 0) {
-            this.supervisorConfig.entitiesToSupervise.splice(index);
+            this.supervisorConfig.entitiesToSupervise.splice(index, 1);
         }
         this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
         this.save();
@@ -99,7 +99,7 @@ export default class ConfigService {
 
         const index = this.supervisorConfig.entitiesToSupervise.findIndex((entity) => entity.entityId === entityId);
         if (index >= 0) {
-            this.supervisorConfig.entitiesToSupervise.splice(index);
+            this.supervisorConfig.entitiesToSupervise.splice(index, 1);
         }
         this.save();
     }
