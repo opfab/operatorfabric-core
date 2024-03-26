@@ -79,7 +79,7 @@ public class PathUtils {
 
   private static void throwExceptionIfPathIsOutsideOfApplicationBasePath(Path path) throws IOException {
     if (isPathOutsideOfApplicationBasePath(path))
-      throw new IOException("Path " + path.toString() + " is not in application base path " + applicationBasePath);
+      throw new IOException("Path " + path.toAbsolutePath().normalize().toString() + " is not in application base path " + applicationBasePath);
   }
 
   public static boolean isPathOutsideOfApplicationBasePath(Path file) {
