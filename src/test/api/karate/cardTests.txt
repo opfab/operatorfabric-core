@@ -8,6 +8,7 @@
       cards/cardsUserAcks.feature                 \
       cards/cardsUserRead.feature                 \
       cards/userAcknowledgmentUpdateCheck.feature \
+      cards/keepUsersReadsAndAcks.feature          \
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \
       cards/postCardWithProcessAndOrStateUnexisting.feature   \
