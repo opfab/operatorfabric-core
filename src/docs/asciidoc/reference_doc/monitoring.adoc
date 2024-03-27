@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -30,7 +30,7 @@ ifdef::single-page-doc[link:../api/businessconfig/[the businessconfig api docume
 ifndef::single-page-doc[link:/documentation/current/api/businessconfig/[the businessconfig api documentation]]
 
 
-= Process monitoring
+== Process monitoring
 
 NOTE: This feature is experimental
 
@@ -39,7 +39,7 @@ The process monitoring screen has the following similarities with the monitoring
 - it is a realtime view of processes based on current cards received by the user
 (i.e. the last version of cards visible by the user)
 - not all the cards are visible, it depends on the business process they are part of. For a card to be visible on
-this screen, the parameter `uiVisibility.processMonitoring` must be set to `true` in the `config.json` file of its
+this screen, the parameter `uiVisibility.processmonitoring` must be set to `true` in the `config.json` file of its
 process.
 
 This screen provides the following features :
