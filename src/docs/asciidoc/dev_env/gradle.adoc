@@ -18,8 +18,6 @@ to gradle and plugins official documentation.
 
 * Test tasks
 * Other:
-** copyWorkingDir: copies [sub-project]/src/main/docker/volume to
-[sub-project]/build/
 ** copyDependencies: copy dependencies to build/support_libs (for Sonar)
 
 === Businessconfig Service
