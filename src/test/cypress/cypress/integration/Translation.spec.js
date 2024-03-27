@@ -8,8 +8,8 @@
  */
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {ScriptCommands} from "../support/scriptCommands";
-import {SettingsCommands} from "../support/settingsCommands";
+import {ScriptCommands} from '../support/scriptCommands';
+import {SettingsCommands} from '../support/settingsCommands';
 
 describe('Test translations', function () {
     const ENGLISH = 'en';
@@ -33,9 +33,11 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-right-menu-settings').should('exist').click();
 
         if (useClock) cy.tick(1000);
-        cy.get("#opfab-setting-locale").click();
+        cy.get('#opfab-setting-locale').click();
         if (useClock) cy.tick(1000);
-        cy.get("#opfab-setting-locale").find('[data-value="' +newLanguage + '"]' ).click();
+        cy.get('#opfab-setting-locale')
+            .find('[data-value="' + newLanguage + '"]')
+            .click();
         if (useClock) cy.tick(1000);
 
         settings.save();
@@ -49,15 +51,21 @@ describe('Test translations', function () {
         }
     }
 
-
     function switchDayNightMode() {
         cy.get('#opfab-navbar-right-menu-nightdaymode').click();
         cy.get('.opfab-right-menu').should('not.exist');
-
     }
 
-    function checkMenuTitles(feedTitle, archivesTitle, monitoringTitle, loggingTitle, singleMenuTitle, secondMenuTitle, 
-                             firstEntryTitle, secondEntryTitle) {
+    function checkMenuTitles(
+        feedTitle,
+        archivesTitle,
+        monitoringTitle,
+        loggingTitle,
+        singleMenuTitle,
+        secondMenuTitle,
+        firstEntryTitle,
+        secondEntryTitle
+    ) {
         cy.get('#opfab-navbar-menu-feed').should('have.text', feedTitle);
         cy.get('#opfab-navbar-menu-archives').should('have.text', archivesTitle);
         cy.get('#opfab-navbar-menu-monitoring').should('have.text', monitoringTitle);
@@ -72,8 +80,15 @@ describe('Test translations', function () {
         cy.get('.opfab-dropdown-menu').find('.opfab-dropdown-menu-item').eq(1).should('have.text', secondEntryTitle);
     }
 
-    function checkRightMenuStaticEntries(realTimeTitle, settingsTitle, activityAreaTitle, feedConfigurationTitle, aboutTitle,
-                                         changePasswordTitle, logoutTitle) {
+    function checkRightMenuStaticEntries(
+        realTimeTitle,
+        settingsTitle,
+        activityAreaTitle,
+        feedConfigurationTitle,
+        aboutTitle,
+        changePasswordTitle,
+        logoutTitle
+    ) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').should('have.text', realTimeTitle);
         cy.get('#opfab-navbar-right-menu-settings').should('have.text', settingsTitle);
@@ -86,8 +101,7 @@ describe('Test translations', function () {
     }
 
     function checkDayAndNightTitles(dayModeTitle, nightModeTitle) {
-        
-        // Check day mode text 
+        // Check day mode text
         cy.get('.opfab-right-menu').should('not.exist');
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('.opfab-right-menu').should('exist');
@@ -101,12 +115,18 @@ describe('Test translations', function () {
 
         // set back to night mode
         switchDayNightMode();
-
     }
 
-    function checkArchivesScreenLabels(serviceLabel, tagLabel, processLabel, stateLabel, publishFromLabel, publishToLabel,
-                                      activeFromLabel, activeToLabel) {
-
+    function checkArchivesScreenLabels(
+        serviceLabel,
+        tagLabel,
+        processLabel,
+        stateLabel,
+        publishFromLabel,
+        publishToLabel,
+        activeFromLabel,
+        activeToLabel
+    ) {
         cy.get('#opfab-navbar-menu-archives').should('exist').click();
         checkLabel('#opfab-processGroup', serviceLabel);
         checkLabel('#opfab-tags', tagLabel);
@@ -118,7 +138,14 @@ describe('Test translations', function () {
         checkDatePickerLabel('#opfab-active-to', activeToLabel);
     }
 
-    function checkArchivesScreenTexts(selectServiceText, selectTagText, selectProcessText, selectStateText, searchText, resetText) {
+    function checkArchivesScreenTexts(
+        selectServiceText,
+        selectTagText,
+        selectProcessText,
+        selectStateText,
+        searchText,
+        resetText
+    ) {
         checkPlaceholderText('#opfab-processGroup', selectServiceText);
         checkPlaceholderText('#opfab-tags', selectTagText);
         checkPlaceholderText('#opfab-process', selectProcessText);
@@ -128,9 +155,16 @@ describe('Test translations', function () {
         cy.get('#opfab-archives-logging-btn-reset').should('have.text', resetText);
     }
 
-    function checkMonitoringFilterTexts(serviceLabel, servicePlaceholder, processLabel, processPlaceholder,
-                                        processStatusLabel, processStatusPlaceholder, searchText, resetText) {
-
+    function checkMonitoringFilterTexts(
+        serviceLabel,
+        servicePlaceholder,
+        processLabel,
+        processPlaceholder,
+        processStatusLabel,
+        processStatusPlaceholder,
+        searchText,
+        resetText
+    ) {
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
 
         checkLabel('#opfab-processGroup', serviceLabel);
@@ -158,10 +192,18 @@ describe('Test translations', function () {
     }
 
     function checkNotificationSeverityTexts(alarmSeverity, actionSeverity, compliantSeverity, informationSeverity) {
-        cy.get('#opfab-filters').find('.label-sev-alarm').should('have.text', ' ' + alarmSeverity + ' ');
-        cy.get('#opfab-filters').find('.label-sev-action').should('have.text', ' ' + actionSeverity + ' ');
-        cy.get('#opfab-filters').find('.label-sev-compliant').should('have.text', ' ' + compliantSeverity + ' ');
-        cy.get('#opfab-filters').find('.label-sev-information').should('have.text', ' ' + informationSeverity + ' ');
+        cy.get('#opfab-filters')
+            .find('.label-sev-alarm')
+            .should('have.text', ' ' + alarmSeverity + ' ');
+        cy.get('#opfab-filters')
+            .find('.label-sev-action')
+            .should('have.text', ' ' + actionSeverity + ' ');
+        cy.get('#opfab-filters')
+            .find('.label-sev-compliant')
+            .should('have.text', ' ' + compliantSeverity + ' ');
+        cy.get('#opfab-filters')
+            .find('.label-sev-information')
+            .should('have.text', ' ' + informationSeverity + ' ');
     }
 
     function checkAknowledgementTexts(acknowledgementHeader, allText, acknowledgedText, notAcknowledgedText) {
@@ -176,17 +218,16 @@ describe('Test translations', function () {
         cy.get('#opfab-timeline-filter-form').should('have.text', applyToTimelineText);
     }
 
-
     function checkResetText(resetText) {
         cy.get('#opfab-feed-filter-reset').find('span').should('have.text', resetText);
     }
 
     function checkLabel(labelId, labelText) {
-        cy.get(labelId).find('label').first().should("have.text",labelText);
+        cy.get(labelId).find('label').first().should('have.text', labelText);
     }
 
     function checkDatePickerLabel(labelId, labelText) {
-        cy.get(labelId).parent().find('label').first().should("have.text",labelText);
+        cy.get(labelId).parent().find('label').first().should('have.text', labelText);
     }
 
     function checkPlaceholderText(selectId, placeholderText) {
@@ -210,30 +251,79 @@ describe('Test translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu ', 'First menu entry', 'Second menu entry');
+        checkMenuTitles(
+            'Card Feed',
+            'Archives',
+            'Monitoring',
+            'Logging',
+            'Single menu entry',
+            'Second menu ',
+            'First menu entry',
+            'Second menu entry'
+        );
 
         changeLanguage(FRENCH);
-        checkMenuTitles('Flux de cartes', 'Archives', 'Monitoring', 'Logging', 'Unique élément', 'Deuxième menu ', 'Premier élément', 'Deuxième élément');
+        checkMenuTitles(
+            'Flux de cartes',
+            'Archives',
+            'Monitoring',
+            'Logging',
+            'Unique élément',
+            'Deuxième menu ',
+            'Premier élément',
+            'Deuxième élément'
+        );
 
         changeLanguage(DUTCH);
-        checkMenuTitles('Kaart Feed', 'Archieven', 'Bewaking','Logboek', 'Enkel menu-item', 'Tweede menu ', 'Eerste menu-item', 'Tweede menu-item');
-
-    })
-
+        checkMenuTitles(
+            'Kaart Feed',
+            'Archieven',
+            'Bewaking',
+            'Logboek',
+            'Enkel menu-item',
+            'Tweede menu ',
+            'Eerste menu-item',
+            'Tweede menu-item'
+        );
+    });
 
     it('Check translations for user dropdown menu', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkRightMenuStaticEntries('Real time users', 'Settings', 'Activity area', 'Notification configuration', 'About', 'Change password', 'Logout');
+        checkRightMenuStaticEntries(
+            'Real time users',
+            'Settings',
+            'Activity area',
+            'Notification configuration',
+            'About',
+            'Change password',
+            'Logout'
+        );
         checkDayAndNightTitles('Day mode', 'Night mode');
 
         changeLanguage(FRENCH);
-        checkRightMenuStaticEntries('Utilisateurs temps réel', 'Paramètres', "Zone d'activité", 'Configuration des notifications', 'À propos', 'Modifier votre mot de passe', 'Déconnexion');
+        checkRightMenuStaticEntries(
+            'Utilisateurs temps réel',
+            'Paramètres',
+            "Zone d'activité",
+            'Configuration des notifications',
+            'À propos',
+            'Modifier votre mot de passe',
+            'Déconnexion'
+        );
         checkDayAndNightTitles('Mode jour', 'Mode nuit');
 
         changeLanguage(DUTCH);
-        checkRightMenuStaticEntries('Realtime gebruikers', 'Instellingen', 'Activiteitengebied', 'Notificatie configuratie', 'Over', 'Wachtwoord wijzigen', 'Uitloggen');
+        checkRightMenuStaticEntries(
+            'Realtime gebruikers',
+            'Instellingen',
+            'Activiteitengebied',
+            'Notificatie configuratie',
+            'Over',
+            'Wachtwoord wijzigen',
+            'Uitloggen'
+        );
         checkDayAndNightTitles('Dag modus', 'Nacht modus');
     });
 
@@ -241,31 +331,106 @@ describe('Test translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkArchivesScreenLabels('SERVICE', 'TAGS', 'PROCESS', 'STATE', 'PUBLISH FROM', 'PUBLISH TO', 'ACTIVE FROM', 'ACTIVE TO');
-        checkArchivesScreenTexts('Select a Service', 'Select a Tag', 'Select a Process', 'Select a State', 'SEARCH', 'RESET');
+        checkArchivesScreenLabels(
+            'SERVICE',
+            'TAGS',
+            'PROCESS',
+            'STATE',
+            'PUBLISH FROM',
+            'PUBLISH TO',
+            'ACTIVE FROM',
+            'ACTIVE TO'
+        );
+        checkArchivesScreenTexts(
+            'Select a Service',
+            'Select a Tag',
+            'Select a Process',
+            'Select a State',
+            ' SEARCH ',
+            ' RESET '
+        );
 
         changeLanguage(FRENCH);
-        checkArchivesScreenLabels('SERVICE', 'ÉTIQUETTES', 'PROCESSUS', 'ÉTAT', 'PUBLIÉE À PARTIR DE', "PUBLIÉE JUSQU'À", 'ACTIVE À PARTIR DE', "ACTIVE JUSQU'À");
-        checkArchivesScreenTexts('Sélectionner un Service', 'Sélectionner une Étiquette', 'Sélectionner un Processus', 'Sélectionner un État', 'RECHERCHER', 'RÉINITIALISER');
+        checkArchivesScreenLabels(
+            'SERVICE',
+            'ÉTIQUETTES',
+            'PROCESSUS',
+            'ÉTAT',
+            'PUBLIÉE À PARTIR DE',
+            "PUBLIÉE JUSQU'À",
+            'ACTIVE À PARTIR DE',
+            "ACTIVE JUSQU'À"
+        );
+        checkArchivesScreenTexts(
+            'Sélectionner un Service',
+            'Sélectionner une Étiquette',
+            'Sélectionner un Processus',
+            'Sélectionner un État',
+            ' RECHERCHER ',
+            ' RÉINITIALISER '
+        );
 
         changeLanguage(DUTCH);
-        checkArchivesScreenLabels('DIENST', 'LABELS', 'PROCES', 'STATUS', 'PUBLICEREN VAN', 'PUBLICEREN TOT', 'ACTIEF VAN', 'ACTIEF TOT');
-        checkArchivesScreenTexts('Selecteer een Dienst', 'Selecteer een Label', 'Selecteer een Proces', 'Selecteer een Status', 'ZOEK', 'HERSTEL');
-    })
+        checkArchivesScreenLabels(
+            'DIENST',
+            'LABELS',
+            'PROCES',
+            'STATUS',
+            'PUBLICEREN VAN',
+            'PUBLICEREN TOT',
+            'ACTIEF VAN',
+            'ACTIEF TOT'
+        );
+        checkArchivesScreenTexts(
+            'Selecteer een Dienst',
+            'Selecteer een Label',
+            'Selecteer een Proces',
+            'Selecteer een Status',
+            ' ZOEK ',
+            ' HERSTEL '
+        );
+    });
 
     it('Check Monitoring screen translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkMonitoringFilterTexts('SERVICE', 'Select a Service', 'PROCESS', 'Select a Process', 'PROCESS STATUS', 'Select a Process status', 'SEARCH', 'RESET');
+        checkMonitoringFilterTexts(
+            'SERVICE',
+            'Select a Service',
+            'PROCESS',
+            'Select a Process',
+            'PROCESS STATUS',
+            'Select a Process status',
+            'SEARCH',
+            'RESET'
+        );
         checkMonitoringResultTexts('Cards with response from my entity ');
 
         changeLanguage(FRENCH);
-        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'RÉINITIALISER');
+        checkMonitoringFilterTexts(
+            'SERVICE',
+            'Sélectionner un Service',
+            'PROCESSUS',
+            'Sélectionner un Processus',
+            'ÉTAT DU PROCESSUS',
+            'Sélectionner un État de processus',
+            'RECHERCHER',
+            'RÉINITIALISER'
+        );
         checkMonitoringResultTexts('Cartes avec réponse de mon entité ');
 
         changeLanguage(DUTCH);
-        checkMonitoringFilterTexts('DIENST', 'Selecteer een Dienst', 'PROCES', 'Selecteer een Proces', 'PROCES STATUS', 'Selecteer een Proces status', 'ZOEK', 'HERSTEL');
+        checkMonitoringFilterTexts(
+            'DIENST',
+            'Selecteer een Dienst',
+            'PROCES',
+            'Selecteer een Proces',
+            'PROCES STATUS',
+            'Selecteer een Proces status',
+            'ZOEK',
+            'HERSTEL'
+        );
         checkMonitoringResultTexts('Kaarten met reactie van mijn entiteit ');
     });
 
@@ -273,7 +438,7 @@ describe('Test translations', function () {
         const currentDate = new Date(2020, 11, 31, 23, 46); // Date must be in the past to avoid session close with token expiration
         opfab.loginWithUser('operator1_fr');
         cy.clock(currentDate);
-       
+
         changeLanguage(ENGLISH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -317,7 +482,7 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarm', 'Action', 'Compliant', 'Information');
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline ');
-        
+
         // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
         cy.get('#opfab-feed-filter-ack-notack').click({force: true});
         checkResetText('Reset filters');
