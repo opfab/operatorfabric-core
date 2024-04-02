@@ -36,9 +36,9 @@ The code is maintained in a public repository on github.
 
 - The list of users is regularly reviewed.
 - A restricted number of users have the right to: 
-   - merge code in the main branch
-   - push docker images to the dockerhub registry.
-   - push libraries to mavencentral
+   ** merge code in the main branch
+   ** push docker images to the dockerhub registry.
+   ** push libraries to mavencentral
 
 == Deployment Security
 
@@ -61,6 +61,7 @@ OperatorFabric is designed to be used with TLS/SSL. However, the default configu
 === Inter-Services Communication
 
 The services within OperatorFabric communicate with each other using HTTP. This communication is not encrypted. The components should not be exposed to the internet and should be deployed in a secure network, either by:
+
 -  Using a single instance with docker-compose that does not expose the services to the outside world
 -  Using a Kubernetes cluster with a private network
 
