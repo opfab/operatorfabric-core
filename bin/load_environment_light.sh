@@ -13,5 +13,5 @@ source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk install java 17.0.10-zulu
 sdk use java 17.0.10-zulu
-nvm install v20.11.1
-nvm use v20.11.1
+nvm install v20.12.0
+nvm use v20.12.0
