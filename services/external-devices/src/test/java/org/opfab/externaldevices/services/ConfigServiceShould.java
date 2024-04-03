@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -138,7 +138,7 @@ class ConfigServiceShould {
     }
 
     @Test
-    void insertDeviceConfigurationSuccessfullyIfUnique() {
+    void saveDeviceConfigurationSuccessfullyIfUnique() {
 
         DeviceConfiguration deviceConfiguration5 = new DeviceConfiguration();
         deviceConfiguration5.id = "ESS5";
@@ -147,7 +147,7 @@ class ConfigServiceShould {
         deviceConfiguration5.signalMappingId = "signalMapping4";
         deviceConfiguration5.isEnabled = true;
 
-        configService.insertDeviceConfiguration(deviceConfiguration5);
+        configService.saveDeviceConfiguration(deviceConfiguration5);
 
         Optional<DeviceConfiguration> retrievedConfiguration = deviceConfigurationRepository.findById("ESS5");
 

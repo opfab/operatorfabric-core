@@ -11,6 +11,7 @@ import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {UsersconfigurationModalComponent} from '../editModal/usersconfiguration-modal.component';
 
 @Component({
     selector: 'of-externaldevices',
@@ -24,6 +25,8 @@ export class UsersTableComponent extends ExternalDevicesConfigurationDirective {
         new Field('edit', FieldType.ACTION_COLUMN),
         new Field('delete', FieldType.ACTION_COLUMN)
     ];
+
+    editModalComponent = UsersconfigurationModalComponent;
 
     canAddItems = true;
 

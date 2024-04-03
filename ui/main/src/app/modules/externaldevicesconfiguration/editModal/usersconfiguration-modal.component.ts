@@ -18,10 +18,10 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-externaldevices-users-modal',
-    templateUrl: './externaldevicesconfiguration-modal.component.html',
+    templateUrl: './usersconfiguration-modal.component.html',
     styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
 })
-export class ExternaldevicesconfigurationModalComponent implements OnInit {
+export class UsersconfigurationModalComponent implements OnInit {
     userdeviceForm = new FormGroup({
         userLogin: new FormControl<string | null>('', [Validators.required]),
         externalDeviceIds: new FormControl<string[] | null>([], [Validators.required])

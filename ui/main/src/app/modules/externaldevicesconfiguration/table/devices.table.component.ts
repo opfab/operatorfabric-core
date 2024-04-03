@@ -25,12 +25,14 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
     fields = [
         new Field('id'),
         new Field('isEnabled', FieldType.CHECKBOX_COLUMN),
+        new Field('edit', FieldType.ACTION_COLUMN),
         new Field('delete', FieldType.ACTION_COLUMN)
     ];
 
     canAddItems = true;
     addItemLabel = 'externalDevicesConfiguration.input.addDevice';
     addDeviceModalComponent = ExternaldevicesModalComponent;
+    editModalComponent = ExternaldevicesModalComponent;
 
     queryData(): Observable<any[]> {
         return ExternalDevicesService.queryAllDevices();
@@ -44,7 +46,8 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
                         'externalDevicesConfiguration.error.errorWhenEnablingDevice',
                         null,
                         MessageLevel.ERROR
-                    )
+                    ),
+                complete: () => this.refreshData()
             });
         } else {
             ExternalDevicesService.disableDevice(deviceData.id).subscribe({
@@ -53,7 +56,8 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
                         'externalDevicesConfiguration.error.errorWhenDisablingDevice',
                         null,
                         MessageLevel.ERROR
-                    )
+                    ),
+                complete: () => this.refreshData()
             });
         }
     }

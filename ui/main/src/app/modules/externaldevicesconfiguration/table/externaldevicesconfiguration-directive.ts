@@ -17,7 +17,6 @@ import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
-import {ExternaldevicesconfigurationModalComponent} from '../editModal/externaldevicesconfiguration-modal.component';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {SignalMappingsCellRendererComponent} from 'app/modules/admin/components/cell-renderers/signal-mappings-cell-renderer.component';
@@ -31,7 +30,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     public pageSize = 10;
     public page = 1;
     private columnDefs: ColDef[] = [];
-    editModalComponent = ExternaldevicesconfigurationModalComponent;
+    public editModalComponent;
     modalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it
         size: 'lg'
