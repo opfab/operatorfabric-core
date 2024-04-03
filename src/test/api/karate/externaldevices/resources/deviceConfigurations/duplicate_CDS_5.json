@@ -1,5 +1,5 @@
 {
-	"id" : "CDS_1",
+	"id" : "CDS_5",
 	"host" : "my_id_is_a_duplicate",
 	"port" : 1234,
 	"signalMappingId": "some_other_CDS_mapping"

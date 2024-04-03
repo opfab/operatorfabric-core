@@ -13,7 +13,7 @@ import {ExternaldevicesconfigurationComponent} from './externaldevicesconfigurat
 import {TranslateModule} from '@ngx-translate/core';
 import {AgGridModule} from 'ag-grid-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {ExternaldevicesconfigurationModalComponent} from './editModal/externaldevicesconfiguration-modal.component';
+import {UsersconfigurationModalComponent} from './editModal/usersconfiguration-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
@@ -27,7 +27,7 @@ import {SignalMappingsModalComponent} from './editModal/signal-mappings-modal.co
 @NgModule({
     declarations: [
         ExternaldevicesconfigurationComponent,
-        ExternaldevicesconfigurationModalComponent,
+        UsersconfigurationModalComponent,
         ExternaldevicesModalComponent,
         UsersTableComponent,
         DevicesTableComponent,

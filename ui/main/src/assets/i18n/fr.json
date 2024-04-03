@@ -615,6 +615,7 @@
       "add": "AJOUTER UNE NOUVELLE CONFIGURATION",
       "edit": "MODIFIER LA CONFIGURATION",
       "addDevice": "AJOUTER UN NOUVEAU PÉRIPHÉRIQUE",
+      "editDevice": "MODIFIER UN PÉRIPHÉRIQUE",
       "addSignalMapping": "AJOUTER UN NOUVEAU MAPPING DE SIGNAUX",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",

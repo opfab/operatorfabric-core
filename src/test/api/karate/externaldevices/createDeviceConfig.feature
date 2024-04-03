@@ -22,7 +22,7 @@ Feature: Device Configuration Management (Create)
     When method post
     Then status 201
 
-  Scenario: Create deviceConfiguration with correct configuration but duplicate id
+  Scenario: Update existing deviceConfigurations
 
     * def configuration = read("resources/deviceConfigurations/duplicate_CDS_5.json")
 
@@ -31,7 +31,7 @@ Feature: Device Configuration Management (Create)
     And header Authorization = 'Bearer ' + authToken
     And request configuration
     When method post
-    Then status 400
+    Then status 201
 
   Scenario: Create deviceConfiguration with incorrect configuration
 

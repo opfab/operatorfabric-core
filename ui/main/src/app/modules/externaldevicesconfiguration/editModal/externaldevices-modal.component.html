@@ -8,7 +8,7 @@
 
 <div class="modal-content entityModal">
   <div class="modal-header">
-    <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.edit</span>
+    <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.editDevice</span>
     <span class="modal-title" *ngIf="!row" translate>externalDevicesConfiguration.input.addDevice</span>
     <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -26,15 +26,15 @@
 
               <div *ngIf="row" class="opfab-input opfab-edit-row">
                 <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
-                <input type="text" disabled value="{{row.deviceId}}"/>
+                <input type="text" disabled value="{{row.id}}"/>
               </div>
               <div *ngIf="!row"  class="opfab-input opfab-edit-row">
                 <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
-                <input formControlName="deviceId" name="deviceId" id="opfab-deviceId" type="text"/>
+                <input formControlName="id" name="id" id="opfab-deviceId" type="text"/>
               </div>
-              <div *ngIf="deviceId.invalid" class="row alert alert-danger">
-                <div *ngIf="deviceId.errors.required" translate>admin.input.id.required</div>
-                <div *ngIf="deviceId.errors.uniqueDeviceIdViolation" translate>admin.input.id.alreadyExisting</div>
+              <div *ngIf="id.invalid" class="row alert alert-danger">
+                <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+                <div *ngIf="id.errors.uniqueDeviceIdViolation" translate>admin.input.id.alreadyExisting</div>
               </div>
 
               <div class="opfab-input opfab-edit-row">
@@ -60,7 +60,8 @@
 
               <div class="opfab-edit-row">
                 <label for="opfab-enabled" class="opfab-checkbox "> <span class="" translate>externalDevicesConfiguration.isEnabled</span>
-                  <input formControlName="enabled" name="enabled" id="opfab-enabled" type="checkbox">
+                    <input *ngIf="row"  name="enabled" id="opfab-enabled" type="checkbox" [checked]="row.isEnabled" disabled>
+                    <input *ngIf="!row" name="enabled" id="opfab-enabled" type="checkbox" formControlName="enabled">
                   <span class="opfab-checkbox-checkmark"></span>
                 </label>
               </div>

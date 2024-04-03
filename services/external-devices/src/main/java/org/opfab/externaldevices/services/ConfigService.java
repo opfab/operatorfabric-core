@@ -63,8 +63,8 @@ public class ConfigService {
         this.settingsRepository = settingsRepository;
     }
 
-    public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
-        deviceConfigurationRepository.insert(deviceConfiguration);
+    public void saveDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
+        deviceConfigurationRepository.save(deviceConfiguration);
     }
 
     public void enableDevice(String deviceId) throws UnknownExternalDeviceException {

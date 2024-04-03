@@ -615,6 +615,7 @@
       "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "addDevice": "NIEUW APPARAAT TOEVOEGEN",
+      "editDevice": "APPARAAT BIJWERKEN",
       "addSignalMapping": "NIEUW SIGNAALTOEWIJZINGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen",

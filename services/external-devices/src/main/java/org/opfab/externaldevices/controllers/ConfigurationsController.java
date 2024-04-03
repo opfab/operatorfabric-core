@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,7 @@ public class ConfigurationsController {
             @Valid @RequestBody DeviceConfiguration deviceConfiguration) {
 
         String id = deviceConfiguration.id;
-        configService.insertDeviceConfiguration(deviceConfiguration);
+        configService.saveDeviceConfiguration(deviceConfiguration);
         if (Boolean.TRUE.equals(deviceConfiguration.isEnabled)) {
             try {
                 devicesService.enableDevice(id);

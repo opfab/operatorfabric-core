@@ -615,6 +615,7 @@
       "add": "ADD NEW USER DEVICE CONFIGURATION",
       "edit": "EDIT USER DEVICE CONFIGURATION",
       "addDevice": "ADD NEW DEVICE",
+      "editDevice": "EDIT DEVICE",
       "addSignalMapping": "ADD NEW SIGNAL MAPPING",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",

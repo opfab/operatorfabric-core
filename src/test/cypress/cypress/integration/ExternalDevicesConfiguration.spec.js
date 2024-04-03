@@ -268,7 +268,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').click();
 
         // Delete device and confirm
-        agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
+        agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 3, 'of-action-cell-renderer');
         cy.get('#opfab-btn-ok').click();
         cy.waitDefaultTime();
 

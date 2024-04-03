@@ -33,7 +33,6 @@ export class ExternaldevicesModalComponent implements OnInit {
 
     @Input() row: any;
 
-    selectedDevice;
     devices: DeviceConfiguration[];
     isLoadingExternalDevices: boolean;
     isLoadingSignalMappings: boolean;
@@ -46,7 +45,7 @@ export class ExternaldevicesModalComponent implements OnInit {
             uniqueDeviceIdValidator.push(this.uniqueDeviceIdValidatorFn());
         }
         this.deviceForm = new FormGroup({
-            deviceId: new FormControl<string | null>('', [Validators.required], uniqueDeviceIdValidator),
+            id: new FormControl<string | null>('', [Validators.required], uniqueDeviceIdValidator),
             host: new FormControl<string | null>('', [Validators.required]),
             port: new FormControl<string | null>('', [Validators.required]),
             signalMappingId: new FormControl<string | null>(null, [Validators.required]),
@@ -67,14 +66,14 @@ export class ExternaldevicesModalComponent implements OnInit {
 
         if (this.row) {
             this.deviceForm.patchValue(this.row, {onlySelf: true});
-            this.selectedDevice = this.row.deviceId;
+            this.selectedSignalMapping = [this.row.signalMappingId];
         }
     }
 
     uniqueDeviceIdValidatorFn(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> => {
             const err: ValidationErrors = {uniqueDeviceIdViolation: true};
-            return this.isUniquedeviceId(this.deviceForm.controls['deviceId'].value) ? of(null) : of(err);
+            return this.isUniquedeviceId(this.deviceForm.controls['id'].value) ? of(null) : of(err);
         };
     }
 
@@ -95,12 +94,13 @@ export class ExternaldevicesModalComponent implements OnInit {
 
     formToDevice(): DeviceConfiguration {
         const port: number = +this.deviceForm.get('port').value;
+        const enabled: boolean = this.row ? this.row.isEnabled : this.deviceForm.get('enabled').value;
         return new DeviceConfiguration(
-            this.deviceForm.get('deviceId').value,
+            this.deviceForm.get('id').value,
             this.deviceForm.get('host').value,
             port,
             this.deviceForm.get('signalMappingId').value,
-            this.deviceForm.get('enabled').value
+            enabled
         );
     }
 
@@ -108,8 +108,8 @@ export class ExternaldevicesModalComponent implements OnInit {
         return this.isLoadingExternalDevices || this.isLoadingSignalMappings;
     }
 
-    get deviceId(): AbstractControl {
-        return this.deviceForm.get('deviceId');
+    get id(): AbstractControl {
+        return this.deviceForm.get('id');
     }
 
     get host(): AbstractControl {
