@@ -13,6 +13,7 @@ package org.opfab.cards.publication.model;
 public enum CardActionEnum {
   PROPAGATE_READ_ACK_TO_PARENT_CARD,
   KEEP_CHILD_CARDS,
-  KEEP_EXISTING_ACKS_AND_READS
+  KEEP_EXISTING_ACKS_AND_READS,
+  KEEP_EXISTING_PUBLISH_DATE
 }
 

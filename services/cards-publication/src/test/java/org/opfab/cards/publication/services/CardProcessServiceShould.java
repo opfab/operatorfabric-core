@@ -59,7 +59,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -1107,4 +1106,23 @@ class CardProcessServiceShould {
                 Assertions.assertThat(updated.getUsersAcks()).isEqualTo(List.of("dummyUser"));
                 Assertions.assertThat(updated.getEntitiesAcks()).isEqualTo(entitiesAcks);
         }
+ 
+        @Test
+        void GIVEN_an_existing_card_WHEN_update_card_CONTAINS_KEEP_EXISTING_PUBLISH_DATE_publishDate_is_kept() {
+                Card card = generateOneCard("entity2");
+                cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
+
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Card original = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+
+                Card newCard = generateOneCard("entity2");
+                newCard.setActions(List.of(CardActionEnum.KEEP_EXISTING_PUBLISH_DATE));
+                cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
+
+                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(updated.getUid()).isNotEqualTo(original.getUid());
+                Assertions.assertThat(updated.getPublishDate()).isEqualTo(original.getPublishDate());
+        }
+
 }

@@ -15,6 +15,7 @@ package org.opfab.cards.model;
  *    <dt>PROPAGATE_READ_ACK_TO_PARENT_CARD</dt>
  *    <dt>KEEP_CHILD_CARDS</dt>
  *    <dt>KEEP_EXISTING_ACKS_AND_READS</dt>
+ *    <dt>KEEP_EXISTING_PUBLISH_DATE</dt>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
@@ -22,5 +23,6 @@ package org.opfab.cards.model;
 public enum CardActionEnum {
    PROPAGATE_READ_ACK_TO_PARENT_CARD,
    KEEP_CHILD_CARDS,
-   KEEP_EXISTING_ACKS_AND_READS
+   KEEP_EXISTING_ACKS_AND_READS,
+   KEEP_EXISTING_PUBLISH_DATE
 }
