@@ -41,7 +41,7 @@ Feature: KeepCardsUserReadsAndAcks
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"updated message"},
-  "actions": ["KEEP_EXISTING_ACKS_AND_READS"]
+  "actions": ["KEEP_EXISTING_ACKS_AND_READS","KEEP_EXISTING_PUBLISH_DATE"]
 }
 """
 

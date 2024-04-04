@@ -251,11 +251,13 @@ definitions:
       Defines the action to be executed on card reception >
       * PROPAGATE_READ_ACK_TO_PARENT_CARD
       * KEEP_CHILD_CARDS
-      * KEEP_EXISTING_ACKS_AND_READS
+      * KEEP_EXISTING_ACKS_AND_READS,
+      * KEEP_EXISTING_PUBLISH_DATE
     enum:
       - PROPAGATE_READ_ACK_TO_PARENT_CARD
       - KEEP_CHILD_CARDS
       - KEEP_EXISTING_ACKS_AND_READS
+      - KEEP_EXISTING_PUBLISH_DATE
     example: PROPAGATE_READ_ACK_TO_PARENT_CARD
   Card:
     type: object

@@ -146,7 +146,7 @@ public class CardProcessingService {
         if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
             if (oldCard != null) {
                 deleteChildCardsProcess(card, jwt);
-                processAcksAndReads(card, oldCard);
+                processCardUpdate(card, oldCard);
             }
             cardRepository.saveCard(card);
             if (oldCard == null)
@@ -179,11 +179,14 @@ public class CardProcessingService {
         return null;
     }
 
-    private void processAcksAndReads(Card card, Card oldCard) {
+    private void processCardUpdate(Card card, Card oldCard) {
         if (shouldKeepAcksAndReads(card)) {
             card.setUsersAcks(oldCard.getUsersAcks());
             card.setUsersReads(oldCard.getUsersReads());
             card.setEntitiesAcks(oldCard.getEntitiesAcks());
+        }
+        if (shouldKeepPublishDate(card)) {
+            card.setPublishDate(oldCard.getPublishDate());
         }
     }
 
@@ -191,6 +194,10 @@ public class CardProcessingService {
         if (Boolean.TRUE.equals(card.getKeepChildCards()))
             log.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
         return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0);
+    }
+
+    private boolean shouldKeepPublishDate(Card card) {
+        return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_EXISTING_PUBLISH_DATE) >= 0);
     }
 
     private boolean shouldKeepAcksAndReads(Card card) {
