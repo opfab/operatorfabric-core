@@ -32,7 +32,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 @Slf4j
 public class PathUtils {
 
-  private static String applicationBasePath = "/";
+  private static String applicationBasePath;
 
   private PathUtils() {
   }
@@ -82,7 +82,10 @@ public class PathUtils {
       throw new IOException("Path " + path.toAbsolutePath().normalize().toString() + " is not in application base path " + applicationBasePath);
   }
 
-  public static boolean isPathOutsideOfApplicationBasePath(Path file) {
+  public static boolean isPathOutsideOfApplicationBasePath(Path file) throws IOException {
+    if (applicationBasePath == null)
+      throw new IOException("applicationBasePath is null");
+
     return !file.toAbsolutePath().normalize().startsWith(applicationBasePath);
   }
 
@@ -122,13 +125,14 @@ public class PathUtils {
    * 
    * @param source target path
    * @return true if target was deleted, false otherwise
+   * @throws IOException 
    */
   public static boolean silentDelete(Path source) {
-    if (isPathOutsideOfApplicationBasePath(source)) {
-      log.error("Source " + source.toString() + " is not in application base path");
-      return false;
-    }
     try {
+      if (isPathOutsideOfApplicationBasePath(source)) {
+        log.error("Source " + source.toString() + " is not in application base path");
+        return false;
+      }
       if (source.toFile().exists()) {
         delete(source);
       }

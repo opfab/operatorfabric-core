@@ -10,8 +10,10 @@
 package org.opfab.utilities;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,23 +25,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@TestMethodOrder(OrderAnnotation.class)
 class PathUtilsShould {
 
   private static final Path basePath = Paths.get("build", "test-data");
 
-  @BeforeEach
-  void setBasePath() {
-    PathUtils.setApplicationBasePath("/");
-  }
 
   @AfterAll
   static void dispose() {
-    PathUtils.silentDelete(basePath);
+      PathUtils.silentDelete(basePath);
+  }
+
+  @Test
+  @Order(1) 
+  void handleErrorWhenApplicationBasePathisNotSet() {
+    assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
+      Path testPath = Paths.get("/app/base/path/");
+      PathUtils.isPathOutsideOfApplicationBasePath(testPath);
+    }).withMessage("applicationBasePath is null");
   }
 
   @Test
   void copy() throws IOException {
+    PathUtils.setApplicationBasePath("/");
     PathUtils.copy(basePath.resolve("dir"), basePath.resolve("target-copy-dir"));
     assertThat(basePath.resolve("target-copy-dir")).exists();
     assertThat(basePath.resolve("target-copy-dir").resolve("empty.file")).exists();
@@ -54,7 +62,7 @@ class PathUtilsShould {
   }
 
   @Test
-  void testPathOutsideOfBasePathWithTwoDots() {
+  void testPathOutsideOfBasePathWithTwoDots() throws IOException {
     PathUtils.setApplicationBasePath("/app/base/path");
 
     // Test a path that goes outside the base path using "../"
@@ -68,6 +76,7 @@ class PathUtilsShould {
 
   @Test
   void move() throws IOException {
+    PathUtils.setApplicationBasePath("/");
     PathUtils.moveDir(basePath.resolve("moveable-dir"), basePath.resolve("target-move-dir"));
     assertThat(basePath.resolve("target-move-dir")).exists();
     assertThat(basePath.resolve("target-move-dir").resolve("empty.file")).exists();
@@ -84,12 +93,14 @@ class PathUtilsShould {
 
   @Test
   void delete() {
+    PathUtils.setApplicationBasePath("/");
     PathUtils.silentDelete(basePath.resolve("deleteable-dir"));
     assertThat(basePath.resolve("deleteable-dir")).doesNotExist();
   }
 
   @Test
   void copyFile() throws IOException {
+    PathUtils.setApplicationBasePath("/");
     PathUtils.copy(basePath.resolve("empty.file"), basePath.resolve("copied.file"));
     assertThat(basePath.resolve("copied.file")).exists();
   }
@@ -104,6 +115,7 @@ class PathUtilsShould {
 
   @Test
   void deleteFile() throws IOException {
+    PathUtils.setApplicationBasePath("/");
     PathUtils.delete(basePath.resolve("deleteable.file"));
     assertThat(basePath.resolve("deleteable.file")).doesNotExist();
   }
@@ -118,6 +130,7 @@ class PathUtilsShould {
 
   @Test
   void getPath() {
+    PathUtils.setApplicationBasePath("/");
     File f = basePath.toFile();
     Path result = PathUtils.getPath(f);
     assertThat(result.normalize().toAbsolutePath()).hasToString(f.getAbsolutePath());
@@ -125,7 +138,7 @@ class PathUtilsShould {
 
   @Test
   void unTarGz() throws IOException {
-
+    PathUtils.setApplicationBasePath("/");
     PathUtils.unTarGz(
         Files.newInputStream(basePath.resolve("archive.tar.gz")),
         basePath.resolve("archive-out"));
@@ -140,6 +153,7 @@ class PathUtilsShould {
 
   @Test
   void handleErrorOnCopy() {
+    PathUtils.setApplicationBasePath("/");
     assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.copy(
           basePath.resolve("dir").resolve("empty.file"),
@@ -152,6 +166,7 @@ class PathUtilsShould {
 
   @Test
   void handleErrorOnDelete() {
+    PathUtils.setApplicationBasePath("/");
     assertThatExceptionOfType(IOException.class).isThrownBy(() -> {
       PathUtils.delete(
           basePath.resolve("dir2").resolve("empty.file"));
