@@ -32,13 +32,27 @@ GitHub's "Private Security Advisories" feature is used to report vulnerabilities
 
 == Supply Chain Security
 
-The code is maintained in a public repository on github.
+The OperatorFabric code is maintained in a public repository on GitHub, ensuring transparency and collaboration.
 
-- The list of users is regularly reviewed.
-- A restricted number of users have the right to: 
-   ** merge code in the main branch
-   ** push docker images to the dockerhub registry.
-   ** push libraries to mavencentral
+To maintain the security of the supply chain, the following measures are implemented:
+
+- Regular review of the list of users with access to the repository.
+- Only a restricted number of users have the necessary permissions to:
+   ** Merge code into the main branch.
+   ** Push Docker images to the DockerHub registry.
+   ** Push libraries to Maven Central.
+
+To ensure code quality and security, the following practices are enforced:
+
+- All modifications to the main branch are done through pull requests.
+- Each pull request is reviewed by at least one other developer.
+- Each commit pushed to a feature branch must be signed by the developer.
+- Release tags on GitHub are signed for authenticity.
+
+Additionally, the OpenSSF Scorecard tool (https://github.com/ossf/scorecard) is used to monitor the security of the supply chain configuration in GitHub.
+
+These measures help maintain the integrity and security of the OperatorFabric supply chain.
+
 
 == Deployment Security
 
