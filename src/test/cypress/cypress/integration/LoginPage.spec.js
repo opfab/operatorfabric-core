@@ -84,7 +84,20 @@ describe('LoginPage', () => {
         cy.hash().should('eq', '#/monitoring');
         cy.contains('Cards with response from my entity');
     });
+    it ('login with user with no group shall popup a message and logout', () => {
+        //go to login page
+        cy.visit('/');
+        cy.get('#opfab-login').type('userwithnogroupnoentity');
+        cy.get('#opfab-password').type('test');
 
+        //press login button
+        cy.get('#opfab-login-btn-submit').click();
+
+        cy.get('#opfab-modal-body').contains('You are not allowed to access the application');
+        cy.get('#opfab-btn-ok').click();
+
+        cy.get('#opfab-login').should('be.visible');
+    });
     it('login is in french if settings.locale is set to fr in web-ui.json', () => {
         //go to login page
         script.setPropertyInConf('settings.locale', '\\"fr\\"');

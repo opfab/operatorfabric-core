@@ -147,7 +147,8 @@
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
     "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL.",
-    "reloadPageButton": "Reload page"
+    "reloadPageButton": "Reload page",
+    "isNotAllowedToAccessOpfab": "You are not allowed to access the application"
   },
   "menu": {
     "feed": "Card Feed",

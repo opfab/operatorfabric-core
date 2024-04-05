@@ -52,6 +52,7 @@ export class ApplicationLoader {
     public environmentColor: string;
     public loadingInProgress = true;
     public isDisconnected = false;
+    public isAllowedToAccessOpfab = true;
     public userLogin;
 
     private appLoadedInAnotherTabComponent: ApplicationLoadingComponent;
@@ -102,18 +103,19 @@ export class ApplicationLoader {
         this.activityAreaChoiceAfterLoginComponent = activityAreaChoiceAfterLoginComponent;
     }
 
-    public async startOpfab(): Promise<void> {
+    public async startOpfab(): Promise<boolean> {
         this.setDefaultStyle();
         await this.loadWebUiConfig();
         this.setTitleInBrowser();
         this.setLoggerConfiguration();
         this.loadTranslations();
         this.setEnvironmentNameAndColor();
-        if (await this.isLoadingToBeStoppedBecauseAppLoadedInAnotherTab()) return;
+        if (await this.isLoadingToBeStoppedBecauseAppLoadedInAnotherTab()) return false;
         await this.authenticate();
         await this.loadSettings();
-        if (await this.isUserToBeDisconnectedBecauseLoginAlreadyInUse()) return;
+        if (await this.isUserToBeDisconnectedBecauseLoginAlreadyInUse()) return false;
         await this.loadAllConfigurationData();
+        if (await this.isUserToBeDisconnectedBecauseIsNotAssociatedToAnyGroups()) return false;
         GlobalStyleService.loadUserStyle();
         await this.setActivityArea();
         this.initServices();
@@ -122,6 +124,7 @@ export class ApplicationLoader {
         await this.waitForStreamInitDone();
         this.goToEntryPage();
         this.loadingInProgress = false;
+        return true;
     }
 
     private setDefaultStyle() {
@@ -253,6 +256,19 @@ export class ApplicationLoader {
             ConfigService.loadMonitoringConfig()
         ];
         return firstValueFrom(Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$));
+    }
+
+    private async isUserToBeDisconnectedBecauseIsNotAssociatedToAnyGroups(): Promise<boolean> {
+        if (
+            UserService.getCurrentUserWithPerimeters().userData.groups === undefined ||
+            UserService.getCurrentUserWithPerimeters().userData.groups.length === 0
+        ) {
+            this.isAllowedToAccessOpfab = false;
+            await ModalService.openInformationModal(new I18n('global.isNotAllowedToAccessOpfab'));
+            SessionManagerService.logout();
+            return true;
+        }
+        return false;
     }
 
     private async setActivityArea(): Promise<void> {
