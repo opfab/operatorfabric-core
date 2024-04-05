@@ -147,7 +147,8 @@
     "disconnected": "Vous êtes déconnecté.",
     "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte.",
     "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL.",
-    "reloadPageButton": "Rafraîchir la page"
+    "reloadPageButton": "Rafraîchir la page",
+    "isNotAllowedToAccessOpfab": "Vous n'êtes pas autorisé à accéder à l'application"
   },
   "menu": {
     "feed": "Flux de cartes",

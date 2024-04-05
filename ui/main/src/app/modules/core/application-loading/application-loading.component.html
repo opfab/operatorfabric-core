@@ -7,7 +7,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<of-loading-in-progress *ngIf="applicationLoader.loadingInProgress && !showLoginScreen"></of-loading-in-progress>
+<of-loading-in-progress *ngIf="applicationLoader.loadingInProgress && !showLoginScreen && applicationLoader.isAllowedToAccessOpfab"></of-loading-in-progress>
 
 <of-app-loaded-in-another-tab #appLoadedInAnotherTab> </of-app-loaded-in-another-tab>
 

@@ -112,10 +112,12 @@ export class ApplicationLoadingComponent implements OnInit {
             this.applicationLoader.setAppLoadedInAnotherTabComponent(this.appLoadedInAnotherTabComponent);
             this.applicationLoader.setActivityAreaChoiceAfterLoginComponent(this.activityAreaChoiceAfterLoginComponent);
             this.applicationLoader.setMethodToAuthenticate(this.authenticate.bind(this));
-            await this.applicationLoader.startOpfab();
-            this.applicationLoadedDone.next(true);
-            this.applicationLoadedDone.complete();
-            this.applicationLoaded = true;
+            const success = await this.applicationLoader.startOpfab();
+            if (success) {
+                this.applicationLoadedDone.next(true);
+                this.applicationLoadedDone.complete();
+                this.applicationLoaded = true;
+            }
         } catch (err) {
             this.applicationLoader.loadingInProgress = false;
             logger.error('Impossible to load application', err);
