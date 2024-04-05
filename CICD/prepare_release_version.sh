@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@ display_usage
 esac
 done
 
-# Get current version from VERSION file (can be SNAPSHOT or X.X.X.RELEASE in the case of a hotfix)
+# Get current version from VERSION file (can be SNAPSHOT or X.X.X.RELEASE in the case of a fix)
 oldVersion=$(cat VERSION)
 echo "Current version is $oldVersion (based on VERSION file)"
 
