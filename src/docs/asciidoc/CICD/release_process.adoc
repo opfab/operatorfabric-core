@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -13,7 +13,7 @@
 
 == Version numbers
 
-We work with two types of versions:
+We work with three types of versions:
 
 * X.Y.Z.RELEASE versions are stable versions
 * X.Y.Z-RC.RELEASE versions are release candidates for the next stable version
@@ -28,21 +28,22 @@ the same major version.
 
 == Releasing a Release Candidate 
 
-
-IMPORTANT: To release a version we use some GitHub Actions dedicated jobs. These jobs are triggered when pushing a commit in branches 
-containing the keyword release at the end (**release) and rely on the VERSION file at the root of this repository to 
-know which version is being produced. It is thus crucial to double-check the content of this file before any push 
-(triggering the GitHub Actions jobs) is made.
-
 Before releasing a version, you need to prepare the release.
 
 === Creating a release branch and preparing the release candidate
 
 . On the link:{opfab_core_repo}[operatorfabric-core repository], create a branch off the `develop` branch named
-`X.X.X.release` (note the lowercase `release` to distinguish it from `X.X.X.RELEASE` tags).
+`X.X.release` if it does not exist  (note the lowercase `release` to distinguish it from `X.X.X.RELEASE` tags).
 +
 ----
-git checkout -b X.X.X.release
+git checkout -b X.X.release
+git push --set-upstream origin X.X.release
+----
++
+Create a working branch for the release candidate. This branch will be used to prepare the release candidate :
++
+----
+git checkout -b FE-X.X.X-RC.release.draft
 ----
 +
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
@@ -83,24 +84,19 @@ git commit -s -m "[RELEASE] X.X.X-RC.RELEASE"
 . Push the commit
 +
 ----
-git push --set-upstream origin X.X.X.release
+git push --set-upstream origin X.X.X-RC.release.draft
 ----
 +
-. Create the tag for the release candidate:
+. Create a pull request from the `X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
++
+. Once the pull request is approved and merge, create the tag for the release candidate:
 +
 ----
+git checkout X.X.release
+git pull  
 git tag X.X.X-RC.RELEASE
 git push origin X.X.X-RC.RELEASE
 ----
-+
-. Check that the build is correctly triggered
-+
-You can check the status of the GitHub Actions triggered by the commit on
-link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
-
-. Wait for the build to complete (around 50 minutes) and check that all jobs have been successful.
-This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
-generation.
 
 === Publish the release candidate on docker hub and documentation
 
@@ -120,7 +116,7 @@ To do so:
 ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
 ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
 
-. Run the following command from the project root:
+. Run the following command from the project root on the release branch:
 +
 ----
 ./gradlew publish
@@ -236,20 +232,15 @@ in case there is an issue.
 
 == Releasing a Major or Minor Version
 
-IMPORTANT: To release a version we use some GitHub Actions dedicated jobs. These jobs are triggered when pushing a commit in branches 
-containing the keyword release at the end (**release) and rely on the VERSION file at the root of this repository to 
-know which version is being produced. It is thus crucial to double-check the content of this file before any push 
-(triggering the GitHub Actions jobs) is made.
-
 Before releasing a version, you need to prepare the release.
-
 
 === Move Release Candidate to Release
 
-. Checkout release branch
+. Create a branch to prepare the release from the release candidate branch:
 +
 ----
-git checkout X.X.X.release
+git checkout X.X.release
+git checkout -b X.X.X.release.draft
 ----
 +
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
@@ -290,56 +281,39 @@ git commit -s -m "[RELEASE] X.X.X.RELEASE"
 . Push the commit
 +
 ----
-git push 
+git push --set-upstream origin X.X.X.release.draft
 ----
 +
-. Check that the build is correctly triggered
+. Create a pull request from the 'X.X.X.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
-You can check the status of the GitHub Actions triggered by the commit on
-link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
+. Once the pull request is approved and merge, create the tag for the release candidate:
 +
-Wait for the build to complete (around 50 minutes) and check that all jobs have been successful.
-This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
-generation.
+----
+git checkout X.X.release
+git pull  
+git tag X.X.X.RELEASE
+git push origin X.X.X.RELEASE
+----
 
-=== Merging the release branch into `master`
+[[publish_release_on_docker_hub_and_documentation]]
+=== Publish the release on docker hub and documentation
 
-Once the release branch build is passing, you should merge the release branch into `master` to bring the new
-developments into `master` and trigger the CICD tasks associated with a release (Docker images for DockerHub and
+Once the release branch build is passing, you should trigger the CICD tasks associated with a release (Docker images for DockerHub and
 documentation).
 
-----
-git checkout master <1>
-git pull <2>
-git merge X.X.X.release <3>
-----
-<1> Check out the `master` branch
-<2> Make sure your local copy is up to date
-<3> Merge the `X.X.X.release` branch into `master`, accepting changes from X.X.X.release in case of conflicts.
-
-----
-git tag X.X.X.RELEASE <1>
-git push <2>
-git push origin X.X.X.RELEASE <3>
-----
-<1> Tag the commit with the `X.X.X.RELEASE` tag
-<2> Push the commits to update the remote `master` branch
-<3> Push the tag
-
-. Check that the build is correctly triggered
-+
-You can check the status of the GitHub Action workflow triggered by the commit on
+To do so , go to 
 link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
-The Github Actions workflow should have the following six jobs executed :
-- Build
-- Karate tests
-- Cypress tests 
-- Publish Documentation (latest)
-- Push images to dockerhub 
-- Push images latest to dockerhub 
+and launch the workflow on X.X.release branch with the following options :
+- Build : true 
+- Karate tests : false
+- Cypress tests : false 
+- Build and publish documentation : true
+- Build and publish documentation - Latest : true if it is the last major/minor version
+- Docker Push : true
+- Docker Push - Latest : true if it is the last major/minor version
 
 
-Wait for the build to complete (around 50 minutes) and check that all jobs have been successful.
+Wait for the build to complete and check that all jobs have been successful.
 
 . Check that the `X.X.X.RELEASE` images have been generated and pushed to DockerHub.
 
@@ -403,7 +377,7 @@ the External Devices API is displayed on the website.
 [[checking_docker_compose]]
 === Checking the docker-compose files
 
-While the docker-compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `master`
+While the docker-compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `X.X.release`
 branch they should rely on the latest RELEASE version available on DockerHub. Once the CI pipeline triggered by the
 previous steps has completed successfully, and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
 
@@ -451,55 +425,31 @@ in case there is an issue.
 
 === Preparing the next version
 
-==== On the release-notes repository
-
 Remove the release_notes.X.X.X.md file corresponding to the release's version.
 
-==== On the operatorfabric-core repository
 
-Now that the release branch has served its purpose, it should be deleted so as not to clutter the repository and to
-avoid confusion with the actual release commit tagged on `master`.
+== Releasing a Patch Version
 
-----
-git branch -d X.X.X.release <1>
-----
-<1> Delete the branch locally
+Let's say fixes that will be released as X.X.X.RELEASE. 
 
-NOTE: You should also delete the branch on GitHub.
+Follow the process described
+ifdef::single-page-doc[<<working_on_fix, here>>]
+ifndef::single-page-doc[<</documentation/current/community/index.adoc#working_on_fix, here>>]
+to create feature branches, work on fixes and merge them back into `X.X.release`.
 
-You should also close the project for this version, and create one for the next version if it doesn't already exist
-(use the "Automated Kanban" template).
 
-== Releasing a Patch (Hotfixes) Version
-
-Let's say fixes are needed on version X.X.0.RELEASE, and will be released as X.X.X.RELEASE. If it's the first patch 
-version to be released for this minor version (i.e. version X.X.1.RELEASE), you will need to create the `X.X.hotfixes` 
-branch.
-To do so:
-
-[source,bash]
-----
-git checkout X.X.0.RELEASE <1>
-git checkout -b X.X.hotfixes <2>
-----
-<1> Checkout X.X.0.RELEASE tag
-<2> Create (and checkout) branch `X.X.hotfixes` from this commit
-
-If branch `X.X.hotfixes` already exists, you can just check it out.
-
-[source,bash]
-----
-git checkout X.X.hotfixes
-----
-
-Then, follow the process described
-
-ifdef::single-page-doc[<<working_on_hotfix, here>>]
-ifndef::single-page-doc[<</documentation/current/community/index.adoc#working_on_hotfix, here>>]
-to create feature branches, work on fixes and merge them back into `X.X.hotfixes`.
-
-Once all the big fixes that need to go into the version X.X.X.RELEASE have been merged into branch `X.X.hotfix`, you
+Once all the big fixes that need to go into the version X.X.X.RELEASE have been merged into branch `X.X.release`, you
 can release the patch version. To do so:
+
+Create a branch to prepare the release from the release branch:
+
+[source,bash]
+----
+git pull X.X.release
+git checkout X.X.release
+git checkout -b X.X.X.release.draft
+----
+
 
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
@@ -507,30 +457,30 @@ can release the patch version. To do so:
 ./CICD/prepare_release_version.sh -v X.X.X.RELEASE
 ----
 +
-. Commit the changes, tag them and push both to GitHub:
+. Commit the changes and push to GitHub:
 +
 ----
 git add .
-git commit -m "[RELEASE] X.X.X.RELEASE " <1>
-git tag X.X.X.RELEASE <2>
-git push --set-upstream origin X.X.hotfixes <3>
-git push origin X.X.X.RELEASE <4>
+git commit -m "[RELEASE] X.X.X.RELEASE "
+git push --set-upstream origin X.X.X.release.draft 
+
 ----
-<1> Commit the changes
-<2> Tag the release
-<3> Push the commit
-<4> Push the tag
++
+. Create a pull request from the 'X.X.X.release.draft` branch to the `X.X.release` branch and ask for a review.
++
+. Once the pull request is approved and merge, create the tag for the release candidate:
++
+----
+git checkout X.X.release
+git pull  
+git tag X.X.X.RELEASE
+git push origin X.X.X.RELEASE
+----
 
-
-This will trigger the build and tests in GitHub Actions.
-
-If the build and tests are successful, launch manually GitHubActions with jobs : `Build` , `Docker Push` and `Build and publish documentation` 
-
-IMPORTANT: In the case of a patch on the last major/minor version tagged on master, this version will become the
-`latest` version. In this case, add the jobs `Docker Push - Latest` and  `Build and publish documentation - Latest` instead of `Build and publish documentation` to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
 
 You then have to follow the following steps as for a classic release:
 
+* <<publish_release_on_docker_hub_and_documentation, Publish the release on docker hub and documentation>>
 * <<update_version_list_on_website, Updating the version list on the website>>.
 * <<checking_docker_compose, Checking the docker-compose files>>.
 * <<publishing_release_on_github, Publishing the release on GitHub>>.

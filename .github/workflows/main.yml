@@ -47,7 +47,7 @@ permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' && github.ref_name != 'master' }}
+    if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       
@@ -107,7 +107,7 @@ jobs:
     environment: publishVersion
     permissions:
       contents: write
-    if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
+    if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     
@@ -175,7 +175,7 @@ jobs:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
       - name : Publish Documentation (latest)
-        if : ${{ github.event.inputs.docLatest  == 'true' || github.ref_name == 'master'}}
+        if : ${{ github.event.inputs.docLatest  == 'true' }}
         run: |
           source $HOME/.sdkman/bin/sdkman-init.sh;
           export NVM_DIR="$HOME/.nvm"
@@ -188,7 +188,7 @@ jobs:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
       - name : Push images to dockerhub 
-        if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
+        if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
@@ -197,7 +197,7 @@ jobs:
           done
 
       - name : Push images latest to dockerhub 
-        if: ${{ github.event.inputs.dockerPushLatest  == 'true'  || github.ref_name == 'master'  }}
+        if: ${{ github.event.inputs.dockerPushLatest  == 'true' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
           docker images --format "{{.Repository}}:{{.Tag}}" | grep lfe | while read image; do 
