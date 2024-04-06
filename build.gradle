@@ -76,7 +76,7 @@ ext {
             rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
 
 //Transitive dependencies udpate needed for security reasons 
-            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.77",
+            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.78",
             snakeyaml       : "org.yaml:snakeyaml:2.2",
             snappy          : "org.xerial.snappy:snappy-java:1.1.10.5"
 //End transitive dependencies
