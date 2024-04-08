@@ -12,12 +12,11 @@ import {expressjwt, type GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
-import ConfigService from './domain/client-side/configService';
 import SupervisorService from './domain/client-side/supervisorService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
 import Logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
-import SupervisorDatabaseService from './domain/server-side/supervisorDatabaseService';
+import MongoSupervisorDatabaseServer from './domain/server-side/mongoSupervisorDatabaseServer';
 import {EntityToSupervise} from './domain/application/entityToSupervise';
 
 const app = express();
@@ -49,16 +48,9 @@ const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
 const logger = Logger.getLogger();
 
-const supervisorDatabaseService = new SupervisorDatabaseService()
+const supervisorDatabaseService = new MongoSupervisorDatabaseServer()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
     .setLogger(logger);
-
-const configService = new ConfigService(
-    supervisorDatabaseService,
-    config.get('operatorfabric.supervisor.defaultConfig'),
-    'config/supervisorConfig.json',
-    logger
-);
 
 const activeOnStartUp: boolean = config.get('operatorfabric.supervisor.activeOnStartup');
 
@@ -75,9 +67,13 @@ const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
     .setLogger(logger);
 
-const supervisorConfig = configService.getSupervisorConfig();
-
-const supervisorService = new SupervisorService(supervisorConfig, opfabServicesInterface, logger);
+const supervisorService = new SupervisorService(
+    config.get('operatorfabric.supervisor.defaultConfig'),
+    'config/supervisorConfig.json',
+    supervisorDatabaseService,
+    opfabServicesInterface,
+    logger
+);
 
 app.get('/status', (req, res) => {
     authorizationService
@@ -125,7 +121,7 @@ app.get('/stop', (req, res) => {
 
 app.get('/config', (req, res) => {
     logger.info('Get config');
-    res.send(configService.getSupervisorConfig());
+    res.send(supervisorService.getSupervisorConfig());
 });
 
 app.post('/config', (req, res) => {
@@ -135,10 +131,7 @@ app.post('/config', (req, res) => {
             if (!isAdmin) res.status(403).send();
             else {
                 logger.info('Update configuration');
-                const updated = configService.patch(req.body as object);
-                supervisorService.setConfiguration(updated);
-                supervisorService.resetConnectionChecker();
-                supervisorService.resetAcknowledgementChecker();
+                const updated = supervisorService.patch(req.body as object);
                 res.send(updated);
             }
         })
@@ -181,12 +174,10 @@ app.post('/supervisedEntities', (req, res) => {
             else {
                 const newEntity: EntityToSupervise = req.body;
                 logger.info('Add supervised entity ' + JSON.stringify(newEntity));
-                configService
+                supervisorService
                     .saveSupervisedEntity(newEntity)
-                    .then((entity) => {
-                        supervisorService.setConfiguration(configService.getSupervisorConfig());
-                        supervisorService.resetConnectionChecker();
-                        res.send(entity);
+                    .then(() => {
+                        res.send();
                     })
                     .catch((err) => {
                         res.status(500).send();
@@ -206,11 +197,9 @@ app.delete('/supervisedEntities/:id', (req, res) => {
         .then((isAdmin) => {
             if (!isAdmin) res.status(403).send();
             else {
-                configService
+                supervisorService
                     .deleteSupervisedEntity(req.params.id)
                     .then(() => {
-                        supervisorService.setConfiguration(configService.getSupervisorConfig());
-                        supervisorService.resetConnectionChecker();
                         res.send();
                     })
                     .catch((err) => {
@@ -267,8 +256,7 @@ app.listen(adminPort, () => {
 });
 
 async function start(): Promise<void> {
-    await supervisorDatabaseService.connectToMongoDB();
-    await configService.synchronizeWithMongoDb();
+    await supervisorService.init();
     if (activeOnStartUp) {
         supervisorService.start();
     }
