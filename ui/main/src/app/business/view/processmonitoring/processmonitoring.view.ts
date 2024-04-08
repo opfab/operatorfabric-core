@@ -12,6 +12,7 @@ import {ProcessGroups, ProcessToMonitor, StatePerProcessToMonitor} from './proce
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofModel/processes.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 export class ProcessMonitoringView {
     private processesToMonitor: ProcessToMonitor[] = null;
@@ -93,5 +94,13 @@ export class ProcessMonitoringView {
             }
         });
         return processes;
+    }
+
+    public mustViewAllCardsFeatureBeDisplayed(): boolean {
+        return UserService.hasCurrentUserAnyPermission([
+            PermissionEnum.ADMIN,
+            PermissionEnum.VIEW_ALL_CARDS,
+            PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS
+        ]);
     }
 }

@@ -299,6 +299,7 @@ describe('Process Monitoring view ', () => {
             expect(statePerProcess[0].states[0].label).toBe('State 2_1');
         });
     });
+
     describe('get process groups', () => {
         it('should return an empty list if no process groups', async () => {
             await initProcesses();
@@ -309,7 +310,7 @@ describe('Process Monitoring view ', () => {
             expect(processGroups.length).toBe(0);
         });
 
-        it('should return 2 process groups when user has access to process process1 , process2 and processWithNoName', async () => {
+        it('should return 2 process groups when user has access to process process1, process2 and processWithNoName', async () => {
             await initProcesses();
             await setUserPerimeter([
                 new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true),
@@ -324,7 +325,7 @@ describe('Process Monitoring view ', () => {
             expect(processGroups.length).toBe(2);
         });
 
-        it('should return process 1 & 2 if service 1  is selected', async () => {
+        it('should return process 1 & 2 if service 1 is selected', async () => {
             await initProcesses();
             await initProcessGroups();
             const computedPerimeters = new Array();
@@ -352,7 +353,7 @@ describe('Process Monitoring view ', () => {
             expect(processes[1].label).toBe('process name 2');
         });
 
-        it('should return process 2 if service 1  is selected and user has no permission on process 1', async () => {
+        it('should return process 2 if service 1 is selected and user has no permission on process 1', async () => {
             await initProcesses();
             await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true)]);
             await initProcessGroups();
@@ -362,6 +363,86 @@ describe('Process Monitoring view ', () => {
             expect(processes.length).toBe(1);
             expect(processes[0].id).toBe('process2');
             expect(processes[0].label).toBe('process name 2');
+        });
+    });
+
+    describe('get the display (or not) of the checkbox for seeing all cards in the perimeter of the user', () => {
+        it('should return false if the user has no permission', async () => {
+            await setUserPerimeter([], []);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeFalse();
+        });
+
+        it(
+            'should return false if the user has permissions but none of VIEW_ALL_CARDS_FOR_USER_PERIMETERS, ' +
+                'VIEW_ALL_CARDS and ADMIN',
+            async () => {
+                await setUserPerimeter(
+                    [],
+                    [PermissionEnum.ADMIN_BUSINESS_PROCESS, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS]
+                );
+                const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+                const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+                expect(mustViewAllCardsFeatureBeDisplayed).toBeFalse();
+            }
+        );
+
+        it('should return true if the user has permission ADMIN', async () => {
+            await setUserPerimeter(
+                [],
+                [
+                    PermissionEnum.ADMIN_BUSINESS_PROCESS,
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.ADMIN
+                ]
+            );
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+        });
+
+        it('should return true if the user has permission VIEW_ALL_CARDS', async () => {
+            await setUserPerimeter(
+                [],
+                [
+                    PermissionEnum.ADMIN_BUSINESS_PROCESS,
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS
+                ]
+            );
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+        });
+
+        it('should return true if the user has permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS', async () => {
+            await setUserPerimeter(
+                [],
+                [
+                    PermissionEnum.ADMIN_BUSINESS_PROCESS,
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS
+                ]
+            );
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+        });
+
+        it('should return true if the user has permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS and ADMIN', async () => {
+            await setUserPerimeter(
+                [],
+                [
+                    PermissionEnum.ADMIN_BUSINESS_PROCESS,
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.ADMIN
+                ]
+            );
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
         });
     });
 });

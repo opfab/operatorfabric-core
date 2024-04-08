@@ -74,6 +74,7 @@ definitions:
       * VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS : Permission to access all archived cards which are in the perimeter of the user
       * VIEW_USER_ACTION_LOGS: Permission to view user action logs
       * VIEW_ALL_CARDS: Permission to query all published cards
+      * VIEW_ALL_CARDS_FOR_USER_PERIMETERS: Permission to access all cards which are in the perimeter of the user
       * READONLY: Permission to view card, no rights to send cards or respond to a card.
     enum:
       - ADMIN
@@ -81,6 +82,7 @@ definitions:
       - VIEW_ALL_ARCHIVED_CARDS
       - VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS
       - VIEW_ALL_CARDS
+      - VIEW_ALL_CARDS_FOR_USER_PERIMETERS
       - VIEW_USER_ACTION_LOGS
       - READONLY
   Group:

@@ -11,11 +11,6 @@
   <ng-template #noProcessStateToDisplay>
     <div id="opfab-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px"
       translate>shared.noProcessStateAvailable</div>
-    <div *ngIf="hasCurrentUserRightsToViewAllArchivedCards"
-      style="display: flex; justify-content: center; padding-top: 10px">
-      <a id='opfab-see-all-cards-link' class="opfab-link" (click)="toggleAdminMode()"><span
-          translate>shared.goToAdminMode</span></a>
-    </div>
   </ng-template>
 
   <div class="opfab-processmonitoring-header" *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
@@ -82,6 +77,15 @@
         </div>
         
         <div  class="opfab-buttons">
+            <label
+                    *ngIf="mustViewAllCardsFeatureBeDisplayed"
+                    id="opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox"
+                    style="margin-left: 10px; max-width: 200px; margin-top: -50px"
+                    class="opfab-checkbox"
+                    translate>shared.adminMode
+                <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
             <button id="opfab-archives-logging-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
             <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
         </div>
@@ -89,9 +93,6 @@
       </div>
     </div>
   </div>
-
-
-
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
