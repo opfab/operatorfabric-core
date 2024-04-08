@@ -1,0 +1,54 @@
+/* Copyright (c) 2022-2023, Alliander (http://www.alliander.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+.opfab-map {
+    margin-top: 1em;
+    width: 100%;
+}
+
+.opfab-ol-popup {
+    position: absolute;
+    left: -50px;
+    display: block;
+    width: max-content;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--opfab-popover-bgcolor);
+    max-height: 250px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.opfab-ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    z-index: 1;
+}
+
+.opfab-ol-popup-closer:after {
+    content: '✖';
+}
+
+.btn-cardlink {
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-popover-bgcolor);
+    border-color: var(--opfab-popover-bgcolor);
+}
+
+.btn-cardlink:hover,
+.btn-cardlink:focus,
+.btn-cardlink.focus {
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
+    border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
+    box-shadow: 0 0 0 0rem;
+}

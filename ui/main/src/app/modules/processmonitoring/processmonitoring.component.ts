@@ -138,6 +138,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     isProcessGroupFilterVisible: boolean;
     mustViewAllCardsFeatureBeDisplayed: boolean;
     isAdminModeChecked: boolean;
+    isMapEnabled: boolean;
     filters;
     yearButtonClicked = false;
     monthButtonClicked = false;
@@ -152,6 +153,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     ]);
     private processMonitoring: any[];
     selectedCardId: string;
+
+    isMapViewActivated: boolean;
 
     constructor(
         private translationService: TranslationService,
@@ -233,6 +236,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         SelectedCardService.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
+
+        this.isMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
     }
 
     changeProcessesWhenSelectProcessGroup(): void {
@@ -383,6 +388,12 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.processMonitoring.forEach((column) => {
             selectedFields.push(column.field);
         });
+        if (this.isMapEnabled) {
+            if (!selectedFields.includes('summaryTranslated')) selectedFields.push('summaryTranslated');
+            if (!selectedFields.includes('publishDate')) selectedFields.push('publishDate');
+            if (!selectedFields.includes('wktGeometry')) selectedFields.push('wktGeometry');
+            if (!selectedFields.includes('wktProjection')) selectedFields.push('wktProjection');
+        }
 
         return new CardsFilter(page, size, this.isAdminModeChecked, true, false, localFilters, selectedFields);
     }
@@ -533,6 +544,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
         return this.translationService.getTranslation(key, interpolateParams);
+    }
+
+    toggleShowMap() {
+        this.isMapViewActivated = !this.isMapViewActivated;
     }
 
     ngOnDestroy() {

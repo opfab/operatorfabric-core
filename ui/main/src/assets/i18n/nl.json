@@ -348,6 +348,9 @@
     },
     "seeDetails": "DETAILS BEKIJKEN"
   },
+  "processMonitoring": {
+    "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"
+  },
   "button": {
     "ok": "OK",
     "cancel": "ANNULEREN",
