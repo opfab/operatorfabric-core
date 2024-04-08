@@ -10,39 +10,21 @@
 import 'jest';
 import ConnectionChecker from '../domain/application/connectionChecker';
 import Logger from '../common/server-side/logger';
+import {OpfabServicesInterfaceStub} from './helpers/opfabServicesInterfaceStub';
+import {EntityToSupervise} from '../domain/application/entityToSupervise';
 import GetResponse from '../common/server-side/getResponse';
-import OpfabServicesInterface from '../common/server-side/opfabServicesInterface';
-
-class OpfabServicesInterfaceStub extends OpfabServicesInterface {
-    public disconnectedEntity: string;
-    public entityRecipients = new Array<string>();
-    public minutes: number = 0;
-    public numberOfCardSend = 0;
-    public isResponseValid = true;
-
-    public userConnected = new Array<any>();
-
-    async getUsersConnected(): Promise<GetResponse> {
-        return new GetResponse(this.userConnected, this.isResponseValid);
-    }
-
-    public async getEntity(id: string): Promise<GetResponse> {
-        return new GetResponse({id, name: id + ' Name'}, true);
-    }
-
-    async sendCard(card: any): Promise<void> {
-        this.numberOfCardSend++;
-        this.disconnectedEntity = card.data.disconnected;
-        this.entityRecipients = card.entityRecipients;
-        this.minutes = card.data.minutes;
-    }
-}
 
 const logger = Logger.getLogger();
 
 describe('connection checker', function () {
     let connectionChecker: ConnectionChecker;
     let opfabInterfaceStub: OpfabServicesInterfaceStub;
+
+    async function checkConnectionXTimes(x: number): Promise<void> {
+        for (let i = 0; i < x; i++) {
+            await connectionChecker.checkConnection();
+        }
+    }
 
     beforeEach(() => {
         opfabInterfaceStub = new OpfabServicesInterfaceStub().setLogger(logger);
@@ -57,40 +39,72 @@ describe('connection checker', function () {
             .setNbOfConsecutiveNotConnectedToSendFirstCard(3)
             .setNbOfConsecutiveNotConnectedToSendSecondCard(5)
             .setConsiderConnectedIfUserInGroups(['Dispatcher'])
+            .setDisconnectedCardTemplate({
+                publisher: 'opfab',
+                processVersion: '1',
+                process: 'supervisor',
+                state: 'disconnectedEntity',
+                severity: 'ALARM'
+            })
             .setEntitiesToSupervise([
-                {entityId: 'ENTITY1', supervisors: ['ENTITY2']},
-                {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
+                new EntityToSupervise('ENTITY1', ['ENTITY2']),
+                new EntityToSupervise('ENTITY3', ['ENTITY2'])
             ]);
     });
 
     it('Should send a card after 3 times ENTITY1 is disconnected', async function () {
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
-        expect(opfabInterfaceStub.disconnectedEntity).toEqual('ENTITY1 Name');
-        expect(opfabInterfaceStub.entityRecipients).toEqual(['ENTITY2']);
-        expect(opfabInterfaceStub.minutes).toEqual(6);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.minutes).toEqual(6);
+    });
+
+    it('Should send a card with disconnected card template configured', async function () {
+        await checkConnectionXTimes(3);
+        expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.minutes).toEqual(6);
+        expect(opfabInterfaceStub.cardSend.publisher).toEqual('opfab');
+        expect(opfabInterfaceStub.cardSend.processVersion).toEqual('1');
+        expect(opfabInterfaceStub.cardSend.process).toEqual('supervisor');
+        expect(opfabInterfaceStub.cardSend.state).toEqual('disconnectedEntity');
+        expect(opfabInterfaceStub.cardSend.severity).toEqual('ALARM');
+    });
+
+    it('Should send entity name in card title', async function () {
+        await checkConnectionXTimes(3);
+        expect(opfabInterfaceStub.cardSend.title.key).toEqual('connection.title');
+        expect(opfabInterfaceStub.cardSend.title.parameters).toEqual({disconnected: 'ENTITY1 Name'});
+    });
+
+    it('Should send entity name and number of minutes in card summary', async function () {
+        await checkConnectionXTimes(3);
+        expect(opfabInterfaceStub.cardSend.summary.key).toEqual('connection.summary');
+        expect(opfabInterfaceStub.cardSend.summary.parameters).toEqual({disconnected: 'ENTITY1 Name', minutes: 6});
     });
 
     it('Should send a second card after 5 times ENTITY1 is disconnected', async function () {
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
-        expect(opfabInterfaceStub.disconnectedEntity).toEqual('ENTITY1 Name');
-        expect(opfabInterfaceStub.entityRecipients).toEqual(['ENTITY2']);
-        expect(opfabInterfaceStub.minutes).toEqual(10);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.minutes).toEqual(10);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
+    });
+
+    it('Should use entityId as Name if not able to get entity name', async function () {
+        opfabInterfaceStub.setGetEntityFunction((id: string) => new GetResponse(null, false));
+        await checkConnectionXTimes(3);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1');
     });
 
     it('Do not send card if ENTITY1 connected ', async function () {
@@ -98,10 +112,7 @@ describe('connection checker', function () {
             {login: 'operator1', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY1']},
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(4);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
     });
 
@@ -109,22 +120,17 @@ describe('connection checker', function () {
         opfabInterfaceStub.userConnected = [
             {login: 'operator4', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY1', 'ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(4);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
     });
 
     it('Do not send card if ENTITY1 disconnected only two times ', async function () {
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         opfabInterfaceStub.userConnected = [
             {login: 'operator1', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY1']},
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
     });
 
@@ -133,16 +139,11 @@ describe('connection checker', function () {
             {login: 'operator1', groups: ['Readonly'], entitiesConnected: ['ENTITY1']},
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
-        expect(opfabInterfaceStub.disconnectedEntity).toEqual('ENTITY1 Name');
-        expect(opfabInterfaceStub.entityRecipients).toEqual(['ENTITY2']);
-        expect(opfabInterfaceStub.minutes).toEqual(6);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.minutes).toEqual(6);
     });
 
     it('Should NOT send a card if considerConnectedIfUserInGroups is not set and users are connected', async function () {
@@ -151,12 +152,17 @@ describe('connection checker', function () {
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
         connectionChecker.setConsiderConnectedIfUserInGroups(null);
+        await checkConnectionXTimes(3);
+        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
+    });
 
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
+    it('Should NOT send a card if considerConnectedIfUserInGroups is empty and users are connected', async function () {
+        opfabInterfaceStub.userConnected = [
+            {login: 'operator1', groups: ['Readonly'], entitiesConnected: ['ENTITY1']},
+            {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
+        ];
+        connectionChecker.setConsiderConnectedIfUserInGroups([]);
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
     });
 
@@ -165,66 +171,46 @@ describe('connection checker', function () {
             {login: 'operator1', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY1']},
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         opfabInterfaceStub.userConnected = [
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
     });
 
     it('Send no send second card if entity connect after first card ', async function () {
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         await connectionChecker.checkConnection();
         opfabInterfaceStub.userConnected = [
             {login: 'operator1', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY1']},
             {login: 'operator3', groups: ['Readonly', 'Dispatcher'], entitiesConnected: ['ENTITY3']}
         ];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(4);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
     });
 
     it('Should send 2 card if 2 entities disconnected', async function () {
         opfabInterfaceStub.userConnected = [];
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(5);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(4);
     });
 
     it('Should restart from zero if reset connection checker', async function () {
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(4);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         connectionChecker.resetState();
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
-        expect(opfabInterfaceStub.disconnectedEntity).toEqual('ENTITY1 Name');
-        expect(opfabInterfaceStub.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
     });
@@ -233,29 +219,23 @@ describe('connection checker', function () {
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
         opfabInterfaceStub.isResponseValid = false;
-        await connectionChecker.checkConnection();
-        expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
-        await connectionChecker.checkConnection();
+        await checkConnectionXTimes(2);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
         opfabInterfaceStub.isResponseValid = true;
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
         await connectionChecker.checkConnection();
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
-        expect(opfabInterfaceStub.disconnectedEntity).toEqual('ENTITY1 Name');
-        expect(opfabInterfaceStub.entityRecipients).toEqual(['ENTITY2']);
-        expect(opfabInterfaceStub.minutes).toEqual(6);
+        expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1 Name');
+        expect(opfabInterfaceStub.cardSend.entityRecipients).toEqual(['ENTITY2']);
+        expect(opfabInterfaceStub.cardSend.data.minutes).toEqual(6);
     });
 
     it('Should send 2 cards after 3 times when connected user has no entities', async function () {
         opfabInterfaceStub.userConnected = [
             {login: 'operator4', groups: ['Readonly', 'Dispatcher'], entitiesConnected: []}
         ];
-
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-        await connectionChecker.checkConnection();
-
+        await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
     });
 });

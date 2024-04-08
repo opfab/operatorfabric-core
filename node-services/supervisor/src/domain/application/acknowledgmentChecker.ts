@@ -75,22 +75,29 @@ export default class AcknowledgementChecker {
         const GetResponse: GetResponse = await this.opfabInterface.getCards({adminMode: true, filters: cardFilters});
         if (!GetResponse.isValid()) return;
 
-        const retrievedCards = GetResponse.getData();
+        const retrievedCards: Card[] = GetResponse.getData() as Card[];
 
-        retrievedCards.forEach(async (card: Card) => {
+        for (const card of retrievedCards) {
             let recipients = card.entityRecipients;
-            if (recipients?.length > 0 && card.entityRecipientsForInformation?.length > 0)
+
+            if (
+                recipients != null &&
+                recipients.length > 0 &&
+                card.entityRecipientsForInformation != null &&
+                card.entityRecipientsForInformation.length > 0
+            )
                 recipients = this.removeElementsFromArray(recipients, card.entityRecipientsForInformation);
 
             if (
-                recipients?.length > 0 &&
+                recipients != null &&
+                recipients.length > 0 &&
                 (card.entitiesAcks == null || card.entitiesAcks.length < recipients.length) &&
                 card.publishDate < now - this.secondsAfterPublicationToConsiderCardAsNotAcknowledged * 1000 &&
                 !this.cardsAlreadySent.has(card.uid)
             ) {
-                this.logger.info(card.uid + ' not ackmowledged');
+                this.logger.info(card.uid + ' not acknowledged');
 
-                const missingAcks = this.removeElementsFromArray(recipients, card.entitiesAcks).join(',');
+                const missingAcks = this.removeElementsFromArray(recipients, card.entitiesAcks ?? []).join(',');
 
                 this.sendUnacknowlegedCard(card, missingAcks)
                     .then(() => this.cardsAlreadySent.set(card.uid, now))
@@ -98,12 +105,12 @@ export default class AcknowledgementChecker {
                         this.logger.error('Error sending unacknowledged card ' + card.uid + ' : ' + err);
                     });
             }
-        });
+        }
         this.cleanCardsAreadySent();
     }
 
-    private async sendUnacknowlegedCard(unackedCard: any, missingAcks: string): Promise<any> {
-        const card = {...this.unackedCardTemplate};
+    private async sendUnacknowlegedCard(unackedCard: Card, missingAcks: string): Promise<any> {
+        const card: Card = {...this.unackedCardTemplate};
         card.startDate = new Date().valueOf();
         card.processInstanceId = unackedCard.id;
         if (unackedCard.publisherType === 'ENTITY') {

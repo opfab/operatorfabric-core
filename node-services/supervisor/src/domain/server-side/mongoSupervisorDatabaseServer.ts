@@ -9,10 +9,11 @@
 
 import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
-import {MongoConfig} from './MongoConfig';
+import {MongoConfig} from './mongoConfig';
 import {EntityToSupervise} from '../application/entityToSupervise';
+import SupervisorDatabaseServer from './supervisorDatabaseServer';
 
-export default class SupervisorDatabaseService {
+export default class MongoSupervisorDatabaseServer implements SupervisorDatabaseServer {
     logger: Logger;
     mongoClient: MongoClient;
     mongoDB: Db;
@@ -30,7 +31,7 @@ export default class SupervisorDatabaseService {
         return this;
     }
 
-    public async connectToMongoDB(): Promise<void> {
+    public async openConnection(): Promise<void> {
         await this.connectWithRetry();
     }
 
@@ -62,8 +63,8 @@ export default class SupervisorDatabaseService {
         }
     }
 
-    public async getSupervisedEntities(): Promise<any[]> {
-        return await this.mongoDB.collection('supervisedEntities').find().toArray();
+    public async getSupervisedEntities(): Promise<EntityToSupervise[]> {
+        return (await this.mongoDB.collection('supervisedEntities').find().toArray()) as any as EntityToSupervise[];
     }
 
     public async saveSupervisedEntity(supervisedEntity: EntityToSupervise): Promise<void> {
@@ -80,9 +81,11 @@ export default class SupervisorDatabaseService {
         }
     }
 
-    public async getSupervisedEntity(id: string): Promise<any> {
+    public async getSupervisedEntity(id: string): Promise<EntityToSupervise | undefined> {
         try {
-            return await this.mongoDB.collection('supervisedEntities').findOne({entityId: id});
+            return (await this.mongoDB
+                .collection('supervisedEntities')
+                .findOne({entityId: id})) as any as EntityToSupervise;
         } catch (error) {
             this.logger.error('Mongo error in find supervised Entity' + JSON.stringify(error));
         }
