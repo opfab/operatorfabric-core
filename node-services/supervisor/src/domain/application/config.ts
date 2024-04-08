@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {EntityToSupervise} from '../application/entityToSupervise';
+import {EntityToSupervise} from './entityToSupervise';
 import SupervisorDatabaseService from '../server-side/supervisorDatabaseService';
-import ConfigDTO from './configDTO';
+import ConfigDTO from '../client-side/configDTO';
 import fs from 'fs';
 
-export default class ConfigService {
+export default class Config {
     supervisorDatabaseService: SupervisorDatabaseService;
     supervisorConfig: ConfigDTO;
     configFilePath: string | null;
@@ -54,7 +54,7 @@ export default class ConfigService {
         }
     }
 
-    public async synchronizeWithMongoDb(): Promise<ConfigDTO> {
+    public async synchronizeConfigWithDatabase(): Promise<ConfigDTO> {
         try {
             const entitiesToSupervise = await this.supervisorDatabaseService.getSupervisedEntities();
             this.logger.debug('Supervised entities from mongodb ' + JSON.stringify(entitiesToSupervise));
@@ -91,7 +91,6 @@ export default class ConfigService {
             this.supervisorConfig.entitiesToSupervise.splice(index, 1);
         }
         this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
-        this.save();
     }
 
     public async deleteSupervisedEntity(entityId: string): Promise<void> {
@@ -101,7 +100,6 @@ export default class ConfigService {
         if (index >= 0) {
             this.supervisorConfig.entitiesToSupervise.splice(index, 1);
         }
-        this.save();
     }
 
     private loadFromFile(): void {
@@ -125,7 +123,11 @@ export default class ConfigService {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (Object.prototype.hasOwnProperty.call(this.supervisorConfig, key) && value != null) {
+                if (
+                    Object.prototype.hasOwnProperty.call(this.supervisorConfig, key) &&
+                    value != null &&
+                    key !== 'entitiesToSupervise'
+                ) {
                     (this.supervisorConfig as any)[key] = value;
                 }
             }

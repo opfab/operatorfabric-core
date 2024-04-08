@@ -8,9 +8,24 @@
  */
 
 export class Card {
-    entityRecipients: string[];
-    entityRecipientsForInformation: string[];
+    entityRecipients?: string[];
+    entityRecipientsForInformation?: string[];
     uid: string;
-    entitiesAcks: string[];
+    id: string;
+    publisher: string;
+    process: string;
+    state: string;
+    processInstanceId: string;
+    processVersion?: string;
+    severity?: string;
+    startDate: number;
+    userRecipients?: string[];
+    entitiesAcks?: string[];
     publishDate: number;
+    publisherType?: string;
+    data?: any;
+    title?: any;
+    titleTranslated?: any;
+    summary?: any;
+    summaryTranslated?: any;
 }

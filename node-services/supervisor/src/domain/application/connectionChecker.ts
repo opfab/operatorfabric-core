@@ -21,7 +21,7 @@ export default class ConnectionChecker {
     private secondsBetweenConnectionChecks: number;
     private supervisorList: Map<string, string[]>;
     private entitiesList: string[];
-    private groupsList: any;
+    private groupsList: string[] = [];
     private disconnectedCardTemplate: any = '';
 
     public setOpfabServicesInterface(opfabInterface: OpfabServicesInterface): this {
@@ -55,7 +55,8 @@ export default class ConnectionChecker {
     }
 
     public setConsiderConnectedIfUserInGroups(considerConnectedIfUserInGroups: any): this {
-        this.groupsList = considerConnectedIfUserInGroups;
+        if (considerConnectedIfUserInGroups == null) this.groupsList = [];
+        else this.groupsList = considerConnectedIfUserInGroups;
         return this;
     }
 
@@ -82,8 +83,8 @@ export default class ConnectionChecker {
 
         this.logger.debug('All users connected : ' + JSON.stringify(allConnectedUsers));
         const connectedUsers =
-            this.groupsList != null
-                ? allConnectedUsers.filter((user: {groups: any[]}) => {
+            this.groupsList.length > 0
+                ? allConnectedUsers.filter((user: {groups: string[]}) => {
                       return user?.groups.filter((group) => this.groupsList.includes(group)).length > 0;
                   })
                 : allConnectedUsers;

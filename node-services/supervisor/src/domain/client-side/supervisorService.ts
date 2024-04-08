@@ -7,91 +7,60 @@
  * This file is part of the OperatorFabric project.
  */
 
-import AcknowledgementChecker from '../application/acknowledgmentChecker';
-import ConnectionChecker from '../application/connectionChecker';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import SupervisorDatabaseService from '../server-side/supervisorDatabaseService';
+import {EntityToSupervise} from '../application/entityToSupervise';
 import ConfigDTO from './configDTO';
+import SupervisorApplication from '../application/supervisorApplication';
 
 export default class SupervisorService {
-    private connectionChecker: ConnectionChecker;
-    private acknowledgementChecker: AcknowledgementChecker;
-    private readonly opfabInterface: OpfabServicesInterface;
-    private config: ConfigDTO;
-    private active = false;
-    private readonly logger: any;
+    private readonly supervisorApplication: SupervisorApplication;
 
-    constructor(config: ConfigDTO, opfabInterface: OpfabServicesInterface, logger: any) {
-        this.config = config;
-        this.opfabInterface = opfabInterface;
-        this.logger = logger;
+    constructor(
+        defaultConfig: any,
+        configFilePath: string | null,
+        private readonly supervisorDatabaseService: SupervisorDatabaseService,
+        opfabInterface: OpfabServicesInterface,
+        private readonly logger: any
+    ) {
+        this.supervisorApplication = new SupervisorApplication(
+            defaultConfig,
+            configFilePath,
+            supervisorDatabaseService,
+            opfabInterface,
+            logger
+        );
     }
 
-    public setConfiguration(config: ConfigDTO): void {
-        this.config = config;
+    public async init(): Promise<void> {
+        await this.supervisorApplication.init();
     }
 
-    public resetConnectionChecker(): void {
-        this.connectionChecker = new ConnectionChecker()
-            .setLogger(this.logger)
-            .setOpfabServicesInterface(this.opfabInterface)
-            .setSecondsBetweenConnectionChecks(this.config.secondsBetweenConnectionChecks)
-            .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
-            .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
-            .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
-            .setEntitiesToSupervise(this.config.entitiesToSupervise)
-            .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
+    public async saveSupervisedEntity(supervisedEntity: EntityToSupervise): Promise<void> {
+        await this.supervisorApplication.saveSupervisedEntity(supervisedEntity);
     }
 
-    public resetAcknowledgementChecker(): void {
-        this.acknowledgementChecker = new AcknowledgementChecker()
-            .setLogger(this.logger)
-            .setOpfabServicesInterface(this.opfabInterface)
-            .setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(
-                this.config.secondsAfterPublicationToConsiderCardAsNotAcknowledged
-            )
-            .setWindowInSecondsForCardSearch(this.config.windowInSecondsForCardSearch)
-            .setUnackedCardTemplate(this.config.unackCardTemplate)
-            .setProcessStatesToSupervise(this.config.processesToSupervise);
+    public async deleteSupervisedEntity(entityId: string): Promise<void> {
+        await this.supervisorApplication.deleteSupervisedEntity(entityId);
+    }
+
+    public patch(update: object): ConfigDTO {
+        return this.supervisorApplication.patch(update);
+    }
+
+    public getSupervisorConfig(): ConfigDTO {
+        return this.supervisorApplication.getSupervisorConfig();
     }
 
     public start(): void {
-        this.resetConnectionChecker();
-        this.resetAcknowledgementChecker();
-        this.checkConnectionRegularly();
-        this.checkAcknowledgmentRegularly();
-        this.active = true;
+        this.supervisorApplication.start();
     }
 
     public stop(): void {
-        this.active = false;
-        this.connectionChecker.resetState();
+        this.supervisorApplication.stop();
     }
 
     public isActive(): boolean {
-        return this.active;
-    }
-
-    private checkConnectionRegularly(): void {
-        if (this.active) {
-            this.logger.info('checkConnectionRegularly');
-            this.connectionChecker
-                .checkConnection()
-                .catch((error) => this.logger.error('error during periodic connections check' + error));
-        }
-        setTimeout(() => {
-            this.checkConnectionRegularly();
-        }, this.config.secondsBetweenConnectionChecks * 1000);
-    }
-
-    private checkAcknowledgmentRegularly(): void {
-        if (this.active) {
-            this.logger.info('checkAcknowledgmentRegularly');
-            this.acknowledgementChecker
-                .checkAcknowledgment()
-                .catch((error) => this.logger.error('error during periodic acknowledgment check' + error));
-        }
-        setTimeout(() => {
-            this.checkAcknowledgmentRegularly();
-        }, this.config.secondsBetweenAcknowledgmentChecks * 1000);
+        return this.supervisorApplication.isActive();
     }
 }

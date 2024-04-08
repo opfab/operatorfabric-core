@@ -36,5 +36,5 @@ operatorfabric:
       windowInSecondsForCardSearch: 1200
       secondsBetweenAcknowledgmentChecks: 10
       secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
-#  logConfig:
-#    logLevel: debug
+  logConfig:
+    logLevel: info
