@@ -13,7 +13,6 @@ subprojects {
 
     //Transitive dependencies udpate needed for security reasons 
         implementation misc.snakeyaml
-        implementation misc.bouncyCastle
     //End transitive dependencies
 
         testAnnotationProcessor misc.lombok
