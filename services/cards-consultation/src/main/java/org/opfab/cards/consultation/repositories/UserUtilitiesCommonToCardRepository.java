@@ -421,7 +421,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
             boolean adminMode = Boolean.TRUE.equals(filter.adminMode());
 
             boolean hasCurrentUserThePermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS);
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS);
 
             return (hasCurrentUserThePermission && adminMode);
         }

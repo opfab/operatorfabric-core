@@ -136,6 +136,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     columnFilters: FilterModel[] = [];
     isProcessGroupFilterVisible: boolean;
+    mustViewAllCardsFeatureBeDisplayed: boolean;
     isAdminModeChecked: boolean;
     filters;
 
@@ -184,6 +185,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     ngOnInit() {
         this.isProcessGroupFilterVisible = this.processMonitoringView.getProcessGroups().length > 1;
+        this.mustViewAllCardsFeatureBeDisplayed = this.processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
 
         this.processGroupMultiSelectOptions = this.processMonitoringView.getProcessGroups().map((processGroup) => {
             return new MultiSelectOption(processGroup.id, processGroup.label);
@@ -343,7 +345,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             selectedFields.push(column.field);
         });
 
-        return new CardsFilter(page, size, false, true, false, localFilters, selectedFields);
+        return new CardsFilter(page, size, this.isAdminModeChecked, true, false, localFilters, selectedFields);
     }
 
     transformFiltersListToMap = (filters: any): void => {

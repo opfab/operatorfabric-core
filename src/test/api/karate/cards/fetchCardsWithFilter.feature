@@ -194,26 +194,6 @@ Feature: Card Filter
 	"data" : {"message":"new message (card10) "}
 }
 """
-    * def mycard =
-"""
-{
-	"publisher" : "operator1_fr",
-	"processVersion" : "2",
-	"process"  :"api_test",
-	"processInstanceId" : "process10",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "ALARM",
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"timespans test"},
-	"startDate" : 1583568831000,
-	"timeSpans" : [
-        {"start" : 1583568831000},
-        {"start" : 1583578831000}
-    	]
-}
-"""
 
     * def cardNotInPerimeters =
 """
@@ -400,7 +380,7 @@ Scenario: fetch the first page
 			Then status 200
 			And match response.numberOfElements == 10
 
-	Scenario: fetch as user with permission VIEW_ALL_CARDS) without adminMode
+	Scenario: fetch as user with permission VIEW_ALL_CARDS without adminMode
 
 		* def filter =
 		"""
@@ -437,6 +417,106 @@ Scenario: fetch the first page
 			Then method post
 			Then status 200
 			And match response.numberOfElements == 10
+
+
+	Scenario: Create a group Supervisor2 with permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS only
+
+		* def groupSupervisor2 =
+"""
+{
+  "id" : "Supervisor2",
+  "name" : "Supervisor2",
+  "description" : "Supervisor2 Group",
+  "perimeters" : ["perimeter"],
+  "permissions" : ["VIEW_ALL_CARDS_FOR_USER_PERIMETERS"]
+}
+"""
+
+		* def usersArray =
+"""
+[   "operator1_crisisroom"
+]
+"""
+
+		Given url opfabUrl + 'users/groups'
+		And header Authorization = 'Bearer ' + authTokenAdmin
+		And request groupSupervisor2
+		When method post
+		Then status 201
+		And match response.id == groupSupervisor2.id
+		And assert response.permissions.length == 1
+		And match response.permissions contains only [ "VIEW_ALL_CARDS_FOR_USER_PERIMETERS"]
+
+
+		Given url opfabUrl + 'users/groups/Supervisor/users/operator1_crisisroom'
+		And header Authorization = 'Bearer ' + authTokenAdmin
+		When method delete
+		Then status 200
+
+		Given url opfabUrl + 'users/groups/Supervisor2/users'
+		And header Authorization = 'Bearer ' + authTokenAdmin
+		And request usersArray
+		When method patch
+		And status 200
+
+	Scenario: fetch as user with permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS without adminMode
+
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [],
+			"adminMode": false
+		}
+		"""
+
+		Given url opfabUrl + 'cards/cards'
+		And header Authorization = 'Bearer ' + authTokenSupervisor
+		And request filter
+		Then method post
+		Then status 200
+		And match response.numberOfElements == 0
+
+	Scenario: fetch as user with permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS with adminMode
+
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [],
+			"adminMode": true
+		}
+		"""
+
+		Given url opfabUrl + 'cards/cards'
+		And header Authorization = 'Bearer ' + authTokenSupervisor
+		And request filter
+		Then method post
+		Then status 200
+		And match response.numberOfElements == 10
+
+
+	Scenario: We set back user operator1_crisisroom in the Supervisor group
+
+		* def usersArray =
+"""
+[   "operator1_crisisroom"
+]
+"""
+
+		Given url opfabUrl + 'users/groups/Supervisor/users'
+		And header Authorization = 'Bearer ' + authTokenAdmin
+		And request usersArray
+		When method patch
+		And status 200
+
+	Scenario: Delete the group Supervisor2
+		Given url opfabUrl + 'users/groups/Supervisor2'
+		And header Authorization = 'Bearer ' + authTokenAdmin
+		When method delete
+		Then status 200
 
 
 	Scenario: filter on a given publish date
