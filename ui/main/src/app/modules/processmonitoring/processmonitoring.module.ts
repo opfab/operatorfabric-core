@@ -22,6 +22,7 @@ import {AgGridModule} from 'ag-grid-angular';
 import {TimeCellRendererComponent} from './components/cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from './components/cell-renderers/sender-cell-renderer.component';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import {MonitoringMapComponent} from './components/map/map.component';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         ProcessMonitoringComponent,
         ProcessmonitoringTableComponent,
         TimeCellRendererComponent,
-        SenderCellRendererComponent
+        SenderCellRendererComponent,
+        MonitoringMapComponent
     ]
 })
 export class ProcessmonitoringModule {}

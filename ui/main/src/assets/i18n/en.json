@@ -348,6 +348,9 @@
     },
     "seeDetails": "SEE DETAILS"
   },
+  "processMonitoring": {
+    "viewResultOnMap": "View Results on a Geographical Map"
+  },
   "button": {
     "ok": "OK",
     "cancel": "CANCEL",

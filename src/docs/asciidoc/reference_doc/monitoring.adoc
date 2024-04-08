@@ -48,6 +48,7 @@ This screen provides the following features :
 in the `web-ui.json` configuration file. This object is a list of the fields you want to see in the array.
 - depending on the permissions of the groups to which the user is attached, he can also see the cards he is not the
 recipient of.
+- if geographical map view is enabled ('feed.geomap.enableMap' set to 'true' in web-ui.json) it is possible to view the cards on the map by checking the "View Results on a Geographical Map" checkbox.
 
 Here is an example of processMonitoring configuration :
 ```
