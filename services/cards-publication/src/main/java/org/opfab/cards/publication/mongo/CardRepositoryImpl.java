@@ -40,6 +40,7 @@ public class CardRepositoryImpl implements CardRepository {
     static final String USERS_ACKS = "usersAcks";
     static final String ENTITIES_ACKS = "entitiesAcks";
     static final String USERS_READS = "usersReads";
+    static final String LAST_UPDATE = "lastUpdate";
 
     public CardRepositoryImpl(MongoTemplate template) {
         this.template = template;
@@ -59,6 +60,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public void saveCard(Card card) {
         log.debug("preparing to write {}", card.toString());
+        card.setLastUpdate(Instant.now());
         template.save(card);
     }
 
@@ -104,11 +106,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        Update update = new Update().addToSet(USERS_ACKS, user.getLogin());
-        update.addToSet(
-                ENTITIES_ACKS,
-                BasicDBObjectBuilder.start("$each", entitiesAcks).get());
-        update.set("lastAckDate", Instant.now());
+        Update update = new Update()
+            .addToSet(USERS_ACKS, user.getLogin())
+            .addToSet(ENTITIES_ACKS,BasicDBObjectBuilder.start("$each", entitiesAcks).get())
+            .set("lastAckDate", Instant.now())
+            .set(LAST_UPDATE, Instant.now());
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update,
@@ -119,8 +121,13 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
+        Update update = new Update()
+            .addToSet(USERS_READS, name)
+            .set(LAST_UPDATE, Instant.now());
+
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().addToSet(USERS_READS, name), Card.class);
+                update, 
+                Card.class);
         log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -130,6 +137,7 @@ public class CardRepositoryImpl implements CardRepository {
         Update update = new Update().pull(USERS_ACKS, userName);
         if (entitiesAcks != null) 
             update = update.pullAll(ENTITIES_ACKS, entitiesAcks.toArray());
+        update.set(LAST_UPDATE, Instant.now());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
         log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
@@ -139,7 +147,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull(USERS_READS, userName), Card.class);
+                new Update().pull(USERS_READS, userName).set(LAST_UPDATE, Instant.now()), Card.class);
         log.debug("removed {} occurrence of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -178,8 +186,13 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
+        Update update = new Update()
+            .unset(USERS_ACKS)
+            .unset(USERS_READS)
+            .set(ENTITIES_ACKS,new LinkedList<String>())
+            .set(LAST_UPDATE, Instant.now());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().unset(USERS_ACKS).unset(USERS_READS).set(ENTITIES_ACKS,new LinkedList<String>()).set("publishDate", Instant.now()), Card.class);
+                update, Card.class);
         log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);

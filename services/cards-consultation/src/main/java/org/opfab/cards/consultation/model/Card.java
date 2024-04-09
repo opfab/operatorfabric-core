@@ -51,8 +51,9 @@ public class Card {
     private String titleTranslated;
     private String summaryTranslated;
 
-    @CreatedDate
     private Instant publishDate;
+
+    private Instant lastUpdate;
 
     private Instant lttd;
     private Instant startDate;
