@@ -195,14 +195,14 @@ Feature: CardsUserAcknowledgement
     And match response.card.hasBeenAcknowledged == false
     And match response.card.uid == uid
 
+    # Unacknowledge a card that is not acknowledged
     Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
-    Then status 204
+    Then status 200
 
-
-    #unack unexisting card 
+    # Unacknowledge an unexisting card 
     Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array

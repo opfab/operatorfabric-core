@@ -70,6 +70,10 @@ public class Card  {
     @Indexed
     private Instant publishDate;
 
+    @CreatedDate
+    @Indexed
+    private Instant lastUpdate;
+
     private Instant lttd;
     
     @Indexed
@@ -176,5 +180,9 @@ public class Card  {
 
     public void setKeepChildCards(Boolean keepChildCards) {
         this.keepChildCards = (keepChildCards != null) && keepChildCards;
+    }
+
+    public void setLastUpdate(Instant lastUpdate){
+        this.lastUpdate = lastUpdate;
     }
 }

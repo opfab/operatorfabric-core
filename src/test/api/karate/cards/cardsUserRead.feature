@@ -169,11 +169,11 @@ Feature: CardsUserRead
     And match response.card.hasBeenRead == true
     And match response.card.uid == uid
 
+    # Read a card that has already been read
     Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     When method delete
-    Then status 204
-
+    Then status 200
 
     Given url opfabUrl + 'cardspub/cards/userCardRead/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken
