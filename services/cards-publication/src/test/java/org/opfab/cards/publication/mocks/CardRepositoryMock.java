@@ -97,6 +97,16 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
+    public void setChildCardDates(String parentCardId, Instant startDate, Instant endDate) {
+        cardsById.values().stream().forEach(child -> {
+            if ((child.getParentCardId() != null) && child.getParentCardId().equals(parentCardId)) {
+                child.setStartDate(startDate);
+                child.setEndDate(endDate);
+            }
+        });
+    }
+
+    @Override
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
         Optional<Card> found = this.findByUid(cardUid);
         if (found.isPresent()) {

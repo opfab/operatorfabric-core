@@ -36,6 +36,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     private MongoTemplate template;
 
+    static final String START_DATE = "startDate";
     static final String END_DATE = "endDate";
     static final String USERS_ACKS = "usersAcks";
     static final String ENTITIES_ACKS = "entitiesAcks";
@@ -105,6 +106,15 @@ public class CardRepositoryImpl implements CardRepository {
         return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, Card.class));
     }
 
+    public void setChildCardDates(String parentCardId, Instant startDate, Instant endDate) {
+        Update update = new Update().set(START_DATE, startDate).set(END_DATE, endDate);
+        UpdateResult updateChilds = template.updateMulti(Query.query(Criteria.where("parentCardId").is(parentCardId)),
+        update,
+        Card.class);
+        log.debug("updated startDate and EndDate of {} child cards of {} parent card", updateChilds.getModifiedCount(),
+        parentCardId);
+    }
+
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
         Update update = new Update()
             .addToSet(USERS_ACKS, user.getLogin())
@@ -167,7 +177,7 @@ public class CardRepositoryImpl implements CardRepository {
         Criteria endDateCriteria = new Criteria().andOperator(Criteria.where(END_DATE).ne(null),
                 Criteria.where(END_DATE).lt(endDateBefore));
         Criteria startDateCriteria = new Criteria().andOperator(Criteria.where(END_DATE).exists(false),
-                Criteria.where("startDate").lt(endDateBefore));
+                Criteria.where(START_DATE).lt(endDateBefore));
         findCardByEndDateBefore.addCriteria(new Criteria().orOperator(endDateCriteria, startDateCriteria));
         findCardByEndDateBefore.fields().exclude("data");
         List<Card> toDelete = template.find(findCardByEndDateBefore, Card.class);
