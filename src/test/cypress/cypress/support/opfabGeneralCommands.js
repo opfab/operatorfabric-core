@@ -97,6 +97,11 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('of-dashboard').should('exist');
     }
 
+    navigateToMonitoringProcessus = function () {
+        cy.get('#opfab-navbar-menu-processmonitoring').click();
+        cy.get('of-processmonitoring').should('exist');
+    }
+
     navigateToRealTimeUsers = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();

@@ -139,6 +139,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     mustViewAllCardsFeatureBeDisplayed: boolean;
     isAdminModeChecked: boolean;
     filters;
+    yearButtonClicked = false;
+    monthButtonClicked = false;
+    weekButtonClicked = false;
+    periodClicked: string;
 
     private mapSeverity = new Map([
         ['alarm', 1],
@@ -181,6 +185,30 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     isThereProcessStateToDisplay(): boolean {
         return this.processList.length > 0;
+    }
+
+    moveDomain(isForward: boolean): void {
+        if (this.processMonitoringForm.value.activeFrom && this.processMonitoringForm.value.activeTo) {
+            const newDates = this.processMonitoringView.getDatesWhenMoving(
+                this.processMonitoringForm.value.activeFrom,
+                this.processMonitoringForm.value.activeTo,
+                isForward,
+                this.periodClicked
+            );
+            this.processMonitoringForm.patchValue({activeFrom: newDates.activeFrom, activeTo: newDates.activeTo});
+        }
+    }
+
+    changeDateBoundsFollowingPeriodClicked(periodClicked: string): void {
+        this.periodClicked = periodClicked;
+        this.yearButtonClicked = periodClicked === 'year';
+        this.monthButtonClicked = periodClicked === 'month';
+        this.weekButtonClicked = periodClicked === 'week';
+
+        const newDates = this.processMonitoringView.getDatesAfterPeriodClick(periodClicked);
+        this.processMonitoringForm.patchValue({activeFrom: newDates.activeFrom, activeTo: newDates.activeTo});
+
+        setTimeout(() => this.setDateFilterBounds(), 100);
     }
 
     ngOnInit() {
@@ -246,7 +274,15 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     ngAfterViewInit() {
+        document.getElementById('opfab-processmonitoring-period-year').click();
         this.sendFilterQuery(0, false);
+    }
+
+    resetPeriodClicked() {
+        this.yearButtonClicked = false;
+        this.monthButtonClicked = false;
+        this.weekButtonClicked = false;
+        this.periodClicked = '';
     }
 
     resetForm() {
@@ -257,6 +293,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.columnFilters = [];
         this.firstQueryHasBeenDone = false;
         this.setDateFilterBounds();
+        this.resetPeriodClicked();
+        document.getElementById('opfab-processmonitoring-period-year').click();
     }
 
     setDateFilterBounds(): void {
@@ -276,6 +314,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     onDateTimeChange() {
+        this.resetPeriodClicked();
         // need to wait otherwise change is not always done
         setTimeout(() => this.setDateFilterBounds(), 100);
     }

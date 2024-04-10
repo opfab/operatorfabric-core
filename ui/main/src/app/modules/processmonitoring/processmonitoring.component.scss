@@ -77,6 +77,51 @@
     padding-left: 5%;
 }
 
+#opfab-processmonitoring-date-navigation-links {
+    position: relative;
+    float: right;
+    flex-grow: 1;
+    font-size: 13px;
+    color: var(--opfab-navbar-color);
+    background-color: var(--opfab-bgcolor);
+    text-decoration: none;
+    border-radius: 5px;
+    padding-bottom: 5px;
+    margin-top: -5px;
+    height: 2em;
+
+    ul {
+        margin: 0;
+        list-style: none;
+        display: flex;
+        justify-content: flex-end;
+
+        li {
+            padding-left: 0px;
+            padding-right: 25px;
+
+            .link-selected {
+                color: var(--opfab-navbar-color-active);
+                font-weight: bold;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            .link-unselect {
+                background-color: var(--opfab-bgcolor);
+                color: var(--opfab-navbar-color);
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+
+        li:hover {
+            color: var(--opfab-navbar-color-active);
+            font-weight: bold;
+        }
+    }
+}
+
 td {
     max-width: 350px;
     padding-left: 5px;

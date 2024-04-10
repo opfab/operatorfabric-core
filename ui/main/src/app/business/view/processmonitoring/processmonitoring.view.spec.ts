@@ -445,4 +445,144 @@ describe('Process Monitoring view ', () => {
             expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
         });
     });
+
+    describe('get dates after period click if the current day/time is 2024-04-29 15:32 (summer time)', () => {
+        it('should return 2024-01-01T00:00 and 2025-01-01T00:00 if the user clicks on the year button', async () => {
+            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('year');
+            expect(dates).toEqual({activeFrom: '2024-01-01T00:00', activeTo: '2025-01-01T00:00'});
+        });
+
+        it('should return 2024-04-01T00:00 and 2024-05-01T00:00 if the user clicks on the month button', async () => {
+            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('month');
+            expect(dates).toEqual({activeFrom: '2024-04-01T00:00', activeTo: '2024-05-01T00:00'});
+        });
+
+        it('should return 2024-04-28T00:00 and 2024-05-05T00:00 if the user clicks on the week button', async () => {
+            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('week');
+            expect(dates).toEqual({activeFrom: '2024-04-28T00:00', activeTo: '2024-05-05T00:00'});
+        });
+    });
+
+    describe('get dates after period click if the current day/time is 2023-12-31 9:18 (winter time)', () => {
+        it('should return 2023-01-01T00:00 and 2024-01-01T00:00 if the user clicks on the year button', async () => {
+            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('year');
+            expect(dates).toEqual({activeFrom: '2023-01-01T00:00', activeTo: '2024-01-01T00:00'});
+        });
+
+        it('should return 2023-12-01T00:00 and 2024-01-01T00:00 if the user clicks on the month button', async () => {
+            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('month');
+            expect(dates).toEqual({activeFrom: '2023-12-01T00:00', activeTo: '2024-01-01T00:00'});
+        });
+
+        it('should return 2023-12-31T00:00 and 2024-01-07T00:00 if the user clicks on the week button', async () => {
+            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesAfterPeriodClick('week');
+            expect(dates).toEqual({activeFrom: '2023-12-31T00:00', activeTo: '2024-01-07T00:00'});
+        });
+    });
+
+    describe('get dates if the user navigates between dates after period click', () => {
+        it('should return 2023-01-01T00:00 and 2024-01-01T00:00 if the user clicks on the year button then navigates backward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-01-01T00:00',
+                '2025-01-01T00:00',
+                false,
+                'year'
+            );
+            expect(dates).toEqual({activeFrom: '2023-01-01T00:00', activeTo: '2024-01-01T00:00'});
+        });
+
+        it('should return 2025-01-01T00:00 and 2026-01-01T00:00 if the user clicks on the year button then navigates forward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-01-01T00:00',
+                '2025-01-01T00:00',
+                true,
+                'year'
+            );
+            expect(dates).toEqual({activeFrom: '2025-01-01T00:00', activeTo: '2026-01-01T00:00'});
+        });
+
+        it('should return 2024-03-01T00:00 and 2024-04-01T00:00 if the user clicks on the month button then navigates backward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-04-01T00:00',
+                '2024-05-01T00:00',
+                false,
+                'month'
+            );
+            expect(dates).toEqual({activeFrom: '2024-03-01T00:00', activeTo: '2024-04-01T00:00'});
+        });
+
+        it('should return 2024-05-01T00:00 and 2024-06-01T00:00 if the user clicks on the year button then navigates forward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-04-01T00:00',
+                '2024-05-01T00:00',
+                true,
+                'month'
+            );
+            expect(dates).toEqual({activeFrom: '2024-05-01T00:00', activeTo: '2024-06-01T00:00'});
+        });
+
+        it('should return 2024-04-21T00:00 and 2024-04-28T00:00 if the user clicks on the week button then navigates backward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-04-28T00:00',
+                '2024-05-05T00:00',
+                false,
+                'week'
+            );
+            expect(dates).toEqual({activeFrom: '2024-04-21T00:00', activeTo: '2024-04-28T00:00'});
+        });
+
+        it('should return 2024-05-05T00:00 and 2024-05-12T00:00 if the user clicks on the week button then navigates forward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving(
+                '2024-04-28T00:00',
+                '2024-05-05T00:00',
+                true,
+                'week'
+            );
+            expect(dates).toEqual({activeFrom: '2024-05-05T00:00', activeTo: '2024-05-12T00:00'});
+        });
+    });
+
+    describe('get dates if the user navigates between dates after setting dates manually', () => {
+        it('should return 2024-04-28T00:00 and 2024-05-02T00:00 if the user navigates backward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving('2024-05-02T00:00', '2024-05-06T00:00', false, '');
+            expect(dates).toEqual({activeFrom: '2024-04-28T00:00', activeTo: '2024-05-02T00:00'});
+        });
+
+        it('should return 2024-05-06T00:00 and 2024-05-10T00:00 if the user navigates forward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving('2024-05-02T00:00', '2024-05-06T00:00', true, '');
+            expect(dates).toEqual({activeFrom: '2024-05-06T00:00', activeTo: '2024-05-10T00:00'});
+        });
+
+        it('should return 2024-04-11T00:00 and 2024-05-01T00:00 if the user navigates backward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving('2024-05-01T00:00', '2024-05-21T00:00', false, '');
+            expect(dates).toEqual({activeFrom: '2024-04-11T00:00', activeTo: '2024-05-01T00:00'});
+        });
+
+        it('should return 2024-05-06T00:00 and 2024-05-10T00:00 if the user navigates forward', async () => {
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const dates = processMonitoringView.getDatesWhenMoving('2024-05-01T00:00', '2024-05-21T00:00', true, '');
+            expect(dates).toEqual({activeFrom: '2024-05-21T00:00', activeTo: '2024-06-10T00:00'});
+        });
+    });
 });
