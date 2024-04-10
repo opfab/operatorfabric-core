@@ -198,6 +198,7 @@ public class TestUtilities {
     public static void prepareCard(Card card, Instant publishDate) {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
+        card.setLastUpdate(publishDate);
         card.setId(card.getProcess() + "." + card.getProcessInstanceId());
         card.setProcessStateKey(card.getProcess() + "." + card.getState());
     }

@@ -109,7 +109,6 @@ public class CardRepositoryImpl implements CardRepository {
         Update update = new Update()
             .addToSet(USERS_ACKS, user.getLogin())
             .addToSet(ENTITIES_ACKS,BasicDBObjectBuilder.start("$each", entitiesAcks).get())
-            .set("lastAckDate", Instant.now())
             .set(LAST_UPDATE, Instant.now());
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),

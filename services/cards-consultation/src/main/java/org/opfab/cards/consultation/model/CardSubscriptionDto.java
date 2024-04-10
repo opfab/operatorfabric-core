@@ -16,5 +16,5 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 
 @Validated
-public record CardSubscriptionDto(@Valid Instant rangeStart, @Valid Instant rangeEnd, Instant publishFrom) {}
+public record CardSubscriptionDto(@Valid Instant rangeStart, @Valid Instant rangeEnd, Instant updatedFrom) {}
 

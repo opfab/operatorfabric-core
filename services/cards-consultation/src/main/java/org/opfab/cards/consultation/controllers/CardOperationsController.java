@@ -97,11 +97,11 @@ public class CardOperationsController {
                         .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
                 if (oldSubscription != null) {
                     log.debug("Found subscription: {}", oldSubscription.getId());
-                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getPublishFrom(),p.getRangeStart(), p.getRangeEnd()));
+                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(), p.getRangeStart(), p.getRangeEnd()));
                 } else {
                     log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
-                return new CardSubscriptionDto(p.getRangeStart(),p.getRangeEnd(),p.getPublishFrom());
+                return new CardSubscriptionDto(p.getRangeStart(),p.getRangeEnd(),p.getUpdatedFrom());
             } catch (IllegalArgumentException e) {
                 log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(
@@ -117,23 +117,26 @@ public class CardOperationsController {
      * @param subscription
      * @return
      */
-    private Flux<String> fetchOldCards(CardSubscription subscription,Instant publishFrom,Instant start,Instant end)  {
+    private Flux<String> fetchOldCards(CardSubscription subscription, Instant updatedFrom, Instant start, Instant end)  {
         
-        return fetchOldCards0(publishFrom, start, end, subscription.getCurrentUserWithPerimeters());
+        return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
         Instant start = parameters.getRangeStart();
         Instant end = parameters.getRangeEnd();
-        Instant publishFrom = parameters.getPublishFrom();
-        return fetchOldCards0(publishFrom, start, end, parameters.getCurrentUserWithPerimeters());
+        Instant updatedFrom = parameters.getUpdatedFrom();
+        return fetchOldCards0(updatedFrom, start, end, parameters.getCurrentUserWithPerimeters());
     }
 
-    private Flux<String> fetchOldCards0(Instant publishFrom, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Flux<CardOperation> oldCards;
-        log.debug("Fetch card with startDate = {} and endDate = {} and publishFrom = {}",start,end,publishFrom);
-        if ((end != null && start != null) || (publishFrom!=null)) {
-            oldCards = cardRepository.getCardOperations(publishFrom, start, end, currentUserWithPerimeters);
+
+        
+
+        log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}",start,end,updatedFrom);
+        if ((end != null && start != null) || (updatedFrom != null)) {
+            oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters);
         } else {
             log.info("Not loading published cards as no range or no publish date is provided");
             oldCards = Flux.empty();

@@ -160,9 +160,6 @@ public class Card  {
     @JsonProperty("rRule")  
     private RRule rRule;
 
-    @Indexed
-    private Instant lastAckDate;
-
     private List<CardActionEnum> actions;
 
     public void prepare(Instant publishDate) {
