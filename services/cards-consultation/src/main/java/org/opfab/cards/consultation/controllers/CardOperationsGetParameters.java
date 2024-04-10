@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,16 +41,9 @@ public class CardOperationsGetParameters {
      */
     private String uiVersion;
 
-    /**
-     * This operation will aggregate card that are either :
-     *  <li>starting between <code>rangeStart</code>and <code>rangeEnd</code></li>
-     *  <li>ending between <code>rangeStart</code>and <code>rangeEnd</code></li>
-     *  <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
-     *  <li>starting before <code>rangeStart</code> and never ending</li>
-     */
     private Instant rangeStart;
     private Instant rangeEnd;
-    private Instant publishFrom;
+    private Instant updatedFrom;
     /**
      * Filter only cards for which this user is a recipient
      * */

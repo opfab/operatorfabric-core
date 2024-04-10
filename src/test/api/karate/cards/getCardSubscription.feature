@@ -157,7 +157,7 @@ Feature: get card Subscription
       And def cardUid = response.uid
 
     # Get subscription and check that card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom='+ cardPublishDate
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardPublishDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -166,7 +166,7 @@ Feature: get card Subscription
     * def cardAckDate = new Date().valueOf();
 
       # Get subscription and check that no card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom=' + cardAckDate
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom=' + cardAckDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -181,7 +181,7 @@ Feature: get card Subscription
 
 
     # Get subscription and check that card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom='+ cardAckDate
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardAckDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200

@@ -116,7 +116,7 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
                             .uiVersion(request.queryParam("version").orElse(null))
                             .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
                             .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
-                            .publishFrom(parseAsInstant(request.queryParam("publishFrom").orElse(null)))
+                            .updatedFrom(parseAsInstant(request.queryParam("updatedFrom").orElse(null)))
                             .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
                             .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
                             .build();
@@ -154,7 +154,7 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
                             .clientId(request.queryParam(CLIENT_ID).orElse(null))
                             .rangeStart(t.getT2().rangeStart())
                             .rangeEnd(t.getT2().rangeEnd())
-                            .publishFrom(t.getT2().publishFrom())
+                            .updatedFrom(t.getT2().updatedFrom())
                             .test(false)
                             .notification(true);
                     return builder.build();

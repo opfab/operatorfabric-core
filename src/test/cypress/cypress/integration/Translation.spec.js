@@ -122,7 +122,7 @@ describe('Test translations', function () {
         tagLabel,
         processLabel,
         stateLabel,
-        publishFromLabel,
+        updatedFromLabel,
         publishToLabel,
         activeFromLabel,
         activeToLabel
@@ -132,7 +132,7 @@ describe('Test translations', function () {
         checkLabel('#opfab-tags', tagLabel);
         checkLabel('#opfab-process', processLabel);
         checkLabel('#opfab-state', stateLabel);
-        checkDatePickerLabel('#opfab-publish-date-from', publishFromLabel);
+        checkDatePickerLabel('#opfab-publish-date-from', updatedFromLabel);
         checkDatePickerLabel('#opfab-publish-date-to', publishToLabel);
         checkDatePickerLabel('#opfab-active-from', activeFromLabel);
         checkDatePickerLabel('#opfab-active-to', activeToLabel);

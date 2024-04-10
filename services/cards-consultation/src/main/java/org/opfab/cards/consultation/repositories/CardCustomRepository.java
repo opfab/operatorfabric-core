@@ -29,23 +29,20 @@ import java.time.Instant;
 public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<Card> {
 
         /**
-     * Finds Card published earlier than <code>latestPublication</code> and either :
-     * <ul>
-     * <li>starting between <code>rangeStart</code>and <code>rangeEnd</code></li>
-     * <li>ending between <code>rangeStart</code>and <code>rangeEnd</code></li>
-     * <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
-     * <li>starting before <code>rangeStart</code> and never ending</li>
-     * </ul>
-     * <br/>
-     * <ul>
-     * <li> if rangeStart is null , find cards with endDate < rangeEnd </li>
-     * <li> if rangeEnd is null , find cards with startDate > rangeStart </li>
-     * <li> if rangeStart and rangeEnd null , return null </li>
-     * </ul>
-     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
- 
+     * Finds Card published earlier than latestPublication and either :
+     * 
+     * starting between rangeStart and rangeEnd
+     * ending between rangeStart and rangeEnd
+     * starting before rangeStart and ending after rangeEnd
+     * starting before rangeStart and never ending
+     * 
+     *  if rangeStart is null, find cards with endDate < rangeEnd 
+     *  if rangeEnd is null, find cards with startDate > rangeStart 
+     *  if rangeStart and rangeEnd null, return null 
+     * 
+     * Cards fetched are limited to the ones that have been published either to login or to groups or to entities
      */
-    Flux<CardOperation> getCardOperations(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
+    Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
     CurrentUserWithPerimeters currentUserWithPerimeters);
 
 

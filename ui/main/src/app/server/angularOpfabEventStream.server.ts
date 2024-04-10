@@ -118,14 +118,14 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     }
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
-        // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
+        // Subtracts two minutes from the last heart beat to avoid losing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastheartbeatDate - AngularOpfabEventStreamServer.TWO_MINUTES;
         logger.info(
             `EventStreamServer - Card subscription has been init again , recover any lost card from date ` +
                 new Date(dateForRecovering),
             LogOption.LOCAL_AND_REMOTE
         );
-        this.httpClient.post<any>(`${this.eventStreamUrl}`, {publishFrom: dateForRecovering}).subscribe();
+        this.httpClient.post<any>(`${this.eventStreamUrl}`, {updatedFrom: dateForRecovering}).subscribe();
     }
 
     public getStreamInitDone(): Observable<void> {
