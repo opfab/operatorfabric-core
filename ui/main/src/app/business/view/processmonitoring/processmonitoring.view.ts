@@ -13,6 +13,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
+import moment from 'moment';
 
 export class ProcessMonitoringView {
     private processesToMonitor: ProcessToMonitor[] = null;
@@ -102,5 +103,199 @@ export class ProcessMonitoringView {
             PermissionEnum.VIEW_ALL_CARDS,
             PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS
         ]);
+    }
+
+    private getDatesWhenMovingWithPeriodClicked(
+        activeFrom: string,
+        activeTo: string,
+        isForward: boolean,
+        periodClicked: string
+    ): {activeFrom: any; activeTo: any} {
+        if (periodClicked === 'year') {
+            return this.getDatesWhenMovingWithYearPeriodClicked(activeFrom, activeTo, isForward);
+        }
+        if (periodClicked === 'month') {
+            return this.getDatesWhenMovingWithMonthPeriodClicked(activeFrom, activeTo, isForward);
+        }
+        if (periodClicked === 'week') {
+            return this.getDatesWhenMovingWithWeekPeriodClicked(activeFrom, activeTo, isForward);
+        }
+        return null;
+    }
+
+    private getDatesWhenMovingWithYearPeriodClicked(
+        activeFrom: string,
+        activeTo: string,
+        isForward: boolean
+    ): {activeFrom: any; activeTo: any} {
+        const activeFromDateFormat = new Date(activeFrom);
+        const activeToDateFormat = new Date(activeTo);
+
+        if (isForward) {
+            return {
+                activeFrom: activeFromDateFormat.getFullYear() + 1 + '-01-01T00:00',
+                activeTo: activeToDateFormat.getFullYear() + 1 + '-01-01T00:00'
+            };
+        } else {
+            return {
+                activeFrom: activeFromDateFormat.getFullYear() - 1 + '-01-01T00:00',
+                activeTo: activeToDateFormat.getFullYear() - 1 + '-01-01T00:00'
+            };
+        }
+    }
+
+    private getDatesWhenMovingWithMonthPeriodClicked(
+        activeFrom: string,
+        activeTo: string,
+        isForward: boolean
+    ): {activeFrom: any; activeTo: any} {
+        const activeFromDateFormat = new Date(activeFrom);
+        const activeToDateFormat = new Date(activeTo);
+
+        if (isForward) {
+            return {
+                activeFrom:
+                    activeFromDateFormat.getMonth() + 1 === 12
+                        ? activeFromDateFormat.getFullYear() + 1 + '-01-01T00:00'
+                        : activeFromDateFormat.getFullYear() +
+                          '-' +
+                          String(activeFromDateFormat.getMonth() + 2).padStart(2, '0') +
+                          '-01T00:00',
+                activeTo:
+                    activeToDateFormat.getMonth() + 1 === 12
+                        ? activeToDateFormat.getFullYear() + 1 + '-01-01T00:00'
+                        : activeToDateFormat.getFullYear() +
+                          '-' +
+                          String(activeToDateFormat.getMonth() + 2).padStart(2, '0') +
+                          '-01T00:00'
+            };
+        } else {
+            return {
+                activeFrom:
+                    activeFromDateFormat.getMonth() === 0
+                        ? activeFromDateFormat.getFullYear() - 1 + '-12-01T00:00'
+                        : activeFromDateFormat.getFullYear() +
+                          '-' +
+                          String(activeFromDateFormat.getMonth()).padStart(2, '0') +
+                          '-01T00:00',
+                activeTo:
+                    activeToDateFormat.getMonth() === 0
+                        ? activeToDateFormat.getFullYear() - 1 + '-12-01T00:00'
+                        : activeToDateFormat.getFullYear() +
+                          '-' +
+                          String(activeToDateFormat.getMonth()).padStart(2, '0') +
+                          '-01T00:00'
+            };
+        }
+    }
+
+    private getDatesWhenMovingWithWeekPeriodClicked(
+        activeFrom: string,
+        activeTo: string,
+        isForward: boolean
+    ): {activeFrom: any; activeTo: any} {
+        if (isForward) {
+            return {
+                activeFrom: moment(activeFrom, 'YYYY-MM-DDTHH:mm').add(7, 'days').format('YYYY-MM-DDTHH:mm'),
+                activeTo: moment(activeTo, 'YYYY-MM-DDTHH:mm').add(7, 'days').format('YYYY-MM-DDTHH:mm')
+            };
+        } else {
+            return {
+                activeFrom: moment(activeFrom, 'YYYY-MM-DDTHH:mm').subtract(7, 'days').format('YYYY-MM-DDTHH:mm'),
+                activeTo: moment(activeTo, 'YYYY-MM-DDTHH:mm').subtract(7, 'days').format('YYYY-MM-DDTHH:mm')
+            };
+        }
+    }
+
+    public getDatesWhenMoving(
+        activeFrom: string,
+        activeTo: string,
+        isForward: boolean,
+        periodClicked: string
+    ): {activeFrom: any; activeTo: any} {
+        if (periodClicked !== '') {
+            return this.getDatesWhenMovingWithPeriodClicked(activeFrom, activeTo, isForward, periodClicked);
+        }
+
+        const activeFromDateFormat = new Date(activeFrom);
+        const activeToDateFormat = new Date(activeTo);
+
+        let newActiveFromDate: Date, newActiveToDate: Date;
+        if (isForward) {
+            newActiveFromDate = new Date(
+                activeFromDateFormat.getTime() + (activeToDateFormat.getTime() - activeFromDateFormat.getTime())
+            );
+            newActiveToDate = new Date(
+                activeToDateFormat.getTime() + (activeToDateFormat.getTime() - activeFromDateFormat.getTime())
+            );
+        } else {
+            newActiveFromDate = new Date(
+                activeFromDateFormat.getTime() - (activeToDateFormat.getTime() - activeFromDateFormat.getTime())
+            );
+            newActiveToDate = new Date(
+                activeToDateFormat.getTime() - (activeToDateFormat.getTime() - activeFromDateFormat.getTime())
+            );
+        }
+        return {
+            activeFrom: this.formatDateObjectForInput(newActiveFromDate),
+            activeTo: this.formatDateObjectForInput(newActiveToDate)
+        };
+    }
+
+    private formatDateObjectForInput(date: Date): string {
+        return (
+            date.getFullYear() +
+            '-' +
+            String(date.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(date.getDate()).padStart(2, '0') +
+            'T' +
+            String(date.getHours()).padStart(2, '0') +
+            ':' +
+            String(date.getMinutes()).padStart(2, '0')
+        );
+    }
+
+    public getDatesAfterPeriodClick(periodClicked: string): {activeFrom: any; activeTo: any} {
+        if (periodClicked === 'year') {
+            return {
+                activeFrom: new Date().getFullYear() + '-01-01T00:00',
+                activeTo: new Date().getFullYear() + 1 + '-01-01T00:00'
+            };
+        }
+        if (periodClicked === 'month') {
+            return {
+                activeFrom:
+                    new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-01T00:00',
+                activeTo:
+                    new Date().getMonth() === 11
+                        ? new Date().getFullYear() + 1 + '-01-01T00:00'
+                        : new Date().getFullYear() +
+                          '-' +
+                          String(new Date().getMonth() + 2).padStart(2, '0') +
+                          '-01T00:00'
+            };
+        }
+        if (periodClicked === 'week') {
+            const startOfWeek = moment().startOf('week').toDate();
+            const endOfWeek = moment().endOf('week').toDate();
+            return {
+                activeFrom:
+                    startOfWeek.getFullYear() +
+                    '-' +
+                    String(startOfWeek.getMonth() + 1).padStart(2, '0') +
+                    '-' +
+                    String(startOfWeek.getDate()).padStart(2, '0') +
+                    'T00:00',
+                activeTo:
+                    endOfWeek.getFullYear() +
+                    '-' +
+                    String(endOfWeek.getMonth() + 1).padStart(2, '0') +
+                    '-' +
+                    String(endOfWeek.getDate() + 1).padStart(2, '0') +
+                    'T00:00'
+            };
+        }
+        return null;
     }
 }

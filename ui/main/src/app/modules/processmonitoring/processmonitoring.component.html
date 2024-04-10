@@ -13,85 +13,116 @@
       translate>shared.noProcessStateAvailable</div>
   </ng-template>
 
-  <div class="opfab-processmonitoring-header" *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
-    <div style="display: flex;">
-      <div style="display: flex;">
-        <!--2 columns in this case-->
-        <!--First column-->
-        <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
-          <div style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;max-height: 48px">
-
-            <of-multi-select *ngIf="isProcessGroupFilterVisible" id="opfab-processGroup" multiSelectId="processGroup"
-              [parentForm]="processMonitoringForm" [config]="processGroupMultiSelectConfig"
-              [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
-            </of-multi-select>
-
-            <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags" id="opfab-tags" multiSelectId="tags"
-              [parentForm]="processMonitoringForm" [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions"
-              [selectedOptions]="tagsSelected">
-            </of-multi-select>
-          </div>
-          <div *ngIf="isProcessGroupFilterVisible && tags" style="min-width:300px;max-width:400px;max-height: 48px">
-            <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="processMonitoringForm"
-              [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected">
-            </of-multi-select>
-          </div>
-        </div>
-        <!--Second column-->
-        <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
-          <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
-
-            <of-multi-select id="opfab-process" multiSelectId="process"
-              [parentForm]="processMonitoringForm" [config]="processMultiSelectConfig" [options]="processMultiSelectOptions"
-              [selectedOptions]="processSelected">
-            </of-multi-select>
-
-          </div>
-          <div style="min-width:300px;max-width:400px;max-height: 48px">
-            <of-multi-select id="opfab-state" multiSelectId="state" [parentForm]="processMonitoringForm"
-              [config]="stateMultiSelectConfig" [options]="stateMultiSelectOptions" [selectedOptions]="stateSelected">
-            </of-multi-select>
-          </div>
-        </div>
-        
-        <div class="opfab-vertical-bar"></div>
-        <div style="margin-left:40px;width:230px;min-width:230px;margin-bottom:30px" [formGroup]="processMonitoringForm">
-            <div class="nopaddingrow opfab-input" style="margin-top: 30px; margin-bottom: 54px;">
-                <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
-                <input
-                        type="datetime-local"
-                        id="opfab-active-from"
-                        formControlName="activeFrom"
-                        (change)="onDateTimeChange()"
-                        [max]="activeMaxDate">
-            </div>
-            <div class="nopaddingrow opfab-input">
-                <label for="opfab-active-to" translate>shared.filters.activeTo</label>
-                <input
-                        type="datetime-local"
-                        id="opfab-active-to"
-                        formControlName="activeTo"
-                        (change)="onDateTimeChange()"
-                        [min]="activeMinDate">
-            </div>
-        </div>
-        
-        <div  class="opfab-buttons">
-            <label
-                    *ngIf="mustViewAllCardsFeatureBeDisplayed"
-                    id="opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox"
-                    style="margin-left: 10px; max-width: 200px; margin-top: -50px"
-                    class="opfab-checkbox"
-                    translate>shared.adminMode
-                <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
-                <span class="opfab-checkbox-checkmark"></span>
-            </label>
-            <button id="opfab-archives-logging-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
-            <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
-        </div>
-  
-      </div>
+  <div class="opfab-processmonitoring-header" style="padding-right: 60px" *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
+    <div id="opfab-processmonitoring-date-navigation-links">
+      <ul>
+        <li>
+          <a id="opfab-processmonitoring-left-arrow" (click)="moveDomain(false)" style="cursor: pointer"> &lt;&lt;
+          </a>
+        </li>
+        <li>
+          <a id="opfab-processmonitoring-period-year" [ngClass]="yearButtonClicked ? 'link-selected' : 'link-unselect'"
+             (click)="changeDateBoundsFollowingPeriodClicked('year')" translate>
+            timeline.buttonTitle.Y
+          </a>
+        </li>
+        <li>
+          <a id="opfab-processmonitoring-period-month" [ngClass]="monthButtonClicked ? 'link-selected' : 'link-unselect'"
+             (click)="changeDateBoundsFollowingPeriodClicked('month')" translate>
+            timeline.buttonTitle.M
+          </a>
+        </li>
+        <li>
+          <a id="opfab-processmonitoring-period-week" [ngClass]="weekButtonClicked ? 'link-selected' : 'link-unselect'"
+             (click)="changeDateBoundsFollowingPeriodClicked('week')" translate>
+            timeline.buttonTitle.W
+          </a>
+        </li>
+        <li>
+          <a id="opfab-processmonitoring-right-arrow" (click)="moveDomain(true)" style="cursor: pointer">
+          &gt;&gt;
+          </a>
+        </li>
+      </ul>
     </div>
+
+    <div style="display: flex;">
+
+      <!--2 columns in this case-->
+      <!--First column-->
+      <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
+        <div style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;max-height: 48px">
+          <of-multi-select *ngIf="isProcessGroupFilterVisible" id="opfab-processGroup" multiSelectId="processGroup"
+            [parentForm]="processMonitoringForm" [config]="processGroupMultiSelectConfig"
+            [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
+          </of-multi-select>
+
+          <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags" id="opfab-tags" multiSelectId="tags"
+            [parentForm]="processMonitoringForm" [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions"
+            [selectedOptions]="tagsSelected">
+          </of-multi-select>
+        </div>
+        <div *ngIf="isProcessGroupFilterVisible && tags" style="min-width:300px;max-width:400px;max-height: 48px">
+          <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="processMonitoringForm"
+            [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected">
+          </of-multi-select>
+        </div>
+      </div>
+      <!--Second column-->
+      <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
+        <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
+
+          <of-multi-select id="opfab-process" multiSelectId="process"
+            [parentForm]="processMonitoringForm" [config]="processMultiSelectConfig" [options]="processMultiSelectOptions"
+            [selectedOptions]="processSelected">
+          </of-multi-select>
+
+        </div>
+        <div style="min-width:300px;max-width:400px;max-height: 48px">
+          <of-multi-select id="opfab-state" multiSelectId="state" [parentForm]="processMonitoringForm"
+            [config]="stateMultiSelectConfig" [options]="stateMultiSelectOptions" [selectedOptions]="stateSelected">
+          </of-multi-select>
+        </div>
+      </div>
+        
+      <div class="opfab-vertical-bar"></div>
+      <div style="margin-left:40px;width:230px;min-width:230px;margin-bottom:30px" [formGroup]="processMonitoringForm">
+        <div class="nopaddingrow opfab-input" style="margin-top: 30px; margin-bottom: 54px;">
+          <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
+          <input
+                  type="datetime-local"
+                  id="opfab-active-from"
+                  formControlName="activeFrom"
+                  (change)="onDateTimeChange()"
+                  [max]="activeMaxDate">
+        </div>
+        <div class="nopaddingrow opfab-input">
+          <label for="opfab-active-to" translate>shared.filters.activeTo</label>
+          <input
+                  type="datetime-local"
+                  id="opfab-active-to"
+                  formControlName="activeTo"
+                  (change)="onDateTimeChange()"
+                  [min]="activeMinDate">
+        </div>
+      </div>
+        
+      <div  class="opfab-buttons">
+          <label
+                  *ngIf="mustViewAllCardsFeatureBeDisplayed"
+                  id="opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox"
+                  style="margin-left: 10px; max-width: 200px; margin-top: -50px"
+                  class="opfab-checkbox"
+                  translate>shared.adminMode
+              <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
+              <span class="opfab-checkbox-checkmark"></span>
+          </label>
+          <button id="opfab-process-monitoring-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
+          <button id="opfab-process-monitoring-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
+      </div>
+  
+    </div>
+
   </div>
 </div>
 
