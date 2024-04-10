@@ -145,9 +145,11 @@ public class CardProcessingService {
 
         if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
             if (oldCard != null) {
-                deleteChildCardsProcess(card, jwt);
                 processCardUpdate(card, oldCard);
+                deleteChildCardsProcess(card, jwt);
             }
+            processChildCard(card);
+
             cardRepository.saveCard(card);
             if (oldCard == null)
                 cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
@@ -167,16 +169,31 @@ public class CardProcessingService {
     }
 
     private Void deleteChildCardsProcess(Card card, Optional<Jwt> jwt) {
-
-        if (!shouldKeepChildCards(card)) {
-            String idCard = card.getProcess() + "." + card.getProcessInstanceId();
-            Optional<List<Card>> childCard = cardRepository
-                    .findChildCard(cardRepository.findCardById(idCard));
-            if (childCard.isPresent()) {
+        String idCard = card.getProcess() + "." + card.getProcessInstanceId();
+        Optional<List<Card>> childCard = cardRepository
+                .findChildCard(cardRepository.findCardById(idCard));
+        if (childCard.isPresent()) {
+            if (!shouldKeepChildCards(card)) {
                 deleteCards(childCard.get(), card.getPublishDate(), jwt);
+            } else {
+                cardRepository.setChildCardDates(card.getId(), getChildStartDateFromParent(card),
+                        getChildEndDateFromParent(card));
             }
         }
         return null;
+    }
+
+
+    private Instant getChildStartDateFromParent(Card parent) {
+        return parent.getStartDate().isBefore(parent.getPublishDate()) ? parent.getStartDate() : parent.getPublishDate();
+    }
+
+    private Instant getChildEndDateFromParent(Card parent) {
+        if (parent.getEndDate() != null) {
+            return parent.getEndDate();
+        } else {
+            return parent.getStartDate().isAfter(parent.getPublishDate()) ? parent.getStartDate() : parent.getPublishDate();
+        }    
     }
 
     private void processCardUpdate(Card card, Card oldCard) {
@@ -187,6 +204,14 @@ public class CardProcessingService {
         }
         if (shouldKeepPublishDate(card)) {
             card.setPublishDate(oldCard.getPublishDate());
+        }
+    }
+
+    private void processChildCard(Card card) {
+        if (card.getParentCardId() != null) {
+            Card parentCard = getExistingCard(card.getParentCardId());
+            card.setStartDate(getChildStartDateFromParent(parentCard));
+            card.setEndDate(getChildEndDateFromParent(parentCard));
         }
     }
 

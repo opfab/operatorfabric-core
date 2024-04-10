@@ -52,6 +52,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -410,6 +411,81 @@ class CardProcessServiceShould {
                                 .isInstanceOf(ConstraintViolationException.class);
                 Assertions.assertThat(checkCardCount(0)).isTrue();
                 Assertions.assertThat(checkArchiveCount(0)).isTrue();
+        }
+
+        @Nested
+        class ChildCardDates {
+                Card card;
+                Card childCard;
+
+                @BeforeEach
+                void setup() {
+                        card = generateOneCard();
+                        card.setStartDate(Instant.now().minus(1, ChronoUnit.DAYS));
+                        cardProcessingService.processCard(card);
+
+                        ArrayList<String> externalRecipients = new ArrayList<>();
+                        externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
+
+                        childCard = Card.builder().publisher("newPublisherId")
+                                        .processVersion("0")
+                                        .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                                        .process("PROCESS_CARD_USER")
+                                        .parentCardId(card.getId())
+                                        .initialParentCardUid(card.getUid())
+                                        .title(new I18n("title",null))
+                                        .summary(new I18n("summary",null))
+                                        .startDate(Instant.now())
+                                        .state("state1")
+                                        .build();
+                }
+
+                @Test
+                void GIVEN_a_parent_card_WHEN_sending_a_child_card_THEN_card_has_startDate_and_endDate_correctly_set() throws URISyntaxException {
+                        Assertions.assertThatCode(
+                                        () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
+                                                        token))
+                                        .doesNotThrowAnyException();
+
+                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getStartDate());
+                        Assertions.assertThat(childCard.getEndDate()).isEqualTo(card.getPublishDate());
+                }
+
+                @Test
+                void GIVEN_a_child_card_WHEN_updating_parent_card_with_KEEP_CHILD_CARDS_action_THEN_child_card_has_startDate_and_endDate_correctly_updated() throws URISyntaxException {
+                        Assertions.assertThatCode(
+                                        () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
+                                                        token))
+                                        .doesNotThrowAnyException();
+                        Assertions.assertThat(checkCardCount(2)).isTrue();
+
+                        card.setActions(List.of(CardActionEnum.KEEP_CHILD_CARDS));
+                        card.setStartDate(Instant.now().plus(1, ChronoUnit.DAYS));
+                        card.setEndDate(Instant.now().plus(5, ChronoUnit.DAYS));
+                        cardProcessingService.processCard(card);
+
+                        Assertions.assertThat(checkCardCount(2)).isTrue();
+                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getPublishDate());
+                        Assertions.assertThat(childCard.getEndDate()).isEqualTo(card.getEndDate());
+                }
+
+                @Test
+                void GIVEN_a_child_card_WHEN_updating_parent_card_with_KEEP_CHILD_CARDS_action_and_startDate_before_publishDate_THEN_child_card_has_startDate_and_endDate_correctly_updated() throws URISyntaxException {
+                        Assertions.assertThatCode(
+                                        () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
+                                                        token))
+                                        .doesNotThrowAnyException();
+                        Assertions.assertThat(checkCardCount(2)).isTrue();
+
+                        card.setActions(List.of(CardActionEnum.KEEP_CHILD_CARDS));
+                        card.setStartDate(Instant.now().minus(1, ChronoUnit.DAYS));
+                        
+                        cardProcessingService.processCard(card);
+
+                        Assertions.assertThat(checkCardCount(2)).isTrue();
+                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getStartDate());
+                        Assertions.assertThat(childCard.getEndDate()).isEqualTo(card.getPublishDate());
+                }
         }
 
         @Test

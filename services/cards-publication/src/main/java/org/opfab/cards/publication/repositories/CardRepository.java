@@ -36,6 +36,8 @@ public interface CardRepository {
 
     public Optional<List<Card>> findChildCard(Card card);
 
+    public void setChildCardDates(String parentCardId, Instant startDate, Instant endDate);
+
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks);
 
     public UserBasedOperationResult addUserRead(String name, String cardUid);
