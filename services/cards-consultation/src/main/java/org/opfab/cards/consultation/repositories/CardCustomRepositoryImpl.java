@@ -49,8 +49,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	private static final String PUBLISH_DATE_FIELD = "publishDate";
 	private static final String START_DATE_FIELD = "startDate";
 	private static final String END_DATE_FIELD = "endDate";
+	private static final String LAST_UPDATE_FIELD = "lastUpdate";
 
-	private static final String LAST_ACK_DATE_FIELD = "lastAckDate";
     private final ReactiveMongoTemplate template;
 
 
@@ -72,25 +72,25 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
 
 	@Override
-	public Flux<CardOperation> getCardOperations(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
+	public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd, 
 	CurrentUserWithPerimeters currentUserWithPerimeters)
 	{
-		return findCards(publishFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard ->
+		return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard ->
 			new CardOperation(CardOperationTypeEnum.ADD, null, LightCard.copy(lightCard))
 		);
 	}
 	
-    private Flux<Card> findCards(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
+    private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
 	CurrentUserWithPerimeters currentUserWithPerimeters)
 	{	
 		Criteria criteria ;
-		if (publishFrom != null) 
+		if (updatedFrom != null) 
 		{
 			if ((rangeEnd != null) || (rangeStart != null))criteria =
-					new Criteria().andOperator(publishDateCriteria(publishFrom),
+					new Criteria().andOperator(updateDateCriteria(updatedFrom),
 						computeCriteriaForUser(currentUserWithPerimeters, false),
 						getCriteriaForRange(rangeStart, rangeEnd));
-			else criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
+			else criteria = new Criteria().andOperator(updateDateCriteria(updatedFrom),
 					computeCriteriaForUser(currentUserWithPerimeters, false));
 		}
 		else criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters, false),
@@ -128,7 +128,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
 	}
 
-	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
+	private Criteria getCriteriaForRange(Instant rangeStart, Instant rangeEnd)
 	{	
 		if (rangeStart==null) return  new Criteria().orOperator(
 			where(END_DATE_FIELD).lte(rangeEnd),
@@ -150,11 +150,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		);
 	}
 
-	private Criteria publishDateCriteria(Instant publishFrom) {
-		Criteria publishCriteria = new Criteria();
-		publishCriteria.orOperator(where(PUBLISH_DATE_FIELD).gte(publishFrom),
-				where(LAST_ACK_DATE_FIELD).gte(publishFrom));
-		return publishCriteria;
+	private Criteria updateDateCriteria(Instant updatedFrom) {
+		return Criteria.where(LAST_UPDATE_FIELD).gte(updatedFrom);
 	}
 
 
