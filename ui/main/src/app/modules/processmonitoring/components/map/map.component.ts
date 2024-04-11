@@ -85,12 +85,6 @@ export class MonitoringMapComponent implements OnInit, OnChanges, OnDestroy, Aft
             this.drawMap(enableGraph);
             this.updateMap();
             this.updateMapWhenGlobalStyleChange();
-            MapService.highlightCardEvent.pipe(takeUntil(this.unsubscribe$)).subscribe(({lightCardId, highLight}) => {
-                this.highlightFeature(lightCardId, highLight);
-            });
-            MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
-                this.zoomToLocation(lightCardId);
-            });
 
             this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', 'publishDateAndTitle');
             MonitoringMapComponent.highlightPolygonStrokeWidth = ConfigService.getConfigValue(
@@ -131,8 +125,8 @@ export class MonitoringMapComponent implements OnInit, OnChanges, OnDestroy, Aft
     }
 
     private adaptTemplateSize() {
-        const marginBottom = 30;
-        const mapTemplate = document.getElementById('ol-map');
+        const marginBottom = -30;
+        const mapTemplate = document.getElementById('ol-monitoring-map');
 
         if (mapTemplate && this.map) {
             const diffWindow = mapTemplate.getBoundingClientRect();
@@ -141,42 +135,6 @@ export class MonitoringMapComponent implements OnInit, OnChanges, OnDestroy, Aft
                 mapTemplate.style.height = `${mapTemplateHeight}px`;
                 this.map.updateSize();
             }
-        }
-    }
-
-    private highlightFeature(lightCardId: string, highlight: boolean) {
-        const mapTemplate = document.getElementById('ol-map');
-        if (mapTemplate && this.map) {
-            if (this.vectorLayer.getSource().getFeatures().length > 0) {
-                const features = this.vectorLayer.getSource().getFeatures();
-                features.forEach((feature) => {
-                    if (feature.get('lightCard')?.id === lightCardId) {
-                        feature.setStyle(function (feature) {
-                            const severity: Severity = feature.get('lightCard').severity;
-                            const geoType: string = feature.getGeometry().getType();
-                            return MonitoringMapComponent.getOpenLayersStyle(geoType, severity, highlight);
-                        });
-                    }
-                });
-            }
-        }
-    }
-
-    private zoomToLocation(lightCardId: string) {
-        const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue('feed.geomap.zoomLevelWhenZoomToLocation', 14);
-        if (this.vectorLayer.getSource().getFeatures().length > 0) {
-            const features = this.vectorLayer.getSource().getFeatures();
-            features.forEach((feature) => {
-                if (feature.get('lightCard')?.id === lightCardId) {
-                    const ext = feature.getGeometry().getExtent();
-                    this.map.getView().fit(ext, {
-                        duration: 0,
-                        maxZoom: zoomLevelWhenZoomToLocation,
-                        padding: [20, 20, 20, 20],
-                        callback: (_) => this.map.updateSize()
-                    });
-                }
-            });
         }
     }
 
@@ -195,7 +153,7 @@ export class MonitoringMapComponent implements OnInit, OnChanges, OnDestroy, Aft
                 center: fromLonLat([longitude, latitude]),
                 zoom: zoom
             }),
-            target: 'ol-map',
+            target: 'ol-monitoring-map',
             overlays: [overlay],
             controls: defaultControls({attribution: false}).extend([attribution])
         });
@@ -319,7 +277,7 @@ export class MonitoringMapComponent implements OnInit, OnChanges, OnDestroy, Aft
             const featureArray = [];
             this.map.removeLayer(this.vectorLayer);
 
-            const maxZoom = ConfigService.getConfigValue('feed.geomap.maxZoom', 11);
+            const maxZoom = 7;
             const zoomDuration = ConfigService.getConfigValue('feed.geomap.zoomDuration', 500);
             const defaultDataProjection = ConfigService.getConfigValue(
                 'feed.geomap.defaultDataProjection',
