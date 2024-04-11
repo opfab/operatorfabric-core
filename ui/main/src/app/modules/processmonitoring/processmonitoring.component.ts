@@ -230,7 +230,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         this.size = ConfigService.getConfigValue('processmonitoring.filters.page.size', 10);
         this.tags = ConfigService.getConfigValue('processmonitoring.filters.tags.list');
-
+        this.page = 1;
         this.results = [];
 
         SelectedCardService.getSelectCardIdChanges().subscribe(
@@ -373,7 +373,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         });
     }
 
-    private getFilter(page: number, size: number): CardsFilter {
+    private getFilter(pageNumber: number, pageSize: number): CardsFilter {
         const localFilters = [];
         this.filters?.forEach((values, key) => {
             localFilters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
@@ -388,14 +388,23 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.processMonitoring.forEach((column) => {
             selectedFields.push(column.field);
         });
-        if (this.isMapEnabled) {
+        if (this.isMapEnabled && this.isMapViewActivated) {
             if (!selectedFields.includes('summaryTranslated')) selectedFields.push('summaryTranslated');
             if (!selectedFields.includes('publishDate')) selectedFields.push('publishDate');
             if (!selectedFields.includes('wktGeometry')) selectedFields.push('wktGeometry');
             if (!selectedFields.includes('wktProjection')) selectedFields.push('wktProjection');
+            pageSize = null;
+            pageNumber = null;
         }
-
-        return new CardsFilter(page, size, this.isAdminModeChecked, true, false, localFilters, selectedFields);
+        return new CardsFilter(
+            pageNumber,
+            pageSize,
+            this.isAdminModeChecked,
+            true,
+            false,
+            localFilters,
+            selectedFields
+        );
     }
 
     transformFiltersListToMap = (filters: any): void => {
@@ -548,6 +557,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     toggleShowMap() {
         this.isMapViewActivated = !this.isMapViewActivated;
+        this.sendFilterQuery(0, !this.isMapViewActivated);
     }
 
     ngOnDestroy() {
