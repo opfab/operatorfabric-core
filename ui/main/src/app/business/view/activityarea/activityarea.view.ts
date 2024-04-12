@@ -17,6 +17,7 @@ import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './a
 import {RolesEnum} from '@ofModel/roles.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {Entity} from '@ofModel/entity.model';
+import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 
 export class ActivityAreaView {
     private activityAreaSubject = new ReplaySubject<ActivityAreaPage>(1);
@@ -156,7 +157,10 @@ export class ActivityAreaView {
             map((response) => {
                 if (response.status === ServerResponseStatus.OK) {
                     OpfabStore.getLightCardStore().removeAllLightCards();
-                    UserService.loadUserWithPerimetersData().subscribe();
+                    UserService.loadUserWithPerimetersData().subscribe(() => {
+                        // needed to trigger change in the list of entities on the top right corner
+                        ApplicationEventsService.setUserConfigChange();
+                    });
                     return true;
                 } else return false;
             })
