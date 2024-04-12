@@ -114,7 +114,7 @@
                   style="margin-left: 10px; max-width: 200px; margin-top: -50px"
                   class="opfab-checkbox"
                   translate>shared.adminMode
-              <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
+              <input type="checkbox" (click)="toggleAdminMode()" onKeyPressed="toggleAdminMode()" [checked]="!isAdminModeChecked" />
               <span class="opfab-checkbox-checkmark"></span>
           </label>
           <button id="opfab-process-monitoring-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
@@ -148,7 +148,7 @@
     </of-processmonitoring-table>
   </div>
 
-  <div *ngIf="isMapViewActivated" style="margin-left:2%;margin-right:2%">
+  <div *ngIf="isMapViewActivated" style="margin-top:-15px;margin-left:2%;margin-right:2%">
     <of-monitoring-map [result]="results"></of-monitoring-map>
   </div>
 </div>
