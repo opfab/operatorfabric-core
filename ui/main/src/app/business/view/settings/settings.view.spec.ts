@@ -7,14 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/business/services/config.service';
 import {ReplaySubject, firstValueFrom} from 'rxjs';
 import {SettingsView} from './settings.view';
 import {ExternalDevicesServerMock} from '@tests/mocks/externalDevicesServer.mock';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
@@ -22,30 +19,19 @@ import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
+import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
 
 describe('Settings view ', () => {
-    function setWebUiConf(webuiConf: any) {
-        const configServerMock = new ConfigServerMock();
-        ConfigService.setConfigServer(configServerMock);
-        configServerMock.setResponseForWebUIConfiguration(new ServerResponse(webuiConf, ServerResponseStatus.OK, null));
-        return firstValueFrom(ConfigService.loadWebUIConfiguration());
-    }
-
-    function setUserConf() {
-        const userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
+    async function setUserConf() {
         const userWithPerimeters = new UserWithPerimeters(new User('user', '', ''), new Array(), null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        return firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
     }
 
     describe('isSettingsVisible', () => {
         let settingsView: SettingsView;
 
         beforeEach(async () => {
-            await setWebUiConf({settingsScreen: {hiddenSettings: ['sendCardsByEmail']}});
+            await loadWebUIConf({settingsScreen: {hiddenSettings: ['sendCardsByEmail']}});
             settingsView = new SettingsView();
         });
 
@@ -86,27 +72,27 @@ describe('Settings view ', () => {
         });
 
         it('should retrieve a boolean setting from the configuration service if it exists', async () => {
-            await setWebUiConf({settings: {remoteLoggingEnabled: true}});
+            await loadWebUIConf({settings: {remoteLoggingEnabled: true}});
             expect(settingsView.getSetting('remoteLoggingEnabled')).toBe(true);
         });
 
         it('should retrieve a number setting from the configuration service if it exists', async () => {
-            await setWebUiConf({settings: {replayInterval: 10}});
+            await loadWebUIConf({settings: {replayInterval: 10}});
             expect(settingsView.getSetting('replayInterval')).toBe(10);
         });
 
         it('should retrieve a string setting from the configuration service if it exists', async () => {
-            await setWebUiConf({settings: {locale: 'en'}});
+            await loadWebUIConf({settings: {locale: 'en'}});
             expect(settingsView.getSetting('locale')).toBe('en');
         });
 
         it('should return null if a setting does not exist', async () => {
-            await setWebUiConf({settings: {locale: 'en'}});
+            await loadWebUIConf({settings: {locale: 'en'}});
             expect(settingsView.getSetting('notExist')).toBeNull();
         });
 
         it('should return the default value of 5 if replayInterval is not set', async () => {
-            await setWebUiConf({settings: {}});
+            await loadWebUIConf({settings: {}});
             expect(settingsView.getSetting('replayInterval')).toBe(5);
         });
     });
@@ -116,7 +102,7 @@ describe('Settings view ', () => {
         let settingsServerMock: SettingsServerMock;
 
         beforeEach(async () => {
-            await setWebUiConf({settings: {}});
+            await loadWebUIConf({settings: {}});
             settingsServerMock = new SettingsServerMock();
             settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
             SettingsService.setSettingsServer(settingsServerMock);
@@ -180,7 +166,7 @@ describe('Settings view ', () => {
         let settingsView: SettingsView;
 
         beforeEach(async () => {
-            await setWebUiConf({settings: {}});
+            await loadWebUIConf({settings: {}});
             settingsView = new SettingsView();
         });
 
@@ -203,13 +189,13 @@ describe('Settings view ', () => {
         });
 
         it('should return false is setting value has been set with existing value', async () => {
-            await setWebUiConf({settings: {remoteLoggingEnabled: true}});
+            await loadWebUIConf({settings: {remoteLoggingEnabled: true}});
             settingsView.setSetting('remoteLoggingEnabled', true);
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(false);
         });
 
         it('should return false if setting value has been set with different value and set again to existing value', async () => {
-            await setWebUiConf({settings: {remoteLoggingEnabled: true}});
+            await loadWebUIConf({settings: {remoteLoggingEnabled: true}});
             settingsView.setSetting('remoteLoggingEnabled', false);
             settingsView.setSetting('remoteLoggingEnabled', true);
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(false);

@@ -50,45 +50,43 @@ describe('Process Monitoring view ', () => {
         stateNoName_1.name = 'State NoName_1';
         statesForProcessWithNoName.set('stateNoName_1', stateNoName_1);
 
-        const processes = new Array();
-        const process1 = new Process(
-            'process1',
-            'v1',
-            processNames[0],
-            undefined,
-            statesForProcess1,
-            new UiVisibility(true, true, true, true)
-        );
-        const process2 = new Process(
-            'process2',
-            'v2',
-            processNames[1],
-            undefined,
-            statesForProcess2,
-            new UiVisibility(true, true, true, true)
-        );
-        const process3 = new Process(
-            'process3',
-            'v2',
-            'process name 3',
-            undefined,
-            statesForProcess3,
-            new UiVisibility(true, false, true, true)
-        );
-        const process4 = new Process('process4', 'v2', 'process name 4', undefined, undefined);
-        const processWithNoName = new Process(
-            'processWithNoName',
-            'v2',
-            '',
-            undefined,
-            statesForProcessWithNoName,
-            new UiVisibility(true, true, true, true)
-        );
-        processes.push(process1);
-        processes.push(process2);
-        processes.push(process3);
-        processes.push(process4);
-        processes.push(processWithNoName);
+        const processes = [
+            new Process(
+                'process1',
+                'v1',
+                processNames[0],
+                undefined,
+                statesForProcess1,
+                new UiVisibility(true, true, true, true)
+            ),
+            new Process(
+                'process2',
+                'v2',
+                processNames[1],
+                undefined,
+                statesForProcess2,
+                new UiVisibility(true, true, true, true)
+            ),
+            new Process(
+                'process3',
+                'v2',
+                'process name 3',
+                undefined,
+                statesForProcess3,
+                new UiVisibility(true, false, true, true)
+            ),
+
+            new Process('process4', 'v2', 'process name 4', undefined, undefined),
+            new Process(
+                'processWithNoName',
+                'v2',
+                '',
+                undefined,
+                statesForProcessWithNoName,
+                new UiVisibility(true, true, true, true)
+            )
+        ];
+
         processServerMock = new ProcessServerMock();
         ProcessesService.setProcessServer(processServerMock);
         processServerMock.setResponseForAllProcessDefinition(
@@ -99,14 +97,11 @@ describe('Process Monitoring view ', () => {
     }
 
     async function setDefaultUserPerimeter() {
-        const computedPerimeters = new Array();
-        const computedPerimeter = new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true);
-        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true);
-        const computedPerimeter3 = new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter);
-        computedPerimeters.push(computedPerimeter2);
-        computedPerimeters.push(computedPerimeter3);
-        await setUserPerimeter(computedPerimeters);
+        await setUserPerimeter([
+            new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true)
+        ]);
     }
 
     async function setUserPerimeter(computedPerimeters: ComputedPerimeter[], permissions?: PermissionEnum[]) {
@@ -328,21 +323,12 @@ describe('Process Monitoring view ', () => {
         it('should return process 1 & 2 if service 1 is selected', async () => {
             await initProcesses();
             await initProcessGroups();
-            const computedPerimeters = new Array();
-            const computedPerimeter = new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true);
-            const computedPerimeter2 = new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true);
-            const computedPerimeter3 = new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true);
-            const computedPerimeter4 = new ComputedPerimeter(
-                'processWithNoName',
-                'stateNoName_1',
-                RightsEnum.Receive,
-                true
-            );
-            computedPerimeters.push(computedPerimeter);
-            computedPerimeters.push(computedPerimeter2);
-            computedPerimeters.push(computedPerimeter3);
-            computedPerimeters.push(computedPerimeter4);
-            await setUserPerimeter(computedPerimeters);
+            await setUserPerimeter([
+                new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
+                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
+                new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true),
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.Receive, true)
+            ]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
 
             const processes = processMonitoringView.getProcessesPerProcessGroups(['service1']);
@@ -447,6 +433,13 @@ describe('Process Monitoring view ', () => {
     });
 
     describe('get dates after period click if the current day/time is 2024-04-29 15:32 (summer time)', () => {
+        beforeEach(() => {
+            jasmine.clock().install();
+        });
+
+        afterEach(() => {
+            jasmine.clock().uninstall();
+        });
         it('should return 2024-01-01T00:00 and 2025-01-01T00:00 if the user clicks on the year button', async () => {
             jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
@@ -470,6 +463,13 @@ describe('Process Monitoring view ', () => {
     });
 
     describe('get dates after period click if the current day/time is 2023-12-31 9:18 (winter time)', () => {
+        beforeEach(() => {
+            jasmine.clock().install();
+        });
+
+        afterEach(() => {
+            jasmine.clock().uninstall();
+        });
         it('should return 2023-01-01T00:00 and 2024-01-01T00:00 if the user clicks on the year button', async () => {
             jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
