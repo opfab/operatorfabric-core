@@ -7,18 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {Process, State} from '@ofModel/processes.model';
+import {State} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {getOneLightCard} from '@tests/helpers';
+import {getOneLightCard, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
@@ -28,17 +23,10 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
-    let userServerMock: UserServerMock;
-    let processServerMock: ProcessServerMock;
     let filteredLightCardStore: FilteredLightCardsStore;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
 
     beforeEach(async () => {
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
-        processServerMock = new ProcessServerMock();
-        ProcessesService.setProcessServer(processServerMock);
-
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
 
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
@@ -51,52 +39,31 @@ describe('Dashboard', () => {
     });
 
     async function initProcesses() {
-        const states1 = new Map<string, State>();
-        const state1 = new State();
-        state1.name = 'State 1';
-        states1.set('state1', state1);
-
-        const states2 = new Map<string, State>();
-        const state2 = new State();
-        state2.name = 'State 2';
-        states2.set('state2', state2);
-        const state3 = new State();
-        state3.name = 'State 3';
-        states2.set('state3', state3);
-        const childState = new State();
-        childState.name = 'child state';
-        childState.isOnlyAChildState = true;
-        states2.set('childState', childState);
-
-        const processes = new Array();
-        const process1 = new Process('process1', 'v1', 'process name', undefined, states1);
-        const process2 = new Process('process2', 'v2', 'process name 2', undefined, states2);
-        processes.push(process1);
-        processes.push(process2);
-        processServerMock.setResponseForAllProcessDefinition(
-            new ServerResponse(processes, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
-        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
+        await setProcessConfiguration([
+            {
+                id: 'process1',
+                version: 'v1',
+                name: 'process name',
+                states: new Map<string, State>([['state1', {name: 'State 1'}]])
+            },
+            {
+                id: 'process2',
+                version: 'v2',
+                name: 'process name 2',
+                states: new Map<string, State>([
+                    ['state2', {name: 'State 2'}],
+                    ['state3', {name: 'State 3'}],
+                    ['childState', {name: 'child state', isOnlyAChildState: true}]
+                ])
+            }
+        ]);
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
-        const processes = new Array();
-        processServerMock.setResponseForAllProcessDefinition(
-            new ServerResponse(processes, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
-        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
+        await setProcessConfiguration([]);
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
-
+        await setUserPerimeter(userWithPerimeters);
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            filteredLightCardStore.getBusinessDateFilter().status
-        );
-
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes).toHaveSize(0);
     });
@@ -105,43 +72,25 @@ describe('Dashboard', () => {
         await initProcesses();
         const computedPerimeters = new Array();
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            filteredLightCardStore.getBusinessDateFilter().status
-        );
-
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(0);
     });
 
     it('GIVEN a process list WHEN get dashboard THEN dashboard contains processes', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
-        const computedPerimeter3 = new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter);
-        computedPerimeters.push(computedPerimeter2);
-        computedPerimeters.push(computedPerimeter3);
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+        ];
+
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            filteredLightCardStore.getBusinessDateFilter().status
-        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -158,23 +107,14 @@ describe('Dashboard', () => {
 
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter);
-        computedPerimeters.push(computedPerimeter2);
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true)
+        ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
-        filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            filteredLightCardStore.getBusinessDateFilter().status
-        );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -185,18 +125,13 @@ describe('Dashboard', () => {
 
     it('GIVEN a process list and an action card in state1 WHEN get dashboard THEN dashboard contains 1 card in process 1 with 1 action circle ', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
-        const computedPerimeter3 = new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter);
-        computedPerimeters.push(computedPerimeter2);
-        computedPerimeters.push(computedPerimeter3);
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+        ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
         filteredLightCardStore.updateFilter(
@@ -233,18 +168,13 @@ describe('Dashboard', () => {
 
     it('GIVEN a process list and a card in state1 WHEN add some cards of every severity THEN dashboard contains 4 circles in state 1', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true);
-        const computedPerimeter3 = new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter1);
-        computedPerimeters.push(computedPerimeter2);
-        computedPerimeters.push(computedPerimeter3);
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+        ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
 
@@ -314,14 +244,9 @@ describe('Dashboard', () => {
 
     it('GIVEN an acknowledged card WHEN cards get sent THEN dashboard does not contain the card', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter1);
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true)];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
 
@@ -346,14 +271,9 @@ describe('Dashboard', () => {
 
     it('GIVEN a card today WHEN date filter is set to the past THEN dashboard does not contain the card', async () => {
         await initProcesses();
-        const computedPerimeters = new Array();
-        const computedPerimeter1 = new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true);
-        computedPerimeters.push(computedPerimeter1);
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true)];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await setUserPerimeter(userWithPerimeters);
 
         dashboard = new Dashboard();
 

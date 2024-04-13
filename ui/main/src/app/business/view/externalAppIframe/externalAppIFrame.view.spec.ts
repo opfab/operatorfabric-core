@@ -8,18 +8,15 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {UserService} from 'app/business/services/users/user.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {firstValueFrom} from 'rxjs';
 import {ExternalAppIFrameView} from './externalAppIFrame.view';
 
 describe('ExternalAppIFrame view ', () => {
-    let configServerMock: ConfigServerMock;
-
+    let externalAppIFrameView: ExternalAppIFrameView;
     const menuConf = {
         navigationBar: [
             {
@@ -43,29 +40,21 @@ describe('ExternalAppIFrame view ', () => {
         ]
     };
 
-    beforeEach(() => {
-        configServerMock = new ConfigServerMock();
+    beforeEach(async () => {
+        const configServerMock = new ConfigServerMock();
         ConfigService.setConfigServer(configServerMock);
-        const mockUserServer = new UserServerMock();
-
-        UserService.setUserServer(mockUserServer);
-
         GlobalStyleService.init();
-
+        GlobalStyleService.setStyle(GlobalStyleService.DAY);
+        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
+        await firstValueFrom(ConfigService.loadUiMenuConfig());
         // Mock method not supported in test context
         history.replaceState = () => {};
+        externalAppIFrameView = new ExternalAppIFrameView();
     });
 
     // menu1/entry1 ==> https://test/ ==> https://test/?opfab_theme=DAY
     it('GIVEN a menu is configured WHEN menu route is send THEN url is set with opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1/');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?opfab_theme=DAY');
@@ -74,14 +63,7 @@ describe('ExternalAppIFrame view ', () => {
 
     // menu1/entry2/ ==> https://test/question?param=myparam ==> https://test/question?param=myparam&opfab_theme=DAY
     it('GIVEN menu is configure with a parameter in url  WHEN route is send THEN url is set with the parameter and opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry2/');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&opfab_theme=DAY');
@@ -91,14 +73,7 @@ describe('ExternalAppIFrame view ', () => {
     // menu1/entry2 ==> https://test/question?param=myparam ==> https://test/question?param=myparam&opfab_theme=DAY
     //
     it('GIVEN menu is configure with a parameter in url without /  WHEN route is send THEN url is set with the parameter and opfab_theme ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry2');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&opfab_theme=DAY');
@@ -114,14 +89,7 @@ describe('ExternalAppIFrame view ', () => {
     //
     // menu1/entry1/?my_param=param&my_param2=param2 ==> https://test/ ==> https://test/?my_param=param&my_param2=param2&opfab_theme=DAY
     it('GIVEN menu is configure WHEN route is send with params THEN url is set with the params and with opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1/?my_param=param&my_param2=param2');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
@@ -138,14 +106,7 @@ describe('ExternalAppIFrame view ', () => {
     // menu1/entry1?my_param=param&my_param2=param2 ==> https://test/ ==> https://test/?my_param=param&my_param2=param2&opfab_theme=DAY
     //
     it('GIVEN menu is configure WHEN route is send with params without / THEN url is set with the params and with opfab_theme', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1/?my_param=param&my_param2=param2');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
@@ -164,14 +125,7 @@ describe('ExternalAppIFrame view ', () => {
     // so we always have a unique case : a double encoded url
 
     it('GIVEN menu is configure WHEN route is send with params and encoded twice THEN url is decoded set with the params and with opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1/%253Fmy_param=param&my_param2=param2');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
@@ -180,14 +134,7 @@ describe('ExternalAppIFrame view ', () => {
 
     // menu1/entry2/?my_param2=param2 ==> https://test/question?param=myparam ==> https://test/question?my_param=param&my_param2=param2&opfab_theme=DAY
     it('GIVEN menu is configure with a parameter in url WHEN route is send with params THEN url is set with all the params and with opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry2/?my_param2=param2');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&my_param2=param2&opfab_theme=DAY');
@@ -196,14 +143,7 @@ describe('ExternalAppIFrame view ', () => {
 
     // menu1/entry1/deep/deep2/query?my_param=param ==> https://test/ ==> https://test/deepurl/deepurl2/query?my_param=param&opfab_theme=DAY
     it('GIVEN menu is configure WHEN route is send with deep link and a param THEN url is set with deep link , the param and opfab_theme  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1/deep/deep2/query?my_param=param');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/deep/deep2/query?my_param=param&opfab_theme=DAY');
@@ -211,19 +151,14 @@ describe('ExternalAppIFrame view ', () => {
     });
 
     it('GIVEN an url is set  WHEN global style change THEN url is set with new style  ', async () => {
-        GlobalStyleService.setStyle(GlobalStyleService.DAY);
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-
-        const externalAppIFrameView = new ExternalAppIFrameView();
-
         RouterStore.setCurrentRoute('/businessconfigparty/entry1');
-
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
+
         expect(url).toEqual('https://test/?opfab_theme=DAY');
 
         GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
         const newUrl = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
+
         expect(newUrl).toEqual('https://test/?opfab_theme=NIGHT');
         externalAppIFrameView.destroy();
     });

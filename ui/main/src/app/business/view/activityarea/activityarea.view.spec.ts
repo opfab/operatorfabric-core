@@ -49,8 +49,7 @@ describe('ActivityAreaView', () => {
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
         EntitiesService.setEntitiesServer(entitiesServerMock);
-        const entities: Entity[] = new Array();
-        entities.push(
+        const entities: Entity[] = [
             new Entity(
                 'CLUSTERING_ENTITY',
                 'CLUSTERING_ENTITY_NAME',
@@ -58,9 +57,8 @@ describe('ActivityAreaView', () => {
                 [RolesEnum.CARD_SENDER, RolesEnum.ACTIVITY_AREA_GROUP],
                 [],
                 []
-            )
-        );
-        entities.push(
+            ),
+
             new Entity(
                 'ENTITY1',
                 'ENTITY1_NAME',
@@ -68,9 +66,7 @@ describe('ActivityAreaView', () => {
                 [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
-            )
-        );
-        entities.push(
+            ),
             new Entity(
                 'ENTITY2',
                 'ENTITY2_NAME',
@@ -78,9 +74,8 @@ describe('ActivityAreaView', () => {
                 [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
-            )
-        );
-        entities.push(
+            ),
+
             new Entity(
                 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE',
                 'ENTITY3_NAME',
@@ -88,9 +83,8 @@ describe('ActivityAreaView', () => {
                 [RolesEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
-            )
-        );
-        entities.push(
+            ),
+
             new Entity(
                 'ENTITY_WITH_NO_CLUSTERING_PARENT',
                 'ENTITY4_NAME',
@@ -98,9 +92,8 @@ describe('ActivityAreaView', () => {
                 [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
                 [],
                 ['ENTITY1']
-            )
-        );
-        entities.push(
+            ),
+
             new Entity(
                 'ENTITY_WITH_NO_PARENT',
                 'ENTITY5_NAME',
@@ -109,7 +102,7 @@ describe('ActivityAreaView', () => {
                 [],
                 null
             )
-        );
+        ];
         entitiesServerMock.setEntities(entities);
         EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));

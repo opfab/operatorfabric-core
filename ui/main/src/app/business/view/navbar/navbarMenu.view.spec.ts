@@ -14,14 +14,13 @@ import {firstValueFrom} from 'rxjs';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {User} from '@ofModel/user.model';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {UserService} from 'app/business/services/users/user.service';
 import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
+import {setUserPerimeter} from '@tests/helpers';
 
 declare const opfabStyle;
 
@@ -34,7 +33,7 @@ describe('NavbarMenuView', () => {
 
     describe('get core navbar menus', () => {
         it('should get menus defined ui-menu.json', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]
             });
             const navBarMenuElements = getNavbarNavigationBar();
@@ -44,7 +43,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get menu translations in labels', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]
             });
             const navBarMenuElements = getNavbarNavigationBar();
@@ -53,7 +52,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get dropdown menus defined ui-menu.json', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [{entries: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]}]
             });
             const navBarMenuElements = getNavbarNavigationBar();
@@ -63,7 +62,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get dropdown menu translations in labels', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {opfabCoreMenuId: 'feed', entries: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]}
                 ]
@@ -74,7 +73,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should not get menu if user is not member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {opfabCoreMenuId: 'feed'},
                     {opfabCoreMenuId: 'archives', showOnlyForGroups: ['groupUserIsNotMember']}
@@ -87,7 +86,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should  get menu if user is member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {opfabCoreMenuId: 'feed'},
                     {opfabCoreMenuId: 'archives', showOnlyForGroups: ['groupUserIsMember', 'groupUserIsNotMember']}
@@ -101,7 +100,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should  get menu if showOnlyForGroups = [] ', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives', showOnlyForGroups: []}]
             });
             await stubCurrentUserData(['groupUserIsMember']);
@@ -112,7 +111,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should not get dropdown menus if user is not member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 showDropdownMenuEvenIfOnlyOneEntry: true,
                 navigationBar: [
                     {
@@ -130,7 +129,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get dropdown menus if user is  member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -150,7 +149,7 @@ describe('NavbarMenuView', () => {
 
     describe('get custom navbar menus', () => {
         it('should get menus defined ui-menu.json', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         customMenuId: 'customMenu1',
@@ -177,7 +176,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get menu translations in labels', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {customMenuId: 'customMenu1', label: 'customMenu1Label_translation_key'},
                     {customMenuId: 'customMenu2', label: 'customMenu2Label_translation_key'}
@@ -189,7 +188,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get dropdown menus defined ui-menu.json', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -206,7 +205,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get dropdown menu translations in labels', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -226,7 +225,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should not get menu if user is not member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {customMenuId: 'customMenu1'},
                     {customMenuId: 'customMenu2', showOnlyForGroups: ['groupUserIsNotMember']}
@@ -239,7 +238,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should  get menu if user is member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {customMenuId: 'customMenu1'},
                     {customMenuId: 'customMenu2', showOnlyForGroups: ['groupUserIsMember', 'groupUserIsNotMember']}
@@ -253,7 +252,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should not get dropdown menus if user is not member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 showDropdownMenuEvenIfOnlyOneEntry: true,
                 navigationBar: [
                     {
@@ -271,7 +270,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should not get dropdown menus if user is  member of showOnlyForGroups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -294,7 +293,7 @@ describe('NavbarMenuView', () => {
 
     describe('get mixed core and custom  navbar menus', () => {
         it('should get menus defined ui-menu.json', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {opfabCoreMenuId: 'feed'},
                     {opfabCoreMenuId: 'archives'},
@@ -311,7 +310,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get menu translation for dropdown menu title in label field', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         label: 'dropdownMenu_translation_key',
@@ -328,7 +327,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('Should not get menu if sub menu is empty', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [{entries: []}, {opfabCoreMenuId: 'feed'}]
             });
             const navBarMenuElements = getNavbarNavigationBar();
@@ -336,7 +335,7 @@ describe('NavbarMenuView', () => {
             expect(navBarMenuElements[0].id).toEqual('feed');
         });
         it('Should not get menu if sub menu is empty because he is not in the right groups', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -353,7 +352,7 @@ describe('NavbarMenuView', () => {
             expect(navBarMenuElements[0].id).toEqual('feed');
         });
         it('Should not show dropdown menu if sub menu contain only one entry and option showDropdownMenuEvenIfOnlyOneEntry is false', async () => {
-            stubConfigLoading({
+            stubMenuConfigLoading({
                 showDropdownMenuEvenIfOnlyOneEntry: false,
                 navigationBar: [
                     {
@@ -377,13 +376,13 @@ describe('NavbarMenuView', () => {
 
     describe('Get right icons visibility', () => {
         it('Should have no icons visibility if not  configured in ui-menu config', async () => {
-            await stubConfigLoading({navigationBar: []});
+            await stubMenuConfigLoading({navigationBar: []});
             const navbarPage = getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeFalsy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
         it('should have icons visibility if configured in ui-menu config', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightIconMenus: [
                     {opfabCoreMenuId: 'usercard', visible: true},
@@ -396,7 +395,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should have icons visibility set to false  if configured in ui-menu config with visible is false', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightIconMenus: [
                     {opfabCoreMenuId: 'usercard', visible: false},
@@ -408,7 +407,7 @@ describe('NavbarMenuView', () => {
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
         it('should have icons visibility set to false  if configured in ui-menu config with user not member of showOnlyForGroups', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightIconMenus: [
                     {opfabCoreMenuId: 'usercard', visible: true, showOnlyForGroups: ['groupWhereUserIsNotMember']},
@@ -421,7 +420,7 @@ describe('NavbarMenuView', () => {
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
         it('should have icons visibility set to true  if configured in ui-menu config with user  member of showOnlyForGroups', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightIconMenus: [
                     {opfabCoreMenuId: 'usercard', visible: true, showOnlyForGroups: ['groupWhereUserIsMember']},
@@ -447,7 +446,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('visible if configured in ui-menu config', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'realtimeusers', visible: true},
@@ -461,7 +460,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should get menu translations in labels', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'realtimeusers', visible: true},
@@ -475,7 +474,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('daynightmode should have translation for day mode when current mode is night', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'nightdaymode', visible: true}]
             });
@@ -487,7 +486,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('daynightmode should have translation for night mode when current mode is day', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'nightdaymode', visible: true}]
             });
@@ -499,7 +498,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('not visible if configured in ui-menu config with visible = false or not set', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'realtimeusers', visible: false},
@@ -511,7 +510,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('not visible if configured in ui-menu config with user not member of showOnlyForGroups', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'realtimeusers', visible: true, showOnlyForGroups: ['groupWhereUserIsNotMember']},
@@ -528,7 +527,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('visible if configured in ui-menu config with user member of showOnlyForGroups', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'realtimeusers', visible: true, showOnlyForGroups: ['groupWhereUserIsMember']},
@@ -546,7 +545,7 @@ describe('NavbarMenuView', () => {
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
         });
         it('not visible if configured in ui-menu config with user not admin for admin feature admin, externaldevicesconfiguration', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'admin', visible: true},
@@ -559,7 +558,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('visible if configured in ui-menu config with user admin for admin feature admin, externaldevicesconfiguration,useractionlogs', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'admin', visible: true},
@@ -576,7 +575,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('visible if configured in ui-menu config with user for admin feature useractionlogs', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
@@ -587,7 +586,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('Action logs not visible if configured in ui-menu config with user without admin feature useractionlogs nor admin', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
@@ -599,7 +598,7 @@ describe('NavbarMenuView', () => {
         it('only menu settings,feedconfiguration,nightdaymode,logout shall be available for collapsed menu', async () => {
             GlobalStyleService.init();
             GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [
                     {opfabCoreMenuId: 'admin', visible: true},
@@ -631,7 +630,7 @@ describe('NavbarMenuView', () => {
     describe('Current selected menu', () => {
         it('should be core menu feed if current route is /', async () => {
             RouterStore.setCurrentRoute('/');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
@@ -640,7 +639,7 @@ describe('NavbarMenuView', () => {
         });
         it('should be core menu feed if current route is feed', async () => {
             RouterStore.setCurrentRoute('/feed');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
@@ -649,7 +648,7 @@ describe('NavbarMenuView', () => {
         });
         it('should be core menu feed if current route is a card in feed : /feed/cards/cardId', async () => {
             RouterStore.setCurrentRoute('/feed/cards/cardId');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
@@ -658,7 +657,7 @@ describe('NavbarMenuView', () => {
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
@@ -667,7 +666,7 @@ describe('NavbarMenuView', () => {
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id/customUrlElement', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id/customUrlElement');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
@@ -676,7 +675,7 @@ describe('NavbarMenuView', () => {
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id?customUrlParam=test', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id?customUrlParam=test');
-            await stubConfigLoading({});
+            await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView(translationService);
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
@@ -691,7 +690,7 @@ describe('NavbarMenuView', () => {
         });
 
         it('should update menu labels in upper menu', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [
                     {
                         entries: [
@@ -719,7 +718,7 @@ describe('NavbarMenuView', () => {
             navbarMenuView.destroy();
         });
         it('should update menu labels in right menu', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
@@ -735,7 +734,7 @@ describe('NavbarMenuView', () => {
             navbarMenuView.destroy();
         });
         it('should trigger menu change listener when locale change', async () => {
-            await stubConfigLoading({
+            await stubMenuConfigLoading({
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
@@ -755,7 +754,7 @@ describe('NavbarMenuView', () => {
         return new NavbarMenuView(translationService).getNavbarMenu().upperMenuElements;
     }
 
-    async function stubConfigLoading(menuConfig: any) {
+    async function stubMenuConfigLoading(menuConfig: any) {
         const configServerMock = new ConfigServerMock();
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConfig, ServerResponseStatus.OK, null));
         ConfigService.setConfigServer(configServerMock);
@@ -764,15 +763,8 @@ describe('NavbarMenuView', () => {
 
     async function stubCurrentUserData(userGroups: string[], permissions: PermissionEnum[] = []) {
         const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const userServerMock = new UserServerMock();
-        userServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
-        const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), permissions, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        UserService.setUserServer(userServerMock);
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        const userWithPerimeters = new UserWithPerimeters(user, new Array(), permissions, new Map());
+        setUserPerimeter(userWithPerimeters);
     }
 
     function getNavbarMenu(): NavbarMenu {
