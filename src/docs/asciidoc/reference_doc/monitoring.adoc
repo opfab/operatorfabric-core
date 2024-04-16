@@ -63,10 +63,16 @@ Here is an example of processMonitoring configuration :
       "colName": "Title",
       "size": "250"
     },
+    { 
+      "field": "entityRecipients",
+      "type": "array",
+      "colName": "Entity Recipients",
+      "size": "400"
+    },
     {
       "field": "data.message",
       "colName": "My field",
-      "size": "700"
+      "size": "300"
     },
     {
       "field": "summaryTranslated",
@@ -84,7 +90,7 @@ Here is an example of processMonitoring configuration :
 Here is the description of the fields :
 
 - "field" : the name of the field in the card (or in the database) you want to display
-- "type" : if you want to display a date/time field, you must set this field to "date" for field formatting
+- "type" : field type to be used for formatting. Possible values : `date`, `array`. Set to `date` if you want to display a date/time field, set it to `array` to display an array as a comma separated list.
 - "colName" : name of the column on the UI
 - "size" : size of the column on the UI, proportionally to each other
 
