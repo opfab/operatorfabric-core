@@ -450,6 +450,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
+    displayArray(values: string[]) {
+        return values ? values.join(',') : '';
+    }
+
     exportToExcel(): void {
         const exportArchiveData = [];
 
@@ -474,6 +478,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                 this.processMonitoring.forEach((column) => {
                     if (column.type === 'date') {
                         lineForExport[column.colName] = this.displayTime(card[String(column.field).split('.').pop()]);
+                    } else if (column.type === 'array') {
+                        lineForExport[column.colName] = this.displayArray(card[String(column.field).split('.').pop()]);
                     } else {
                         lineForExport[column.colName] = card[String(column.field).split('.').pop()];
                     }
