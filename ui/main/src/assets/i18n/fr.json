@@ -172,8 +172,7 @@
     "activityarea": "Zone d'activité",
     "useractionlogs": "Trace des actions utilisateurs",
     "newcardTooltip": "Créer une nouvelle carte",
-    "calendarTooltip": "Calendrier",
-    "settingsSaved": "Paramètres sauvegardés"
+    "calendarTooltip": "Calendrier"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -326,7 +325,8 @@
     "sendCardsByEmail": "Envoi des notifications par mail",
     "emailToPlainText": "Envoi des mails en texte brut",
     "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
-    "email": "Email"
+    "email": "Email",
+    "settingsSaved": "Paramètres sauvegardés"
   },
   "archive": {
     "cardLoadingInProgress":"Chargement de la carte...",

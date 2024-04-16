@@ -172,8 +172,7 @@
     "activityarea": "Activiteitengebied",
     "useractionlogs": "Logboek",
     "newcardTooltip": "Maak een nieuwe kaart",
-    "calendarTooltip": "Kalender",
-    "settingsSaved": "Instellingen bewaard"
+    "calendarTooltip": "Kalender"
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
@@ -326,7 +325,8 @@
     "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
     "emailToPlainText": "De e-mails versturen in platte tekst",
     "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
-    "email": "Email"
+    "email": "Email",
+    "settingsSaved": "Instellingen bewaard"
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
