@@ -7,7 +7,11 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-table" style="margin-top: 4px;">
-        <table style="border-bottom: none">
+        <table style="border-bottom: none" aria-describedby="Signal mappings">
+                <tr style="display: none">
+                        <th scope="col">Severity</th>
+                        <th scope="col">Signal code</th>
+                </tr>
                 <tr>
                         <td translate>shared.severity.alarm</td>
                         <td >{{supportedSignals['ALARM']}}</td>
