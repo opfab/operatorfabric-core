@@ -199,28 +199,29 @@
                         hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters
                     "
                     id="opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox"
-                    style="margin-left: 10px; max-width: 200px; margin-top: -50px"
+                    style="margin-left: 10px; max-width: 200px; margin-top: -90px; margin-bottom: 50px"
                     class="opfab-checkbox"
                     translate
                     >shared.adminMode
                     <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
-                <button
-                    id="opfab-archives-logging-btn-search"
-                    [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn opfab-btn-search-admin-mode' : 'opfab-btn'"
-                    (click)="query()"
-                    translate>
-                    button.search
-                </button>
-                <button
-                    id="opfab-archives-logging-btn-reset"
-                    class="opfab-btn-cancel"
-                    style="margin-top: 50px"
-                    (click)="resetForm()"
-                    translate>
-                    button.reset
-                </button>
+                <div style="display:flex; margin-bottom: 22px">
+                    <button
+                        id="opfab-archives-logging-btn-search"
+                        [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn opfab-btn-search-admin-mode' : 'opfab-btn'"
+                        (click)="query()"
+                        translate>
+                        button.search
+                    </button>
+                    <button
+                        id="opfab-archives-logging-btn-reset"
+                        class="opfab-btn-cancel"
+                        (click)="resetForm()"
+                        translate>
+                        button.reset
+                    </button>
+                </div>
             </div>
         </div>
     </div>
