@@ -17,7 +17,7 @@
             </div>
             <br>
         </div>
-
+        <of-spinner *ngIf="showSpinner" [seeInModal]="true"></of-spinner>
         <ag-grid-angular id="opfab-externaldevices-table-grid" aria-describedby="External devices table"
                 (gridReady)="onGridReady($event)"
                 [gridOptions]="gridOptions"

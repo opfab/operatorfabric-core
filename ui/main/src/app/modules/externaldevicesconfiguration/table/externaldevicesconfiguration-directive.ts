@@ -42,6 +42,8 @@ export abstract class ExternalDevicesConfigurationDirective {
     protected canAddItems: boolean;
     protected addItemLabel = 'externalDevicesConfiguration.input.add';
     private isLoadingData = true;
+    protected waitingDeviceResponse: boolean;
+    protected showSpinner: boolean;
 
     constructor(
         protected translateService: TranslateService,
