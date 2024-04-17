@@ -13,7 +13,7 @@ import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} fro
 
 import {ErrorService} from 'app/business/services/error-service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 
 export class ExternalDevicesService {
     private static externalDevicesServer: ExternalDevicesServer;
@@ -68,16 +68,12 @@ export class ExternalDevicesService {
         );
     }
 
-    static enableDevice(deviceId: string): Observable<string> {
-        return ExternalDevicesService.externalDevicesServer
-            .enableDevice(deviceId)
-            .pipe(map((serverResponse) => serverResponse.data));
+    static enableDevice(deviceId: string): Observable<ServerResponse<any>> {
+        return ExternalDevicesService.externalDevicesServer.enableDevice(deviceId);
     }
 
-    static disableDevice(deviceId: string): Observable<string> {
-        return ExternalDevicesService.externalDevicesServer
-            .disableDevice(deviceId)
-            .pipe(map((serverResponse) => serverResponse.data));
+    static disableDevice(deviceId: string): Observable<ServerResponse<any>> {
+        return ExternalDevicesService.externalDevicesServer.disableDevice(deviceId);
     }
 
     static deleteDevice(deviceId: string): Observable<string> {

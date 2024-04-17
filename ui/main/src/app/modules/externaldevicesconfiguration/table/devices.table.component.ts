@@ -15,6 +15,7 @@ import {ExternalDevicesService} from 'app/business/services/notifications/extern
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-externaldevices',
@@ -39,25 +40,33 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
     }
 
     detectCheckboxClick(deviceData: any, isCheckboxChecked: boolean): void {
+        this.waitingDeviceResponse = true;
+        setTimeout(() => {
+            if (this.waitingDeviceResponse) this.showSpinner = true;
+        }, 500);
         if (isCheckboxChecked) {
-            ExternalDevicesService.enableDevice(deviceData.id).subscribe({
-                error: () =>
+            ExternalDevicesService.enableDevice(deviceData.id).subscribe((response) => {
+                this.waitingDeviceResponse = false;
+                this.showSpinner = false;
+                if (response.status !== ServerResponseStatus.OK)
                     this.displayMessage(
                         'externalDevicesConfiguration.error.errorWhenEnablingDevice',
-                        null,
+                        response.statusMessage,
                         MessageLevel.ERROR
-                    ),
-                complete: () => this.refreshData()
+                    );
+                else this.refreshData();
             });
         } else {
-            ExternalDevicesService.disableDevice(deviceData.id).subscribe({
-                error: () =>
+            ExternalDevicesService.disableDevice(deviceData.id).subscribe((response) => {
+                this.waitingDeviceResponse = false;
+                this.showSpinner = false;
+                if (response.status !== ServerResponseStatus.OK)
                     this.displayMessage(
                         'externalDevicesConfiguration.error.errorWhenDisablingDevice',
-                        null,
+                        response.statusMessage,
                         MessageLevel.ERROR
-                    ),
-                complete: () => this.refreshData()
+                    );
+                else this.refreshData();
             });
         }
     }
