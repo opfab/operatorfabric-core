@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
+import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
@@ -46,11 +47,9 @@ public class WebSecurityConfiguration {
         configureCommon(http);
 
         http
-                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+            .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                     .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(opfabJwtConverter))
-                );
-
+                            .jwtAuthenticationConverter(opfabJwtConverter)));
 
         return http.build();
     }
@@ -61,6 +60,8 @@ public class WebSecurityConfiguration {
     3) it is called for publishing card, for checking if process/state exists in the bundles */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+        .accessDeniedHandler(new CustomAccessDeniedHandler()))
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                 .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()

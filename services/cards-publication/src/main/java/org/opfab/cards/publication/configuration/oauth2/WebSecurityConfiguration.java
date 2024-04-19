@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,8 @@ import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManage
 
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsernameAndIpAllowed;
+
+import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -61,6 +63,8 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http, boolean checkAuthenticationForCardSending) throws Exception {
         if (checkAuthenticationForCardSending) {
             http
+                    .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
@@ -72,6 +76,8 @@ public class WebSecurityConfiguration {
                     );
         } else {
             http
+                    .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                         .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
