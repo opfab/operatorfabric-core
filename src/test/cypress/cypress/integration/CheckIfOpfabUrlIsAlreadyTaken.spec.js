@@ -43,18 +43,18 @@ describe('Check the behaviour of OpFab when URL is already in use', function () 
     it(`Check OpFab does not start if connection is canceled`, function () {
         lockUrl();
         cy.visit('');
-        cy.get('#opfab-log-in-confirmation-because-url-is-locked').should('exist');
+        cy.get('#opfab-modal-body').should('exist');
 
-        cy.get('#opfab-log-in-confirmation-because-url-is-locked').find('#opfab-cancel-button').click();
+        cy.get('#opfab-modal-body').find('#opfab-btn-cancel').click();
         cy.get('#opfab-disconnected-message').should('exist');
     });
 
     it(`Check OpFab starts if connection is confirmed`, function () {
         lockUrl();
         cy.visit('');
-        cy.get('#opfab-log-in-confirmation-because-url-is-locked').should('exist');
+        cy.get('#opfab-modal-body').should('exist');
 
-        cy.get('#opfab-log-in-confirmation-because-url-is-locked').find('#opfab-confirm-button').click();
+        cy.get('#opfab-modal-body').find('#opfab-btn-ok').click();
         cy.get('#opfab-disconnected-message').should('not.exist');
 
         opfab.loginWithoutHackWithUser('operator1_fr');

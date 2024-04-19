@@ -10,6 +10,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalConfig} from '@ofModel/modal-config.model';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-ngb-modal',
@@ -24,5 +25,9 @@ export class OpfabNgbModalComponent {
 
     public close(buttonId: string) {
         this.activeModal.close(buttonId);
+    }
+
+    protected isI18n(val: string | I18n): boolean {
+        return val instanceof I18n;
     }
 }

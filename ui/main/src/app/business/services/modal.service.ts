@@ -9,30 +9,22 @@
 
 import {I18n} from '@ofModel/i18n.model';
 import {ModalServer} from '../server/modal.server';
-import {TranslationService} from './translation/translation.service';
 import {ModalConfig} from '@ofModel/modal-config.model';
 
 export class ModalService {
     private static modalServer: ModalServer;
-    private static translationService: TranslationService;
 
     public static setModalServer(modalServer: ModalServer) {
         ModalService.modalServer = modalServer;
     }
 
-    public static setTranslationService(translationService: TranslationService) {
-        ModalService.translationService = translationService;
-    }
-
     public static openInformationModal(message: string | I18n): Promise<void> {
-        const messageTranslated = this.getTranslatedValue(message);
-
         const modalConfig: ModalConfig = {
             title: undefined,
-            message: messageTranslated,
+            message: message,
             buttons: [
                 {
-                    label: this.translationService.getTranslation('button.ok'),
+                    label: new I18n('button.ok'),
                     id: 'ok',
                     isSelected: true
                 }
@@ -44,27 +36,17 @@ export class ModalService {
             .catch(() => undefined); // in case of modal closed via Esc key
     }
 
-    private static getTranslatedValue(value: string | I18n): string {
-        if (value instanceof I18n) {
-            return this.translationService.getTranslation(value.key, value.parameters);
-        }
-        return value;
-    }
-
     public static openConfirmationModal(title: string | I18n, message: string | I18n): Promise<boolean> {
-        const titleTranslated = this.getTranslatedValue(title);
-        const messageTranslated = this.getTranslatedValue(message);
-
         const modalConfig: ModalConfig = {
-            title: titleTranslated,
-            message: messageTranslated,
+            title: title,
+            message: message,
             buttons: [
                 {
-                    label: this.translationService.getTranslation('button.cancel'),
+                    label: new I18n('button.cancel'),
                     id: 'cancel'
                 },
                 {
-                    label: this.translationService.getTranslation('button.ok'),
+                    label: new I18n('button.ok'),
                     id: 'ok',
                     isSelected: true
                 }
@@ -78,19 +60,19 @@ export class ModalService {
 
     public static openSaveBeforeExitModal(): Promise<string> {
         const modalConfig: ModalConfig = {
-            title: this.translationService.getTranslation('shared.popup.title'),
-            message: this.translationService.getTranslation('notificationConfiguration.modificationToSave'),
+            title: new I18n('shared.popup.title'),
+            message: new I18n('notificationConfiguration.modificationToSave'),
             buttons: [
                 {
-                    label: this.translationService.getTranslation('button.doNotSave'),
+                    label: new I18n('button.doNotSave'),
                     id: 'doNotSave'
                 },
                 {
-                    label: this.translationService.getTranslation('button.cancel'),
+                    label: new I18n('button.cancel'),
                     id: 'cancel'
                 },
                 {
-                    label: this.translationService.getTranslation('button.save'),
+                    label: new I18n('button.save'),
                     id: 'save',
                     isSelected: true
                 }
