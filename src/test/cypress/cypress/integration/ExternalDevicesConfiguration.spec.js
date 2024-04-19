@@ -64,7 +64,7 @@ describe('ExternalDevicesconfigurationPage', () => {
     })
 
 
-    it('Add new external device', () => {
+    it('Add/edit new external device', () => {
         opfab.loginWithUser('admin');
         opfab.openExternalDevices();
 
@@ -92,6 +92,43 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('of-externaldevices-modal').should('not.exist');
         agGrid.countTableRows('ag-grid-angular', 4);
 
+        // Edit previously created row
+        agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
+
+        cy.get('of-externaldevices-modal').should('exist');
+
+        // Remove localhost and see if save button is disabled
+        cy.get('#opfab-host').clear();
+        cy.get('#opfab-admin-user-btn-save').should('be.disabled');
+        cy.get('#opfab-host').type('localhost_updated');
+        cy.get('#opfab-admin-user-btn-save').should('be.enabled');
+
+        // Remove port and see if save button is disabled
+        cy.get('#opfab-port').clear();
+        cy.get('#opfab-admin-user-btn-save').should('be.disabled');
+        cy.get('#opfab-port').type('123456');
+        cy.get('#opfab-admin-user-btn-save').should('be.enabled');
+
+        cy.get('#opfab-signalMappingDropdownList').click();
+        cy.get('#opfab-signalMappingDropdownList').find('.vscomp-option-text').eq(0).click({force: true});
+        cy.get('#opfab-signalMappingDropdownList').click();
+
+        cy.get('#opfab-admin-user-btn-save').should('be.enabled');
+        cy.get('#opfab-admin-user-btn-save').click();
+        cy.get('of-externaldevices-modal').should('not.exist');
+        agGrid.countTableRows('ag-grid-angular', 4);
+
+        // Check if the fields are really updated
+        agGrid.clickCell('#opfab-externaldevices-table-grid', 3, 2, 'of-action-cell-renderer');
+
+        cy.get('of-externaldevices-modal').should('exist');
+
+        cy.get('#opfab-host').should('have.value', 'localhost_updated');
+        cy.get('#opfab-port').should('have.value', '123456');
+        cy.get('#opfab-signalMappingDropdownList').find('.vscomp-value').should('have.text', 'default_CDS_mapping');
+
+        cy.get('#opfab-admin-edit-btn-cancel').click();
+        cy.get('of-externaldevices-modal').should('not.exist');
     })
 
     it('Add new signal mapping', () => {
