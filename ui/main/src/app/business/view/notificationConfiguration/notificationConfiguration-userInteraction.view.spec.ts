@@ -31,6 +31,7 @@ import {OpfabEventStreamService} from 'app/business/services/events/opfabEventSt
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
 import {ModalServerMock} from '@tests/mocks/modalServer.mock';
+import {I18n} from '@ofModel/i18n.model';
 
 describe('Notification configuration view - User interaction ', () => {
     const translationServiceMock = new TranslationServiceMock();
@@ -405,7 +406,7 @@ describe('Notification configuration view - User interaction ', () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
                 expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
-                expect(modalServerMock.modalConfigReceived.message).toContain('settings.settingsSaved');
+                expect(modalServerMock.modalConfigReceived.message).toEqual(new I18n('settings.settingsSaved'));
                 await waitForAllPromises();
                 modalServerMock.clickOnButton('ok');
             });
@@ -417,7 +418,9 @@ describe('Notification configuration view - User interaction ', () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
                 expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
-                expect(modalServerMock.modalConfigReceived.message).toContain('shared.error.impossibleToSaveSettings');
+                expect(modalServerMock.modalConfigReceived.message).toEqual(
+                    new I18n('shared.error.impossibleToSaveSettings')
+                );
                 await waitForAllPromises();
                 modalServerMock.clickOnButton('ok');
             });

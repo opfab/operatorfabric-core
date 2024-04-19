@@ -25,7 +25,6 @@ import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {ModalServerMock} from './mocks/modalServer.mock';
-import {TranslationServiceMock} from './mocks/translation.service.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
 import {ConfigService} from 'app/business/services/config.service';
 
@@ -181,7 +180,6 @@ export async function waitForAllPromises() {
 export function getModalServerMock(): ModalServerMock {
     const modalServerMock = new ModalServerMock();
     ModalService.setModalServer(modalServerMock);
-    ModalService.setTranslationService(new TranslationServiceMock());
     return modalServerMock;
 }
 

@@ -81,7 +81,6 @@ export class ApplicationLoader {
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         SettingsService.setSettingsServer(servers.settingsServer);
         ModalService.setModalServer(servers.modalServer);
-        ModalService.setTranslationService(servers.translationService);
         OpfabAPIService.setTranslationService(servers.translationService);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);

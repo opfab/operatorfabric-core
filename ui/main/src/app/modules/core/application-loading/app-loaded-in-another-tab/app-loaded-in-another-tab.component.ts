@@ -8,13 +8,14 @@
  */
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {ModalService} from '../../../../business/services/modal.service';
+import {I18n} from '@ofModel/i18n.model';
 
 /** This component checks if the url of opfab is already in use
  *  in the browser (there should not be several accounts connected
@@ -39,16 +40,12 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
 
     @ViewChild('confirmToContinueLoading') confirmToContinueLoadingTemplate: TemplateRef<any>;
 
-    private confirmToContinueLoadingModal: NgbModalRef;
     public opfabUrl: string;
 
     public isDisconnectedByAnotherTab = false;
     private isApplicationActive = false;
 
-    constructor(
-        private urlLockService: UrlLockService,
-        private modalService: NgbModal
-    ) {
+    constructor(private urlLockService: UrlLockService) {
         super();
     }
 
@@ -62,9 +59,15 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
     private checkIfAppLoadedInAnotherTab(): void {
         if (this.urlLockService.isUrlLocked()) {
             logger.info('Another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
-            this.confirmToContinueLoadingModal = this.modalService.open(this.confirmToContinueLoadingTemplate, {
-                centered: true,
-                backdrop: 'static'
+            ModalService.openConfirmationModal(
+                undefined,
+                new I18n('login.confirmationBecauseAppAlreadyLoadedInAnotherTab', {url: this.opfabUrl})
+            ).then((confirmed) => {
+                if (confirmed) {
+                    this.continueLoadingAndDisconnectOtherUsers();
+                } else {
+                    this.cancelApplicationLoadingBecauseAppIsLoadedInAnotherTab();
+                }
             });
         } else {
             logger.info('No another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
@@ -79,7 +82,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
     }
 
     public continueLoadingAndDisconnectOtherUsers(): void {
-        this.confirmToContinueLoadingModal.close();
         this.urlLockService.lockUrl();
         this.urlLockService.disconnectOtherUsers();
         // Wait for connection to be closed on the back
@@ -102,7 +104,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
     }
 
     public cancelApplicationLoadingBecauseAppIsLoadedInAnotherTab(): void {
-        this.confirmToContinueLoadingModal.close();
         this.setAsFinishedWithError();
     }
 }

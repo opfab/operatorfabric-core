@@ -7,14 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {I18n} from '@ofModel/i18n.model';
+
 export class ModalConfig {
-    public readonly title?: string;
-    public readonly message?: string;
+    public readonly title?: string | I18n;
+    public readonly message?: string | I18n;
     public readonly buttons?: ModalButton[];
 }
 
 export class ModalButton {
     public readonly id: string;
-    public readonly label: string;
+    public readonly label: string | I18n;
     public readonly isSelected?: boolean = true;
 }
