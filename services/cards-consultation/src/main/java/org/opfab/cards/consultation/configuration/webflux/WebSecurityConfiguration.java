@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 import reactor.core.publisher.Mono;
 
 
@@ -66,6 +67,8 @@ public class WebSecurityConfiguration {
                         .disable()
                     )
                 )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                    .accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .authorizeExchange(authorizeExchange -> authorizeExchange
                     .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                     .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
