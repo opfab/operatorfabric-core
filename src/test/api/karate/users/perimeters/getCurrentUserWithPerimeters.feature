@@ -124,25 +124,17 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 
 
   Scenario: Create group15
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group15
-    When method post
-    Then status 201
-    And match response.description == group15.description
-    And match response.name == group15.name
-    And match response.id == group15.id
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(group15)', token: '#(authToken)'}
+    Then match result.response.description == group15.description
+    And match result.response.name == group15.name
+    And match result.response.id == group15.id
 
 
   Scenario: Create group16
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group16
-    When method post
-    Then status 201
-    And match response.description == group16.description
-    And match response.name == group16.name
-    And match response.id == group16.id
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(group16)', token: '#(authToken)'}
+    Then match result.response.description == group16.description
+    And match result.response.name == group16.name
+    And match result.response.id == group16.id
 
 
   Scenario: Add operator1_fr to group15
@@ -162,25 +154,17 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 
 
   Scenario: Create perimeter15_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_1
-    When method post
-    Then status 201
-    And match response.id == perimeter15_1.id
-    And match response.process == perimeter15_1.process
-    And match response.stateRights == perimeter15_1.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter15_1)', token: '#(authToken)'}
+    Then match result.response.id == perimeter15_1.id
+    And match result.response.process == perimeter15_1.process
+    And match result.response.stateRights == perimeter15_1.stateRights
 
 
   Scenario: Create perimeter15_2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_2
-    When method post
-    Then status 201
-    And match response.id == perimeter15_2.id
-    And match response.process == perimeter15_2.process
-    And match response.stateRights == perimeter15_2.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter15_2)', token: '#(authToken)'}
+    Then match result.response.id == perimeter15_2.id
+    And match result.response.process == perimeter15_2.process
+    And match result.response.stateRights == perimeter15_2.stateRights
 
 
   Scenario: Put group15 for perimeter15_1

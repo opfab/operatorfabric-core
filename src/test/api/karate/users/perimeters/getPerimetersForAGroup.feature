@@ -52,36 +52,24 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
 """
 
   Scenario: Create group12
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group12
-    When method post
-    Then status 201
-    And match response.description == group12.description
-    And match response.name == group12.name
-    And match response.id == group12.id
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(group12)', token: '#(authToken)'}
+    Then match result.response.description == group12.description
+    And match result.response.name == group12.name
+    And match result.response.id == group12.id
 
 
   Scenario: Create perimeter12_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter12_1
-    When method post
-    Then status 201
-    And match response.id == perimeter12_1.id
-    And match response.process == perimeter12_1.process
-    And match response.stateRights == perimeter12_1.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter12_1)', token: '#(authToken)'}
+    Then match result.response.id == perimeter12_1.id
+    And match result.response.process == perimeter12_1.process
+    And match result.response.stateRights == perimeter12_1.stateRights
 
 
   Scenario: Create perimeter12_2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter12_2
-    When method post
-    Then status 201
-    And match response.id == perimeter12_2.id
-    And match response.process == perimeter12_2.process
-    And match response.stateRights == perimeter12_2.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter12_2)', token: '#(authToken)'}
+    Then match result.response.id == perimeter12_2.id
+    And match result.response.process == perimeter12_2.process
+    And match result.response.stateRights == perimeter12_2.stateRights
 
 
   Scenario: Put group12 for perimeter12_1
@@ -107,7 +95,7 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
 
 
   Scenario: get all perimeters for group12 with simple user
-    #   Using TSO user,  expected response 403
+    # Using TSO user, expected response 403
     Given url opfabUrl + 'users/groups/' + group12.id + '/perimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get

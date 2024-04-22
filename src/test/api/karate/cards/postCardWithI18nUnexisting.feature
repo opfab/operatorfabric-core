@@ -6,9 +6,6 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-
-  Scenario: Post card with unexisting i18n file
-
     * def perimeter =
 """
 {
@@ -28,6 +25,8 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
 [   "perimeter"
 ]
 """
+
+Scenario: Post card with unexisting i18n file
 
 # Create new perimeter
 # use retry to avoid flaky test when previous test ask for perimeter delete
@@ -173,7 +172,4 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
     And match response.id == 'api_test.cardWithExistingI18nKeys'
 
 #delete perimeter created previously
-Given url opfabUrl + 'users/perimeters/perimeter'
-And header Authorization = 'Bearer ' + authToken
-When method delete
-Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}

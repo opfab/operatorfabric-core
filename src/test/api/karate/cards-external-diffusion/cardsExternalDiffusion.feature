@@ -9,26 +9,6 @@ Feature: Cards external diffusion
     * def authTokenOperator2 = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
-
-  Scenario: Post card for operator1
-
-    * def cardForOperator1 =
-    """
-    {
-        "publisher" : "operator1_fr",
-        "processVersion" : "1",
-        "process"  :"api_test",
-        "processInstanceId" : "process1",
-        "state": "mailState",
-        "userRecipients": ["operator1_fr"],
-        "severity" : "INFORMATION",
-        "startDate" : 1553186770681,
-        "summary" : {"key" : "defaultProcess.summary"},
-        "title" : {"key" : "defaultProcess.title"},
-        "data" : {"message":"a message"}
-    }
-    """
-
     * def perimeter =
     """
     {
@@ -47,6 +27,25 @@ Feature: Cards external diffusion
     """
     [   "perimeter"
     ]
+    """
+
+  Scenario: Post card for operator1
+
+    * def cardForOperator1 =
+    """
+    {
+        "publisher" : "operator1_fr",
+        "processVersion" : "1",
+        "process"  :"api_test",
+        "processInstanceId" : "process1",
+        "state": "mailState",
+        "userRecipients": ["operator1_fr"],
+        "severity" : "INFORMATION",
+        "startDate" : 1553186770681,
+        "summary" : {"key" : "defaultProcess.summary"},
+        "title" : {"key" : "defaultProcess.title"},
+        "data" : {"message":"a message"}
+    }
     """
 
     * def userSettings =
@@ -72,11 +71,7 @@ Feature: Cards external diffusion
     """
 
 # Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeter
-    When method post
-    Then status 201
+* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 # Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -304,7 +299,4 @@ Scenario: Check daily recap email is being sent
 Scenario: Restore perimeter config
 
     # delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/perimeter'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    When method delete
-    Then status 200
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

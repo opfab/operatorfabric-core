@@ -114,13 +114,9 @@ Feature: UserCards tests
 ]
 """
 
-  Scenario: Create perimeter for initial process
-#Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter
-    When method post
-    Then status 201
+Scenario: Create perimeter for initial process
+  #Create new perimeter
+  * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
 
 #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -130,11 +126,7 @@ Feature: UserCards tests
     Then status 200
 
 #Create new perimeter perimeterForDefaultProcess
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeterForDefaultProcess
-    When method post
-    Then status 201
+  * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeterForDefaultProcess)', token: '#(authToken)'}
 
 #Attach perimeterForDefaultProcess to group Supervisor
     Given url opfabUrl + 'users/groups/Supervisor/perimeters'
@@ -144,13 +136,10 @@ Feature: UserCards tests
     Then status 200
 
   Scenario: Create groupKarate
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate
-    When method post
-    Then match response.description == groupKarate.description
-    And match response.name == groupKarate.name
-    And match response.id == groupKarate.id
+    Given def result = callonce read('../common/createGroup.feature') {group: '#(groupKarate)', token: '#(authToken)'}
+    Then match result.response.description == groupKarate.description
+    And match result.response.name == groupKarate.name
+    And match result.response.id == groupKarate.id
 
 
   Scenario: Add operator1_fr to groupKarate
@@ -162,18 +151,12 @@ Feature: UserCards tests
 
 
   Scenario: Create perimeter_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter_1
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter_1)', token: '#(authToken)'}
 
 
 
   Scenario: Create perimeter_2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter_2
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter_2)', token: '#(authToken)'}
 
 
 
@@ -556,33 +539,17 @@ Scenario: Delete user operator1_fr from groupKarate
   Then status 200
 
 #delete perimeter created previously
-  Given url opfabUrl + 'users/perimeters/perimeter'
-  And header Authorization = 'Bearer ' + authToken
-  When method delete
-  Then status 200
+  * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}
 
 #delete perimeterForDefaultProcess created previously
-  Given url opfabUrl + 'users/perimeters/perimeterForDefaultProcess'
-  And header Authorization = 'Bearer ' + authToken
-  When method delete
-  Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeterForDefaultProcess.id)', token: '#(authToken)'}
 
 #delete perimeter_1 created previously
-  Given url opfabUrl + 'users/perimeters/' + perimeter_1.id
-  And header Authorization = 'Bearer ' + authToken
-  When method delete
-  Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter_1.id)', token: '#(authToken)'}
 
 #delete perimeter_2 created previously
-  Given url opfabUrl + 'users/perimeters/' + perimeter_2.id
-  And header Authorization = 'Bearer ' + authToken
-  When method delete
-  Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter_2.id)', token: '#(authToken)'}
 
 # delete groupKarate
 Scenario: Delete groupKarate created previously
-  Given url opfabUrl + 'users/groups/' + groupKarate.id
-  And header Authorization = 'Bearer ' + authToken
-  When method delete
-  Then status 200
-#
+  * callonce read('../common/deleteGroup.feature') { groupId: '#(groupKarate.id)', token: '#(authToken)'}

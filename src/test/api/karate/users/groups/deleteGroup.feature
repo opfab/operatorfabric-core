@@ -59,10 +59,7 @@ Feature: deleteGroup
 
 
   Scenario: delete group (with admin authentication), expected response 200
-    Given url opfabUrl + 'users/groups/' + groupForEndpointDeleteGroup.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    * callonce read('../../common/deleteGroup.feature') { groupId: '#(groupForEndpointDeleteGroup.id)', token: '#(authToken)'}
 
 
   Scenario: we check that the group doesn't exist anymore, expected response 404

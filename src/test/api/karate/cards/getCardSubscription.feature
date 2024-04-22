@@ -8,6 +8,24 @@ Feature: get card Subscription
     * def authTokenAsTSO = signInAsTSO.authToken
     * def signInAsTSO4 = callonce read('../common/getToken.feature') { username: 'operator4_fr'}
     * def authTokenAsTSO4 = signInAsTSO4.authToken
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "ReceiveAndWrite"
+      }
+    ]
+}
+"""
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
 
 
 * def getCard = 
@@ -39,32 +57,9 @@ Feature: get card Subscription
     """
     * def card = call getCard
 
-    * def perimeter =
-"""
-{
-  "id" : "perimeter",
-  "process" : "api_test",
-  "stateRights" : [
-      {
-        "state" : "messageState",
-        "right" : "ReceiveAndWrite"
-      }
-    ]
-}
-"""
-    * def perimeterArray =
-"""
-[   "perimeter"
-]
-"""
-
-  Scenario: Create perimeter and attach it to group ReadOnly
-#Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter
-    When method post
-    Then status 201
+Scenario: Create perimeter and attach it to group ReadOnly
+  #Create new perimeter
+  * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
 
 #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -190,7 +185,4 @@ Feature: get card Subscription
 
 
     #delete perimeter created previously
-      Given url opfabUrl + 'users/perimeters/perimeter'
-      And header Authorization = 'Bearer ' + authToken
-      When method delete
-      Then status 200
+      * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}

@@ -11,8 +11,27 @@ Feature: CardsUserAcknowledgement
     * def authTokenAdmin = signInAdmin.authToken
     * def signInAsREADONLY = callonce read('../common/getToken.feature') { username: 'operator1_crisisroom'}
     * def authTokenAsREADONLY = signInAsREADONLY.authToken
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "ReceiveAndWrite"
+      }
+    ]
+}
+"""
 
-    Scenario: CardsUserAcknowledgement
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+Scenario: CardsUserAcknowledgement
 
     * def card =
 """
@@ -29,26 +48,6 @@ Feature: CardsUserAcknowledgement
 	"title" : {"key" : "defaultProcess.title"},
 	"data" : {"message":"a message"}
 }
-"""
-
-        * def perimeter =
-"""
-{
-  "id" : "perimeter",
-  "process" : "api_test",
-  "stateRights" : [
-      {
-        "state" : "messageState",
-        "right" : "ReceiveAndWrite"
-      }
-    ]
-}
-"""
-
-        * def perimeterArray =
-"""
-[   "perimeter"
-]
 """
 
       * def entity1Array =
@@ -70,11 +69,7 @@ Feature: CardsUserAcknowledgement
 """
 
 #Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeter
-    When method post
-    Then status 201
+* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -218,7 +213,4 @@ Feature: CardsUserAcknowledgement
     Then status 200
 
   #delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/perimeter'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    When method delete
-    Then status 200
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

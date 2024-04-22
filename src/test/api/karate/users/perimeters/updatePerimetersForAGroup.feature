@@ -74,36 +74,24 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
 
 
   Scenario: Create group13
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group13
-    When method post
-    Then status 201
-    And match response.description == group13.description
-    And match response.name == group13.name
-    And match response.id == group13.id
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(group13)', token: '#(authToken)'}
+    Then match result.response.description == group13.description
+    And match result.response.name == group13.name
+    And match result.response.id == group13.id
 
 
   Scenario: Create perimeter13_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter13_1
-    When method post
-    Then status 201
-    And match response.id == perimeter13_1.id
-    And match response.process == perimeter13_1.process
-    And match response.stateRights == perimeter13_1.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter13_1)', token: '#(authToken)'}
+    Then match result.response.id == perimeter13_1.id
+    And match result.response.process == perimeter13_1.process
+    And match result.response.stateRights == perimeter13_1.stateRights
 
 
   Scenario: Create perimeter13_2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter13_2
-    When method post
-    Then status 201
-    And match response.id == perimeter13_2.id
-    And match response.process == perimeter13_2.process
-    And match response.stateRights == perimeter13_2.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter13_2)', token: '#(authToken)'}
+    Then match result.response.id == perimeter13_2.id
+    And match result.response.process == perimeter13_2.process
+    And match result.response.stateRights == perimeter13_2.stateRights
 
 
   Scenario: Put perimeter13_1 for group13 without authentication

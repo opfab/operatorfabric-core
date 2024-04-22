@@ -9,6 +9,25 @@ Feature: Supervisor
     * def authTokenAdmin = signInAdmin.authToken
     * def signInSupervisor = callonce read('../common/getToken.feature') { username: 'opfab'}
     * def authTokenSupervisor = signInSupervisor.authToken
+    * def perimeter =
+    """
+    {
+      "id" : "perimeter",
+      "process" : "supervisor",
+      "stateRights" : [
+          {
+            "state" : "disconnectedEntity",
+            "right" : "ReceiveAndWrite"
+          }
+        ]
+    }
+    """
+    
+        * def perimeterArray =
+    """
+    [   "perimeter"
+    ]
+    """
 
 
 
@@ -75,31 +94,8 @@ Scenario: start/stop/status API
   
 Scenario: Check card is sent when entities are not connected
 
-    * def perimeter =
-    """
-    {
-      "id" : "perimeter",
-      "process" : "supervisor",
-      "stateRights" : [
-          {
-            "state" : "disconnectedEntity",
-            "right" : "ReceiveAndWrite"
-          }
-        ]
-    }
-    """
-    
-        * def perimeterArray =
-    """
-    [   "perimeter"
-    ]
-    """
     #Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeter
-    When method post
-    Then status 201
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
     
     #Attach perimeter to group Dispatcher
     Given url opfabUrl + 'users/groups/Dispatcher/perimeters'
@@ -202,8 +198,7 @@ Scenario: Check card is sent when entities are not connected
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeter_update
     When method put
-    Then status 200
-    
+    Then status 200    
 
 
     * def updateConfig =
@@ -329,7 +324,4 @@ Scenario: Restore
 
 
 # delete perimeter created previously
-  Given url opfabUrl + 'users/perimeters/perimeter'
-  And header Authorization = 'Bearer ' + authTokenAdmin
-  When method delete
-  Then status 200
+  * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

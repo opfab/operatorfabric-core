@@ -7,7 +7,7 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-       #defining perimeters
+    #defining perimeters
     * def perimeter = 'perimeterKarate4'
 
     * def perimeterKarate4 =
@@ -25,7 +25,6 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
 }
 """
 
-    # defining groups to create
     # defining groups to create
     * def groupKarate7 =
 """
@@ -78,53 +77,34 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
 
   Scenario: Create Perimeter
   #Create new perimeter (check if the perimeter already exists otherwise it will return 200)
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeterKarate4
-    When method post
-    Then status 201
-    And match response.id == perimeterKarate4.id
-    And match response.process == perimeterKarate4.process
-    And match response.stateRights == perimeterKarate4.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeterKarate4)', token: '#(authToken)'}
+    Then match result.response.id == perimeterKarate4.id
+    And match result.response.process == perimeterKarate4.process
+    And match result.response.stateRights == perimeterKarate4.stateRights
 
 
   Scenario: Create groupKarate7
-    #post /groups
     #create new group, expected response 201
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate7
-    When method post
-    Then status 201
-    And match response.id == groupKarate7.id
-    And match response.name == groupKarate7.name
-    And match response.description == groupKarate7.description
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(groupKarate7)', token: '#(authToken)'}
+    Then match result.response.id == groupKarate7.id
+    And match result.response.name == groupKarate7.name
+    And match result.response.description == groupKarate7.description
 
 
   Scenario: Create groupKarate8
-    #post /groups
     #create new group, expected response 201
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate8
-    When method post
-    Then status 201
-    And match response.id == groupKarate8.id
-    And match response.name == groupKarate8.name
-    And match response.description == groupKarate8.description
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(groupKarate8)', token: '#(authToken)'}
+    And match result.response.id == groupKarate8.id
+    And match result.response.name == groupKarate8.name
+    And match result.response.description == groupKarate8.description
 
 
   Scenario: Create groupKarate9
-    #post /groups
     #create new group, expected response 201
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate9
-    When method post
-    Then status 201
-    And match response.id == groupKarate9.id
-    And match response.name == groupKarate9.name
-    And match response.description == groupKarate9.description
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(groupKarate9)', token: '#(authToken)'}
+    And match result.response.id == groupKarate9.id
+    And match result.response.name == groupKarate9.name
+    And match result.response.description == groupKarate9.description
 
 
   Scenario: Add groupKarate9 to the perimeter

@@ -119,13 +119,10 @@ Feature: Client ip control
 
 
   Scenario: Create groupIp
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupIp
-    When method post
-    Then match response.description == groupIp.description
-    And match response.name == groupIp.name
-    And match response.id == groupIp.id
+    Given def result = callonce read('../common/createGroup.feature') {group: '#(groupIp)', token: '#(authToken)'}
+    Then match result.response.description == groupIp.description
+    And match result.response.name == groupIp.name
+    And match result.response.id == groupIp.id
 
 
   Scenario: Add user_test_api_1 to groupIp
@@ -137,10 +134,7 @@ Feature: Client ip control
 
 
   Scenario: Create perimeterIp
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeterIp
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeterIp)', token: '#(authToken)'}
 
 
   Scenario: Put groupIp for perimeterIp
@@ -149,8 +143,6 @@ Feature: Client ip control
     And request groupArray
     When method put
     Then status 200
-
-
 
 
   Scenario Outline: Check direct calls from unauthorized ip are refused

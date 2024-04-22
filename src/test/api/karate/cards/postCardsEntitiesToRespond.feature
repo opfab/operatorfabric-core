@@ -6,9 +6,6 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     * def authTokenAsTSO = signInAsTSO.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
-
-  Scenario: Push cards with different values of entitiesAllowedToRespond and entitiesRequiredToRespond (all these tests correspond to successful cards creations)
-
 	* def perimeter =
 	"""
 	{
@@ -29,12 +26,10 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
 	]
 	"""
 	
+  Scenario: Push cards with different values of entitiesAllowedToRespond and entitiesRequiredToRespond (all these tests correspond to successful cards creations)
+
 	#Create new perimeter
-		Given url opfabUrl + 'users/perimeters'
-		And header Authorization = 'Bearer ' + authTokenAdmin
-		And request perimeter
-		When method post
-		Then status 201
+	* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 	
 	#Attach perimeter to group
 		Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -147,7 +142,4 @@ Feature: Post cards with entitiesAllowedToRespond and/or entitiesRequiredToRespo
     Then status 201
 
 #delete perimeter created previously
-Given url opfabUrl + 'users/perimeters/perimeter'
-And header Authorization = 'Bearer ' + authTokenAdmin
-When method delete
-Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
