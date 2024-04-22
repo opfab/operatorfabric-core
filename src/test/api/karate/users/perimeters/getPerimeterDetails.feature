@@ -26,14 +26,10 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
 
     #Create the perimeter
   Scenario: Create the perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter
-    When method post
-    Then status 201
-    And match response.id == perimeter.id
-    And match response.process == perimeter.process
-    And match response.stateRights == perimeter.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
+    Then match result.response.id == perimeter.id
+    And match result.response.process == perimeter.process
+    And match result.response.stateRights == perimeter.stateRights
 
 
   Scenario: get perimeter details

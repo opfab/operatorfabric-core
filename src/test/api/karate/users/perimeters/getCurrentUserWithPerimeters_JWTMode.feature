@@ -67,25 +67,17 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
 
 
   Scenario: Create perimeter15_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_1
-    When method post
-    Then status 201
-    And match response.id == perimeter15_1.id
-    And match response.process == perimeter15_1.process
-    And match response.stateRights == perimeter15_1.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter15_1)', token: '#(authToken)'}
+    Then match result.response.id == perimeter15_1.id
+    And match result.response.process == perimeter15_1.process
+    And match result.response.stateRights == perimeter15_1.stateRights
 
 
   Scenario: Create perimeter15_2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_2
-    When method post
-    Then status 201
-    And match response.id == perimeter15_2.id
-    And match response.process == perimeter15_2.process
-    And match response.stateRights == perimeter15_2.stateRights
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter15_2)', token: '#(authToken)'}
+    Then match result.response.id == perimeter15_2.id
+    And match result.response.process == perimeter15_2.process
+    And match result.response.stateRights == perimeter15_2.stateRights
 
 
   Scenario: Add Dispatcher group to perimeter15_1

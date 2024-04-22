@@ -7,11 +7,6 @@ Background:
   * def authToken = signIn.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken
-
-Scenario: Post a big Card
-
-* def card = read("resources/bigCard.json")
-
   * def perimeter =
 """
 {
@@ -32,12 +27,12 @@ Scenario: Post a big Card
 ]
 """
 
+Scenario: Post a big Card
+
+* def card = read("resources/bigCard.json")
+
 #Create new perimeter
-  Given url opfabUrl + 'users/perimeters'
-  And header Authorization = 'Bearer ' + authTokenAdmin
-  And request perimeter
-  When method post
-  Then status 201
+* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
   Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -69,10 +64,7 @@ When method get
 Then status 200
 
 #delete perimeter created previously
-Given url opfabUrl + 'users/perimeters/perimeter'
-And header Authorization = 'Bearer ' + authTokenAdmin
-When method delete
-Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
 
 
 

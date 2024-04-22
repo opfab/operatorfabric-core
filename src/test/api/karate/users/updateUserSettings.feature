@@ -65,12 +65,7 @@ Feature: update user settings
 
 
   Scenario: Create perimeter to test filteringNotificationAllowed
-
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeterToTestFilteringNotificationAllowed
-    When method post
-    Then status 201
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeterToTestFilteringNotificationAllowed)', token: '#(authToken)'}
 
 
   Scenario: Add group Dispatcher to the perimeter
@@ -112,11 +107,7 @@ Feature: update user settings
 
 
   Scenario: Delete perimeter created previously
-
-    Given url opfabUrl + 'users/perimeters/' + perimeterToTestFilteringNotificationAllowed.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeterToTestFilteringNotificationAllowed.id)', token: '#(authToken)'}
 
 
   Scenario: We clean the field processesStatesNotNotified for operatior1_fr

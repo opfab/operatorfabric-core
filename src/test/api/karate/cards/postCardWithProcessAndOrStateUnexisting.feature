@@ -6,28 +6,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-
-  Scenario: Post card with unexisting process
-
-    * def card =
-"""
-{
-	"publisher" : "operator1_fr",
-	"process" : "unexistingProcess",
-	"processVersion" : "1",
-	"processInstanceId" : "cardWithUnexistingProcess",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "INFORMATION",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message"}
-}
-"""
-
-
-  * def perimeter =
+    * def perimeter =
   """
   {
     "id" : "perimeter",
@@ -50,13 +29,28 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
   [   "perimeter"
   ]
   """
+
+  Scenario: Post card with unexisting process
+
+    * def card =
+"""
+{
+	"publisher" : "operator1_fr",
+	"process" : "unexistingProcess",
+	"processVersion" : "1",
+	"processInstanceId" : "cardWithUnexistingProcess",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+"""
   
   #Create new perimeter
-      Given url opfabUrl + 'users/perimeters'
-      And header Authorization = 'Bearer ' + authToken
-      And request perimeter
-      When method post
-      Then status 201
+  * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
   
   #Attach perimeter to group
       Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -260,7 +254,4 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     Then status 201
 
     #delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/perimeter'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}

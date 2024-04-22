@@ -117,15 +117,11 @@ Feature: CreateGroups
   Scenario: Create Groups
 
 #Create new group (check if the group already exists otherwise it will return 200)
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group
-    When method post
-    Then status 201
-    And match response.description == group.description
-    And match response.name == group.name
-    And match response.id == group.id
-    And match response.permissions == '#notpresent'
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(group)', token: '#(authToken)'}
+    Then match result.response.description == group.description
+    And match result.response.name == group.name
+    And match result.response.id == group.id
+    And match result.response.permissions == '#notpresent'
 
   Scenario: Update my group
 
@@ -193,12 +189,8 @@ Feature: CreateGroups
 
 
   Scenario Outline: Create group with valid id format
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request <groupWithValidIdFormat>
-    When method post
-    Then status 201
-    And match response.id == <expectedGroupId>
+    Given def result = callonce read('../../common/createGroup.feature') {group: '#(<groupWithValidIdFormat>)', token: '#(authToken)'}
+    And match result.response.id == <expectedGroupId>
 
     Examples:
       | groupWithValidIdFormat  | expectedGroupId            |
@@ -209,10 +201,7 @@ Feature: CreateGroups
 
 
   Scenario Outline: we delete the groups previously created
-    Given url opfabUrl + 'users/groups/' + <groupId>
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    callonce read('../../common/deleteGroup.feature') {perimeterId: '#(<groupId>)', token: '#(authToken)'}
 
     Examples:
       | groupId  |

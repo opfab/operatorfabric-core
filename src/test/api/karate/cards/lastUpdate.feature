@@ -7,9 +7,6 @@ Feature: LastUpdate
     * def authToken = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
-
-Scenario: Configuration
-
     * def perimeter =
 """
 {
@@ -30,12 +27,10 @@ Scenario: Configuration
 ]
 """
 
+Scenario: Configuration
+
 #Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeter
-    When method post
-    Then status 201
+* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -195,7 +190,4 @@ Scenario: Delete the test card and config
         Then status 200
 
     # Delete perimeter created previously
-        Given url opfabUrl + 'users/perimeters/perimeter'
-        And header Authorization = 'Bearer ' + authTokenAdmin
-        When method delete
-        Then status 200
+        * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

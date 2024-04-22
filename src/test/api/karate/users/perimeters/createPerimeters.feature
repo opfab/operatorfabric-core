@@ -126,18 +126,14 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Create Perimeters
   #Create new perimeter (check if the perimeter already exists otherwise it will return 200)
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter
-    When method post
-    Then status 201
-    And match response.id == perimeter.id
-    And match response.process == perimeter.process
-    And match response.stateRights[0] == perimeter.stateRights[0]
-    And match response.stateRights[1] == perimeter.stateRights[1]
-    And match response.stateRights[2].state == perimeter.stateRights[2].state
-    And match response.stateRights[2].right == perimeter.stateRights[2].right
-    And match response.stateRights[2].filteringNotificationAllowed == true
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
+    Then match result.response.id == perimeter.id
+    And match result.response.process == perimeter.process
+    And match result.response.stateRights[0] == perimeter.stateRights[0]
+    And match result.response.stateRights[1] == perimeter.stateRights[1]
+    And match result.response.stateRights[2].state == perimeter.stateRights[2].state
+    And match result.response.stateRights[2].right == perimeter.stateRights[2].right
+    And match result.response.stateRights[2].filteringNotificationAllowed == true
 
 
   Scenario: Try to update existing perimeter
@@ -194,12 +190,8 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario Outline: Create perimeter with valid id format
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request <perimeterWithValidIdFormat>
-    When method post
-    Then status 201
-    And match response.id == <expectedPerimeterId>
+    Given def result = callonce read('../../common/createPerimeter.feature') {perimeter: '#(<perimeterWithValidIdFormat>)', token: '#(authToken)'}
+    And match result.response.id == <expectedPerimeterId>
 
     Examples:
       | perimeterWithValidIdFormat  | expectedPerimeterId            |
@@ -210,10 +202,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario Outline: we delete the perimeters previously created
-    Given url opfabUrl + 'users/perimeters/' + <perimeterId>
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    callonce read('../../common/deletePerimeter.feature') {perimeterId: '#(<perimeterId>)', token: '#(authToken)'}
 
     Examples:
       | perimeterId  |

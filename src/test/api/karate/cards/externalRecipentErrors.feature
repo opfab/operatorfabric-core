@@ -50,13 +50,10 @@ Feature: External recipient application errors
 
 
   Scenario: Create groupKarate
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate
-    When method post
-    Then match response.description == groupKarate.description
-    And match response.name == groupKarate.name
-    And match response.id == groupKarate.id
+    Given def result = callonce read('../common/createGroup.feature') {group: '#(groupKarate)', token: '#(authToken)'}
+    Then match result.response.description == groupKarate.description
+    And match result.response.name == groupKarate.name
+    And match result.response.id == groupKarate.id
 
 
   Scenario: Add operator1_fr to groupKarate
@@ -68,10 +65,7 @@ Feature: External recipient application errors
 
 
   Scenario: Create perimeter_1
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter_1
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter_1)', token: '#(authToken)'}
 
 
   Scenario: Put groupKarate for perimeter_1
@@ -207,8 +201,5 @@ Feature: External recipient application errors
     Then status 200
 
 #delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/' + perimeter_1.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter_1.id)', token: '#(authToken)'}
 

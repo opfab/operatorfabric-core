@@ -99,22 +99,16 @@ Feature: deleteUserCards tests
 """
 
   Scenario: Create groupKarate
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate
-    When method post
-    Then match response.description == groupKarate.description
-    And match response.name == groupKarate.name
-    And match response.id == groupKarate.id
+    Given def result = callonce read('../common/createGroup.feature') {group: '#(groupKarate)', token: '#(authToken)'}
+    Then match result.response.description == groupKarate.description
+    And match result.response.name == groupKarate.name
+    And match result.response.id == groupKarate.id
 
   Scenario: Create groupKarate2
-    Given url opfabUrl + 'users/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request groupKarate2
-    When method post
-    Then match response.description == groupKarate2.description
-    And match response.name == groupKarate2.name
-    And match response.id == groupKarate2.id
+    Given def result = callonce read('../common/createGroup.feature') {group: '#(groupKarate2)', token: '#(authToken)'}
+    Then match result.response.description == groupKarate2.description
+    And match result.response.name == groupKarate2.name
+    And match result.response.id == groupKarate2.id
 
 
   Scenario: Add operator1_fr to groupKarate
@@ -133,22 +127,13 @@ Feature: deleteUserCards tests
 
 
   Scenario: Create perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authToken)'}
 
   Scenario: Create perimeter2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter2
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter2)', token: '#(authToken)'}
 
   Scenario: Create perimeterWriteForState2
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeterWriteForState2
-    When method post
+    * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeterWriteForState2)', token: '#(authToken)'}
 
 
   Scenario: Put groupKarate for perimeter
@@ -314,18 +299,10 @@ Feature: deleteUserCards tests
     Then status 200
 
 
-  Scenario: delete the perimeter previously created
-    Given url opfabUrl + 'users/perimeters/' + perimeter.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
-
-    
-  Scenario: delete the perimeter2 previously created
-    Given url opfabUrl + 'users/perimeters/' + perimeter2.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  Scenario: perimeters created previously
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter2.id)', token: '#(authToken)'}
+    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeterWriteForState2.id)', token: '#(authToken)'}
 
   Scenario: delete the group previously created
     Given url opfabUrl + 'users/groups/' + groupKarate.id

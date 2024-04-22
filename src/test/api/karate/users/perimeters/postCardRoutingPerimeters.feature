@@ -7,27 +7,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-      #defining perimeters
-    * def perimeter =
-"""
-{
-  "id" : "perimeterKarate16",
-  "process" : "process1",
-  "stateRights" : [
-      {
-        "state" : "state1",
-        "right" : "Receive",
-        "filteringNotificationAllowed" : true
-      },
-      {
-        "state" : "state2",
-        "right" : "ReceiveAndWrite",
-        "filteringNotificationAllowed" : true
-      }
-    ]
-}
-"""
-
     * def groupDispatcherList =
 """
 [
@@ -130,18 +109,10 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
   Scenario: Create Perimeters
   #Create new perimeter
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter2
-    When method post
-    Then status 201
+    * callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeter2)', token: '#(authToken)'}
 
-    #Create new perimeter
-      Given url opfabUrl + 'users/perimeters'
-      And header Authorization = 'Bearer ' + authToken
-      And request perimeterWrite
-      When method post
-      Then status 201
+  #Create new perimeter
+    * callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeterWrite)', token: '#(authToken)'}
 
   #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
@@ -149,9 +120,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request perimeterArray
     When method patch
     Then status 200
-
-
-  
 
 
   Scenario: Push the card 'cardForGroup'
@@ -203,13 +171,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   #delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/perimeter'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+    * callonce read('../../common/deletePerimeter.feature') {perimeterId: '#(perimeter2.id)', token: '#(authToken)'}
 
-      #delete perimeter created previously
-      Given url opfabUrl + 'users/perimeters/perimeterWrite'
-      And header Authorization = 'Bearer ' + authToken
-      When method delete
-      Then status 200
+  #delete perimeter created previously
+    * callonce read('../../common/deletePerimeter.feature') {perimeterId: '#(perimeterWrite.id)', token: '#(authToken)'}

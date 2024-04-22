@@ -8,6 +8,25 @@ Feature: Post cards with entitiesAllowedToEdit
     * def authTokenAdmin = signInAdmin.authToken
     * def signInAsTSO2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
     * def authTokenAsTSO2 = signInAsTSO2.authToken
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "ReceiveAndWrite"
+      }
+    ]
+}
+"""
+
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
 
   Scenario: Push cards with entitiesAllowedToEdit
 
@@ -69,33 +88,9 @@ Feature: Post cards with entitiesAllowedToEdit
     """
 
 
-    * def perimeter =
-"""
-{
-  "id" : "perimeter",
-  "process" : "api_test",
-  "stateRights" : [
-      {
-        "state" : "messageState",
-        "right" : "ReceiveAndWrite"
-      }
-    ]
-}
-"""
-
-    * def perimeterArray =
-"""
-[   "perimeter"
-]
-"""
-
 
 #Create new perimeter
-   Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeter
-    When method post
-    Then status 201
+* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
     Given url opfabUrl + 'users/groups/Dispatcher/perimeters'
@@ -161,7 +156,4 @@ And match response.card.publisher  == 'ENTITY2_FR'
 Scenario: Clean
 
 #delete perimeter created previously
-Given url opfabUrl + 'users/perimeters/perimeter'
-And header Authorization = 'Bearer ' + authTokenAdmin
-When method delete
-Then status 200
+* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
