@@ -278,7 +278,9 @@ export class ProcessMonitoringView {
         }
         if (periodClicked === 'week') {
             const startOfWeek = moment().startOf('week').toDate();
+            console.log('startOfWeek : ' + startOfWeek.toISOString());
             const endOfWeek = moment().endOf('week').toDate();
+            console.log('endOfWeek : ' + endOfWeek.toISOString());
             return {
                 activeFrom:
                     startOfWeek.getFullYear() +

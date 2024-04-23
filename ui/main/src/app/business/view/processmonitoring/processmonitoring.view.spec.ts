@@ -462,7 +462,9 @@ describe('Process Monitoring view ', () => {
         });
 
         it('should return 2024-04-28T00:00 and 2024-05-05T00:00 if the user clicks on the week button', async () => {
+            console.log('Before Mock date =' + new Date().toISOString());
             jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            console.log('Mock date =' + new Date().toISOString());
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
             expect(dates).toEqual({activeFrom: '2024-04-28T00:00', activeTo: '2024-05-05T00:00'});
@@ -485,7 +487,9 @@ describe('Process Monitoring view ', () => {
         });
 
         it('should return 2023-12-31T00:00 and 2024-01-07T00:00 if the user clicks on the week button', async () => {
+            console.log('Before Mock date =' + new Date().toISOString());
             jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            console.log('Mock date =' + new Date().toISOString());
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
             expect(dates).toEqual({activeFrom: '2023-12-31T00:00', activeTo: '2024-01-07T00:00'});
