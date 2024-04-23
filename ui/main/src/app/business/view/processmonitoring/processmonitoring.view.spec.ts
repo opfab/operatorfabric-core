@@ -18,6 +18,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {PermissionEnum} from '@ofModel/permission.model';
+import moment from 'moment';
 
 describe('Process Monitoring view ', () => {
     let processServerMock: ProcessServerMock;
@@ -434,6 +435,7 @@ describe('Process Monitoring view ', () => {
 
     describe('get dates after period click if the current day/time is 2024-04-29 15:32 (summer time)', () => {
         beforeEach(() => {
+            moment.locale('en'); // set "en" local to have start of week on sunday
             jasmine.clock().install();
         });
 
@@ -464,6 +466,7 @@ describe('Process Monitoring view ', () => {
 
     describe('get dates after period click if the current day/time is 2023-12-31 9:18 (winter time)', () => {
         beforeEach(() => {
+            moment.locale('en'); // set "en" local to have start of week on sunday
             jasmine.clock().install();
         });
 

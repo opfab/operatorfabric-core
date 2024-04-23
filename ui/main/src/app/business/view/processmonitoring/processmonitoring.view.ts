@@ -278,7 +278,7 @@ export class ProcessMonitoringView {
         }
         if (periodClicked === 'week') {
             const startOfWeek = moment().startOf('week').toDate();
-            const endOfWeek = moment().endOf('week').toDate();
+            const endOfWeek = moment().endOf('week').add(1, 'days').toDate();
             return {
                 activeFrom:
                     startOfWeek.getFullYear() +
@@ -292,7 +292,7 @@ export class ProcessMonitoringView {
                     '-' +
                     String(endOfWeek.getMonth() + 1).padStart(2, '0') +
                     '-' +
-                    String(endOfWeek.getDate() + 1).padStart(2, '0') +
+                    String(endOfWeek.getDate()).padStart(2, '0') +
                     'T00:00'
             };
         }
