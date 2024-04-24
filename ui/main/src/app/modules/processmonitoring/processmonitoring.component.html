@@ -107,20 +107,21 @@
         </div>
       </div>
         
-      <div  class="opfab-buttons">
+      <div class="opfab-buttons">
           <label
                   *ngIf="mustViewAllCardsFeatureBeDisplayed"
                   id="opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox"
-                  style="margin-left: 10px; max-width: 200px; margin-top: -50px"
+                  style="margin-left: 10px; max-width: 200px;"
                   class="opfab-checkbox"
                   translate>shared.adminMode
               <input type="checkbox" (click)="toggleAdminMode()" onKeyPressed="toggleAdminMode()" [checked]="!isAdminModeChecked" />
               <span class="opfab-checkbox-checkmark"></span>
           </label>
-          <button id="opfab-process-monitoring-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
-          <button id="opfab-process-monitoring-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
-      </div>
-  
+          <div style="display:flex;margin-top:50px">
+            <button id="opfab-process-monitoring-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
+            <button id="opfab-process-monitoring-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate>button.reset</button>
+          </div>
+      </div> 
     </div>
 
   </div>
