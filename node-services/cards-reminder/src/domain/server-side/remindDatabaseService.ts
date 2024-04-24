@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Db, MongoClient, ObjectId} from 'mongodb';
+import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
 import {MongoConfig} from './MongoConfig';
 import {Reminder} from '../model/reminder.model';
@@ -102,7 +102,7 @@ export default class RemindDatabaseService {
 
     public async persistReminder(reminder: Reminder): Promise<void> {
         try {
-            const mongoReminder = {_id: new ObjectId(reminder.cardId), ...reminder};
+            const mongoReminder = {_id: undefined, ...reminder};
             await this.mongoDB.collection(this.remindersCollection).insertOne(mongoReminder);
         } catch (error) {
             this.logger.error('Mongo error in insert reminder' + error);
