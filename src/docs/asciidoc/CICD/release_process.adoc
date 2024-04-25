@@ -84,10 +84,10 @@ git commit -s -m "[RELEASE] X.X.X-RC.RELEASE"
 . Push the commit
 +
 ----
-git push --set-upstream origin X.X.X-RC.release.draft
+git push --set-upstream origin FE-X.X.X-RC.release.draft
 ----
 +
-. Create a pull request from the `X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
+. Create a pull request from the `FE-X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
 . Once the pull request is approved and merge, create the tag for the release candidate:
 +
