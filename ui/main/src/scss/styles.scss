@@ -316,6 +316,12 @@ body {
     color: var(--opfab-textcolor);
     font-size: 16px;
     font-weight: 400;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.modal-body-rounded {
+    border-radius: 6px;
 }
 
 .modal-header {
