@@ -120,7 +120,7 @@
         "mode": "PASSWORD"
       }
     },
-    "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
+    "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/account-security/signing-in"
   },
   "settings": {
     "locale": "en",
