@@ -385,11 +385,13 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.selectedProcessId = event.selectedProcessId;
         OpfabAPIService.currentUserCard.state = event.state;
         OpfabAPIService.currentUserCard.processId = event.selectedProcessId;
-        OpfabAPIService.currentUserCard.startDate = null;
-        OpfabAPIService.currentUserCard.endDate = null;
-        OpfabAPIService.currentUserCard.lttd = null;
-        OpfabAPIService.currentUserCard.expirationDate = null;
-        OpfabAPIService.currentUserCard.initialSeverity = null;
+        if (!this.cardToEdit && !this.cardToCopy) {
+            OpfabAPIService.currentUserCard.startDate = null;
+            OpfabAPIService.currentUserCard.endDate = null;
+            OpfabAPIService.currentUserCard.lttd = null;
+            OpfabAPIService.currentUserCard.expirationDate = null;
+            OpfabAPIService.currentUserCard.initialSeverity = null;
+        }
 
         this.userCardConfiguration = ProcessesService.getProcess(this.selectedProcessId).states.get(
             this.selectedStateId
