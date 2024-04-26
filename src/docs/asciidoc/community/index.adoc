@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -13,8 +13,6 @@ First, thank you for your interest !
 
 We can't stress enough that feedback, discussions, questions and contributions to OperatorFabric are very much
 appreciated.
-However, because the project is still in its early stages, we're not fully equipped for any of it yet, so please bear
-with us while the contribution process and tooling are sorted out.
 
 
 This project is governed by the link:../pdf/technical-charter.pdf[OperatorFabric Technical Charter].
@@ -110,6 +108,29 @@ include::documentation.adoc[leveloffset=+2]
 
 include::copyright.adoc[leveloffset=+2]
 
+== Software releases
+
+The project uses release candidate to validate the release before the final release.
+
+The technical steps for publishing a release are outlined in the
+ifdef::single-page-doc[<<release_process, CI/CD documentation>>]
+ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#release_process, CI/CD documentation>>]
+
+=== Manual testing
+
+Prior to initiating the release process, the release candidate must undergo manual testing by the team, as not all aspects are covered by automated tests.
+
+The manual tests should, at a minimum, cover the following areas not addressed by automated tests:
+
+- Geographical features
+- Verification that a card is properly reminded (reminder feature)
+- Authentication using both IMPLICIT and CODE flows
+- Load testing via src/test/resources/cardsForStressTests/send6xN_TestCards.sh
+- Visual inspection of all screens at the minimum supported resolution in both day and night modes
+- Sound notifications
+- System notifications
+
+
 == Project Governance
 
 === Project Owner
@@ -158,7 +179,5 @@ could be interested in:
 * https://lists.lfenergy.org/g/opfab-announce[OperatorFabric Announcements] (such as new releases)
 * https://lists.lfenergy.org/g/opfab-tsc[OperatorFabric Technical Steering Committee] (agenda, minutes and invitations for TSC)
 
-And if you're interested in LF Energy in general:
-https://lists.lfenergy.org/g/lfenergy[LF Energy General Discussion]
 
 include::CODE_OF_CONDUCT.adoc[leveloffset=+1]
