@@ -29,7 +29,6 @@ export default class JwtTokenUtils {
     public validateToken(token: string, margin: number): boolean {
         if (token?.length > 0) {
             const jwt = this.decodeToken(token);
-
             if (jwt != null) {
                 const expirationDate = jwt.exp;
                 if (new Date().valueOf() < expirationDate * 1000 - margin) {
@@ -38,6 +37,17 @@ export default class JwtTokenUtils {
             }
         }
         return false;
+    }
+
+    public getUser(token: string | null, loginClaim: string): string | undefined {
+        let user;
+        if (token != null && token?.length > 0) {
+            const jwt = this.decodeToken(token);
+            if (jwt != null) {
+                user = jwt[loginClaim];
+            }
+        }
+        return user;
     }
 
     private decodeToken(token: string): any {

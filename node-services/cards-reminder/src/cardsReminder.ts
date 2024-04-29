@@ -83,6 +83,7 @@ const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
 
 const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
+    .setLoginClaim(config.get('operatorfabric.security.jwt.login-claim'))
     .setLogger(logger);
 
 const cardsReminderService = new CardsReminderService(
@@ -98,7 +99,7 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else res.send(cardsReminderService.isActive());
         })
         .catch((err) => {
@@ -111,7 +112,7 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 cardsReminderService.start();
                 res.send('Start service');
@@ -127,7 +128,7 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Stop card reminder service asked');
                 cardsReminderService.stop();
@@ -144,7 +145,7 @@ app.get('/reset', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Reset card reminder service asked');
                 cardsReminderService.reset().catch((err) => {
@@ -163,7 +164,7 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 res.send(Logger.getLogLevel());
             }
@@ -178,7 +179,7 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level: string =

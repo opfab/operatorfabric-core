@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Request} from 'express';
+import {Request, Response} from 'express';
 import OpfabServicesInterface from './opfabServicesInterface';
 import JwtTokenUtils from './jwtTokenUtils';
 
@@ -15,6 +15,8 @@ export default class AuthorizationService {
     opfabServicesInterface: OpfabServicesInterface;
     jwtToken: JwtTokenUtils = new JwtTokenUtils();
     logger: any;
+    loginClaim: string = "sub";
+
 
     public setLogger(logger: any): this {
         this.logger = logger;
@@ -24,6 +26,11 @@ export default class AuthorizationService {
 
     public setOpfabServicesInterface(opfabServicesInterface: OpfabServicesInterface): this {
         this.opfabServicesInterface = opfabServicesInterface;
+        return this;
+    }
+
+    public setLoginClaim(loginClaim: string) {
+        this.loginClaim = loginClaim;
         return this;
     }
 
@@ -37,6 +44,17 @@ export default class AuthorizationService {
         return res;
     }
 
+    public handleUnauthorizedAccess(req: Request, res: Response): void {
+        const username = this.jwtToken.getUser(this.jwtToken.getRequestToken(req), this.loginClaim);
+        this.logger.warn(
+            'SECURITY : user ' +
+                username +
+                ' try to access resource ' +
+                req.originalUrl +
+                ' without the required authorization'
+        );
+        res.status(403).send();
+    }
     private hasUserAnyPermission(user: any, permissions: string[]): boolean {
         if (user == null || permissions == null) return false;
         return user.permissions?.filter((permission: string) => permissions.includes(permission)).length > 0;

@@ -65,6 +65,7 @@ const opfabServicesInterface = new OpfabServicesInterface()
 
 const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
+    .setLoginClaim(config.get('operatorfabric.security.jwt.login-claim'))
     .setLogger(logger);
 
 const supervisorService = new SupervisorService(
@@ -79,8 +80,9 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else res.send(supervisorService.isActive());
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else res.send(supervisorService.isActive());
         })
         .catch((err) => {
             logger.error('Error getting authorization in GET /status' + err);
@@ -91,8 +93,9 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 logger.info('Start supervisor asked');
                 supervisorService.start();
                 res.send('Start supervisor');
@@ -107,8 +110,9 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 logger.info('Stop supervisor asked');
                 supervisorService.stop();
                 res.send('Stop supervisor');
@@ -128,8 +132,9 @@ app.post('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 logger.info('Update configuration');
                 const updated = supervisorService.patch(req.body as object);
                 res.send(updated);
@@ -149,8 +154,9 @@ app.get('/supervisedEntities', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 supervisorDatabaseService
                     .getSupervisedEntities()
                     .then((entities) => res.send(entities))
@@ -170,8 +176,9 @@ app.post('/supervisedEntities', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 const newEntity: EntityToSupervise = req.body;
                 logger.info('Add supervised entity ' + JSON.stringify(newEntity));
                 supervisorService
@@ -195,8 +202,9 @@ app.delete('/supervisedEntities/:id', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 supervisorService
                     .deleteSupervisedEntity(req.params.id)
                     .then(() => {
@@ -218,8 +226,9 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 res.send(logger.transports[0].level);
             }
         })
@@ -233,8 +242,9 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
-            else {
+            if (!isAdmin) {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            } else {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level: string =
                     req.body.configuredLevel !== null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
