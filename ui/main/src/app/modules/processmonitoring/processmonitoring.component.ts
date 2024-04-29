@@ -93,6 +93,15 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         nbOfDisplayValues: 1
     };
 
+    tagsMultiSelectOptions: Array<MultiSelectOption> = [];
+    tagsSelected: Array<string> = [];
+    tagsMultiSelectConfig = {
+        labelKey: 'shared.filters.tags',
+        placeholderKey: 'shared.filters.selectTagText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+
     tags: any[];
     size: number;
     processMonitoringForm = new FormGroup({
@@ -151,7 +160,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         ['compliant', 3],
         ['information', 4]
     ]);
-    private processMonitoring: any[];
+    private processMonitoringFields: any[];
     selectedCardId: string;
 
     isMapViewActivated: boolean;
@@ -161,7 +170,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.processMonitoring = ConfigService.getConfigValue('processMonitoring');
+        this.processMonitoringFields = ConfigService.getConfigValue('processMonitoring.fields');
         this.processList = this.processMonitoringView.getProcessList();
         this.isAdminModeChecked =
             UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') === 'false';
@@ -228,16 +237,30 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
 
-        this.size = ConfigService.getConfigValue('processmonitoring.filters.page.size', 10);
-        this.tags = ConfigService.getConfigValue('processmonitoring.filters.tags.list');
+        this.size = ConfigService.getConfigValue('processMonitoring.filters.page.size', 10);
+        this.tags = ConfigService.getConfigValue('processMonitoring.filters.tags.list');
         this.page = 1;
         this.results = [];
+
+        this.tagsMultiSelectOptions = this.tags.map((tag) => {
+            return new MultiSelectOption(tag.value, tag.label);
+        });
 
         SelectedCardService.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
 
         this.isMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
+
+        const tagsSelectedInStorage = UserPreferencesService.getPreference('opfab.processMonitoring.tagsSelected');
+        if (tagsSelectedInStorage?.length > 0) {
+            this.tagsSelected = tagsSelectedInStorage.split(',');
+            this.processMonitoringForm.patchValue({tags: this.tagsSelected});
+        }
+    }
+
+    public tagsChoiceChanged(tags: string[]) {
+        UserPreferencesService.setPreference('opfab.processMonitoring.tagsSelected', tags);
     }
 
     changeProcessesWhenSelectProcessGroup(): void {
@@ -295,6 +318,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.processGroupMultiSelectOptions = this.processMonitoringView.getProcessGroups().map((processGroup) => {
             return new MultiSelectOption(processGroup.id, processGroup.label);
         });
+        this.tagsSelected = [];
         this.columnFilters = [];
         this.firstQueryHasBeenDone = false;
         this.setDateFilterBounds();
@@ -336,7 +360,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        if (isSearchButtonClicked) {
+        if (isSearchButtonClicked || this.tagsSelected?.length > 0) {
             const {value} = this.processMonitoringForm;
             this.transformFiltersListToMap(value);
         }
@@ -385,7 +409,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.columnFilters.forEach((filter) => localFilters.push(filter));
 
         const selectedFields: string[] = [];
-        this.processMonitoring.forEach((column) => {
+        this.processMonitoringFields.forEach((column) => {
             selectedFields.push(column.field);
         });
         if (this.isMapEnabled && this.isMapViewActivated) {
@@ -534,7 +558,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
                 const lineForExport = {};
                 lineForExport[severityColumnName] = card.severity;
-                this.processMonitoring.forEach((column) => {
+                this.processMonitoringFields.forEach((column) => {
                     if (column.type === 'date') {
                         lineForExport[column.colName] = this.displayTime(card[String(column.field).split('.').pop()]);
                     } else if (column.type === 'array') {

@@ -10,7 +10,6 @@
 export class ProcessGroups {
     id: string;
     label: string;
-    processesId: string[];
 }
 
 export class ProcessToMonitor {
