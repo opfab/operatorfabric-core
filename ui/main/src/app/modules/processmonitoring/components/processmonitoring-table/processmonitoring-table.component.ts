@@ -30,7 +30,7 @@ export class ProcessmonitoringTableComponent {
     @Input() page: number;
     @Input() processStateNameMap: Map<string, string>;
     @Input() processStateDescriptionMap: Map<string, string>;
-    @Input() processMonitoring: any[];
+    @Input() processMonitoringFields: any[];
 
     @Output() pageChange = new EventEmitter<number>();
     @Output() filterChange = new EventEmitter<number>();
@@ -123,10 +123,10 @@ export class ProcessmonitoringTableComponent {
             }
         ];
 
-        if (this.processMonitoring) {
+        if (this.processMonitoringFields) {
             const columnSizeAverage = this.computeColumnSizeAverage();
 
-            this.processMonitoring.forEach((column) => {
+            this.processMonitoringFields.forEach((column) => {
                 if (column.type === 'date') {
                     this.columnDefs.push({
                         type: 'summaryColumn',
@@ -156,10 +156,10 @@ export class ProcessmonitoringTableComponent {
 
     computeColumnSizeAverage(): number {
         let columnSizeAverage = 0;
-        this.processMonitoring.forEach((column) => {
+        this.processMonitoringFields.forEach((column) => {
             columnSizeAverage += isNaN(Number(column.size)) ? 1 : Number(column.size);
         });
-        return columnSizeAverage / this.processMonitoring.length;
+        return columnSizeAverage / this.processMonitoringFields.length;
     }
 
     updateResultPage(currentPage): void {
