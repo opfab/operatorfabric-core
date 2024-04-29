@@ -14,6 +14,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ActivityareaComponent} from './activityarea.component';
 import {ActivityareaRoutingModule} from './activityarea-routing.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [ActivityareaComponent],
@@ -23,7 +24,8 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
         ReactiveFormsModule,
         TranslateModule,
         ActivityareaRoutingModule,
-        SpinnerModule
+        SpinnerModule,
+        NgbPopover
     ],
     exports: [ActivityareaComponent]
 })

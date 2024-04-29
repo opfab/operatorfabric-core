@@ -98,6 +98,11 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         else this.confirmSaveSettings();
     }
 
+    isEllipsisActive(id: string): boolean {
+        const element = document.getElementById(id);
+        return element.offsetWidth < element.scrollWidth;
+    }
+
     ngOnDestroy() {
         this.activityAreaView.stopUpdateRegularyConnectedUser();
     }
