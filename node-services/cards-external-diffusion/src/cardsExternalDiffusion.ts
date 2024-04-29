@@ -89,6 +89,7 @@ const cardsExternalDiffusionDatabaseService = new CardsExternalDiffusionDatabase
 
 const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
+    .setLoginClaim(config.get('operatorfabric.security.jwt.login-claim'))
     .setLogger(logger);
 
 const serviceConfig = configService.getConfig();
@@ -106,7 +107,7 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else res.send(cardsExternalDiffusionService.isActive());
         })
         .catch((err) => {
@@ -119,7 +120,7 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 cardsExternalDiffusionService.start();
                 res.send('Start service');
@@ -135,7 +136,7 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Stop card external diffusion service asked');
                 cardsExternalDiffusionService.stop();
@@ -152,7 +153,7 @@ app.get('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else res.send(configService.getConfig());
         })
         .catch((err) => {
@@ -165,7 +166,7 @@ app.post('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
                 const updated = configService.patch(req.body as object);
@@ -183,7 +184,7 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 res.send(Logger.getLogLevel());
             }
@@ -198,7 +199,7 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level =
@@ -229,7 +230,7 @@ app.post('/sendDailyEmail', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) res.status(403).send();
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
                 logger.info('Sending email with cards from the last 24 hours');
                 cardsExternalDiffusionService.sendDailyRecap().catch((err) => {
