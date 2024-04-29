@@ -31,9 +31,20 @@
                         <td>
                             <ng-template #connected >
                                 <span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{line.connectedUsers.length}}
-                                </span>&nbsp;&nbsp;{{line.connectedUsersText}}
+                                </span>&nbsp;&nbsp;<span [id]="'table-line-' + line.entityId"
+                                                         class="opfab-activityarea-table-line"
+                                                         placement="top-left"
+                                                         [disablePopover]="!isEllipsisActive('table-line-' + line.entityId)"
+                                                         [ngbPopover]="usersDropdown" container="body"
+                                                         triggers="mouseenter:mouseleave"
+                                                         popoverClass="opfab-popover-no-arrow">{{line.connectedUsersText}}</span>
                             </ng-template>
                             <ng-template #disconnected><span class="badge rounded-pill bg-secondary opfab-activityarea-badge">0</span></ng-template>
+                            <ng-template #usersDropdown>
+                                <div *ngFor="let user of line.connectedUsers">
+                                    &nbsp; {{user}} &nbsp;
+                                </div>
+                            </ng-template>
                             <span *ngIf="line.connectedUsers.length>0;then connected else disconnected"></span>
                         </td>
                     </tr>
