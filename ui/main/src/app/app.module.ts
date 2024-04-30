@@ -21,7 +21,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
-import {AdminModule} from './modules/admin/admin.module';
 import {CalendarModule} from './modules/calendar/calendar.module';
 import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
@@ -106,7 +105,6 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         DashboardModule,
         NgbModalModule,
         AppRoutingModule,
-        AdminModule,
         CalendarModule,
         NavbarModule,
         ActivityareaModule,
