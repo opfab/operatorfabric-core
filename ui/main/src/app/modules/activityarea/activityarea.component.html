@@ -19,7 +19,7 @@
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-container" >
             <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
-                <span *ngIf="cluster.name !== ' '" class="opfab-activityarea-cluster-name">{{cluster.name}} &nbsp;</span>
+                <span *ngIf="cluster.name !== ' ' || activityAreaPage?.activityAreaClusters?.length > 1 " class="opfab-activityarea-cluster-name">{{cluster.name}} &nbsp;</span>
                 <table class ="opfab-activityarea-table" aria-describedby="activity area table">
                     <tr *ngFor="let line of cluster.lines;">
                         <th class ="opfab-table-line" >
