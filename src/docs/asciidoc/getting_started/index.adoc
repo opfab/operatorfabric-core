@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -881,5 +881,24 @@ image::example8_answer_to_card.png[example 8 screen shot #2]
 Finally, operator1_fr sees the answer of operator3_fr :
 
 image::example8_answer_received.png[example 8 screen shot #3]
+
+== Demonstration
+
+For demonstration purposes, a "demo" folder containing examples is included. 
+In this folder, bundles of generic cards are included as well as scripts to load the configuration.
+The bundles include 4 built-in templates :
+
+* message
+* message_or_question_list
+* question
+* task
+
+The scripts allow to create or delete the bundles, businessData, perimeters or realTimeScreens as necessary. While inside the "client/demo" folder, the script 
+
+----
+./loadDemoConf.sh
+----
+ 
+is available to set it all up.
 
 include::troubleshooting.adoc[leveloffset=+1]
