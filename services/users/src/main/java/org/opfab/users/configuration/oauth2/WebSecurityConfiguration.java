@@ -12,6 +12,7 @@
 package org.opfab.users.configuration.oauth2;
 
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -63,9 +64,9 @@ public class WebSecurityConfiguration {
         configureCommon(http);
         http
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-                    .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(opfabJwtConverter))
-                );
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(opfabJwtConverter))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }
@@ -78,7 +79,8 @@ public class WebSecurityConfiguration {
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                     .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
                     .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
