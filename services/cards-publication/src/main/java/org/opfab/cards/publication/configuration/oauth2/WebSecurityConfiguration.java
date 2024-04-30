@@ -28,6 +28,7 @@ import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManage
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsernameAndIpAllowed;
 
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -55,8 +56,7 @@ public class WebSecurityConfiguration {
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                     .jwt(jwt -> jwt
                         .jwtAuthenticationConverter(opfabJwtConverter))
-                );
-
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         return http.build();
     }
 
@@ -64,7 +64,8 @@ public class WebSecurityConfiguration {
         if (checkAuthenticationForCardSending) {
             http
                     .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
@@ -77,7 +78,8 @@ public class WebSecurityConfiguration {
         } else {
             http
                     .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                         .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())

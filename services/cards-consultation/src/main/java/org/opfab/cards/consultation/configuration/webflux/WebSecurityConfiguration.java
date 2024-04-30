@@ -21,6 +21,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
+
 import reactor.core.publisher.Mono;
 
 
@@ -51,7 +53,7 @@ public class WebSecurityConfiguration {
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                     .jwt(jwt -> jwt
                         .jwtAuthenticationConverter(opfabReactiveJwtConverter))
-                );
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }
@@ -68,7 +70,8 @@ public class WebSecurityConfiguration {
                     )
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                    .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                    .accessDeniedHandler(new CustomAccessDeniedHandler())
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeExchange(authorizeExchange -> authorizeExchange
                     .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                     .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()

@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
 
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
@@ -43,14 +44,14 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
+            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
 
         http
-            .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-                    .jwt(jwt -> jwt
-                            .jwtAuthenticationConverter(opfabJwtConverter)));
-
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(opfabJwtConverter))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         return http.build();
     }
 
@@ -60,17 +61,20 @@ public class WebSecurityConfiguration {
     3) it is called for publishing card, for checking if process/state exists in the bundles */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
-        .exceptionHandling(exceptionHandling -> exceptionHandling
-        .accessDeniedHandler(new CustomAccessDeniedHandler()))
-            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
-                .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-                .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-                .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-                .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
-                .anyRequest().access(authenticatedAndIpAllowed())
-            );
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                        .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
+                        .requestMatchers(HttpMethod.POST, THIRDS_PATH)
+                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .requestMatchers(HttpMethod.PUT, THIRDS_PATH)
+                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .requestMatchers(HttpMethod.DELETE, THIRDS_PATH)
+                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
+                        .anyRequest().access(authenticatedAndIpAllowed()));
 
     }
 

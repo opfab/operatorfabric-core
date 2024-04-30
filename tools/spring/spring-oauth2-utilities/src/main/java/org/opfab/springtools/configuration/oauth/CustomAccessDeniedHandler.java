@@ -31,8 +31,8 @@ public class CustomAccessDeniedHandler  implements AccessDeniedHandler, ServerAc
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exc) throws IOException {
-        
-        log.warn(ACCESS_DENIED_WARNING, request.getUserPrincipal().getName(), request.getRequestURI());
+
+        log.warn(ACCESS_DENIED_WARNING, request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "unknown" , request.getRequestURI());
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
     }
 
