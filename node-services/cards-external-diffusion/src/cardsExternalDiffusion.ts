@@ -222,6 +222,15 @@ app.get('/healthcheck', (req, res) => {
     res.send();
 });
 
+app.use(function (err: any, req: any, res: any, next: any): void {
+    if (err.name === 'UnauthorizedError') {
+        logger.warn('SECURITY : try to access resource ' + req.originalUrl + ' without valid token');
+        res.status(401).send('Invalid token');
+    } else {
+        next(err);
+    }
+});
+
 app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort as number}`);
 });

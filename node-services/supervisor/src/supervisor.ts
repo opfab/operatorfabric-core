@@ -29,7 +29,7 @@ const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserve
 // disable eslint as false positive , promise are authorized see
 // https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
 app.use(
-    /\/((?!healthcheck).)*/, // Token verification activated except for heathcheck request
+    /\/((?!healthcheck).)*/, // Token verification activated except for healthcheck request
     expressjwt({
         secret: jwksRsa.expressJwtSecret({
             cache: true,
@@ -259,6 +259,15 @@ app.post('/logLevel', (req, res) => {
             logger.error('Error in POST /logLevel' + err);
             res.status(500).send();
         });
+});
+
+app.use(function (err: any, req: any, res: any, next: any): void {
+    if (err.name === 'UnauthorizedError') {
+        logger.warn('SECURITY : try to access resource ' + req.originalUrl + ' without valid token');
+        res.status(401).send('Invalid token');
+    } else {
+        next(err);
+    }
 });
 
 app.listen(adminPort, () => {
