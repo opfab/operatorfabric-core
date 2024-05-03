@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,88 +7,77 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {QuestionCardTemplateView} from './questionCardTemplateView';
-
-declare const opfab;
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {setEntities} from '@tests/helpers';
+import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofModel/entity.model';
 
 describe('Question Card template', () => {
     let view: QuestionCardTemplateView;
-    beforeEach(() => {
-        initOpfabApiMock();
+    beforeEach(async () => {
+        const translationService = new TranslationServiceMock();
+        OpfabAPIService.setTranslationService(translationService);
+        OpfabAPIService.init();
+        OpfabAPIService.initAPI();
+        OpfabAPIService.initTemplateInterface();
+        await setEntities([
+            new Entity('entity1', 'entity1 name', '', [RolesEnum.CARD_RECEIVER], [], null),
+            new Entity('entity2', 'entity2 name', '', [RolesEnum.CARD_RECEIVER], [], null)
+        ]);
         view = new QuestionCardTemplateView();
     });
 
     it('GIVEN a card WHEN get question THEN question is provided', () => {
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question'}};
-        };
+        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
         expect(view.getQuestion()).toEqual('My question');
     });
 
     it('GIVEN a card WHEN get question with new line THEN question is provided with <br> tag', () => {
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question \n question'}};
-        };
+        OpfabAPIService.currentCard.card = {data: {question: 'My question \n question'}};
         expect(view.getQuestion()).toEqual('My question <br/> question');
     });
 
     it('GIVEN a card WHEN get question with an HTML tag THEN question is provided with the HTML tag escape', () => {
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question <script> question'}};
-        };
+        OpfabAPIService.currentCard.card = {data: {question: 'My question <script> question'}};
         expect(view.getQuestion()).toEqual('My question &lt;script&gt; question');
     });
 
     it('Given a card WHEN user is not allowed to answer THEN response input is hidden', () => {
-        opfab.currentCard.isUserAllowedToRespond = () => false;
+        OpfabAPIService.currentCard.isUserAllowedToRespond = false;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a card WHEN user card is locked THEN response input is hidden', () => {
-        opfab.currentCard.isUserAllowedToRespond = () => true;
-
-        let listenToResponseLockTemplateFunction;
-        opfab.currentCard.listenToResponseLock = (listenLockFunction) =>
-            (listenToResponseLockTemplateFunction = listenLockFunction);
-
+        OpfabAPIService.currentCard.isUserAllowedToRespond = false;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
 
-        listenToResponseLockTemplateFunction();
+        OpfabAPIService.templateInterface.lockAnswer();
 
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a card WHEN user card is unlocked THEN response input is visible', () => {
-        opfab.currentCard.isUserAllowedToRespond = () => true;
-
-        let listenToResponseUnlockTemplateFunction;
-        opfab.currentCard.listenToResponseUnlock = (listenUnlockFunction) =>
-            (listenToResponseUnlockTemplateFunction = listenUnlockFunction);
-
+        OpfabAPIService.currentCard.isUserAllowedToRespond = true;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
 
-        listenToResponseUnlockTemplateFunction();
+        OpfabAPIService.templateInterface.unlockAnswer();
 
         expect(inputFieldVisibility).toBeTrue();
     });
 
     it('GIVEN input is "my response" WHEN get user response THEN responseCardData.response is "my_response" and response is valid', () => {
-        // Simulate opfabAPI
-        let getUserResponseFromTemplate;
-        opfab.currentCard.registerFunctionToGetUserResponse = (getUserResponse) => {
-            getUserResponseFromTemplate = getUserResponse;
-        };
-
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => 'my response');
 
-        expect(getUserResponseFromTemplate().valid).toBeTrue();
-        expect(getUserResponseFromTemplate().responseCardData.response).toEqual('my response');
+        const userResponse = OpfabAPIService.templateInterface.getUserResponse();
+        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.responseCardData.response).toEqual('my response');
     });
 
     it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {
@@ -103,19 +92,13 @@ describe('Question Card template', () => {
             }
         ];
 
-        // Simulate opfab API
-        let sendChildCards: Function;
-        opfab.currentCard.listenToChildCards = (listenFunction) => {
-            sendChildCards = listenFunction;
-        };
-
         // Get responses from view
         let responsesResult;
         view.listenToResponses((responses) => {
             responsesResult = responses;
         });
 
-        sendChildCards(childcards);
+        OpfabAPIService.templateInterface.setChildCards(childcards);
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].response).toEqual('response_entity1');
         expect(responsesResult[1].entityName).toEqual('entity2 name');

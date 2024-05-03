@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageOrQuestionListUserCardTemplateView} from './message-or-question-listUserCardTemplateView';
-
-declare const opfab;
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 
 class QuillEditorMock {
     contents: string;
@@ -30,7 +29,11 @@ class QuillEditorMock {
 
 describe('MessageOrQuestionList UserCard template', () => {
     beforeEach(() => {
-        initOpfabApiMock();
+        const translationService = new TranslationServiceMock();
+        OpfabAPIService.setTranslationService(translationService);
+        OpfabAPIService.init();
+        OpfabAPIService.initAPI();
+        OpfabAPIService.initUserCardTemplateInterface();
     });
 
     it('GIVEN a new card THEN initial selected message option is the first option', () => {
@@ -45,36 +48,23 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'CREATE';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {id: 'id1', richMessage: 'message1'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id1');
     });
 
     it('GIVEN an existing card WHEN user edit card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {richMessage: 'My message', summary: 'My summary'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });
 
     it('GIVEN an existing card with an HTML tag in  message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {richMessage: 'My message <script>'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message <script>'}};
         expect(view.getRichMessage()).toEqual('My message &lt;script&gt;');
     });
 
@@ -90,12 +80,8 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {id: 'id2', richMessage: 'message2'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
@@ -112,24 +98,16 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'COPY';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {id: 'id2', richMessage: 'message2'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'COPY';
+        OpfabAPIService.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'COPY';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {richMessage: 'My message', summary: 'My summary'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'COPY';
+        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });
@@ -141,7 +119,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         const specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.valid).toEqual(false);
         expect(specficCardInformation.errorMsg).toEqual(
-            'Translation of buildInTemplate.message-or-question-listUserCard.emptyMessage'
+            'Translation (en) of buildInTemplate.message-or-question-listUserCard.emptyMessage'
         );
     });
 

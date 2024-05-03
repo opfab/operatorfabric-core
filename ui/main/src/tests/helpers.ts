@@ -27,6 +27,9 @@ import {ModalService} from 'app/business/services/modal.service';
 import {ModalServerMock} from './mocks/modalServer.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
 import {ConfigService} from 'app/business/services/config.service';
+import {EntitiesServerMock} from './mocks/entitiesServer.mock';
+import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -188,4 +191,11 @@ export async function loadWebUIConf(conf: any) {
     ConfigService.setConfigServer(configServerMock);
     configServerMock.setResponseForWebUIConfiguration(new ServerResponse(conf, ServerResponseStatus.OK, null));
     await firstValueFrom(ConfigService.loadWebUIConfiguration());
+}
+
+export async function setEntities(entities: Entity[]) {
+    const entitiesServerMock = new EntitiesServerMock();
+    EntitiesService.setEntitiesServer(entitiesServerMock);
+    entitiesServerMock.setEntities(entities);
+    await firstValueFrom(EntitiesService.loadAllEntitiesData());
 }
