@@ -190,6 +190,10 @@ export class SoundNotificationService {
         this.lastSentCardId = cardId;
     }
 
+    public static getLastSentCardId(): string {
+        return this.lastSentCardId;
+    }
+
     private static checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
         return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction > 0;
     }

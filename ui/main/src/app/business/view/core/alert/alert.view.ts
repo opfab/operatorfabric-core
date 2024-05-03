@@ -35,7 +35,7 @@ export class AlertView {
         if (this.hideMessagesLevel.includes(message.level)) return;
 
         this.alertPage.display = true;
-        if (message.i18n)
+        if (message.i18n?.key)
             this.alertPage.message = this.translationService.getTranslation(message.i18n.key, message.i18n.parameters);
         else this.alertPage.message = message.message;
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);

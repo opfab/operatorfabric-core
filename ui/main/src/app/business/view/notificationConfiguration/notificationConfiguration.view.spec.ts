@@ -137,7 +137,7 @@ describe('Notification configuration view ', () => {
         };
 
         beforeAll(async () => {
-            await setProcessConfiguration(defaultProcesses, processGroups);
+            await setProcessConfiguration(defaultProcesses, undefined, processGroups);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
         });
@@ -193,7 +193,7 @@ describe('Notification configuration view ', () => {
         };
 
         beforeAll(async () => {
-            await setProcessConfiguration(defaultProcesses, processGroups);
+            await setProcessConfiguration(defaultProcesses, undefined, processGroups);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
         });
@@ -266,6 +266,7 @@ describe('Notification configuration view ', () => {
                         ])
                     }
                 ],
+                undefined,
                 {
                     groups: [
                         {

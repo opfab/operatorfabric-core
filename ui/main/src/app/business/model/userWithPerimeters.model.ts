@@ -30,7 +30,7 @@ export class ComputedPerimeter {
         readonly process: string,
         readonly state: string,
         readonly rights: RightsEnum,
-        readonly filteringNotificationAllowed: boolean
+        readonly filteringNotificationAllowed?: boolean
     ) {}
 }
 

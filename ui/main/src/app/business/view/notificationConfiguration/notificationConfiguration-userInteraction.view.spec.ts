@@ -181,6 +181,7 @@ describe('Notification configuration view - User interaction ', () => {
                         ])
                     }
                 ],
+                undefined,
                 {
                     groups: [
                         {
@@ -487,6 +488,7 @@ describe('Notification configuration view - User interaction ', () => {
                         ])
                     }
                 ],
+                undefined,
                 {
                     groups: [
                         {

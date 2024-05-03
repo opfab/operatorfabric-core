@@ -132,6 +132,7 @@ for more information).
 ifdef::single-page-doc[<<_using_rrule_field, Using rRule field >>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_using_rrule_field, Using rRule field>>]
 for more information).
+* tags (list of strings)
 * wktGeometry (string)
 * wktProjection (string)
 * actions (list of card actions)

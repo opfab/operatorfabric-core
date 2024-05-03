@@ -11,7 +11,7 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateLoader} from '@ngx-translate/core';
-import {Observable, firstValueFrom, of} from 'rxjs';
+import {Observable, ReplaySubject, firstValueFrom, of} from 'rxjs';
 import {Type} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Guid} from 'guid-typescript';
@@ -27,9 +27,12 @@ import {ModalService} from 'app/business/services/modal.service';
 import {ModalServerMock} from './mocks/modalServer.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
 import {ConfigService} from 'app/business/services/config.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesServerMock} from './mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {Message} from '@ofModel/message.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -86,15 +89,15 @@ export function getOneCard(cardTemplate?: any): Card {
         cardTemplate.processInstanceId ?? 'testProcessInstanceId',
         cardTemplate.state ?? 'testState',
         cardTemplate.lttd ?? null,
-        getI18nData('testTitle'),
-        getI18nData('testSummary'),
+        cardTemplate.title ?? getI18nData('testTitle'),
+        cardTemplate.summary ?? getI18nData('testSummary'),
         cardTemplate.titleTranslated ?? 'testTitleTranslated',
         cardTemplate.summaryTranslated ?? 'testSummaryTranslated',
         cardTemplate.data ?? {data: 'data'},
         cardTemplate.userRecipients ?? null,
         cardTemplate.groupRecipients ?? null,
         cardTemplate.entityRecipients ?? null,
-        undefined,
+        cardTemplate.entityRecipientsForInformation ?? null,
         undefined,
         cardTemplate.entitiesAllowedToRespond ?? null,
         cardTemplate.entitiesRequiredToRespond ?? null,
@@ -112,7 +115,8 @@ export function getOneCard(cardTemplate?: any): Card {
         cardTemplate.timeSpans ?? null,
         cardTemplate.entitiesAcks ?? null,
         undefined,
-        cardTemplate.rRule ?? null
+        cardTemplate.rRule ?? null,
+        cardTemplate.actions ?? null
     );
 }
 
@@ -166,9 +170,16 @@ export async function setUserPerimeter(userWithPerimeters: UserWithPerimeters) {
     await firstValueFrom(UserService.loadUserWithPerimetersData());
 }
 
-export async function setProcessConfiguration(processes: Process[], processGroups: any = {groups: []}) {
+export async function setProcessConfiguration(
+    processes: Process[],
+    processesWithAllVersions: Process[] = undefined,
+    processGroups: any = {groups: []}
+) {
     const processServerMock = new ProcessServerMock();
-    processServerMock.setResponseForAllProcessDefinition(new ServerResponse(processes, ServerResponseStatus.OK, null));
+    processServerMock.setResponseForProcessesDefinition(new ServerResponse(processes, ServerResponseStatus.OK, null));
+    processServerMock.setResponseForProcessesWithAllVersions(
+        new ServerResponse(processesWithAllVersions ?? processes, ServerResponseStatus.OK, null)
+    );
     processServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
     ProcessesService.setProcessServer(processServerMock);
     await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
@@ -198,4 +209,28 @@ export async function setEntities(entities: Entity[]) {
     EntitiesService.setEntitiesServer(entitiesServerMock);
     entitiesServerMock.setEntities(entities);
     await firstValueFrom(EntitiesService.loadAllEntitiesData());
+}
+
+export function initOpfabAPIService() {
+    OpfabAPIService.init();
+    OpfabAPIService.initAPI();
+    OpfabAPIService.initUserCardTemplateInterface();
+    OpfabAPIService.initTemplateInterface();
+}
+
+export class AlertMessageReceiver {
+    private alertSubject: ReplaySubject<Message>;
+    constructor() {
+        this.alertSubject = new ReplaySubject<Message>();
+        this.listenForMessageReceived();
+    }
+
+    async listenForMessageReceived() {
+        const message = await firstValueFrom(AlertMessageService.getAlertMessage());
+        this.alertSubject.next(message);
+    }
+
+    async getMessageReceived(): Promise<Message> {
+        return await firstValueFrom(this.alertSubject.asObservable());
+    }
 }

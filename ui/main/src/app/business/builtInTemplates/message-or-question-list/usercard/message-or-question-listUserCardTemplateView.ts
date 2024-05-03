@@ -54,7 +54,6 @@ export class MessageOrQuestionListUserCardTemplateView {
                 errorMsg: opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.emptyMessage')
             };
         }
-
         const title = this.selectedMessage.title.trim();
         const id = this.selectedMessage.id;
         const question = this.selectedMessage.question;
@@ -66,9 +65,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         let entitiesAllowedToRespond;
 
         if (this.selectedMessage.question) {
-            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients
-                ? this.selectedMessage?.possibleRecipients
-                : '';
+            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients;
         } else {
             entitiesAllowedToRespond = [];
         }

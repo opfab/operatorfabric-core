@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,14 +54,6 @@
     background-color: $sev-information;
 }
 
-.alert-info {
-    color: var(--opfab-text-color);
-    background-color: transparent;
-    border-color: transparent;
-    text-align: center;
-    width: auto;
-    padding-top: 50px;
-}
 
 .opfab-section-header {
     font-weight: 600;
