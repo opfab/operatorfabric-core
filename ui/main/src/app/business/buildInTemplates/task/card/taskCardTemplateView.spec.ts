@@ -7,29 +7,29 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskCardTemplateView} from './taskCardTemplateView';
-
-declare const opfab;
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 
 describe('Question UserCard template', () => {
     let view: TaskCardTemplateView;
     beforeEach(() => {
-        initOpfabApiMock();
+        const translationService = new TranslationServiceMock();
+        OpfabAPIService.setTranslationService(translationService);
+        OpfabAPIService.init();
+        OpfabAPIService.initAPI();
         view = new TaskCardTemplateView();
     });
 
     it('GIVEN a card WHEN get data THEN data is provided', () => {
-        opfab.currentCard.getCard = function () {
-            return {
-                data: {
-                    taskTitle: 'My task Title',
-                    taskDescription: 'My task Description',
-                    byhour: ['5'],
-                    byminute: ['15'],
-                    durationInMinutes: '15'
-                }
-            };
+        OpfabAPIService.currentCard.card = {
+            data: {
+                taskTitle: 'My task Title',
+                taskDescription: 'My task Description',
+                byhour: ['5'],
+                byminute: ['15'],
+                durationInMinutes: '15'
+            }
         };
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
@@ -38,25 +38,25 @@ describe('Question UserCard template', () => {
         expect(view.getDurationInMinutes()).toEqual('15');
     });
     it('GIVEN a card WHEN filling content THEN text is correct', () => {
-        opfab.currentCard.getCard = function () {
-            return {
-                data: {
-                    freq: 'MONTHLY',
-                    bysetpos: ['1'],
-                    byweekday: ['MO'],
-                    bymonthday: ['1'],
-                    bymonth: [1]
-                }
-            };
+        OpfabAPIService.currentCard.card = {
+            data: {
+                freq: 'MONTHLY',
+                bysetpos: ['1'],
+                byweekday: ['MO'],
+                bymonthday: ['1'],
+                bymonth: [1]
+            }
         };
         const text = view.fillTexts();
         expect(text.textForBysetpos).toEqual(
-            'Translation of buildInTemplate.taskCard.the Translation of buildInTemplate.taskCard.first '
+            'Translation (en) of buildInTemplate.taskCard.the Translation (en) of buildInTemplate.taskCard.first '
         );
-        expect(text.textForByWeekday).toEqual(' Translation of shared.calendar.monday');
-        expect(text.textForBymonthday).toEqual('Translation of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>');
+        expect(text.textForByWeekday).toEqual(' Translation (en) of shared.calendar.monday');
+        expect(text.textForBymonthday).toEqual(
+            'Translation (en) of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>'
+        );
         expect(text.textForBymonth).toEqual(
-            'Translation of buildInTemplate.taskCard.in Translation of shared.calendar.january'
+            'Translation (en) of buildInTemplate.taskCard.in Translation (en) of shared.calendar.january'
         );
     });
 });

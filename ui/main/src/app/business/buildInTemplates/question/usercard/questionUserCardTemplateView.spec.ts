@@ -7,57 +7,44 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
-
-declare const opfab;
 
 describe('Question UserCard template', () => {
     beforeEach(() => {
-        initOpfabApiMock();
+        const translationService = new TranslationServiceMock();
+        OpfabAPIService.setTranslationService(translationService);
+        OpfabAPIService.init();
+        OpfabAPIService.initAPI();
+        OpfabAPIService.initUserCardTemplateInterface();
     });
 
     it('GIVEN an existing card WHEN user edit card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
         expect(view.getQuestion()).toEqual('My question');
     });
 
     it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
         const view = new QuestionUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question <script>'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {data: {question: 'My question <script>'}};
         expect(view.getQuestion()).toEqual('My question &lt;script&gt;');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'COPY';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'COPY';
+        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
         expect(view.getQuestion()).toEqual('My question');
     });
 
     it('GIVEN a user WHEN create card THEN question is empty', () => {
         const view = new QuestionUserCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'CREATE';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
         expect(view.getQuestion()).toEqual('');
     });
 
@@ -73,7 +60,7 @@ describe('Question UserCard template', () => {
         const specificCardInformation = view.getSpecificCardInformation('');
         expect(specificCardInformation.valid).toEqual(false);
         expect(specificCardInformation.errorMsg).toEqual(
-            'Translation of buildInTemplate.questionUserCard.noQuestionError'
+            'Translation (en) of buildInTemplate.questionUserCard.noQuestionError'
         );
     });
 });

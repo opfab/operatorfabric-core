@@ -7,35 +7,30 @@
 //  * This file is part of the OperatorFabric project.
 //  */
 
-import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskCardTemplateView} from './taskUserCardTemplateView';
-
-declare const opfab;
 
 describe('Question UserCard template', () => {
     beforeEach(() => {
-        initOpfabApiMock();
+        const translationService = new TranslationServiceMock();
+        OpfabAPIService.setTranslationService(translationService);
+        OpfabAPIService.init();
+        OpfabAPIService.initAPI();
+        OpfabAPIService.initUserCardTemplateInterface();
     });
 
     it('GIVEN a user WHEN create card THEN task title is empty', () => {
         const view = new TaskCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'CREATE';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {taskTitle: 'My task Title'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+        OpfabAPIService.currentCard.card = {data: {taskTitle: 'My task Title'}};
         expect(view.getTaskTitle()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'CREATE';
-        };
-        opfab.currentCard.getCard = function () {
-            return {data: {taskDescription: 'My task Description'}};
-        };
+        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+        OpfabAPIService.currentCard.card = {data: {taskDescription: 'My task Description'}};
         expect(view.getTaskDescription()).toEqual('');
     });
 
@@ -79,25 +74,21 @@ describe('Question UserCard template', () => {
 
     it('GIVEN an existing card WHEN user edit card THEN card data is current card data', () => {
         const view = new TaskCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'EDITION';
-        };
-        opfab.currentCard.getCard = function () {
-            return {
-                data: {
-                    taskTitle: 'My task Title',
-                    taskDescription: 'My task Description',
-                    freq: 'DAILY',
-                    byhour: ['15'],
-                    byminute: ['15'],
-                    durationInMinutes: '15',
-                    minutesForReminder: '5',
-                    byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
-                    bymonth: [1, 2, 3],
-                    bysetpos: [],
-                    bymonthday: []
-                }
-            };
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {
+            data: {
+                taskTitle: 'My task Title',
+                taskDescription: 'My task Description',
+                freq: 'DAILY',
+                byhour: ['15'],
+                byminute: ['15'],
+                durationInMinutes: '15',
+                minutesForReminder: '5',
+                byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+                bymonth: [1, 2, 3],
+                bysetpos: [],
+                bymonthday: []
+            }
         };
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
@@ -113,25 +104,21 @@ describe('Question UserCard template', () => {
 
     it('GIVEN an existing card WHEN user copy card THEN data is current card data', () => {
         const view = new TaskCardTemplateView();
-        opfab.currentUserCard.getEditionMode = function () {
-            return 'COPY';
-        };
-        opfab.currentCard.getCard = function () {
-            return {
-                data: {
-                    taskTitle: 'My task Title',
-                    taskDescription: 'My task Description',
-                    freq: 'DAILY',
-                    byhour: ['15'],
-                    byminute: ['15'],
-                    durationInMinutes: '15',
-                    minutesForReminder: '5',
-                    byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
-                    bymonth: [1, 2, 3],
-                    bysetpos: [],
-                    bymonthday: []
-                }
-            };
+        OpfabAPIService.currentUserCard.editionMode = 'COPY';
+        OpfabAPIService.currentCard.card = {
+            data: {
+                taskTitle: 'My task Title',
+                taskDescription: 'My task Description',
+                freq: 'DAILY',
+                byhour: ['15'],
+                byminute: ['15'],
+                durationInMinutes: '15',
+                minutesForReminder: '5',
+                byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+                bymonth: [1, 2, 3],
+                bysetpos: [],
+                bymonthday: []
+            }
         };
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');

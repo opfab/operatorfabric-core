@@ -21,6 +21,7 @@ export class OpfabAPIService {
     public static userCardTemplateInterface: any;
 
     private static translationService: TranslationService;
+    private static initAPIDone = false;
 
     public static setTranslationService(translationService: TranslationService) {
         OpfabAPIService.translationService = translationService;
@@ -119,6 +120,7 @@ export class OpfabAPIService {
     }
 
     public static initAPI() {
+        if (OpfabAPIService.initAPIDone) return;
         opfab.businessconfig.businessData.get = async function (resourceName) {
             const resource = await BusinessDataService.getBusinessData(resourceName);
             return resource;
@@ -149,6 +151,7 @@ export class OpfabAPIService {
         OpfabAPIService.initUserApi();
         OpfabAPIService.initCurrentCardApi();
         OpfabAPIService.initCurrentUserCardApi();
+        OpfabAPIService.initAPIDone = true;
     }
 
     private static initUserApi() {
