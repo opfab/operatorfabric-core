@@ -90,7 +90,10 @@ describe('Process Monitoring view ', () => {
 
         processServerMock = new ProcessServerMock();
         ProcessesService.setProcessServer(processServerMock);
-        processServerMock.setResponseForAllProcessDefinition(
+        processServerMock.setResponseForProcessesDefinition(
+            new ServerResponse(processes, ServerResponseStatus.OK, null)
+        );
+        processServerMock.setResponseForProcessesWithAllVersions(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());

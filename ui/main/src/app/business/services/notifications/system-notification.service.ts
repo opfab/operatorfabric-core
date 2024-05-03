@@ -100,6 +100,10 @@ export class SystemNotificationService {
         this.lastSentCardId = cardId;
     }
 
+    public static getLastSentCardId(): string {
+        return this.lastSentCardId;
+    }
+
     private static checkCardIsRecent(card: LightCard): boolean {
         return new Date().getTime() - card.publishDate <= SystemNotificationService.RECENT_THRESHOLD;
     }

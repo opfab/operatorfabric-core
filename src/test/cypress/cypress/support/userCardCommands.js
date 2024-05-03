@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ export class UserCardCommands extends OpfabCommands {
 
     // SERVICE COMMANDS 
     checkServiceSelectDoesNotExist= function () {
-        cy.get('#of-usercard-service-selector').should('not.exist');
+        cy.get('#of-usercard-service-selector').should("not.be.visible");
     }
 
     checkServiceSelectExists= function () {
@@ -40,9 +40,6 @@ export class UserCardCommands extends OpfabCommands {
 
 
     // PROCESS COMMANDS 
-    checkProcessSelectDoesNotExist= function () {
-        cy.get('#of-usercard-process-filter').should('not.exist');
-    }
 
     selectProcess= function (processName) {
         this.opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', processName)
@@ -72,36 +69,36 @@ export class UserCardCommands extends OpfabCommands {
     // DATES COMMANDS 
 
     checkStartDateChoiceDoesNotExist= function () {
-        cy.get('#opfab-usercard-startdate-choice').should("not.exist");
+        cy.get('#opfab-usercard-input-startDate').should("not.be.visible");
     }
 
     checkStartDateChoiceExists= function () {
-        cy.get('#opfab-usercard-startdate-choice');
+        cy.get('#opfab-usercard-input-startDate');
     }
 
     checkEndDateChoiceDoesNotExist= function () {
-        cy.get('#opfab-usercard-enddate-choice').should("not.exist");
+        cy.get('#opfab-usercard-input-endDate').should("not.be.visible");
     }
 
     checkEndDateChoiceExists= function () {
-        cy.get('#opfab-usercard-enddate-choice');
+        cy.get('#opfab-usercard-input-endDate');
     }
 
     checkLttdChoiceDoesNotExist= function () {
-        cy.get('#opfab-usercard-lttd-choice').should("not.exist");
+        cy.get('#opfab-usercard-input-lttd').should("not.be.visible");
     }
 
     checkLttdChoiceExists= function () {
-        cy.get('#opfab-usercard-lttd-choice');
+        cy.get('#opfab-usercard-input-lttd');
     }
 
     // SEVERITY COMMANDS 
     checkSeverityChoiceExists= function () {
-        cy.get('#opfab-usercard-severity-choice');
+        cy.get('#opfab-usercard-input-severity');
     }
 
     checkSeverityChoiceDoesNotExist= function () {
-        cy.get('#opfab-usercard-severity-choice').should("not.exist");
+        cy.get('#opfab-usercard-input-severity').should("not.be.visible");
     }
 
     checkSelectedSeverityIs= function (severity) {
@@ -110,11 +107,11 @@ export class UserCardCommands extends OpfabCommands {
 
     // EMITTER COMMANDS 
     checkEmitterSelectDoesNotExist= function () {
-        cy.get('#of-usercard-card-emitter-selector').should("not.exist");
+        cy.get('#of-usercard-card-emitter-selector').should("not.be.visible");
     }
 
     checkEmitterSelectExists= function () {
-        cy.get('#of-usercard-card-emitter-selector');
+        cy.get('#of-usercard-card-emitter-selector').should("be.visible");
     }
 
     selectEmitter= function (emitterName) {
@@ -127,7 +124,7 @@ export class UserCardCommands extends OpfabCommands {
   
     // RECIPIENTS COMMANDS 
     checkRecipientSelectDoesNotExist= function () {
-        cy.get('#opfab-recipients').should("not.exist");
+        cy.get('#opfab-recipients').should("not.be.visible");
     }
 
     selectRecipient= function (recipientName) {
@@ -148,7 +145,7 @@ export class UserCardCommands extends OpfabCommands {
 
     // RECIPIENTS FOR INFORMATION COMMANDS
     checkRecipientForInformationSelectDoesNotExist= function () {
-        cy.get('#opfab-recipients-for-information').should("not.exist");
+        cy.get('#opfab-recipients-for-information').should("not.be.visible");
     }
 
     selectRecipientForInformation= function (recipientName) {

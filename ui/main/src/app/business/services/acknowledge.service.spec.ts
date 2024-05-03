@@ -58,7 +58,10 @@ describe('AcknowledgeService testing ', () => {
         UserService.setUserServer(userServerMock);
 
         const processServerMock = new ProcessServerMock();
-        processServerMock.setResponseForAllProcessDefinition(
+        processServerMock.setResponseForProcessesDefinition(
+            new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
+        );
+        processServerMock.setResponseForProcessesWithAllVersions(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
         ProcessesService.setProcessServer(processServerMock);

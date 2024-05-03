@@ -15,10 +15,9 @@ import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 
 describe('Handlebars Services', () => {
-    let processServer: ProcessServerMock;
+    let processServerMock: ProcessServerMock;
 
     const now = moment(Date.now());
 
@@ -27,8 +26,9 @@ describe('Handlebars Services', () => {
     });
 
     beforeEach(() => {
-        processServer = new ProcessServerMock();
-        ProcessesService.setProcessServer(processServer);
+        processServerMock = new ProcessServerMock();
+        processServerMock.setTemplateResponseWithParamFromMethodCall(false);
+        ProcessesService.setProcessServer(processServerMock);
         HandlebarsService.clearCache();
     });
 
@@ -66,7 +66,7 @@ describe('Handlebars Services', () => {
         });
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
-            processServer.setResponseForTemplate(new ServerResponse(template, ServerResponseStatus.OK, null));
+            processServerMock.setResponseTemplateForGetTemplate(template);
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
                     expect(result).withContext(contextMessage).toEqual(expectedResult);
@@ -329,7 +329,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile  now ', (done) => {
-            processServer.setResponseForTemplate(new ServerResponse('{{now}}', ServerResponseStatus.OK, null));
+            processServerMock.setResponseTemplateForGetTemplate('{{now}}');
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
                     // As it takes times to execute and the test are asynchronous we could not test the exact value

@@ -67,7 +67,7 @@
         "endDateBeforeStartDate": "End date must be after start date.",
         "featureNotConfigured": "Feature not configured",
         "confirmSettings": "CONFIRM SETTINGS",
-        "cardEmitter": "EMITTER",
+        "cardPublisher": "EMITTER",
         "entity": "ENTITY",
         "goToAdminMode": "See all cards (whether I am the recipient or not)",
         "adminMode": "See only the cards I am recipient of",
@@ -386,8 +386,7 @@
         "title": "CREATE A NEW CARD",
         "editTitle": "EDIT A NEW CARD",
         "error": {
-            "notAvailable": "You are not allowed to send card.",
-            "userHasNoEntityThatCanSendCard": "You are not a member of any entity that can send cards.",
+            "notAvailable": "You are not allowed to send cards.",
             "templateError": "Technical error : invalid template",
             "impossibleToSendCard": "Impossible to send card for technical reasons",
             "lttdBeforeStartDate": "Limit date for response must be after start date and after the current date and time.",

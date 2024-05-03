@@ -76,9 +76,7 @@ export class AngularCardServer extends AngularServer implements CardServer {
 
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
-            this.httpClient.post<FieldToTranslate>(`${this.cardPublicationUrl}/translateCardField`, fieldToTranslate, {
-                observe: 'response'
-            })
+            this.httpClient.post<FieldToTranslate>(`${this.cardPublicationUrl}/translateCardField`, fieldToTranslate)
         );
     }
 

@@ -12,18 +12,35 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FieldToTranslate} from '@ofModel/field-to-translate.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {CardServer} from 'app/business/server/card.server';
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of} from 'rxjs';
 
 export class CardServerMock implements CardServer {
+    private setResponseForLoadCard: Function;
     private setResponseForLoadArchivedCard: Function;
+    private setResponseForPostCard: () => ServerResponse<CardCreationReportData> = () =>
+        new ServerResponse<CardCreationReportData>(
+            new CardCreationReportData('cardCreatedUid', 'cardCreatedId'),
+            ServerResponseStatus.OK,
+            null
+        );
+
+    public cardsPosted: CardForPublishing[] = [];
+
+    public setResponseFunctionForLoadCard(respFunc: Function) {
+        this.setResponseForLoadCard = respFunc;
+    }
 
     public setResponseFunctionForLoadArchivedCard(respFunc: Function) {
         this.setResponseForLoadArchivedCard = respFunc;
     }
 
+    public setResponseFunctionForPostCard(respFunc: () => ServerResponse<CardCreationReportData>) {
+        this.setResponseForPostCard = respFunc;
+    }
+
     loadCard(id: string): Observable<ServerResponse<any>> {
-        throw new Error('Method not implemented.');
+        return of(this.setResponseForLoadCard(id));
     }
     loadArchivedCard(id: string): Observable<ServerResponse<any>> {
         return of(this.setResponseForLoadArchivedCard(id));
@@ -32,7 +49,8 @@ export class CardServerMock implements CardServer {
         throw new Error('Method not implemented.');
     }
     postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
-        throw new Error('Method not implemented.');
+        this.cardsPosted.push(card);
+        return of(this.setResponseForPostCard());
     }
     deleteCard(card: Card): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');
@@ -44,7 +62,15 @@ export class CardServerMock implements CardServer {
         throw new Error('Method not implemented.');
     }
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {
-        throw new Error('Method not implemented.');
+        return of(
+            new ServerResponse(
+                {
+                    translatedField: `Translation of ${fieldToTranslate.i18nValue?.key} for process ${fieldToTranslate.process} with version ${fieldToTranslate.processVersion}`
+                },
+                ServerResponseStatus.OK,
+                null
+            )
+        );
     }
     fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');

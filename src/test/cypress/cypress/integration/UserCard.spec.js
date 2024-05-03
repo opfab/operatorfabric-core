@@ -36,7 +36,7 @@ describe('User Card ', function () {
     it('Check error message when READONLY user try to create a usercard', () => {
       opfab.loginWithUser('operator1_crisisroom');
       opfab.navigateToUserCard();
-      cy.get('of-usercard').find('.alert-info').should('contain','You are not allowed to send card.')
+      cy.get('of-usercard').should('contain','You are not allowed to send card')
     })
   })
 
@@ -268,7 +268,7 @@ describe('User Card ', function () {
 
         opfab.navigateToUserCard();
         cy.get('of-usercard').find('#opfab-usercard-creation').should('not.exist');
-        cy.get('of-usercard').should('have.text', 'You are not a member of any entity that can send cards.');
+        cy.get('of-usercard').should('contain', 'You are not allowed to send card');
         cy.get('#opfab-usercard-close').click();
 
         // The user should be able to send a card if an entity is added
@@ -835,7 +835,7 @@ describe('User Card ', function () {
 
   })
 
-  describe("Should load state and process from gateway", function() {
+  describe("Should load state and process from opfab API", function() {
 
     it('Check state and process', () => {
 
@@ -929,7 +929,7 @@ describe('User Card ', function () {
     })
   })
 
-  describe("Should receive card emitter from gateway", function() {
+  describe("Should receive card emitter from opfabAPI", function() {
 
     it('Check card emitter for operator1_fr', () => {
 

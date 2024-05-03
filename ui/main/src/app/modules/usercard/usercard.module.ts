@@ -14,21 +14,11 @@ import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
-import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
-import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-select-state-form.component';
-import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
-import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
 
 @NgModule({
-    declarations: [
-        UserCardComponent,
-        UserCardDatesFormComponent,
-        UserCardSelectStateFormComponent,
-        UserCardRecipientsFormComponent,
-        UsercardSelectCardEmitterFormComponent
-    ],
+    declarations: [UserCardComponent],
     imports: [
         CommonModule,
         FormsModule,

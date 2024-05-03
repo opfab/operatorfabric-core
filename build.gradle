@@ -118,6 +118,12 @@ sonar {
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
+        
+        // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
+        // we need to create nested test and this rule is blocking us
+        property 'sonar.issue.ignore.multicriteria', 'e1'
+        property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
+        property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.spec.ts'
     }
 }
 

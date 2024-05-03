@@ -67,7 +67,7 @@
         "endDateBeforeStartDate": "Einddatum moet na start datum liggen.",
         "featureNotConfigured": "Functie niet geconfigureerd",
         "confirmSettings": "BEVESTIG INSTELLINGEN",
-        "cardEmitter": "EMITTER",
+        "cardPublisher": "EMITTER",
         "entity": "ENTITEIT",
         "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
         "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
@@ -387,7 +387,6 @@
         "editTitle": "WIJZIG EEN NIEUWE KAART",
         "error": {
             "notAvailable": "U heeft geen toestemming om kaarten te verzenden.",
-            "userHasNoEntityThatCanSendCard": "U bent geen lid van een entiteit die kaarten kan versturen.",
             "templateError": "Technische fout: ongeldige sjabloon",
             "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
             "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
