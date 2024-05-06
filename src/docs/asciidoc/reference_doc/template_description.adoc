@@ -751,6 +751,9 @@ To use the rich text editor component just add a <opfab-richtext-editor> tag in 
 The editor use a custom JSON format called Delta to store the formatted content. To get the JSON content as a string you can call the `getContents()` method. To get the HTML formatted text you can call the `getHtml()` method.
 
 To set the initial content of the editor you can either call the `setContents(delta)` method from javascript  providing the content as Delta JSON string or directly in the template by putting the Delta JSON string as content of the <opfab-richtext-editor> tag.
+
+Opfab provides a utility to obtain the Delta JSON representation of a rich text. This utility is available at the following link : http://localhost:2002/#/devtools/richtext
+The tool allows you to convert a rich text formatted using the visual editor into the corresponding Delta JSON format.
  
 It is possible to disable/enable the editor by calling the `enable(enabled: boolean)` method.
 
