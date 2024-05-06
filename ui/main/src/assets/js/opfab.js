@@ -255,6 +255,10 @@ class QuillEditor extends HTMLElement {
         return this.EMPTY_REGEXP.test(this.quill.root.innerHTML);
     }
 
+    enable(enabled) {
+        this.quill.enable(enabled);
+    }
+
     // Lifecycle method: called when the element is added to the DOM
     connectedCallback() {
         const textEditor = this.firstChild;
