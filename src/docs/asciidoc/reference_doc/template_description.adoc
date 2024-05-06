@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -752,8 +752,9 @@ The editor use a custom JSON format called Delta to store the formatted content.
 
 To set the initial content of the editor you can either call the `setContents(delta)` method from javascript  providing the content as Delta JSON string or directly in the template by putting the Delta JSON string as content of the <opfab-richtext-editor> tag.
  
+It is possible to disable/enable the editor by calling the `enable(enabled: boolean)` method.
 
-To show the rich message an HTML element you can call the `opfab.richTextEditor.showRichMessage(element)` method. For example:
+To show the rich message in an HTML element you can call the `opfab.richTextEditor.showRichMessage(element)` method. For example:
 
 ....
 <span id="richMessage">{{card.data.richMessage}}</span>
