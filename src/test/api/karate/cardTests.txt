@@ -28,4 +28,5 @@
       cards/externalRecipentErrors.feature        \
       cards/postCardWithRRuleRecurrence.feature   \
       cards/cardsReminder.feature                 \
-      cards/cardIdWithSpecialCharacters.feature
+      cards/cardIdWithSpecialCharacters.feature   \
+      cards/resetRateLimiter.feature
