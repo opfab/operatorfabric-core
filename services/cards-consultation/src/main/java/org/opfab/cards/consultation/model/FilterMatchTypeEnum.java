@@ -13,13 +13,15 @@ package org.opfab.cards.consultation.model;
 
 
 public enum FilterMatchTypeEnum {
-    EQUALS,
-    NOTEQUAL,
-    STARTSWITH,
-    ENDSWITH,
-    CONTAINS,
-    NOTCONTAINS,
     BLANK,
+    CONTAINS,
+    ENDSWITH,
+    EQUALS,
+    GREATERTHAN,
+    IN,
+    LESSTHAN,
     NOTBLANK,
-    IN
+    NOTCONTAINS,
+    NOTEQUAL,
+    STARTSWITH  
 }

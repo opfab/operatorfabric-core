@@ -34,8 +34,6 @@ import java.util.regex.Pattern;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-
 import org.springframework.data.mongodb.core.aggregation.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -286,13 +284,17 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         filter.filters().forEach(columnFilter -> {
             if (!SPECIAL_PARAMETERS.contains(columnFilter.columnName()) && columnFilter.operation() == null) {
                 // Multiple conditions operations are not supported yet
-                criteria.add(getMatchingCriteria(columnFilter));
+                try {
+                    criteria.add(getMatchingCriteria(columnFilter));
+                } catch (NumberFormatException | NoSuchFieldException | SecurityException e) {
+                    // Ignore criteria on wrong columns
+                }
             }
         });
         return criteria;
     }
 
-    private Criteria getMatchingCriteria(FilterModel columnFilter) {
+    private Criteria getMatchingCriteria(FilterModel columnFilter) throws NumberFormatException, NoSuchFieldException, SecurityException {
         Criteria criteria = null;
         switch(columnFilter.matchType()) {
             case EQUALS: 
@@ -322,6 +324,16 @@ public interface UserUtilitiesCommonToCardRepository<T> {
             case IN:
                 criteria =  Criteria.where(columnFilter.columnName()).in(columnFilter.filter());
                 break;
+            case LESSTHAN:
+                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName()).getType().getCanonicalName().equals("java.time.Instant")) {
+                    criteria = Criteria.where(columnFilter.columnName()).lt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
+                } else  criteria =  Criteria.where(columnFilter.columnName()).lt(columnFilter.filter().get(0));
+                break;
+            case GREATERTHAN:
+                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName()).getType().getCanonicalName().equals("java.time.Instant")) {
+                    criteria = Criteria.where(columnFilter.columnName()).gt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
+                } else  criteria =  Criteria.where(columnFilter.columnName()).gt(columnFilter.filter().get(0));
+            break;
         }
         return criteria;
     }
