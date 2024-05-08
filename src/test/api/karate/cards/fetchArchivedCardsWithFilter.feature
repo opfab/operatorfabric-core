@@ -1105,6 +1105,98 @@ Scenario: fetch the first page
 			Then status 200
 			And assert response.numberOfElements == 0 
   
+
+
+	Scenario: filter using LESSTHAN and GREATERTHAN 
+  
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [
+			{
+				"columnName": "startDate",
+				"filter" : ["1583333122000"],
+				"matchType" : "GREATERTHAN"
+			}
+			]
+		}
+		"""
+	
+		Given url opfabUrl + 'cards/archives'
+		And header Authorization = 'Bearer ' + authTokenAsTSO
+		And request filter
+		Then method post
+		Then status 200
+		And assert response.numberOfElements == 0
+
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [
+			{
+				"columnName": "startDate",
+				"filter" : ["1583333111000"],
+				"matchType" : "GREATERTHAN"
+			}
+			]
+		}
+		"""
+  
+		Given url opfabUrl + 'cards/archives'
+		And header Authorization = 'Bearer ' + authTokenAsTSO
+		And request filter
+		Then method post
+		Then status 200
+	   	And assert response.numberOfElements == 10
+
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [
+			{
+				"columnName": "startDate",
+				"filter" : ["1583333122000"],
+				"matchType" : "LESSTHAN"
+			}
+			]
+		}
+		"""
+  
+		Given url opfabUrl + 'cards/archives'
+		And header Authorization = 'Bearer ' + authTokenAsTSO
+		And request filter
+		Then method post
+		Then status 200
+		And assert response.numberOfElements == 0
+
+		* def filter =
+		"""
+		{
+			"page" : 0,
+			"size" : 10,
+			"filters" : [
+			{
+				"columnName": "startDate",
+				"filter" : ["1583333133000"],
+				"matchType" : "LESSTHAN"
+			}
+			]
+		}
+		"""
+  
+		Given url opfabUrl + 'cards/archives'
+		And header Authorization = 'Bearer ' + authTokenAsTSO
+		And request filter
+		Then method post
+		Then status 200
+		And assert response.numberOfElements == 10
+
 	Scenario: delete perimeter
 	  #delete perimeter created previously
 		* callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

@@ -144,7 +144,7 @@ public class ArchivedCardRepositoryShould {
         persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, null, login1, new String[]{"rte","operator"}, null));
 
         //card starts in future and never ends
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusThree, null, login1, new String[]{"rte","operator","group2"}, new String[]{"entity1","entity2"}));
+        persistCard(createSimpleArchivedCard(processNo, firstPublisher, nowMinusThree, nowPlusThree, null, login1, new String[]{"rte","operator","group2"}, new String[]{"entity1","entity2"}));
 
         //create later published cards in past
         persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null));
@@ -591,6 +591,122 @@ public class ArchivedCardRepositoryShould {
                             card -> checkIfCardActiveInRange(card, null, end))
                     );
                     //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void fetchArchivedCardsPublishDateGreaterThan() {
+
+        FilterModel filter1 = FilterModel.builder()
+            .columnName("publishDate")
+            .matchType(FilterMatchTypeEnum.GREATERTHAN)
+            .filter(List.of(Long.toString(now.toEpochMilli())))
+            .build();
+            
+        CardsFilter filters = CardsFilter.builder()
+            .filters(List.of(filter1)).build();
+
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(3);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    // Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> card.getPublishDate().isAfter(now))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void fetchArchivedCardsPublishDateLessThan() {
+
+        FilterModel filter1 = FilterModel.builder()
+            .columnName("publishDate")
+            .matchType(FilterMatchTypeEnum.LESSTHAN)
+            .filter(List.of(Long.toString(now.toEpochMilli())))
+            .build();
+            
+        CardsFilter filters = CardsFilter.builder()
+            .filters(List.of(filter1)).build();
+
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(9);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    // Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> card.getPublishDate().isBefore(now))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void fetchArchivedCardsProcessInstanceIdLessThan() {
+
+        FilterModel filter1 = FilterModel.builder()
+                .columnName("processInstanceId")
+                .matchType(FilterMatchTypeEnum.LESSTHAN)
+                .filter(List.of("PROCESS3"))
+                .build();
+
+        CardsFilter filters = CardsFilter.builder()
+                .filters(List.of(filter1)).build();
+
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(6);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    // Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> card.getProcessInstanceId().compareTo("PROCESS3") < 0));
+                    // Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void fetchArchivedCardsProcessInstanceIdGreaterThan() {
+
+        FilterModel filter1 = FilterModel.builder()
+                .columnName("processInstanceId")
+                .matchType(FilterMatchTypeEnum.GREATERTHAN)
+                .filter(List.of("PROCESS2"))
+                .build();
+
+        CardsFilter filters = CardsFilter.builder()
+                .filters(List.of(filter1)).build();
+
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    // Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> card.getProcessInstanceId().compareTo("PROCESS2") > 0));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
