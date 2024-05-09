@@ -9,7 +9,7 @@
 
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
-import fs from 'fs';
+import * as fs from 'fs';
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MailHandlebarsHelper {
@@ -17,9 +17,9 @@ export class MailHandlebarsHelper {
 
     public static init(): void {
         const quillFilePath = require.resolve('quill');
-        const quillMinFilePath = quillFilePath.replace('quill.js', 'quill.min.js');
+        const quillDistFilePath = quillFilePath.replace('quill.js', 'dist/quill.js');
 
-        const quillLibrary = fs.readFileSync(quillMinFilePath);
+        const quillLibrary = fs.readFileSync(quillDistFilePath);
 
         const TEMPLATE = `<div id="editor"></div>
         <script>${quillLibrary.toString()}</script>

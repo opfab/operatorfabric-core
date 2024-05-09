@@ -9,7 +9,8 @@
 
 import * as Handlebars from 'handlebars';
 import moment from 'moment';
-import {JSDOM} from 'jsdom'
+import {JSDOM} from 'jsdom';
+import * as fs from 'fs';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 export class HandlebarsHelper {
@@ -337,15 +338,13 @@ export class HandlebarsHelper {
         });
     }
 
-    private static registerDeltaToHtml() {
-        Handlebars.registerHelper('deltaToHtml', (delta) => {
-            const fs = require('fs');
-            let quillFilePath = require.resolve('quill');
-            let quillMinFilePath = quillFilePath.replace('quill.js', 'quill.min.js');
-            
-            let quillLibrary = fs.readFileSync(quillMinFilePath);
-            const TEMPLATE =  `<div id="editor"></div>
-            <script>${quillLibrary}</script>
+    private static registerDeltaToHtml(): void {
+        Handlebars.registerHelper('deltaToHtml', (delta: string) => {
+            const quillFilePath = require.resolve('quill');
+
+            const quillLibrary = fs.readFileSync(quillFilePath);
+            const TEMPLATE = `<div id="editor"></div>
+            <script>${quillLibrary.toString()}</script>
             <script>
               document.getSelection = function() {
                 return {
@@ -358,12 +357,12 @@ export class HandlebarsHelper {
                 } catch(e) {}
                 return false;
               };
-            </script>`
+            </script>`;
 
-            const DOM = new JSDOM(TEMPLATE, { runScripts: 'dangerously', resources: 'usable' });
+            const DOM = new JSDOM(TEMPLATE, {runScripts: 'dangerously', resources: 'usable'});
             const quill = new DOM.window.Quill('#editor');
- 
-            quill.setContents(JSON.parse(delta));            
+
+            quill.setContents(JSON.parse(delta));
             const html = quill.root.innerHTML;
             return html;
         });
