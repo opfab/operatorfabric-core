@@ -32,6 +32,104 @@ Feature: CardsReminder
     ]
     """
 
+    
+  * def entity1Array =
+      """
+      [   "ENTITY1_FR"
+      ]
+      """
+
+            * def entity2Array =
+      """
+      [   "ENTITY2_FR"
+      ]
+      """
+
+Scenario: Send card and receive reminder
+
+
+#Create new perimeter
+* call read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And request perimeterArray
+    When method patch
+    Then status 200
+
+
+    * def currentDate = new Date()
+    * def now = new Date().valueOf()
+    * def yesterday = new java.math.BigDecimal(now - 8640000)
+    * def tomorrow = new java.math.BigDecimal(now + 8640000)
+
+    * def datePlus2Min = new Date(now + 2*60*1000).getTime();
+    * def hours = new java.lang.Integer(new Date(datePlus2Min).getHours())
+    * def minutes = new java.lang.Integer(new Date(datePlus2Min).getMinutes())
+    * def seconds = new java.lang.Integer(new Date(datePlus2Min).getSeconds())
+    * def secondsForReminder = 60 + (120 -seconds) - 10
+
+    * def card =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"secondsBeforeTimeSpanForReminder" : #(secondsForReminder),
+	"timeSpans" : [
+		{"start" : #(yesterday) ,"end" : #(tomorrow) , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[1,2,3,4,5,6,7],
+						"hoursAndMinutes": {"hours": #(hours),"minutes": #(minutes)},
+						"durationInMinutes": 5
+					}
+		}]
+}
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
+    And request card
+    When method post
+    Then status 201
+    And def uid = response.uid
+
+
+    #Signal that card has been read card by operator1_fr
+    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    And header Authorization = 'Bearer ' + authToken
+    And request ''
+    When method post
+    Then status 201
+
+
+    Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == true
+
+# Wait for reminder, card should become unread
+    * configure retry = { count: 30, interval: 1000 }
+    Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
+    And header Authorization = 'Bearer ' + authToken
+    And retry until responseStatus == 200  && response.card.hasBeenRead == false
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == false
+
+
 Scenario: ResetCardsReadsAndAcks
 
     * def card =
@@ -51,27 +149,7 @@ Scenario: ResetCardsReadsAndAcks
 }
 """
 
-      * def entity1Array =
-"""
-[   "ENTITY1_FR"
-]
-"""
 
-      * def entity2Array =
-"""
-[   "ENTITY2_FR"
-]
-"""
-
-#Create new perimeter
-* callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
-
-#Attach perimeter to group
-    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
-    And header Authorization = 'Bearer ' + authTokenAdmin
-    And request perimeterArray
-    When method patch
-    Then status 200
 
 
 # Push card
@@ -184,4 +262,4 @@ Scenario: ResetCardsReadsAndAcks
 #    Then status 200
 
   #delete perimeter created previously
-    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
+    * call read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
