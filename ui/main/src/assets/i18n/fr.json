@@ -705,7 +705,7 @@
   "errors" : {
     "notFound" : "Ressource non trouvée",
     "notAllowed" : "Action non autorisée",
-    "badRequest" : "Requête invalide {{badRequestMessage}}",
+    "badRequest" : "Invalid Request {{badRequestMessage}}",
     "pageNotAllowed": "Vous n'êtes pas autorisé à voir cette page"
   },
   "buildInTemplate" : {

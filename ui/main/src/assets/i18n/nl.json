@@ -705,7 +705,7 @@
   "errors" : {
     "notFound" : "Bron niet gevonden",
     "notAllowed" : "Actie niet toegestaan",
-    "badRequest" : "Ongeldige aanvraag {{badRequestMessage}}",
+    "badRequest" : "Invalid Request {{badRequestMessage}}",
     "pageNotAllowed" : "Je mag deze pagina niet bekijken"
   } ,
   "buildInTemplate" : {
