@@ -9,16 +9,54 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ScriptCommands} from "../support/scriptCommands";
+import {AgGridCommands} from "../support/agGridCommands";
 
 describe('Monitoring processus screen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
+    const agGrid = new AgGridCommands();
 
     before('Set up configuration', function () {
         script.deleteAllCards();
         script.loadTestConf();
         script.send6TestCards();
+    });
+
+
+    it('Check cards reception for monitoring processus screen', function () {
+
+        opfab.loginWithUser('operator2_fr');
+
+        opfab.navigateToMonitoringProcessus();
+
+        // operator2_fr should see the grid of cards
+        cy.get("#opfab-processmonitoring-table-grid").should("exist");
+
+        // Should have 3 cards
+        agGrid.countTableRows('#opfab-processmonitoring-table-grid', 3);
+
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 2, 'have.text', 'Message');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 3, 'have.text', '');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 4, 'have.text',
+            '{\"ops\":[{\"insert\":\"France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 5, 'have.text',
+            'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 6, 'have.text', '');
+
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 3, 'have.text',
+            'ENTITY1_FR, ENTITY2_FR, ENTITY3_FR');
+
+        // No card detail is displayed
+        cy.get('of-card').should('not.exist');
+
+        // Opens the first card, checks that its content is visible
+        agGrid.clickCell('#opfab-processmonitoring-table-grid', 0, 1);
+        cy.get('of-card').first().should('exist');
+
+        // Closes the card content and check card body is no longer visible
+        cy.get("#opfab-close-card").click();
+        cy.get('of-card').should('not.exist');
     });
 
 
