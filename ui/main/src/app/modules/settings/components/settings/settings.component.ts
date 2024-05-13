@@ -11,7 +11,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {SettingsView} from 'app/business/view/settings/settings.view';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -76,9 +76,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         const formGroupConfig = {};
         settings.forEach((setting) => {
-            formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
+            if (setting === 'email')
+                formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting), Validators.email);
+            else formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
         });
-
         this.settingsForm = new FormGroup(formGroupConfig, {updateOn: 'change'});
         this.initLocaleMultiselect();
     }
@@ -142,5 +143,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
             return this.canDeactivateSubject;
         }
         return true;
+    }
+
+    get email() {
+        return this.settingsForm.get('email');
     }
 }

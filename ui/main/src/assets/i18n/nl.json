@@ -326,7 +326,12 @@
     "emailToPlainText": "De e-mails versturen in platte tekst",
     "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
     "email": "Email",
-    "settingsSaved": "Instellingen bewaard"
+    "settingsSaved": "Instellingen bewaard",
+    "input": {
+      "errors": {
+        "invalidEmail": "Ongeldige e-mail"
+      }
+    }
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",

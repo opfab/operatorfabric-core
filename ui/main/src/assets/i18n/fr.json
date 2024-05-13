@@ -326,7 +326,12 @@
     "emailToPlainText": "Envoi des mails en texte brut",
     "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
     "email": "Email",
-    "settingsSaved": "Paramètres sauvegardés"
+    "settingsSaved": "Paramètres sauvegardés",
+    "input": {
+      "errors": {
+        "invalidEmail": "Email invalide"
+      }
+    }
   },
   "archive": {
     "cardLoadingInProgress":"Chargement de la carte...",
