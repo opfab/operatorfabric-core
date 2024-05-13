@@ -326,7 +326,12 @@
     "emailToPlainText": "Send emails in plain text",
     "sendDailyEmail": "Send daily email to recap the cards of the day",
     "email": "Email",
-    "settingsSaved": "Settings saved"
+    "settingsSaved": "Settings saved",
+    "input": {
+      "errors": {
+        "invalidEmail": "Invalid email"
+      }
+    }
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",

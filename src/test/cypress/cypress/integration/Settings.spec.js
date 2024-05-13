@@ -23,11 +23,21 @@ describe('Settings', function () {
 
     it('Should proposed to save settings ', () => {
         opfab.loginWithUser('operator1_fr');
-
+        checkEmailValidation();
         checkCancelNavigation();
         checkExitWithoutSaving();
         checkAcceptSaving();
     });
+
+
+    function checkEmailValidation() {
+        opfab.navigateToSettings();
+        cy.get('#opfab-settings-btn-save').should('be.enabled')
+        cy.get('#opfab-setting-input-email').type('test');
+        cy.get('#opfab-settings-btn-save').should('be.disabled')
+        cy.get('#opfab-setting-input-email').type('@domain');
+        cy.get('#opfab-settings-btn-save').should('be.enabled')
+    }
 
     function checkCancelNavigation() {
         opfab.navigateToSettings();

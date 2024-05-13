@@ -136,7 +136,10 @@
     <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('email')">
       <div class="opfab-input">
         <label for="opfab-setting-email" translate>settings.email</label>
-        <input id="opfab-setting-input-email" type="text" formControlName="email" autocomplete="off">
+        <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off">
+      </div>
+      <div *ngIf="email.invalid" class="row alert alert-danger">
+        <div *ngIf="email.errors.email" translate>settings.input.errors.invalidEmail</div>
       </div>
     </div>
     <div class="opfab-settings-item" id="opfab-setting-input-remoteLoggingEnabled"
@@ -153,7 +156,7 @@
 <br />
 
 <div style="text-align: center;width:100%">
-  <button id="opfab-settings-btn-save" type="button" class="opfab-btn"
+  <button id="opfab-settings-btn-save" type="button" class="opfab-btn" [disabled]="!settingsForm.valid"
     (click)='saveSettings()' style="text-align: center;min-width: 243px;"
     translate>shared.confirmSettings</button>
 </div>
