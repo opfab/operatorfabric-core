@@ -28,7 +28,7 @@
     "jwt-decode": "4.0.0",
     "mongodb": "6.6.1",
     "nodemailer": "6.9.13",
-    "quill": "2.0.1",
+    "quill": "2.0.2",
     "winston": "3.13.0",
     "winston-daily-rotate-file": "5.0.0"
   },
