@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2023-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -23,9 +23,8 @@
         <div class="container">
           <div>
 
-            <div *ngIf="!row" class="opfab-input opfab-edit-row">
-              <label for="opfab-id" translate>admin.input.id.label</label>
-              <of-multi-select 
+            <div *ngIf="!row" class="opfab-edit-row">
+              <of-multi-select
               id="opfab-entityId"
               multiSelectId="entityId"
               [parentForm]="entityForm"
