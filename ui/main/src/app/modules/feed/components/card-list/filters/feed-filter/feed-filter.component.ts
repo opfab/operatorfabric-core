@@ -84,7 +84,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
     private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService) {
+    constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
@@ -241,7 +241,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.stateMultiSelect.options = [];
         if (this.selectedProcess?.length > 0) {
             const selected = this.processList.find((process) => process.id === this.selectedProcess);
-            const stateOptions = this.processStatesDropdownListService.getStatesMultiSelectOptionsPerSingleProcess(
+            const stateOptions = ProcessStatesMultiSelectOptionsService.getStatesMultiSelectOptionsPerSingleProcess(
                 selected,
                 false,
                 true

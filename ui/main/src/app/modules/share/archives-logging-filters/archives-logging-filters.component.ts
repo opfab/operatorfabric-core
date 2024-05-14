@@ -131,10 +131,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     defaultMinPublishDateStringFormat: string;
 
-    constructor(
-        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
-        private changeDetector: ChangeDetectorRef
-    ) {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UserService.isCurrentUserAdmin() ||
             UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
@@ -184,24 +181,24 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.clearMultiFilters();
 
         this.statesMultiSelectOptionsPerProcesses =
-            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(
+            ProcessStatesMultiSelectOptionsService.getStatesMultiSelectOptionsPerProcess(
                 this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards,
                 this.hideChildStates
             );
 
         this.processesWithoutProcessGroupMultiSelectOptions =
-            this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
+            ProcessStatesMultiSelectOptionsService.getProcessesWithoutProcessGroupMultiSelectOptions(
                 this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards,
                 this.visibleProcessesId
             );
 
         this.processMultiSelectOptionsPerProcessGroups =
-            this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
+            ProcessStatesMultiSelectOptionsService.getProcessesMultiSelectOptionsPerProcessGroup(
                 this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards,
                 this.visibleProcessesId
             );
 
-        this.processGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessGroupsMultiSelectOptions(
+        this.processGroupMultiSelectOptions = ProcessStatesMultiSelectOptionsService.getProcessGroupsMultiSelectOptions(
             this.processesWithoutProcessGroupMultiSelectOptions,
             this.processMultiSelectOptionsPerProcessGroups
         );
