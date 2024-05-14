@@ -49,16 +49,45 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
             sortable: false,
             filter: 'agTextColumnFilter',
             filterParams: {
-                valueGetter: (params) => {
+                textMatcher: (params) => {
+                    let response = false;
+
+                    if (params.filterOption === 'blank') return params.data.stateRights.length === 0;
+                    if (params.filterOption === 'notblank') return params.data.stateRights.length > 0;
+
                     const currentProcessDef = this.processesDefinition.filter(
                         (processDef) => processDef.id === params.data.process
                     )[0];
-                    let text = '';
-                    params.data.stateRights.forEach((stateRight) => {
-                        if (currentProcessDef.states.get(stateRight.state))
-                            text += currentProcessDef.states.get(stateRight.state).name + ' ';
-                    });
-                    return text;
+                    const stateNames = [];
+                    for (const stateRight of params.data.stateRights) {
+                        if (currentProcessDef.states.get(stateRight.state)) {
+                            const stateName = currentProcessDef.states.get(stateRight.state).name.toLocaleLowerCase();
+                            stateNames.push(stateName);
+                            switch (params.filterOption) {
+                                case 'equals':
+                                    response = Utilities.compareObj(stateName, params.filterText) === 0;
+                                    break;
+                                case 'notEqual':
+                                    response = Utilities.compareObj(stateName, params.filterText) !== 0;
+                                    break;
+                                case 'contains':
+                                    response = stateName.indexOf(params.filterText) >= 0;
+                                    break;
+                                case 'startsWith':
+                                    response = Utilities.removeEmojis(stateName).startsWith(params.filterText);
+                                    break;
+                                case 'endsWith':
+                                    response = Utilities.removeEmojis(stateName).endsWith(params.filterText);
+                                    break;
+                            }
+                            if (response) return true;
+                        }
+                    }
+                    if (params.filterOption === 'notContains') {
+                        const matchingStates = stateNames.filter((name) => name.indexOf(params.filterText) >= 0);
+                        response = matchingStates.length === 0;
+                    }
+                    return response;
                 }
             },
             wrapText: true,

@@ -45,7 +45,7 @@ export class Utilities {
         return 0;
     }
 
-    private static removeEmojis(str: string): string {
+    public static removeEmojis(str: string): string {
         // regex to find all emojis (see https://www.regextester.com/106421 )
         let temp = str.replace(
             /\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/g,
