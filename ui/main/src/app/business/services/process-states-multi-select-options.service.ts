@@ -7,22 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {Process} from '@ofModel/processes.model';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 /** This class contains functions to get the list of process and states for filters in UI */
 
-@Injectable({
-    providedIn: 'root'
-})
 export class ProcessStatesMultiSelectOptionsService {
-    constructor(private translate: TranslateService) {}
+    private static translationService: TranslationService;
 
-    getStatesMultiSelectOptionsPerProcess(
+    public static init(translationService: TranslationService) {
+        this.translationService = translationService;
+    }
+
+    static getStatesMultiSelectOptionsPerProcess(
         isAdminModeAndUserHasRightToSeeAllStates: boolean,
         hideChildStates: boolean
     ): any[] {
@@ -39,7 +39,7 @@ export class ProcessStatesMultiSelectOptionsService {
         return statesMultiSelectOptionsPerProcess;
     }
 
-    getStatesMultiSelectOptionsPerSingleProcess(
+    static getStatesMultiSelectOptionsPerSingleProcess(
         process: Process,
         isAdminModeAndUserHasRightToSeeAllStates: boolean,
         hideChildStates: boolean
@@ -61,7 +61,7 @@ export class ProcessStatesMultiSelectOptionsService {
         return stateOptions;
     }
 
-    private doesStateHaveToBeDisplayedInFilters(
+    private static doesStateHaveToBeDisplayedInFilters(
         hideChildStates: boolean,
         isOnlyAChildState: boolean,
         processId: string,
@@ -75,7 +75,7 @@ export class ProcessStatesMultiSelectOptionsService {
         );
     }
 
-    getProcessesWithoutProcessGroupMultiSelectOptions(
+    static getProcessesWithoutProcessGroupMultiSelectOptions(
         isAdminModeAndUserHasRightToSeeAllStates: boolean,
         processesFilter?: string[]
     ): any[] {
@@ -88,7 +88,7 @@ export class ProcessStatesMultiSelectOptionsService {
         return processesWithoutProcessGroupMultiSelectOptions;
     }
 
-    getProcessesMultiSelectOptionsPerProcessGroup(
+    static getProcessesMultiSelectOptionsPerProcessGroup(
         isAdminModeAndUserHasRightToSeeAllStates: boolean,
         processesFilter?: string[]
     ): Map<string, any[]> {
@@ -113,7 +113,7 @@ export class ProcessStatesMultiSelectOptionsService {
         return processMultiSelectOptionsPerProcessGroups;
     }
 
-    getProcessGroupsMultiSelectOptions(
+    static getProcessGroupsMultiSelectOptions(
         processesWithoutProcessGroupMultiSelectOptions: any[],
         processMultiSelectOptionsPerProcessGroups: Map<string, any[]>
     ): any[] {
@@ -122,7 +122,7 @@ export class ProcessStatesMultiSelectOptionsService {
 
         if (processesWithoutProcessGroupMultiSelectOptions.length > 0)
             processGroupsMultiSelectOptions.push(
-                new MultiSelectOption('--', this.translate.instant('processGroup.defaultLabel'))
+                new MultiSelectOption('--', this.translationService.getTranslation('processGroup.defaultLabel'))
             );
 
         const processGroupIds = Array.from(processMultiSelectOptionsPerProcessGroups.keys());
