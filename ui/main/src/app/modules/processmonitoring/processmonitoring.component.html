@@ -87,7 +87,7 @@
         
       <div class="opfab-vertical-bar"></div>
       <div style="margin-left:40px;width:230px;min-width:230px;margin-bottom:30px" [formGroup]="processMonitoringForm">
-        <div class="nopaddingrow opfab-input" style="margin-top: 30px; margin-bottom: 54px;">
+        <div class="opfab-input" style="margin-top: 30px; margin-bottom: 54px;">
           <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
           <input
                   type="datetime-local"
@@ -96,7 +96,7 @@
                   (change)="onDateTimeChange()"
                   [max]="activeMaxDate">
         </div>
-        <div class="nopaddingrow opfab-input">
+        <div class="opfab-input">
           <label for="opfab-active-to" translate>shared.filters.activeTo</label>
           <input
                   type="datetime-local"

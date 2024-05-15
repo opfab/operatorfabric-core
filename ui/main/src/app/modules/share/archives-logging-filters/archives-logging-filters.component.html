@@ -151,7 +151,7 @@
                 [formGroup]="this.parentForm"
                 *ngIf="displayPublishDateFilter"
                 style="width: 210px; min-width: 210px">
-                <div class="nopaddingrow opfab-input" style="margin-top: 28px; margin-bottom: 54px">
+                <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px">
                     <label for="opfab-publish-date-from" translate>shared.filters.publishDateFrom</label>
                     <input
                         type="datetime-local"
@@ -160,7 +160,7 @@
                         formControlName="publishDateFrom"
                         [max]="publishMaxDate" />
                 </div>
-                <div class="nopaddingrow opfab-input">
+                <div class="opfab-input">
                     <label for="opfab-publish-date-to" translate>shared.filters.publishDateTo</label>
                     <input
                         type="datetime-local"
@@ -173,7 +173,7 @@
 
             <div class="opfab-vertical-bar"></div>
             <div style="margin-left: 40px; width: 210px; min-width: 210px" [formGroup]="this.parentForm">
-                <div class="nopaddingrow opfab-input" style="margin-top: 28px; margin-bottom: 54px">
+                <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px">
                     <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
                     <input
                         type="datetime-local"
@@ -182,7 +182,7 @@
                         formControlName="activeFrom"
                         [max]="activeMaxDate" />
                 </div>
-                <div class="nopaddingrow opfab-input">
+                <div class="opfab-input">
                     <label for="opfab-active-to" translate>shared.filters.activeTo</label>
                     <input
                         type="datetime-local"
