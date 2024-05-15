@@ -175,5 +175,6 @@
         ]
       }
     }
-  }
+  },
+  "customJsToLoad": ["http://localhost:2002/externalJs/example.js"]
 }

@@ -138,6 +138,7 @@ services:
     volumes:
       - "./ui-config:/usr/share/nginx/html/config"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "./externalJs:/usr/share/nginx/html/externalJs"
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
