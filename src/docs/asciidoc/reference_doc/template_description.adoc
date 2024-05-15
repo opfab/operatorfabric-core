@@ -777,3 +777,8 @@ To show the rich message in an HTML element you can call the `opfab.richTextEdit
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
 The version of chartjs integrated in OperatorFabric is v3.7.1.
+
+== Custom javascript files
+
+It is possibile to configure Opfab to load custom javascript files at startup. This allows to share common functions and business logic between templates.
+The list of URLs of javascript files to be loaded can be configured using `customJsToLoad` parameter in `web-ui.json` file.

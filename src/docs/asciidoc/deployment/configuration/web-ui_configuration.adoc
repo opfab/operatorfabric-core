@@ -181,6 +181,7 @@ a|authentication mode, available options:
 
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 
+|customJsToLoad||no|List of URLs of javascript files to be loaded at startup
 
 |===
 

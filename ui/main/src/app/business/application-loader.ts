@@ -120,6 +120,7 @@ export class ApplicationLoader {
         this.initServices();
         loadBuildInTemplates();
         this.initOpfabAPI();
+        await this.loadCustomScripts();
         await this.waitForStreamInitDone();
         this.goToEntryPage();
         this.loadingInProgress = false;
@@ -304,6 +305,17 @@ export class ApplicationLoader {
         if (RouterService.getCurrentRoute() === '/') {
             const defaultEntryPage = ConfigService.getConfigValue('defaultEntryPage', 'feed');
             RouterService.navigateTo(defaultEntryPage);
+        }
+    }
+
+    private async loadCustomScripts() {
+        const customScripts = ConfigService.getConfigValue('customJsToLoad');
+        if (customScripts) {
+            for (const script of customScripts) {
+                await import(/* webpackIgnore: true */ script).catch((err) =>
+                    logger.error('Error loading custom script ' + script + ' : ' + err)
+                );
+            }
         }
     }
 }
