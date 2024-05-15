@@ -19,12 +19,12 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
     <div id="opfab-useractionlogs-filters"
         style="display: flex; padding-left: 5%; background-color: var(--opfab-bgcolor-darker)">
         <div style="display: flex; margin-top: 38px; margin-bottom: 38px">
-            <div style="min-width: 200px">
+            <div style="width: 225px">
                 <of-multi-select id="opfab-login-filter" multiSelectId="login" [parentForm]="this.userActionLogsForm"
                     [config]="loginMultiSelectConfig" [options]="this.logins" [selectedOptions]="loginsSelected">
                 </of-multi-select>
             </div>
-            <div style="min-width: 200px; margin-left: 10px">
+            <div style="width: 225px; margin-left: 10px">
                 <of-multi-select id="opfab-action-filter" multiSelectId="action" [parentForm]="this.userActionLogsForm"
                     [config]="actionsMultiSelectConfig" [options]="actions" [selectedOptions]="actionsSelected">
                 </of-multi-select>
@@ -32,14 +32,14 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
         </div>
 
         <div style="display: flex; margin-top: 39px" [formGroup]="this.userActionLogsForm">
-            <div class="opfab-input" style="margin-left: 10px">
+            <div class="opfab-input opfab-useractionlogs-datepicker">
                 <label for="opfab-date-from" translate>useractionlogs.filters.dateFrom</label>
                 <input
                         type="datetime-local"
                         id="opfab-date-from"
                         formControlName="dateFrom">
             </div>
-            <div class="opfab-input" style="margin-left: 10px">
+            <div class="opfab-input opfab-useractionlogs-datepicker">
                 <label for="opfab-date-to" translate>useractionlogs.filters.dateTo</label>
                 <input
                         type="datetime-local"
