@@ -13,6 +13,8 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
+import {Subject, firstValueFrom, takeUntil} from 'rxjs';
+import {ModalService} from 'app/business/services/modal.service';
 
 @Component({
     selector: 'of-activityarea',
@@ -35,6 +37,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
 
+    private canDeactivateSubject = new Subject<boolean>();
+    private ngUnsubscribe$ = new Subject<void>();
+
     constructor(private modalService: NgbModal) {}
 
     ngOnInit() {
@@ -43,6 +48,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             this.activityAreaPage = page;
             this.initForm();
             this.isScreenLoaded = true;
+            this.listenToFormChanges();
         });
     }
 
@@ -57,30 +63,35 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                 }
             });
         });
-        this.activityAreaForm = new FormGroup(lines);
+        this.activityAreaForm = new FormGroup(lines, {updateOn: 'change'});
     }
 
-    confirmSaveSettings() {
+    private listenToFormChanges() {
+        Object.keys(this.activityAreaForm.controls).forEach((key) => {
+            this.activityAreaForm
+                .get(key)
+                .valueChanges.pipe(takeUntil(this.ngUnsubscribe$))
+                .subscribe((value) => {
+                    this.activityAreaView.setEntityConnected(key, value);
+                });
+        });
+    }
+
+    async confirmSaveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
         if (this.confirmationPopup) this.confirmationPopup.close();
 
-        for (const entityId of Object.keys(this.activityAreaForm.controls)) {
-            const control = this.activityAreaForm.get(entityId);
-            this.activityAreaView.setEntityConnected(entityId, control.value);
+        const resp = await firstValueFrom(this.activityAreaView.saveActivityArea());
+        this.saveSettingsInProgress = false;
+        this.messageAfterSavingSettings = '';
+        if (!resp) {
+            this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
+            this.displaySendResultError = true;
         }
-
-        this.activityAreaView.saveActivityArea().subscribe((resp) => {
-            this.saveSettingsInProgress = false;
-            this.messageAfterSavingSettings = '';
-            if (!resp) {
-                this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
-                this.displaySendResultError = true;
-            }
-            if (this.confirmationPopup) this.confirmationPopup.close();
-            this.confirm.emit();
-        });
+        if (this.confirmationPopup) this.confirmationPopup.close();
+        this.confirm.emit();
     }
 
     doNotConfirmSaveSettings() {
@@ -101,6 +112,27 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     isEllipsisActive(id: string): boolean {
         const element = document.getElementById(id);
         return element.offsetWidth < element.scrollWidth;
+    }
+
+    canDeactivate() {
+        if (this.activityAreaView.doesActivityAreasNeedToBeSaved()) {
+            ModalService.openSaveBeforeExitModal().then(async (result) => {
+                switch (result) {
+                    case 'save':
+                        await this.confirmSaveSettings();
+                        this.canDeactivateSubject.next(true);
+                        break;
+                    case 'cancel':
+                        this.canDeactivateSubject.next(false);
+                        break;
+                    default:
+                        this.canDeactivateSubject.next(true);
+                        break;
+                }
+            });
+            return this.canDeactivateSubject;
+        }
+        return true;
     }
 
     ngOnDestroy() {

@@ -18,7 +18,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {firstValueFrom} from 'rxjs';
 
 export class SettingsView {
-    newSettings: any = {};
+    private newSettings: any = {};
 
     public isSettingVisible(setting: string): boolean {
         return !ConfigService.getConfigValue('settingsScreen.hiddenSettings', []).includes(setting);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 import {OpfabCommands} from './opfabCommands';
 
 export class ActivityAreaCommands extends OpfabCommands {
-
     constructor() {
         super();
         super.init('ACTIVITY AREA');
@@ -22,15 +21,14 @@ export class ActivityAreaCommands extends OpfabCommands {
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
         cy.wait('@saved'); // wait for settings to be saved
-        cy.wait('@reloadPerimeter'); // wait for user perimeter to be updated 
-    
-        // pause the cypress code  to let the time to update the perimeter
-        // this is to unsure javascript engine  launch the user perimeter processing before the next cypress instruction 
-        cy.wait(100); 
-    }
+        cy.wait('@reloadPerimeter'); // wait for user perimeter to be updated
+
+        // pause the cypress code to let the time to update the perimeter
+        // this is to ensure the javascript engine launches the processing of the user perimeter before the next cypress instruction
+        cy.wait(100);
+    };
 
     clickOnCheckbox = function (entityName) {
         cy.get('.opfab-checkbox').contains(entityName).click();
-    }
+    };
 }
-

@@ -26,6 +26,7 @@ export class ActivityAreaView {
     private activityAreaClusters: Map<string, ActivityAreaEntityCluster> = new Map<string, ActivityAreaEntityCluster>();
     private currentUserLogin;
     private intervalForConnectedUsersUpdate;
+    private newActivityAreas: any = new Map<string, boolean>();
 
     constructor() {
         this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
@@ -133,38 +134,51 @@ export class ActivityAreaView {
     }
 
     public setEntityConnected(entityId: string, isConnected: boolean) {
-        this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
-            cluster.lines.forEach((line) => {
-                if (line.entityId === entityId) {
-                    line.isUserConnected = isConnected;
-                }
+        if (this.newActivityAreas.has(entityId)) {
+            this.newActivityAreas.delete(entityId);
+        } else {
+            this.newActivityAreas.set(entityId, isConnected);
+        }
+    }
+
+    private applyConnectionUpdateToPage(): void {
+        for (const [entityId, isConnected] of this.newActivityAreas) {
+            this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+                cluster.lines.forEach((line) => {
+                    if (line.entityId === entityId) {
+                        line.isUserConnected = isConnected;
+                    }
+                });
             });
-        });
+        }
     }
 
     public saveActivityArea(): Observable<boolean> {
         const entitiesDisconnected = new Array();
-        this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
-            cluster.lines.forEach((line) => {
-                if (line.isUserConnected) return;
-                entitiesDisconnected.push(line.entityId);
+        if (this.doesActivityAreasNeedToBeSaved) {
+            this.applyConnectionUpdateToPage();
+            this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+                cluster.lines.forEach((line) => {
+                    if (!line.isUserConnected) entitiesDisconnected.push(line.entityId);
+                });
             });
-        });
-        return SettingsService.patchUserSettings({
-            login: this.currentUserLogin,
-            entitiesDisconnected: entitiesDisconnected
-        }).pipe(
-            map((response) => {
-                if (response.status === ServerResponseStatus.OK) {
-                    OpfabStore.getLightCardStore().removeAllLightCards();
-                    UserService.loadUserWithPerimetersData().subscribe(() => {
-                        // needed to trigger change in the list of entities on the top right corner
-                        ApplicationEventsService.setUserConfigChange();
-                    });
-                    return true;
-                } else return false;
-            })
-        );
+            this.newActivityAreas = new Map<string, boolean>();
+            return SettingsService.patchUserSettings({
+                login: this.currentUserLogin,
+                entitiesDisconnected: entitiesDisconnected
+            }).pipe(
+                map((response) => {
+                    if (response.status === ServerResponseStatus.OK) {
+                        OpfabStore.getLightCardStore().removeAllLightCards();
+                        UserService.loadUserWithPerimetersData().subscribe(() => {
+                            // needed to trigger change in the list of entities on the top right corner
+                            ApplicationEventsService.setUserConfigChange();
+                        });
+                        return true;
+                    } else return false;
+                })
+            );
+        }
     }
 
     public getActivityAreaPage(): Observable<ActivityAreaPage> {
@@ -173,5 +187,9 @@ export class ActivityAreaView {
 
     public stopUpdateRegularyConnectedUser() {
         clearInterval(this.intervalForConnectedUsersUpdate);
+    }
+
+    public doesActivityAreasNeedToBeSaved(): boolean {
+        return this.newActivityAreas.size > 0;
     }
 }
