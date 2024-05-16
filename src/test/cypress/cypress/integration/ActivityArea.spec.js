@@ -7,13 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {ActivityAreaCommands} from "../support/activityAreaCommands"
-import {ScriptCommands} from "../support/scriptCommands";
-
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ActivityAreaCommands} from '../support/activityAreaCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('ActivityAreaPage', () => {
-
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
@@ -26,16 +24,19 @@ describe('ActivityAreaPage', () => {
         script.send6TestCards();
     });
 
-
     it('Connection of operator4_fr, disconnection from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR and check of feed and archives pages', () => {
         opfab.loginWithUser('operator4_fr');
 
-
-
-        // operator4_fr is connected to all his entities, he should receive 6 cards in the feed
+        // operator4_fr is connected to all of his entities, he should receive 6 cards in the feed
         cy.get('of-light-card').should('have.length', 6);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚠️ Network Contingencies ⚠️'.toUpperCase());
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Electricity consumption forecast'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(0)
+            .find('.card-title')
+            .should('have.text', '⚠️ Network Contingencies ⚠️'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(1)
+            .find('.card-title')
+            .should('have.text', 'Electricity consumption forecast'.toUpperCase());
         cy.get('of-light-card').eq(2).find('.card-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
         cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Process state (calcul)'.toUpperCase());
         cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Data quality'.toUpperCase());
@@ -95,7 +96,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        script.setPropertyInConf('selectActivityAreaOnLogin ',true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', true);
 
         cy.visit('');
 
@@ -186,7 +187,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        script.setPropertyInConf('selectActivityAreaOnLogin ',false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
@@ -215,6 +216,5 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-no-activityarea').should('exist');
         cy.get('#opfab-no-activityarea').contains('No activity area available').should('exist');
         cy.get('#opfab-activity-areas').should('not.exist');
-        
     });
 });

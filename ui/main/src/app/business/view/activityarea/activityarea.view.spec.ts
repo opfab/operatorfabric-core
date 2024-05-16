@@ -338,6 +338,25 @@ describe('ActivityAreaView', () => {
         expect(UserService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
+    it('GIVEN a user WHEN set entity connected THEN Activity Area needs to be saved ', async () => {
+        mockUserConfig(['ENTITY1'], []);
+        initActivityAreaView();
+        await firstValueFrom(activityAreaView.getActivityAreaPage());
+        activityAreaView.setEntityConnected('ENTITY1', true);
+        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeTruthy;
+    });
+
+    it('GIVEN a user WHEN set entity connected an even number of times THEN Activity Area does not need to be saved ', async () => {
+        mockUserConfig(['ENTITY1'], []);
+        initActivityAreaView();
+        await firstValueFrom(activityAreaView.getActivityAreaPage());
+        activityAreaView.setEntityConnected('ENTITY1', true);
+        activityAreaView.setEntityConnected('ENTITY1', false);
+        activityAreaView.setEntityConnected('ENTITY1', true);
+        activityAreaView.setEntityConnected('ENTITY1', false);
+        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeFalsy;
+    });
+
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {
         const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
