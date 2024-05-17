@@ -14,11 +14,14 @@ declare const opfab;
 export class QuestionCardTemplateView {
     showInputField: Function;
 
-    public getQuestion() {
-        let question = opfab.currentCard.getCard()?.data?.question;
-        if (question) question = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(question));
-        else question = '';
-        return question;
+    public getRichQuestion() {
+        let richQuestion = opfab.currentCard.getCard()?.data?.richQuestion;
+        if (richQuestion) {
+            richQuestion = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(richQuestion));
+        } else {
+            richQuestion = '';
+        }
+        return richQuestion;
     }
 
     public setFunctionToGetResponseInput(getResponseInput: Function) {

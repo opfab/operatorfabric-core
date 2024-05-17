@@ -573,7 +573,7 @@ describe('Response card tests', function () {
         usercard.selectProcess('Message or question');
         usercard.selectState('Question', 1);
         cy.get('#opfab-question-label').should('have.text', 'QUESTION');
-        cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
+        cy.get('#usercard_question_input').find('div').eq(0).type('question');
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
         usercard.selectRecipient('Control Center FR South');

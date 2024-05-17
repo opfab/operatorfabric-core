@@ -10,13 +10,13 @@
 declare const opfab;
 
 export class QuestionUserCardTemplateView {
-    public getSpecificCardInformation(question: string) {
+    public getSpecificCardInformation(quillEditor: any) {
         const card = {
             summary: {key: 'question.summary'},
             title: {key: 'question.title'},
-            data: {question: question}
+            data: {richQuestion: quillEditor.getContents()}
         };
-        if (question.length < 1)
+        if (quillEditor.isEmpty())
             return {
                 valid: false,
                 errorMsg: opfab.utils.getTranslation('builtInTemplate.questionUserCard.noQuestionError')
@@ -27,12 +27,14 @@ export class QuestionUserCardTemplateView {
         };
     }
 
-    public getQuestion() {
+    public getRichQuestion() {
         let question = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
-            const questionField = opfab.currentCard.getCard()?.data?.question;
-            if (questionField) question = questionField;
+            const questionField = opfab.currentCard.getCard()?.data?.richQuestion;
+            if (questionField) {
+                question = opfab.utils.escapeHtml(questionField);
+            }
         }
-        return opfab.utils.escapeHtml(question);
+        return question;
     }
 }

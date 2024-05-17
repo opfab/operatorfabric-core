@@ -22,13 +22,15 @@ export class QuestionUserCardTemplate extends BaseUserCardTemplate {
         <br/>
         <div class="opfab-textarea">
             <label id="opfab-question-label">${opfab.utils.getTranslation('builtInTemplate.questionUserCard.textareaLabel')}</label>
-            <textarea id="usercard_question_input" rows="5" 
-                style="width:100%">${this.view.getQuestion()}</textarea>
+            <opfab-richtext-editor id="usercard_question_input" rows="5" 
+                style="width:100%">${this.view.getRichQuestion()}</opfab-richtext-editor>
         </div>
         `;
     }
+
     getSpecificCardInformation() {
-        const message = (<HTMLInputElement>document.getElementById('usercard_question_input')).value;
-        return this.view.getSpecificCardInformation(message);
+        const quillEditor = <HTMLInputElement>document.getElementById('usercard_question_input');
+
+        return this.view.getSpecificCardInformation(quillEditor);
     }
 }

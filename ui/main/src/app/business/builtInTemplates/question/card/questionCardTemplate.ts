@@ -24,9 +24,11 @@ export class QuestionCardTemplate extends HTMLElement {
     }
 
     private setHTMLContent() {
+        const richQuestion = opfab.utils.escapeHtml(opfab.currentCard.getCard()?.data?.richQuestion);
+
         this.innerHTML = `
         <br/>
-        <h2 style="text-align: justify;">${this.questionCardTemplateView.getQuestion()}</h2>
+        <h2 id="richQuestion" style="text-align: justify;">${richQuestion}</h2>
         <div id="template_response_input_component">
             <br/>
             <div class="opfab-input">
@@ -38,6 +40,7 @@ export class QuestionCardTemplate extends HTMLElement {
         <br/>   
         <div id="template_responses"></div>
         `;
+        opfab.richTextEditor.showRichMessage(document.getElementById('richQuestion'));
     }
 
     private setFunctionToGetUserResponseInput() {
