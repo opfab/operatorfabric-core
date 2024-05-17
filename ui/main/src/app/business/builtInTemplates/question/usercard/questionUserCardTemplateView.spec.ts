@@ -11,6 +11,22 @@ import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
 
+class QuillEditorMock {
+    contents: string;
+
+    setContents(contents: string) {
+        this.contents = contents;
+    }
+
+    getContents() {
+        return this.contents;
+    }
+
+    isEmpty() {
+        return !this.contents || this.contents.length === 0;
+    }
+}
+
 describe('Question UserCard template', () => {
     beforeEach(() => {
         const translationService = new TranslationServiceMock();
@@ -23,41 +39,45 @@ describe('Question UserCard template', () => {
     it('GIVEN an existing card WHEN user edit card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
-        expect(view.getQuestion()).toEqual('My question');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        expect(view.getRichQuestion()).toEqual('My question');
     });
 
     it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {question: 'My question <script>'}};
-        expect(view.getQuestion()).toEqual('My question &lt;script&gt;');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question <script>'}};
+        expect(view.getRichQuestion()).toEqual('My question &lt;script&gt;');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
-        expect(view.getQuestion()).toEqual('My question');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        expect(view.getRichQuestion()).toEqual('My question');
     });
 
     it('GIVEN a user WHEN create card THEN question is empty', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
-        expect(view.getQuestion()).toEqual('');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        expect(view.getRichQuestion()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card with question THEN card is provided with question', () => {
         const view = new QuestionUserCardTemplateView();
-        const specificCardInformation = view.getSpecificCardInformation('My question');
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents('My question');
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor);
+        expect(specificCardInformation.card.data.richQuestion).toEqual('My question');
         expect(specificCardInformation.valid).toEqual(true);
-        expect(specificCardInformation.card.data.question).toEqual('My question');
     });
 
     it('GIVEN a user WHEN create card with empty question THEN card is not valid with error message ', () => {
         const view = new QuestionUserCardTemplateView();
-        const specificCardInformation = view.getSpecificCardInformation('');
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents('');
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor);
         expect(specificCardInformation.valid).toEqual(false);
         expect(specificCardInformation.errorMsg).toEqual(
             'Translation (en) of builtInTemplate.questionUserCard.noQuestionError'

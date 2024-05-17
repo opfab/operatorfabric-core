@@ -30,18 +30,18 @@ describe('Question Card template', () => {
     });
 
     it('GIVEN a card WHEN get question THEN question is provided', () => {
-        OpfabAPIService.currentCard.card = {data: {question: 'My question'}};
-        expect(view.getQuestion()).toEqual('My question');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        expect(view.getRichQuestion()).toEqual('My question');
     });
 
     it('GIVEN a card WHEN get question with new line THEN question is provided with <br> tag', () => {
-        OpfabAPIService.currentCard.card = {data: {question: 'My question \n question'}};
-        expect(view.getQuestion()).toEqual('My question <br/> question');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question \n question'}};
+        expect(view.getRichQuestion()).toEqual('My question <br/> question');
     });
 
     it('GIVEN a card WHEN get question with an HTML tag THEN question is provided with the HTML tag escape', () => {
-        OpfabAPIService.currentCard.card = {data: {question: 'My question <script> question'}};
-        expect(view.getQuestion()).toEqual('My question &lt;script&gt; question');
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question <script> question'}};
+        expect(view.getRichQuestion()).toEqual('My question &lt;script&gt; question');
     });
 
     it('Given a card WHEN user is not allowed to answer THEN response input is hidden', () => {
