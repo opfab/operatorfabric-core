@@ -39,7 +39,7 @@
     "ag-grid-community": "31.3.1",
     "angular-oauth2-oidc": "17.0.2",
     "bootstrap": "5.3.3",
-    "chart.js": "4.4.2",
+    "chart.js": "4.4.3",
     "chartjs-adapter-date-fns": "3.0.0",
     "chartjs-plugin-datalabels": "2.2.0",
     "file-saver-es": "2.0.5",
