@@ -14,7 +14,6 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ConfigService} from 'app/business/services/config.service';
@@ -27,6 +26,7 @@ import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 
 @Component({
     selector: 'of-calendar',
@@ -229,10 +229,11 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     datesRangeChange(dateInfo) {
-        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-            start: dateInfo.view.activeStart.getTime(),
-            end: dateInfo.view.activeEnd.getTime()
-        });
+        RealtimeDomainService.setStartAndEndDomain(
+            dateInfo.view.activeStart.getTime(),
+            dateInfo.view.activeEnd.getTime(),
+            false
+        );
     }
 
     ngOnDestroy() {

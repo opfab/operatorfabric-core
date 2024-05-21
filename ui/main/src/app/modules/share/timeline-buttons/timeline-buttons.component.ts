@@ -10,12 +10,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import moment from 'moment';
-import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -23,13 +21,9 @@ import {OpfabStore} from 'app/business/store/opfabStore';
     styleUrls: ['./timeline-buttons.component.scss']
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
-    private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
-
     public hideTimeLine = false;
     public currentDomain;
     public currentDomainId: string;
-    private followClockTick: boolean;
-    private overlap = 0;
 
     public selectedButtonTitle: string;
     public buttonList;
@@ -44,12 +38,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public domainChange: EventEmitter<any> = new EventEmitter();
 
     private isDestroyed = false;
-
-    private filteredLightCardStore: FilteredLightCardsStore;
-
-    constructor() {
-        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-    }
 
     ngOnInit() {
         this.loadDomainConfiguration();
@@ -99,7 +87,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
-        const savedDomain = UserPreferencesService.getPreference('opfab.timeLine.domain');
+        const savedDomain = RealtimeDomainService.getDomainId();
 
         if (savedDomain) {
             const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
@@ -109,7 +97,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         }
 
         if (initialGraphConf) {
-            this.changeGraphConf(initialGraphConf);
+            this.changeGraphConf(initialGraphConf, false);
         }
     }
 
@@ -117,8 +105,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * Call when click on a zoom button
      * @param conf button clicked
      */
-    changeGraphConf(conf: any): void {
-        this.followClockTick = true;
+    changeGraphConf(conf: any, reset: boolean): void {
+        if (reset) RealtimeDomainService.unlockTimeline();
 
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
@@ -127,114 +115,17 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
-
-        this.setDefaultStartAndEndDomain();
-        UserPreferencesService.setPreference('opfab.timeLine.domain', this.currentDomainId);
+        RealtimeDomainService.setDomainId(this.currentDomainId, reset);
+        this.currentDomain = RealtimeDomainService.getCurrentDomain();
+        this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
+        this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
+        this.domainChange.emit(true);
     }
 
     selectZoomButton(buttonTitle) {
         this.buttonList.forEach((button) => {
             button.selected = button.buttonTitle === buttonTitle;
         });
-    }
-
-    setDefaultStartAndEndDomain() {
-        let startDomain;
-        let endDomain;
-        switch (this.currentDomainId) {
-            case 'TR': {
-                startDomain = this.getRealTimeStartDate();
-                endDomain = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
-                break;
-            }
-            case 'J': {
-                startDomain = moment().hours(0).minutes(0).second(0).millisecond(0);
-                endDomain = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
-                break;
-            }
-            case '7D': {
-                startDomain = moment().minutes(0).second(0).millisecond(0).subtract(12, 'hours');
-                // set position to a multiple of 4
-                for (let i = 0; i < 4; i++) {
-                    if ((startDomain.hours() - i) % 4 === 0) {
-                        startDomain.subtract(i, 'hours');
-                        break;
-                    }
-                }
-                endDomain = moment(startDomain).add(8, 'day');
-                break;
-            }
-            case 'W': {
-                startDomain = moment().startOf('week').minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('week').minutes(0).second(0).millisecond(0).add(1, 'week');
-                break;
-            }
-            case 'M': {
-                startDomain = moment().startOf('month').minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('month').hour(0).minutes(0).second(0).millisecond(0).add(1, 'month');
-                break;
-            }
-            case 'Y': {
-                startDomain = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).add(1, 'year');
-                break;
-            }
-        }
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
-    }
-
-    private getRealTimeStartDate() {
-        const currentMinutes = moment().minutes();
-        const roundedMinutes = Math.floor(currentMinutes / 15) * 15; // rounds minutes to previous quarter
-        return moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
-    }
-
-    /**
-     * apply new timeline domain
-     * feed state dispatch a change on filter, provide the new filter start and end
-     * @param startDomain new start of domain
-     * @param endDomain new end of domain
-     */
-    setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false): void {
-        if (this.currentDomainId === 'W') {
-            /*
-             * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
-             * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
-             * to a locale with monday as first day of week
-             */
-            const startOfWeek = moment(startDomain)
-                .add(2, 'day')
-                .startOf('week')
-                .minutes(0)
-                .second(0)
-                .millisecond(0)
-                .valueOf();
-            const endOfWeek = moment(startDomain)
-                .add(2, 'day')
-                .startOf('week')
-                .minutes(0)
-                .second(0)
-                .millisecond(0)
-                .add(1, 'week');
-            startDomain = startOfWeek.valueOf();
-            endDomain = endOfWeek.valueOf();
-        }
-
-        if (useOverlap) {
-            this.overlap = this.OVERLAP_DURATION_IN_MS;
-            startDomain = startDomain - this.overlap;
-        } else this.overlap = 0;
-
-        this.currentDomain = {startDate: startDomain, endDate: endDomain, overlap: this.overlap};
-        this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
-        this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
-
-        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-            start: startDomain,
-            end: endDomain,
-            domainId: this.currentDomainId
-        });
-        this.domainChange.emit(true);
     }
 
     getDateFormatting(value): string {
@@ -257,66 +148,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * select the movement applied on domain : forward or backward
-     * parse the conf object dedicated for movement, parse it two time when end property is present
-     * each object's keys add time precision on start or end of domain
-     * @param moveForward direction: add or subtract conf object
-     */
-    moveDomain(moveForward: boolean): void {
-        let startDomain = moment(this.currentDomain.startDate);
-        let endDomain = moment(this.currentDomain.endDate);
-
-        // Move from main visualisation, now domain stop to move
-        this.followClockTick = false;
-
-        if (moveForward) {
-            logger.info('Move domain forward', LogOption.REMOTE);
-            startDomain = this.goForward(startDomain.add(this.overlap, 'milliseconds'));
-            endDomain = this.goForward(endDomain);
-        } else {
-            logger.info('Move domain backward', LogOption.REMOTE);
-            startDomain = this.goBackward(startDomain.add(this.overlap, 'milliseconds'));
-            endDomain = this.goBackward(endDomain);
-        }
-
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
-    }
-
-    goForward(dateToMove: moment.Moment) {
-        switch (this.currentDomainId) {
-            case 'TR':
-                return dateToMove.add(2, 'hour');
-            case 'J':
-                return dateToMove.add(1, 'day');
-            case '7D':
-                return dateToMove.add(8, 'hour').startOf('day').add(1, 'day'); // the feed is not always at the beginning of the day
-            case 'W':
-                return dateToMove.add(7, 'day');
-            case 'M':
-                return dateToMove.add(1, 'month');
-            case 'Y':
-                return dateToMove.add(1, 'year');
-        }
-    }
-
-    goBackward(dateToMove: moment.Moment) {
-        switch (this.currentDomainId) {
-            case 'TR':
-                return dateToMove.subtract(2, 'hour');
-            case 'J':
-                return dateToMove.subtract(1, 'day');
-            case '7D':
-                return dateToMove.add(8, 'hour').startOf('day').subtract(1, 'day'); // the feed is not always at the beginning of the day
-            case 'W':
-                return dateToMove.subtract(7, 'day');
-            case 'M':
-                return dateToMove.subtract(1, 'month');
-            case 'Y':
-                return dateToMove.subtract(1, 'year');
-        }
-    }
-
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
         UserPreferencesService.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
@@ -333,11 +164,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
                     if (i !== 0) {
-                        this.changeGraphConf(this.buttonList[i - 1]);
+                        this.changeGraphConf(this.buttonList[i - 1], true);
                     }
                 } else {
                     if (i !== this.buttonList.length - 1) {
-                        this.changeGraphConf(this.buttonList[i + 1]);
+                        this.changeGraphConf(this.buttonList[i + 1], true);
                     }
                 }
                 return;
@@ -346,30 +177,34 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     isTimelineLocked(): boolean {
-        return !this.followClockTick;
+        return RealtimeDomainService.isTimelineLocked();
     }
 
     lockTimeline(): void {
-        logger.info('Lock timeline', LogOption.REMOTE);
-        this.followClockTick = false;
+        RealtimeDomainService.lockTimeline();
     }
 
     unlockTimeline(): void {
-        logger.info('Unlock timeline', LogOption.REMOTE);
-        this.followClockTick = true;
-
+        RealtimeDomainService.unlockTimeline();
         // Restore default domain when the user unlocks the timeline
-        this.setDefaultStartAndEndDomain();
+        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
+    }
+
+    moveDomain(moveForward: boolean): void {
+        this.currentDomain = RealtimeDomainService.moveDomain(moveForward);
+        this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
+        this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
+        this.domainChange.emit(true);
     }
 
     private shiftTimeLineIfNecessary() {
-        if (this.followClockTick) {
+        if (!RealtimeDomainService.isTimelineLocked()) {
             const currentDate = moment().valueOf();
 
             switch (this.currentDomainId) {
                 case 'TR':
                     if (currentDate > 150 * 60 * 1000 + this.currentDomain.startDate) {
-                        this.setDefaultStartAndEndDomain();
+                        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
                     }
                     break;
                 case 'J':
@@ -377,7 +212,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     break;
                 case '7D':
                     if (currentDate > 16 * 60 * 60 * 1000 + this.currentDomain.startDate) {
-                        this.setDefaultStartAndEndDomain();
+                        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
                     }
                     break;
                 case 'W':
@@ -410,7 +245,13 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 .second(0)
                 .millisecond(0)
                 .add(1, domainDuration);
-            this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), true);
+            this.currentDomain = RealtimeDomainService.setStartAndEndDomain(
+                startDomain.valueOf(),
+                endDomain.valueOf(),
+                true
+            );
+            this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
+            this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         }
     }
 
