@@ -16,7 +16,7 @@ import {TaskUserCardTemplate} from './task/usercard/taskUserCardTemplate';
 import {MessageOrQuestionListCardTemplate} from './message-or-question-list/card/message-or-question-listCardTemplate';
 import {MessageOrQuestionListUserCardTemplate} from './message-or-question-list/usercard/message-or-question-listUserCardTemplate';
 
-export const loadBuildInTemplates = () => {
+export const loadBuiltInTemplates = () => {
     customElements.define('opfab-message-card', MessageCardTemplate);
     customElements.define('opfab-message-usercard', MessageUserCardTemplate);
     customElements.define('opfab-question-card', QuestionCardTemplate);

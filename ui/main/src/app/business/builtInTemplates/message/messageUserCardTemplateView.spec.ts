@@ -80,7 +80,7 @@ describe('Message UserCard template', () => {
         const specficCardInformation = view.getSpecificCardInformation(quillEditor, messageTitle);
         expect(specficCardInformation.valid).toEqual(false);
         expect(specficCardInformation.errorMsg).toEqual(
-            'Translation (en) of buildInTemplate.messageUserCard.noMessageError'
+            'Translation (en) of builtInTemplate.messageUserCard.noMessageError'
         );
     });
 });

@@ -19,7 +19,7 @@ export class MessageUserCardTemplateView {
         if (quillEditor.isEmpty())
             return {
                 valid: false,
-                errorMsg: opfab.utils.getTranslation('buildInTemplate.messageUserCard.noMessageError')
+                errorMsg: opfab.utils.getTranslation('builtInTemplate.messageUserCard.noMessageError')
             };
         return {
             valid: true,

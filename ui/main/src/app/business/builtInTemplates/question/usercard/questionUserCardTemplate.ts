@@ -21,7 +21,7 @@ export class QuestionUserCardTemplate extends BaseUserCardTemplate {
         this.innerHTML = `
         <br/>
         <div class="opfab-textarea">
-            <label id="opfab-question-label">${opfab.utils.getTranslation('buildInTemplate.questionUserCard.textareaLabel')}</label>
+            <label id="opfab-question-label">${opfab.utils.getTranslation('builtInTemplate.questionUserCard.textareaLabel')}</label>
             <textarea id="usercard_question_input" rows="5" 
                 style="width:100%">${this.view.getQuestion()}</textarea>
         </div>

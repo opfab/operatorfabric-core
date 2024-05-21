@@ -14,7 +14,7 @@ import {RemoteLoggerService} from './services/logs/remote-logger.service';
 import {I18nService} from './services/translation/i18n.service';
 import {UserService} from './services/users/user.service';
 import {OpfabAPIService} from './services/opfabAPI.service';
-import {loadBuildInTemplates} from './buildInTemplates/templatesLoader';
+import {loadBuiltInTemplates} from './builtInTemplates/templatesLoader';
 import {GlobalStyleService} from './services/global-style.service';
 import {EntitiesService} from './services/users/entities.service';
 import {GroupsService} from './services/users/groups.service';
@@ -118,7 +118,7 @@ export class ApplicationLoader {
         GlobalStyleService.loadUserStyle();
         await this.setActivityArea();
         this.initServices();
-        loadBuildInTemplates();
+        loadBuiltInTemplates();
         this.initOpfabAPI();
         await this.loadCustomScripts();
         await this.waitForStreamInitDone();

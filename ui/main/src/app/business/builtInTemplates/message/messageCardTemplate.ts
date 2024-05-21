@@ -14,7 +14,7 @@ export class MessageCardTemplate extends HTMLElement {
         super();
 
         let messageHeader = this.getAttribute('message-header');
-        if (!messageHeader) messageHeader = opfab.utils.getTranslation('buildInTemplate.messageCard.message');
+        if (!messageHeader) messageHeader = opfab.utils.getTranslation('builtInTemplate.messageCard.message');
         const richMessage = opfab.utils.escapeHtml(opfab.currentCard.getCard()?.data?.richMessage);
 
         this.innerHTML = `

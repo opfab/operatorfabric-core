@@ -38,17 +38,17 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
 
         <div id="reponse">
             <div style="display:flex;margin:auto;width:500px">
-                <div style="margin:10px"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.answers')} : </div>
+                <div style="margin:10px"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.answers')} : </div>
                 <div style="margin:10px" id="yes_button">
                     <label class="opfab-radio-button">
-                        <span> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.yes')} </span>
+                        <span> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.yes')} </span>
                         <input type="radio" name="agreement" id="YES" value="YES" checked>
                         <span class="opfab-radio-button-checkmark"></span>
                     </label>
                 </div>
                 <div style="margin:10px" id="no_button">
                     <label class="opfab-radio-button">
-                        <span> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.no')} </span>
+                        <span> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.no')} </span>
                         <input type="radio" name="agreement" id="NO" value="NO">
                         <span class="opfab-radio-button-checkmark"></span>
                     </label>
@@ -56,7 +56,7 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
             </div>
 
             <div id="comment_area">
-                <div class="opfab-textarea" style="position:relative;">    <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.comment')} </label>
+                <div class="opfab-textarea" style="position:relative;">    <label> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.comment')} </label>
                     <textarea id="comment" name="comment"></textarea>
                 </div>
             </div>
@@ -84,19 +84,19 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
         this.messageOrQuestionListCardTemplateView.listenToResponses((responses) => {
             let html = '';
             if (responses?.forEach && responses.length > 0) {
-                html += `<center><h3> ${opfab.utils.getTranslation('buildInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
+                html += `<center><h3> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
                 html += '<div class="opfab-table">';
-                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.entityColumnLabel')} </th>`;
-                html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.responseColumnLabel')} </th>`;
-                html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.commentColumnLabel')} </th>`;
+                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.entityColumnLabel')} </th>`;
+                html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.responseColumnLabel')} </th>`;
+                html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.commentColumnLabel')} </th>`;
                 html += ' </tr>';
                 responses?.forEach((response) => {
                     html += '<tr>';
                     html += '<td>' + response.entityName + '</td>';
                     if (response.agreement)
-                        html += `<td> <span style="color:green"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.yes')} </span></td>`;
+                        html += `<td> <span style="color:green"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.yes')} </span></td>`;
                     else
-                        html += `<td> <span style="color:red"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.no')} </span></td>`;
+                        html += `<td> <span style="color:red"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.no')} </span></td>`;
                     html += '<td>' + response.comment + '</td> </tr>';
                 });
                 html += '</table> </div></center>';

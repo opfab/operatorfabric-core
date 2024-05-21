@@ -1,805 +1,804 @@
 {
-  "shared": {
-    "severity": {
-      "alarm": "Alarm",
-      "action": "Actie",
-      "compliant": "Conform",
-      "information": "Informatie"
-    },
-    "typeOfState": {
-      "typeOfState" : "PROCES STATUS",
-      "FINISHED": "AFGEROND",
-      "INPROGRESS": "WORDT UITGEVOERD",
-      "CANCELED": "GEANNULEERD"
-    },
-    "filters": {
-      "processGroup": "DIENST",
-      "process": "PROCES",
-      "state": "STATUS",
-      "tags": "LABELS",
-      "selectProcessGroupText": "Selecteer een Dienst",
-      "selectProcessText": "Selecteer een Proces",
-      "selectStateText": "Selecteer een Status",
-      "selectTagText": "Selecteer een Label",
-      "publishDateFrom": "PUBLICEREN VAN",
-      "publishDateTo": "PUBLICEREN TOT",
-      "activeFrom": "ACTIEF VAN",
-      "activeTo": "ACTIEF TOT",
-      "invalidPublishStartDate": "Datum 'Publiceren van'  is ongeldig.",
-      "invalidPublishEndDate": "Datum 'Publiceren tot' is ongeldig.",
-      "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
-      "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
-      "publishEndDateBeforeStartDate" : "'Publiceren tot' moet na 'Publiceren van' liggen.",
-      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen.",
-      "invalidFromDate": "Datum 'Van' is ongeldig.",
-      "invalidToDate": "Datum 'Tot' is ongeldig.",
-      "toDateBeforeFromDate" : "'Tot' moet na 'Van' liggen."
-    },
-    "result": {
-      "severity": "ERNST",
-      "timeOfAction": "TIJD VAN ACTIE",
-      "title": "TITEL",
-      "summary": "OVERZICHT",
-      "state": "STATUS",
-      "description": "STATUS OMSCHRIJVING",
-      "sender": "VERZENDER",
-      "process" : "PROCES",
-      "processGroup": "DIENST",
-      "representative": "VERTEGENWOORDIGER",
-      "publishDate" : "PUBLICATIE DATUM",
-      "businessPeriod" : "BEDRIJFSPERIODE",
-      "time": "TIJD",
-      "answer": "ANTWOORD",
-      "emitter": "ZENDER",
-      "entitiesResponses": "ANTWOORDEN",
-      "requiredResponses": "VEREISTE ANTWOORDEN",
-      "entityRecipients": "ONTVANGERS ENTITEITEN"
-    },
-    "exportInProgress": "Bezig met exporteren",
-    "loadingInProgress": "Bezig met laden",
-    "requestInProgress": "Bezig met verzoek...",
-    "deleteInProgress": "Bezig met verwijdering...",
-    "logoutInProgress": "Bezig met uitloggen...",
-    "noResult": "Uw zoekopdracht leverde geen resultaten op.",
-    "exportToExcel": "Exporteer data",
-    "resultsNumber":"Aantal resultaten",
-    "noProcessStateAvailable": "Geen proces/status beschikbaar",
-    "endDateBeforeStartDate": "Einddatum moet na start datum liggen.",
-    "featureNotConfigured": "Functie niet geconfigureerd",
-    "confirmSettings": "BEVESTIG INSTELLINGEN",
-    "cardEmitter": "EMITTER",
-    "entity": "ENTITEIT",
-    "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
-    "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
-    "popup": {
-      "title": "BEVESTIGING",
-      "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
-    },
-    "error": {
-      "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
-      "incorrectSubmission": "Onjuiste invoer",
-      "technicalError" : "Technische fout"
-    },
-    "calendar": {
-      "monday":"Maandag",
-      "tuesday":"Dinsdag",
-      "wednesday":"Woensdag",
-      "thursday":"Donderdag",
-      "friday":"Vrijdag",
-      "saturday":"Zaterdag",
-      "sunday":"Zondag",
-      "january":"Januari",
-      "february":"Februari",
-      "march":"Maart",
-      "april":"April",
-      "may":"Mei",
-      "june":"Juni",
-      "july":"Juli",
-      "august":"Augustus",
-      "september":"September",
-      "october":"Oktober",
-      "november":"November",
-      "december":"December"
-    },
-    "ordinal": {
-      "suffix": {
-        "1": "ste",
-        "2": "de",
-        "3": "de",
-        "4": "de",
-        "5": "de",
-        "6": "de",
-        "7": "de",
-        "8": "ste",
-        "9": "de",
-        "10": "de",
-        "11": "de",
-        "12": "de",
-        "13": "de",
-        "14": "de",
-        "15": "de",
-        "16": "de",
-        "17": "de",
-        "18": "de",
-        "19": "de",
-        "20": "ste",
-        "21": "ste",
-        "22": "ste",
-        "23": "ste",
-        "24": "ste",
-        "25": "ste",
-        "26": "ste",
-        "27": "ste",
-        "28": "ste",
-        "29": "ste",
-        "30": "ste",
-        "31": "ste",
-        "default": "ste"
-      }
-    }
-  },
-  "global":{
-    "connectionLost":"Verbinding verbroken",
-    "tryToReconnect":"Bezig met verbinden ...",
-    "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
-    "activateSoundButton":"Activeer geluid",
-    "sessionExpiredText":"De sessie is verlopen.",
-    "disconnected": "Je bent losgekoppeld.",
-    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
-    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL.",
-    "reloadPageButton": "Herlaad pagina",
-    "isNotAllowedToAccessOpfab": "U heeft geen toegang tot de applicatie"
-  },
-  "menu": {
-    "feed": "Kaart Feed",
-    "calendar": "Kalender",
-    "archives": "Archieven",
-    "dashboard": "Dashboard",
-    "logging": "Logboek",
-    "admin": "Administratie",
-    "monitoring": "Bewaking",
-    "processmonitoring": "Bewakingsproces",
-    "logout": "Uitloggen",
-    "changepassword": "Wachtwoord wijzigen",
-    "settings": "Instellingen",
-    "feedconfiguration": "Notificatie configuratie",
-    "about": "Over",
-    "usercard": "Kaart maken",
-    "switchToNightMode": "Nacht modus",
-    "switchToDayMode": "Dag modus",
-    "realtimeusers": "Realtime gebruikers",
-    "externaldevicesconfiguration": "Extern apparaat configuratie",
-    "activityarea": "Activiteitengebied",
-    "useractionlogs": "Logboek",
-    "newcardTooltip": "Maak een nieuwe kaart",
-    "calendarTooltip": "Kalender"
-  },
-  "timeline": {
-    "hideTimeline" : "Verberg Tijdlijn",
-    "showTimeline" : "Toon Tijdlijn",
-    "businessPeriod": "Bedrijfsperiode",
-    "buttonTitle": {
-      "TR": "Realtime",
-      "J": "Dag",
-      "7D": "7 Dagen",
-      "W": "Week",
-      "M": "Maand",
-      "Y": "Jaar"
-    },
-    "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt.",
-    "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven."
-  },
-  "multiFilter": {
-    "searchPlaceholderText": "Zoeken",
-    "selectAllText": "Selecteer Alles",
-    "unSelectAllText": "Deselecteer Alles",
-    "filterSelectAllText": "Selecteer alle gefilterde resultaten",
-    "filterUnSelectAllText": "Deselecteer alle gefilterde resultaten",
-    "noDataLabel": "Geen Data Beschikbaar"
-  },
-  "multiSelect": {
-    "searchPlaceholderText": "Zoeken..." ,
-    "clearButtonText" : "Clear",
-    "noSearchResultsText" : "Geen resultaten",
-    "noOptionsText" :""     
-  },
-  "feed": {
-    "filters": {
-      "title": "Filters",
-      "reset": "Filters opnieuw instellen",
-      "time": {
-        "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
-        "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
-        "start.label": "START",
-        "end.label": "EIND",
-        "active.label": "Actief"
-      },
-      "type": {
-        "title": "Type"
-      },
-      "showCardsWithResponse": {
-        "label": "Kaarten met reactie van mijn entiteit"
-      },
-      "ack": {
-        "title": "Bevestigen",
-        "acknowledged": {
-          "label": "Bevestigd"
+    "shared": {
+        "severity": {
+            "alarm": "Alarm",
+            "action": "Actie",
+            "compliant": "Conform",
+            "information": "Informatie"
         },
-        "notacknowledged": {
-          "label": "Niet bevestigd"
+        "typeOfState": {
+            "typeOfState": "PROCES STATUS",
+            "FINISHED": "AFGEROND",
+            "INPROGRESS": "WORDT UITGEVOERD",
+            "CANCELED": "GEANNULEERD"
+        },
+        "filters": {
+            "processGroup": "DIENST",
+            "process": "PROCES",
+            "state": "STATUS",
+            "tags": "LABELS",
+            "selectProcessGroupText": "Selecteer een Dienst",
+            "selectProcessText": "Selecteer een Proces",
+            "selectStateText": "Selecteer een Status",
+            "selectTagText": "Selecteer een Label",
+            "publishDateFrom": "PUBLICEREN VAN",
+            "publishDateTo": "PUBLICEREN TOT",
+            "activeFrom": "ACTIEF VAN",
+            "activeTo": "ACTIEF TOT",
+            "invalidPublishStartDate": "Datum 'Publiceren van'  is ongeldig.",
+            "invalidPublishEndDate": "Datum 'Publiceren tot' is ongeldig.",
+            "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
+            "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
+            "publishEndDateBeforeStartDate": "'Publiceren tot' moet na 'Publiceren van' liggen.",
+            "activeEndDateBeforeStartDate": "'Actief tot' moet na 'Actief van' liggen.",
+            "invalidFromDate": "Datum 'Van' is ongeldig.",
+            "invalidToDate": "Datum 'Tot' is ongeldig.",
+            "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen."
+        },
+        "result": {
+            "severity": "ERNST",
+            "timeOfAction": "TIJD VAN ACTIE",
+            "title": "TITEL",
+            "summary": "OVERZICHT",
+            "state": "STATUS",
+            "description": "STATUS OMSCHRIJVING",
+            "sender": "VERZENDER",
+            "process": "PROCES",
+            "processGroup": "DIENST",
+            "representative": "VERTEGENWOORDIGER",
+            "publishDate": "PUBLICATIE DATUM",
+            "businessPeriod": "BEDRIJFSPERIODE",
+            "time": "TIJD",
+            "answer": "ANTWOORD",
+            "emitter": "ZENDER",
+            "entitiesResponses": "ANTWOORDEN",
+            "requiredResponses": "VEREISTE ANTWOORDEN",
+            "entityRecipients": "ONTVANGERS ENTITEITEN"
+        },
+        "exportInProgress": "Bezig met exporteren",
+        "loadingInProgress": "Bezig met laden",
+        "requestInProgress": "Bezig met verzoek...",
+        "deleteInProgress": "Bezig met verwijdering...",
+        "logoutInProgress": "Bezig met uitloggen...",
+        "noResult": "Uw zoekopdracht leverde geen resultaten op.",
+        "exportToExcel": "Exporteer data",
+        "resultsNumber": "Aantal resultaten",
+        "noProcessStateAvailable": "Geen proces/status beschikbaar",
+        "endDateBeforeStartDate": "Einddatum moet na start datum liggen.",
+        "featureNotConfigured": "Functie niet geconfigureerd",
+        "confirmSettings": "BEVESTIG INSTELLINGEN",
+        "cardEmitter": "EMITTER",
+        "entity": "ENTITEIT",
+        "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
+        "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
+        "popup": {
+            "title": "BEVESTIGING",
+            "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
+        },
+        "error": {
+            "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
+            "incorrectSubmission": "Onjuiste invoer",
+            "technicalError": "Technische fout"
+        },
+        "calendar": {
+            "monday": "Maandag",
+            "tuesday": "Dinsdag",
+            "wednesday": "Woensdag",
+            "thursday": "Donderdag",
+            "friday": "Vrijdag",
+            "saturday": "Zaterdag",
+            "sunday": "Zondag",
+            "january": "Januari",
+            "february": "Februari",
+            "march": "Maart",
+            "april": "April",
+            "may": "Mei",
+            "june": "Juni",
+            "july": "Juli",
+            "august": "Augustus",
+            "september": "September",
+            "october": "Oktober",
+            "november": "November",
+            "december": "December"
+        },
+        "ordinal": {
+            "suffix": {
+                "1": "ste",
+                "2": "de",
+                "3": "de",
+                "4": "de",
+                "5": "de",
+                "6": "de",
+                "7": "de",
+                "8": "ste",
+                "9": "de",
+                "10": "de",
+                "11": "de",
+                "12": "de",
+                "13": "de",
+                "14": "de",
+                "15": "de",
+                "16": "de",
+                "17": "de",
+                "18": "de",
+                "19": "de",
+                "20": "ste",
+                "21": "ste",
+                "22": "ste",
+                "23": "ste",
+                "24": "ste",
+                "25": "ste",
+                "26": "ste",
+                "27": "ste",
+                "28": "ste",
+                "29": "ste",
+                "30": "ste",
+                "31": "ste",
+                "default": "ste"
+            }
         }
-      },
-      "applyFiltersToTimeLine" : {
-        "label" : "Filters toepassen op tijdlijn"
-      },
-      "process": {
-        "label": "Proces"
-      }
     },
-    "sort": {
-      "title": "Sorteer op",
-      "severity": "Ernst en dan ontvangstdatum",
-      "publish": "Ontvangstdatum",
-      "unread": "Ongelezen en dan ontvangstdatum",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum"
+    "global": {
+        "connectionLost": "Verbinding verbroken",
+        "tryToReconnect": "Bezig met verbinden ...",
+        "activateSoundText": "Geluid is niet geactiveerd, klik om te activeren",
+        "activateSoundButton": "Activeer geluid",
+        "sessionExpiredText": "De sessie is verlopen.",
+        "disconnected": "Je bent losgekoppeld.",
+        "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
+        "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL.",
+        "reloadPageButton": "Herlaad pagina",
+        "isNotAllowedToAccessOpfab": "U heeft geen toegang tot de applicatie"
     },
-    "tips": {
-      "acknowledged": "Bevestigd",
-      "lttd": "Resterende tijd om te beslissen",
-      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
-      "loadingInProgress": "Kaart wordt geladen",
-      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
-      "expirationDate": "Vervaldatum",
-      "seeGeolocation": "Zie geolocatie"
+    "menu": {
+        "feed": "Kaart Feed",
+        "calendar": "Kalender",
+        "archives": "Archieven",
+        "dashboard": "Dashboard",
+        "logging": "Logboek",
+        "admin": "Administratie",
+        "monitoring": "Bewaking",
+        "processmonitoring": "Bewakingsproces",
+        "logout": "Uitloggen",
+        "changepassword": "Wachtwoord wijzigen",
+        "settings": "Instellingen",
+        "feedconfiguration": "Notificatie configuratie",
+        "about": "Over",
+        "usercard": "Kaart maken",
+        "switchToNightMode": "Nacht modus",
+        "switchToDayMode": "Dag modus",
+        "realtimeusers": "Realtime gebruikers",
+        "externaldevicesconfiguration": "Extern apparaat configuratie",
+        "activityarea": "Activiteitengebied",
+        "useractionlogs": "Logboek",
+        "newcardTooltip": "Maak een nieuwe kaart",
+        "calendarTooltip": "Kalender"
     },
-    "acknowledgeAllCards": {
-      "label": "Bevestig alle kaarten",
-      "popup": {
-        "title": "BEVESTIGING",
-        "doYouReallyWant": "Hiermee worden alle zichtbare kaarten van in uw feed bevestigd, bevestig a.u.b."
-      }
+    "timeline": {
+        "hideTimeline": "Verberg Tijdlijn",
+        "showTimeline": "Toon Tijdlijn",
+        "businessPeriod": "Bedrijfsperiode",
+        "buttonTitle": {
+            "TR": "Realtime",
+            "J": "Dag",
+            "7D": "7 Dagen",
+            "W": "Week",
+            "M": "Maand",
+            "Y": "Jaar"
+        },
+        "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt.",
+        "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven."
     },
-    "lttdFinished": "Afgerond",
-    "responsesClosed": "Reacties gesloten",
-    "received": "Ontvangen :",
-    "deleted": "Verwijderd of bijgewerkt :",
-    "addressedTo": "Geadresseerd aan :",
-    "at": "op",
-    "from" : "van",
-    "moreCards": "kaarten over",
-    "lastResponse": "Laatste reactie :",
-    "cardLoadingInProgress":"Bezig met laden van de kaart...",
-    "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
-    "selectedCardDeleted": "Deze kaart werd verwijderd",
-    "entityRecipients" : "Ontvangers entiteiten :",
-    "entityRecipientsForInformation" : "Ontvangers entiteiten in kopie :",
-    "searchPlaceholderText": "Zoeken...",
-    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)",
-    "businessPeriod": "Bedrijfsperiode :"
-  },
-  "login": {
-    "reset": "Opnieuw instellen",
-    "login": "Gebruikersnaam",
-    "password": "Wachtwoord",
-    "confirmationBecauseAccountIsAreadyUsed": "De account {{login}} wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
-    "confirmationBecauseAppAlreadyLoadedInAnotherTab": "De URL {{url}} wordt al gebruikt in deze browser, wilt u nog steeds inloggen ?\n\n Door op OK te klikken, verbreekt u de verbinding met de andere tabbladen van deze browser die deze URL gebruiken.",
-    "submit": {
-      "password": "Inloggen",
-      "code": "Log in met {{name}}"
+    "multiFilter": {
+        "searchPlaceholderText": "Zoeken",
+        "selectAllText": "Selecteer Alles",
+        "unSelectAllText": "Deselecteer Alles",
+        "filterSelectAllText": "Selecteer alle gefilterde resultaten",
+        "filterUnSelectAllText": "Deselecteer alle gefilterde resultaten",
+        "noDataLabel": "Geen Data Beschikbaar"
     },
-    "error": {
-      "authenticate": "Onjuiste gebruikersnaam of wachtwoord",
-      "code": "Onjuiste authenticatiecode",
-      "unavailable": "Authenticatieservice is momenteel niet beschikbaar",
-      "unexpected": "Er is een onverwachte fout gedetecteerd tijdens het inloggen: {{error}}",
-      "disconnected": "De verbinding is verbroken.",
-      "token": {
-        "invalid": "Ongeldige token opgeslagen.",
-        "expiration": "Het opgeslagen token is verlopen."
-      }
-    }
-  },
-  "about": {
-    "title": "OVER"
-  },
-  "settings": {
-    "title": "INSTELLINGEN",
-    "description": "OMSCHRIJVING",
-    "locale": "TAAL",
-    "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
-    "playSoundForAlarm": "Alarm",
-    "playSoundForAction": "Actie",
-    "playSoundForCompliant": "Conform",
-    "playSoundForInformation": "Informatie",
-    "replayEnabled": "Geluidsherhaling ingeschakeld",
-    "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
-    "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
-    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
-    "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
-    "systemNotificationAlarm": "Alarm",
-    "systemNotificationAction": "Actie",
-    "systemNotificationCompliant": "Conform",
-    "systemNotificationInformation": "Informatie",
-    "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
-    "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
-    "emailToPlainText": "De e-mails versturen in platte tekst",
-    "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
-    "email": "Email",
-    "settingsSaved": "Instellingen bewaard",
-    "input": {
-      "errors": {
-        "invalidEmail": "Ongeldige e-mail"
-      }
-    }
-  },
-  "archive": {
-    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
-    "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond.",
-    "collapsibleUpdates": "Opvouwbare updates"
-  },
-  "monitoring": {
-    "hideFilters" : "Verberg Filters",
-    "showFilters" : "Toon Filters",
-    "noSelection" : "NB",
-    "moreRows": "rijen over",
-    "filters": {
-      "typeOfState" : {
-        "selectTypeOfStateText" : "Selecteer een Proces status"
-      }
+    "multiSelect": {
+        "searchPlaceholderText": "Zoeken...",
+        "clearButtonText": "Clear",
+        "noSearchResultsText": "Geen resultaten",
+        "noOptionsText": ""
     },
-    "tips": {
-      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd."
+    "feed": {
+        "filters": {
+            "title": "Filters",
+            "reset": "Filters opnieuw instellen",
+            "time": {
+                "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
+                "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
+                "start.label": "START",
+                "end.label": "EIND",
+                "active.label": "Actief"
+            },
+            "type": {
+                "title": "Type"
+            },
+            "showCardsWithResponse": {
+                "label": "Kaarten met reactie van mijn entiteit"
+            },
+            "ack": {
+                "title": "Bevestigen",
+                "acknowledged": {
+                    "label": "Bevestigd"
+                },
+                "notacknowledged": {
+                    "label": "Niet bevestigd"
+                }
+            },
+            "applyFiltersToTimeLine": {
+                "label": "Filters toepassen op tijdlijn"
+            },
+            "process": {
+                "label": "Proces"
+            }
+        },
+        "sort": {
+            "title": "Sorteer op",
+            "severity": "Ernst en dan ontvangstdatum",
+            "publish": "Ontvangstdatum",
+            "unread": "Ongelezen en dan ontvangstdatum",
+            "startDate": "Startdatum",
+            "endDate": "Einddatum"
+        },
+        "tips": {
+            "acknowledged": "Bevestigd",
+            "lttd": "Resterende tijd om te beslissen",
+            "hasAResponseFromYourEntity": "Uw entiteit heeft al gereageerd.",
+            "loadingInProgress": "Kaart wordt geladen",
+            "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
+            "expirationDate": "Vervaldatum",
+            "seeGeolocation": "Zie geolocatie"
+        },
+        "acknowledgeAllCards": {
+            "label": "Bevestig alle kaarten",
+            "popup": {
+                "title": "BEVESTIGING",
+                "doYouReallyWant": "Hiermee worden alle zichtbare kaarten van in uw feed bevestigd, bevestig a.u.b."
+            }
+        },
+        "lttdFinished": "Afgerond",
+        "responsesClosed": "Reacties gesloten",
+        "received": "Ontvangen :",
+        "deleted": "Verwijderd of bijgewerkt :",
+        "addressedTo": "Geadresseerd aan :",
+        "at": "op",
+        "from": "van",
+        "moreCards": "kaarten over",
+        "lastResponse": "Laatste reactie :",
+        "cardLoadingInProgress": "Bezig met laden van de kaart...",
+        "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
+        "selectedCardDeleted": "Deze kaart werd verwijderd",
+        "entityRecipients": "Ontvangers entiteiten :",
+        "entityRecipientsForInformation": "Ontvangers entiteiten in kopie :",
+        "searchPlaceholderText": "Zoeken...",
+        "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)",
+        "businessPeriod": "Bedrijfsperiode :"
     },
-    "seeDetails": "DETAILS BEKIJKEN"
-  },
-  "processMonitoring": {
-    "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"
-  },
-  "button": {
-    "ok": "OK",
-    "cancel": "ANNULEREN",
-    "reset": "HERSTEL",
-    "delete": "Verwijderen",
-    "edit": "Wijzigen",
-    "createCopy": "Een kopie maken",
-    "yes": "JA",
-    "no": "NEE",
-    "search" : "ZOEK",
-    "save": "OPSLAAN",
-    "doNotSave": "NIET OPSLAAN"
-  },
-  "activityArea": {
-    "title": "ACTIVITEITENGEBIED",
-    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
-    "savingInProgress": "aan het opslaan...",
-    "noAreaAvailable": "Geen activiteitengebied beschikbaar"
-  },
-  "notificationConfiguration": {
-    "title": "NOTIFICATIE CONFIGURATIE",
-    "information": "INFORMATIE",
-    "modificationToSave": "Er zijn wijzigingen in behandeling, wilt u deze opslaan?",
-    "youAreUnsubscribedFrom": "U bent uitgeschreven voor een of meer meldingen waarvoor uitschrijving niet toegestaan is.\n\nBetrokken melding(en) :\n",
-    "youWillBeSubscribedAgain": "\n\nDoor op OK te klikken, wordt u opnieuw ingeschreven voor deze meldingen."
-  },
-  "userCard": {
-    "title": "MAAK EEN NIEUWE KAART ",
-    "editTitle" : "WIJZIG EEN NIEUWE KAART",
-    "error": {
-      "notAvailable": "U heeft geen toestemming om kaarten te verzenden.",
-      "userHasNoEntityThatCanSendCard" : "U bent geen lid van een entiteit die kaarten kan versturen.",
-      "templateError": "Technische fout: ongeldige sjabloon",
-      "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
-      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
-      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
-      "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
+    "login": {
+        "reset": "Opnieuw instellen",
+        "login": "Gebruikersnaam",
+        "password": "Wachtwoord",
+        "confirmationBecauseAccountIsAreadyUsed": "De account {{login}} wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
+        "confirmationBecauseAppAlreadyLoadedInAnotherTab": "De URL {{url}} wordt al gebruikt in deze browser, wilt u nog steeds inloggen ?\n\n Door op OK te klikken, verbreekt u de verbinding met de andere tabbladen van deze browser die deze URL gebruiken.",
+        "submit": {
+            "password": "Inloggen",
+            "code": "Log in met {{name}}"
+        },
+        "error": {
+            "authenticate": "Onjuiste gebruikersnaam of wachtwoord",
+            "code": "Onjuiste authenticatiecode",
+            "unavailable": "Authenticatieservice is momenteel niet beschikbaar",
+            "unexpected": "Er is een onverwachte fout gedetecteerd tijdens het inloggen: {{error}}",
+            "disconnected": "De verbinding is verbroken.",
+            "token": {
+                "invalid": "Ongeldige token opgeslagen.",
+                "expiration": "Het opgeslagen token is verlopen."
+            }
+        }
     },
-    "filters": {
-      "severity": "ERNST",
-      "startDate":  "STARTDATUM",
-      "endDate":  "EINDDATUM",
-      "expirationDate": "VERVALDATUM",
-      "lttd": "BEPERK DATUM VOOR REACTIE",
-      "recipients": "ONTVANGERS",
-      "recipientsForInformation": "ONTVANGERS IN KOPIE"
+    "about": {
+        "title": "OVER"
     },
-    "prepareCard": "BEKIJK VOOR VERZENDING",
-    "confirmSending": "Wilt u deze kaart versturen?",
-    "accept": "VERSTUREN",
-    "refuse": "ANNULEREN",
-    "processInstanceId": "Id",
-    "state": "Status",
-    "recipients": "ONTVANGERS:",
-    "recipientsForInformation": "ONTVANGERS IN KOPIE:",
-    "youAreTheOnlyRecipient": "Er is geen ontvanger ingesteld.",
-    "feedPreview": "FEED PREVIEW:",
-    "contentPreview": "CONTENT PREVIEW:",
-    "send-another-one": "SEND ANOTHER CARD",
-    "cardSendWithNoError": "Uw kaart is gepubliceerd.",
-    "deleteCard": {
-      "title" : "BEVESTIGING",
-      "doYouReallyWant": "Wilt u deze kaart echt verwijderen?",
-      "cardDeletedWithNoError": "Kaart verwijderd",
-      "error": {
-        "impossibleToDeleteCard": "Om technische redenen is het niet mogelijk om de kaart te verwijderen"
-      }
+    "settings": {
+        "title": "INSTELLINGEN",
+        "description": "OMSCHRIJVING",
+        "locale": "TAAL",
+        "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
+        "playSoundForAlarm": "Alarm",
+        "playSoundForAction": "Actie",
+        "playSoundForCompliant": "Conform",
+        "playSoundForInformation": "Informatie",
+        "replayEnabled": "Geluidsherhaling ingeschakeld",
+        "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
+        "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
+        "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
+        "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
+        "systemNotificationAlarm": "Alarm",
+        "systemNotificationAction": "Actie",
+        "systemNotificationCompliant": "Conform",
+        "systemNotificationInformation": "Informatie",
+        "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
+        "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
+        "emailToPlainText": "De e-mails versturen in platte tekst",
+        "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
+        "email": "Email",
+        "settingsSaved": "Instellingen bewaard",
+        "input": {
+            "errors": {
+                "invalidEmail": "Ongeldige e-mail"
+            }
+        }
     },
-    "sendingCardInProgress": "Kaart wordt verzonden...",
-    "richTextEditor": {
-      "enterLink": "link invoeren",
-      "saveLink": "Opslaan",
-      "visitLink": "Link bezoeken",
-      "editLink": "Wijzigen",
-      "removeLink": "Verwijderen"
-    }
-  },
-  "response": {
-    "btnValidate": "VALIDEER ANTWOORD",
-    "btnUnlock": "WIJZIG ANTWOORD",
-    "error": {
-      "submit": "Het antwoord kon niet verzonden worden.",
-      "form": "Het formulier is niet correct ingevuld.",
-      "ack": "Kan de bevestiging van deze kaart niet wijzigen door een fout van het externe systeem"
+    "archive": {
+        "cardLoadingInProgress": "Bezig met laden van de kaart  ...",
+        "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond.",
+        "collapsibleUpdates": "Opvouwbare updates"
     },
-    "submitSuccess": "Uw antwoord is bevestigd. Bedankt!",
-    "answers": "Antwoorden",
-    "answered": "Beantwoord",
-    "unanswered": "Nog niet beantwoord",
-    "status": "Proces Status",
-    "chooseEntitiesForResponse": "Kies de entiteiten waarvoor u reageert :",
-    "entitiesChoice": "Entiteiten keuze"
-  },
-  "cardAcknowledgment": {
+    "monitoring": {
+        "hideFilters": "Verberg Filters",
+        "showFilters": "Toon Filters",
+        "noSelection": "NB",
+        "moreRows": "rijen over",
+        "filters": {
+            "typeOfState": {
+                "selectTypeOfStateText": "Selecteer een Proces status"
+            }
+        },
+        "tips": {
+            "hasAResponseFromYourEntity": "Uw entiteit heeft al gereageerd."
+        },
+        "seeDetails": "DETAILS BEKIJKEN"
+    },
+    "processMonitoring": {
+        "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"
+    },
     "button": {
-      "ack": "BEVESTIG",
-      "ackAndClose": "BEVESTIG EN SLUIT",
-      "unack": "ANNULEER BEVESTIGING"
+        "ok": "OK",
+        "cancel": "ANNULEREN",
+        "reset": "HERSTEL",
+        "delete": "Verwijderen",
+        "edit": "Wijzigen",
+        "createCopy": "Een kopie maken",
+        "yes": "JA",
+        "no": "NEE",
+        "search": "ZOEK",
+        "save": "OPSLAAN",
+        "doNotSave": "NIET OPSLAAN"
     },
-    "acknowledged": "Bevestigd"
-  },
-  "admin": {
-    "input": {
-      "group": {
-        "id": "ID",
-        "name": "NAAM",
-        "description": "OMSCHRIJVING",
-        "perimeters" : "PERIMETERS",
-        "permissions" : "TOESTEMMING",
-        "users": "GEBRUIKERS",
-        "realtime": "REAL TIME",
-        "type": "TYPE",
-        "true": "JA",
-        "false": "NEE",
-        "confirmDelete": "Wilt u de groep echt verwijderen",
-        "add": "NIEUWE GROEP TOEVOEGEN"
-      },
-      "entity": {
-        "id": "ID",
-        "name": "NAAM",
-        "parents": "HOOFD ENTITEITEN",
-        "description": "OMSCHRIJVING",
-        "labels": "LABELS",
-        "users": "GEBRUIKERS",
-        "confirmDelete": "Wilt u de entiteit echt verwijderen",
-        "add": "NIEUWE ENTITEIT TOEVOEGEN",
-        "true": "JA",
-        "false": "NEE",
-        "addLabel": "Voeg label toe",
-        "roles": "ROLLEN",
-        "roleValues": {
-          "ACTIVITY_AREA": "Activiteitengebied",
-          "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
-          "CARD_SENDER": "Kaartverzender",
-          "CARD_RECEIVER": "Kaartontvanger"
+    "activityArea": {
+        "title": "ACTIVITEITENGEBIED",
+        "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
+        "savingInProgress": "aan het opslaan...",
+        "noAreaAvailable": "Geen activiteitengebied beschikbaar"
+    },
+    "notificationConfiguration": {
+        "title": "NOTIFICATIE CONFIGURATIE",
+        "information": "INFORMATIE",
+        "modificationToSave": "Er zijn wijzigingen in behandeling, wilt u deze opslaan?",
+        "youAreUnsubscribedFrom": "U bent uitgeschreven voor een of meer meldingen waarvoor uitschrijving niet toegestaan is.\n\nBetrokken melding(en) :\n",
+        "youWillBeSubscribedAgain": "\n\nDoor op OK te klikken, wordt u opnieuw ingeschreven voor deze meldingen."
+    },
+    "userCard": {
+        "title": "MAAK EEN NIEUWE KAART ",
+        "editTitle": "WIJZIG EEN NIEUWE KAART",
+        "error": {
+            "notAvailable": "U heeft geen toestemming om kaarten te verzenden.",
+            "userHasNoEntityThatCanSendCard": "U bent geen lid van een entiteit die kaarten kan versturen.",
+            "templateError": "Technische fout: ongeldige sjabloon",
+            "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
+            "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
+            "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
+            "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
+        },
+        "filters": {
+            "severity": "ERNST",
+            "startDate": "STARTDATUM",
+            "endDate": "EINDDATUM",
+            "expirationDate": "VERVALDATUM",
+            "lttd": "BEPERK DATUM VOOR REACTIE",
+            "recipients": "ONTVANGERS",
+            "recipientsForInformation": "ONTVANGERS IN KOPIE"
+        },
+        "prepareCard": "BEKIJK VOOR VERZENDING",
+        "confirmSending": "Wilt u deze kaart versturen?",
+        "accept": "VERSTUREN",
+        "refuse": "ANNULEREN",
+        "processInstanceId": "Id",
+        "state": "Status",
+        "recipients": "ONTVANGERS:",
+        "recipientsForInformation": "ONTVANGERS IN KOPIE:",
+        "youAreTheOnlyRecipient": "Er is geen ontvanger ingesteld.",
+        "feedPreview": "FEED PREVIEW:",
+        "contentPreview": "CONTENT PREVIEW:",
+        "send-another-one": "SEND ANOTHER CARD",
+        "cardSendWithNoError": "Uw kaart is gepubliceerd.",
+        "deleteCard": {
+            "title": "BEVESTIGING",
+            "doYouReallyWant": "Wilt u deze kaart echt verwijderen?",
+            "cardDeletedWithNoError": "Kaart verwijderd",
+            "error": {
+                "impossibleToDeleteCard": "Om technische redenen is het niet mogelijk om de kaart te verwijderen"
+            }
+        },
+        "sendingCardInProgress": "Kaart wordt verzonden...",
+        "richTextEditor": {
+            "enterLink": "link invoeren",
+            "saveLink": "Opslaan",
+            "visitLink": "Link bezoeken",
+            "editLink": "Wijzigen",
+            "removeLink": "Verwijderen"
         }
-      },
-      "perimeter": {
-        "id": "ID",
-        "process": "PROCES",
-        "stateRights": "STATUS RECHTEN",
-        "state": "STATUS",
-        "right": "RECHT",
-        "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
-        "confirmDelete": "Wilt u de perimeter echt verwijderen",
-        "add":"NIEUWE PERIMETER TOEVOEGEN"
-      },
-      "process": {
-        "ProcessId": "ID",
-        "ProcessName": "PROCES",
-        "ProcessVersion": "HUIDIGE VERSIE",
-        "confirmDelete": "Wilt u het proces echt verwijderen"
-      },
-      "user": {
-        "login": "GEBRUIKERSNAAM",
-        "lastName": "ACHTERNAAM",
-        "firstName": "VOORNAAM",
-        "comment": "OPMERKING",
-        "groups": "GROEPEN",
-        "entities": "ENTITEITEN",
-        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
-        "confirmDelete": "Wilt u de gebruiker echt verwijderen",
-        "add": "NIEUWE GEBRUIKER TOEVOEGEN"
-      },
-      "businessData": {
-        "name": "ZAKELIJKE GEGEVENS",
-        "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
-        "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
-      },
-      "supervisedEntity": {
-        "entityName": "ENTITEIT",
-        "supervisors": "SUPERVISORS",
-        "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
-        "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",
-        "allEntitiesSupervised": "Alle entiteiten staan al onder toezicht"
-      },
-      "selectUserText": "Selecteer Gebruiker",
-      "selectGroupText": "Selecteer een Groep",
-      "selectEntityText": "Selecteen een Entiteit",
-      "selectPerimeterText": "Selecteen een Perimeter",
-      "selectProcessText": "Selecteer een Proces",
-      "selectStateText": "Selecteer een Status",
-      "selectRightText": "Selecteer een Recht",
-      "selectGroupTypeText": "Selecteer een Type",
-      "selectGroupPermissionText": "Selecteer een Toestemming",
-      "edit": "Wijzigen",
-      "delete": "Verwijderen",
-      "save": "WIJZIGINGEN OPSLAAN",
-      "close": "SLUITEN",
-      "cancel": "ANNULEREN",
-      "confirm": "Bevestig alstublieft...",
-      "login": {
-        "required": "Gebruikersnaam is vereist.",
-        "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
-        "pattern": "Gebruikersnaam mag geen spaties bevatten.",
-        "alreadyExisting": "Gebruikersnaam bestaat al."
-      },
-      "authorizedIPAddresses": {
-        "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX,XXX.XXX... volgen"
-      },
-      "firstName": {
-        "required": "Voornaam is vereist."
-      },
-      "lastName": {
-        "required": "Achternaam is vereist."
-      },
-      "id": {
-        "required": "Id is vereist.",
-        "minLength": "Id moet minimaal 2 tekens bevatten.",
-        "pattern": "Id mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
-        "label":"ID",
-        "alreadyExisting": "Id bestaat al."
-      },
-      "name": {
-        "required": "Naam is vereist.",
-        "label":"NAAM",
-        "alreadyExisting": "Naam bestaat al."
-      },
-      "description": "OMSCHRIJVING",
-      "lines": "regels per pagina"
     },
-    "tabs": {
-      "users": "Gebruikers Beheer",
-      "groups": "Groepen Beheer",
-      "entities": "Entiteiten Beheer",
-      "perimeters": "Perimeters Beheer",
-      "processes": "Processen Beheer",
-      "businessData": "Zakelijke gegevens",
-      "supervisedEntities": "Entiteiten onder toezicht"
+    "response": {
+        "btnValidate": "VALIDEER ANTWOORD",
+        "btnUnlock": "WIJZIG ANTWOORD",
+        "error": {
+            "submit": "Het antwoord kon niet verzonden worden.",
+            "form": "Het formulier is niet correct ingevuld.",
+            "ack": "Kan de bevestiging van deze kaart niet wijzigen door een fout van het externe systeem"
+        },
+        "submitSuccess": "Uw antwoord is bevestigd. Bedankt!",
+        "answers": "Antwoorden",
+        "answered": "Beantwoord",
+        "unanswered": "Nog niet beantwoord",
+        "status": "Proces Status",
+        "chooseEntitiesForResponse": "Kies de entiteiten waarvoor u reageert :",
+        "entitiesChoice": "Entiteiten keuze"
+    },
+    "cardAcknowledgment": {
+        "button": {
+            "ack": "BEVESTIG",
+            "ackAndClose": "BEVESTIG EN SLUIT",
+            "unack": "ANNULEER BEVESTIGING"
+        },
+        "acknowledged": "Bevestigd"
+    },
+    "admin": {
+        "input": {
+            "group": {
+                "id": "ID",
+                "name": "NAAM",
+                "description": "OMSCHRIJVING",
+                "perimeters": "PERIMETERS",
+                "permissions": "TOESTEMMING",
+                "users": "GEBRUIKERS",
+                "realtime": "REAL TIME",
+                "type": "TYPE",
+                "true": "JA",
+                "false": "NEE",
+                "confirmDelete": "Wilt u de groep echt verwijderen",
+                "add": "NIEUWE GROEP TOEVOEGEN"
+            },
+            "entity": {
+                "id": "ID",
+                "name": "NAAM",
+                "parents": "HOOFD ENTITEITEN",
+                "description": "OMSCHRIJVING",
+                "labels": "LABELS",
+                "users": "GEBRUIKERS",
+                "confirmDelete": "Wilt u de entiteit echt verwijderen",
+                "add": "NIEUWE ENTITEIT TOEVOEGEN",
+                "true": "JA",
+                "false": "NEE",
+                "addLabel": "Voeg label toe",
+                "roles": "ROLLEN",
+                "roleValues": {
+                    "ACTIVITY_AREA": "Activiteitengebied",
+                    "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
+                    "CARD_SENDER": "Kaartverzender",
+                    "CARD_RECEIVER": "Kaartontvanger"
+                }
+            },
+            "perimeter": {
+                "id": "ID",
+                "process": "PROCES",
+                "stateRights": "STATUS RECHTEN",
+                "state": "STATUS",
+                "right": "RECHT",
+                "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
+                "confirmDelete": "Wilt u de perimeter echt verwijderen",
+                "add": "NIEUWE PERIMETER TOEVOEGEN"
+            },
+            "process": {
+                "ProcessId": "ID",
+                "ProcessName": "PROCES",
+                "ProcessVersion": "HUIDIGE VERSIE",
+                "confirmDelete": "Wilt u het proces echt verwijderen"
+            },
+            "user": {
+                "login": "GEBRUIKERSNAAM",
+                "lastName": "ACHTERNAAM",
+                "firstName": "VOORNAAM",
+                "comment": "OPMERKING",
+                "groups": "GROEPEN",
+                "entities": "ENTITEITEN",
+                "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
+                "confirmDelete": "Wilt u de gebruiker echt verwijderen",
+                "add": "NIEUWE GEBRUIKER TOEVOEGEN"
+            },
+            "businessData": {
+                "name": "ZAKELIJKE GEGEVENS",
+                "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
+                "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
+            },
+            "supervisedEntity": {
+                "entityName": "ENTITEIT",
+                "supervisors": "SUPERVISORS",
+                "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
+                "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",
+                "allEntitiesSupervised": "Alle entiteiten staan al onder toezicht"
+            },
+            "selectUserText": "Selecteer Gebruiker",
+            "selectGroupText": "Selecteer een Groep",
+            "selectEntityText": "Selecteen een Entiteit",
+            "selectPerimeterText": "Selecteen een Perimeter",
+            "selectProcessText": "Selecteer een Proces",
+            "selectStateText": "Selecteer een Status",
+            "selectRightText": "Selecteer een Recht",
+            "selectGroupTypeText": "Selecteer een Type",
+            "selectGroupPermissionText": "Selecteer een Toestemming",
+            "edit": "Wijzigen",
+            "delete": "Verwijderen",
+            "save": "WIJZIGINGEN OPSLAAN",
+            "close": "SLUITEN",
+            "cancel": "ANNULEREN",
+            "confirm": "Bevestig alstublieft...",
+            "login": {
+                "required": "Gebruikersnaam is vereist.",
+                "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
+                "pattern": "Gebruikersnaam mag geen spaties bevatten.",
+                "alreadyExisting": "Gebruikersnaam bestaat al."
+            },
+            "authorizedIPAddresses": {
+                "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX,XXX.XXX... volgen"
+            },
+            "firstName": {
+                "required": "Voornaam is vereist."
+            },
+            "lastName": {
+                "required": "Achternaam is vereist."
+            },
+            "id": {
+                "required": "Id is vereist.",
+                "minLength": "Id moet minimaal 2 tekens bevatten.",
+                "pattern": "Id mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
+                "label": "ID",
+                "alreadyExisting": "Id bestaat al."
+            },
+            "name": {
+                "required": "Naam is vereist.",
+                "label": "NAAM",
+                "alreadyExisting": "Naam bestaat al."
+            },
+            "description": "OMSCHRIJVING",
+            "lines": "regels per pagina"
+        },
+        "tabs": {
+            "users": "Gebruikers Beheer",
+            "groups": "Groepen Beheer",
+            "entities": "Entiteiten Beheer",
+            "perimeters": "Perimeters Beheer",
+            "processes": "Processen Beheer",
+            "businessData": "Zakelijke gegevens",
+            "supervisedEntities": "Entiteiten onder toezicht"
+        }
+    },
+    "processGroup": {
+        "defaultLabel": "--"
+    },
+    "ag-grid": {
+        "loadingOoo": "Bezig met laden...",
+        "noRowsToShow": "Geen rijen om te tonen",
+        "filterOoo": "Filter...",
+        "equals": "Gelijk aan",
+        "notEqual": "Niet gelijk aan",
+        "contains": "Bevat",
+        "notContains": "Bevat niet",
+        "startsWith": "Begint met",
+        "endsWith": "Eindigt met",
+        "andCondition": "EN",
+        "orCondition": "OF",
+        "to": "tot",
+        "of": "van",
+        "page": "Pagina",
+        "blank": "Leeg",
+        "notBlank": "Niet leeg",
+        "true": "JA",
+        "false": "NEE",
+        "empty": " "
+    },
+    "realTimeUsers": {
+        "connected": "Verbonden",
+        "disconnected": "Niet verbonden",
+        "selectScreenText": "Selecteer een scherm",
+        "realTimeScreen": "REALTIME SCHERM"
+    },
+    "externalDevicesConfiguration": {
+        "input": {
+            "selectUserText": "Selecteer gebruiker",
+            "selectDeviceText": "Selecteer apparaat",
+            "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
+            "edit": "APPARAATCONFIGURATIE WIJZIGEN",
+            "addDevice": "NIEUW APPARAAT TOEVOEGEN",
+            "editDevice": "APPARAAT BIJWERKEN",
+            "addSignalMapping": "NIEUW SIGNAALTOEWIJZINGEN",
+            "confirm": "Bevestig alstublieft",
+            "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen",
+            "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
+            "loadingExternalDevices": "Extern apparaat laden...",
+            "confirmDeleteDevice": "Wilt u de apparaat verwijderen",
+            "host": {
+                "required": "Host is vereist."
+            },
+            "port": {
+                "required": "Port is vereist."
+            },
+            "signalMapping": {
+                "required": "Signaaltoewijzingen is vereist."
+            }
+        },
+        "tabs": {
+            "users": "Gebruikers Configuratie",
+            "devices": "Externe Apparaten",
+            "signalMappings": "Signaaltoewijzingen"
+        },
+        "error": {
+            "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
+            "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
+        },
+        "signalMappings": {
+            "id": "ID",
+            "supportedSignals": "ONDERSTEUNDE SIGNALEN"
+        },
+        "userLogin": "GEBRUIKERSNAAM",
+        "externalDeviceIds": "APPARATEN",
+        "edit": "WIJZIGEN",
+        "delete": "VERWIJDEREN",
+        "id": "APPARATEN",
+        "deviceId": "ID",
+        "host": "HOST",
+        "port": "PORT",
+        "signalMapping": "SIGNAALTOEWIJZINGEN",
+        "isEnabled": "IS INGESCHAKELD"
+    },
+    "useractionlogs": {
+        "title": "LOGBOEKEN VAN GEBRUIKERSACTIES",
+        "date": "Datum",
+        "action": "Actie",
+        "login": "Gebruikersnaam",
+        "entities": "Entiteiten",
+        "cardUid": "Kaart UID",
+        "comment": "Opmerking",
+        "filters": {
+            "action": "ACTIE",
+            "login": "GEBRUIKERSNAAM",
+            "dateFrom": "VAN",
+            "dateTo": "TOT"
+        }
+    },
+    "datePicker": {
+        "monday": "Ma",
+        "tuesday": "Di",
+        "wednesday": "Wo",
+        "thursday": "Do",
+        "friday": "Vr",
+        "saturday": "Za",
+        "sunday": "Zo",
+        "january": "Jan",
+        "february": "Feb",
+        "march": "Mar",
+        "april": "Apr",
+        "may": "Mei",
+        "june": "Jun",
+        "july": "Jul",
+        "august": "Aug",
+        "september": "Sep",
+        "october": "Okt",
+        "november": "Nov",
+        "december": "Dec",
+        "week": "Week",
+        "placeholder": "JJJJ-MM-DD"
+    },
+    "reloadRequired": {
+        "message": "Applicatie herladen vereist. Om te herladen klik ",
+        "linkText": "hier"
+    },
+    "errors": {
+        "notFound": "Bron niet gevonden",
+        "notAllowed": "Actie niet toegestaan",
+        "badRequest": "Invalid Request {{badRequestMessage}}",
+        "pageNotAllowed": "Je mag deze pagina niet bekijken"
+    },
+    "builtInTemplate": {
+        "messageCard": {
+            "message": "U hebt een bericht ontvangen :"
+        },
+        "messageUserCard": {
+            "noMessageError": "U moet een bericht opgeven",
+            "messageTitleLabel": "BERICHT TITEL",
+            "textareaLabel": "BERICHT"
+        },
+        "questionCard": {
+            "responseInputLabel": "ANTWOORD",
+            "responsesReceivedLabel": "Ontvangen reacties :",
+            "entityColumnLabel": "Entiteit",
+            "responseColumnLabel": "Antwoord",
+            "dateColumnLabel": "Datum"
+        },
+        "questionUserCard": {
+            "noQuestionError": "U moet een vraag opgeven",
+            "textareaLabel": "VRAAG"
+        },
+        "taskCard": {
+            "taskToDo": "U heeft de volgende taak te doen",
+            "duration": "Duur",
+            "minutes": "minuten",
+            "at": "Op",
+            "first": "eerste",
+            "second": "tweede",
+            "third": "derde",
+            "fourth": "vierde",
+            "last": "laatste",
+            "the": "De",
+            "on": "op",
+            "firstDayOfTheMonth": "De eerste dag van de maand",
+            "lastDayOfTheMonth": "De laatste dag van de maand",
+            "daysBeforeEndOfTheMonth": "dagen voor het einde van de maand",
+            "dayOfTheMonth": "dag van de maand",
+            "in": "in"
+        },
+        "taskUserCard": {
+            "taskTitleLabel": "TAAK TITEL",
+            "taskDescriptionLabel": "TAAK BESCHRIJVING",
+            "dailyFreq": "Dagelijkse frequentie",
+            "monthlyFreq": "Maandelijkse frequentie",
+            "Repeat": "HERHAAL ELKE",
+            "selectAll": "Alles selecteren",
+            "ordinalDay": "N-de dag",
+            "ordinalWeekDay": "N-de weekdag",
+            "dayNumber": "DAGNUMMER",
+            "firstDayOfTheMonth": "Eerste dag van de maand",
+            "lastDayOfTheMonth": "Laatste dag van de maand",
+            "dayOfTheMonth": "dag van de maand",
+            "occurrenceNumber": "NUMMER VAN VOORKOMEN",
+            "weekDay": "WEEKDAG",
+            "at": "OM",
+            "time": "TIJD",
+            "taskDuration": "TAAKDUUR (MINUTEN)",
+            "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK",
+            "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
+            "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
+            "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
+            "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven.",
+            "the": "De"
+        },
+        "message-or-question-listCard": {
+            "answers": "Antwoorden",
+            "yes": "Ja",
+            "no": "Nee",
+            "entityColumnLabel": "ENTITEIT",
+            "responseColumnLabel": "ANTWOORD",
+            "commentColumnLabel": "OPMERKING",
+            "comment": "OPMERKING"
+        },
+        "message-or-question-listUserCard": {
+            "titleLabel": "TITEL",
+            "summaryLabel": "OVERZICHT",
+            "messageLabel": "BERICHT",
+            "emptyMessage": "U kunt geen leeg bericht verzenden"
+        }
+    },
+    "devtools": {
+        "richTextComposer": {
+            "title": "RIJKE TEKST CONVERTER",
+            "richTextEditor": "RIJKE TEKST",
+            "convert": "Converteer",
+            "result": "CONVERSIERESULTAAT",
+            "copy": "Kopiëren naar klembord"
+        }
     }
-  },
-  "processGroup": {
-    "defaultLabel": "--"
-  },
-  "ag-grid": {
-    "loadingOoo": "Bezig met laden...",
-    "noRowsToShow": "Geen rijen om te tonen",
-    "filterOoo": "Filter...",
-    "equals": "Gelijk aan",
-    "notEqual": "Niet gelijk aan",
-    "contains": "Bevat",
-    "notContains": "Bevat niet",
-    "startsWith": "Begint met",
-    "endsWith": "Eindigt met",
-    "andCondition": "EN",
-    "orCondition": "OF",
-    "to": "tot",
-    "of": "van",
-    "page": "Pagina",
-    "blank": "Leeg",
-    "notBlank": "Niet leeg",
-    "true": "JA",
-    "false": "NEE",
-    "empty": " "
-  },
-  "realTimeUsers": {
-    "connected": "Verbonden",
-    "disconnected": "Niet verbonden",
-    "selectScreenText": "Selecteer een scherm",
-    "realTimeScreen": "REALTIME SCHERM"
-  },
-  "externalDevicesConfiguration": {
-    "input": {
-      "selectUserText": "Selecteer gebruiker",
-      "selectDeviceText": "Selecteer apparaat",
-      "add": "NIEUWE APPARAATCONFIGURATIE TOEVOEGEN",
-      "edit": "APPARAATCONFIGURATIE WIJZIGEN",
-      "addDevice": "NIEUW APPARAAT TOEVOEGEN",
-      "editDevice": "APPARAAT BIJWERKEN",
-      "addSignalMapping": "NIEUW SIGNAALTOEWIJZINGEN",
-      "confirm": "Bevestig alstublieft",
-      "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen",
-      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
-      "loadingExternalDevices": "Extern apparaat laden...",
-      "confirmDeleteDevice": "Wilt u de apparaat verwijderen",
-      "host": {
-        "required": "Host is vereist."
-      },
-      "port": {
-        "required": "Port is vereist."
-      },
-      "signalMapping": { 
-        "required": "Signaaltoewijzingen is vereist."
-      }
-    },
-    "tabs": {
-      "users": "Gebruikers Configuratie",
-      "devices": "Externe Apparaten",
-      "signalMappings": "Signaaltoewijzingen"
-    },
-    "error": {
-      "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
-      "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
-    },
-    "signalMappings": {
-      "id": "ID",
-      "supportedSignals": "ONDERSTEUNDE SIGNALEN"
-    },
-    "userLogin": "GEBRUIKERSNAAM",
-    "externalDeviceIds": "APPARATEN",
-    "edit": "WIJZIGEN",
-    "delete": "VERWIJDEREN",
-    "id": "APPARATEN",
-    "deviceId":"ID",
-    "host": "HOST",
-    "port": "PORT",
-    "signalMapping": "SIGNAALTOEWIJZINGEN",
-    "isEnabled": "IS INGESCHAKELD"
-  },
-  "useractionlogs": {
-    "title": "LOGBOEKEN VAN GEBRUIKERSACTIES",
-    "date": "Datum",
-    "action": "Actie",
-    "login": "Gebruikersnaam",
-    "entities": "Entiteiten",
-    "cardUid": "Kaart UID",
-    "comment": "Opmerking",
-    "filters": {
-      "action": "ACTIE",
-      "login": "GEBRUIKERSNAAM",
-      "dateFrom": "VAN",
-      "dateTo": "TOT"
-    }
-  },
-  "datePicker": {
-    "monday": "Ma",
-    "tuesday" : "Di",
-    "wednesday" : "Wo",
-    "thursday": "Do",
-    "friday": "Vr",
-    "saturday": "Za",
-    "sunday": "Zo",
-    "january": "Jan",
-    "february": "Feb",
-    "march": "Mar",
-    "april": "Apr",
-    "may": "Mei",
-    "june": "Jun",
-    "july": "Jul",
-    "august": "Aug",
-    "september": "Sep",
-    "october": "Okt",
-    "november": "Nov",
-    "december": "Dec",
-    "week": "Week",
-    "placeholder": "JJJJ-MM-DD"
-  },
-  "reloadRequired" : {
-    "message": "Applicatie herladen vereist. Om te herladen klik ",
-    "linkText": "hier"
-  },
-  "errors" : {
-    "notFound" : "Bron niet gevonden",
-    "notAllowed" : "Actie niet toegestaan",
-    "badRequest" : "Invalid Request {{badRequestMessage}}",
-    "pageNotAllowed" : "Je mag deze pagina niet bekijken"
-  } ,
-  "buildInTemplate" : {
-    "messageCard" : {
-      "message" : "U hebt een bericht ontvangen :"
-    },
-    "messageUserCard": {
-      "noMessageError":"U moet een bericht opgeven",
-      "messageTitleLabel": "BERICHT TITEL",
-      "textareaLabel":"BERICHT"
-    },
-    "questionCard" : {
-      "responseInputLabel" : "ANTWOORD",
-      "responsesReceivedLabel": "Ontvangen reacties :",
-      "entityColumnLabel": "Entiteit",
-      "responseColumnLabel": "Antwoord",
-      "dateColumnLabel": "Datum"
-    },
-    "questionUserCard": {
-      "noQuestionError": "U moet een vraag opgeven",
-      "textareaLabel": "VRAAG"
-    },
-    "taskCard": {
-      "taskToDo": "U heeft de volgende taak te doen",
-      "duration": "Duur",
-      "minutes": "minuten",
-      "at": "Op",
-      "first": "eerste",
-      "second": "tweede",
-      "third": "derde",
-      "fourth": "vierde",
-      "last": "laatste",
-      "the": "De",
-      "on": "op",
-      "firstDayOfTheMonth": "De eerste dag van de maand",
-      "lastDayOfTheMonth": "De laatste dag van de maand",
-      "daysBeforeEndOfTheMonth": "dagen voor het einde van de maand",
-      "dayOfTheMonth": "dag van de maand",
-      "in": "in"
-   },
-    "taskUserCard": {
-      "taskTitleLabel": "TAAK TITEL",
-      "taskDescriptionLabel": "TAAK BESCHRIJVING",
-      "dailyFreq": "Dagelijkse frequentie",
-      "monthlyFreq": "Maandelijkse frequentie",
-      "Repeat": "HERHAAL ELKE",
-      "selectAll": "Alles selecteren",
-      "ordinalDay": "N-de dag",
-      "ordinalWeekDay": "N-de weekdag",
-      "dayNumber": "DAGNUMMER",
-      "firstDayOfTheMonth": "Eerste dag van de maand",
-      "lastDayOfTheMonth": "Laatste dag van de maand",
-      "dayOfTheMonth": "dag van de maand",
-      "occurrenceNumber": "NUMMER VAN VOORKOMEN",
-      "weekDay": "WEEKDAG",
-      "at": "OM",
-      "time": "TIJD",
-      "taskDuration": "TAAKDUUR (MINUTEN)",
-      "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK",
-      "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
-      "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
-      "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
-      "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven.",
-      "the": "De"
-    },
-    "message-or-question-listCard": {
-      "answers": "Antwoorden",
-      "yes": "Ja",
-      "no": "Nee",
-      "entityColumnLabel": "ENTITEIT",
-      "responseColumnLabel": "ANTWOORD",
-      "commentColumnLabel": "OPMERKING",
-      "comment": "OPMERKING"
-    },
-    "message-or-question-listUserCard": {
-      "titleLabel": "TITEL",
-      "summaryLabel": "OVERZICHT",
-      "messageLabel": "BERICHT",
-      "emptyMessage": "U kunt geen leeg bericht verzenden"
-    }
-
-  },
-  "devtools": {
-    "richTextComposer": {
-      "title": "RIJKE TEKST CONVERTER",
-      "richTextEditor": "RIJKE TEKST",
-      "convert": "Converteer",
-      "result": "CONVERSIERESULTAAT",
-      "copy": "Kopiëren naar klembord"
-    }
-  }
 }

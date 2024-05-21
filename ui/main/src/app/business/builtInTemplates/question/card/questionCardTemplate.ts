@@ -30,7 +30,7 @@ export class QuestionCardTemplate extends HTMLElement {
         <div id="template_response_input_component">
             <br/>
             <div class="opfab-input">
-                <label> ${opfab.utils.getTranslation('buildInTemplate.questionCard.responseInputLabel')} </label>
+                <label> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responseInputLabel')} </label>
                 <input id="template_response_input"></input>
             </div>
             <br/>
@@ -50,11 +50,11 @@ export class QuestionCardTemplate extends HTMLElement {
         this.questionCardTemplateView.listenToResponses((responses) => {
             let html = '';
             if (responses?.forEach && responses.length > 0) {
-                html += `<center><h3> ${opfab.utils.getTranslation('buildInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
+                html += `<center><h3> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
                 html += '<div class="opfab-table">';
-                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('buildInTemplate.questionCard.dateColumnLabel')} </th>`;
-                html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.questionCard.entityColumnLabel')} </th>`;
-                html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.questionCard.responseColumnLabel')} </th>`;
+                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('builtInTemplate.questionCard.dateColumnLabel')} </th>`;
+                html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.questionCard.entityColumnLabel')} </th>`;
+                html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.questionCard.responseColumnLabel')} </th>`;
                 html += ' </tr>';
                 responses?.forEach((response) => {
                     html += '<tr>';

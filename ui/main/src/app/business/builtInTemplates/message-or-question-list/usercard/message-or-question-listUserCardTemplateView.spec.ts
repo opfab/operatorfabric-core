@@ -119,7 +119,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         const specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
         expect(specficCardInformation.valid).toEqual(false);
         expect(specficCardInformation.errorMsg).toEqual(
-            'Translation (en) of buildInTemplate.message-or-question-listUserCard.emptyMessage'
+            'Translation (en) of builtInTemplate.message-or-question-listUserCard.emptyMessage'
         );
     });
 

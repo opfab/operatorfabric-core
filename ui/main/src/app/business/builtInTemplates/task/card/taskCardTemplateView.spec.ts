@@ -49,14 +49,14 @@ describe('Question UserCard template', () => {
         };
         const text = view.fillTexts();
         expect(text.textForBysetpos).toEqual(
-            'Translation (en) of buildInTemplate.taskCard.the Translation (en) of buildInTemplate.taskCard.first '
+            'Translation (en) of builtInTemplate.taskCard.the Translation (en) of builtInTemplate.taskCard.first '
         );
         expect(text.textForByWeekday).toEqual(' Translation (en) of shared.calendar.monday');
         expect(text.textForBymonthday).toEqual(
-            'Translation (en) of buildInTemplate.taskCard.firstDayOfTheMonth<br/><br/>'
+            'Translation (en) of builtInTemplate.taskCard.firstDayOfTheMonth<br/><br/>'
         );
         expect(text.textForBymonth).toEqual(
-            'Translation (en) of buildInTemplate.taskCard.in Translation (en) of shared.calendar.january'
+            'Translation (en) of builtInTemplate.taskCard.in Translation (en) of shared.calendar.january'
         );
     });
 });

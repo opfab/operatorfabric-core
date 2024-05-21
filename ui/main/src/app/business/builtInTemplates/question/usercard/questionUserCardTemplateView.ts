@@ -19,7 +19,7 @@ export class QuestionUserCardTemplateView {
         if (question.length < 1)
             return {
                 valid: false,
-                errorMsg: opfab.utils.getTranslation('buildInTemplate.questionUserCard.noQuestionError')
+                errorMsg: opfab.utils.getTranslation('builtInTemplate.questionUserCard.noQuestionError')
             };
         return {
             valid: true,

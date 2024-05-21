@@ -60,7 +60,7 @@ describe('Question UserCard template', () => {
         const specificCardInformation = view.getSpecificCardInformation('');
         expect(specificCardInformation.valid).toEqual(false);
         expect(specificCardInformation.errorMsg).toEqual(
-            'Translation (en) of buildInTemplate.questionUserCard.noQuestionError'
+            'Translation (en) of builtInTemplate.questionUserCard.noQuestionError'
         );
     });
 });

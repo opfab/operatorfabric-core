@@ -5,22 +5,22 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Build-in templates
+= Built-in templates
 
-Instead of coding your own templates for cards or user cards, you can use opfab build-in templates if it suits your needs.
+Instead of coding your own templates for cards or user cards, you can use opfab built-in templates if it suits your needs.
 
 == Message
 
 === Card template
 
-If you want to show only a simple message, you can use the message build-in template, to do that just put in your handlebar file :
+If you want to show only a simple message, you can use the message built-in template, to do that just put in your handlebar file :
 
 ```
 <opfab-message-card> </opfab-message-card>
 
 ```
 
-The build-in template supposes the message is stored in the card in field `data.message`.
+The built-in template supposes the message is stored in the card in field `data.message`.
 
 
 You can change the text header by providing the message-header attribute: 
@@ -41,21 +41,21 @@ If you want to create a user card for a simple message, just add in your handleb
 The message will be stored in the field `data.message` of the card 
 
 By using attributes you can set some parameters regarding recipients, see 
-ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
 == Question 
 
 === Card template
 
-If you want to show a question and see user responses, you can use the question build-in template, to do that just put in your handlebar file:
+If you want to show a question and see user responses, you can use the question built-in template, to do that just put in your handlebar file:
 
 ```
 <opfab-question-card> </opfab-question-card>
 
 ```
 
-The build-in template supposes the question is stored in the card in the field `data.question`.
+The built-in template supposes the question is stored in the card in the field `data.question`.
 
 
 === User card template 
@@ -70,21 +70,21 @@ If you want to create a user card for a simple question, just add in your handle
 The question will be stored in the field `data.question` of the card 
 
 By using attributes you can set some parameters regarding recipients, see 
-ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
 == Message Or Question List 
 
 === Card template
 
-If you want to show a message or a question and the answers, you can use the message or question list build-in template, to do that just put in your handlebar file:
+If you want to show a message or a question and the answers, you can use the message or question list built-in template, to do that just put in your handlebar file:
 
 ```
 <opfab-message-or-question-list-card> </opfab-message-or-question-list-card>
 
 ```
 
-The build-in template supposes the message or question is stored in the card in the field `data.message`.
+The built-in template supposes the message or question is stored in the card in the field `data.message`.
 
 
 === User card template 
@@ -144,8 +144,8 @@ message option is available only for the specified entities. If not specified or
 The `summary` field is optional. If specified, considering 'xxx' is the value of the field, so the summary you will see
 in the feed will be 'Message received : xxx'. If not specified, the summary will only be 'Message received'.
 
-[[build-in_templates_common_usercard_attributes]]
-== Common attributes for user cards build-in templates 
+[[built-in_templates_common_usercard_attributes]]
+== Common attributes for user cards built-in templates 
 
 For each user card templates, you can set : 
 

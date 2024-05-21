@@ -51,7 +51,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         if (quillEditor.isEmpty()) {
             return {
                 valid: false,
-                errorMsg: opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.emptyMessage')
+                errorMsg: opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.emptyMessage')
             };
         }
 

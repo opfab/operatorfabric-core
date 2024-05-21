@@ -55,12 +55,12 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.innerHTML = `
         <br/>
         <div class="opfab-input">
-            <label for="taskTitle"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskTitleLabel')}</label>
+            <label for="taskTitle"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.taskTitleLabel')}</label>
             <input size="50" type="text" id="taskTitle" value='${this.view.getTaskTitle()}'> 
         </div>
         <br/>
         <div class="opfab-input">
-            <label for="taskDescription"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskDescriptionLabel')}</label>
+            <label for="taskDescription"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.taskDescriptionLabel')}</label>
             <input size="50" type="text" id="taskDescription" value='${this.view.getTaskDescription()}'> 
         </div>
         <br/>
@@ -69,13 +69,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <table style="width: 30%;margin-bottom: -5px;">
                 <tr>
                     <td>
-                        <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.dailyFreq')} </span>
+                        <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dailyFreq')} </span>
                             <input type="radio" id="radioButtonDailyFreq" checked>
                             <span class="opfab-radio-button-checkmark"></span>
                         </label>
                     </td>
                     <td>
-                        <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.monthlyFreq')} </span>
+                        <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.monthlyFreq')} </span>
                             <input type="radio" id="radioButtonMonthlyFreq">
                             <span class="opfab-radio-button-checkmark"></span>
                         </label>
@@ -88,10 +88,10 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         
         <div id="daysOfWeek">
             <div class="opfab-border-box">
-                <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.Repeat')} </label>
+                <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.Repeat')} </label>
                 <table width="100%" style="margin-bottom: -5px;">
                     <tr>
-                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllDays">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllDays">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                     </tr>
                 </table>
                 <table width="100%" style="margin-bottom: -5px;" id="weekdaysCheckboxes">
@@ -112,7 +112,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         <div class="opfab-border-box">
             <table width="100%" style="margin-bottom: -5px;">
                 <tr>
-                    <td><label class="opfab-checkbox" style="padding-left:25px">${opfab.utils.getTranslation('buildInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllMonths">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                    <td><label class="opfab-checkbox" style="padding-left:25px">${opfab.utils.getTranslation('builtInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllMonths">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                 </tr>
             </table>
             <table width="100%" style="margin-bottom: -5px;" id="monthsCheckboxes">
@@ -153,13 +153,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 <table style="width: 30%;margin-bottom: -5px;">
                     <tr>
                         <td>
-                            <label class="opfab-radio-button"> <span>${opfab.utils.getTranslation('buildInTemplate.taskUserCard.ordinalDay')} </span>
+                            <label class="opfab-radio-button"> <span>${opfab.utils.getTranslation('builtInTemplate.taskUserCard.ordinalDay')} </span>
                                 <input type="radio" id="radioButtonNthDay" checked>
                                 <span class="opfab-radio-button-checkmark"></span>
                             </label>
                         </td>
                         <td>
-                            <label class="opfab-radio-button"> <span>${opfab.utils.getTranslation('buildInTemplate.taskUserCard.ordinalWeekDay')} </span>
+                            <label class="opfab-radio-button"> <span>${opfab.utils.getTranslation('builtInTemplate.taskUserCard.ordinalWeekDay')} </span>
                                 <input type="radio" id="radioButtonNthWeekday">
                                 <span class="opfab-radio-button-checkmark"></span>
                             </label>
@@ -172,16 +172,16 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <div class="opfab-border-box" id="nthDayTable">
                 <table width="100%" style="margin-bottom: -5px;">
                     <tr>
-                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.firstDayOfTheMonth')} <input type="checkbox" id="firstDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.lastDayOfTheMonth')} <input type="checkbox" id="lastDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                        <td style="width: 35px;font-size: 13px"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.the')} </td>
+                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.firstDayOfTheMonth')} <input type="checkbox" id="firstDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                        <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.lastDayOfTheMonth')} <input type="checkbox" id="lastDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                        <td style="width: 35px;font-size: 13px"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.the')} </td>
                         <td style="width: 90px">
                             <div class="opfab-input">
-                                <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.dayNumber')} </label>
+                                <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dayNumber')} </label>
                                 <input size="1" maxlength="2" type="number" id="nthDay" min="1" max="31" oninput="if (this.value > 31) this.value = '';">
                             </div>
                         </td>
-                        <td style="font-size:13px"> &nbsp; ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.dayOfTheMonth')} </td>
+                        <td style="font-size:13px"> &nbsp; ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dayOfTheMonth')} </td>
                     </tr>
                 </table>
             </div>
@@ -189,13 +189,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 <tr>
                     <td style="width: 40%">
                         <div class="opfab-multiselect" style="width: 80%">
-                            <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.occurrenceNumber')} </label>
+                            <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.occurrenceNumber')} </label>
                             <div id="occurrence-number-select"></div>
                         </div>
                     </td>
                     <td style="width: 40%">
                         <div class="opfab-multiselect" style="width: 80%">
-                            <label>  ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.weekDay')} </label>
+                            <label>  ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.weekDay')} </label>
                             <div id="weekday-select"></div>
                         </div>
                     </td>
@@ -211,11 +211,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <table style="width:65%">
                 <tr>
                     <td style="width:6%">
-                    ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.at')} :
+                    ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.at')} :
                     </td> 
                     <td style="width:15%">
                         <div class="opfab-input">
-                            <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.time')} </label>
+                            <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.time')} </label>
                             <input type="time" id="time" style="text-align:center" value=${this.view.getByHourAndMinutes()} >
                         </div>
                     </td>
@@ -225,7 +225,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     </td>
                     <td style="width:22%">
                         <div class="opfab-input">
-                            <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskDuration')} </label>
+                            <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.taskDuration')} </label>
                             <input maxlength="3" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
                             id="durationInMinutes" value=${this.view.getDurationInMinutes(15)}>
                         </div>
@@ -235,7 +235,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     </td>
                     <td style="width:30%">
                         <div class="opfab-input">
-                            <label> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.minutesForReminder')} </label>
+                            <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.minutesForReminder')} </label>
                             <input type="text" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                              id="minutesForReminder" value=${this.view.getMinutesForReminder(5)}>
                         </div>
@@ -304,11 +304,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.occurrenceNumberSelect = opfab.multiSelect.init({
             id: 'occurrence-number-select',
             options: [
-                {label: opfab.utils.getTranslation('buildInTemplate.taskCard.first'), value: 1},
-                {label: opfab.utils.getTranslation('buildInTemplate.taskCard.second'), value: 2},
-                {label: opfab.utils.getTranslation('buildInTemplate.taskCard.third'), value: 3},
-                {label: opfab.utils.getTranslation('buildInTemplate.taskCard.fourth'), value: 4},
-                {label: opfab.utils.getTranslation('buildInTemplate.taskCard.last'), value: -1}
+                {label: opfab.utils.getTranslation('builtInTemplate.taskCard.first'), value: 1},
+                {label: opfab.utils.getTranslation('builtInTemplate.taskCard.second'), value: 2},
+                {label: opfab.utils.getTranslation('builtInTemplate.taskCard.third'), value: 3},
+                {label: opfab.utils.getTranslation('builtInTemplate.taskCard.fourth'), value: 4},
+                {label: opfab.utils.getTranslation('builtInTemplate.taskCard.last'), value: -1}
             ],
             multiple: true,
             search: true
@@ -523,7 +523,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     return {
                         valid: false,
                         errorMsg: opfab.utils.getTranslation(
-                            'buildInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay'
+                            'builtInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay'
                         )
                     };
                 }
@@ -539,7 +539,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     return {
                         valid: false,
                         errorMsg: opfab.utils.getTranslation(
-                            'buildInTemplate.taskUserCard.youMustProvideAnOccurrenceNumberAndAWeekday'
+                            'builtInTemplate.taskUserCard.youMustProvideAnOccurrenceNumberAndAWeekday'
                         )
                     };
                 }
@@ -548,7 +548,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             if (bymonth.length === 0) {
                 return {
                     valid: false,
-                    errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
+                    errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
                 };
             }
         } else {
@@ -559,14 +559,14 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             if (byweekday.length === 0) {
                 return {
                     valid: false,
-                    errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneWeekday')
+                    errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideAtLeastOneWeekday')
                 };
             }
 
             if (bymonth.length === 0) {
                 return {
                     valid: false,
-                    errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
+                    errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
                 };
             }
         }

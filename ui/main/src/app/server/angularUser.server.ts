@@ -25,7 +25,7 @@ export class AngularUserServer extends AngularServer implements UserServer {
     readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param httpClient - Angular built-in
      */
     constructor(private httpClient: HttpClient) {
         super();
