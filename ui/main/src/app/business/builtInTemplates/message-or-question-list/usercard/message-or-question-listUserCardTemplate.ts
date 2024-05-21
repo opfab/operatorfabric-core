@@ -26,21 +26,21 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         <br/>
 
         <div class="opfab-multiselect">
-            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.titleLabel')} </label>
+            <label> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.titleLabel')} </label>
             <div id="message-select"></div>
         </div>
 
         <br/>
 
         <div class="opfab-textarea">
-            <label> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.summaryLabel')} </label>
+            <label> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.summaryLabel')} </label>
             <textarea id="summary" name="summary" style="width:100%" rows="1">${this.view.getSummary()}</textarea>
         </div>
 
         <br/>
 
         <div class="opfab-textarea">
-        <label>${opfab.utils.getTranslation('buildInTemplate.message-or-question-listUserCard.messageLabel')}</label>
+        <label>${opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.messageLabel')}</label>
             <opfab-richtext-editor id="message">${this.view.getRichMessage()}</opfab-richtext-editor>
         </div>
 

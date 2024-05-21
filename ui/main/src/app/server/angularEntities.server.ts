@@ -24,7 +24,7 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
     protected _entities: Entity[];
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param httpClient - Angular built-in
      */
     constructor(private httpClient: HttpClient) {
         super();

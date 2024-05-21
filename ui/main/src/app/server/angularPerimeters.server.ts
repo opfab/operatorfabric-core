@@ -24,7 +24,7 @@ export class AngularPerimetersServer extends AngularServer implements Perimeters
 
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param httpClient - Angular built-in
      */
     constructor(private httpClient: HttpClient) {
         super();

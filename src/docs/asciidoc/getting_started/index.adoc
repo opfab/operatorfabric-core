@@ -778,12 +778,12 @@ If you look at the *message.handlebars* file in the bundle, you will see how the
 See the link:https://opfab.github.io/documentation/current/reference_doc/#user_cards[card documentation] for further
 information on cards.
 
-=== Example 7: Message card using "build-in" templates
+=== Example 7: Message card using "built-in" templates
 
-Instead of coding your own templates for message cards or user cards, you can use opfab build-in templates if it suits your needs.
+Instead of coding your own templates for message cards or user cards, you can use opfab built-in templates if it suits your needs.
 In the following example, we are going to modify the templates of the previous bundle (the message card).
 
-If you want to show only a simple message, you can use the message build-in template, to achieve this, first you have to
+If you want to show only a simple message, you can use the message built-in template, to achieve this, first you have to
 put in your handlebar file `message.handlebars`:
 
 ```
@@ -791,7 +791,7 @@ put in your handlebar file `message.handlebars`:
 
 ```
 
-NOTE: The build-in template supposes the message is stored in the card in field `data.message`.
+NOTE: The built-in template supposes the message is stored in the card in field `data.message`.
 
 Then you have to put in your handlebar file `message_usercard.handlebars`:
 
@@ -808,7 +808,7 @@ You can package the bundle and send it to the server with the provided scripts :
 ./packageBundle.sh | ./sendBundle.sh
 ----
 
-Now if you reload the page, you should be able to create a card using build-in template.
+Now if you reload the page, you should be able to create a card using built-in template.
 
 image::example7_card_send.png[example 7 screen shot #1]
 
@@ -820,8 +820,8 @@ You can change the text header by providing the message-header attribute:
 ```
 
 By using attributes you can set some parameters regarding recipients, see
-ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
 You can see the updated UI using this command line and refreshing the page to update the bundle.
 
@@ -831,10 +831,10 @@ You can see the updated UI using this command line and refreshing the page to up
 
 image::example7_card_send_updated.png[example 7 screen shot #2]
 
-=== Example 8: Question card using "build-in" templates
+=== Example 8: Question card using "built-in" templates
 
 Another example of templating is a question/response use case. Opfab allows you to send a response which will be attached
-to the card. This mechanism can be illustrated via the build-in template for question card.
+to the card. This mechanism can be illustrated via the built-in template for question card.
 
 To show a question and see user responses, first you have to put in your handlebar file `question.handlebars`:
 
@@ -843,7 +843,7 @@ To show a question and see user responses, first you have to put in your handleb
 
 ```
 
-NOTE: The build-in template supposes the question is stored in the card in the field `data.question`.
+NOTE: The built-in template supposes the question is stored in the card in the field `data.question`.
 
 Then you have to put in your handlebar file `question_usercard.handlebars`:
 
@@ -853,9 +853,9 @@ Then you have to put in your handlebar file `question_usercard.handlebars`:
 ```
 NOTE: The question will be stored in the field `data.question` of the card.
 
-Like the message build-in template, you can set default attributes :
-ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+Like the message built-in template, you can set default attributes :
+ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
 Use the provided script to add rights to send question card :
 ----
@@ -868,7 +868,7 @@ You can package the bundle and send it to the server with the provided scripts :
 ./packageBundle.sh | ./sendBundle.sh
 ----
 
-Example for using a question card with the previous build-in template :
+Example for using a question card with the previous built-in template :
 
 First, operator1_fr log in and create the question card :
 

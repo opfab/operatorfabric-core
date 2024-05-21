@@ -18,8 +18,8 @@ export class MessageUserCardTemplate extends BaseUserCardTemplate {
         super();
         this.view = new MessageUserCardTemplateView();
         const richMessage = this.view.getRichMessage();
-        const textareaLabel = opfab.utils.getTranslation('buildInTemplate.messageUserCard.textareaLabel');
-        const messageTitleLabel = opfab.utils.getTranslation('buildInTemplate.messageUserCard.messageTitleLabel');
+        const textareaLabel = opfab.utils.getTranslation('builtInTemplate.messageUserCard.textareaLabel');
+        const messageTitleLabel = opfab.utils.getTranslation('builtInTemplate.messageUserCard.messageTitleLabel');
         this.innerHTML = `
         <br/>
         <div class="opfab-input">

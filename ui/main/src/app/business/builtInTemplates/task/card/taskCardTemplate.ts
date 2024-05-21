@@ -24,7 +24,7 @@ export class TaskCardTemplate extends HTMLElement {
     private setHTMLContent() {
         this.innerHTML = `
 
-        <h2> ${opfab.utils.getTranslation('buildInTemplate.taskCard.taskToDo')} :  </h2>
+        <h2> ${opfab.utils.getTranslation('builtInTemplate.taskCard.taskToDo')} :  </h2>
         <br/>
         <br/>
         <center>
@@ -33,10 +33,10 @@ export class TaskCardTemplate extends HTMLElement {
         ${this.taskCardTemplateView.getTaskDescription()}
 
         <br/>
-        ${opfab.utils.getTranslation('buildInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('buildInTemplate.taskCard.minutes')} <br/>
+        ${opfab.utils.getTranslation('builtInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('builtInTemplate.taskCard.minutes')} <br/>
         <br/> 
 
-        ${opfab.utils.getTranslation('buildInTemplate.taskCard.at')} ${this.taskCardTemplateView.getByHour()}:${this.taskCardTemplateView.getByMinute()}
+        ${opfab.utils.getTranslation('builtInTemplate.taskCard.at')} ${this.taskCardTemplateView.getByHour()}:${this.taskCardTemplateView.getByMinute()}
         <span id="bysetpos"></span><span id="byweekday"></span><br/>
         <br/>
         <span id="bymonthday"></span>

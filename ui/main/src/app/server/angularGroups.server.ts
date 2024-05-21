@@ -23,7 +23,7 @@ export class AngularGroupsServer extends AngularServer implements GroupsServer {
 
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param httpClient - Angular built-in
      */
     constructor(private httpClient: HttpClient) {
         super();

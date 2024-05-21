@@ -20,7 +20,7 @@ export class ExternalDevicesService {
 
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param httpClient - Angular built-in
      */
     static setExternalDevicesServer(externalDevicesServer: ExternalDevicesServer) {
         ExternalDevicesService.externalDevicesServer = externalDevicesServer;
