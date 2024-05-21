@@ -436,8 +436,7 @@ describe('Test translations', function () {
 
     it('Check Business period translations', function () {
         const currentDate = new Date(2020, 11, 31, 23, 46); // Date must be in the past to avoid session close with token expiration
-        opfab.loginWithUser('operator1_fr');
-        cy.clock(currentDate);
+        opfab.loginWithClock(currentDate);
 
         changeLanguage(ENGLISH, true);
         cy.tick(1000);

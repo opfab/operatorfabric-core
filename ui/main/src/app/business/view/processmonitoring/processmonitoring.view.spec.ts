@@ -435,7 +435,12 @@ describe('Process Monitoring view ', () => {
 
     describe('get dates after period click if the current day/time is 2024-04-29 15:32 (summer time)', () => {
         beforeEach(() => {
-            moment.locale('en'); // set "en" local to have start of week on sunday
+            moment.updateLocale('en', {
+                week: {
+                    dow: 6 // First day of week is Saturday
+                }
+            });
+            moment.locale('en');
             jasmine.clock().install();
         });
 
@@ -460,13 +465,18 @@ describe('Process Monitoring view ', () => {
             jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
-            expect(dates).toEqual({activeFrom: '2024-04-28T00:00', activeTo: '2024-05-05T00:00'});
+            expect(dates).toEqual({activeFrom: '2024-04-27T00:00', activeTo: '2024-05-04T00:00'});
         });
     });
 
     describe('get dates after period click if the current day/time is 2023-12-31 9:18 (winter time)', () => {
         beforeEach(() => {
-            moment.locale('en'); // set "en" local to have start of week on sunday
+            moment.updateLocale('en', {
+                week: {
+                    dow: 6 // First day of week is Saturday
+                }
+            });
+            moment.locale('en');
             jasmine.clock().install();
         });
 
@@ -491,7 +501,7 @@ describe('Process Monitoring view ', () => {
             jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
-            expect(dates).toEqual({activeFrom: '2023-12-31T00:00', activeTo: '2024-01-07T00:00'});
+            expect(dates).toEqual({activeFrom: '2023-12-30T00:00', activeTo: '2024-01-06T00:00'});
         });
     });
 
