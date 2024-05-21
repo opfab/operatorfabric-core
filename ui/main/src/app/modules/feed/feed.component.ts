@@ -11,7 +11,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {delay, map} from 'rxjs/operators';
-import * as moment from 'moment';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/business/services/config.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -61,13 +60,6 @@ export class FeedComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.selection$ = SelectedCardService.getSelectCardIdChanges();
-
-        moment.updateLocale('en', {
-            week: {
-                dow: 6, // First day of week is Saturday
-                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
-            }
-        });
 
         this.lightCards$ = this.filteredLightCardStore.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
