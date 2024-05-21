@@ -27,6 +27,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -67,7 +68,7 @@ describe('InitChartComponent', () => {
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
-
+        RealtimeDomainService.init();
         OpfabEventStreamService.setEventStreamServer(new OpfabEventStreamServerMock());
         fixture = TestBed.createComponent(InitChartComponent);
         component = fixture.componentInstance;

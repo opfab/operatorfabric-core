@@ -44,6 +44,7 @@ import {SessionManagerService} from './services/session-manager.service';
 import {SoundNotificationService} from './services/notifications/sound-notification.service';
 import {I18n} from '@ofModel/i18n.model';
 import {ProcessStatesMultiSelectOptionsService} from './services/process-states-multi-select-options.service';
+import {RealtimeDomainService} from './services/realtime-domain.service';
 
 declare const opfab: any;
 
@@ -288,6 +289,7 @@ export class ApplicationLoader {
         SoundNotificationService.initSoundService();
         HandlebarsService.init();
         SelectedCardLoaderService.init();
+        RealtimeDomainService.init();
     }
 
     private async waitForStreamInitDone(): Promise<void> {
