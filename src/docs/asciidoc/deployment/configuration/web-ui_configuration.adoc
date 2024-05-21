@@ -175,7 +175,7 @@ a|authentication mode, available options:
 "emailToPlainText"  : if present, the email option to have the emails sent as plain text won't be displayed
 "sendDailyEmail"  : if present, the email option to have the daily email recap won't be displayed
 
-|showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
+|showUserEntitiesOnTopRightOfTheScreen|false|no|If set to true, the user's entities with the "ACTIVITY_AREA" role will be displayed under the login on the top right of the screen
 
 |title|OperatorFabric|no|Title of the application, displayed on the browser
 
