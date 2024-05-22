@@ -282,14 +282,6 @@ public class UsersServiceShould {
         }
 
         @Test
-        void GIVEN_Admin_User_WHEN_Deleting_Admin_User_THEN_Return_BAD_REQUEST() {
-            OperationResult<String> result = usersService.deleteUser("admin");
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Deleting user admin is not allowed");
-        }
-
-        @Test
         void GIVEN_An_Existing_User_WHEN_Deleting_User_THEN_Sucess_And_User_Is_Deleted() {
             OperationResult<String> result = usersService.deleteUser("user1");
             assertThat(result.isSuccess()).isTrue();

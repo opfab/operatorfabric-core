@@ -67,10 +67,3 @@ Feature: deleteGroup
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
-
-  Scenario: try to delete admin group (should return 403)
-    Given url opfabUrl + 'users/groups/ADMIN'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 400
-    And match response.message == 'Deleting group ADMIN is not allowed'

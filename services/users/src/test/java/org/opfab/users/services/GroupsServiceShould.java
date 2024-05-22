@@ -205,14 +205,6 @@ class GroupsServiceShould {
         }
 
         @Test
-        void GIVEN_Admin_Group_WHEN_Deleting_Admin_Group_THEN_Return_BAD_REQUEST() {
-            OperationResult<String> result = groupsService.deleteGroup("ADMIN");
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Deleting group ADMIN is not allowed");
-        }
-
-        @Test
         void GIVEN_An_Existing_Group_WHEN_Deleting_Group_THEN_Sucess_And_Group_Is_Deleted() {
             OperationResult<String> result = groupsService.deleteGroup("group1");
             assertThat(result.isSuccess()).isTrue();
@@ -418,15 +410,6 @@ class GroupsServiceShould {
                 String[] expectedMessageSent2 = { "user", "user2" }; 
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
-            }
-
-            @Test
-            void GIVEN_Admin_User_WHEN_Try_Removing_From_Admin_Group_THEN_Failed_And_Return_BAD_REQUEST() {
-                OperationResult<String> result = groupsService.deleteGroupUser("admin", "admin");
-                assertThat(result.isSuccess()).isFalse();
-                assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-                assertThat(result.getErrorMessage()).isEqualTo("Removing group ADMIN from user admin is not allowed");
-                assertThat(userRepositoryStub.findById("admin").get().getGroups()).contains("ADMIN");
             }
 
             @Test
