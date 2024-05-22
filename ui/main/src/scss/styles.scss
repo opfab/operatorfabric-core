@@ -9,17 +9,14 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
-@use "../../node_modules/ag-grid-community/styles" as ag;
+@use '../../node_modules/ag-grid-community/styles' as ag;
 
 @import 'variables';
 
 /* import bootstrap*/
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 
-
 @import '../../node_modules/ngx-chips/core/styles/core/_core.scss';
-
-
 
 @each $color, $value in $theme-colors {
     .brand-bg-#{$color} {
@@ -113,7 +110,6 @@ body {
     mask: url(../assets/images/icons/export-data.svg);
 }
 
-
 // INPUT FIELD STYLE
 
 .opfab-input,
@@ -128,7 +124,6 @@ body {
     outline: none;
     background-color: var(--opfab-bgcolor-darker);
 }
-
 
 // HOUR INPUT FIELD STYLE
 ::-webkit-calendar-picker-indicator {
@@ -220,7 +215,6 @@ type-ahead > .badge-primary {
     color: var(--opfab-input-text-color);
 }
 // end type-ahead  conf
-
 
 // Class to use when background form is lighter
 
@@ -447,7 +441,7 @@ body {
     }
 }
 
-.opfab-bubble-text{
+.opfab-bubble-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -457,30 +451,29 @@ body {
 // OpFab customization of the alpine theme for ag-grid
 // It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
 
+@include ag.grid-styles(
+    (
+        // ^^^ Include ag.grid-styles which it is no longer nested  in .ag-theme-{name} {}
+        theme: opfab,
+        extend-theme: alpine,
+        // ^^^ Add the theme name to the mixin
+        background-color: var(--opfab-bgcolor),
+        header-background-color: var(--opfab-bgcolor-darker),
+        odd-row-background-color: var(--opfab-bgcolor-darker),
+        modal-overlay-background-color: var(--opfab-bgcolor),
+        data-color: var(--opfab-text-color),
+        header-foreground-color: var(--opfab-text-color),
+        secondary-foreground-color: var(--opfab-text-color),
+        input-disabled-background-color: var(--opfab-button-disable-bgcolor),
+        input-disabled-border-color: var(--opfab-button-disable-bgcolor),
+        header-column-resize-handle-color: var(--opfab-table-border-color)
+    )
+);
 
-    @include ag.grid-styles((
-  // ^^^ Include ag.grid-styles which it is no longer nested  in .ag-theme-{name} {}
-    theme: opfab,
-    extend-theme: alpine,
-    // ^^^ Add the theme name to the mixin
-    background-color: var(--opfab-bgcolor),
-    header-background-color: var(--opfab-bgcolor-darker),
-    odd-row-background-color: var(--opfab-bgcolor-darker),
-    modal-overlay-background-color: var(--opfab-bgcolor),
-    data-color: var(--opfab-text-color),
-    header-foreground-color: var(--opfab-text-color),
-    secondary-foreground-color: var(--opfab-text-color),
-    input-disabled-background-color: var(--opfab-button-disable-bgcolor),
-    input-disabled-border-color: var(--opfab-button-disable-bgcolor),
-    header-column-resize-handle-color: var(--opfab-table-border-color)
-    ));
-
-    .ag-theme-opfab {
-
-    --ag-borders : none;
+.ag-theme-opfab {
+    --ag-borders: none;
     --ag-header-height: 70px;
-    --ag-icon-font-color : var(--opfab-text-color);
-
+    --ag-icon-font-color: var(--opfab-text-color);
 
     // This is done to reduce min-height (150px by default) in order to remove empty space when there is 1 line or 2
     // The height of a line is 42 (40 + 1*2 padding)
@@ -541,9 +534,8 @@ body {
         font-size: 13px;
     }
 
-
-
-    .ag-cell-label-container, .ag-header-cell-comp-wrapper {
+    .ag-cell-label-container,
+    .ag-header-cell-comp-wrapper {
         height: 100%;
         width: 100%;
     }
@@ -600,7 +592,6 @@ body {
 .opfab-monitoring-ag-grid-row {
     cursor: pointer;
 }
-
 
 // OpFab customization of the default theme for ngx-chips component
 // It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
@@ -702,7 +693,6 @@ tag-input {
     fill: var(--opfab-text-color) !important;
 }
 
-
 .ql-snow .ql-picker {
     color: var(--opfab-text-color) !important;
 }
@@ -712,7 +702,6 @@ tag-input {
 }
 
 .ql-snow .ql-tooltip {
-    
     z-index: 100 !important;
 }
 
@@ -735,15 +724,13 @@ tag-input {
 }
 
 .ql-picker-label {
-   color: var(--opfab-color) !important;
+    color: var(--opfab-color) !important;
 }
-
 
 .ql-picker-label.ql-active {
     background: var(--opfab-richtexteditor-button-active);
     border-radius: 3px;
 }
-
 
 // END QUILLJS STYLE
 
@@ -753,7 +740,7 @@ tag-input {
     content: var(--opfab-richtext-link-visit) !important;
 }
 
-.ql-snow .ql-tooltip[data-mode=link]::before {
+.ql-snow .ql-tooltip[data-mode='link']::before {
     content: var(--opfab-richtext-link-enter) !important;
 }
 

@@ -99,10 +99,6 @@ public class UsersService {
     }
 
     public OperationResult<String> deleteUser(String login) {
-        if (login.equalsIgnoreCase(ADMIN_GROUP_ID)) {
-            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    "Deleting user admin is not allowed");
-        }
         Optional<User> user = userRepository.findById(login);
         if (user.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,

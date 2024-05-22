@@ -30,8 +30,6 @@ public class GroupsService {
     private static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     private static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
     private static final String USER_NOT_FOUND_MSG = "User %s not found";
-    private static final String ADMIN_GROUP_ID = "ADMIN";
-    private static final String ADMIN_LOGIN = "admin";
 
     private GroupRepository groupRepository;
     private UserRepository userRepository;
@@ -100,10 +98,6 @@ public class GroupsService {
     }
 
     public OperationResult<String> deleteGroup(String groupId) {
-        if (groupId.equalsIgnoreCase(ADMIN_GROUP_ID)) {
-            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    "Deleting group ADMIN is not allowed");
-        }
         Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
@@ -191,11 +185,6 @@ public class GroupsService {
     }
 
     public OperationResult<String> deleteGroupUser(String groupId, String login) {
-
-        if (groupId.equalsIgnoreCase(ADMIN_GROUP_ID) && login.equalsIgnoreCase(ADMIN_LOGIN)) {
-            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    "Removing group ADMIN from user admin is not allowed");
-        }
 
         if (!groupRepository.findById(groupId).isPresent())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,

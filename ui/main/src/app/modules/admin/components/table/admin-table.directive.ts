@@ -91,6 +91,7 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     protected i18NPrefix = 'admin.input.';
     protected crudService: CrudService;
+    private currentUserLogin;
 
     constructor(
         protected translateService: TranslateService,
@@ -98,6 +99,7 @@ export abstract class AdminTableDirective implements OnDestroy {
         protected dataHandlingService: SharingService,
         private changeDetector: ChangeDetectorRef
     ) {
+        this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
             context: {
@@ -203,10 +205,8 @@ export abstract class AdminTableDirective implements OnDestroy {
 
         const deleteActionCellClassRules = {
             'action-cell-delete-admin': (params) =>
-                (params.context.componentParent.tableType === AdminItemType.USER &&
-                    params.data.login.toLowerCase() === 'admin') ||
-                (params.context.componentParent.tableType === AdminItemType.GROUP &&
-                    params.data.id.toLowerCase() === 'admin')
+                params.context.componentParent.tableType === AdminItemType.USER &&
+                params.data.login.toLowerCase() === this.currentUserLogin
         };
 
         // Add action columns
