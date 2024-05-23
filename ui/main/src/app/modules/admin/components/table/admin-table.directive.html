@@ -19,7 +19,7 @@
         </form>
     </span>
     <div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
-        <div *ngIf="showAddButton" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="add-item">
+        <div *ngIf="showAddButton" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" (keydown)="createNewItem()" id ="add-item">
             <em class="fas fa-plus-circle"></em></a>
             <span>&nbsp;<label for="add-item" translate> admin.input.{{this.tableType}}.add </label></span>
             <br>
@@ -45,7 +45,7 @@
             </ngb-pagination>
             </div>
             <div class="opfab-admin-export-div">
-                <div id="opfab-admin-btn-exportToExcel" class="opfab-admin-export-btn" (click)="export()">
+                <div id="opfab-admin-btn-exportToExcel" class="opfab-admin-export-btn" (click)="export()" (keydown)="export()">
                     <span class="opfab-icon-export-data"></span>
                     <span style="font-weight: bold;" translate> shared.exportToExcel </span>
                 </div>

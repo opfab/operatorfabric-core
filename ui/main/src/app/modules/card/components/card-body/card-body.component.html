@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -17,18 +17,18 @@
             </of-card-actions>
             <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton"
               class="opfab-max-and-reduce-icons">
-              <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
+              <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)' (keydown)='setFullScreen(true)'></div>
             </div>
             <div id="opfab-card-detail-fullscreen-button" *ngIf="fullscreen && showMaxAndReduceButton"
               class="opfab-max-and-reduce-icons">
-              <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
+              <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)' (keydown)='setFullScreen(false)'></div>
             </div>
-            <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close"(click)="closeDetails()">
+            <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()" (keydown)="closeDetails()">
               &times;
             </div>
           </div>
           <div *ngIf="!isThereEnoughSpaceToShowCard()" style="display:flex">
-            <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close"(click)="closeDetails()">
+            <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()" (keydown)="closeDetails()">
               &times;
             </div>
           </div>

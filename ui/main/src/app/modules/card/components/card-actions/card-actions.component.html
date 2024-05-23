@@ -33,7 +33,7 @@
     <div class="modal-header">
         <div translate> userCard.editTitle </div>
         <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+            (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </div>
     </div>
@@ -48,7 +48,7 @@
     <div class="modal-header">
         <div translate> userCard.title </div>
         <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-             (click)="modal.dismiss('Cross click')">
+             (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </div>
     </div>

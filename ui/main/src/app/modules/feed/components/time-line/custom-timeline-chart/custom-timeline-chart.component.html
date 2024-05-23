@@ -98,7 +98,8 @@
 
         <svg:g *ngFor="let circle of circles$|async;let index = index;" type="button">
         <svg:g id="opfab-timelineCircle-{{index}}" 
-            (click)="onCircleClick(circle)" 
+            (click)="onCircleClick(circle)"
+            (keydown)="onCircleClick(circle)"  
             (mouseenter)="feedCircleHovered(circle, p1)"
             (mouseleave)="onMouseLeave()" 
             container="body" 

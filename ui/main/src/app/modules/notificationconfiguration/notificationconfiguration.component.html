@@ -17,6 +17,7 @@
         <label class="opfab-checkbox">
             <h5 class="font-weight-bold">{{processGroup.label}}</h5>
             <input type="checkbox" (click)="notificationConfigurationView.clickOnProcessGroup(processGroup.id)"
+                (keydown)="notificationConfigurationView.clickOnProcessGroup(processGroup.id)"
                 [id]="'opfab_notification_processgroup_' + processGroup.id" [checked]="processGroup.checked">
             <span class="opfab-checkbox-checkmark"></span>
         </label>
@@ -53,7 +54,7 @@
             <label style="font-weight: bold;width: auto" class="opfab-checkbox">{{process.label}}
                 <input [id]="'opfab_notification_process_' + process.id" type="checkbox"
                     [disabled]="!process.filteringNotificationAllowed" (click)="notificationConfigurationView.clickOnProcess(process.id)"
-                    [checked]="process.checked">
+                    (keydown)="notificationConfigurationView.clickOnProcess(process.id)" [checked]="process.checked">
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
         </p>
@@ -66,14 +67,16 @@
                         <input type="checkbox" [checked]="state.checked"
                             [id]="'opfab_notification_state_' + process.id + '.' + state.id"
                             (click)="notificationConfigurationView.clickOnState(process.id, state.id);"
+                            (keydown)="notificationConfigurationView.clickOnState(process.id, state.id);"
                             [disabled]="!state.filteringNotificationAllowed">
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </td>
                 <td *ngIf="notificationConfigurationPage.isEmailEnabled"
                     [id]="'opfab_email_notification_state_td_' + process.id + '.' + state.id"
-                    (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)" style="padding-left: 13px"
-                    class="opfab-notificationconfiguration-slash">
+                    (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
+                    (keydown)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
+                    style="padding-left: 13px" class="opfab-notificationconfiguration-slash">
                     <div [id]="'opfab_email_notification_state_div_' + process.id + '.' + state.id"></div>
                 </td>
             </tr>

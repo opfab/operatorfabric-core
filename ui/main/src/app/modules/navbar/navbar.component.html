@@ -64,7 +64,7 @@
         <span translate>menu.newcardTooltip</span>
       </ng-template>
       <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px"
-        (click)="openCardCreation()" *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
+        (click)="openCardCreation()" (keydown)="openCardCreation()" *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
         <span class="opfab-menu-icon-newcard" [ngbPopover]="createNewCard" popoverClass="opfab-popover-unclickable"
           container="body" triggers="mouseenter:mouseleave">></span>
       </li>
@@ -141,7 +141,7 @@
   <div class="modal-header">
     <div translate> userCard.title </div>
     <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+      (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
@@ -157,7 +157,7 @@
     <div class="modal-header" id="opfab-about-dialog-header">
       <div class="opfab-about-title" translate> about.title </div>
       <div id="opfab-about-close" class="opfab-close-modal-icon" aria-label="Close"
-        (click)="modal.dismiss('Cross click')">
+        (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </div>
     </div>

@@ -75,7 +75,7 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
                     </thead>
                     <tbody>
                         <tr *ngFor="let row of userActionLogsResult.data.content"
-                            class="opfab-useractionlogs-table-line" (click)="clickOnCard(row.cardUid)">
+                            class="opfab-useractionlogs-table-line" (click)="clickOnCard(row.cardUid)" (keydown)="clickOnCard(row.cardUid)">
                             <td>{{ row.date }}</td>
                             <td>{{ row.action }}</td>
                             <td>{{ row.login }}</td>
@@ -97,7 +97,7 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
                     </ngb-pagination>
                 </div>
                 <div class="opfab-useractionlogs-export-div">
-                    <div id="opfab-useractionlogs-btn-exportToExcel" class="opfab-useractionlogs-export-btn" (click)="export()">
+                    <div id="opfab-useractionlogs-btn-exportToExcel" class="opfab-useractionlogs-export-btn" (click)="export()" (keydown)="export()">
                         <span class="opfab-icon-export-data"></span>
                         <span style="font-weight: bold;" translate> shared.exportToExcel </span>
                     </div>
@@ -121,7 +121,7 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
     <div class="modal-header">
         <div id="opfab-archives-card-title">{{ selectedCard.titleTranslated | opfabTitleCase }}</div>
         <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+            (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </div>
     </div>

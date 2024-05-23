@@ -10,7 +10,7 @@
   <div class="modal-header">
     <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.edit</span>
     <span class="modal-title" *ngIf="!row" translate>externalDevicesConfiguration.input.addSignalMapping</span>
-    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
+    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')" (keydown)="dismissModal('Cross click')">
       <span aria-hidden="true">&times;</span>
     </div>
   </div>

@@ -18,7 +18,7 @@
 <div class="opfab-dashboard" *ngIf="dashboardPage.processes.length > 0; else noProcessStateToDisplay">
     <div class="opfab-dashboardGrid" *ngFor="let process of dashboardPage.processes">
         <div class="opfab-dashboard-process">
-            <span [ngClass]="{'opfab-feed-link': !hideProcessFilter}" (click)="onProcessClick(process.id)"><b style="font-size: 16px">{{ process.name }}</b></span>
+            <span [ngClass]="{'opfab-feed-link': !hideProcessFilter}" (click)="onProcessClick(process.id)" (keydown)="onProcessClick(process.id)"><b style="font-size: 16px">{{ process.name }}</b></span>
             <div class="opfab-dashboard-cell" *ngFor="let state of process.states">
                 <span *ngFor="let circle of state.circles;let index = index;">
                     <svg *ngIf="!!circle.severity" 
@@ -30,6 +30,7 @@
                         xmlns:xlink="http://www.w3.org/1999/xlink"
                         style=" max-height: 500px; overflow: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0;">
                         <g (click)="onCircleClick(circle)"
+                            (keydown)="onCircleClick(circle)"
                             [ngbPopover]="tooltipTemplate"
                             #p1="ngbPopover"
                             (mouseenter)="dashboardCircleHovered(circle, p1)"
@@ -69,7 +70,7 @@
                         </g>
                     </svg>
                 </span>
-                <span [ngClass]="{'opfab-feed-link': !hideProcessFilter && !hideStateFilter}" (click)="onStateClick(process.id, state.id)"> {{ state.name }}</span>
+                <span [ngClass]="{'opfab-feed-link': !hideProcessFilter && !hideStateFilter}" (click)="onStateClick(process.id, state.id)" (keydown)="onStateClick(process.id, state.id)"> {{ state.name }}</span>
                 <br />
             </div>
         </div>

@@ -22,7 +22,7 @@
 <div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
   <div style="display:flex; justify-content:flex-start;">
     <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
-      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
+      <input type="checkbox" (click)="toggleCollapsibleUpdates()" (keydown)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
       <span class="opfab-checkbox-checkmark"></span>
     </label>
   </div>
@@ -45,13 +45,17 @@
 
       <tbody>
       <ng-container *ngFor="let updates of updatesByCardId">
-        <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+        <tr  (click)="openCard(updates.mostRecent.id)" (keydown)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
           <td style ="min-width: 15px" class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
           <td class="opfab-archive-sev"></td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates)">
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory"
+            style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates)"
+            (keydown)="$event.stopPropagation();displayHistoryOfACard(updates)">
             <div class="opfab-archives-icon-plus"></div>
           </td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)">
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory"
+            style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)"
+            (keydown)="$event.stopPropagation();hideHistoryOfACard(updates)">
             <div class="opfab-archives-icon-minus"></div>
           </td>
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
@@ -70,7 +74,7 @@
 
         <!--history of the card-->
         <ng-container *ngIf="updates.displayHistory">
-          <tr *ngFor="let historyCard of updates.cardHistories" (click)="openCard(historyCard.id)" class="opfab-archives-table-line" style="cursor: pointer;">
+          <tr *ngFor="let historyCard of updates.cardHistories" (click)="openCard(historyCard.id)" (keydown)="openCard(historyCard.id)" class="opfab-archives-table-line" style="cursor: pointer;">
             <td class="opfab-archive-sev"></td>
             <td class="opfab-archive-sev opfab-archive-sev-{{historyCard.severity.toLowerCase()}}"></td>
             <td></td>
@@ -110,7 +114,7 @@
         </ngb-pagination>
       </div>
       <div style="width:50%;text-align:right;padding-right:8px;">
-        <div id="opfab-archives-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" fileName="archiveResults" >
+        <div id="opfab-archives-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" (keydown)="export()" fileName="archiveResults" >
           <span class="opfab-icon-export-data"></span>
           <span style="font-weight: bold;" translate>shared.exportToExcel</span>
         </div>
@@ -132,7 +136,7 @@
   <div class="modal-header">
     <div id="opfab-archives-card-title">{{selectedCardTruncatedTitle | opfabTitleCase}}</div>
     <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+      (click)="modal.dismiss('Cross click')" (keydown)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </div>
   </div>

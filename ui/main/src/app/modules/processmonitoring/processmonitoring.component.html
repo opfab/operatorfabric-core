@@ -114,7 +114,7 @@
                   style="margin-left: 10px; max-width: 200px;"
                   class="opfab-checkbox"
                   translate>shared.adminMode
-              <input type="checkbox" (click)="toggleAdminMode()" onKeyPressed="toggleAdminMode()" [checked]="!isAdminModeChecked" />
+              <input type="checkbox" (click)="toggleAdminMode()" (keydown)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
               <span class="opfab-checkbox-checkmark"></span>
           </label>
           <div style="display:flex;margin-top:50px">
@@ -137,7 +137,7 @@
 
   <div *ngIf="isMapEnabled" style="display:flex; justify-content:flex-start; margin-left:5%;margin-right:5%" >
     <label id="opfab-show-map" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>processMonitoring.viewResultOnMap
-      <input type="checkbox" (click)="toggleShowMap()" [checked]="isMapViewActivated" >
+      <input type="checkbox" (click)="toggleShowMap()" (keydown)="toggleShowMap()" [checked]="isMapViewActivated" >
       <span class="opfab-checkbox-checkmark"></span>
     </label>
   </div>

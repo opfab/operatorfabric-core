@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,7 +10,7 @@
     <div id="of-pinned-cards">
         <div class="opfab-pinned-card" *ngFor="let pinned of visiblePinnedCards" style="white-space: nowrap;">
             <div style="display:flex">
-            <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)" style="text-overflow: ellipsis; overflow: hidden; max-width:215px">{{pinned.titleTranslated}}</span>
+            <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)"  (keydown)="select(pinned.id)" style="text-overflow: ellipsis; overflow: hidden; max-width:215px">{{pinned.titleTranslated}}</span>
             <em class="fas fa-thumbtack" style="padding-left: 4px; margin-top: 4px;"></em>
             </div>
 
@@ -20,7 +20,7 @@
 </div>
 <ng-template #hiddenCardsTemplate>
     <div class="opfab-pinned-card opfab-hidden-pinned-card" *ngFor="let pinned of hiddenPinnedCards">
-        <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)">{{pinned.titleTranslated}}</span>
+        <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)" (keydown)="select(pinned.id)">{{pinned.titleTranslated}}</span>
         <em class="fas fa-thumbtack" style="padding-left: 4px;"></em>
     </div>
     <div *ngIf="areThereTooManyHiddenCards()" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">

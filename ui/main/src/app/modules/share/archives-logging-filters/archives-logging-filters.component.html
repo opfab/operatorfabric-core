@@ -203,7 +203,7 @@
                     class="opfab-checkbox"
                     translate
                     >shared.adminMode
-                    <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
+                    <input type="checkbox" (click)="toggleAdminMode()" (keydown)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
                 <div style="display:flex; margin-bottom: 22px">

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -28,7 +28,7 @@
         </ngb-pagination>
         </div>
         <div class="opfab-monitoring-export-div">
-            <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" fileName="monitoringResults" >
+            <div id="opfab-monitoring-btn-exportToExcel" class="opfab-monitoring-export-btn" style="cursor:pointer" (click)="export()" (keydown)="export()" fileName="monitoringResults" >
                 <span class="opfab-icon-export-data"></span>
                 <span style="font-weight: bold;" translate> shared.exportToExcel </span>
             </div>

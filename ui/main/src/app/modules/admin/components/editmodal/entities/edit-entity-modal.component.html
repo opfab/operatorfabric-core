@@ -11,7 +11,7 @@
   <div class="modal-header">
     <span class="modal-title" *ngIf="row">{{row.id}}</span>
     <span class="modal-title" *ngIf="!row" translate>admin.input.{{type}}.add</span>
-    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
+    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')" (keydown)="dismissModal('Cross click')">
       <span aria-hidden="true">&times;</span>
     </div>
   </div>

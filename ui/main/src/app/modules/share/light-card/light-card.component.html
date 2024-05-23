@@ -13,7 +13,7 @@
      class="card light-card-detail "
      [class.light-card-detail-selected]="open || groupedCardOpen" [class.light-card-detail-unselected]="!open && !groupedCardOpen"
      [class.light-card-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
-     (click)="select($event)"
+     (click)="select($event)"  (keydown)="select($event)"
      (mouseenter)='highlightOnMap(true)'
      (mouseleave)='highlightOnMap(false)'
 >
@@ -51,7 +51,7 @@
                               triggers="mouseenter:mouseleave">
                             <em id="opfab-feed-light-card-group-icon" style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
-                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1"
+                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' (keydown)='zoomToLocation($event)' class="p-1"
                               placement="right" [ngbPopover]="tipSeeGeolocation" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -9,7 +9,7 @@
 
 <div id='div-detail-msg' class="opfab-info-message"  *ngIf='alertPage.display' [style]="alertPage.style + ';background-color:' + alertPage.backgroundColor">
     <span> &nbsp; {{alertPage.message}}</span>
-    <div id="opfab-close-alert" class="opfab-alert-close" aria-label="Close" (click)=" this.alertView.closeAlert();">
+    <div id="opfab-close-alert" class="opfab-alert-close" aria-label="Close" (click)=" this.alertView.closeAlert();" (keydown)=" this.alertView.closeAlert();">
       <span aria-hidden="true">&times;</span>
     </div>
 </div>
