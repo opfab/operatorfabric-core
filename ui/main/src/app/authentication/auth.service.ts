@@ -123,7 +123,8 @@ export class AuthService {
         logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
-        window.location.href = ConfigService.getConfigValue('security.logout-url', 'https://opfab.github.io');
+        if (this.mode !== AuthenticationMode.IMPLICIT)
+            window.location.href = ConfigService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 
     private goBackToLoginPage() {
