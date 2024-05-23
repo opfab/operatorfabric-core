@@ -87,7 +87,7 @@
     "karma-junit-reporter": "2.0.1",
     "karma-mocha-reporter": "2.2.5",
     "typescript": "5.4.5",
-    "zone.js": "0.14.5"
+    "zone.js": "0.14.6"
   },
   "browserslist": [
     "last 10 Chrome major version",
