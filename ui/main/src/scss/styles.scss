@@ -39,6 +39,11 @@ body {
     scrollbar-color: var(--opfab-scrollbar-bar-bgcolor-firefox) var(--opfab-scrollbar-bgcolor-firefox);
 }
 
+* :focus-visible {
+	outline: 0;
+	box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
 // Colors for state types
 .opfab-typeOfState-INPROGRESS {
     color: #ff6600;
