@@ -27,7 +27,7 @@
           <div [class.active]="menuElement.id === currentMenuId" class='nav-link'
             *ngIf="!menuElement.dropdownMenu || menuElement.dropdownMenu.length===0">
             <a id="opfab-navbar-menu-{{menuElement.id}}" style="cursor: pointer;"
-              (click)="clickOnMenu(menuElement)">{{menuElement.label}}</a>
+              (click)="clickOnMenu(menuElement)" (keydown.enter)="clickOnMenu(menuElement)" tabindex="0">{{menuElement.label}}</a>
             <a id="opfab-navbar-menu-icon-{{menuElement.id}}" *ngIf="menuElement.linkType==='BOTH'"
               class="opfab-icon-link " (click)="clickOnMenu(menuElement,true)">
               <em class="fas fa-external-link-alt"></em>
@@ -36,9 +36,10 @@
 
           <!-- Dropdown menu  -->
           <a class="nav-link" id="opfab-navbar-menu-dropdown-{{menuElement.id}}"
-            *ngIf="menuElement.dropdownMenu?.length>0" (mouseenter)="toggleMenu(p1)" triggers="mouseenter:mouseleave"
+            *ngIf="menuElement.dropdownMenu?.length>0" 
+            (mouseenter)="p1.open()" (keydown.enter)="p1.open()" (blur)="p1.close()" (mouseleave)="p1.close()" (keydown.esc)="p1.close()"
             closeDelay="3000" #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow"
-            placement="bottom-left" container="body" href="javascript:void(0)" translate>{{menuElement.label}}
+            placement="bottom-left" container="body" href="javascript:void(0)" tabindex="0">{{menuElement.label}}
             <em class="fa fa-caret-down"></em>
           </a>
           <ng-template #navbarDropdown>
