@@ -147,6 +147,8 @@ a|authentication mode, available options:
 - PASSWORD: Direct Password Flow (fallback);
 - IMPLICIT: Implicit Flow.
 
+|security.implicit-mode-post-logout-url|null|no| The redirect URL after logout when using IMPLICIT flow 
+
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login
 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )

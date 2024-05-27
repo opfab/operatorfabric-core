@@ -13,6 +13,7 @@ import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
     constructor(
@@ -34,6 +35,11 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
             clearHashAfterLogin: false,
             requireHttps: false
         };
+        const postLogoutUrl = ConfigService.getConfigValue('security.implicit-mode-post-logout-url');
+        if (postLogoutUrl) {
+            authConfig.postLogoutRedirectUri = postLogoutUrl;
+        }
+
         this.oauthService.configure(authConfig);
         this.oauthService.setupAutomaticSilentRefresh();
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
