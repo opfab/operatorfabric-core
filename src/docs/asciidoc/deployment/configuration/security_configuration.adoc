@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -143,6 +143,9 @@ To enable IMPLICIT Flow authentication the following properties need to be set i
 - `security.oauth2.flow.mode` to `IMPLICIT`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
 
+It is possible to configure the URL to redirect the browser after logout by setting the `security.implicit-mode-post-logout-url` parameter in web-ui.json.
+Be careful that the configured value should be one of the valid post logout redirect URIs configured on Keycloak realm.
+
 ==== Example of configuration for IMPLICIT Flow 
 
 
@@ -161,6 +164,7 @@ To enable IMPLICIT Flow authentication the following properties need to be set i
       }
     },
     "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
+    "implicit-mode-post-logout-url": "https://opfab.github.io"
   }
 }
 ----
