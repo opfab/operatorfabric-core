@@ -14,9 +14,11 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
-    Output
+    Output,
+    SimpleChanges
 } from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
@@ -60,7 +62,7 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
     styleUrls: ['./archives-logging-filters.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
@@ -149,6 +151,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        this.loadValuesforTags();
+    }
+
     ngOnInit() {
         this.processesGroups = ProcessesService.getProcessGroups();
         this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
@@ -174,7 +180,13 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.processesWithoutProcessGroupMultiSelectOptions = [];
         this.processMultiSelectOptionsPerProcessGroups.clear();
         this.processGroupMultiSelectOptions = [];
+    }
+
+    loadValuesforTags() {
         this.tagsMultiSelectOptions = [];
+        if (this.tags) {
+            this.tags.forEach((tag) => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value, tag.label)));
+        }
     }
 
     loadValuesForFilters() {
@@ -213,9 +225,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             processesIds.includes(visibleProcess.value)
         );
 
-        if (this.tags) {
-            this.tags.forEach((tag) => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value, tag.label)));
-        }
         this.setDefaultPublishDateFilter();
     }
 

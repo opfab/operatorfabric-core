@@ -176,5 +176,5 @@
       }
     }
   },
-  "customJsToLoad": ["http://localhost:2002/externalJs/example.js"]
+  "customJsToLoad": ["http://localhost:2002/externalJs/example.js","http://localhost:2002/externalJs/loadTags.js"]
 }

@@ -11,6 +11,7 @@
 The frontend API is intended to provide a way for template to communicate with the core opfab code. It's divided as follow :
 
 - Users API : API to get information about users and entities
+- BusinessConfig API : API to get business configuration information
 - Navigate API : API to ask opfab to navigate to a specific view
 - CurrentCard API : API to get information regarding the current card 
 - CurrentUserCard API : API to get information regarding the current user card (card in creation or edition)
@@ -54,7 +55,22 @@ Obtain all entities as an array :
 const entities = opfab.users.entities.getAllEntities();
 ```
 
+== BusinessConfig API
 
+=== Function registerFunctionToGetTags
+
+It is possible to register at startup the function to be used to retrieve the list of tags:
+
+```
+opfab.businessconfig.registerFunctionToGetTags(function);
+```
+
+The registered function must take as input parameter the screen name. The possible values for screen name are : 'archives', 'logging', 'processMonitoring'
+
+An example of usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJs/loadTags.js[config/docker/externalJs/loadTags.js].
+
+In no custon function is registered or if the registered function returns `undefined`, then Opfab will take the tags values configured in web-ui.json
 
 == Navigate API 
 

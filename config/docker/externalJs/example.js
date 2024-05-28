@@ -6,4 +6,4 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-console.log('Custom js example executed');
+console.log(new Date().toISOString(), 'Custom js example executed');
