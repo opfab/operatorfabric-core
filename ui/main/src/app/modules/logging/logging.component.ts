@@ -34,6 +34,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 @Component({
     selector: 'of-logging',
@@ -44,7 +45,7 @@ import {TranslationService} from 'app/business/services/translation/translation.
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    tags: any[];
+    tags: any[] = [];
     size: number;
     loggingForm = new FormGroup({
         tags: new FormControl([]),
@@ -121,8 +122,10 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     ngOnInit() {
         this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
-        this.tags = ConfigService.getConfigValue('logging.filters.tags.list');
-
+        OpfabAPIService.businessconfig.getTags('logging').then((customTags) => {
+            this.tags = customTags ?? ConfigService.getConfigValue('logging.filters.tags.list');
+            this.changeDetector.markForCheck();
+        });
         this.results = [];
     }
 

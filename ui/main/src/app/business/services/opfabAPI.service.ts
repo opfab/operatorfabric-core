@@ -10,12 +10,14 @@
 import {BusinessDataService} from './businessconfig/businessdata.service';
 import {TranslationService} from './translation/translation.service';
 import {EntitiesService} from './users/entities.service';
+import {LogOption, LoggerService as logger} from './logs/logger.service';
 
 declare const opfab: any;
 
 export class OpfabAPIService {
     public static currentCard;
     public static currentUserCard;
+    public static businessconfig;
 
     public static templateInterface: any;
     public static userCardTemplateInterface: any;
@@ -121,10 +123,6 @@ export class OpfabAPIService {
 
     public static initAPI() {
         if (OpfabAPIService.initAPIDone) return;
-        opfab.businessconfig.businessData.get = async function (resourceName) {
-            const resource = await BusinessDataService.getBusinessData(resourceName);
-            return resource;
-        };
 
         opfab.navigate.redirectToBusinessMenu = function (menuId, urlExtension) {
             const urlSplit = document.location.href.split('#');
@@ -151,7 +149,30 @@ export class OpfabAPIService {
         OpfabAPIService.initUserApi();
         OpfabAPIService.initCurrentCardApi();
         OpfabAPIService.initCurrentUserCardApi();
+        OpfabAPIService.initBusinessConfigApi();
         OpfabAPIService.initAPIDone = true;
+    }
+
+    private static initBusinessConfigApi() {
+        const self = this;
+
+        opfab.businessconfig.businessData.get = async function (resourceName) {
+            const resource = await BusinessDataService.getBusinessData(resourceName);
+            return resource;
+        };
+
+        this.businessconfig = {
+            getTags: async function (screenName: string) {
+                return undefined;
+            }
+        };
+
+        opfab.businessconfig.registerFunctionToGetTags = function (getTags) {
+            self.businessconfig.getTags = getTags;
+            logger.info('Registered function to get tags', LogOption.LOCAL_AND_REMOTE);
+        };
+        // prevent unwanted modifications from templates code or custom scripts
+        Object.freeze(opfab.businessconfig);
     }
 
     private static initUserApi() {

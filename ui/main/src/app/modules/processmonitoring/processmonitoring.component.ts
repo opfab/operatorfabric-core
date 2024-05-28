@@ -36,6 +36,7 @@ import {ProcessMonitoringView} from 'app/business/view/processmonitoring/process
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -102,7 +103,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         nbOfDisplayValues: 1
     };
 
-    tags: any[];
+    tags: any[] = [];
     size: number;
     processMonitoringForm = new FormGroup({
         tags: new FormControl([]),
@@ -238,25 +239,27 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.changeStatesWhenSelectProcess();
 
         this.size = ConfigService.getConfigValue('processMonitoring.filters.page.size', 10);
-        this.tags = ConfigService.getConfigValue('processMonitoring.filters.tags.list');
+        OpfabAPIService.businessconfig.getTags('processMonitoring').then((customTags) => {
+            this.tags = customTags ?? ConfigService.getConfigValue('processMonitoring.filters.tags.list');
+
+            this.tagsMultiSelectOptions = this.tags.map((tag) => {
+                return new MultiSelectOption(tag.value, tag.label);
+            });
+            const tagsSelectedInStorage = UserPreferencesService.getPreference('opfab.processMonitoring.tagsSelected');
+            if (tagsSelectedInStorage?.length > 0) {
+                this.tagsSelected = tagsSelectedInStorage.split(',');
+                this.processMonitoringForm.patchValue({tags: this.tagsSelected});
+            }
+            this.changeDetector.markForCheck();
+        });
         this.page = 1;
         this.results = [];
-
-        this.tagsMultiSelectOptions = this.tags.map((tag) => {
-            return new MultiSelectOption(tag.value, tag.label);
-        });
 
         SelectedCardService.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
 
         this.isMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
-
-        const tagsSelectedInStorage = UserPreferencesService.getPreference('opfab.processMonitoring.tagsSelected');
-        if (tagsSelectedInStorage?.length > 0) {
-            this.tagsSelected = tagsSelectedInStorage.split(',');
-            this.processMonitoringForm.patchValue({tags: this.tagsSelected});
-        }
     }
 
     public tagsChoiceChanged(tags: string[]) {

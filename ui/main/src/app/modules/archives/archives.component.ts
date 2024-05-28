@@ -36,6 +36,7 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 @Component({
     selector: 'of-archives',
@@ -46,7 +47,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 export class ArchivesComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    tags: any[];
+    tags: any[] = [];
     size: number;
     historySize: number;
     archiveForm = new FormGroup({
@@ -118,7 +119,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.size = ConfigService.getConfigValue('archive.filters.page.size', 10);
         this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
-        this.tags = ConfigService.getConfigValue('archive.filters.tags.list');
+        OpfabAPIService.businessconfig.getTags('archive').then((customTags) => {
+            this.tags = customTags ?? ConfigService.getConfigValue('archive.filters.tags.list');
+            this.changeDetector.markForCheck();
+        });
         this.results = [];
         this.updatesByCardId = [];
     }
