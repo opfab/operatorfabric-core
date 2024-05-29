@@ -133,6 +133,9 @@ export class SoundNotificationService {
         OpfabStore.getLightCardStore()
             .getNewLightCards()
             .subscribe((card) => this.handleLoadedCard(card));
+        OpfabStore.getLightCardStore()
+            .getNewLightChildCards()
+            .subscribe((card) => this.handleLoadedChildCard(card));
     }
 
     public static clearOutstandingNotifications() {
@@ -144,6 +147,19 @@ export class SoundNotificationService {
         if (NotificationDecision.isSoundToBePlayedForCard(card)) {
             this.incomingCard.next(card);
             if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
+                AlertMessageService.sendAlertMessage({
+                    message: null,
+                    level: MessageLevel.BUSINESS,
+                    i18n: {key: 'feed.hiddenCardReceived'}
+                });
+        }
+    }
+
+    public static handleLoadedChildCard(lightCard: LightCard) {
+        if (NotificationDecision.isNotificationNeededForChildCard(lightCard)) {
+            const parentCard = OpfabStore.getLightCardStore().getLightCard(lightCard.parentCardId);
+            this.incomingCard.next(parentCard);
+            if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(parentCard))
                 AlertMessageService.sendAlertMessage({
                     message: null,
                     level: MessageLevel.BUSINESS,

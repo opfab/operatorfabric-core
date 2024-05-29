@@ -27,6 +27,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
 
 class FormResult {
     valid: boolean;
@@ -189,6 +190,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 actions: responseData.actions
             };
             this.sendingResponseInProgress = true;
+            // Exclude card from sound and system notifications before publishing to avoid synchronization problems
+            NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
             CardService.postCard(card).subscribe((resp) => {
                 this.sendingResponseInProgress = false;
                 if (resp.status !== ServerResponseStatus.OK) {

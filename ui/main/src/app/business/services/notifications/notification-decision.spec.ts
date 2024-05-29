@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {NotificationDecision} from './notification-decision';
 import {getOneLightCard} from '@tests/helpers';
 
@@ -173,5 +173,62 @@ describe('Sound decisions', () => {
             expect(NotificationDecision.hasSentCard(card1.id)).toBeFalse();
             done();
         });
+    });
+
+    it('Sound and system notification for child card with PROPAGATE_READ_ACK_TO_PARENT_CARD', (done) => {
+        const publishDate = new Date().getTime();
+        const card = getOneLightCard({
+            publishDate: publishDate,
+            parentCardId: '123456',
+            actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
+        });
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTrue();
+        done();
+    });
+
+    it('No Sound and no system notification for child card without PROPAGATE_READ_ACK_TO_PARENT_CARD', (done) => {
+        const publishDate = new Date().getTime();
+        const card = getOneLightCard({
+            publishDate: publishDate,
+            parentCardId: '123456',
+            actions: []
+        });
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        done();
+    });
+
+    it('No sound and no system notification if child card with PROPAGATE_READ_ACK_TO_PARENT_CARD is in lastSentCards', (done) => {
+        const publishDate = new Date().getTime();
+        const card = getOneLightCard({
+            publishDate: publishDate,
+            parentCardId: '123456',
+            actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
+        });
+        NotificationDecision.addSentCard(card.id);
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        done();
+    });
+
+    it('Sound and system notification if child card with PROPAGATE_READ_ACK_TO_PARENT_CARD is in lastSentCards and publish date is after sent timestamp plus error margin', (done) => {
+        /* This use case arises when a different user from the same entity modifies a response child card originally sent by the current user.
+         * We detect this scenario by verifying that the card's publish date is later than the date when the current user sent the child card.
+         */
+        const publishDate = new Date().getTime();
+        let card = getOneLightCard({
+            publishDate: publishDate,
+            parentCardId: '123456',
+            actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
+        });
+        NotificationDecision.addSentCard(card.id);
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+
+        jasmine.clock().tick(1000);
+        card = {...card, publishDate: new Date().getTime()};
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+
+        jasmine.clock().tick(NotificationDecision.ERROR_MARGIN);
+        card = {...card, publishDate: new Date().getTime()};
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTrue();
+        done();
     });
 });

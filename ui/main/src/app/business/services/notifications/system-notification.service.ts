@@ -66,10 +66,20 @@ export class SystemNotificationService {
         OpfabStore.getLightCardStore()
             .getNewLightCards()
             .subscribe((lightCard) => this.handleLoadedCard(lightCard));
+        OpfabStore.getLightCardStore()
+            .getNewLightChildCards()
+            .subscribe((card) => this.handleLoadedChildCard(card));
     }
 
     public static handleLoadedCard(lightCard: LightCard) {
         if (NotificationDecision.isSystemNotificationToBeShownForCard(lightCard)) this.incomingCard.next(lightCard);
+    }
+
+    public static handleLoadedChildCard(lightCard: LightCard) {
+        if (NotificationDecision.isNotificationNeededForChildCard(lightCard)) {
+            const parentCard = OpfabStore.getLightCardStore().getLightCard(lightCard.parentCardId);
+            this.incomingCard.next(parentCard);
+        }
     }
 
     private static initSystemNotificationForSeverity(severity: Severity) {
