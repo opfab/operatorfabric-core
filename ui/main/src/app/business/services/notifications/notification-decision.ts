@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {CardAction, LightCard, Severity} from '@ofModel/light-card.model';
 
 export class NotificationDecision {
     /* We allow a 30-minute window for a card to be considered 'recent'. This accounts for potential network issues that
@@ -79,6 +79,13 @@ export class NotificationDecision {
                 this.checkCardIsRecent(card)
             );
         }
+    }
+
+    public static isNotificationNeededForChildCard(card: LightCard) {
+        return (
+            card.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) &&
+            (!this.lastSentCards.get(card.id) || this.checkSentCardIsRecentlyPublished(card))
+        );
     }
 
     public static isSystemNotificationToBeShownForCard(card: LightCard) {

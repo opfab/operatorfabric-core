@@ -64,7 +64,23 @@ export function getOneLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.timeSpans ?? null,
         lightCardTemplate.rrule ?? null,
         lightCardTemplate.process ?? 'testProcess',
-        lightCardTemplate.state ?? 'testState'
+        lightCardTemplate.state ?? 'testState',
+        lightCardTemplate.parentCardId ?? null,
+        lightCardTemplate.initialParentCardUid ?? null,
+        lightCardTemplate.keepChildCards ?? false,
+        lightCardTemplate.representative ?? null,
+        lightCardTemplate.representativeType ?? null,
+        lightCardTemplate.wktGeometry ?? null,
+        lightCardTemplate.wktProjection ?? null,
+        lightCardTemplate.entitiesAcks ?? null,
+        lightCardTemplate.entityRecipients ?? null,
+        lightCardTemplate.entityRecipientsForInformation ?? null,
+        lightCardTemplate.entitiesAllowedToRespond ?? null,
+        lightCardTemplate.entitiesRequiredToRespond ?? null,
+        lightCardTemplate.entitiesAllowedToEdit ?? null,
+        lightCardTemplate.publisherType ?? null,
+        lightCardTemplate.secondsBeforeTimeSpanForReminder ?? null,
+        lightCardTemplate.actions ?? null
     );
 }
 
