@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.opfab.utilities.ObjectUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -168,6 +169,97 @@ public class Card  {
         this.uid = UUID.randomUUID().toString();
         this.processStateKey = process + "." + state;
         this.entitiesAcks = Collections.emptyList();
+    }
+
+    public Card patch(Card other) {
+        Card result = new Card();
+
+        result.uid = this.uid;
+        result.id = this.id;
+        result.parentCardId = this.parentCardId;
+        result.initialParentCardUid = this.initialParentCardUid;
+        result.keepChildCards = this.keepChildCards;
+
+        result.publisher = ObjectUtils.getNotNullOrDefault(other.getPublisher(), this.getPublisher());
+
+        result.processVersion = ObjectUtils.getNotNullOrDefault(other.getProcessVersion(),
+                this.getProcessVersion());
+
+        result.process = this.process;
+        result.processInstanceId = this.processInstanceId;
+
+        result.state = ObjectUtils.getNotNullOrDefault(other.getState(),
+                this.getState());
+        result.title = ObjectUtils.getNotNullOrDefault(other.getTitle(),
+                this.getTitle());
+        result.summary = ObjectUtils.getNotNullOrDefault(other.getSummary(),
+                this.getSummary());
+
+        result.titleTranslated = ObjectUtils.getNotNullOrDefault(other.getTitleTranslated(),
+                this.getTitleTranslated());
+        result.summaryTranslated = ObjectUtils.getNotNullOrDefault(other.getSummaryTranslated(),
+                this.getSummaryTranslated());
+        result.publishDate = this.getPublishDate();
+        result.lastUpdate = this.getLastUpdate();
+
+        result.lttd = ObjectUtils.getNotNullOrDefault(other.getLttd(),
+                this.getLttd());
+        result.startDate = ObjectUtils.getNotNullOrDefault(other.getStartDate(), this.getStartDate());
+
+        result.endDate = ObjectUtils.getNotNullOrDefault(other.getEndDate(), this.getEndDate());
+        result.expirationDate = ObjectUtils.getNotNullOrDefault(other.getExpirationDate(),
+                this.getExpirationDate());
+        result.severity = ObjectUtils.getNotNullOrDefault(other.getSeverity(), this.getSeverity());
+        result.tags = ObjectUtils.getNotNullOrDefault(other.getTags(),
+                this.getTags(), ArrayList::new);
+        result.timeSpans = ObjectUtils.getNotNullOrDefault(other.getTimeSpans(),
+                this.getTimeSpans(), ArrayList::new);
+
+        result.data = ObjectUtils.getNotNullOrDefault(other.getData(), this.getData());
+
+        result.userRecipients = ObjectUtils.getNotNullOrDefault(other.getUserRecipients(),
+                this.getUserRecipients(), ArrayList::new);
+
+        result.groupRecipients = ObjectUtils.getNotNullOrDefault(other.getGroupRecipients(),
+                this.getGroupRecipients(), ArrayList::new);
+
+        result.entitiesAllowedToRespond = ObjectUtils.getNotNullOrDefault(other.getEntitiesAllowedToRespond(),
+                this.getEntitiesAllowedToRespond(), ArrayList::new);
+
+        result.entitiesRequiredToRespond = ObjectUtils.getNotNullOrDefault(other.getEntitiesRequiredToRespond(),
+                this.getEntitiesRequiredToRespond(), ArrayList::new);
+
+        result.entitiesAllowedToEdit = ObjectUtils.getNotNullOrDefault(other.getEntitiesAllowedToEdit(),
+                this.getEntitiesAllowedToEdit(), ArrayList::new);
+
+        result.entityRecipients = ObjectUtils.getNotNullOrDefault(other.getEntityRecipients(),
+                this.getEntityRecipients(), ArrayList::new);
+
+        result.entityRecipientsForInformation = ObjectUtils.getNotNullOrDefault(other.getEntityRecipientsForInformation(),
+                this.getEntityRecipientsForInformation(), ArrayList::new);
+
+        result.externalRecipients = ObjectUtils.getNotNullOrDefault(other.getExternalRecipients(),
+                this.getExternalRecipients(), ArrayList::new);
+
+        result.usersAcks = this.getUsersAcks();
+        result.entitiesAcks = this.getEntitiesAcks();
+        result.usersReads = this.getUsersReads();
+        result.processStateKey = result.process + "." + result.state;
+
+        result.publisherType = ObjectUtils.getNotNullOrDefault(other.getPublisherType(), this.getPublisherType());
+        result.representative = ObjectUtils.getNotNullOrDefault(other.getRepresentative(), this.getRepresentative());
+        result.representativeType = ObjectUtils.getNotNullOrDefault(other.getRepresentativeType(),
+                this.getRepresentativeType());
+        result.wktGeometry = ObjectUtils.getNotNullOrDefault(other.getWktGeometry(), this.getWktGeometry());
+        result.wktProjection = ObjectUtils.getNotNullOrDefault(other.getWktProjection(), this.getWktProjection());
+        result.secondsBeforeTimeSpanForReminder =
+                ObjectUtils.getNotNullOrDefault(other.getSecondsBeforeTimeSpanForReminder(),
+                        this.getSecondsBeforeTimeSpanForReminder());
+        result.toNotify = ObjectUtils.getNotNullOrDefault(other.getToNotify(), this.getToNotify());
+        result.rRule = ObjectUtils.getNotNullOrDefault(other.getRRule(), this.getRRule());
+        result.actions = ObjectUtils.getNotNullOrDefault(other.getActions(), this.getActions());
+
+        return result;
     }
 
 

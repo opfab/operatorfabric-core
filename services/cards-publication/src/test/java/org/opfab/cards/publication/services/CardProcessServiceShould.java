@@ -285,6 +285,46 @@ class CardProcessServiceShould {
         }
 
         @Test
+        void GIVEN_a_publisher_WHEN_patching_a_card_THEN_card_is_saved() {
+                Card initialCard = generateOneCard();
+                cardProcessingService.processCard(initialCard);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(checkArchiveCount(1)).isTrue();
+
+                Card patchCard = Card.builder().severity(SeverityEnum.ALARM).build();
+                cardProcessingService.patchCard(initialCard.getId(), patchCard, Optional.empty(), Optional.empty());
+
+                Card persistedCard = cardRepositoryMock.findCardById(initialCard.getId(), false);
+                assertThat(persistedCard.getSeverity()).isEqualTo(SeverityEnum.ALARM);
+                assertThat(persistedCard.getStartDate()).isEqualTo(initialCard.getStartDate());
+                assertThat(persistedCard.getTitle()).isEqualTo(initialCard.getTitle());
+                assertThat(persistedCard.getPublisher()).isEqualTo(initialCard.getPublisher());
+                assertThat(persistedCard.getProcess()).isEqualTo(initialCard.getProcess());
+                assertThat(persistedCard.getProcessInstanceId()).isEqualTo(initialCard.getProcessInstanceId());
+
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(checkArchiveCount(2)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_publisher_WHEN_patching_a_nonexistent_card_THEN_card_is_not_saved() {
+                Optional<CurrentUserWithPerimeters> emptyForUser = Optional.empty();
+                Optional<Jwt> emptyForJwt = Optional.empty();
+                Card initialCard = generateOneCard();
+                cardProcessingService.processCard(initialCard);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(checkArchiveCount(1)).isTrue();
+
+                Card patchCard = Card.builder().severity(SeverityEnum.ALARM).build();
+                Assertions.assertThatThrownBy(() -> cardProcessingService.patchCard("nonexistentId",
+                                patchCard, emptyForUser, emptyForJwt))
+                        .isInstanceOf(ApiErrorException.class)
+                        .hasMessageContaining("Card with id nonexistentId not found");
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+                Assertions.assertThat(checkArchiveCount(1)).isTrue();
+        }
+
+        @Test
         void GIVEN_a_publisher_WHEN_sending_a_new_card_THEN_card_event_ADD_is_send_to_eventBus() {
 
                 cardProcessingService.processCard(generateOneCard());
@@ -592,7 +632,7 @@ class CardProcessServiceShould {
                                 .secondsBeforeTimeSpanForReminder(Integer.valueOf(1000))
                                 .build();
                 cardProcessingService.processCard(newCard);
-                Card persistedCard = cardRepositoryMock.findCardById(newCard.getId());
+                Card persistedCard = cardRepositoryMock.findCardById(newCard.getId(), false);
                 assertThat(persistedCard).isEqualTo(newCard);
                 assertThat(persistedCard.getTitleTranslated()).isEqualTo("Title translated");
                 assertThat(persistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
@@ -743,7 +783,7 @@ class CardProcessServiceShould {
                 card.setInitialParentCardUid(null);
                 card.setKeepChildCards(null);
                 cardProcessingService.processCard(card);
-                Card cardSaved = cardRepositoryMock.findCardById(card.getId());
+                Card cardSaved = cardRepositoryMock.findCardById(card.getId(), false);
                 Assertions.assertThat(cardSaved.getKeepChildCards()).isNotNull();
                 Assertions.assertThat(cardSaved.getKeepChildCards()).isFalse();
         }
@@ -782,7 +822,7 @@ class CardProcessServiceShould {
                 Card card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
-                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token))
+                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token, false))
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card publisher is set to dummyUser and account login is wrongUser, the card cannot be sent");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
@@ -807,7 +847,7 @@ class CardProcessServiceShould {
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
 
-                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
@@ -825,7 +865,7 @@ class CardProcessServiceShould {
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
 
-                cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token);
+                cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 String cardId = card.getId();
                 Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
@@ -849,7 +889,7 @@ class CardProcessServiceShould {
                 card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
-                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token))
+                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, optionalWrongUser, token, false))
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
@@ -877,7 +917,7 @@ class CardProcessServiceShould {
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
                 Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
 
-                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
@@ -897,7 +937,7 @@ class CardProcessServiceShould {
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
                 Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
 
-                cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token);
+                cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 String cardId = card.getId();
                 Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
@@ -924,7 +964,7 @@ class CardProcessServiceShould {
 
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
-                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1")
+                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false)
                                 .getPublisher()).isEqualTo("newPublisherId");
         }
 
@@ -943,7 +983,7 @@ class CardProcessServiceShould {
 
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
-                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1")
+                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false)
                                 .getPublisher()).isEqualTo("entityAllowed");
 
         }
@@ -965,12 +1005,12 @@ class CardProcessServiceShould {
                                 () -> cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token))
                                 .isInstanceOf(ApiErrorException.class)
                                 .hasMessage("User is not the sender of the original card or user is not part of entities allowed to edit card. Card is rejected");
-                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1")
+                Assertions.assertThat(cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false)
                                 .getPublisher()).isEqualTo("entity2");
         }
 
         @Test
-        void GIVEN_a_card_with_an_unexisting_process__WHEN_sending_card_THEN_card_is_rejected() {
+        void GIVEN_a_card_with_an_nonexistent_process__WHEN_sending_card_THEN_card_is_rejected() {
                 Card card = generateOneCard("entity2");
                 card.setProcess("dummyProcess");
                 Assertions.assertThatThrownBy(
@@ -981,7 +1021,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_with_an_unexisting_state_WHEN_sending_card_THEN_card_is_rejected() {
+        void GIVEN_a_card_with_an_nonexistent_state_WHEN_sending_card_THEN_card_is_rejected() {
                 Card card = generateOneCard("entity2");
                 card.setState("dummyState");
                 Assertions.assertThatThrownBy(
@@ -992,7 +1032,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_with_an_unexisting_process_version_WHEN_sending_card_THEN_card_is_rejected() {
+        void GIVEN_a_card_with_an_nonexistent_process_version_WHEN_sending_card_THEN_card_is_rejected() {
                 Card card = generateOneCard("entity2");
                 card.setProcessVersion("99");
                 Assertions.assertThatThrownBy(
@@ -1124,7 +1164,7 @@ class CardProcessServiceShould {
                 testCurrentUserWithPerimeters.setComputedPerimeters(list);
                 Optional<CurrentUserWithPerimeters> user = Optional.of(testCurrentUserWithPerimeters);
 
-                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, user, token))
+                Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, user, token, false))
                                 .isInstanceOf(AccessDeniedException.class)
                                 .hasMessage("user not authorized to send card with process PROCESS_CARD_USER and state state1 as it is not permitted by his perimeters, the card is rejected");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
@@ -1148,7 +1188,7 @@ class CardProcessServiceShould {
                 list.add(cp);
                 testCurrentUserWithPerimeters.setComputedPerimeters(list);
                 Optional<CurrentUserWithPerimeters> user = Optional.of(testCurrentUserWithPerimeters);
-                cardProcessingService.processCard(card, user, token);
+                cardProcessingService.processCard(card, user, token, false);
 
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
@@ -1176,7 +1216,7 @@ class CardProcessServiceShould {
                 newCard.setActions(List.of(CardActionEnum.KEEP_EXISTING_ACKS_AND_READS));
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
 
-                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 Assertions.assertThat(updated.getUsersReads()).isEqualTo(List.of("dummyUser","user2"));
                 Assertions.assertThat(updated.getUsersAcks()).isEqualTo(List.of("dummyUser"));
@@ -1189,13 +1229,13 @@ class CardProcessServiceShould {
                 cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
 
                 Assertions.assertThat(checkCardCount(1)).isTrue();
-                Card original = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+                Card original = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false);
 
                 Card newCard = generateOneCard("entity2");
                 newCard.setActions(List.of(CardActionEnum.KEEP_EXISTING_PUBLISH_DATE));
                 cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
 
-                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1");
+                Card updated = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 Assertions.assertThat(updated.getUid()).isNotEqualTo(original.getUid());
                 Assertions.assertThat(updated.getPublishDate()).isEqualTo(original.getPublishDate());

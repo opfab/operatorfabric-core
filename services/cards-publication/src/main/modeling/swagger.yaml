@@ -930,6 +930,38 @@ paths:
             $ref: '#/definitions/CardCreationReport'
         '400':
           description: bad request
+    patch:
+      tags:
+        - card
+      summary: Patch existing card
+      description: Patch existing card
+      operationId: patchCard
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: card id
+          type: string
+          required: true
+        - in: body
+          name: card
+          description: card containing fields to be updated
+          schema:
+            $ref: '#/definitions/Card'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CardCreationReport'
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '404':
+          description: Card not found
     delete:
       tags:
         - cards

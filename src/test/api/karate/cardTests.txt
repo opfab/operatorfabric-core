@@ -1,6 +1,7 @@
       cards/fetchArchivedCardsWithFilter.feature  \
       cards/fetchCardsWithFilter.feature          \
       cards/cards.feature                         \
+      cards/patchCard.feature                     \
       cards/cardsWithTimespans.feature            \
       cards/fetchArchivedCard.feature             \
       cards/getCardSubscription.feature           \

@@ -68,13 +68,36 @@ public class CardController {
             token = jwtPrincipal.getToken();
         }
 
-        cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token));
+        cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token), false);
 
         logUserAction(user != null ? user.getUserData().getLogin() : null,
                 card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
                 user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
 
         return new CardCreationReport(card.getId(), card.getUid());
+    }
+
+    @PatchMapping(value = "/{id}", produces = { "application/json" }, consumes = { "application/json" })
+    @ResponseStatus(HttpStatus.OK)
+    public CardCreationReport patchCard( @PathVariable String id, @RequestBody Card card,
+                                          HttpServletResponse response, Principal principal) {
+        // Overwrite eventual uid sent by client
+        card.setUid(UUID.randomUUID().toString());
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = null;
+        Jwt token = null;
+        if (jwtPrincipal != null) {
+            user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+            token = jwtPrincipal.getToken();
+        }
+
+        cardProcessingService.patchCard(id, card, Optional.ofNullable(user), Optional.ofNullable(token));
+
+        logUserAction(user != null ? user.getUserData().getLogin() : null,
+                      UserActionEnum.SEND_CARD,
+                      user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
+
+        return new CardCreationReport(card.getId(),card.getUid());
     }
 
     @DeleteMapping
