@@ -47,6 +47,7 @@ export class MailHandlebarsHelper {
             try {
                 MailHandlebarsHelper.quill.setContents(JSON.parse(delta));
             } catch (error) {
+                /* eslint-disable-next-line no-console */
                 console.log(new Date().toISOString() + ' : Error while parsing delta: ', error);
                 return '';
             }

@@ -130,7 +130,7 @@ export class UserService {
                     }
                 },
                 error: (error) =>
-                    console.error(new Date().toISOString(), 'An error occurred when loading perimeter', error)
+                    logger.error(new Date().toISOString() + 'An error occurred when loading perimeter' + error)
             })
         );
     }

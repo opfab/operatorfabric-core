@@ -17,6 +17,7 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
 import {ConfigServer} from '../business/server/config.server';
 import {AngularServer} from './angular.server';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -44,7 +45,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
                     try {
                         config = JSON.parse(config);
                     } catch (error) {
-                        console.error('Invalid web-ui.json file:', error);
+                        logger.error('Invalid web-ui.json file: ' + JSON.stringify(error));
                     }
                     return config;
                 })

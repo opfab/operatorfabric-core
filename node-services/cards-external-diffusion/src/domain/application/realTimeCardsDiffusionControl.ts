@@ -227,7 +227,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 }
             }
         } catch (e) {
-            console.warn("Couldn't parse email for : ", card.state, e);
+            this.logger.warn(`Couldn't parse email for : ${card.state}, ${e}`);
         }
         return cardBodyHtml;
     }

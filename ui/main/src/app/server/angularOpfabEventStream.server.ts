@@ -87,7 +87,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         };
         this.eventSource.onerror = (error) => {
             this.streamStatusEvents.next('close');
-            console.error(new Date().toISOString(), 'EventStreamServer - Error event in card subscription:', error);
+            logger.error('EventStreamServer - Error event in card subscription: ' + JSON.stringify(error));
         };
         this.eventSource.onopen = (open) => {
             this.streamStatusEvents.next('open');

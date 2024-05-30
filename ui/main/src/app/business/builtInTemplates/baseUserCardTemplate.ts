@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {LoggerService as logger} from '../services/logs/logger.service';
+
 declare const opfab;
 
 export abstract class BaseUserCardTemplate extends HTMLElement {
@@ -28,7 +30,9 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
             try {
                 opfab.currentUserCard.setDropdownEntityRecipientList(JSON.parse(entityRecipientList));
             } catch (err) {
-                console.error('Invalid entityRecipientList', entityRecipientList, err);
+                logger.error(
+                    'Invalid entityRecipientList ' + JSON.stringify(entityRecipientList) + ' ' + JSON.stringify(err)
+                );
             }
         }
 
@@ -36,7 +40,12 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
             try {
                 opfab.currentUserCard.setInitialSelectedRecipients(JSON.parse(initialSelectedRecipients));
             } catch (err) {
-                console.error('Invalid initialSelectedRecipients', initialSelectedRecipients, err);
+                logger.error(
+                    'Invalid initialSelectedRecipients ' +
+                        JSON.stringify(initialSelectedRecipients) +
+                        ' ' +
+                        JSON.stringify(err)
+                );
             }
         }
 
@@ -46,7 +55,12 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
                     JSON.parse(entityRecipientForInformationList)
                 );
             } catch (err) {
-                console.error('Invalid entityRecipientForInformationList', entityRecipientForInformationList, err);
+                logger.error(
+                    'Invalid entityRecipientForInformationList ' +
+                        JSON.stringify(entityRecipientForInformationList) +
+                        ' ' +
+                        JSON.stringify(err)
+                );
             }
         }
 
@@ -56,10 +70,11 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
                     JSON.parse(initialSelectedRecipientsForInformation)
                 );
             } catch (err) {
-                console.error(
-                    'Invalid initialSelectedRecipientsForInformation',
-                    initialSelectedRecipientsForInformation,
-                    err
+                logger.error(
+                    'Invalid initialSelectedRecipientsForInformation ' +
+                        JSON.stringify(initialSelectedRecipientsForInformation) +
+                        ' ' +
+                        JSON.stringify(err)
                 );
             }
         }
@@ -68,7 +83,12 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
             try {
                 this.externalRecipients = JSON.parse(externalRecipientsAttribute);
             } catch (err) {
-                console.error('Invalid externalRecipients', externalRecipientsAttribute, err);
+                logger.error(
+                    'Invalid externalRecipients ' +
+                        JSON.stringify(externalRecipientsAttribute) +
+                        ' ' +
+                        JSON.stringify(err)
+                );
             }
         }
     }

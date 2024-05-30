@@ -164,6 +164,7 @@ export class AppModule {}
 
 export function shallPWAFeatureBeActivated(): boolean {
     const activateSW = Utilities.isNavigatorChromiumBased() && location.href.includes('PWAFeature=true');
+    /* eslint-disable-next-line no-console */
     console.log(new Date().toISOString(), 'PWA feature enable : ', activateSW);
     return activateSW;
 }

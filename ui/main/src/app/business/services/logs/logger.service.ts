@@ -30,12 +30,14 @@ export class LoggerService {
         const logLine = new Date().toISOString() + ' ' + logLevel + ' ' + log;
         switch (logOption) {
             case LogOption.LOCAL:
+                /* eslint-disable-next-line no-console */
                 console.log(logLine);
                 break;
             case LogOption.REMOTE:
                 RemoteLoggerService.postLog(logLine);
                 break;
             case LogOption.LOCAL_AND_REMOTE:
+                /* eslint-disable-next-line no-console */
                 console.log(logLine);
                 RemoteLoggerService.postLog(logLine);
                 break;

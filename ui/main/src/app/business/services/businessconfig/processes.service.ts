@@ -20,7 +20,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LoggerService} from '../logs/logger.service';
+import {LoggerService as logger} from '../logs/logger.service';
 
 export class ProcessesService {
     private static processServer: ProcessServer;
@@ -41,14 +41,14 @@ export class ProcessesService {
                 if (processesLoaded) {
                     ProcessesService.processesWithLatestVersionOnly = processesLoaded;
                     if (ProcessesService.processesWithLatestVersionOnly.length === 0) {
-                        LoggerService.warn('No processes configured');
+                        logger.warn('No processes configured');
                     } else {
-                        LoggerService.info('List of processes loaded');
+                        logger.info('List of processes loaded');
                     }
                 }
             }),
             catchError((error) => {
-                console.error(new Date().toISOString(), 'An error occurred when loading all processes', error);
+                logger.error('An error occurred when loading all processes ' + JSON.stringify(error));
                 return of(error);
             })
         );
@@ -60,15 +60,15 @@ export class ProcessesService {
                 if (processesLoaded) {
                     ProcessesService.processesWithAllVersions = processesLoaded;
                     if (ProcessesService.processesWithAllVersions.length === 0) {
-                        LoggerService.warn('No processes configured');
+                        logger.warn('No processes configured');
                     } else {
                         ProcessesService.loadAllProcessesWithAllVersionsInCache();
-                        LoggerService.info('List of all versions of processes loaded');
+                        logger.info('List of all versions of processes loaded');
                     }
                 }
             }),
             catchError((error) => {
-                LoggerService.error('An error occurred when loading all versions of processes' + error);
+                logger.error('An error occurred when loading all versions of processes' + JSON.stringify(error));
                 return of(error);
             })
         );
@@ -89,10 +89,10 @@ export class ProcessesService {
                             });
                         });
                     }
-                    LoggerService.info('List of process groups loaded');
+                    logger.info('List of process groups loaded');
                 }
                 if (response.status !== ServerResponseStatus.OK)
-                    LoggerService.error('An error occurred when loading processGroups');
+                    logger.error('An error occurred when loading processGroups');
                 return '';
             })
         );
@@ -170,7 +170,7 @@ export class ProcessesService {
         return ProcessesService.processServer.getAllProcessesDefinition().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    LoggerService.error('An error occurred when loading processes configuration');
+                    logger.error('An error occurred when loading processes configuration');
                     return new Array<Process>();
                 }
                 return response.data;
@@ -182,7 +182,7 @@ export class ProcessesService {
         return ProcessesService.processServer.getAllProcessesWithAllVersions().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    LoggerService.error('An error occurred when loading all versions of processes');
+                    logger.error('An error occurred when loading all versions of processes');
                     return new Array<Process>();
                 }
                 return response.data;
@@ -204,7 +204,7 @@ export class ProcessesService {
             map((response) => {
                 if (response.status === ServerResponseStatus.OK && response.data)
                     ProcessesService.processesWithAllVersionsCache.set(key, response.data);
-                else LoggerService.warn(`Process ` + ` ${id} with version ${version} does not exist.`);
+                else logger.warn(`Process ` + ` ${id} with version ${version} does not exist.`);
                 return response.data;
             })
         );
