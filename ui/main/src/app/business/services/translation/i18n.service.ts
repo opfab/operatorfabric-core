@@ -15,7 +15,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {ConfigServer} from '../../server/config.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
-import {LoggerService} from '../logs/logger.service';
+import {LoggerService as logger} from '../logs/logger.service';
 import {environment} from '@env/environment';
 
 declare const opfab: any;
@@ -100,7 +100,7 @@ export class I18nService {
                     if (serverResponse.status === ServerResponseStatus.OK) {
                         this.translationService.setTranslation(locale, serverResponse.data, true);
                     } else {
-                        LoggerService.error(`Impossible to load locale ${I18nService.localUrl}${locale}.json`);
+                        logger.error(`Impossible to load locale ${I18nService.localUrl}${locale}.json`);
                     }
                 }
             })
@@ -123,7 +123,7 @@ export class I18nService {
         });
 
         catchError((err, caught) => {
-            console.error('Impossible to load configuration file ui-menu.json', err);
+            logger.error('Impossible to load configuration file ui-menu.json' + JSON.stringify(err));
             return caught;
         });
     }

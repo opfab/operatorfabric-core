@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,12 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppModule} from './app/app.module';
 import {environment} from './environments/environment';
 
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+
 if (environment.production) {
     enableProdMode();
 }
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(JSON.stringify(err)));

@@ -8,6 +8,7 @@
  */
 
 import {JsonToArray} from './json-to-array';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 describe('set array columns ', () => {
     it('set two field in rules   ', () => {
@@ -624,6 +625,6 @@ describe('Flatten objects with double nested array  ', () => {
 
 export function areArraysEquals(array1, array2): boolean {
     const equals = JSON.stringify(array1) === JSON.stringify(array2);
-    if (!equals) console.error('Warning ', array1, ' is different from ', array2);
+    if (!equals) logger.error(`Warning ${array1} is different from ${array2}`);
     return equals;
 }

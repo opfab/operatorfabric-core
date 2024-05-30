@@ -159,7 +159,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
             if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
-                logger.error('Response card publisher not allowed : ' + publisherEntity);
+                logger.error('Response card publisher not allowed : ' + JSON.stringify(publisherEntity));
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }
@@ -196,7 +196,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 this.sendingResponseInProgress = false;
                 if (resp.status !== ServerResponseStatus.OK) {
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                    console.error(resp);
+                    logger.error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage);
                 } else {
                     this.isResponseLocked = true;
                     OpfabAPIService.templateInterface.lockAnswer();

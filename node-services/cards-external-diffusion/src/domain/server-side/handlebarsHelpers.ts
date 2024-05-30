@@ -181,6 +181,7 @@ export class HandlebarsHelper {
                 case 'uppercase':
                     return word.toUpperCase();
                 default:
+                    /* eslint-disable-next-line no-console */
                     console.error(`Invalid parameter ${breakage} for the toBreakage helper`);
                     return 'ERROR';
             }

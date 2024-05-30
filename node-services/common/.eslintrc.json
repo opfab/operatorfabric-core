@@ -10,10 +10,8 @@
     },
     "rules": {
         "@typescript-eslint/consistent-type-imports": "off"
-        // This rules does not necessary as we a using a transpiler with type checking
-        // For more information 
+        // This rules is not necessary as we are using a transpiler with type checking
+        // For more information
         // see https://typescript-eslint.io/blog/consistent-type-imports-and-exports-why-and-how
-
     }
 }
-

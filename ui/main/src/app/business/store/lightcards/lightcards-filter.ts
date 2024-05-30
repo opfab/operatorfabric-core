@@ -119,7 +119,7 @@ export class LightCardsFilter {
                 } else if (status.end) {
                     return card.publishDate <= status.end || card.startDate <= status.end;
                 }
-                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
+                logger.warn('Unexpected business date filter situation');
                 return false;
             },
             false,

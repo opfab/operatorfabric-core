@@ -209,11 +209,13 @@ export class LightCardsStore {
                     }
                 },
                 error: (error) => {
-                    console.error('LightCardStore - Error received from  card operation stream ', error);
+                    logger.error(
+                        'LightCardStore - Error received from  card operation stream ' + JSON.stringify(error)
+                    );
                 }
             });
         catchError((error, caught) => {
-            console.error('LightCardStore - Global  error in subscription ', error);
+            logger.error('LightCardStore - Global  error in subscription ' + JSON.stringify(error));
             return caught;
         });
     }

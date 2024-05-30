@@ -37,6 +37,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-archives',
@@ -268,7 +269,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
                     // log to debug CI/CD Failures
-                    console.debug(new Date().toISOString(), 'Archives : receive card update ');
+                    logger.debug('Archives : receive card update');
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {

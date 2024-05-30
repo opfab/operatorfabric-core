@@ -21,6 +21,7 @@ import {GroupedCardsService} from 'app/business/services/lightcards/grouped-card
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
@@ -178,7 +179,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                     }
                 });
             } catch (err) {
-                console.error(err);
+                logger.error(JSON.stringify(err));
                 this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
             }
         }

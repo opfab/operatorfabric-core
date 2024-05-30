@@ -9,6 +9,7 @@
 
 import * as Handlebars from 'handlebars/dist/handlebars.js';
 import * as moment from 'moment';
+import {LoggerService as logger} from '../logs/logger.service';
 
 export class HandlebarsHelper {
     public static init() {
@@ -175,7 +176,7 @@ export class HandlebarsHelper {
                 case 'uppercase':
                     return word.toUpperCase();
                 default:
-                    console.error(`Invalid parameter ${breakage} for the toBreakage helper`);
+                    logger.error(`Invalid parameter ${breakage} for the toBreakage helper`);
                     return 'ERROR';
             }
         });

@@ -91,10 +91,7 @@ export class OpfabAPIService {
 
             // OpFab calls this method to get the form result when the user wants to send a response
             getUserResponse: function () {
-                console.log(
-                    new Date().toISOString(),
-                    ` Template : no getUserResponse method provided , valid set to false`
-                );
+                logger.info(` Template : no getUserResponse method provided , valid set to false`);
                 return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
             },
 
@@ -112,9 +109,9 @@ export class OpfabAPIService {
             setEntityUsedForSendingCard: function (senderEntity) {},
 
             getSpecificCardInformation: function () {
-                console.log(
-                    new Date().toISOString(),
-                    ` Template : no getSpecificCardInformation method registered , valid set to false`
+                logger.info(
+                    new Date().toISOString() +
+                        ` Template : no getSpecificCardInformation method registered , valid set to false`
                 );
                 return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
             }
@@ -219,8 +216,7 @@ export class OpfabAPIService {
             return self.currentCard.entitiesAllowedToRespond;
         };
         opfab.currentCard.getEntityUsedForUserResponse = function () {
-            console.warn(
-                new Date().toISOString(),
+            logger.warn(
                 ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
             );
             return self.currentCard.entityUsedForUserResponse;
