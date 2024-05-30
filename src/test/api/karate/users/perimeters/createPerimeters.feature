@@ -40,7 +40,8 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "ReceiveAndWrite"
+        "right" : "ReceiveAndWrite",
+        "filteringNotificationAllowed" : false
       }
     ]
 }
@@ -136,14 +137,17 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And match result.response.stateRights[2].filteringNotificationAllowed == true
 
 
-  Scenario: Try to update existing perimeter
-  #Expected response 400
+  Scenario: Update existing perimeter sending a POST request
+  #Expected response 200
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeterUpdated
     When method post
-    Then status 400
-    And match response.message == 'Creation failed because perimeter perimeterKarate1_1 already exist'
+    Then status 200
+    And match response.id == perimeterUpdated.id
+    And match response.stateRights[0] == perimeterUpdated.stateRights[0]
+    And match response.stateRights[0].state == perimeterUpdated.stateRights[0].state
+    And match response.stateRights[0].right == perimeterUpdated.stateRights[0].right
 
 
   Scenario: create without admin role
