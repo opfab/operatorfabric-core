@@ -86,10 +86,13 @@ public class PerimetersController {
             @Valid @RequestBody Perimeter perimeter)
             throws ApiErrorException {
 
-        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
         if (result.isSuccess()) {
-            response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
-            response.setStatus(201);
+            if (!result.getResult().isUpdate()) {
+                response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
+                response.setStatus(201);
+            } else
+                response.setStatus(200);
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
