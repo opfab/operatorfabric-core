@@ -32,7 +32,7 @@ public interface CardRepository {
 
     public void setArchivedCardAsDeleted(String process, String processInstanceId,Instant deletionDate);
 
-    public Card findCardById(String id);
+    public Card findCardById(String id, boolean dataFieldIncluded);
 
     public Optional<List<Card>> findChildCard(Card card);
 

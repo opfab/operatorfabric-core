@@ -84,13 +84,15 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
 
-    public Card findCardById(String id) {
+    public Card findCardById(String id, boolean dataFieldIncluded) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
          * excludes data which can be unpredictably huge depending on publisher needs.
          */
         Query findCardByIdWithoutDataField = new Query();
-        findCardByIdWithoutDataField.fields().exclude("data");
+        if (!dataFieldIncluded) {
+            findCardByIdWithoutDataField.fields().exclude("data");
+        }
         findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(id));
 
         return this.template.findOne(findCardByIdWithoutDataField, Card.class);

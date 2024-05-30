@@ -136,12 +136,12 @@ class SendKafkaCardShould {
                 kafkaTemplate.send(commandTopic, cardCommand);
 
                 org.opfab.cards.publication.model.Card card = cardRepositoryMock
-                                .findCardById(taskId + "." + processInstanceId);
+                                .findCardById(taskId + "." + processInstanceId, false);
  
                 
                 CountDownLatch latch = new CountDownLatch(20);
                 for (int retries = 20; retries > 0 && card == null; retries--) {
-                    card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
+                    card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId, false);
                     if (card == null) {
                         try {
                             latch.await(250, TimeUnit.MILLISECONDS);

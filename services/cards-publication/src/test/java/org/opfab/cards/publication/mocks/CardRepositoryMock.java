@@ -81,7 +81,7 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public Card findCardById(String id) {
+    public Card findCardById(String id, boolean dataFieldIncluded) {
         return cardsById.get(id);
     }
 

@@ -117,6 +117,17 @@ public class CardValidationService {
                     "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
     }
 
+    void validateCardForPatch(Card cardForPatch, Card initialCard) throws ConstraintViolationException {
+        if ((cardForPatch.getProcess() != null) && !cardForPatch.getProcess().equals(initialCard.getProcess()))
+            throw new ConstraintViolationException("The current process field " + initialCard.getProcess()
+                    + " can not be patched with new value " + cardForPatch.getProcess(), null);
+
+        if ((cardForPatch.getProcessInstanceId() != null) &&
+            !cardForPatch.getProcessInstanceId().equals(initialCard.getProcessInstanceId()))
+            throw new ConstraintViolationException("The current processInstanceId field " + initialCard.getProcessInstanceId()
+                    + " can not be patched with new value " + cardForPatch.getProcessInstanceId(), null);
+    }
+
     private void checkNotNull(Object field, String fieldName) throws ConstraintViolationException {
         if (field == null) {
             throw new ConstraintViolationException(String.format("Impossible to publish card because there is no %s", fieldName), null);
@@ -124,7 +135,7 @@ public class CardValidationService {
     }
 
     boolean checkIsCardIdExisting(String cardId) {
-        return !((Optional.ofNullable(cardId).isPresent()) && (cardRepository.findCardById(cardId) == null));
+        return !((Optional.ofNullable(cardId).isPresent()) && (cardRepository.findCardById(cardId, false) == null));
     }
 
     boolean checkIsParentCardIdExisting(Card c) {

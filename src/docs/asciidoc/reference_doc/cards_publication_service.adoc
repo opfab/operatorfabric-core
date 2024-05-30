@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -20,3 +20,12 @@ to OperatorFabric. It then handles those cards:
 include::card_structure.adoc[leveloffset=+1]
 
 include::card_examples.adoc[leveloffset=+1]
+
+== Patching cards
+
+The Cards Publication Service exposes a REST API endpoint through which a card can be patched.
+You can find more information in
+ifdef::single-page-doc[link:../api/cards/[the cards api documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/cards/[the cards api documentation]]
+. For example, fields like severity, title, summary or data etc... can be patched. However, the fields `process` and
+`processInstanceId` can not be patched as they are used to identify the card.
