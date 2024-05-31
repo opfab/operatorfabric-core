@@ -199,7 +199,8 @@ public class CardRepositoryImpl implements CardRepository {
             .unset(USERS_ACKS)
             .unset(USERS_READS)
             .set(ENTITIES_ACKS,new LinkedList<String>())
-            .set(LAST_UPDATE, Instant.now());
+            .set(LAST_UPDATE, Instant.now())
+            .set("publishDate", Instant.now());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
         log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
