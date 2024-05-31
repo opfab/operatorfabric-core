@@ -72,7 +72,7 @@ public class CardOperationsController {
                                 log.warn("Wrong UI version : {}", t.getUiVersion());
                                 wrongUiVersion = true;
                             }
-                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), wrongUiVersion);
+                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), t.getUiVersion(), wrongUiVersion);
                             return subscription.getPublisher();
                         } else {
                             return fetchOldCards(t);

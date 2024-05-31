@@ -162,10 +162,10 @@ public class CardSubscriptionService implements EventListener {
     }
 
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
-        return this.subscribe(currentUserWithPerimeters, clientId, false);
+        return this.subscribe(currentUserWithPerimeters, clientId, null, false);
     }
 
-    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId, boolean sendReload) {
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId, String uiVersion, boolean sendReload) {
 
         if (mustCheckIfUserIsAlreadyConnected()) {
             String userLogin = currentUserWithPerimeters.getUserData().getLogin();
@@ -184,7 +184,7 @@ public class CardSubscriptionService implements EventListener {
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
 
-        logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, null);
+        logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, "Ver: " + uiVersion);
 
         return cardSubscription;
     }
