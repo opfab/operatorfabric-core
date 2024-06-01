@@ -15,6 +15,7 @@ import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.model.CardCreationReport;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.FieldToTranslate;
+import org.opfab.cards.publication.model.TranslatedField;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
@@ -43,8 +44,6 @@ public class CardController {
     private CardTranslationService cardTranslationService;
     private UserActionLogService userActionLogService;
 
-
-
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     CardController(
@@ -52,13 +51,12 @@ public class CardController {
         cardTranslationService = services.getCardTranslationService();
         userActionLogService = services.getUserActionLogService();
         cardProcessingService = services.getCardProcessingService();
-            
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CardCreationReport createCard( @RequestBody Card card,
+    public CardCreationReport createCard(@RequestBody Card card,
             HttpServletResponse response, Principal principal) {
         // Overwrite eventual uid sent by client
         card.setUid(UUID.randomUUID().toString());
@@ -76,7 +74,7 @@ public class CardController {
                 card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
                 user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
 
-        return new CardCreationReport(card.getId(),card.getUid());
+        return new CardCreationReport(card.getId(), card.getUid());
     }
 
     @DeleteMapping
@@ -98,7 +96,7 @@ public class CardController {
         logUserAction(user.getUserData().getLogin(),
                 card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
                 user.getUserData().getEntities(), card.getUid(), null);
-        return new CardCreationReport(card.getId(),card.getUid());
+        return new CardCreationReport(card.getId(), card.getUid());
     }
 
     @DeleteMapping("/userCard/{id}")
@@ -254,7 +252,7 @@ public class CardController {
     }
 
     @PostMapping("/translateCardField")
-    public String translateCardField(HttpServletRequest request, HttpServletResponse response,
+    public TranslatedField translateCardField(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestBody FieldToTranslate fieldToTranslate) {
 
         if (fieldToTranslate == null || fieldToTranslate.process().isEmpty()
@@ -266,14 +264,14 @@ public class CardController {
             String translatedField = cardTranslationService.translateCardField(fieldToTranslate.process(),
                     fieldToTranslate.processVersion(),
                     fieldToTranslate.i18nValue());
-            return "{\"translatedField\": \"" + translatedField + "\"}";
+            return new TranslatedField(translatedField);
         }
     }
 
     /**
      * POST request to reset acks and reads for a card and resend card as reminder
      *
-     * @param cardUid of the card 
+     * @param cardUid of the card
      */
     @PostMapping("/resetReadAndAcks/{cardUid}")
     public Void postResetReadAndAcks(Principal principal,
@@ -290,7 +288,7 @@ public class CardController {
     }
 
     @PostMapping("/rateLimiter")
-    public void resetRateLimiter(){
+    public void resetRateLimiter() {
         cardProcessingService.resetRateLimiter();
     }
 
