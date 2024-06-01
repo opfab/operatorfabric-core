@@ -20,6 +20,8 @@ export class OpfabEventStreamService {
     private static startOfAlreadyLoadedPeriod: number;
     private static endOfAlreadyLoadedPeriod: number;
 
+    private static currentPeriod: {start: number; end: number};
+
     private static receivedDisconnectedSubject = new Subject<boolean>();
     private static reloadRequest = new Subject<void>();
     private static businessConfigChange = new Subject<void>();
@@ -87,9 +89,19 @@ export class OpfabEventStreamService {
 
     public static resetAlreadyLoadingPeriod() {
         OpfabEventStreamService.startOfAlreadyLoadedPeriod = null;
+        OpfabEventStreamService.currentPeriod = null;
     }
 
     public static setSubscriptionDates(start: number, end: number) {
+        if (
+            OpfabEventStreamService.currentPeriod &&
+            start === OpfabEventStreamService.currentPeriod.start &&
+            end === OpfabEventStreamService.currentPeriod.end
+        ) {
+            logger.info('EventStreamService - Same period, no need to reload cards', LogOption.LOCAL_AND_REMOTE);
+            return;
+        }
+        OpfabEventStreamService.currentPeriod = {start, end};
         logger.info(
             'EventStreamService - Set subscription date' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
