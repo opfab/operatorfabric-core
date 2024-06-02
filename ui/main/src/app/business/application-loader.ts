@@ -123,6 +123,7 @@ export class ApplicationLoader {
         loadBuildInTemplates();
         this.initOpfabAPI();
         await this.waitForStreamInitDone();
+        RealtimeDomainService.init(); // important to be after the stream init done
         this.goToEntryPage();
         this.loadingInProgress = false;
         return true;
@@ -287,7 +288,6 @@ export class ApplicationLoader {
         SoundNotificationService.initSoundService();
         HandlebarsService.init();
         SelectedCardLoaderService.init();
-        RealtimeDomainService.init();
     }
 
     private async waitForStreamInitDone(): Promise<void> {

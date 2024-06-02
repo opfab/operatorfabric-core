@@ -147,7 +147,6 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     public getStreamStatus(): Observable<any> {
         return this.streamStatusEvents.asObservable();
     }
-
     public setBusinessPeriod(startDate: number, endDate: number): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
             this.httpClient.post<any>(`${this.eventStreamUrl}`, {rangeStart: startDate, rangeEnd: endDate})
