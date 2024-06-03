@@ -9,7 +9,7 @@
 
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Card, CardData, fromCardToLightCard} from '@ofModel/card.model';
+import {Card, CardWithChildCards, fromCardToLightCard} from '@ofModel/card.model';
 import {Severity} from '@ofModel/light-card.model';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {map} from 'rxjs/operators';
@@ -332,7 +332,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         }
     }
 
-    private buildLightCardPreview(cardWithChildCards: CardData) {
+    private buildLightCardPreview(cardWithChildCards: CardWithChildCards) {
         const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         const hasChildCardFromCurrentUserEntity =
             cardWithChildCards.childCards?.some((child) => userEntities.includes(child.publisher)) ?? false;

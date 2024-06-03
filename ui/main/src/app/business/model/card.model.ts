@@ -98,7 +98,7 @@ export class CardForPublishing {
     ) {}
 }
 
-export class CardData {
+export class CardWithChildCards {
     constructor(
         readonly card: Card,
         readonly childCards: Card[]

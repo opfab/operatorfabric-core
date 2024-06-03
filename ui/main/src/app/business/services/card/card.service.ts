@@ -7,7 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 import {Observable} from 'rxjs';
-import {Card, CardCreationReportData, CardData, CardForPublishing, fromCardToLightCard} from '@ofModel/card.model';
+import {
+    Card,
+    CardCreationReportData,
+    CardWithChildCards,
+    CardForPublishing,
+    fromCardToLightCard
+} from '@ofModel/card.model';
 import {map} from 'rxjs/operators';
 import {I18n} from '@ofModel/i18n.model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
@@ -23,7 +29,7 @@ export class CardService {
         CardService.cardServer = cardServer;
     }
 
-    public static loadCard(id: string): Observable<CardData> {
+    public static loadCard(id: string): Observable<CardWithChildCards> {
         return CardService.cardServer.loadCard(id).pipe(
             map((cardResponse) => {
                 if (cardResponse.status === ServerResponseStatus.OK) {
@@ -38,7 +44,7 @@ export class CardService {
         );
     }
 
-    public static loadArchivedCard(id: string): Observable<CardData> {
+    public static loadArchivedCard(id: string): Observable<CardWithChildCards> {
         return CardService.cardServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
     }
 

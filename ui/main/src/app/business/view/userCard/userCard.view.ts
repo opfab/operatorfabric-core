@@ -20,7 +20,7 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {SeverityForm} from './severityForm/severityForm';
 import {PublisherForm} from './publisherForm/publisherForm';
 import {RecipientsForm} from './recipientsForm/recipientsForm';
-import {Card, CardData} from '@ofModel/card.model';
+import {Card, CardWithChildCards} from '@ofModel/card.model';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder/cardBuilder';
 import {CardSender} from './cardSender/cardSender';
@@ -241,7 +241,7 @@ export class UserCardView {
         this.childCardToSend = cardBuilder.getCurrentUserChildCard();
     }
 
-    public getCardWithChildCardsForPreview(): CardData {
+    public getCardWithChildCardsForPreview(): CardWithChildCards {
         return {card: this.cardToSend, childCards: this.getChildCardsForPreview()};
     }
 
