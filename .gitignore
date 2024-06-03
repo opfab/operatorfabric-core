@@ -65,11 +65,8 @@ fabric.properties
 **/out
 classes
 ### VisualStudioCode ###
-.vscode/*
-.vscode/settings.json
-!.vscode/tasks.json
-#!.vscode/launch.json
-!.vscode/extensions.json
+**/.vscode/*
+
 .history
 .project
 .settings
