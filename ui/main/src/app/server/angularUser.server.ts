@@ -29,9 +29,9 @@ export class AngularUserServer extends AngularServer implements UserServer {
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.userUrl = `${environment.url}/users`;
-        this.connectionsUrl = `${environment.url}/cards/connections`;
-        this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.url}/cards/willNewSubscriptionDisconnectAnExistingSubscription`;
+        this.userUrl = `${environment.url}users`;
+        this.connectionsUrl = `${environment.url}cards/connections`;
+        this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.url}cards/willNewSubscriptionDisconnectAnExistingSubscription`;
     }
     deleteById(login: string) {
         const url = `${this.userUrl}/users/${login}`;

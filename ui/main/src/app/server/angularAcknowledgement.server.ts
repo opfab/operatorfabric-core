@@ -24,8 +24,8 @@ export class AngularAcknowledgeServer extends AngularServer implements Acknowled
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.userAckUrl = `${environment.url}/cardspub/cards/userAcknowledgement`;
-        this.cancelUserAckUrl = `${environment.url}/cardspub/cards/cancelUserAcknowledgement`;
+        this.userAckUrl = `${environment.url}cardspub/cards/userAcknowledgement`;
+        this.cancelUserAckUrl = `${environment.url}cardspub/cards/cancelUserAcknowledgement`;
     }
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {

@@ -29,7 +29,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.externalDevicesUrl = `${environment.url}/externaldevices`;
+        this.externalDevicesUrl = `${environment.url}externaldevices`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
         this.devicesUrl = this.externalDevicesUrl + '/devices';

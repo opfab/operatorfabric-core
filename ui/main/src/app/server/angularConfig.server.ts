@@ -30,11 +30,11 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.configUrl = `${environment.url}/config/web-ui.json`;
-        this.menuUrl = `${environment.url}/config/ui-menu.json`;
-        this.monitoringConfigUrl = `${environment.url}/businessconfig/monitoring`;
-        this.localUrl = `/assets/i18n`;
-        this.realTimeScreensUrl = `${environment.url}/businessconfig/realtimescreens`;
+        this.configUrl = `${environment.url}config/web-ui.json`;
+        this.menuUrl = `${environment.url}config/ui-menu.json`;
+        this.monitoringConfigUrl = `${environment.url}businessconfig/monitoring`;
+        this.localUrl = `${environment.url}assets/i18n`;
+        this.realTimeScreensUrl = `${environment.url}businessconfig/realtimescreens`;
     }
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {

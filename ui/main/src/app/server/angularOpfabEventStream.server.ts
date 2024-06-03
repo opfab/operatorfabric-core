@@ -43,9 +43,9 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     constructor(private httpClient: HttpClient) {
         super();
         const subscriptionClientId = Guid.create().toString();
-        this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;
-        this.closeEventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${subscriptionClientId}`;
-        this.heartbeatUrl = `${environment.url}/cards/cardSubscriptionHeartbeat?clientId=${subscriptionClientId}`;
+        this.eventStreamUrl = `${environment.url}cards/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;
+        this.closeEventStreamUrl = `${environment.url}cards/cardSubscription?clientId=${subscriptionClientId}`;
+        this.heartbeatUrl = `${environment.url}cards/cardSubscriptionHeartbeat?clientId=${subscriptionClientId}`;
         this.isHeartbeatRunning = false;
     }
 

@@ -26,8 +26,8 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
     public async initializeAuthentication() {
         const authConfig: AuthConfig = {
             issuer: this.delegateUrl,
-            redirectUri: window.location.origin,
-            silentRefreshRedirectUri: window.location.origin + this.getPathEnd() + '/silent-refresh.html',
+            redirectUri: this.getRedirectUri(),
+            silentRefreshRedirectUri: this.getRedirectUri() + 'silent-refresh.html',
             clientId: this.clientId,
             scope: 'openid profile email',
             showDebugInformation: false,
@@ -51,8 +51,8 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
         });
     }
 
-    private getPathEnd(): string {
-        return location.pathname.length > 1 ? location.pathname : '';
+    private getRedirectUri(): string {
+        return `${location.origin}${location.pathname}`;
     }
 
     private async login() {

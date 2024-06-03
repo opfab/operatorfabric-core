@@ -21,8 +21,8 @@ export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
 export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
-    protected checkTokenUrl = `${environment.url}/auth/check_token`;
-    protected askTokenUrl = `${environment.url}/auth/token`;
+    protected checkTokenUrl = `${environment.url}auth/check_token`;
+    protected askTokenUrl = `${environment.url}auth/token`;
 
     protected tokenWillSoonExpire = new Subject<boolean>();
     protected tokenExpired = new Subject<boolean>();

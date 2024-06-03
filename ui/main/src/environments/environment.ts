@@ -13,7 +13,7 @@
 
 export const environment = {
     production: false,
-    url: 'http://localhost:2002'
+    url: 'http://localhost:2002/'
 };
 
 /*
