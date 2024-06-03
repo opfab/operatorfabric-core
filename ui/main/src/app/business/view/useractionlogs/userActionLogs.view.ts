@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardData} from '@ofModel/card.model';
+import {CardWithChildCards} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {Page} from '@ofModel/page.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -186,7 +186,7 @@ export class UserActionLogsView {
         return names.join();
     }
 
-    public getCard(cardUid: string): Observable<CardData> {
+    public getCard(cardUid: string): Observable<CardWithChildCards> {
         return CardService.loadArchivedCard(cardUid).pipe(
             switchMap((card) => {
                 if (!card) {

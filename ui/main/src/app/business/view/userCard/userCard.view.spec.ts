@@ -23,7 +23,7 @@ import {setSpecificCardInformation} from '@tests/userCardView/helpers';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {CardService} from 'app/business/services/card/card.service';
 import {I18n} from '@ofModel/i18n.model';
-import {CardData} from '@ofModel/card.model';
+import {CardWithChildCards} from '@ofModel/card.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 
 declare const opfab: any;
@@ -33,14 +33,14 @@ describe('UserCard view ', () => {
     let userCardUIControlMock: UserCardUIControlMock;
     let cardServerMock: CardServerMock;
 
-    async function initUserCardView(cardWithChildCards?: CardData, editionMode?: EditionMode): Promise<void> {
+    async function initUserCardView(cardWithChildCards?: CardWithChildCards, editionMode?: EditionMode): Promise<void> {
         userCardUIControlMock = new UserCardUIControlMock();
         userCardView = new UserCardView(userCardUIControlMock);
         setCardDataResponse(cardWithChildCards);
         await userCardView.init(cardWithChildCards?.card?.id, editionMode);
     }
 
-    function setCardDataResponse(cardData: CardData) {
+    function setCardDataResponse(cardData: CardWithChildCards) {
         cardServerMock.setResponseFunctionForLoadCard(() => {
             return new ServerResponse(cardData, ServerResponseStatus.OK, '');
         });

@@ -16,7 +16,7 @@ import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
 import {CardServer} from 'app/business/server/card.server';
 import {CardsFilter} from '@ofModel/cards-filter.model';
-import {CardForPublishing, Card, CardData, CardCreationReportData} from '@ofModel/card.model';
+import {CardForPublishing, Card, CardWithChildCards, CardCreationReportData} from '@ofModel/card.model';
 import {FieldToTranslate} from '@ofModel/field-to-translate.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
@@ -41,11 +41,11 @@ export class AngularCardServer extends AngularServer implements CardServer {
     }
 
     loadCard(id: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<CardData>(`${this.cardConsultationUrl}/${id}`));
+        return this.processHttpResponse(this.httpClient.get<CardWithChildCards>(`${this.cardConsultationUrl}/${id}`));
     }
 
     loadArchivedCard(id: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<CardData>(`${this.archivesUrl}/${id}`));
+        return this.processHttpResponse(this.httpClient.get<CardWithChildCards>(`${this.archivesUrl}/${id}`));
     }
 
     fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>> {

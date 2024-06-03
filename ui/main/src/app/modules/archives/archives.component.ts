@@ -27,7 +27,7 @@ import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
-import {Card, CardData} from '@ofModel/card.model';
+import {Card, CardWithChildCards} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {DisplayContext} from '@ofModel/template.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
@@ -383,7 +383,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.cardLoadingInProgress = true;
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
-        CardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+        CardService.loadArchivedCard(cardId).subscribe((card: CardWithChildCards) => {
             if (card) {
                 this.selectedCard = card.card;
                 this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated, 100);
