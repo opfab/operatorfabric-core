@@ -12,6 +12,7 @@
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
 const card = require('./cardCommands.js')
+const processGroups = require('./processGroupsCommands.js')
 const args = process.argv.slice(2);
 
 (async () => {
@@ -28,6 +29,12 @@ const args = process.argv.slice(2);
                 break;
             case 'logout':
                 login.logout();
+                break;
+            case 'processgroups':
+                if (!login.checkIsLogged()) {
+                    return;
+                }
+                await processGroups.processProcessGroupsCommand(args.slice(1));
                 break;
             case 'status':
                 login.status();
@@ -57,23 +64,28 @@ function printHelp() {
 
 Command list :
 
-    config      Set, get or list opfab cli configuration values
-    login       Log in to opfab
-    logout      Log out to opfab
-    status      Show login status
-    card        Send or delete a card 
-    help        Show help on a command using help <command> or all commands using help  
+    card            Send or delete a card 
+    config          Set, get or list opfab cli configuration values
+    help            Show help on a command using help <command> or all commands using help  
+    login           Log in to opfab
+    logout          Log out to opfab
+    processgroups   Send or clear processgroups
+    status          Show login status
+
 `);
     } else {
         switch (args[1]) {
+            case 'card':
+                card.printHelp();
+                break;
             case 'config':
                 config.printHelp();
                 break;
             case 'login':
                 login.printHelp();
                 break;
-            case 'card':
-                card.printHelp();
+            case 'processgroups':
+                processGroups.printHelp();
                 break;
             case 'default':
                 console.log(`No help for command ${args[1]}`);
