@@ -28,7 +28,7 @@ export class AngularSupervisedEntitiesServer extends AngularServer implements Su
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.supervisedEntitiesUrl = `${environment.url}/supervisor/supervisedEntities`;
+        this.supervisedEntitiesUrl = `${environment.url}supervisor/supervisedEntities`;
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {

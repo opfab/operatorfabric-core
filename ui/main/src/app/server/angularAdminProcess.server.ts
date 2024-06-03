@@ -23,7 +23,7 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
     readonly processesUrl: string;
     constructor(private httpClient: HttpClient) {
         super();
-        this.processesUrl = `${environment.url}/businessconfig/processes`;
+        this.processesUrl = `${environment.url}businessconfig/processes`;
     }
 
     queryAllProcesses(): Observable<ServerResponse<Process[]>> {

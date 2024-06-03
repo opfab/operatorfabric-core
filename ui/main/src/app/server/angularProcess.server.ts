@@ -25,8 +25,8 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.processesUrl = `${environment.url}/businessconfig/processes`;
-        this.processGroupsUrl = `${environment.url}/businessconfig/processgroups`;
+        this.processesUrl = `${environment.url}businessconfig/processes`;
+        this.processGroupsUrl = `${environment.url}businessconfig/processgroups`;
     }
 
     getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>> {

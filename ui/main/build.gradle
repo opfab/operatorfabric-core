@@ -40,7 +40,7 @@ task runBuild(type: NpmTask) {
     outputs.dir('build')
 
     dependsOn npmInstall,runLint
-    args = ['run', 'build','--baseHref=/ui/', '--deployUrl=/ui/']
+    args = ['run', 'build','--' ,'--base-href=./']
 }
 
 

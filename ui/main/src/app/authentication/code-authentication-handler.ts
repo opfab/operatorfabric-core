@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
         params.append('code', code);
         params.append('grant_type', 'authorization_code');
         params.append('clientId', this.clientId);
-        params.append('redirect_uri', this.computeRedirectUri());
+        params.append('redirect_uri', this.getRedirectUri());
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
         return this.httpClient.post<HttpAuthInfo>(this.askTokenUrl, params.toString(), {headers: headers});
@@ -56,15 +56,13 @@ export class CodeAuthenticationHandler extends AuthHandler {
 
     private moveToLoginPage() {
         if (!this.delegateUrl) {
-            window.location.href = `${environment.url}/auth/code/redirect_uri=${this.computeRedirectUri()}`;
+            window.location.href = `${environment.url}auth/code/redirect_uri=${this.getRedirectUri()}`;
         } else {
-            window.location.href = `${this.delegateUrl}&redirect_uri=${this.computeRedirectUri()}`;
+            window.location.href = `${this.delegateUrl}&redirect_uri=${this.getRedirectUri()}`;
         }
     }
 
-    private computeRedirectUri(): string {
-        const uriBase = location.origin;
-        const pathEnd = location.pathname.length > 1 ? location.pathname : '';
-        return `${uriBase}${pathEnd}`;
+    private getRedirectUri(): string {
+        return `${location.origin}${location.pathname}`;
     }
 }

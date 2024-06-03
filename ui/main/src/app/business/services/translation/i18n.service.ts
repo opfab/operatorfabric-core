@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,12 @@ import {ConfigServer} from '../../server/config.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
 import {LoggerService} from '../logs/logger.service';
+import {environment} from '@env/environment';
 
 declare const opfab: any;
 
 export class I18nService {
-    private static localUrl = '/assets/i18n/';
+    private static localUrl = `${environment.url}assets/i18n/`;
     private static _locale: string;
     private static configServer: ConfigServer;
     private static translationService: TranslationService;
