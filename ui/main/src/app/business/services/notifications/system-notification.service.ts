@@ -10,7 +10,6 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {merge, Subject} from 'rxjs';
-import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from '../config.service';
 import {LogOption, LoggerService as logger} from '../logs/logger.service';
 import {filter} from 'rxjs/operators';
@@ -24,9 +23,8 @@ export class SystemNotificationService {
 
     private static systemNotificationConfigBySeverity: Map<Severity, string>;
     private static systemNotificationEnabled: Map<Severity, boolean>;
-    private static incomingCardOrReminder = new Subject();
+    private static incomingCard = new Subject();
     private static lastSentCardId: string;
-    private static filteredLightCardStore: FilteredLightCardsStore = OpfabStore.getFilteredLightCardStore();
 
     public static initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();
@@ -82,16 +80,12 @@ export class SystemNotificationService {
             .subscribe((lightCard) => this.handleLoadedCard(lightCard));
     }
 
-    public static handleRemindCard(card: LightCard) {
-        if (this.filteredLightCardStore.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
-    }
-
     public static handleLoadedCard(lightCard: LightCard) {
         if (lightCard.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no system notification as the card was sent by the current user
         else {
             if (!lightCard.hasBeenRead && this.checkCardIsRecent(lightCard)) {
-                this.incomingCardOrReminder.next(lightCard);
+                this.incomingCard.next(lightCard);
             }
         }
     }
@@ -109,7 +103,7 @@ export class SystemNotificationService {
     }
 
     private static initSystemNotificationForSeverity(severity: Severity) {
-        merge(this.incomingCardOrReminder.pipe(filter((card: LightCard) => card.severity === severity))).subscribe(
+        merge(this.incomingCard.pipe(filter((card: LightCard) => card.severity === severity))).subscribe(
             (lightCard) => {
                 this.notifyIfSeverityEnabled(severity, lightCard);
             }
