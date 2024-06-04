@@ -46,7 +46,7 @@ export class SoundNotificationService {
     private static replayEnabled: boolean;
     private static playSoundWhenSessionEnd = false;
 
-    private static incomingCardOrReminder = new Subject();
+    private static incomingCard = new Subject();
     private static sessionEnd = new Subject();
     private static clearSignal = new Subject();
     private static ngUnsubscribe$ = new Subject<void>();
@@ -156,10 +156,6 @@ export class SoundNotificationService {
         this.lastUserAction = new Date().valueOf();
     }
 
-    public static handleRemindCard(card: LightCard) {
-        this.incomingCardOrReminder.next(card);
-    }
-
     public static handleLoadedCard(card: LightCard) {
         if (card.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no sound as the card was sent by the current user
@@ -169,7 +165,7 @@ export class SoundNotificationService {
                 this.checkCardHasBeenPublishAfterLastUserAction(card) &&
                 this.checkCardIsRecent(card)
             ) {
-                this.incomingCardOrReminder.next(card);
+                this.incomingCard.next(card);
                 if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
                     AlertMessageService.sendAlertMessage({
                         message: null,
@@ -232,7 +228,7 @@ export class SoundNotificationService {
 
     private static initSoundPlayingForSeverity(severity: Severity) {
         merge(
-            this.incomingCardOrReminder.pipe(
+            this.incomingCard.pipe(
                 filter((card: LightCard) => card.severity === severity),
                 map((x) => SignalType.NOTIFICATION)
             ),
