@@ -115,7 +115,7 @@ Feature: Post cards with entitiesAllowedToEdit
 
 
 # Get card with user operator1_fr and check entitiesAllowedToEdit field
-Given url opfabUrl + 'cards/cards/api_test.process_withEntitiesToEdit'
+Given url opfabUrl + 'cards-consultation/cards/api_test.process_withEntitiesToEdit'
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method get
 Then status 200
@@ -146,7 +146,7 @@ When method post
 Then status 201
 
 # Get card with user operator1_fr and check publisher field
-Given url opfabUrl + 'cards/cards/api_test.process_withEntitiesToEdit'
+Given url opfabUrl + 'cards-consultation/cards/api_test.process_withEntitiesToEdit'
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method get
 Then status 200

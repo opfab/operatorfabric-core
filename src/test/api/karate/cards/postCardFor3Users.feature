@@ -75,7 +75,7 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards/cards/api_test.process3users' 
+Given url opfabUrl + 'cards-consultation/cards/api_test.process3users' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -84,7 +84,7 @@ And def cardUid = response.card.uid
 
 
 #get card from archives with user operator1_fr
-Given url opfabUrl + 'cards/archives/' + cardUid 
+Given url opfabUrl + 'cards-consultation/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

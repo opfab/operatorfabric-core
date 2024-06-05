@@ -87,7 +87,7 @@ Scenario: CardsUserAcknowledgement
     Then status 201
 
 #get card with user operator1_fr and check not containing userAcks items
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -96,14 +96,14 @@ Scenario: CardsUserAcknowledgement
     And def uid = response.card.uid
 
 #make an acknowledgement to the card with operator1_fr with entities for which the user is not a member
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1entity2Array
     When method post
     Then status 403
 
 #make an entity acknowledgement to the card with READONLY operator1_crisisroom with allowed entities 
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authTokenAsREADONLY
     And request entity1Array
     When method post
@@ -111,14 +111,14 @@ Scenario: CardsUserAcknowledgement
 
 
 #make an acknowledgement to the card with operator1_fr
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
     Then status 201
 
 #get card with user operator1_fr and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -127,7 +127,7 @@ Scenario: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 #get card with user operator2_fr and check containing no ack for him
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -136,14 +136,14 @@ Scenario: CardsUserAcknowledgement
 
 
 #make a second acknowledgement to the card with operator2_fr
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken2
     And request entity2Array
     When method post
     Then status 201
 
 #get card with user operator1_fr and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -152,7 +152,7 @@ Scenario: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 #get card with user operator2_fr and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -162,26 +162,26 @@ Scenario: CardsUserAcknowledgement
 
 
 
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/unexisting_card_uid'
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/unexisting_card_uid'
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
     Then status 404
 
 #cancel acknowledgement to the card with operator1_fr with entities for which the user is not a member
-    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1entity2Array
     When method post
     Then status 403
 
-    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
     Then status 200
 
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -191,14 +191,14 @@ Scenario: CardsUserAcknowledgement
     And match response.card.uid == uid
 
     # Unacknowledge a card that is not acknowledged
-    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/cancelUserAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
     Then status 200
 
     # Unacknowledge an unexisting card 
-    Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/unexisting_card____uid'
+    Given url opfabUrl + 'cards-publication/cards/cancelUserAcknowledgement/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post

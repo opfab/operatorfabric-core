@@ -140,25 +140,25 @@ Feature: Delete Cards by end date before
     Then status 200
 
 #get deleted card should return NOT_FOUND
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 #get deleted card should return NOT_FOUND
-    Given url opfabUrl + 'cards/cards/api_test.process2card1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 #get card with user operator1_fr 
-    Given url opfabUrl + 'cards/cards/api_test.process2card2'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card2'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
 
 #get card with user operator1_fr 
-    Given url opfabUrl + 'cards/cards/api_test.process2card3'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card3'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

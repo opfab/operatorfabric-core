@@ -550,7 +550,7 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
-        cy.delayRequestResponse('/cardspub/cards/userAcknowledgement/*');
+        cy.delayRequestResponse('/cards-publication/cards/userAcknowledgement/*');
 
         card.acknowledge();
         opfab.checkLoadingSpinnerIsDisplayed();
@@ -566,7 +566,7 @@ describe('Acknowledgment tests', function () {
 
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
-        cy.delayRequestResponse('/cardspub/cards/cancelUserAcknowledgement/*');
+        cy.delayRequestResponse('/cards-publication/cards/cancelUserAcknowledgement/*');
 
         card.unacknowledge();
 

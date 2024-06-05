@@ -13,13 +13,13 @@ Feature: ResetRateLimiter
 Scenario: ResetRateLimiter
 
   # Send request without ADMIN rights
-    Given url opfabUrl + 'cardspub/cards/rateLimiter'
+    Given url opfabUrl + 'cards-publication/cards/rateLimiter'
     And header Authorization = 'Bearer ' + authToken
     When method post
     Then status 403
 
   # Send request with ADMIN rights
-    Given url opfabUrl + 'cardspub/cards/rateLimiter'
+    Given url opfabUrl + 'cards-publication/cards/rateLimiter'
     And header Authorization = 'Bearer ' + authTokenAdmin
     When method post
     Then status 200

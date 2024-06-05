@@ -321,7 +321,7 @@ describe('User Card ', function () {
     it('Check spinner appears when card template is loading', () => {
 
       cy.delayRequestResponse('/businessconfig/**');
-      cy.delayRequestResponse('/cardspub/**');
+      cy.delayRequestResponse('/cards-publication/**');
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
@@ -491,7 +491,7 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
 
       feed.openFirstCard();
-      cy.intercept('DELETE', '/cardspub/cards/userCard/*', {delay: 2000, statusCode: 502});
+      cy.intercept('DELETE', '/cards-publication/cards/userCard/*', {delay: 2000, statusCode: 502});
 
       feed.deleteCurrentCard();
       opfab.checkLoadingSpinnerIsDisplayed();

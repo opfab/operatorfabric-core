@@ -69,14 +69,14 @@ Scenario: Create perimeter and attach it to group ReadOnly
     Then status 200
 
     Scenario: get card subscription 
-      Given url opfabUrl + 'cards/cardSubscription' +'?clientId=abc0123456789def'
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?clientId=abc0123456789def'
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
       And match response == ''
 
     Scenario: Without authentication
-      Given url opfabUrl + 'cards/cardSubscription'
+      Given url opfabUrl + 'cards-consultation/cardSubscription'
       When method get
       Then status 401
 
@@ -91,7 +91,7 @@ Scenario: Create perimeter and attach it to group ReadOnly
       Then status 201
 
     # Get card uid and check rRule field
-      Given url opfabUrl + 'cards/cards/api_test.process1'
+      Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -100,14 +100,14 @@ Scenario: Create perimeter and attach it to group ReadOnly
 
 
     # Get subscription with past range and check that no card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ pastStartDate + '&rangeEnd=' + pastEndDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ pastStartDate + '&rangeEnd=' + pastEndDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
       And match response == ''
 
     # Get subscription and check that card is returned and check it contains rRule field
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -123,7 +123,7 @@ Scenario: Create perimeter and attach it to group ReadOnly
 
       
     # Get subscription and check that no card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&rangeStart='+ startDate + '&rangeEnd=' + endDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -152,7 +152,7 @@ Scenario: Create perimeter and attach it to group ReadOnly
       And def cardUid = response.uid
 
     # Get subscription and check that card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardPublishDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardPublishDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -161,14 +161,14 @@ Scenario: Create perimeter and attach it to group ReadOnly
     * def cardAckDate = new Date().valueOf();
 
       # Get subscription and check that no card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom=' + cardAckDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom=' + cardAckDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
       And match response == ''
 
     # make an acknowledgement to the card with operator4_fr
-      Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + cardUid
+      Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + cardUid
       And header Authorization = 'Bearer ' + authTokenAsTSO4
       And request entity1Array
       When method post
@@ -176,7 +176,7 @@ Scenario: Create perimeter and attach it to group ReadOnly
 
 
     # Get subscription and check that card is returned
-      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardAckDate
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom='+ cardAckDate
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200

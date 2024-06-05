@@ -1,0 +1,53 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.3.X to release 4.4.0
+
+== Application Endpoints 
+
+To enhance consistency and avoid confusion, we have changed the endpoints used via Nginx:
+  
+  - The endpoint `/cards` has been replaced by `/cards-consultation`.
+  - The endpoint `/cardspub` has been replaced by `/cards-publication`.
+
+This means you need to update your Nginx configuration to reflect these changes.
+
+For example, consider this configuration:
+....
+  location /cards/ {
+    proxy_buffering off;
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-consultation:2104/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+
+  location /cardspub/cards {
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-publication:2102/cards;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+....
+
+This should be changed to:
+
+....
+  location /cards-consultation/ {
+    proxy_buffering off;
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-consultation:2104/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+ 
+  location /cards-publication/ {
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-publication:2102/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+....
+
+
+For a smooth, real-time migration, you can temporarily keep both endpoints in your Nginx configuration and remove the old one after a while.

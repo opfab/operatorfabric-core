@@ -241,7 +241,7 @@ Feature: Cards with timespans
   Scenario: Delete the card
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.processTimeSpan'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -303,7 +303,7 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/api_test.processTimeSpan'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.processTimeSpan'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

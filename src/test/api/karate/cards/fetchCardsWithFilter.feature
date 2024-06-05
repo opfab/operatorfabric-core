@@ -329,7 +329,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	  Given url opfabUrl + 'cards/cards'
+	  Given url opfabUrl + 'cards-consultation/cards'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -349,7 +349,7 @@ Scenario: fetch the first page
 		}
 		"""
 	  
-		  Given url opfabUrl + 'cards/cards'
+		  Given url opfabUrl + 'cards-consultation/cards'
 		  And header Authorization = 'Bearer ' + authTokenAdmin
 		  And request filter
 		  Then method post
@@ -368,7 +368,7 @@ Scenario: fetch the first page
 		}
 		"""
 		
-			Given url opfabUrl + 'cards/cards'
+			Given url opfabUrl + 'cards-consultation/cards'
 			And header Authorization = 'Bearer ' + authTokenAdmin
 			And request filter
 			Then method post
@@ -387,7 +387,7 @@ Scenario: fetch the first page
 		}
 		"""
 		
-			Given url opfabUrl + 'cards/cards'
+			Given url opfabUrl + 'cards-consultation/cards'
 			And header Authorization = 'Bearer ' + authTokenSupervisor
 			And request filter
 			Then method post
@@ -406,7 +406,7 @@ Scenario: fetch the first page
 		}
 		"""
 		
-			Given url opfabUrl + 'cards/cards'
+			Given url opfabUrl + 'cards-consultation/cards'
 			And header Authorization = 'Bearer ' + authTokenSupervisor
 			And request filter
 			Then method post
@@ -466,7 +466,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenSupervisor
 		And request filter
 		Then method post
@@ -485,7 +485,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenSupervisor
 		And request filter
 		Then method post
@@ -530,7 +530,7 @@ Scenario: fetch the first page
 		}
 		"""
 	
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -555,7 +555,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -581,7 +581,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -607,7 +607,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -632,7 +632,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -657,7 +657,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -687,7 +687,7 @@ Scenario: fetch the first page
 		}
 		"""
 
-		Given url opfabUrl + 'cards/cards'
+		Given url opfabUrl + 'cards-consultation/cards'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post

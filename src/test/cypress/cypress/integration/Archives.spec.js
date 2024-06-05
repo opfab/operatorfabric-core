@@ -477,7 +477,7 @@ describe('Archives screen tests', function () {
     }
 
     function delayArchiveRequest() {
-        cy.intercept('/cards/archives', (req) => {
+        cy.intercept('/cards-consultation/archives', (req) => {
             req.reply((res) => {
                 res.delay = 2000;
             });

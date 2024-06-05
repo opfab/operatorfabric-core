@@ -66,7 +66,7 @@ Feature: CardsUserRead
     Then status 201
 
 #get card with user operator1_fr and check it hasn't been read yet
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -75,14 +75,14 @@ Feature: CardsUserRead
 
 
 #Signal that card has been read card by operator1_fr
-    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
     When method post
     Then status 201
 
 #get card with user operator1_fr and check hasBeenRead is set to true
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -92,7 +92,7 @@ Feature: CardsUserRead
 
 
 #get card with user operator2_fr and check hasBeenRead is set to false
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -101,14 +101,14 @@ Feature: CardsUserRead
 
 
 #Signal that card has been read card by operator2_fr
-    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken2
     And request ''
     When method post
     Then status 201
 
 #get card with user operator1_fr and check hasBeenRead is still set to true
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -133,7 +133,7 @@ Feature: CardsUserRead
     }
     """
 
-    Given url opfabUrl + 'cards/cards'
+    Given url opfabUrl + 'cards-consultation/cards'
     And header Authorization = 'Bearer ' + authToken
     And request filter
     Then method post
@@ -144,12 +144,12 @@ Feature: CardsUserRead
     And match response.content[0].usersReads[1] == "operator2_fr"
 
 # Delete user read
-    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -157,7 +157,7 @@ Feature: CardsUserRead
     And match response.card.uid == uid
 
 #get card with user operator2_fr and check hasBeenRead is still set to true
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -165,12 +165,12 @@ Feature: CardsUserRead
     And match response.card.uid == uid
 
     # Read a card that has already been read
-    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
-    Given url opfabUrl + 'cardspub/cards/userCardRead/unexisting_card____uid'
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
