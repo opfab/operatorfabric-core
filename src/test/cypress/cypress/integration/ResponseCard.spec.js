@@ -545,7 +545,7 @@ describe('Response card tests', function () {
         feed.openFirstCard();
 
         // Mock and delay card response 
-        cy.intercept('/cardspub/cards/userCard', {
+        cy.intercept('/cards-publication/cards/userCard', {
             statusCode: 201,
             delay: 3000
         });

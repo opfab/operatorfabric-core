@@ -71,7 +71,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     When method post
     Then status 201
 
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -79,14 +79,14 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And def uid = response.card.uid
 
 #make an acknowledgement to the card with operator1_fr
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entityArray
     When method post
     Then status 201
 
 #get card with user operator1_fr and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -119,7 +119,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
   Then status 201
 
   #get card with user operator1_fr and check containing any ack
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200

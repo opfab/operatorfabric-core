@@ -93,7 +93,7 @@ Scenario: Post a new version of the card
   And def cardId = response.id
 
   # Get card with user operator1_fr
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -106,13 +106,13 @@ Scenario: Post a new version of the card
   And match response.card.severity == 'INFORMATION'
 
   # Get card without authentication
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   When method get
   Then status 401
 
 Scenario: Delete the card
   # Get card with user operator1_fr
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -162,7 +162,7 @@ Scenario: Post card with attribute externalRecipients
   Then status 201
 
   # Get card with user operator1_fr and new attribute externalRecipients
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -177,7 +177,7 @@ Scenario: Post card with attribute externalRecipients
 
   # Make sure externalRecipients are notified of card suppression
   * configure retry = { count: 3, interval: 3000 }
-  Given url opfabUrl + 'cards/cards/api_test.process1_deleted'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1_deleted'
   And header Authorization = 'Bearer ' + authTokenForOperator5
   And retry until responseStatus == 200 
   When method get
@@ -296,7 +296,7 @@ Scenario: Post card with correct parentCardId but initialParentCardUid not corre
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -332,7 +332,7 @@ Scenario: Post card with correct parentCardId but initialParentCardUid not corre
 
 Scenario: Post card with correct parentCardId and initialParentCardUid
   # Get parent card id
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -391,7 +391,7 @@ Scenario: Push card and its two child cards, then get the parent card
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -453,7 +453,7 @@ Scenario: Push card and its two child cards, then get the parent card
 
   # Get the parent card with its two child cards
 
-  Given url opfabUrl + 'cards/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -487,7 +487,7 @@ Scenario: Push card with null keepChilCards and publisherType
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards/cards/api_test.processKeepChildCardsNull'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.processKeepChildCardsNull'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200

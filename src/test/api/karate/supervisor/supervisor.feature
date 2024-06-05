@@ -162,7 +162,7 @@ Scenario: Check card is sent when entities are not connected
     """
 
     * configure retry = { count: 15, interval: 1000 }
-    Given url opfabUrl + 'cards/cards'
+    Given url opfabUrl + 'cards-consultation/cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request filter
     And retry until responseStatus == 200 && response.numberOfElements == 1 
@@ -250,7 +250,7 @@ Scenario: Check card is sent when entities are not connected
     """
 
     * configure retry = { count: 15, interval: 1000 }
-    Given url opfabUrl + 'cards/cards'
+    Given url opfabUrl + 'cards-consultation/cards'
     And header Authorization = 'Bearer ' + authTokenSupervisor
     And request filter
     And retry until responseStatus == 200 && response.numberOfElements == 1 
@@ -284,7 +284,7 @@ Scenario: Check card is sent when entities are not connected
     """
 
     * configure retry = { count: 15, interval: 1000 }
-    Given url opfabUrl + 'cards/cards'
+    Given url opfabUrl + 'cards-consultation/cards'
     And header Authorization = 'Bearer ' + authTokenSupervisor
     And request filter
     And retry until responseStatus == 200 && response.numberOfElements == 1 

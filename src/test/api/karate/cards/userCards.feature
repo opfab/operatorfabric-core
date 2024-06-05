@@ -204,7 +204,7 @@ Scenario: Create perimeter for initial process
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -278,7 +278,7 @@ Scenario: Create perimeter for initial process
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/process_1.process_id_w'
+    Given url opfabUrl + 'cards-consultation/cards/process_1.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -287,7 +287,7 @@ Scenario: Create perimeter for initial process
 
 # We check externalApp has sent a card following reception of card process_1.process_id_w
     * configure retry = { count: 3, interval: 3000 }
-    Given url opfabUrl + 'cards/cards/api_test.process_id_w'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsItsupervisor1
     And retry until responseStatus == 200 && response.card.data.message == "Card with id=process_1.process_id_w received by externalApp. Card sent for karate tests, addressed to :   IT_SUPERVISOR_ENTITY "
     When method get
@@ -334,7 +334,7 @@ Scenario: Create perimeter for initial process
 
   Scenario: We update the parent card (which id is : api_test.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
     #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -371,7 +371,7 @@ Scenario: Create perimeter for initial process
     Then status 201
 
 # verify that child card was not deleted after parent card update
-    Given url opfabUrl + 'cards/cards/process_2.process_o'
+    Given url opfabUrl + 'cards-consultation/cards/process_2.process_o'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -379,7 +379,7 @@ Scenario: Create perimeter for initial process
     And match response.card.initialParentCardUid == cardUid
 
 # we check that the parent card still has its child card
-    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -414,13 +414,13 @@ Scenario: Create perimeter for initial process
     Then status 201
 
 # verify that child card was deleted after parent card update
-    Given url opfabUrl + 'cards/cards/process_2.process_o'
+    Given url opfabUrl + 'cards-consultation/cards/process_2.process_o'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 # we check that the parent card has no child card anymore
-    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -430,7 +430,7 @@ Scenario: Create perimeter for initial process
 
   Scenario: We push 2 child cards, then we delete the parent card, then we check that the 2 child cards are deleted
     #get the id of the updated parent card (with user tso1-operator)
-    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -465,7 +465,7 @@ Scenario: Create perimeter for initial process
     Then status 201
 
 # We check that the child card exists (childCard1)
-    Given url opfabUrl + 'cards/cards/process_1.process_id_4'
+    Given url opfabUrl + 'cards-consultation/cards/process_1.process_id_4'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -502,7 +502,7 @@ Scenario: Create perimeter for initial process
     Then status 201
 
 # We check that the child card exists (childCard2)
-    Given url opfabUrl + 'cards/cards/process_1.process_id_5'
+    Given url opfabUrl + 'cards-consultation/cards/process_1.process_id_5'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -519,12 +519,12 @@ Scenario: Create perimeter for initial process
 
 # verify that the 2 child cards was deleted after parent card deletion
 
-    Given url opfabUrl + 'cards/cards/process_1.process_id_4'
+    Given url opfabUrl + 'cards-consultation/cards/process_1.process_id_4'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
-    Given url opfabUrl + 'cards/cards/process_1.process_id_5'
+    Given url opfabUrl + 'cards-consultation/cards/process_1.process_id_5'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404

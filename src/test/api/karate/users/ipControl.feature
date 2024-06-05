@@ -15,8 +15,8 @@ Feature: Client ip control
 
     * def nginxUserServiceUrl = opfabUrl + 'users/users/user_test_api_1'
     * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes'
-    * def nginxCardsConsultationServiceUrl = opfabUrl + 'cards/cardSubscription' + '?notification=false&clientId=abc0123456789def'
-    * def nginxUserCardsPublicationServiceUrl = opfabUrl + '/cardspub/cards/userCard'
+    * def nginxCardsConsultationServiceUrl = opfabUrl + 'cards-consultation/cardSubscription' + '?notification=false&clientId=abc0123456789def'
+    * def nginxUserCardsPublicationServiceUrl = opfabUrl + '/cards-publication/cards/userCard'
 
     * def userAuthorizedIPAddressesUpdate =
 """

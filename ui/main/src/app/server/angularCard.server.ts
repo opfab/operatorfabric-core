@@ -33,11 +33,11 @@ export class AngularCardServer extends AngularServer implements CardServer {
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.cardConsultationUrl = `${environment.url}cards/cards`;
-        this.archivesUrl = `${environment.url}cards/archives`;
-        this.cardPublicationUrl = `${environment.url}cardspub/cards`;
-        this.userCardReadUrl = `${environment.url}cardspub/cards/userCardRead`;
-        this.userCardUrl = `${environment.url}cardspub/cards/userCard`;
+        this.cardConsultationUrl = `${environment.url}cards-consultation/cards`;
+        this.archivesUrl = `${environment.url}cards-consultation/archives`;
+        this.cardPublicationUrl = `${environment.url}cards-publication/cards`;
+        this.userCardReadUrl = `${environment.url}cards-publication/cards/userCardRead`;
+        this.userCardUrl = `${environment.url}cards-publication/cards/userCard`;
     }
 
     loadCard(id: string): Observable<ServerResponse<any>> {

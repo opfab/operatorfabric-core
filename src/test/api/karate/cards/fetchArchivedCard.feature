@@ -67,7 +67,7 @@ Feature: fetchArchive
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/api_test.process_archive_1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -76,7 +76,7 @@ Feature: fetchArchive
 
 #get card form archives with user operator1_fr
 
-    Given url opfabUrl + 'cards/archives/' + cardUid
+    Given url opfabUrl + 'cards-consultation/archives/' + cardUid
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -87,13 +87,13 @@ Feature: fetchArchive
 # get card form archives without authentication
 
 
-    Given url opfabUrl + 'cards/archives/' + cardUid
+    Given url opfabUrl + 'cards-consultation/archives/' + cardUid
     When method get
     Then status 401
 
 
 # get card form archives with user operator2_fr
-    Given url opfabUrl + 'cards/archives/' + cardUid
+    Given url opfabUrl + 'cards-consultation/archives/' + cardUid
     And header Authorization = 'Bearer ' + authTokenTSO2
     When method get
     Then status 404
@@ -128,7 +128,7 @@ Feature: fetchArchive
 
 
 #get card with user operator1_fr
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200

@@ -245,7 +245,7 @@ Feature: Check addition of transitive entities to user
 # get cards
  	Scenario Outline: Get cards for user with single entity (user_test_api_1)
 
-     		Given url opfabUrl + 'cards/cards/' + <card>.process+'.'+<card>.processInstanceId
+     		Given url opfabUrl + 'cards-consultation/cards/' + <card>.process+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + singleToken
      		When method get
      		Then status <expected>
@@ -259,7 +259,7 @@ Feature: Check addition of transitive entities to user
 
  	Scenario Outline: Get cards for user with root entity only (user_test_api_2)
 
-     		Given url opfabUrl + 'cards/cards/' + <card>.process+'.'+<card>.processInstanceId
+     		Given url opfabUrl + 'cards-consultation/cards/' + <card>.process+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + rootToken
      		When method get
      		Then status <expected>
@@ -273,7 +273,7 @@ Feature: Check addition of transitive entities to user
 
  	Scenario Outline: Get cards for user with child and grand child entity (user_test_api_3)
 
-     		Given url opfabUrl + 'cards/cards/' + <card>.process+'.'+<card>.processInstanceId
+     		Given url opfabUrl + 'cards-consultation/cards/' + <card>.process+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + childAndGrandChildToken
      		When method get
      		Then status <expected>
@@ -287,7 +287,7 @@ Feature: Check addition of transitive entities to user
 
  	Scenario Outline: Get cards for user without child entity (user_test_api_4)
 
-     		Given url opfabUrl + 'cards/cards/' + <card>.process+'.'+<card>.processInstanceId
+     		Given url opfabUrl + 'cards-consultation/cards/' + <card>.process+'.'+<card>.processInstanceId
      		And header Authorization = 'Bearer ' + withoutChildToken
      		When method get
      		Then status <expected>

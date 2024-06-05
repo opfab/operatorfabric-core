@@ -51,7 +51,7 @@ Scenario: Check Archives / must insert 10 cards first with other scenarios
 }
 """
 
-  Given url opfabUrl + 'cards/archives'
+  Given url opfabUrl + 'cards-consultation/archives'
   And header Authorization = 'Bearer ' + authToken
   And request filter1
   Then method post

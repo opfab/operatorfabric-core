@@ -345,7 +345,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -365,7 +365,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -386,7 +386,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -406,7 +406,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAdmin
 	  And request filter
 	  Then method post
@@ -427,7 +427,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	Given url opfabUrl + 'cards/archives'
+	Given url opfabUrl + 'cards-consultation/archives'
 	And header Authorization = 'Bearer ' + authTokenAdmin
 	And request filter
 	Then method post
@@ -445,7 +445,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	Given url opfabUrl + 'cards/archives'
+	Given url opfabUrl + 'cards-consultation/archives'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
 	And request filter
 	Then method post
@@ -469,7 +469,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	Given url opfabUrl + 'cards/archives'
+	Given url opfabUrl + 'cards-consultation/archives'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
 	And request filter
 	Then method post
@@ -488,7 +488,7 @@ Scenario: fetch the first page
 	}
 	"""
   
-	Given url opfabUrl + 'cards/archives'
+	Given url opfabUrl + 'cards-consultation/archives'
 	And request filter
 	Then method post
 	Then status 403
@@ -511,7 +511,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -533,7 +533,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives'
+	  Given url opfabUrl + 'cards-consultation/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -557,7 +557,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives' +'?activeFrom=1553186770481'
+	  Given url opfabUrl + 'cards-consultation/archives' +'?activeFrom=1553186770481'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
@@ -581,7 +581,7 @@ Scenario: fetch the first page
 		}
 		"""
   
-		Given url opfabUrl + 'cards/archives'
+		Given url opfabUrl + 'cards-consultation/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -604,7 +604,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filter
 		  Then method post
@@ -629,7 +629,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filter
 		  Then method post
@@ -649,7 +649,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filter
 		  Then method post
@@ -668,7 +668,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filter
 		  Then method post
@@ -686,7 +686,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filter
 		  Then method post
@@ -726,7 +726,7 @@ Scenario: fetch the first page
 		  }
 		  """
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filterEQUALS
 		  When method post
@@ -734,7 +734,7 @@ Scenario: fetch the first page
 		  And assert response.numberOfElements == 10
   
   
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
 		  And request filterEQUALS2
 		  When method post
@@ -775,7 +775,7 @@ Scenario: fetch the first page
 			}
 			"""
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNEQ
 			When method post
@@ -783,7 +783,7 @@ Scenario: fetch the first page
 			And assert response.numberOfElements == 10
   
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNEQ2
 			When method post
@@ -821,14 +821,14 @@ Scenario: fetch the first page
 			]
 		  }
 		  """
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterSW
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
 		  
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterSW2
 			  When method post
@@ -867,7 +867,7 @@ Scenario: fetch the first page
 			  }
 			  """
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterEW2
 			  When method post
@@ -905,14 +905,14 @@ Scenario: fetch the first page
 		  }
 		  """
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterBLANK
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
    
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterBLANK2
 			  When method post
@@ -950,14 +950,14 @@ Scenario: fetch the first page
 			}
 			"""
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNOTBLANK
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNOTBLANK2
 			  When method post
@@ -997,14 +997,14 @@ Scenario: fetch the first page
 			}
 			"""
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterCONTAINS
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterCONTAINS2
 			  When method post
@@ -1044,14 +1044,14 @@ Scenario: fetch the first page
 		  }
 		  """
 		  
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNOTCONTAINS
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterNOTCONTAINS2
 			  When method post
@@ -1091,14 +1091,14 @@ Scenario: fetch the first page
 		  }
 		  """
 		  
-		  Given url opfabUrl + 'cards/archives'
+		  Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterIN
 			  When method post
 			Then status 200
 			And assert response.numberOfElements == 10
   
-			Given url opfabUrl + 'cards/archives'
+			Given url opfabUrl + 'cards-consultation/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
 			And request filterIN2
 			  When method post
@@ -1124,7 +1124,7 @@ Scenario: fetch the first page
 		}
 		"""
 	
-		Given url opfabUrl + 'cards/archives'
+		Given url opfabUrl + 'cards-consultation/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -1146,7 +1146,7 @@ Scenario: fetch the first page
 		}
 		"""
   
-		Given url opfabUrl + 'cards/archives'
+		Given url opfabUrl + 'cards-consultation/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -1168,7 +1168,7 @@ Scenario: fetch the first page
 		}
 		"""
   
-		Given url opfabUrl + 'cards/archives'
+		Given url opfabUrl + 'cards-consultation/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post
@@ -1190,7 +1190,7 @@ Scenario: fetch the first page
 		}
 		"""
   
-		Given url opfabUrl + 'cards/archives'
+		Given url opfabUrl + 'cards-consultation/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
 		And request filter
 		Then method post

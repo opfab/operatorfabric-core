@@ -45,7 +45,7 @@ public class SseTest extends Simulation {
     .exists().saveAs("access_token")))
 
     .exec(sse("subscribe")
-      .connect("/cards/cardSubscription?clientId=" + java.util.UUID.randomUUID() + "&version=SNAPSHOT&notification=true")
+      .connect("/cards-consultation/cardSubscription?clientId=" + java.util.UUID.randomUUID() + "&version=SNAPSHOT&notification=true")
       .header("Authorization", "Bearer #{access_token}")
       .await(10).on(
         sse.checkMessage("init").check(regex("INIT"))

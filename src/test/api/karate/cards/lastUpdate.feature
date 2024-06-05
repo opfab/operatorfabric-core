@@ -91,7 +91,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And def creationDate = response.lastUpdate
 
     # Check lastUpdate field is correct
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         And def now = new Date ().valueOf()
         And def tenSecondsAgo = new Date(now - 10000).valueOf()
@@ -110,7 +110,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And def updateDate = response.lastUpdate
 
     # Check lastUpdate field has been updated
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
@@ -118,7 +118,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And match response.card.uid == uid
 
     # Make an acknowledgement to the card with operator1_fr
-        Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+        Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
         And header Authorization = 'Bearer ' + authToken
         And request entity1Array
         When method post
@@ -126,7 +126,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And def acknowledgementDate = new Date ().valueOf()
 
     # Check lastUpdate field has been updated
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
@@ -134,7 +134,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And match response.card.uid == uid
 
     # Unacknowledge the card
-        Given url opfabUrl + 'cardspub/cards/cancelUserAcknowledgement/' + uid
+        Given url opfabUrl + 'cards-publication/cards/cancelUserAcknowledgement/' + uid
         And header Authorization = 'Bearer ' + authToken
         And request entity1Array
         When method post
@@ -142,7 +142,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And def unacknowledgementDate = new Date ().valueOf()
     
     # Check lastUpdate field has been updated
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
@@ -150,7 +150,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And match response.card.uid == uid
     
     # Signal that card has been read card by operator1_fr
-        Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+        Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
         And header Authorization = 'Bearer ' + authToken
         And request ''
         When method post
@@ -158,7 +158,7 @@ Scenario: Create a card, update it, read it and acknowledge it
         And def readDate = new Date ().valueOf()
 
     # Check lastUpdate field is correct
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
@@ -166,14 +166,14 @@ Scenario: Create a card, update it, read it and acknowledge it
         And match response.card.uid == uid
     
     # Unread the card
-        Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+        Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
         And header Authorization = 'Bearer ' + authToken
         And request entity1Array
         When method delete
         Then status 200
 
     # Check lastUpdate field is correct
-        Given url opfabUrl + 'cards/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200

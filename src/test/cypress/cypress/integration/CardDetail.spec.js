@@ -201,7 +201,7 @@ describe('Card detail', function () {
 
         it(`Check that a spinner is displayed when the card takes time to load `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
-            cy.delayRequestResponse('/cards/cards/**');
+            cy.delayRequestResponse('/cards-consultation/cards/**');
             opfab.loginWithUser('operator1_fr');
             cy.get('of-light-card').eq(0).click();
             opfab.checkLoadingSpinnerIsDisplayed();

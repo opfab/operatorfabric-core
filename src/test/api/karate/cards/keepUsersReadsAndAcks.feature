@@ -89,21 +89,21 @@ Feature: KeepCardsUserReadsAndAcks
     And def uid = response.uid
 
 #Signal that card has been read card by operator1_fr
-    Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
     When method post
     Then status 201
 
 #make an acknowledgement to the card with operator1_fr
-    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1Array
     When method post
     Then status 201
 
 #get card with user operator1_fr and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -120,7 +120,7 @@ Feature: KeepCardsUserReadsAndAcks
     And def uid = response.uid
 
 #get card with user operator1_fr and check hasBeenRead, hasBeenAcknowledged and entitiesAcks were kept
-    Given url opfabUrl + 'cards/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
