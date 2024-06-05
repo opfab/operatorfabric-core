@@ -12,6 +12,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {AlertPage} from './alertPage';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 export class AlertView {
     private alertMessageBusinessAutoClose: boolean;
@@ -38,6 +39,7 @@ export class AlertView {
         if (message.i18n?.key)
             this.alertPage.message = this.translationService.getTranslation(message.i18n.key, message.i18n.parameters);
         else this.alertPage.message = message.message;
+        logger.debug(`AlertMessage : ${this.alertPage.message}`, LogOption.LOCAL_AND_REMOTE);
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);
         this.lastMessageDate = new Date().valueOf();
         if (message.level !== MessageLevel.BUSINESS || this.alertMessageBusinessAutoClose)
