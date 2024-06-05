@@ -29,7 +29,8 @@
         <br />
     </div>
     <br />
-    <div class="row opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
+    <div *ngIf="notificationConfigurationPage.processesWithNoProcessGroup.length"
+         class="row opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
         <ng-container *ngFor="let process of notificationConfigurationPage.processesWithNoProcessGroup">
             <ng-container *ngTemplateOutlet="processTemplate; context: { process: process }"></ng-container>
         </ng-container>
