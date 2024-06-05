@@ -13,8 +13,9 @@ package org.opfab.cards.publication.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -22,17 +23,27 @@ import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.springtools.json.InstantModule;
 import org.springframework.stereotype.Component;
-
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public class CardObjectMapper {
 
     private final ObjectMapper objectMapper;
+    private static final List<String> exclusions = Arrays.asList("getSchema", "getSpecificData");
 
     public CardObjectMapper() {
-        this.objectMapper = JsonMapper.builder().enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS).build();
+        this.objectMapper = JsonMapper.builder().build();
 
+        /* Exclude specific avro fields to avoid Json mapping exceptions */
+        objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+            @Override
+            public boolean hasIgnoreMarker(final AnnotatedMember m) {
+                return exclusions.contains(m.getName()) || super.hasIgnoreMarker(m);
+            }
+        });
+ 
         objectMapper.registerModule(new Jdk8Module());
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new InstantModule());
