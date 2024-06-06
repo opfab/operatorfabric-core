@@ -115,7 +115,7 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
 
         @Test
         void postInvalidMonitoringShouldReturnBadRequest() throws Exception {
-                mockMvc.perform(post("/businessconfig/monitoring").contentType(MediaType.APPLICATION_JSON)
+                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
                                 .content("dummyContent")).andExpect(status().isBadRequest()).andReturn();
         }
 
@@ -123,16 +123,16 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
         void postMonitoringShouldUpdateMonitoring() throws Exception {
 
                 // should have value on startup
-                mockMvc.perform(get("/businessconfig/monitoring")).andExpect(status().isOk())
+                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.export.fields[0].columnName", is("initValue")));
 
                 // post new configuration
-                mockMvc.perform(post("/businessconfig/monitoring").contentType(MediaType.APPLICATION_JSON)
+                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
                                 .content(getMonitoring())).andExpect(status().isCreated()).andReturn();
 
                 // check new configuration loaded
-                mockMvc.perform(get("/businessconfig/monitoring")).andExpect(status().isOk())
+                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.export.fields[0].columnName", is("myField")))
                                 .andExpect(jsonPath("$.export.fields[0].jsonField", is("card.state")))

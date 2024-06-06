@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,7 +78,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void listProcesses() throws Exception {
-        mockMvc.perform(get("/businessconfig/processes"))
+        mockMvc.perform(get("/processes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -87,7 +87,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void listProcessGroups() throws Exception {
-        mockMvc.perform(get("/businessconfig/processgroups"))
+        mockMvc.perform(get("/processgroups"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.groups", hasSize(0)))
@@ -96,7 +96,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void listRealTimeScreens() throws Exception {
-        mockMvc.perform(get("/businessconfig/realtimescreens"))
+        mockMvc.perform(get("/realtimescreens"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.realTimeScreens", hasSize(0)))
@@ -105,7 +105,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void fetch() throws Exception {
-        ResultActions result = mockMvc.perform(get("/businessconfig/processes/first"));
+        ResultActions result = mockMvc.perform(get("/processes/first"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -115,7 +115,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void fetchWithVersion() throws Exception {
-        ResultActions result = mockMvc.perform(get("/businessconfig/processes/first?version=0.1"));
+        ResultActions result = mockMvc.perform(get("/processes/first?version=0.1"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -124,14 +124,14 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @Test
     void fetchNonExistingProcesses() throws Exception {
-        mockMvc.perform(get("/businessconfig/processes/DOES_NOT_EXIST"))
+        mockMvc.perform(get("/processes/DOES_NOT_EXIST"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void fetchCssResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/css/style1")
+                get("/processes/first/css/style1")
                         .accept("text/css"));
         result
                 .andExpect(status().isOk())
@@ -141,7 +141,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                         "}")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/css/style1?version=0.1")
+                get("/processes/first/css/style1?version=0.1")
                         .accept("text/css"));
         result
                 .andExpect(status().isOk())
@@ -155,7 +155,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template1")
+                get("/processes/first/templates/template1")
                         .accept("application/handlebars")
         );
         result
@@ -164,7 +164,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("{{service}}")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/template?version=0.1")
+                get("/processes/first/templates/template?version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
@@ -172,7 +172,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("{{service}} 0.1")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/templates/templateIO?version=0.1")
+                get("/processes/first/templates/templateIO?version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
@@ -183,7 +183,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     @Test
     void fetchTranslationResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n")
+                get("/processes/first/i18n")
                         .accept("text/plain")
         );
         result
@@ -192,7 +192,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1\"")))
         ;
         result = mockMvc.perform(
-                get("/businessconfig/processes/first/i18n?version=0.1")
+                get("/processes/first/i18n?version=0.1")
                         .accept("text/plain")
         );
         result
@@ -203,7 +203,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
         assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
-                        get("/businessconfig/processes/first/i18n?version=2.1")
+                        get("/processes/first/i18n?version=2.1")
                                 .accept("text/plain")
                 ));
     }
@@ -216,11 +216,11 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
-            mockMvc.perform(multipart("/businessconfig/processes/second").file(bundle))
+            mockMvc.perform(multipart("/processes/second").file(bundle))
                     .andExpect(status().isForbidden())
             ;
 
-            mockMvc.perform(get("/businessconfig/processes"))
+            mockMvc.perform(get("/processes"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)));
@@ -233,11 +233,11 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
                     .readAllBytes(pathToProcessGroupsFile));
 
-            mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+            mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
                     .andExpect(status().isForbidden())
             ;
 
-            mockMvc.perform(get("/businessconfig/processgroups"))
+            mockMvc.perform(get("/processgroups"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.groups", hasSize(0)));
@@ -250,11 +250,11 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             MockMultipartFile realTimeScreensFile = new MockMultipartFile("file", "realtimescreens.json", MediaType.TEXT_PLAIN_VALUE, Files
                     .readAllBytes(pathToRealTimeScreensFile));
 
-            mockMvc.perform(multipart("/businessconfig/realtimescreens").file(realTimeScreensFile))
+            mockMvc.perform(multipart("/realtimescreens").file(realTimeScreensFile))
                     .andExpect(status().isForbidden())
             ;
 
-            mockMvc.perform(get("/businessconfig/realtimescreens"))
+            mockMvc.perform(get("/realtimescreens"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.realTimeScreens", hasSize(0)));
@@ -263,10 +263,10 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         @Test
         void notAllowMonitoringToBePosted() throws Exception {
 
-                mockMvc.perform(post("/businessconfig/monitoring").contentType(MediaType.APPLICATION_JSON)
+                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
                                 .content("{}")).andExpect(status().isForbidden());
 
-                mockMvc.perform(get("/businessconfig/monitoring")).andExpect(status().isOk())
+                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.export.fields[0].columnName", is(notNullValue())));
         }
@@ -288,21 +288,21 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         	
         	@Test
             void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/businessconfig/processes/"+bundleName+"/versions/0.1"));
+        		ResultActions result = mockMvc.perform(delete("/processes/"+bundleName+"/versions/0.1"));
                 result
                         .andExpect(status().isForbidden());
             }
         	
         	@Test
             void deleteGivenBundle() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/businessconfig/processes/"+bundleName));
+        		ResultActions result = mockMvc.perform(delete("/processes/"+bundleName));
                 result
                         .andExpect(status().isForbidden());
             }
         	
         	@Test
             void deleteGivenBundleNotFoundError() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/businessconfig/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
+        		ResultActions result = mockMvc.perform(delete("/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
                 result
                         .andExpect(status().isForbidden());
             }
@@ -312,9 +312,9 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             class DeleteContent {
                 @Test
                 void clean() throws Exception {
-                    mockMvc.perform(delete("/businessconfig/processes"))
+                    mockMvc.perform(delete("/processes"))
                             .andExpect(status().isForbidden());
-                    mockMvc.perform(get("/businessconfig/processes"))
+                    mockMvc.perform(get("/processes"))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                             .andExpect(jsonPath("$", hasSize(2)));

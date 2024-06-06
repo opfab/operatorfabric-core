@@ -43,7 +43,7 @@ import net.minidev.json.parser.ParseException;
 
 @RestController
 @Slf4j
-@RequestMapping("/businessconfig")
+@RequestMapping({"/businessconfig","/"}) // /businessconfig is a legacy path  ,shall be removed in a future version
 public class BusinessconfigController {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";

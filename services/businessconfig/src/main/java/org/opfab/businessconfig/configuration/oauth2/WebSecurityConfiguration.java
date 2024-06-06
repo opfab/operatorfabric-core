@@ -38,8 +38,8 @@ public class WebSecurityConfiguration {
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String ADMIN_BUSINESS_PROCESS_ROLE = "ADMIN_BUSINESS_PROCESS";
-    public static final String THIRDS_PATH = "/businessconfig/**";
-    public static final String BUSINESS_DATA_PATH = "/businessconfig/businessdata/**";
+    public static final String GLOBAL_PATH = "/**";
+    public static final String PROCESS_PATH  = "/processes/**";
 
 
     @Bean
@@ -55,7 +55,7 @@ public class WebSecurityConfiguration {
         return http.build();
     }
 
-    /* We remove authentication for GET on THIRDS_PATH because :
+    /* We remove authentication for GET on PROCESS because :
     1) style is called via <style>, so no token is provided (Static resource)
     2) it is called by CardPublication when checkAuthenticationForCardSending is set to false
     3) it is called for publishing card, for checking if process/state exists in the bundles */
@@ -66,12 +66,12 @@ public class WebSecurityConfiguration {
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                        .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
-                        .requestMatchers(HttpMethod.POST, THIRDS_PATH)
+                        .requestMatchers(HttpMethod.GET, PROCESS_PATH).permitAll()  
+                        .requestMatchers(HttpMethod.POST, GLOBAL_PATH)
                         .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-                        .requestMatchers(HttpMethod.PUT, THIRDS_PATH)
+                        .requestMatchers(HttpMethod.PUT, GLOBAL_PATH)
                         .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-                        .requestMatchers(HttpMethod.DELETE, THIRDS_PATH)
+                        .requestMatchers(HttpMethod.DELETE, GLOBAL_PATH)
                         .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
                         .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
                         .anyRequest().access(authenticatedAndIpAllowed()));

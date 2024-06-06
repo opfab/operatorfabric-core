@@ -35,20 +35,6 @@ Feature: getBusinessconfigHistory
     And assert response[1].id == 'api_test'
     And assert response[1].version == '2'
 
-
-  Scenario: List existing Businessconfig history without authentication
-
-    # Check bundle
-
-    Given url opfabUrl + '/businessconfig/processhistory/api_test'
-    When method GET
-    Then status 200
-    And assert response.length == 2
-    And assert response[0].id == 'api_test'
-    And assert response[0].version == '1'
-    And assert response[1].id == 'api_test'
-    And assert response[1].version == '2'
-
   Scenario: List not existing Businessconfig history
 
     # Check bundle
