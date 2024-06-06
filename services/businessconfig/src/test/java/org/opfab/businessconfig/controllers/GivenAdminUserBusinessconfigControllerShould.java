@@ -124,7 +124,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                                                 "    font-weight: bold;\n" +
                                                 "}")));
                 result = mockMvc.perform(
-                                get("/businessconfig/processes/first/css/style1?version=0.1")
+                                get("/processes/first/css/style1?version=0.1")
                                                 .accept("text/css"));
                 result
                                 .andExpect(status().isOk())
@@ -137,21 +137,21 @@ class GivenAdminUserBusinessconfigControllerShould {
         @Test
         void fetchTemplateResource() throws Exception {
                 ResultActions result = mockMvc.perform(
-                                get("/businessconfig/processes/first/templates/template1")
+                                get("/processes/first/templates/template1")
                                                 .accept("application/handlebars"));
                 result
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType("application/handlebars"))
                                 .andExpect(content().string(is("{{service}}")));
                 result = mockMvc.perform(
-                                get("/businessconfig/processes/first/templates/template?version=0.1")
+                                get("/processes/first/templates/template?version=0.1")
                                                 .accept("application/handlebars"));
                 result
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType("application/handlebars"))
                                 .andExpect(content().string(is("{{service}} 0.1")));
                 result = mockMvc.perform(
-                                get("/businessconfig/processes/first/templates/templateIO?version=0.1")
+                                get("/processes/first/templates/templateIO?version=0.1")
                                                 .accept("application/json", "application/handlebars"));
                 result
                                 .andExpect(status().is4xxClientError())
@@ -161,14 +161,14 @@ class GivenAdminUserBusinessconfigControllerShould {
         @Test
         void fetchI18n() throws Exception {
                 ResultActions result = mockMvc.perform(
-                                get("/businessconfig/processes/first/i18n")
+                                get("/processes/first/i18n")
                                                 .accept("text/plain"));
                 result
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType("text/plain"))
                                 .andExpect(content().string(is("card.title=\"Title $1\"")));
                 result = mockMvc.perform(
-                                get("/businessconfig/processes/first/i18n?version=0.1")
+                                get("/processes/first/i18n?version=0.1")
                                                 .accept("text/plain"));
                 result
                                 .andExpect(status().isOk())
@@ -176,13 +176,13 @@ class GivenAdminUserBusinessconfigControllerShould {
                                 .andExpect(content().string(is("card.title=\"Title $1 0.1\"")));
 
                 assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> mockMvc.perform(
-                                get("/businessconfig/processes/first/i18n?version=2.1")
+                                get("/processes/first/i18n?version=2.1")
                                                 .accept("text/plain")));
         }
 
         @Test
         void listRealTimeScreens() throws Exception {
-                mockMvc.perform(get("/businessconfig/realtimescreens"))
+                mockMvc.perform(get("/realtimescreens"))
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.realTimeScreens", hasSize(0)));
@@ -197,20 +197,19 @@ class GivenAdminUserBusinessconfigControllerShould {
                         MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz",
                                         "application/gzip", Files
                                                         .readAllBytes(pathToBundle));
-                        mockMvc.perform(multipart("/businessconfig/processes").file(bundle))
+                        mockMvc.perform(multipart("/processes").file(bundle))
                                         .andExpect(status().isCreated())
-                                        .andExpect(header().string("Location", "/businessconfig/processes/second"))
                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                         .andExpect(jsonPath("$.id", is("second")))
                                         .andExpect(jsonPath("$.name", is("process.title")))
                                         .andExpect(jsonPath("$.version", is("2.1")));
 
-                        mockMvc.perform(get("/businessconfig/processes"))
+                        mockMvc.perform(get("/processes"))
                                         .andExpect(status().isOk())
                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                         .andExpect(jsonPath("$", hasSize(3)));
 
-                        mockMvc.perform(get("/businessconfig/processes/second/css/nostyle"))
+                        mockMvc.perform(get("/processes/second/css/nostyle"))
                                         .andExpect(status().isNotFound());
                 }
 
@@ -222,11 +221,10 @@ class GivenAdminUserBusinessconfigControllerShould {
                                         MediaType.TEXT_PLAIN_VALUE, Files
                                                         .readAllBytes(pathToProcessGroupsFile));
 
-                        mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
-                                        .andExpect(status().isCreated())
-                                        .andExpect(header().string("Location", "/businessconfig/processgroups"));
+                        mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
+                                        .andExpect(status().isCreated());
 
-                        mockMvc.perform(get("/businessconfig/processgroups"))
+                        mockMvc.perform(get("/processgroups"))
                                         .andExpect(status().isOk())
                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                         .andExpect(jsonPath("$.groups", hasSize(2)))
@@ -246,7 +244,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                                         Files
                                                         .readAllBytes(pathToProcessGroupsFile));
 
-                        mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                        mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
                                         .andExpect(status().isBadRequest())
                                         .andExpect(jsonPath("$.message",
                                                         is("There is a duplicate process in the file you have sent")));
@@ -262,7 +260,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                                         MediaType.TEXT_PLAIN_VALUE, Files
                                                         .readAllBytes(pathToProcessGroupsFile));
 
-                        mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                        mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
                                         .andExpect(status().isBadRequest())
                                         .andExpect(jsonPath("$.message",
                                                         is("There is a duplicate process in the file you have sent")));
@@ -276,11 +274,10 @@ class GivenAdminUserBusinessconfigControllerShould {
                                         MediaType.TEXT_PLAIN_VALUE, Files
                                                         .readAllBytes(pathToRealTimeScreensFile));
 
-                        mockMvc.perform(multipart("/businessconfig/realtimescreens").file(realTimeScreensFile))
-                                        .andExpect(status().isCreated())
-                                        .andExpect(header().string("Location", "/businessconfig/realtimescreens"));
+                        mockMvc.perform(multipart("/realtimescreens").file(realTimeScreensFile))
+                                        .andExpect(status().isCreated());
 
-                        mockMvc.perform(get("/businessconfig/realtimescreens"))
+                        mockMvc.perform(get("/realtimescreens"))
                                         .andExpect(status().isOk())
                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                         .andExpect(jsonPath("$.realTimeScreens", hasSize(1)))
@@ -314,24 +311,24 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteBundleByNameAndVersionWhichNotBeingDefault() throws Exception {
                                 ResultActions result = mockMvc.perform(
-                                                delete("/businessconfig/processes/" + bundleName + "/versions/0.1"));
+                                                delete("/processes/" + bundleName + "/versions/0.1"));
                                 result
                                                 .andExpect(status().isNoContent());
                                 result = mockMvc.perform(
-                                                get("/businessconfig/processes/" + bundleName + "?version=0.1"));
+                                                get("/processes/" + bundleName + "?version=0.1"));
                                 result
                                                 .andExpect(status().isNotFound());
                         }
 
                         @Test
                         void deleteBundleByNameAndVersionWhichBeingDefault() throws Exception {
-                                mockMvc.perform(delete("/businessconfig/processes/" + bundleName + "/versions/v1"))
+                                mockMvc.perform(delete("/processes/" + bundleName + "/versions/v1"))
                                                 .andExpect(status().isNoContent());
                                 ResultActions result = mockMvc.perform(
-                                                delete("/businessconfig/processes/" + bundleName + "/versions/0.1"));
+                                                delete("/processes/" + bundleName + "/versions/0.1"));
                                 result
                                                 .andExpect(status().isNoContent());
-                                result = mockMvc.perform(get("/businessconfig/processes/" + bundleName));
+                                result = mockMvc.perform(get("/processes/" + bundleName));
                                 result
                                                 .andExpect(status().isOk())
                                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -341,10 +338,10 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
                                 ResultActions result = mockMvc
-                                                .perform(delete("/businessconfig/processes/deletetest/versions/2.1"));
+                                                .perform(delete("/processes/deletetest/versions/2.1"));
                                 result
                                                 .andExpect(status().isNoContent());
-                                result = mockMvc.perform(get("/businessconfig/processes/deletetest"));
+                                result = mockMvc.perform(get("/processes/deletetest"));
                                 result
                                                 .andExpect(status().isNotFound());
                         }
@@ -361,7 +358,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                                         String bundleName = data[0];
                                         String version = data[1];
 
-                                        ResultActions result = mockMvc.perform(delete("/businessconfig/processes/"
+                                        ResultActions result = mockMvc.perform(delete("/processes/"
                                                         + bundleName + "/versions/" + version));
                                         result.andExpect(status().isNotFound());
                                 }
@@ -370,10 +367,10 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteGivenBundle() throws Exception {
                                 ResultActions result = mockMvc
-                                                .perform(delete("/businessconfig/processes/" + bundleName));
+                                                .perform(delete("/processes/" + bundleName));
                                 result
                                                 .andExpect(status().isNoContent());
-                                result = mockMvc.perform(get("/businessconfig/processes/" + bundleName));
+                                result = mockMvc.perform(get("/processes/" + bundleName));
                                 result
                                                 .andExpect(status().isNotFound());
                         }
@@ -381,7 +378,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteGivenBundleNotFoundError() throws Exception {
                                 ResultActions result = mockMvc.perform(delete(
-                                                "/businessconfig/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
+                                                "/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
                                 result
                                                 .andExpect(status().isNotFound());
                         }
@@ -391,9 +388,9 @@ class GivenAdminUserBusinessconfigControllerShould {
                         class DeleteContent {
                                 @Test
                                 void clean() throws Exception {
-                                        mockMvc.perform(delete("/businessconfig/processes"))
+                                        mockMvc.perform(delete("/processes"))
                                                         .andExpect(status().isNoContent());
-                                        mockMvc.perform(get("/businessconfig/processes"))
+                                        mockMvc.perform(get("/processes"))
                                                         .andExpect(status().isOk())
                                                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                                         .andExpect(jsonPath("$", hasSize(0)));

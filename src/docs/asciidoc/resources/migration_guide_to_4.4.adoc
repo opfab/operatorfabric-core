@@ -7,7 +7,7 @@
 
 = Migration Guide from release 4.3.X to release 4.4.0
 
-== Application Endpoints 
+== Application Endpoints for cards 
 
 To enhance consistency and avoid confusion, we have changed the endpoints used via Nginx:
   
@@ -51,3 +51,39 @@ This should be changed to:
 
 
 For a smooth, real-time migration, you can temporarily keep both endpoints in your Nginx configuration and remove the old one after a while.
+
+
+== Businessconfig service endpoint
+
+To enhance consistency and avoid confusion, we have changed the base path when accessing the `businessconfig` service directly (without passing through `web-ui`) from `/businessconfig` to `/`.
+
+This means you need to update your Nginx configuration to reflect these changes.
+
+For example, consider this configuration:
+....
+ location /businessconfig {
+    gzip on;
+    gzip_types application/json;
+    proxy_set_header Host $http_host;
+    proxy_pass http://businessconfig:2100;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    client_max_body_size 100M;
+  }
+....
+
+This should be changed to:
+
+....
+   location /businessconfig/ {
+    gzip on;
+    gzip_types application/json;
+    proxy_set_header Host $http_host;
+    proxy_pass http://businessconfig:2100/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    client_max_body_size 100M;
+  }
+....
+
+If you are using the `businessconfig` service directly via some scripts, you need to update these scripts.
+
+The old endpoint is still available but will be removed in a future release.

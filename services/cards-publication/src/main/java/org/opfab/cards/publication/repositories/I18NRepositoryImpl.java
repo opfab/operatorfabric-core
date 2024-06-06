@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,7 @@ public class I18NRepositoryImpl implements I18NRepository, EventListener {
 
         HttpClient httpClient = HttpClient.newHttpClient();
         String uri = String.format(
-                "%s/businessconfig/processes/%s/i18n?version=%s", businessConfigUrl, process, processVersion);
+                "%s/processes/%s/i18n?version=%s", businessConfigUrl, process, processVersion);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .build();

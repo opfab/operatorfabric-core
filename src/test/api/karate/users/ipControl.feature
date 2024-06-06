@@ -8,13 +8,13 @@ Feature: Client ip control
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def userServiceUrl = opfabUserUrl + 'users/user_test_api_1'
-    * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processes'
+    * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processgroups'
     * def cardsConsultationServiceUrl = opfabCardsConsultationUrl + 'cardSubscription' + '?notification=false&clientId=abc0123456789def'
     * def userCardsPublicationServiceUrl = opfabPublishCardUrl + 'cards/userCard'
     * def cardsPublicationServiceUrl = opfabPublishCardUrl + 'cards'
 
     * def nginxUserServiceUrl = opfabUrl + 'users/users/user_test_api_1'
-    * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes'
+    * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processgroups'
     * def nginxCardsConsultationServiceUrl = opfabUrl + 'cards-consultation/cardSubscription' + '?notification=false&clientId=abc0123456789def'
     * def nginxUserCardsPublicationServiceUrl = opfabUrl + '/cards-publication/cards/userCard'
 
@@ -157,7 +157,7 @@ Feature: Client ip control
     Examples:
     | url                          | method | request | expected  |
     | userServiceUrl               | get    | ''      | 403       |
-    | businessConfigServiceUrl     | get    | ''      | 200       |
+    | businessConfigServiceUrl     | get    | ''      | 403       |
     | userCardsPublicationServiceUrl   | post   | card    | 403       |
     | cardsPublicationServiceUrl   | post   | card1    | 403       |
     | cardsConsultationServiceUrl  | get    | ''      | 403       |
@@ -193,7 +193,7 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     Examples:
     | url                                   | method | request | expected  |
     | nginxUserServiceUrl                   | get    | ''      | 403       |
-    | nginxBusinessConfigServiceUrl         | get    | ''      | 200       |
+    | nginxBusinessConfigServiceUrl         | get    | ''      | 403       |
     | nginxUserCardsPublicationServiceUrl   | post   | card    | 403       |
     | nginxCardsConsultationServiceUrl      | get    | ''      | 403       |
 

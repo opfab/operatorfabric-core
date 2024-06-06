@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,6 @@ then
 else
 	echo "Will load businessData $1 on $url"
 	source ../getToken.sh $url
-	curl -s -v -X POST "$url:2100/businessconfig/businessData/$1" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1"
+	curl -s -v -X POST "$url:2100/businessData/$1" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1"
 	echo ""
 fi

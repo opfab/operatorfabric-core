@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,7 +57,7 @@ class BusinessconfigControllerWithWrongConfigurationShould {
     Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
     MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
        .readAllBytes(pathToBundle));
-    mockMvc.perform(multipart("/businessconfig/processes").file(bundle))
+    mockMvc.perform(multipart("/processes").file(bundle))
        .andExpect(status().isBadRequest());
   }
 
@@ -68,7 +68,7 @@ class BusinessconfigControllerWithWrongConfigurationShould {
     MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
             .readAllBytes(pathToProcessGroupsFile));
 
-    mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+    mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
             .andExpect(status().isBadRequest());
   }
 }

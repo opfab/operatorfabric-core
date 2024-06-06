@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,5 +20,5 @@ fi
 
 echo "Will delete all bundles on $url"
 source ../getToken.sh $url
-curl -s -X DELETE "$url:2100/businessconfig/processes" -H "Authorization:Bearer $token"
+curl -s -X DELETE "$url:2100/processes" -H "Authorization:Bearer $token"
 echo ""
