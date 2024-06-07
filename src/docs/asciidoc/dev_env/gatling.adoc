@@ -15,12 +15,15 @@ All test java sources are in src/test/gatling/src/java
 IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to edit the tests classes  and replace localhost with the address of your running instance.
 
 
-## Run a test
-
-To launch a specific test, launch:
-
+## Run tests
+To run all the tests, launch:
 ....
-$OF_HOME/gradlew clean  gatlingRun-<TestClassName>
+$OF_HOME/gradlew clean  gatlingRun
+....
+
+To run only a specific test, launch:
+....
+$OF_HOME/gradlew clean  gatlingRun --simulation=<TestClassName>
 ....
 
 The result will be available in the `src/test/gatling/build/reports/gatling/` folder.
