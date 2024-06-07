@@ -119,11 +119,18 @@ sonar {
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
         
+
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2'
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
-        property 'sonar.issue.ignore.multicriteria', 'e1'
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
         property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.spec.ts'
+        // Ignoring the rule: "Mouse events should have corresponding keyboard events"
+        // Reason: There are alternative ways to ensure accessibility without providing a keyboard event for each mouse event.
+        // For instance, a modal window with a close button that only responds to mouse events is not necessarily a problem,
+        // provided that the modal can also be closed by pressing the Escape key.
+        property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'Web:MouseEventWithoutKeyboardEquivalentCheck'
+        property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*'
     }
 }
 
