@@ -7,14 +7,20 @@
 
 = Migration Guide from release 4.3.X to release 4.4.0
 
-== Application Endpoints for cards 
+== Endpoints configuration 
 
-To enhance consistency and avoid confusion, we have changed the endpoints used via Nginx:
-  
-  - The endpoint `/cards` has been replaced by `/cards-consultation`.
-  - The endpoint `/cardspub` has been replaced by `/cards-publication`.
+To enhance consistency and avoid confusion, we made the following modifications to the endpoints:
 
-This means you need to update your Nginx configuration to reflect these changes.
+  - When accessed via `web-ui`(nginx), the endpoint `/cards` has been replaced by `/cards-consultation`.
+  - When accessed via `web-ui`(nginx), the endpoint `/cardspub` has been replaced by `/cards-publication`.
+  - The base path for accessing the `businessconfig` service directly (without passing through `web-ui`) has been changed from `/businessconfig` to `/`.
+
+Please note that the old endpoint `/businessconfig` is still available but will be removed in a future release.
+
+We have simplified our nginx reference configuration. Instead of adjusting your configuration for the new release, you can rebuild your configuration using the new reference configuration (located at `config/docker/nginx.conf`) and adapt it to your specific needs.
+
+If you prefer to adapt your existing file, the following changes should be made:
+
 
 For example, consider this configuration:
 ....
@@ -29,6 +35,15 @@ For example, consider this configuration:
     proxy_set_header Host $http_host;
     proxy_pass http://cards-publication:2102/cards;
     proxy_set_header X-Forwarded-For $remote_addr;
+  }
+
+   location /businessconfig {
+    gzip on;
+    gzip_types application/json;
+    proxy_set_header Host $http_host;
+    proxy_pass http://businessconfig:2100;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    client_max_body_size 100M;
   }
 ....
 
@@ -47,34 +62,8 @@ This should be changed to:
     proxy_pass http://cards-publication:2102/;
     proxy_set_header X-Forwarded-For $remote_addr;
   }
-....
 
-
-For a smooth, real-time migration, you can temporarily keep both endpoints in your Nginx configuration and remove the old one after a while.
-
-
-== Businessconfig service endpoint
-
-To enhance consistency and avoid confusion, we have changed the base path when accessing the `businessconfig` service directly (without passing through `web-ui`) from `/businessconfig` to `/`.
-
-This means you need to update your Nginx configuration to reflect these changes.
-
-For example, consider this configuration:
-....
- location /businessconfig {
-    gzip on;
-    gzip_types application/json;
-    proxy_set_header Host $http_host;
-    proxy_pass http://businessconfig:2100;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    client_max_body_size 100M;
-  }
-....
-
-This should be changed to:
-
-....
-   location /businessconfig/ {
+  location /businessconfig/ {
     gzip on;
     gzip_types application/json;
     proxy_set_header Host $http_host;
@@ -84,6 +73,9 @@ This should be changed to:
   }
 ....
 
+
+For a smooth, real-time migration, you can temporarily keep endpoints '/cards' and '/cardspub' in your Nginx configuration and remove the old one after a while.
+
 If you are using the `businessconfig` service directly via some scripts, you need to update these scripts.
 
-The old endpoint is still available but will be removed in a future release.
+

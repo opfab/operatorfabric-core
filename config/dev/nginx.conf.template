@@ -112,7 +112,7 @@ server {
     return 404;
   }
 
-  location ~ "^/users/(.*)" {
+  location /users/ {
     # enables `ng serve` mode
     if ($request_method = 'OPTIONS') {
       add_header 'Access-Control-Allow-Origin' '*';
@@ -126,7 +126,7 @@ server {
       return 204;
     }
     proxy_set_header Host $http_host;
-    proxy_pass http://${MY_DOCKER_HOST}:2103/$1$is_args$args;
+    proxy_pass http://${MY_DOCKER_HOST}:2103/;
     proxy_set_header X-Forwarded-For $remote_addr;
   }
 
@@ -165,7 +165,7 @@ server {
     proxy_pass http://${MY_DOCKER_HOST}:2102/;
     proxy_set_header X-Forwarded-For $remote_addr;
   }
-    location ~ "^/externaldevices/(.*)" {
+     location /externaldevices/ {
       # enables `ng serve` mode
       if ($request_method = 'OPTIONS') {
         add_header 'Access-Control-Allow-Origin' '*';
@@ -179,11 +179,11 @@ server {
         return 204;
       }
       proxy_set_header Host $http_host;
-      proxy_pass http://${MY_DOCKER_HOST}:2105/$1;
+      proxy_pass http://${MY_DOCKER_HOST}:2105/;
       proxy_set_header X-Forwarded-For $remote_addr;
     }
 
-    location ~ "^/supervisor/(.*)" {
+   location /supervisor/ {
       # enables `ng serve` mode
       if ($request_method = 'OPTIONS') {
         add_header 'Access-Control-Allow-Origin' '*';
@@ -197,7 +197,7 @@ server {
         return 204;
       }
       proxy_set_header Host $http_host;
-      proxy_pass http://${MY_DOCKER_HOST}:2108/$1;
+      proxy_pass http://${MY_DOCKER_HOST}:2108/;
       proxy_set_header X-Forwarded-For $remote_addr;
     }
 
