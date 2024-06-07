@@ -45,6 +45,7 @@ import {SoundNotificationService} from './services/notifications/sound-notificat
 import {I18n} from '@ofModel/i18n.model';
 import {ProcessStatesMultiSelectOptionsService} from './services/process-states-multi-select-options.service';
 import {RealtimeDomainService} from './services/realtime-domain.service';
+import {NotificationDecision} from './services/notifications/notification-decision';
 
 declare const opfab: any;
 
@@ -286,6 +287,7 @@ export class ApplicationLoader {
         OpfabEventStreamService.initEventStream();
         OpfabStore.init(); // this will effectively open the http stream connection
         ApplicationUpdateService.init();
+        NotificationDecision.init();
         SystemNotificationService.initSystemNotificationService();
         SoundNotificationService.initSoundService();
         HandlebarsService.init();

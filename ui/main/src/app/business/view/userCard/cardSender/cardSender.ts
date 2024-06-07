@@ -15,8 +15,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {firstValueFrom} from 'rxjs';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
-import {SystemNotificationService} from 'app/business/services/notifications/system-notification.service';
+import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
 
 export class CardSender {
     public async sendCardAndChildCard(card: Card, childCard?: Card, setCurrentDateForStartDate = false) {
@@ -27,8 +26,7 @@ export class CardSender {
                 startDate: new Date().valueOf()
             };
         }
-        SoundNotificationService.lastSentCard(card.process + '.' + card.processInstanceId);
-        SystemNotificationService.lastSentCard(card.process + '.' + card.processInstanceId);
+        NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
         const responseFromCardPost = await firstValueFrom(CardService.postCard(cardForPublish));
         if (responseFromCardPost.status !== ServerResponseStatus.OK) {
             this.displayErrorMessageOnUI();

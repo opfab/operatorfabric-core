@@ -17,14 +17,12 @@ import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from '../alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RouterService} from '../router.service';
+import {NotificationDecision} from './notification-decision';
 
 export class SystemNotificationService {
-    private static RECENT_THRESHOLD = 4000;
-
     private static systemNotificationConfigBySeverity: Map<Severity, string>;
-    private static systemNotificationEnabled: Map<Severity, boolean>;
+
     private static incomingCard = new Subject();
-    private static lastSentCardId: string;
 
     public static initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();
@@ -33,12 +31,11 @@ export class SystemNotificationService {
         this.systemNotificationConfigBySeverity.set(Severity.COMPLIANT, 'settings.systemNotificationCompliant');
         this.systemNotificationConfigBySeverity.set(Severity.INFORMATION, 'settings.systemNotificationInformation');
 
-        this.systemNotificationEnabled = new Map<Severity, boolean>();
         this.systemNotificationConfigBySeverity.forEach((systemNotificationConfig, severity) => {
             ConfigService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
-                this.systemNotificationEnabled.set(severity, x);
-
-                if (this.isAtLeastOneSeverityEnabled()) {
+                NotificationDecision.setSystemNotificationEnabledForSeverity(severity, x);
+                debugger;
+                if (NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()) {
                     this.requestPermissionForSystemNotification();
                 }
             });
@@ -49,15 +46,6 @@ export class SystemNotificationService {
         }
 
         this.listenForCardUpdate();
-    }
-
-    private static isAtLeastOneSeverityEnabled(): boolean {
-        for (const entry of this.systemNotificationEnabled.entries()) {
-            if (entry[1]) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static requestPermissionForSystemNotification() {
@@ -81,25 +69,7 @@ export class SystemNotificationService {
     }
 
     public static handleLoadedCard(lightCard: LightCard) {
-        if (lightCard.id === this.lastSentCardId)
-            this.lastSentCardId = ''; // no system notification as the card was sent by the current user
-        else {
-            if (!lightCard.hasBeenRead && this.checkCardIsRecent(lightCard)) {
-                this.incomingCard.next(lightCard);
-            }
-        }
-    }
-
-    public static lastSentCard(cardId: string) {
-        this.lastSentCardId = cardId;
-    }
-
-    public static getLastSentCardId(): string {
-        return this.lastSentCardId;
-    }
-
-    private static checkCardIsRecent(card: LightCard): boolean {
-        return new Date().getTime() - card.publishDate <= SystemNotificationService.RECENT_THRESHOLD;
+        if (NotificationDecision.isSystemNotificationToBeShownForCard(lightCard)) this.incomingCard.next(lightCard);
     }
 
     private static initSystemNotificationForSeverity(severity: Severity) {
@@ -111,7 +81,7 @@ export class SystemNotificationService {
     }
 
     private static notifyIfSeverityEnabled(severity: Severity, lightCard: LightCard) {
-        if (this.systemNotificationEnabled.get(severity)) {
+        if (NotificationDecision.isSystemNotificationEnabledForSeverity(severity)) {
             logger.debug(new Date().toISOString() + ' Send system notification');
             this.sendSystemNotificationMessage(lightCard);
         } else {
