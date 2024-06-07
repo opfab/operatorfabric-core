@@ -21,14 +21,12 @@ import {SoundServer} from 'app/business/server/sound.server';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {ModalService} from '../modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {NotificationDecision} from './notification-decision';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SoundNotificationService {
-    private static RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
-    private static ERROR_MARGIN = 4000; // in milliseconds
-
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
@@ -41,18 +39,13 @@ export class SoundNotificationService {
     private static replayInterval: number;
 
     private static soundConfigBySeverity: Map<Severity, SoundConfig>;
-    private static soundEnabled: Map<Severity, boolean>;
     private static playSoundOnExternalDevice: boolean;
     private static replayEnabled: boolean;
-    private static playSoundWhenSessionEnd = false;
 
     private static incomingCard = new Subject();
     private static sessionEnd = new Subject();
     private static clearSignal = new Subject();
     private static ngUnsubscribe$ = new Subject<void>();
-    private static lastSentCardId: string;
-    private static lastUserAction = new Date().valueOf();
-
     private static isServiceActive = true;
 
     private static soundServer: SoundServer;
@@ -88,11 +81,9 @@ export class SoundNotificationService {
             soundEnabledSetting: 'settings.playSoundForInformation'
         });
 
-        this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
             ConfigService.getConfigValueAsObservable(soundConfig.soundEnabledSetting, false).subscribe((x) => {
-                this.soundEnabled.set(severity, x);
-                this.setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated();
+                NotificationDecision.setSoundEnabledForSeverity(severity, x);
             });
         });
         ConfigService.getConfigValueAsObservable('settings.playSoundOnExternalDevice', false).subscribe((x) => {
@@ -121,7 +112,7 @@ export class SoundNotificationService {
     private static activateBrowserSoundIfNotActivated() {
         setTimeout(() => {
             const playSoundOnExternalDevice = SoundNotificationService.getPlaySoundOnExternalDevice();
-            if (!playSoundOnExternalDevice && SoundNotificationService.isAtLeastOneSoundActivated()) {
+            if (!playSoundOnExternalDevice && NotificationDecision.isAtLeastOneSoundActivated()) {
                 const context = new AudioContext();
                 if (context.state !== 'running') {
                     context.resume();
@@ -138,13 +129,6 @@ export class SoundNotificationService {
         return ConfigService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
     }
 
-    private static setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated() {
-        this.playSoundWhenSessionEnd = false;
-        for (const soundEnabled of this.soundEnabled.values()) {
-            if (soundEnabled) this.playSoundWhenSessionEnd = true;
-        }
-    }
-
     private static listenForCardUpdate() {
         OpfabStore.getLightCardStore()
             .getNewLightCards()
@@ -153,49 +137,25 @@ export class SoundNotificationService {
 
     public static clearOutstandingNotifications() {
         this.clearSignal.next(null);
-        this.lastUserAction = new Date().valueOf();
+        NotificationDecision.setLastUserAction(new Date().valueOf());
     }
 
     public static handleLoadedCard(card: LightCard) {
-        if (card.id === this.lastSentCardId)
-            this.lastSentCardId = ''; // no sound as the card was sent by the current user
-        else {
-            if (
-                !card.hasBeenRead &&
-                this.checkCardHasBeenPublishAfterLastUserAction(card) &&
-                this.checkCardIsRecent(card)
-            ) {
-                this.incomingCard.next(card);
-                if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
-                    AlertMessageService.sendAlertMessage({
-                        message: null,
-                        level: MessageLevel.BUSINESS,
-                        i18n: {key: 'feed.hiddenCardReceived'}
-                    });
-            }
+        if (NotificationDecision.isSoundToBePlayedForCard(card)) {
+            this.incomingCard.next(card);
+            if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
+                AlertMessageService.sendAlertMessage({
+                    message: null,
+                    level: MessageLevel.BUSINESS,
+                    i18n: {key: 'feed.hiddenCardReceived'}
+                });
         }
     }
 
     public static handleSessionEnd() {
-        if (this.playSoundWhenSessionEnd) {
+        if (NotificationDecision.isPlaySoundWhenSessionEndEnabled()) {
             this.sessionEnd.next(null);
         }
-    }
-
-    public static lastSentCard(cardId: string) {
-        this.lastSentCardId = cardId;
-    }
-
-    public static getLastSentCardId(): string {
-        return this.lastSentCardId;
-    }
-
-    private static checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
-        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction > 0;
-    }
-
-    private static checkCardIsRecent(card: LightCard): boolean {
-        return new Date().getTime() - card.publishDate <= SoundNotificationService.RECENT_THRESHOLD;
     }
 
     private static getSoundForSeverity(severity: Severity): HTMLAudioElement {
@@ -203,7 +163,7 @@ export class SoundNotificationService {
     }
 
     private static playSoundForSeverityEnabled(severity: Severity) {
-        if (this.soundEnabled.get(severity)) this.playSound(severity);
+        if (NotificationDecision.isPlaySoundForSeverityEnabled(severity)) this.playSound(severity);
         else
             logger.debug(
                 'No sound was played for ' + severity + ' as sound is disabled for this severity',
@@ -283,14 +243,6 @@ export class SoundNotificationService {
             );
             /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
         });
-    }
-
-    public static isAtLeastOneSoundActivated(): boolean {
-        let activated = false;
-        this.soundEnabled.forEach((soundForSeverity) => {
-            if (soundForSeverity) activated = true;
-        });
-        return activated;
     }
 }
 

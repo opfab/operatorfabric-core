@@ -14,8 +14,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
-import {SystemNotificationService} from 'app/business/services/notifications/system-notification.service';
+import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
 
 describe('UserCard CardSender', () => {
     let cardServerMock: CardServerMock;
@@ -51,12 +50,12 @@ describe('UserCard CardSender', () => {
         });
         it('Should set the card id as last card sent for soundNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
-            expect(SoundNotificationService.getLastSentCardId()).toEqual(card.process + '.' + card.processInstanceId);
+            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();
         });
 
         it('Should set the card id as last card sent for systemNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
-            expect(SystemNotificationService.getLastSentCardId()).toEqual(card.process + '.' + card.processInstanceId);
+            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();
         });
     });
     describe('send a card with a child card', () => {
