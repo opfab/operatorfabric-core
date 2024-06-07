@@ -123,7 +123,7 @@ Prior to initiating the release process, the release candidate must undergo manu
 The manual tests should, at a minimum, cover the following areas not addressed by automated tests:
 
 - Geographical features
-- Verification that a card is properly reminded (reminder feature)
+- Verification that a card is properly reminded (reminder feature) and sounded
 - Authentication using both IMPLICIT and CODE flows
 - Load testing via src/test/resources/cardsForStressTests/send6xN_TestCards.sh
 - Visual inspection of all screens at the minimum supported resolution in both day and night modes

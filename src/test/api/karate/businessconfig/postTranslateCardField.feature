@@ -31,6 +31,20 @@ Feature: Post translateCardField
 }
 """
 
+    * def fieldToTranslateWithParameterAndSpecialCharacters =
+"""
+{
+    "process" : "APOGEESEA",
+    "processVersion" : "1",
+    "i18nValue" : {
+        "key" : "apogeesea.card.summary",
+        "parameters" : {
+            "contingenciesSize" : "3 # $ % & * + - / = ? @ ^ _ \" {} ' []"
+        }
+    }
+}
+"""
+
     * def fieldToTranslateNotExisting =
 """
 {
@@ -66,6 +80,15 @@ Feature: Post translateCardField
     When method POST
     Then status 200
     And match response == {"translatedField": "3 contingencies"}
+
+  Scenario: Post request for field with a parameter with special characters
+
+    Given url opfabPublishCardUrl + 'cards/translateCardField'
+    And header Authorization = 'Bearer ' + authToken
+    And request fieldToTranslateWithParameterAndSpecialCharacters
+    When method POST
+    Then status 200
+    And match response == {"translatedField": "3 # $ % & * + - / = ? @ ^ _ \" {} ' [] contingencies"}
 
   Scenario: Post request for a non existing key
 
