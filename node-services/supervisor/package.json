@@ -23,7 +23,7 @@
     "js-yaml": "4.1.0",
     "jwks-rsa": "3.1.0",
     "jwt-decode": "4.0.0",
-    "mongodb": "6.6.2",
+    "mongodb": "6.7.0",
     "winston": "3.13.0",
     "winston-daily-rotate-file": "5.0.0"
   },
