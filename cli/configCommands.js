@@ -52,7 +52,7 @@ const config = {
         }
     },
 
-    validKeys: ['access_token', 'login', 'url','port'],
+    validKeys: ['access_token', 'token_expiration', 'login', 'url', 'port'],
 
     setConfig(key, value) {
         if (!this.validKeys.includes(key)) {
@@ -75,7 +75,7 @@ const config = {
     get  Get a configuration value
     list List all configuration values
         `);
-    }   
+    }
 };
 
 module.exports = config;
