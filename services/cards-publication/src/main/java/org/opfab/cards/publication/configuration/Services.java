@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,10 @@
 
 package org.opfab.cards.publication.configuration;
 
+import java.util.Optional;
+
 import org.opfab.cards.publication.repositories.CardRepository;
+import org.opfab.cards.publication.repositories.I18NRepository;
 import org.opfab.cards.publication.repositories.I18NRepositoryImpl;
 import org.opfab.cards.publication.repositories.ProcessRepositoryImpl;
 import org.opfab.cards.publication.services.CardNotificationService;
@@ -36,10 +39,12 @@ public class Services {
 
     private final CardValidationService cardValidationService;
 
+
     Services(
             UserActionLogService userActionLogService,
             CardRepository cardRepository,
             ExternalAppService externalAppService,
+            Optional<I18NRepository> i18nRepository,
             EventBus eventBus,
             ObjectMapper objectMapper,
             @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
@@ -49,7 +54,11 @@ public class Services {
             @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
             @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter,
             @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl) {
-        this.cardTranslationService = new CardTranslationService(new I18NRepositoryImpl(eventBus,businessconfigUrl));
+        if (!i18nRepository.isPresent()) {
+            this.cardTranslationService = new CardTranslationService(new I18NRepositoryImpl(eventBus,businessconfigUrl));
+        } else {
+            this.cardTranslationService = new CardTranslationService(i18nRepository.get());
+        }
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
         cardValidationService = new CardValidationService(cardRepository, new ProcessRepositoryImpl(businessconfigUrl, eventBus));
