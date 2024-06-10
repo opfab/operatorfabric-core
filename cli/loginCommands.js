@@ -10,6 +10,8 @@
 const config = require('./configCommands.js');
 const prompts = require('prompts');
 
+const FIVE_MINUTES = 1000 * 60 * 5;
+
 const loginCommands = {
     url: undefined,
     port: undefined,
@@ -93,7 +95,22 @@ const loginCommands = {
                 return;
             }
         }
-        await this.loginWithUserAndPassword();
+        if (!this.isUserAlreadyLoggedIn()) await this.loginWithUserAndPassword();
+    },
+
+    isUserAlreadyLoggedIn() {
+        if (config.getConfig('access_token') === undefined) return false;
+        else {
+            if (config.getConfig('login') !== this.login) return false;
+            if (config.getConfig('url') !== this.url) return false;
+            if (config.getConfig('port') !== this.port) return false;
+            if (config.getConfig('token_expiration') < Date.now() + FIVE_MINUTES) {
+                console.log('User logged in but token needs to be refreshed');
+                return false;
+            }
+        }
+        console.log('You are already logged in , no need to log in again');
+        return true;
     },
 
     checkIsLogged() {
@@ -141,10 +158,18 @@ const loginCommands = {
             return;
         }
         config.setConfig('access_token', responseData.access_token);
+        config.setConfig('token_expiration', this.getExpirationDate(responseData.access_token));
         config.setConfig('login', this.login);
         config.setConfig('url', this.url);
         config.setConfig('port', this.port);
         console.log(`Logged in with user ${this.login} on ${this.url}:${this.port}`);
+    },
+
+    getExpirationDate(token) {
+        const payload = token.split('.')[1];
+        const decodedPayload = Buffer.from(payload, 'base64').toString('utf8');
+        const { exp } = JSON.parse(decodedPayload);
+        return exp*1000; // to have it in ms since epoch 
     },
 
     async printHelp() {
