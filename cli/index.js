@@ -11,8 +11,9 @@
 
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
-const card = require('./cardCommands.js')
-const processGroups = require('./processGroupsCommands.js')
+const card = require('./cardCommands.js');
+const perimeter = require('./perimeterCommands.js');
+const processGroups = require('./processGroupsCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -45,6 +46,9 @@ const args = process.argv.slice(2);
                 }
                 card.processCardCommand(args.slice(1));
                 break;
+            case 'perimeter':
+                perimeter.processPerimeterCommand(args.slice(1));
+                break;
             case 'help':
                 printHelp();
                 break;
@@ -69,6 +73,7 @@ Command list :
     help            Show help on a command using help <command> or all commands using help  
     login           Log in to opfab
     logout          Log out to opfab
+    perimeter       Create or delete a perimeter
     processgroups   Send or clear processgroups
     status          Show login status
 
@@ -77,6 +82,9 @@ Command list :
         switch (args[1]) {
             case 'card':
                 card.printHelp();
+                break;
+            case 'perimeter':
+                perimeter.printHelp();
                 break;
             case 'config':
                 config.printHelp();
