@@ -15,6 +15,7 @@ const card = require('./cardCommands.js');
 const perimeter = require('./perimeterCommands.js');
 const processGroups = require('./processGroupsCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
+const businessData = require('./businessDataCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -23,6 +24,12 @@ const args = process.argv.slice(2);
     } else {
         config.loadConfig();
         switch (args[0]) {
+            case 'businessdata':
+                if (!login.checkIsLogged()) {
+                    return;
+                }
+                await businessData.processBusinessDataCommand(args.slice(1));
+                break;
             case 'config':
                 config.processConfigCommand(args.slice(1));
                 break;
@@ -75,6 +82,7 @@ function printHelp() {
 
 Command list :
 
+    businessdata    Send business data
     card            Send or delete a card 
     config          Set, get or list opfab cli configuration values
     help            Show help on a command using help <command> or all commands using help  
@@ -88,6 +96,9 @@ Command list :
 `);
     } else {
         switch (args[1]) {
+            case 'businessdata':
+                businessData.printHelp();
+                break;
             case 'card':
                 card.printHelp();
                 break;
