@@ -7,7 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOneCard, initOpfabAPIService, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {
+    getOneCard,
+    initOpfabAPIService,
+    loadWebUIConf,
+    setEntities,
+    setProcessConfiguration,
+    setUserPerimeter
+} from '@tests/helpers';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -167,6 +174,9 @@ describe('UserCard view ', () => {
             new ComputedPerimeter('process3', 'state3_2', RightsEnum.ReceiveAndWrite)
         ]);
     }
+    beforeAll(async () => {
+        await loadWebUIConf({}); // Necessary to init to avoid having configuration from a previous test
+    });
     beforeEach(async () => {
         await initConfigurationCommonToAllTests(setCurrentUserConfiguration);
     });
