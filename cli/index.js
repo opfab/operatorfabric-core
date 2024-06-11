@@ -25,9 +25,7 @@ const args = process.argv.slice(2);
         config.loadConfig();
         switch (args[0]) {
             case 'businessdata':
-                if (!login.checkIsLogged()) {
-                    return;
-                }
+                exitIfNotLoggedIn();
                 await businessData.processBusinessDataCommand(args.slice(1));
                 break;
             case 'config':
@@ -40,24 +38,18 @@ const args = process.argv.slice(2);
                 login.logout();
                 break;
             case 'processgroups':
-                if (!login.checkIsLogged()) {
-                    return;
-                }
+                exitIfNotLoggedIn();
                 await processGroups.processProcessGroupsCommand(args.slice(1));
                 break;
             case 'realtimescreen':
-                if (!login.checkIsLogged()) {
-                    return;
-                }
+                exitIfNotLoggedIn();
                 await realtimescreen.processRealtimescreenCommand(args.slice(1));
                 break;
             case 'status':
                 login.status();
                 break;
             case 'card':
-                if (!login.checkIsLogged()) {
-                    return;
-                }
+                exitIfNotLoggedIn();
                 card.processCardCommand(args.slice(1));
                 break;
             case 'perimeter':
@@ -75,6 +67,12 @@ To see a list of supported opfab commands, run:
         }
     }
 })();
+
+function exitIfNotLoggedIn() {
+    if (!login.checkIsLogged()) {
+        process.exit();
+    }
+}
 
 function printHelp() {
     if (args[1] === undefined) {
