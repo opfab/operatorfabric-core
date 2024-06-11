@@ -14,6 +14,7 @@ const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
 const perimeter = require('./perimeterCommands.js');
 const processGroups = require('./processGroupsCommands.js');
+const realtimescreen = require('./realtimescreenCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -36,6 +37,12 @@ const args = process.argv.slice(2);
                     return;
                 }
                 await processGroups.processProcessGroupsCommand(args.slice(1));
+                break;
+            case 'realtimescreen':
+                if (!login.checkIsLogged()) {
+                    return;
+                }
+                await realtimescreen.processRealtimescreenCommand(args.slice(1));
                 break;
             case 'status':
                 login.status();
@@ -75,6 +82,7 @@ Command list :
     logout          Log out to opfab
     perimeter       Create or delete a perimeter
     processgroups   Send or clear processgroups
+    realtimescreen  Load real time screen definition file
     status          Show login status
 
 `);
@@ -94,6 +102,9 @@ Command list :
                 break;
             case 'processgroups':
                 processGroups.printHelp();
+                break;
+            case 'realtimescreen':
+                realtimescreen.printHelp();
                 break;
             case 'default':
                 console.log(`No help for command ${args[1]}`);
