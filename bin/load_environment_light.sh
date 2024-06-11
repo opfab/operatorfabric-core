@@ -15,3 +15,9 @@ sdk install java 17.0.11-zulu
 sdk use java 17.0.11-zulu
 nvm install v20.14.0
 nvm use v20.14.0
+
+(
+    echo "Install opfab-cli"
+    cd $OF_HOME/cli
+    npm install -g
+)
