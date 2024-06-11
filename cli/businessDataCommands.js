@@ -30,15 +30,13 @@ const businessDataCommands = {
                 return;
             }
         }
-        switch (command) {
-            case 'load':
-                await this.loadBusinessDataFile(args[1]);
-                break;
-            default:
-                console.log(`Unknown businessdata command : ${command}
+
+        if (command === 'load') {
+            await this.loadBusinessDataFile(args[1]);
+        } else {
+            console.log(`Unknown businessdata command : ${command}
                 `);
-                await this.printHelp();
-                break;
+            await this.printHelp();
         }
     },
 
