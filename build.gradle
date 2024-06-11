@@ -102,12 +102,12 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization" , "opfab"
         property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
-        property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/supervisor,node-services/common'
+        property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/supervisor,node-services/common,cli'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,node-services/**/coverage/lcov.info'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','config*/**/*,ui/**/*.spec.ts,ui/main/src/app/modules/**,\
+        property 'sonar.coverage.exclusions','cli/**,config*/**/*,ui/**/*.spec.ts,ui/main/src/app/modules/**,\
                                               ui/main/src/app/server/**,ui/main/src/app/authentication/**,\
                                               ui/main/src/app/services/**,ui/main/src/app/router/**,ui/main/src/tests/**,\
                                               **/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*,\

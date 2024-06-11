@@ -102,13 +102,11 @@ const cardCommands = {
             console.error('Card sent successfully');
             const result = await response.json();
             console.error(result);
-            return;
         }
         else 
         {
             console.error('Failed to send card');
             console.error('Response:', response);
-            return;
         }
     },
 

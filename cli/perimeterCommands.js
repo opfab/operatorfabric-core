@@ -96,14 +96,12 @@ const perimeterCommands = {
 
         if (response.ok) {
             console.error('Perimeter created successfully');
-            const result = await response.json();
-            return;
+            await response.json();
         }
         else
         {
             console.error('Failed to create perimeter');
             console.error('Response:', response);
-            return;
         }
     },
 
