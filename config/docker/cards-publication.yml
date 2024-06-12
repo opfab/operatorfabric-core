@@ -1,8 +1,10 @@
 
-# uncomment kafka.consumer.group-id to enable Kafka
-#  kafka:
-#    consumer:
-#      group-id: opfab-command
+# comment kafka.consumer.group-id to disable Kafka
+spring:
+  kafka:
+    consumer:
+      group-id: opfab-command
+    bootstrap-servers: kafka:9092
 
 #  VALUE FOR TESTING
 #  TO BE REMOVED FOR PRODUCTION MODE
@@ -18,8 +20,8 @@ operatorfabric:
           url: "http://ext-app:8090/test"
           propagateUserToken: true
         - id: "api_test_externalRecipient2"
-          url: "http://ext-app:8090/test"
-          propagateUserToken: true
+          url: "kafka:test"
+          propagateUserToken: false
         - id: "externalRecipient1"
           url: "http://ext-app:8090/test"
           propagateUserToken: true
