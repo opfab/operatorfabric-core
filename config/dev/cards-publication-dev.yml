@@ -1,4 +1,7 @@
 # This file contains only parameters that need to be overridden from the docker configuration
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
 operatorfabric:
   cards-publication:
     external-recipients:

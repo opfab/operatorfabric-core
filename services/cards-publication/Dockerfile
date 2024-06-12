@@ -2,6 +2,8 @@ FROM azul/zulu-openjdk-alpine:17.0.11-jre@sha256:9bf1cff1512fe2bfaf21d518480d24d
 VOLUME /tmp
 ARG JAR_FILE
 RUN apk --no-cache add bash
+# Add libc6-compat to support snappy compression for kafka
+RUN apk add --no-cache libc6-compat
 ENV SPRING_CONFIG_NAME classpath:/application.yml,common,application,cards-publication
 ENV SPRING_CONFIG_LOCATION classpath:/application.yml,./config/,./external-config/
 COPY build/docker/add-certificates.sh /add-certificates.sh

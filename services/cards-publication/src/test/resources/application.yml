@@ -9,13 +9,6 @@ spring:
       delegate:
         #        class: io.confluent.kafka.serializers.KafkaAvroSerializer
         class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
-  kafka:
-    bootstrap-servers: localhost:8384
-    consumer:
-      group-id: opfab-command
-
-
-
 operatorfabric:
   cards-publication:
     kafka:

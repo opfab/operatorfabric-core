@@ -45,7 +45,9 @@ ext {
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
             springKafka           : "org.springframework.kafka:spring-kafka:$springKafka",
-            springKafkaTest       : "org.springframework.kafka:spring-kafka-test:$springKafka"
+            springKafkaTest       : "org.springframework.kafka:spring-kafka-test:$springKafka",
+            kafka          : "org.apache.kafka:kafka:$kafka",
+            kafkaClients          : "org.apache.kafka:kafka-clients:$kafka"
     ]
 
     testing_deps = [
