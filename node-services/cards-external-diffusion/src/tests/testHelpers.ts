@@ -20,7 +20,6 @@ export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServi
 
     card: any;
     allUsers = new Array<any>();
-    connectedUsers = new Array<any>();
 
     usersWithPerimeters = new Array<any>();
 
@@ -30,10 +29,6 @@ export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServi
 
     public getUsers(): any[] {
         return this.allUsers;
-    }
-
-    public async getUsersConnected(): Promise<GetResponse> {
-        return new GetResponse(this.connectedUsers, this.isResponseValid);
     }
 
     public async getUserWithPerimetersByLogin(login: string): Promise<GetResponse> {

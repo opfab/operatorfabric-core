@@ -25,21 +25,6 @@ function getOpfabServicesInterface(): CardsExternalDiffusionOpfabServicesInterfa
 const logger = Logger.getLogger();
 
 describe('Opfab interface', function () {
-    it('Should get one user login when one user connected ', async function () {
-        const opfabServicesInterface = getOpfabServicesInterface();
-
-        sinon.stub(opfabServicesInterface, 'sendRequest').callsFake(async (request) => {
-            if (request.url.includes('token') === true) return {status: 200, data: {access_token: 'fakeToken'}};
-            else {
-                if (request.headers?.Authorization?.includes('Bearer fakeToken') === true)
-                    return {status: 200, data: [{login: 'user1'}]};
-                else return {status: 400};
-            }
-        });
-        const users = await opfabServicesInterface.getUsersConnected();
-        expect(users.getData().length).toEqual(1);
-    });
-
     it('Should return invalid response when impossible to authenticate to opfab ', async function () {
         const opfabServicesInterface = getOpfabServicesInterface();
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake(async (request: any) => {

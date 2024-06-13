@@ -8,7 +8,7 @@
 
 = Email Notifications
 
-OpFab can send card notifications via email. These notifications are sent when a new card is published for a user, remains unread for a configured period, and the user is not connected to OpFab. The email subject includes the card title, summary, and start and end dates.
+OpFab can send card notifications via email. These notifications are sent when a new card is published for a user and remains unread for a configured period. The email subject includes the card title, summary, and start and end dates.
 
 == Configuring Email Notifications
 

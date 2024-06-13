@@ -65,7 +65,6 @@ describe('Cards external diffusion', function () {
             {login: 'operator_1', entities: ['ENTITY1']},
             {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
         ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
@@ -106,19 +105,9 @@ describe('Cards external diffusion', function () {
     it('Should send card when publishDate is after configured period', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
@@ -158,7 +147,6 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
-        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
@@ -213,7 +201,6 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
-        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
@@ -265,19 +252,9 @@ describe('Cards external diffusion', function () {
     it('Should not send same card twice', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
@@ -313,19 +290,9 @@ describe('Cards external diffusion', function () {
     it('Should not send card when setting sendCardsByEmail is set to false', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: false,
@@ -359,19 +326,9 @@ describe('Cards external diffusion', function () {
     it('Should not send card when setting sendCardsByEmail is not set', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 email: 'operator_2@opfab.com',
@@ -404,19 +361,9 @@ describe('Cards external diffusion', function () {
     it('Should not send email when email address is not set', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
@@ -449,19 +396,9 @@ describe('Cards external diffusion', function () {
     it('Should not send card when email is empty', async function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
-        opfabServicesInterfaceStub.allUsers = [
-            {login: 'operator_1', entities: ['ENTITY1']},
-            {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
-        ];
-        opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                email: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
@@ -499,7 +436,6 @@ describe('Cards external diffusion', function () {
             {login: 'operator_1', entities: ['ENTITY1']},
             {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
         ];
-        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
@@ -548,7 +484,6 @@ describe('Cards external diffusion', function () {
             {login: 'operator_1', entities: ['ENTITY1']},
             {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
         ];
-        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
@@ -603,7 +538,6 @@ describe('Cards external diffusion', function () {
             {login: 'operator_1', entities: ['ENTITY1']},
             {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}
         ];
-        opfabServicesInterfaceStub.connectedUsers = [];
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {

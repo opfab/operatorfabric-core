@@ -71,25 +71,19 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         const users = this.cardsExternalDiffusionOpfabServicesInterface.getUsers();
         const userLogins: string[] = users.map((u) => u.login);
 
-        const connectedResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getUsersConnected();
-        if (connectedResponse.isValid()) {
-            const connectedUsers: string[] = connectedResponse.getData().map((u: {login: string}) => u.login);
-            const usersToCheck = this.removeElementsFromArray(userLogins, connectedUsers);
-            this.logger.debug('Disconnected users ' + JSON.stringify(usersToCheck));
-            if (usersToCheck.length > 0) {
-                const dateFrom = Date.now() - this.windowInSecondsForCardSearch * 1000;
-                const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as Card[];
-                if (cards.length > 0) {
-                    this.logger.debug('Found cards: ' + cards.length);
-                    usersToCheck.forEach((login) => {
-                        this.sendCardsToUserIfNecessary(cards, login).catch((error) =>
-                            this.logger.error('error during sendCardsToUserIfNecessary ', error)
-                        );
-                    });
-                }
+        if (userLogins.length > 0) {
+            const dateFrom = Date.now() - this.windowInSecondsForCardSearch * 1000;
+            const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as Card[];
+            if (cards.length > 0) {
+                this.logger.debug('Found cards: ' + cards.length);
+                userLogins.forEach((login) => {
+                    this.sendCardsToUserIfNecessary(cards, login).catch((error) =>
+                        this.logger.error('error during sendCardsToUserIfNecessary ', error)
+                    );
+                });
             }
-            await this.cleanCardsAlreadySent();
         }
+        await this.cleanCardsAlreadySent();
     }
 
     async sendCardsToUserIfNecessary(cards: Card[], login: string): Promise<void> {
