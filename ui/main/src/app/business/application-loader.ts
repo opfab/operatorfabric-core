@@ -126,6 +126,7 @@ export class ApplicationLoader {
         this.initOpfabAPI();
         await this.loadCustomScripts();
         await this.waitForStreamInitDone();
+        logger.info('Card stream connection established');
         RealtimeDomainService.init(); // important to be after the stream init done
         this.goToEntryPage();
         this.loadingInProgress = false;
