@@ -16,6 +16,7 @@ const perimeter = require('./perimeterCommands.js');
 const processGroups = require('./processGroupsCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
+const service = require('./serviceCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -55,6 +56,10 @@ const args = process.argv.slice(2);
             case 'perimeter':
                 perimeter.processPerimeterCommand(args.slice(1));
                 break;
+            case 'service':
+                exitIfNotLoggedIn();
+                service.processServiceCommand(args.slice(1));
+                break;
             case 'help':
                 printHelp();
                 break;
@@ -89,6 +94,7 @@ Command list :
     perimeter       Create or delete a perimeter
     processgroups   Send or clear processgroups
     realtimescreen  Load real time screen definition file
+    service         Get or set log level for java services
     status          Show login status
 
 `);
@@ -114,6 +120,9 @@ Command list :
                 break;
             case 'realtimescreen':
                 realtimescreen.printHelp();
+                break;
+            case 'service':
+                service.printHelp();
                 break;
             case 'default':
                 console.log(`No help for command ${args[1]}`);
