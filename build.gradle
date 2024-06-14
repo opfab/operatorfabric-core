@@ -69,7 +69,7 @@ ext {
             jsonSmart      : "net.minidev:json-smart:2.5.1",
             handlebars     : "com.github.jknack:handlebars:4.4.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
-            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
+            jlibmodbus     : "com.intelligt.modbus:jlibmodbus:$jlibmodbus",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsLang    : "org.apache.commons:commons-lang3:$apacheCommonsLang",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",

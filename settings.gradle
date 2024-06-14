@@ -12,19 +12,6 @@ dependencyResolutionManagement {
         maven { url "https://packages.confluent.io/maven/" }
         maven { url "https://artifacts.elastic.co/maven/"}
         maven { url "https://plugins.gradle.org/m2/" }
-
-        exclusiveContent {// Temporary workaround for jlibmodbus
-            forRepository {
-                flatDir {
-                    dirs "$rootDir/libs"
-                }
-            }
-            filter {
-                // this repository *only* contains artifacts with group "com.intelligt.modbus"
-                includeGroup "com.intelligt.modbus"
-            }
-
-        }
     }
 }
 
