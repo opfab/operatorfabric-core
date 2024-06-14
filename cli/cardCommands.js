@@ -12,10 +12,6 @@ const prompts = require('prompts');
 const fs = require('fs').promises;
 
 const cardCommands = {
-    url: undefined,
-    port: undefined,
-    login: undefined,
-    password: undefined,
 
     async processCardCommand(args) {
         let action = args[0];
@@ -28,6 +24,7 @@ const cardCommands = {
                     choices: [
                         { title: 'Send', value: 'send' },
                         { title: 'Delete', value: 'delete' },
+                        { title: 'Reset Rate Limiter', value: 'resetratelimiter' }
                     ],
                 })
             ).value;
@@ -42,6 +39,9 @@ const cardCommands = {
                 break;
             case 'delete': 
                 await this.deleteCard(args.slice(1));
+                break;
+            case 'resetratelimiter':
+                await this.resetRateLimiter();
                 break;
             default:
                 console.log(`Unknown card action : ${action}
@@ -158,13 +158,44 @@ const cardCommands = {
         }
     },
 
+    async resetRateLimiter() {
+        const url = `${config.getConfig('url')}:2002/cards-publication/cards/rateLimiter`;
+        const token = config.getConfig('access_token');
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        let response;
+        try {
+            response = await fetch(url, options);
+        } catch (error) {
+            console.error('Failed to reset rate limiter');
+            console.error('Error:', error);
+            return;
+        }
+
+        if (response.ok) {
+            console.error('Rate limiter reset');
+        }
+        else
+        {
+            console.error('Failed to reset rate limiter');
+            console.error('Response:', response);
+        }
+    },
+
     async printHelp() {
         console.log(`Usage: opfab card <command> <cardId|cardFileName>
 
 Command list :
 
-    send      send a card : opfab card send <cardFileName>
-    delete    delete a card by id : opfab card delete <cardId>
+    send               send a card : opfab card send <cardFileName>
+    delete             delete a card by id : opfab card delete <cardId>
+    resetratelimiter   reset the rate limiter for sending cards : opfab card resetratelimiter
         
         `);
     }
