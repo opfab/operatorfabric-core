@@ -178,7 +178,7 @@ public class PathUtils {
         TarArchiveInputStream tis = new TarArchiveInputStream(gzis)) {
       TarArchiveEntry entry;
       // loop over tar entries
-      while ((entry = tis.getNextTarEntry()) != null) {
+      while ((entry = tis.getNextEntry()) != null) {
         String fileName = entry.getName();
         throwExceptionIfPathIsOutsideOfApplicationBasePath(outPath.resolve(fileName));
         if (entry.isDirectory()) {
