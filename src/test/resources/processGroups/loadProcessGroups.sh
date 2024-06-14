@@ -8,21 +8,5 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-# This starts by moving to the directory where the script is located so the paths below still work even if the script
-# is called from another folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-url=$2
-if [[ -z $url ]]
-then
-	url="http://localhost"
-fi
-if [[ -z $1 ]]
-then
-    echo "Usage : loadProcessGroups processGroups_name opfab_url"
-else
-	echo "Will load processGroups $1 on $url"
-	source ../getToken.sh $url
-	curl -s -X POST "$url:2100/processgroups" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1"
-	echo ""
-fi
+opfab login http://localhost 2002 admin test
+opfab processgroups load $1
