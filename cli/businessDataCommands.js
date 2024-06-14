@@ -9,6 +9,7 @@
 
 const prompts = require('prompts');
 const utils = require('./utils.js');
+const config = require('./configCommands');
 
 const businessDataCommands = {
 
@@ -21,7 +22,8 @@ const businessDataCommands = {
                     name: 'value',
                     message: 'BusinessData command',
                     choices: [
-                        {title: 'load', value: 'load'}
+                        {title: 'load', value: 'load'},
+                        {title: 'delete', value: 'delete'}
                     ]
                 })
             ).value;
@@ -31,12 +33,18 @@ const businessDataCommands = {
             }
         }
 
-        if (command === 'load') {
-            await this.loadBusinessDataFile(args[1]);
-        } else {
-            console.log(`Unknown businessdata command : ${command}
+        switch (command) {
+            case 'load':
+                await this.loadBusinessDataFile(args[1]);
+                break;
+            case 'delete':
+                await this.deleteBusinessData(args[1]);
+                break;
+            default:
+                console.log(`Unknown businessdata command : ${command}
                 `);
-            await this.printHelp();
+                await this.printHelp();
+                break;
         }
     },
 
@@ -59,12 +67,60 @@ const businessDataCommands = {
         utils.sendFile('businessconfig/businessData/' + filename, businessDataFile);
     },
 
+    async deleteBusinessData(businessDataName) {
+        if (!businessDataName) {
+            businessDataName = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'Business Data Name '
+                })
+            ).value;
+            if (!businessDataName) {
+                console.log('Business Data Name is required');
+                return;
+            }
+        }
+
+        const url = `${config.getConfig('url')}:2002/businessconfig/businessData/${businessDataName}`;
+        const token = config.getConfig('access_token');
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        let response;
+        try {
+            response = await fetch(url, options);
+        } catch (error) {
+            console.error('Failed to delete business data');
+            console.error('Error:', error);
+            return;
+        }
+
+        switch (response.status) {
+            case 204:
+                console.info(`Business data with name ${businessDataName} deleted successfully`);
+                return;
+            case 404:
+                console.error(`Business data with name ${businessDataName} not found`);
+                return;
+            default:
+                console.error('Failed to delete business data');
+                console.error('Response:', response);
+                return;
+        }
+    },
+
     async printHelp() {
         console.log(`Usage: opfab businessdata <command> [args]
 
 Command list :
 
-    load      load business data from a file  : opfab businessdata load <businessDataFileName>    
+    delete    delete business data : opfab businessdata delete <businessDataName>
+    load      load business data from a file : opfab businessdata load <businessDataFileName>    
         
         `);
     }

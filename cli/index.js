@@ -85,7 +85,7 @@ function printHelp() {
 
 Command list :
 
-    businessdata    Send business data
+    businessdata    Send or delete business data
     card            Send a card, delete a card or reset the card limiter for sending cards 
     config          Set, get or list opfab cli configuration values
     help            Show help on a command using help <command> or all commands using help  
