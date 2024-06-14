@@ -23,21 +23,21 @@ export class ScriptCommands extends OpfabCommands {
 
     loadRealTimeScreensConf = function () {
         // This clears existing realtimescreens.json and loads a new one
-        cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json ' + Cypress.env('host'));
+        cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json');
     }
 
     loadEmptyProcessGroups = function () {
         // This load a process groups file without any process group
-        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json ' + Cypress.env('host'));
+        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json');
     }
 
     loadProcessGroupsNotTotallyConfigured = function () {
         // This load a process groups file without any process group
-        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json ' + Cypress.env('host'));
+        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json');
     }
 
     loadProcessGroups = function () {
-        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroups.json ' + Cypress.env('host'));
+        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroups.json');
     }
 
 
