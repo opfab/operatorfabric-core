@@ -188,18 +188,15 @@ public class PathUtils {
           // copy entry to files
           Path curPath = outPath.resolve(fileName);
           createDirIfNeeded(curPath.getParent());
-          Files.copy(tis, curPath);
+          // there is no security issue here as the path has been checked before via throwExceptionIfPathIsOutsideOfApplicationBasePath
+          Files.copy(tis, curPath); //NOSONAR
         }
       }
     }
   }
 
-  /**
-   * create directory if it does not exist
-   * 
-   * @param dir directory to create
-   * @throws IOException if an I/O error occurs
-   */
+
+  @SuppressWarnings("java:S6096") // there is no security issue here as the path has been checked before via throwExceptionIfPathIsOutsideOfApplicationBasePath
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
       Files.createDirectories(dir);
