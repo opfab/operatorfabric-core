@@ -12,7 +12,6 @@ const prompts = require('prompts');
 const fs = require('fs').promises;
 
 const perimeterCommands = {
-
     async processPerimeterCommand(args) {
         let action = args[0];
         if (!action) {
@@ -22,9 +21,9 @@ const perimeterCommands = {
                     name: 'value',
                     message: 'Perimeter action',
                     choices: [
-                        { title: 'Create', value: 'create' },
-                        { title: 'Delete', value: 'delete' },
-                    ],
+                        {title: 'Create', value: 'create'},
+                        {title: 'Delete', value: 'delete'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -47,61 +46,59 @@ const perimeterCommands = {
         }
     },
 
-
     async createPerimeter(args) {
-        let perimeterFile = args[0];
+        let perimeterFiles = args;
 
-        if (!perimeterFile) {
-            perimeterFile = (
+        if (perimeterFiles.length === 0) {
+            const fileName = (
                 await prompts({
                     type: 'text',
                     name: 'value',
                     message: 'JSON perimeter file name '
                 })
             ).value;
-            if (!perimeterFile) {
+            if (!fileName) {
                 console.log('JSON perimeter file name is required');
                 return;
             }
+            perimeterFiles = [fileName];
         }
-
-        let fileContent;
-        try {
-            fileContent = await fs.readFile(perimeterFile, 'utf8');
-        }
-        catch (error) {
-            console.error('Failed to read perimeter file', perimeterFile);
-            console.error('Error:', error);
-            return;
-        }
-        const url = `${config.getConfig('url')}:2002/users/perimeters`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'POST',
-            body: fileContent,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+        for (const perimeterFile of perimeterFiles) {
+            let fileContent;
+            try {
+                fileContent = await fs.readFile(perimeterFile, 'utf8');
+            } catch (error) {
+                console.error('Failed to read perimeter file', perimeterFile);
+                console.error('Error:', error);
             }
-        };
+            if (fileContent) {
+                const url = `${config.getConfig('url')}:2002/users/perimeters`;
+                const token = config.getConfig('access_token');
+                const options = {
+                    method: 'POST',
+                    body: fileContent,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                };
 
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to create perimeter');
-            console.error('Error:', error);
-            return;
-        }
+                let response;
+                try {
+                    response = await fetch(url, options);
+                } catch (error) {
+                    console.error('Failed to create perimeter');
+                    console.error('Error:', error);
+                }
 
-        if (response.ok) {
-            console.error('Perimeter created successfully');
-            await response.json();
-        }
-        else
-        {
-            console.error('Failed to create perimeter');
-            console.error('Response:', response);
+                if (response?.ok) {
+                    console.error('Perimeter created successfully (' + perimeterFile + ')');
+                    await response.json();
+                } else {
+                    console.error('Failed to create perimeter');
+                    console.error('Response:', response);
+                }
+            }
         }
     },
 
@@ -126,7 +123,7 @@ const perimeterCommands = {
         const options = {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 
@@ -158,7 +155,7 @@ const perimeterCommands = {
 
 Command list :
 
-    create      create a perimeter : opfab perimeter create <perimeterFileName>
+    create      create a perimeter : opfab perimeter create <perimeterFileName>...
     delete      delete a perimeter by id : opfab perimeter delete <perimeterId>
         
         `);
