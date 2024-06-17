@@ -17,6 +17,7 @@ const processGroups = require('./processGroupsCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const service = require('./serviceCommands.js');
+const bundleCommand = require('./bundleCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -25,6 +26,10 @@ const args = process.argv.slice(2);
     } else {
         config.loadConfig();
         switch (args[0]) {
+            case 'bundle':
+                exitIfNotLoggedIn();
+                await bundleCommand.processBundleCommand(args.slice(1));
+                break;
             case 'businessdata':
                 exitIfNotLoggedIn();
                 await businessData.processBusinessDataCommand(args.slice(1));
@@ -85,6 +90,7 @@ function printHelp() {
 
 Command list :
 
+    bundle          Load or delete a bundle
     businessdata    Send or delete business data
     card            Send a card, delete a card or reset the card limiter for sending cards 
     config          Set, get or list opfab cli configuration values

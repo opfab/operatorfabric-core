@@ -10,19 +10,5 @@
 
 # This starts by moving to the directory where the script is located so the paths below still work even if the script
 # is called from another folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-url=$2
-if [[ -z $url ]]
-then
-	url="http://localhost"
-fi
-if [[ -z $1 ]]
-then
-    echo "Usage : deleteBundle bundle_name opfab_url"
-else
-	echo "Will delete bundle $1 on $url"
-	source ../getToken.sh $url
-	curl -s -X DELETE "$url:2100/processes/$1" -H "Authorization:Bearer $token"
-	echo ""
-fi
+opfab login http://localhost 2002 admin test
+opfab bundle delete $1

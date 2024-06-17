@@ -11,7 +11,7 @@ const config = require('./configCommands.js');
 const fs = require('fs').promises;
 
 const utils = {
-    async sendFile(path, fileName) {
+    async sendFile(path, fileName,logSuccess = true) {
         try {
             const formData = new FormData();
             const fileContent = await fs.readFile(fileName);
@@ -38,8 +38,7 @@ const utils = {
                 throw new Error(`\n Server response : ${await response.text()} \n`);
             }
 
-            console.log(`${fileName} loaded successfully`);
-            console.log(await response.text());
+            if (logSuccess) console.log(`${fileName} loaded successfully`);
         } catch (error) {
             console.error(`Failed to load ${fileName} : ${error.message}`);
         }
