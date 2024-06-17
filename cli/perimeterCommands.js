@@ -72,7 +72,7 @@ const perimeterCommands = {
                 console.error('Error:', error);
             }
             if (fileContent) {
-                const url = `${config.getConfig('url')}:2002/users/perimeters`;
+                const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/perimeters`;
                 const token = config.getConfig('access_token');
                 const options = {
                     method: 'POST',
@@ -118,7 +118,7 @@ const perimeterCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:2002/users/perimeters/${perimeterId}`;
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/perimeters/${perimeterId}`;
         const token = config.getConfig('access_token');
         const options = {
             method: 'DELETE',

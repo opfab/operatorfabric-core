@@ -18,6 +18,7 @@ const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const service = require('./serviceCommands.js');
 const bundleCommand = require('./bundleCommands.js');
+const monitoringConfig = require('./monitoringConfigCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -42,6 +43,10 @@ const args = process.argv.slice(2);
                 break;
             case 'logout':
                 login.logout();
+                break;
+            case 'monitoringconfig':
+                exitIfNotLoggedIn();
+                await monitoringConfig.processMonitoringConfigCommand(args.slice(1));
                 break;
             case 'processgroups':
                 exitIfNotLoggedIn();
@@ -97,6 +102,7 @@ Command list :
     help            Show help on a command using help <command> or all commands using help  
     login           Log in to opfab
     logout          Log out to opfab
+    monitoringconfig Load or delete a configuration for monitoring screen
     perimeter       Create or delete a perimeter
     processgroups   Send or clear processgroups
     realtimescreen  Load real time screen definition file
@@ -129,6 +135,9 @@ Command list :
                 break;
             case 'service':
                 service.printHelp();
+                break;
+            case 'monitoringconfig':
+                monitoringConfig.printHelp();
                 break;
             case 'default':
                 console.log(`No help for command ${args[1]}`);

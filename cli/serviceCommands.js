@@ -52,7 +52,7 @@ const serviceCommands = {
         const serviceName = await this.fetchServiceName(args);
         if (serviceName === '') return;
 
-        const url = `${config.getConfig('url')}:2002/` + serviceName + '/actuator/loggers/ROOT';
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + serviceName + '/actuator/loggers/ROOT';
         const token = config.getConfig('access_token');
         const options = {
             method: 'GET',
@@ -111,7 +111,7 @@ const serviceCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:2002/` + serviceName + '/actuator/loggers/ROOT';
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + serviceName + '/actuator/loggers/ROOT';
         const token = config.getConfig('access_token');
         const body = {configuredLevel: logLevel};
         const options = {
