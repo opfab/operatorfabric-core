@@ -38,6 +38,16 @@ In particular, *if you are using edge have a look to https://github.com/opfab/op
 include::configuration/configuration.adoc[leveloffset=+1]
 
 
+== OperatorFabric CLI (Command Line Interface)
+
+The OperatorFabric CLI is designed to streamline administrative tasks. It provides a user-friendly alternative to direct API access and custom scripting, enhancing efficiency and ease of use.
+
+The CLI is automatically installed when you execute the `bin/load_environment_light.sh` script.
+
+To use the CLI, simply type `opfab help` in your terminal to view a list of available commands.
+
+Before you can start using the CLI, you must first authenticate yourself with the desired OperatorFabric instance using the login command. 
+
 == Monitoring
 
 Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :

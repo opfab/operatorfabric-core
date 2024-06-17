@@ -1,0 +1,17 @@
+// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= OperatorFabric CLI (Command Line Interface)
+
+The OperatorFabric CLI provides a convenient way to interact with OperatorFabric during development, eliminating the need for direct API access.
+
+The CLI is automatically installed when you execute the `bin/load_environment_light.sh` script.
+
+To use the CLI, simply type `opfab help` in your terminal to view a list of available commands.
+
+Before you can start using the CLI, you must first authenticate yourself with the desired OperatorFabric instance using the login command.
