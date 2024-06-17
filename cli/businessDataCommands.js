@@ -82,7 +82,7 @@ const businessDataCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:2002/businessconfig/businessData/${businessDataName}`;
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/businessconfig/businessData/${businessDataName}`;
         const token = config.getConfig('access_token');
         const options = {
             method: 'DELETE',

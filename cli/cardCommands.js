@@ -85,7 +85,7 @@ const cardCommands = {
             body: fileContent, 
             headers: {
                 'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 
@@ -131,7 +131,7 @@ const cardCommands = {
         const options = {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 
@@ -159,13 +159,13 @@ const cardCommands = {
     },
 
     async resetRateLimiter() {
-        const url = `${config.getConfig('url')}:2002/cards-publication/cards/rateLimiter`;
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/cards-publication/cards/rateLimiter`;
         const token = config.getConfig('access_token');
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 

@@ -8,21 +8,5 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-# This starts by moving to the directory where the script is located so the paths below still work even if the script
-# is called from another folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-url=$2
-if [[ -z $url ]]
-then
-	url="http://localhost"
-fi
-if [[ -z $1 ]]
-then
-    echo "Usage : loadMonitoringConfig file_name opfab_url"
-else
-	echo "Will load monitoringConfig $1 on $url"
-	source ../getToken.sh $url
-	curl -s -v -X POST "$url:2100/monitoring" -H  "accept: application/json" -H "Authorization:Bearer $token" -H "Content-type:application/json" --data @$1
-	echo ""
-fi
+opfab login http://localhost 2002 admin test
+opfab monitoringconfig load $1

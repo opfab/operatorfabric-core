@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -497,7 +497,7 @@ describe ('Monitoring screen tests',function () {
 
         it('Check export', function () {
             // Standard export, no custom configuration
-            script.loadMonitoringConfig('emptyConfig.json');
+            script.loadMonitoringConfig('./resources/monitoringConfig/emptyConfig.json');
 
             opfab.loginWithUser('operator1_fr');
 
@@ -585,7 +585,7 @@ describe ('Monitoring screen tests',function () {
 
         it('Check custom export configuration', function () {
             // Load custom export configuration
-            script.loadMonitoringConfig('monitoringConfig.json');
+            script.loadMonitoringConfig('./resources/monitoringConfig/monitoringConfig.json');
 
             opfab.loginWithUser('operator1_fr');
 
