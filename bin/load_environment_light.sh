@@ -18,7 +18,7 @@ nvm use v20.14.0
 
 (
     echo "Install opfab-cli"
-    cd $OF_HOME/cli
+    cd $OF_HOME/cli/src
     npm install #Need first an install to download all necessary module
     npm install -g #Need global install to have the command opfab available
 )
