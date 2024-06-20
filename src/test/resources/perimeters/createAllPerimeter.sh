@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,29 +17,29 @@ for d in *.json; do
     ./createPerimeter.sh  $perimeter $1
 done
 
- ./addPerimeterToGroup.sh question Dispatcher $1
- ./addPerimeterToGroup.sh question Planner $1
- ./addPerimeterToGroup.sh defaultProcess Dispatcher $1
- ./addPerimeterToGroup.sh defaultProcess Planner $1
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Dispatcher $1
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Planner $1
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Supervisor $1
- ./addPerimeterToGroup.sh messageOrQuestionExample Dispatcher $1
- ./addPerimeterToGroup.sh messageOrQuestionExample Planner $1
- ./addPerimeterToGroup.sh messageOrQuestionExample Supervisor $1
- ./addPerimeterToGroup.sh taskExample Dispatcher $1
- ./addPerimeterToGroup.sh taskExample Planner $1
- ./addPerimeterToGroup.sh taskExample Supervisor $1
- ./addPerimeterToGroup.sh taskAdvancedExample Dispatcher $1
- ./addPerimeterToGroup.sh taskAdvancedExample Planner $1
- ./addPerimeterToGroup.sh taskAdvancedExample Supervisor $1
- ./addPerimeterToGroup.sh gridCooperation Dispatcher $1
- ./addPerimeterToGroup.sh gridCooperation Planner $1
- ./addPerimeterToGroup.sh gridCooperation Supervisor $1
- ./addPerimeterToGroup.sh cypress Dispatcher $1
- ./addPerimeterToGroup.sh cypress Planner $1
- ./addPerimeterToGroup.sh cypress Supervisor $1
- ./addPerimeterToGroup.sh questionReceiveOnly Supervisor $1
- ./addPerimeterToGroup.sh externalRecipent Dispatcher $1
- ./addPerimeterToGroup.sh supervisor Dispatcher $1
+ ./addPerimeterToGroup.sh question Dispatcher
+ ./addPerimeterToGroup.sh question Planner
+ ./addPerimeterToGroup.sh defaultProcess Dispatcher
+ ./addPerimeterToGroup.sh defaultProcess Planner
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Dispatcher
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Planner
+ ./addPerimeterToGroup.sh conferenceAndITIncidentExample Supervisor
+ ./addPerimeterToGroup.sh messageOrQuestionExample Dispatcher
+ ./addPerimeterToGroup.sh messageOrQuestionExample Planner
+ ./addPerimeterToGroup.sh messageOrQuestionExample Supervisor
+ ./addPerimeterToGroup.sh taskExample Dispatcher
+ ./addPerimeterToGroup.sh taskExample Planner
+ ./addPerimeterToGroup.sh taskExample Supervisor
+ ./addPerimeterToGroup.sh taskAdvancedExample Dispatcher
+ ./addPerimeterToGroup.sh taskAdvancedExample Planner
+ ./addPerimeterToGroup.sh taskAdvancedExample Supervisor
+ ./addPerimeterToGroup.sh gridCooperation Dispatcher
+ ./addPerimeterToGroup.sh gridCooperation Planner
+ ./addPerimeterToGroup.sh gridCooperation Supervisor
+ ./addPerimeterToGroup.sh cypress Dispatcher
+ ./addPerimeterToGroup.sh cypress Planner
+ ./addPerimeterToGroup.sh cypress Supervisor
+ ./addPerimeterToGroup.sh questionReceiveOnly Supervisor
+ ./addPerimeterToGroup.sh externalRecipent Dispatcher
+ ./addPerimeterToGroup.sh supervisor Dispatcher
  
