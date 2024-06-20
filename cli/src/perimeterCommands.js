@@ -22,6 +22,7 @@ const perimeterCommands = {
                     message: 'Perimeter action',
                     choices: [
                         {title: 'Create', value: 'create'},
+                        {title: 'Add to group', value: 'addtogroup'},
                         {title: 'Delete', value: 'delete'}
                     ]
                 })
@@ -34,6 +35,9 @@ const perimeterCommands = {
         switch (action) {
             case 'create':
                 await this.createPerimeter(args.slice(1));
+                break;
+            case 'addtogroup':
+                await this.addPerimeterToGroup(args.slice(1));
                 break;
             case 'delete':
                 await this.deletePerimeter(args.slice(1));
@@ -102,6 +106,79 @@ const perimeterCommands = {
         }
     },
 
+    async fetchPerimeterId(args) {
+        let perimeterId = args[0];
+
+        if (!perimeterId) {
+            perimeterId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'Perimeter ID'
+                })
+            ).value;
+            if (!perimeterId) {
+                console.log('Perimeter ID is required');
+                return;
+            }
+        }
+        return perimeterId;
+    },
+
+    async addPerimeterToGroup(args) {
+        const perimeterId = await this.fetchPerimeterId(args);
+        if (perimeterId === '') return;
+
+        let groupId = args[1];
+
+        if (!groupId) {
+            groupId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'Group ID'
+                })
+            ).value;
+            if (!groupId) {
+                console.log('Group ID is required');
+                return;
+            }
+        }
+
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/groups/${groupId}/perimeters`;
+        const token = config.getConfig('access_token');
+        const options = {
+            method: 'PATCH',
+            body: `["${perimeterId}"]`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        let response;
+        try {
+            response = await fetch(url, options);
+        } catch (error) {
+            console.error('Failed to add perimeter to group');
+            console.error('Error:', error);
+            return;
+        }
+
+        switch (response.status) {
+            case 200:
+                console.info(`Perimeter ${perimeterId} added to group ${groupId} successfully`);
+                return;
+            case 404:
+                console.error(`Perimeter ${perimeterId} or group ${groupId} not found`);
+                return;
+            default:
+                console.error('Failed to add perimeter to group');
+                console.error('Response:', response);
+                return;
+        }
+    },
+
     async deletePerimeter(args) {
         let perimeterId = args[0];
         if (!perimeterId) {
@@ -156,6 +233,7 @@ const perimeterCommands = {
 Command list :
 
     create      create a perimeter : opfab perimeter create <perimeterFileName>...
+    addtogroup  add a perimeter to a group : opfab perimeter addtogroup <perimeterId> <groupId>
     delete      delete a perimeter by id : opfab perimeter delete <perimeterId>
         
         `);
