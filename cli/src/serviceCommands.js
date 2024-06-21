@@ -75,9 +75,7 @@ const serviceCommands = {
             console.error('Log level got successfully');
             const result = await response.json();
             console.error(result);
-        }
-        else
-        {
+        } else {
             console.error('Failed to get log level');
             console.error('Response:', response);
         }
@@ -134,9 +132,7 @@ const serviceCommands = {
 
         if (response.ok) {
             console.error('Log level set successfully');
-        }
-        else
-        {
+        } else {
             console.error('Failed to set log level');
             console.error('Response:', response);
         }
