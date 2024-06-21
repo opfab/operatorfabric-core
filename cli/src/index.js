@@ -19,6 +19,7 @@ const businessData = require('./businessDataCommands.js');
 const service = require('./serviceCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
+const connectedUsers = require('./connectedUsersCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -37,6 +38,10 @@ const args = process.argv.slice(2);
                 break;
             case 'config':
                 config.processConfigCommand(args.slice(1));
+                break;
+            case 'connectedusers':
+                exitIfNotLoggedIn();
+                await connectedUsers.processConnectedUsersCommand(args.slice(1));
                 break;
             case 'login':
                 await login.processLoginCommand(args.slice(1));
@@ -61,14 +66,14 @@ const args = process.argv.slice(2);
                 break;
             case 'card':
                 exitIfNotLoggedIn();
-                card.processCardCommand(args.slice(1));
+                await card.processCardCommand(args.slice(1));
                 break;
             case 'perimeter':
-                perimeter.processPerimeterCommand(args.slice(1));
+                await perimeter.processPerimeterCommand(args.slice(1));
                 break;
             case 'service':
                 exitIfNotLoggedIn();
-                service.processServiceCommand(args.slice(1));
+                await service.processServiceCommand(args.slice(1));
                 break;
             case 'help':
                 printHelp();
@@ -99,6 +104,7 @@ Command list :
     businessdata    Send or delete business data
     card            Send a card, delete a card or reset the card limiter for sending cards 
     config          Set, get or list opfab cli configuration values
+    connectedusers  Send a message to subscriptions 
     help            Show help on a command using help <command> or all commands using help  
     login           Log in to opfab
     logout          Log out to opfab
@@ -117,6 +123,9 @@ Command list :
                 break;
             case 'card':
                 card.printHelp();
+                break;
+            case 'connectedusers':
+                connectedUsers.printHelp();
                 break;
             case 'perimeter':
                 perimeter.printHelp();
