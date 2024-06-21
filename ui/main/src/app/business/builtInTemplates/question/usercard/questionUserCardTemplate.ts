@@ -18,7 +18,13 @@ export class QuestionUserCardTemplate extends BaseUserCardTemplate {
     constructor() {
         super();
         this.view = new QuestionUserCardTemplateView();
+
         this.innerHTML = `
+        <br/>
+        <div class="opfab-input">
+            <label>${opfab.utils.getTranslation('builtInTemplate.questionUserCard.titleLabel')}</label>
+            <input id="usercard_question_title" value='${this.view.getTitle()}'>
+        </div>
         <br/>
         <div class="opfab-textarea">
             <label id="opfab-question-label">${opfab.utils.getTranslation('builtInTemplate.questionUserCard.textareaLabel')}</label>
@@ -30,7 +36,7 @@ export class QuestionUserCardTemplate extends BaseUserCardTemplate {
 
     getSpecificCardInformation() {
         const quillEditor = <HTMLInputElement>document.getElementById('usercard_question_input');
-
-        return this.view.getSpecificCardInformation(quillEditor);
+        const title = (<HTMLInputElement>document.getElementById('usercard_question_title')).value;
+        return this.view.getSpecificCardInformation(quillEditor, title);
     }
 }

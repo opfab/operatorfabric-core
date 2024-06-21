@@ -4,7 +4,7 @@
 		"summary":"Message received"
 	},
 	"question":{
-		"title":"Question ",
+		"title":"Question - {{questionTitle}}",
 		"summary":"There is a question for you"
 	},
 	"message_or_question_list":{

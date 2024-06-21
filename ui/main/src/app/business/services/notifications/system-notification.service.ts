@@ -34,7 +34,6 @@ export class SystemNotificationService {
         this.systemNotificationConfigBySeverity.forEach((systemNotificationConfig, severity) => {
             ConfigService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
                 NotificationDecision.setSystemNotificationEnabledForSeverity(severity, x);
-                debugger;
                 if (NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()) {
                     this.requestPermissionForSystemNotification();
                 }

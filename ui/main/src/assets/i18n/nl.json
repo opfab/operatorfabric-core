@@ -730,7 +730,8 @@
         },
         "questionUserCard": {
             "noQuestionError": "U moet een vraag opgeven",
-            "textareaLabel": "VRAAG"
+            "textareaLabel": "VRAAG",
+            "titleLabel": "TITEL"
         },
         "taskCard": {
             "taskToDo": "U heeft de volgende taak te doen",

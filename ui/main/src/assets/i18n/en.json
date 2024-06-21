@@ -730,7 +730,8 @@
         },
         "questionUserCard": {
             "noQuestionError": "You must provide a question",
-            "textareaLabel": "QUESTION"
+            "textareaLabel": "QUESTION",
+            "titleLabel": "TITLE"
         },
         "taskCard": {
             "taskToDo": "You have the following task to do ",
