@@ -37,7 +37,7 @@
           <!-- Dropdown menu  -->
           <a class="nav-link" id="opfab-navbar-menu-dropdown-{{menuElement.id}}"
             *ngIf="menuElement.dropdownMenu?.length>0" 
-            (mouseenter)="p1.open()" (keydown.enter)="p1.open()" (blur)="p1.close()" (mouseleave)="p1.close()" (keydown.esc)="p1.close()"
+            (keydown.enter)="p1.open()" (blur)="p1.close()" (keydown.esc)="p1.close()"  triggers="mouseenter:mouseleave"
             closeDelay="3000" #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow"
             placement="bottom-left" container="body" href="javascript:void(0)" tabindex="0">{{menuElement.label}}
             <em class="fa fa-caret-down"></em>
