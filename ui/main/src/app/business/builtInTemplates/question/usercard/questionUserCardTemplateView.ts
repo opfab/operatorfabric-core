@@ -10,11 +10,11 @@
 declare const opfab;
 
 export class QuestionUserCardTemplateView {
-    public getSpecificCardInformation(quillEditor: any) {
+    public getSpecificCardInformation(quillEditor: any, title: string) {
         const card = {
             summary: {key: 'question.summary'},
-            title: {key: 'question.title'},
-            data: {richQuestion: quillEditor.getContents()}
+            title: {key: 'question.title', parameters: {questionTitle: title}},
+            data: {richQuestion: quillEditor.getContents(), questionTitle: title}
         };
         if (quillEditor.isEmpty())
             return {
@@ -36,5 +36,16 @@ export class QuestionUserCardTemplateView {
             }
         }
         return question;
+    }
+
+    public getTitle() {
+        let title = '';
+        if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
+            const titleField = opfab.currentCard.getCard()?.data?.questionTitle;
+            if (titleField) {
+                title = titleField;
+            }
+        }
+        return title;
     }
 }

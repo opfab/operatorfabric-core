@@ -36,11 +36,12 @@ describe('Question UserCard template', () => {
         OpfabAPIService.initUserCardTemplateInterface();
     });
 
-    it('GIVEN an existing card WHEN user edit card THEN question is actual question', () => {
+    it('GIVEN an existing card WHEN user edit card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('My question');
+        expect(view.getTitle()).toEqual('My title');
     });
 
     it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
@@ -50,26 +51,30 @@ describe('Question UserCard template', () => {
         expect(view.getRichQuestion()).toEqual('My question &lt;script&gt;');
     });
 
-    it('GIVEN an existing card WHEN user copy card THEN question is actual question', () => {
+    it('GIVEN an existing card WHEN user copy card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('My question');
+        expect(view.getTitle()).toEqual('My title');
     });
 
-    it('GIVEN a user WHEN create card THEN question is empty', () => {
+    it('GIVEN a user WHEN create card THEN title and question are empty', () => {
         const view = new QuestionUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question'}};
+        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('');
+        expect(view.getTitle()).toEqual('');
     });
 
-    it('GIVEN a user WHEN create card with question THEN card is provided with question', () => {
+    it('GIVEN a user WHEN create card with title and question THEN card is provided with title and question', () => {
         const view = new QuestionUserCardTemplateView();
         const quillEditor = new QuillEditorMock();
         quillEditor.setContents('My question');
-        const specificCardInformation = view.getSpecificCardInformation(quillEditor);
+        const title = 'Question title';
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor, title);
         expect(specificCardInformation.card.data.richQuestion).toEqual('My question');
+        expect(specificCardInformation.card.data.questionTitle).toEqual('Question title');
         expect(specificCardInformation.valid).toEqual(true);
     });
 
@@ -77,7 +82,8 @@ describe('Question UserCard template', () => {
         const view = new QuestionUserCardTemplateView();
         const quillEditor = new QuillEditorMock();
         quillEditor.setContents('');
-        const specificCardInformation = view.getSpecificCardInformation(quillEditor);
+        const title = 'Question title';
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor, title);
         expect(specificCardInformation.valid).toEqual(false);
         expect(specificCardInformation.errorMsg).toEqual(
             'Translation (en) of builtInTemplate.questionUserCard.noQuestionError'
