@@ -95,7 +95,14 @@ const loginCommands = {
                 return;
             }
         }
-        if (!this.isUserAlreadyLoggedIn()) await this.loginWithUserAndPassword();
+
+        if ((!this.url.startsWith('http://')) && (!this.url.startsWith('https://'))) {
+            this.url = 'http://' + this.url;
+        }
+
+        if (!this.isUserAlreadyLoggedIn()) {
+            await this.loginWithUserAndPassword();
+        }
     },
 
     isUserAlreadyLoggedIn() {
