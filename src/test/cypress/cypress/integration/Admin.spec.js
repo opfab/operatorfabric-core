@@ -208,7 +208,8 @@ describe('AdmininstrationPages', () => {
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
         // Add Label2
-        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label2');
+        // Using type('Label2') ends up sometimes with a truncated value, so we use invoke('val', 'Label2') instead
+        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).invoke('val', 'Label2').trigger('input');
 
         // Remove Label1
         cy.get('tag-input').find('[aria-label="Remove tag"]').eq(0).click();
