@@ -21,13 +21,13 @@ fi
 	source ./getToken.sh $url
 	cd bundles
 	./deleteAllBundles.sh $url
-	./loadAllBundles.sh $url
+	./loadAllBundles.sh
 	cd ../processGroups
 	./loadProcessGroups.sh processGroups.json
 	cd ../perimeters
-	./createAllPerimeter.sh $url
+	./createAllPerimeter.sh
 	cd ../realTimeScreens
 	./loadRealTimeScreens.sh realTimeScreens.json
 	cd ../businessData
-	./loadAllBusinessData.sh $url
+	./loadAllBusinessData.sh
 )

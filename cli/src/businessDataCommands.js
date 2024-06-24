@@ -49,7 +49,6 @@ const businessDataCommands = {
     },
 
     async loadBusinessDataFile(businessDataFile) {
-        let filename;
         if (!businessDataFile) {
             businessDataFile = (
                 await prompts({
@@ -62,8 +61,8 @@ const businessDataCommands = {
                 console.log('BusinessData file name is required');
                 return;
             }
-            filename = businessDataFile.replace(/^.*[\\/]/, ''); //we remove the path and keep only the filename
-        }
+            }
+        const filename = businessDataFile.replace(/^.*[\\/]/, ''); //we remove the path and keep only the filename
         utils.sendFile('businessconfig/businessData/' + filename, businessDataFile);
     },
 
