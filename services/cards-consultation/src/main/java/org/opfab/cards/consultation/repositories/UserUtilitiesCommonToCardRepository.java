@@ -43,8 +43,12 @@ import reactor.util.function.Tuple2;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public interface UserUtilitiesCommonToCardRepository<T> {
 
+    public static final Logger log = LoggerFactory.getLogger(UserUtilitiesCommonToCardRepository.class);
 
     public static final String ENTITY_RECIPIENTS = "entityRecipients";
 	public static final String GROUP_RECIPIENTS = "groupRecipients";
@@ -53,7 +57,6 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 	public static final String PUBLISH_DATE_FIELD = "publishDate";
 	public static final String START_DATE_FIELD = "startDate";
 	public static final String END_DATE_FIELD = "endDate";
-
 
     public static final String PROCESS_FIELD = "process";
     public static final String PROCESS_INSTANCE_ID_FIELD = "processInstanceId";
@@ -272,9 +275,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         /* Add child cards criteria (by default, child cards are not included) */
         criteria.add(childCardsIncludedOrNotCriteria(filter));
-
         return criteria;
-
     }
 
     private List<Criteria> getFilterCriteria(CardsFilter filter) {
@@ -288,6 +289,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                     criteria.add(getMatchingCriteria(columnFilter));
                 } catch (NumberFormatException | NoSuchFieldException | SecurityException e) {
                     // Ignore criteria on wrong columns
+                    log.error("Bad filter criteria ", e);
                 }
             }
         });
