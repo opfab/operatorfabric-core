@@ -196,7 +196,7 @@ public class PathUtils {
   }
 
 
-  @SuppressWarnings("java:S6096") // there is no security issue here as the path has been checked before via throwExceptionIfPathIsOutsideOfApplicationBasePath
+  @SuppressWarnings("javasecurity:S6096") // there is no security issue here as the path has been checked before via throwExceptionIfPathIsOutsideOfApplicationBasePath
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
       Files.createDirectories(dir);
