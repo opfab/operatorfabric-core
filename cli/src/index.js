@@ -24,7 +24,7 @@ const args = process.argv.slice(2);
 
 (async () => {
     if (args[0] === undefined) {
-        console.log('Please choose an option');
+        printHelp();
     } else {
         config.loadConfig();
         switch (args[0]) {
@@ -79,11 +79,9 @@ const args = process.argv.slice(2);
                 printHelp();
                 break;
             default:
-                console.log(`Unknown command : ${args[0]}
-                
-To see a list of supported opfab commands, run:
-      opfab help
+                console.log(`\n Unknown command : ${args[0]}
                 `);
+                printHelp();
         }
     }
 })();
