@@ -48,6 +48,7 @@ include 'karateTests'
 include 'cypressTests'
 include 'gatlingTests'
 include 'dummyModbusDevice'
+include 'cli'
 
 project(':client:businessconfig').name = 'businessconfig-client-data'
 project(':client:cards').name = 'cards-client-data'
@@ -69,6 +70,7 @@ project(':karateTests').projectDir = file('src/test/api/karate')
 project(':cypressTests').projectDir = file('src/test/cypress')
 project(':gatlingTests').projectDir = file('src/test/gatling')
 project(':dummyModbusDevice').projectDir = file('src/test/dummyModbusDevice')
+project(':cli').name = 'cli'
 
 //we check if the modules have gradle configuration files
 rootProject.children.each { project ->

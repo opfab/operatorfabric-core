@@ -1,0 +1,14 @@
+plugins {
+	id "base"
+}
+
+task buildDocker(type: Exec) {
+    workingDir project.projectDir
+    commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-opfab-cli:${project.version}", '.'
+}
+
+tasks.named("buildDocker") {
+    inputs.files(fileTree('src'))
+    inputs.file('Dockerfile')
+    inputs.file('entryPoint.sh')
+}

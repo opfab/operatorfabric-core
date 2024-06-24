@@ -48,6 +48,8 @@ To use the CLI, simply type `opfab help` in your terminal to view a list of avai
 
 Before you can start using the CLI, you must first authenticate yourself with the desired OperatorFabric instance using the login command. 
 
+For those preferring not to install npm and nodejs locally, the CLI is accessible via a Docker container. Utilize the `cli/opfabDockerCli.sh` script to launch a shell environment pre-configured with the opfab CLI. The script mounts your current directory to `/host` within the Docker container.
+
 == Monitoring
 
 Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :
