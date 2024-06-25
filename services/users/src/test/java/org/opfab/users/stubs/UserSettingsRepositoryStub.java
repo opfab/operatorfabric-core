@@ -9,7 +9,9 @@
 
  package org.opfab.users.stubs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,5 +44,10 @@ public class UserSettingsRepositoryStub implements UserSettingsRepository{
     
     private UserSettings cloneUserSettings(UserSettings settings) {
         return new UserSettings(settings); 
+    }
+
+    @Override
+    public List<UserSettings> findAll() {
+        return new ArrayList<UserSettings>(userSettingsStorage.values());
     } 
 }

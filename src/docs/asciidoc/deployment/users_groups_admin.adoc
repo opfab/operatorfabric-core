@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -180,6 +180,13 @@ HTTP/1.1 200 OK
     "login": "john-doe-operator"
 }
 ....
+
+=== Notification configuration
+Using the
+ifdef::single-page-doc[<<CLI, Opfab CLI>>]
+ifndef::single-page-doc[<</documentation/current/dev_env/opfab-cli.adoc#CLI, Opfab CLI>>] 
+it is possible to configure process/state notification for all users at once.
+Execute `opfab users help` command for usage details.
 
 == Groups/Entities
 

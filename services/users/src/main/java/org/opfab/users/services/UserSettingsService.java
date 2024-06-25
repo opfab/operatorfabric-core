@@ -8,6 +8,7 @@
  */
 package org.opfab.users.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,4 +177,69 @@ public class UserSettingsService {
 
     }
 
+    public void setProcessStateNotified(String process, String state) {
+        log.info("setProcessStateNotified for {} {}", process, state);
+        List<UserSettings> settings = userSettingsRepository.findAll();
+
+        settings.forEach(userSettings -> {
+            if (userSettings.getProcessesStatesNotNotified() != null && userSettings.getProcessesStatesNotNotified().get(process) != null) {
+                List<String> statesNotNotified = userSettings.getProcessesStatesNotNotified().get(process);
+                int stateIndex = statesNotNotified.indexOf(state);
+                if (stateIndex >= 0) {
+                    statesNotNotified.remove(stateIndex);
+                    userSettingsRepository.save(userSettings);
+                    notificationService.publishUpdatedUserMessage(userSettings.getLogin());
+                }
+            }
+        });
+    }
+
+    public void unsetProcessStateNotified(String process, String state) {
+        log.info("unsetProcessStateNotified for {} {}", process, state);
+        List<UserSettings> settings = userSettingsRepository.findAll();
+
+        settings.forEach(userSettings -> {
+            if (userSettings.getProcessesStatesNotNotified() == null) userSettings.setProcessesStatesNotNotified(new HashMap<>());
+            List<String> statesNotNotified = userSettings.getProcessesStatesNotNotified().computeIfAbsent(process, p -> new ArrayList<String>());
+            int stateIndex = statesNotNotified.indexOf(state);
+            if (stateIndex < 0) {
+                statesNotNotified.add(state);
+                userSettingsRepository.save(userSettings);
+                notificationService.publishUpdatedUserMessage(userSettings.getLogin());
+            }
+        });
+    }
+
+    public void setProcessStateNotifiedByEmail(String process, String state) {
+        log.info("setProcessStateNotifiedByEmail for {} {}", process, state);
+        List<UserSettings> settings = userSettingsRepository.findAll();
+
+        settings.forEach(userSettings -> {
+            if (userSettings.getProcessesStatesNotifiedByEmail() == null) userSettings.setProcessesStatesNotifiedByEmail(new HashMap<>());
+            List<String> statesNotified = userSettings.getProcessesStatesNotifiedByEmail().computeIfAbsent(process, p -> new ArrayList<String>());
+            int stateIndex = statesNotified.indexOf(state);
+            if (stateIndex < 0) {
+                statesNotified.add(state);
+                userSettingsRepository.save(userSettings);
+                notificationService.publishUpdatedUserMessage(userSettings.getLogin());
+            }
+        });
+    }
+
+    public void unsetProcessStateNotifiedByEmail(String process, String state) {
+        log.info("unsetProcessStateNotifiedByEmail for {} {}", process, state);
+        List<UserSettings> settings = userSettingsRepository.findAll();
+
+        settings.forEach(userSettings -> {
+            if (userSettings.getProcessesStatesNotifiedByEmail() != null && userSettings.getProcessesStatesNotifiedByEmail().get(process) != null) {
+                List<String> statesNotified = userSettings.getProcessesStatesNotifiedByEmail().get(process);
+                int stateIndex = statesNotified.indexOf(state);
+                if (stateIndex >= 0) {
+                    statesNotified.remove(stateIndex);
+                    userSettingsRepository.save(userSettings);
+                    notificationService.publishUpdatedUserMessage(userSettings.getLogin());
+                }
+            }
+        });
+    }
 }
