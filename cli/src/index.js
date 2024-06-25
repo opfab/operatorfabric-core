@@ -20,6 +20,7 @@ const service = require('./serviceCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const connectedUsers = require('./connectedUsersCommands.js');
+const users = require('./usersCommands.js');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -42,6 +43,10 @@ const args = process.argv.slice(2);
             case 'connectedusers':
                 exitIfNotLoggedIn();
                 await connectedUsers.processConnectedUsersCommand(args.slice(1));
+                break;
+            case 'users':
+                exitIfNotLoggedIn();
+                await users.processUsersCommand(args.slice(1));
                 break;
             case 'login':
                 await login.processLoginCommand(args.slice(1));
@@ -114,6 +119,7 @@ Command list :
     realtimescreen  Load real time screen definition file
     service         Get or set log level for java services
     status          Show login status
+    users           Set or unset process/state notifications
 
 `);
     } else {

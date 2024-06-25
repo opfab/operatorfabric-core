@@ -45,5 +45,6 @@
       users/ipControl.feature \
       users/synchronizeWithToken.feature \
       users/getUserActionLogs.feature \
+      users/notificationConfiguration.feature \
 
 

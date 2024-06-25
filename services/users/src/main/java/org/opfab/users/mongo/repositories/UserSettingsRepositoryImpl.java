@@ -9,6 +9,7 @@
 
 package org.opfab.users.mongo.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.opfab.users.model.UserSettings;
@@ -35,7 +36,11 @@ public class UserSettingsRepositoryImpl implements UserSettingsRepository {
     @Override
     public void deleteAll() {
         mongoUserSettingsRepository.deleteAll();
+    }
 
+    @Override
+    public List<UserSettings> findAll() {
+        return mongoUserSettingsRepository.findAll();
     }
 
 }

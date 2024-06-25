@@ -52,6 +52,10 @@ public class WebSecurityConfiguration {
     public static final String ENTITIES_PATH = "/entities/**";
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String USER_ACTION_LOGS = "/userActionLogs";
+    public static final String NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotified/**";
+    public static final String EMAIL_NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotifiedbymail/**";
+
+    
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String USER_WITH_PERIMETERS_PATH = "/UserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
@@ -102,6 +106,8 @@ public class WebSecurityConfiguration {
                     .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .requestMatchers(NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
+                    .requestMatchers(EMAIL_NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
                     .anyRequest().access(authenticatedAndIpAllowed())
                 );
     }

@@ -5,7 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
+[[CLI]]
 = OperatorFabric CLI (Command Line Interface)
 
 The OperatorFabric CLI provides a convenient way to interact with OperatorFabric during development, eliminating the need for direct API access.

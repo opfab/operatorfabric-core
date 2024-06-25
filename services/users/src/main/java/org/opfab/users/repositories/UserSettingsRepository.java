@@ -8,6 +8,7 @@
  */
 package org.opfab.users.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.opfab.users.model.UserSettings;
@@ -17,6 +18,8 @@ public interface UserSettingsRepository {
     public UserSettings save(UserSettings userSettings);
 
     public Optional<UserSettings> findById(String id);
+
+    public List<UserSettings> findAll();
 
     public void deleteAll();
 
