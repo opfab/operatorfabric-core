@@ -142,7 +142,7 @@ The `publishers` field is optional. It is used to restrict the possible publishe
 message option is available only for the specified entities. If not specified or empty, there are no restrictions.
 
 The `summary` field is optional. If specified, considering 'xxx' is the value of the field, so the summary you will see
-in the feed will be 'Message received : xxx'. If not specified, the summary will only be 'Message received'.
+in the feed will be 'Message received : xxx'. If left empty the summary input field in user card will be displayed with no initial value and the summary in the feed will be 'Message received'. If not specified, the summary input field will not be displayed in user card form and the summary will be 'Message received'.
 
 [[built-in_templates_common_usercard_attributes]]
 == Common attributes for user cards built-in templates 
