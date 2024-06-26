@@ -30,11 +30,11 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
             <div id="message-select"></div>
         </div>
 
-        <br/>
+        <br id="summary-break"/>
 
-        <div class="opfab-textarea">
+        <div class="opfab-textarea" id="summary-section">
             <label> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listUserCard.summaryLabel')} </label>
-            <textarea id="summary" name="summary" style="width:100%" rows="1">${this.view.getSummary()}</textarea>
+            <textarea id="summary" name="summary-area" style="width:100%" rows="1">${this.view.getSummary()}</textarea>
         </div>
 
         <br/>
@@ -77,16 +77,23 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     fillTextAndRecipientFields() {
         const messageId = this.messageSelect.getSelectedValues();
         const message = this.view.getMessageOrQuestion(messageId);
-
+        const summaryArea = document.getElementById('summary') as HTMLTextAreaElement;
+        const summarySection = document.getElementById('summary-section') as HTMLTextAreaElement;
+        const summaryBreak = document.getElementById('summary-break') as HTMLTextAreaElement;
         if (this.previousTitleId !== messageId || opfab.currentUserCard.getEditionMode() === 'CREATE') {
             const quill = document.getElementById('message');
             this.view.setRichTextContent(quill, message);
-
-            const summaryArea = document.getElementById('summary') as HTMLTextAreaElement;
             summaryArea.value = message?.summary ?? '';
-
             this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
+        }
+
+        if (message?.summary?.length >= 0) {
+            summarySection.style.display = 'block';
+            summaryBreak.style.display = 'initial';
+        } else {
+            summarySection.style.display = 'none';
+            summaryBreak.style.display = 'none';
         }
     }
 
