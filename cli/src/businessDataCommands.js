@@ -9,10 +9,8 @@
 
 const prompts = require('prompts');
 const utils = require('./utils.js');
-const config = require('./configCommands');
 
 const businessDataCommands = {
-
     async processBusinessDataCommand(args) {
         let command = args[0];
         if (!command) {
@@ -80,37 +78,14 @@ const businessDataCommands = {
                 return;
             }
         }
-
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/businessconfig/businessData/${businessDataName}`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to delete business data');
-            console.error('Error:', error);
-            return;
-        }
-
-        switch (response.status) {
-            case 204:
-                console.info(`Business data with name ${businessDataName} deleted successfully`);
-                return;
-            case 404:
-                console.error(`Business data with name ${businessDataName} not found`);
-                return;
-            default:
-                console.error('Failed to delete business data');
-                console.error('Response:', response);
-                return;
-        }
+        await utils.sendRequest(
+            `businessconfig/businessData/${businessDataName}`,
+            'DELETE',
+            undefined,
+            `Business data with name ${businessDataName} deleted successfully`,
+            `Failed to delete business data`,
+            `Business data with name ${businessDataName} not found`
+        );
     },
 
     async printHelp() {

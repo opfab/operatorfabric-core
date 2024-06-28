@@ -9,7 +9,6 @@
 const prompts = require('prompts');
 const fs = require('fs').promises;
 const utils = require('./utils.js');
-const config = require('./configCommands.js');
 
 const bundleCommand = {
     async processBundleCommand(args) {
@@ -64,7 +63,7 @@ const bundleCommand = {
         let gzippedBundle;
         try {
             gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
-            await utils.sendFile('businessconfig/processes', gzippedBundle,false);
+            await utils.sendFile('businessconfig/processes', gzippedBundle, false);
         } catch (error) {
             console.log(`Error reading directory ${bundleDirectory}: ${error}`);
             return;
@@ -104,37 +103,15 @@ const bundleCommand = {
                 return;
             }
         }
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/businessconfig/processes/${processId}`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        };
 
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to delete bundle');
-            console.error('Error:', error);
-            return;
-        }
-
-        switch (response.status) {
-            case 200:
-            case 204:
-                console.info(`Bundle ${processId} deleted successfully`);
-                return;
-            case 404:
-                console.error(`Bundle ${processId} not found`);
-                return;
-            default:
-                console.error('Failed to delete bundle');
-                console.error('Response:', response);
-                return;
-        }
+        await utils.sendRequest(
+            `businessconfig/processes/${processId}`,
+            'DELETE',
+            undefined,
+            `Bundle ${processId} deleted successfully`,
+            `Failed to delete bundle ${processId}`,
+            `Bundle ${processId} not found`
+        );
     },
 
     printHelp() {

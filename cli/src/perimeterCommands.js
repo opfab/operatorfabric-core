@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-const config = require('./configCommands.js');
 const prompts = require('prompts');
+const utils = require('./utils.js');
 const fs = require('fs').promises;
 
 const perimeterCommands = {
@@ -76,32 +76,15 @@ const perimeterCommands = {
                 console.error('Error:', error);
             }
             if (fileContent) {
-                const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/perimeters`;
-                const token = config.getConfig('access_token');
-                const options = {
-                    method: 'POST',
-                    body: fileContent,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    }
-                };
 
-                let response;
-                try {
-                    response = await fetch(url, options);
-                } catch (error) {
-                    console.error('Failed to create perimeter');
-                    console.error('Error:', error);
-                }
-
-                if (response?.ok) {
-                    console.error('Perimeter created successfully (' + perimeterFile + ')');
-                    await response.json();
-                } else {
-                    console.error('Failed to create perimeter');
-                    console.error('Response:', response);
-                }
+                await utils.sendRequest(
+                    'users/perimeters',
+                    'POST',
+                    fileContent,
+                    `Perimeter created successfully (${perimeterFile})`,
+                    `Failed to create perimeter  ${perimeterFile}`,
+                    `Failed to create perimeter ${perimeterFile} , not found error`
+                )
             }
         }
     },
@@ -145,38 +128,14 @@ const perimeterCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/groups/${groupId}/perimeters`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'PATCH',
-            body: `["${perimeterId}"]`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to add perimeter to group');
-            console.error('Error:', error);
-            return;
-        }
-
-        switch (response.status) {
-            case 200:
-                console.info(`Perimeter ${perimeterId} added to group ${groupId} successfully`);
-                return;
-            case 404:
-                console.error(`Perimeter ${perimeterId} or group ${groupId} not found`);
-                return;
-            default:
-                console.error('Failed to add perimeter to group');
-                console.error('Response:', response);
-                return;
-        }
+        await utils.sendRequest(
+            `users/groups/${groupId}/perimeters`,
+            'PATCH',
+            `["${perimeterId}"]`,
+            `Perimeter ${perimeterId} added to group ${groupId} successfully`,
+            `Failed to add perimeter to group`,
+            `Perimeter ${perimeterId} or group ${groupId} not found`
+        );
     },
 
     async deletePerimeter(args) {
@@ -195,36 +154,14 @@ const perimeterCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/users/perimeters/${perimeterId}`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to delete perimeter');
-            console.error('Error:', error);
-            return;
-        }
-
-        switch (response.status) {
-            case 200:
-                console.info(`Perimeter with id ${perimeterId} deleted successfully`);
-                return;
-            case 404:
-                console.error(`Perimeter with id ${perimeterId} not found`);
-                return;
-            default:
-                console.error('Failed to delete perimeter');
-                console.error('Response:', response);
-                return;
-        }
+        await utils.sendRequest(
+            `users/perimeters/${perimeterId}`,
+            'DELETE',
+            undefined,
+            `Perimeter ${perimeterId} deleted successfully`,
+            `Failed to delete perimeter`,
+            `Perimeter ${perimeterId} not found`
+        );
     },
 
     async printHelp() {
