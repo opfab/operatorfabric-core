@@ -50,6 +50,23 @@ Before you can start using the CLI, you must first authenticate yourself with th
 
 For those preferring not to install npm and nodejs locally, the CLI is accessible via a Docker container. Utilize the `cli/opfabDockerCli.sh` script to launch a shell environment pre-configured with the opfab CLI. The script mounts your current directory to `/host` within the Docker container.
 
+Using the Docker version, you can pre-set environment configurations through a config file. This file should list each environment configuration on a separate line. For example:
+
+----
+dev DEV LOCALHOST_URL 2002 admin test
+prod PROD PROD_URL 80
+----
+
+Each line consists of:
+- The first value is the configuration name.
+- The second value is the name to be added to the shell prompt.
+- The third value is the URL of the OperatorFabric instance.
+- The fourth value is the port number to use.
+- The fifth value is the username.
+- The sixth value is the password (if not provided, it will be requested via a prompt).
+
+To launch the Docker CLI using the config file, execute `opfabDockerCli.sh` with the config file as an argument.
+
 == Monitoring
 
 Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :
