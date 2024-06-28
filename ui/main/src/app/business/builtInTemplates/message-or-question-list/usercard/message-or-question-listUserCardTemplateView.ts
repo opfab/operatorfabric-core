@@ -96,11 +96,12 @@ export class MessageOrQuestionListUserCardTemplateView {
 
     public async initRecipientsAndMessageList(businessDataName: string) {
         this.messageOrQuestionList = await opfab.businessconfig.businessData.get(businessDataName);
-
-        opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
-        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(
-            this.messageOrQuestionList.possibleRecipients
-        );
+        if (this.messageOrQuestionList?.possibleRecipients?.length > 0) {
+            opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
+            opfab.currentUserCard.setDropdownEntityRecipientForInformationList(
+                this.messageOrQuestionList.possibleRecipients
+            );
+        }
     }
 
     public getMessageOrQuestion(messageId: string) {
