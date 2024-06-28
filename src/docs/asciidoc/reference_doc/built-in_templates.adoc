@@ -135,6 +135,8 @@ If you want to use the template as is, the json file must follow this structure 
 
 }`
 
+The `possibleRecipients` field is optional. If specified and not empty, the list of possible recipients will be restricted to the specified list. If not specified or empty, the possible recipients list will not be restricted.
+
 The `severity` field is optional. If not specified, the card will take a default severity value depending on 'question'
 field value : "ACTION" if question is true, "INFORMATION" if question is false.
 
