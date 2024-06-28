@@ -9,6 +9,7 @@
 
 const config = require('./configCommands.js');
 const prompts = require('prompts');
+const utils = require('./utils.js');
 
 const connectedUsersCommands = {
     async processConnectedUsersCommand(args) {
@@ -19,9 +20,7 @@ const connectedUsersCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'Connected users action',
-                    choices: [
-                        {title: 'Send message', value: 'sendmessage'}
-                    ]
+                    choices: [{title: 'Send message', value: 'sendmessage'}]
                 })
             ).value;
             if (!action) {
@@ -29,7 +28,7 @@ const connectedUsersCommands = {
                 return;
             }
         }
-        
+
         if (action === 'sendmessage') {
             await this.sendMessage(args[1]);
         } else {
@@ -47,10 +46,10 @@ const connectedUsersCommands = {
                     name: 'value',
                     message: 'Message',
                     choices: [
-                        { title: 'RELOAD', value: 'RELOAD' },
-                        { title: 'BUSINESS_CONFIG_CHANGE', value: 'BUSINESS_CONFIG_CHANGE' },
-                        { title: 'USER_CONFIG_CHANGE', value: 'USER_CONFIG_CHANGE' }
-                    ],
+                        {title: 'RELOAD', value: 'RELOAD'},
+                        {title: 'BUSINESS_CONFIG_CHANGE', value: 'BUSINESS_CONFIG_CHANGE'},
+                        {title: 'USER_CONFIG_CHANGE', value: 'USER_CONFIG_CHANGE'}
+                    ]
                 })
             ).value;
             if (!message) {
@@ -59,32 +58,14 @@ const connectedUsersCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + 'cards-consultation/messageToSubscriptions';
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'POST',
-            body: message,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to send message ' + message);
-            console.error('Error:', error);
-            return;
-        }
-
-        if (response.ok) {
-            console.error('Message ' + message + ' sent successfully');
-        } else {
-            console.error('Failed to send message ' + message);
-            console.error('Response:', response);
-        }
+        await utils.sendRequest(
+            'cards-consultation/messageToSubscriptions',
+            'POST',
+            message,
+            `Message ${message} sent successfully`,
+            `Failed to send message ${message}`,
+            `Failed to send message ${message} , not found error`
+        );
     },
 
     async printHelp() {

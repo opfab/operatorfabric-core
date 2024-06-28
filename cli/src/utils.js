@@ -11,7 +11,7 @@ const config = require('./configCommands.js');
 const fs = require('fs').promises;
 
 const utils = {
-    async sendFile(path, fileName,logSuccess = true) {
+    async sendFile(path, fileName, logSuccess = true) {
         try {
             const formData = new FormData();
             const fileContent = await fs.readFile(fileName);
@@ -68,16 +68,58 @@ const utils = {
                 return;
             } else {
                 if (response.status === 403) {
-                   throw new Error(`User is not authorized`);
-                } 
+                    throw new Error(`User is not authorized`);
+                }
                 throw new Error(`\n Server response : ${await response.text()} \n`);
             }
         } catch (error) {
             console.error(`Failed to ${action} : ${error.message}`);
             return;
         }
+    },
+    async sendRequest(path, method, body,successMessage,errorMessage,notFoundMessage) {
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/${path}`;
+        const token = config.getConfig('access_token');
 
-        
+        const options = {
+            method: method,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        };
+
+        if (body) {
+            options.body = body;
+        }
+
+        let response;
+        try {
+            response = await fetch(url, options);
+        }
+        catch (error) {
+            console.error(errorMessage);
+            console.error(`Error`,error);
+            return;
+        }
+        if (response.ok) {
+            console.log(successMessage);
+        }
+        else {
+            switch (response.status) {
+                case 404:
+                    console.error(notFoundMessage);
+                    break;
+                case 403:
+                    console.error('User is not authorized');
+                    break;
+                default:
+                    console.error(errorMessage);
+                    console.error('Response:', response);
+                    break;
+            }
+        }
+        return response;
     }
 };
 module.exports = utils;

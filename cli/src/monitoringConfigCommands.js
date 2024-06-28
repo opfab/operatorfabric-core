@@ -8,11 +8,11 @@
  */
 
 const prompts = require('prompts');
-const config = require("./configCommands");
+const config = require('./configCommands');
+const utils = require('./utils');
 const fs = require('fs').promises;
 
 const monitoringConfigCommands = {
-
     async processMonitoringConfigCommand(args) {
         let command = args[0];
         if (!command) {
@@ -65,72 +65,31 @@ const monitoringConfigCommands = {
         let fileContent;
         try {
             fileContent = await fs.readFile(monitoringConfigFile, 'utf8');
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Failed to read monitoring config file', monitoringConfigFile);
             console.error('Error:', error);
             return;
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/businessconfig/monitoring`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'POST',
-            body: fileContent,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to send monitoring config file');
-            console.error('Error:', error);
-            return;
-        }
-
-        if (response.ok) {
-            console.error('Monitoring config file sent successfully');
-        }
-        else
-        {
-            console.error('Failed to send monitoring config file');
-            console.error('Response:', response);
-        }
+        await utils.sendRequest(
+            'businessconfig/monitoring',
+            'POST',
+            fileContent,
+            `Monitoring config file sent successfully`,
+            `Failed to send monitoring config file`,
+            `Failed to send monitoring config file, not found error`
+        );
     },
 
     async deleteMonitoringConfig() {
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/businessconfig/monitoring`;
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'POST',
-            body: '{}',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to delete monitoring config');
-            console.error('Error:', error);
-            return;
-        }
-
-        if (response.ok) {
-            console.error('Monitoring config deleted successfully');
-        }
-        else
-        {
-            console.error('Failed to delete monitoring config');
-            console.error('Response:', response);
-        }
+        await utils.sendRequest(
+            'businessconfig/monitoring',
+            'POST',
+            '{}',
+            `Monitoring config deleted successfully`,
+            `Failed to delete monitoring config`,
+            `Failed to delete monitoring config, not found error`
+        );
     },
 
     async printHelp() {

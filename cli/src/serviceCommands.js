@@ -7,11 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-const config = require('./configCommands.js');
 const prompts = require('prompts');
+const utils = require('./utils.js');
 
 const serviceCommands = {
-
     async processServiceCommand(args) {
         let action = args[0];
         if (!action) {
@@ -21,9 +20,9 @@ const serviceCommands = {
                     name: 'value',
                     message: 'Service action',
                     choices: [
-                        { title: 'Get-log-level', value: 'get-log-level' },
-                        { title: 'Set-log-level', value: 'set-log-level' }
-                    ],
+                        {title: 'Get-log-level', value: 'get-log-level'},
+                        {title: 'Set-log-level', value: 'set-log-level'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -47,38 +46,19 @@ const serviceCommands = {
         }
     },
 
-
     async getLogLevel(args) {
         const serviceName = await this.fetchServiceName(args);
         if (serviceName === '') return;
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + serviceName + '/actuator/loggers/ROOT';
-        const token = config.getConfig('access_token');
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to get log level');
-            console.error('Error:', error);
-            return;
-        }
-
-        if (response.ok) {
-            console.error('Log level got successfully');
-            const result = await response.json();
-            console.error(result);
-        } else {
-            console.error('Failed to get log level');
-            console.error('Response:', response);
-        }
+        const result = await utils.sendRequest(
+            serviceName + '/actuator/loggers/ROOT',
+            'GET',
+            undefined,
+            'Log level got successfully',
+            'Failed to get log level',
+            'Failed to get log level not found error'
+        );
+        if (result.ok) console.info(await result.json());
     },
 
     async setLogLevel(args) {
@@ -94,13 +74,13 @@ const serviceCommands = {
                     name: 'value',
                     message: 'Log level',
                     choices: [
-                        { title: 'TRACE', value: 'trace' },
-                        { title: 'DEBUG', value: 'debug' },
-                        { title: 'INFO', value: 'info' },
-                        { title: 'WARN', value: 'warn' },
-                        { title: 'ERROR', value: 'error' },
-                        { title: 'FATAL', value: 'fatal' }
-                    ],
+                        {title: 'TRACE', value: 'trace'},
+                        {title: 'DEBUG', value: 'debug'},
+                        {title: 'INFO', value: 'info'},
+                        {title: 'WARN', value: 'warn'},
+                        {title: 'ERROR', value: 'error'},
+                        {title: 'FATAL', value: 'fatal'}
+                    ]
                 })
             ).value;
             if (!logLevel) {
@@ -109,33 +89,14 @@ const serviceCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + serviceName + '/actuator/loggers/ROOT';
-        const token = config.getConfig('access_token');
-        const body = {configuredLevel: logLevel};
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        let response;
-        try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to set log level');
-            console.error('Error:', error);
-            return;
-        }
-
-        if (response.ok) {
-            console.error('Log level set successfully');
-        } else {
-            console.error('Failed to set log level');
-            console.error('Response:', response);
-        }
+        await utils.sendRequest(
+            serviceName + '/actuator/loggers/ROOT',
+            'POST',
+            JSON.stringify({configuredLevel: logLevel}),
+            'Log level set successfully',
+            'Failed to set log level',
+            'Failed to set log level not found error'
+        );
     },
 
     async fetchServiceName(args) {
@@ -148,12 +109,12 @@ const serviceCommands = {
                     name: 'value',
                     message: 'Service name',
                     choices: [
-                        { title: 'Users', value: 'users' },
-                        { title: 'Businessconfig', value: 'businessconfig' },
-                        { title: 'Cards-consultation', value: 'cards-consultation' },
-                        { title: 'Cards-publication', value: 'cards-publication' },
-                        { title: 'External-devices', value: 'external-devices' }
-                    ],
+                        {title: 'Users', value: 'users'},
+                        {title: 'Businessconfig', value: 'businessconfig'},
+                        {title: 'Cards-consultation', value: 'cards-consultation'},
+                        {title: 'Cards-publication', value: 'cards-publication'},
+                        {title: 'External-devices', value: 'external-devices'}
+                    ]
                 })
             ).value;
             if (!serviceName) {
