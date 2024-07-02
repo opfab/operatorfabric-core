@@ -10,6 +10,7 @@
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskCardTemplateView} from './taskUserCardTemplateView';
+import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 
 describe('Question UserCard template', () => {
     beforeEach(() => {
@@ -30,14 +31,15 @@ describe('Question UserCard template', () => {
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {taskDescription: 'My task Description'}};
+        OpfabAPIService.currentCard.card = {data: {richTaskDescription: 'My task Description'}};
         expect(view.getTaskDescription()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card with data THEN card is provided with data', () => {
         const view = new TaskCardTemplateView();
         const taskTitle = 'My task Title';
-        const taskDescription = 'My task Description';
+        const taskDescriptionQuillEditor = new QuillEditorMock();
+        taskDescriptionQuillEditor.setContents('My task Description');
         const freq = 'DAILY';
         const durationInMinutes = '15';
         const minutesForReminder = '5';
@@ -48,7 +50,7 @@ describe('Question UserCard template', () => {
         const time = '15:15';
         const specficCardInformation = view.getSpecificCardInformation(
             taskTitle,
-            taskDescription,
+            taskDescriptionQuillEditor,
             freq,
             durationInMinutes,
             minutesForReminder,
@@ -60,7 +62,7 @@ describe('Question UserCard template', () => {
         );
         expect(specficCardInformation.valid).toEqual(true);
         expect(specficCardInformation.card.data.taskTitle).toEqual('My task Title');
-        expect(specficCardInformation.card.data.taskDescription).toEqual('My task Description');
+        expect(specficCardInformation.card.data.richTaskDescription).toEqual('My task Description');
         expect(specficCardInformation.card.data.freq).toEqual('DAILY');
         expect(specficCardInformation.card.data.durationInMinutes).toEqual('15');
         expect(specficCardInformation.card.data.minutesForReminder).toEqual('5');
@@ -78,7 +80,7 @@ describe('Question UserCard template', () => {
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
-                taskDescription: 'My task Description',
+                richTaskDescription: 'My task Description',
                 freq: 'DAILY',
                 byhour: ['15'],
                 byminute: ['15'],
@@ -108,7 +110,7 @@ describe('Question UserCard template', () => {
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
-                taskDescription: 'My task Description',
+                richTaskDescription: 'My task Description',
                 freq: 'DAILY',
                 byhour: ['15'],
                 byminute: ['15'],
@@ -130,5 +132,28 @@ describe('Question UserCard template', () => {
         expect(view.getSetPos()).toEqual([]);
         expect(view.getMonth()).toEqual([1, 2, 3]);
         expect(view.getMonthDay()).toEqual([]);
+    });
+
+    it('GIVEN an existing card with taskDescription and not richTaskDescription WHEN user edit card THEN task description has rich text format', () => {
+        const view = new TaskCardTemplateView();
+        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        OpfabAPIService.currentCard.card = {
+            data: {
+                taskTitle: 'My task Title',
+                taskDescription: 'My task Description',
+                freq: 'DAILY',
+                byhour: ['15'],
+                byminute: ['15'],
+                durationInMinutes: '15',
+                minutesForReminder: '5',
+                byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+                bymonth: [1, 2, 3],
+                bysetpos: [],
+                bymonthday: []
+            }
+        };
+        expect(view.getTaskDescription()).toEqual(
+            '{&quot;ops&quot;:[{&quot;insert&quot;:&quot;My task Description&quot;}]}'
+        );
     });
 });

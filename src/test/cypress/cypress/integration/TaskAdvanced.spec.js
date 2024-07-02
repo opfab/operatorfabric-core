@@ -27,7 +27,7 @@ describe('Task Advanced', function () {
     script.deleteAllSettings();
   });
 
-  describe('Send user card with question and answer it', function () {
+  describe('Send task advanced user card', function () {
     before('Delete previous cards', function () {
       script.deleteAllCards();
       script.deleteAllArchivedCards();
@@ -80,7 +80,7 @@ describe('Task Advanced', function () {
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
       cy.get('#taskTitle').invoke('val', 'Task title');
-      cy.get('#taskDescription').invoke('val', 'Test task for daily frequency');
+      typeInRichTextEditor('#taskDescription', 'Test task for daily frequency');
 
       // we unselect Tuesday, Thursday, Saturday, Sunday
       cy.get('.opfab-checkbox').contains('Tuesday').click();
@@ -115,7 +115,7 @@ describe('Task Advanced', function () {
 
       // We check all fields are correctly filled
       feed.editCurrentCard();
-      cy.get("#taskDescription").should('have.value', 'Test task for daily frequency');
+      cy.get("#taskDescription").should('contain.text', 'Test task for daily frequency');
       cy.get('#Monday').should('be.checked');
       cy.get('#Tuesday').should('not.be.checked');
       cy.get('#Wednesday').should('be.checked');
@@ -150,7 +150,7 @@ describe('Task Advanced', function () {
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
       cy.get('#taskTitle').invoke('val', 'Task title');
-      cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth day)');
+      typeInRichTextEditor('#taskDescription', 'Test task for monthly frequency (Nth day)');
 
       // by default, all months are selected, so we unselect all months
       cy.get('#selectAllMonths').parent().find('.opfab-checkbox-checkmark').click();
@@ -183,7 +183,7 @@ describe('Task Advanced', function () {
 
       // We check all fields are correctly filled
       feed.editCurrentCard();
-      cy.get("#taskDescription").should('have.value', 'Test task for monthly frequency (Nth day)');
+      cy.get("#taskDescription").should('contain.text', 'Test task for monthly frequency (Nth day)');
 
       cy.get('#radioButtonMonthlyFreq').should('be.checked');
 
@@ -219,7 +219,7 @@ describe('Task Advanced', function () {
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
       cy.get('#taskTitle').invoke('val', 'Task title');
-      cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth weekday)');
+      typeInRichTextEditor('#taskDescription', 'Test task for monthly frequency (Nth weekday)');
 
       // by default, all months are selected, so we unselect all months
       cy.get('#selectAllMonths').parent().find('.opfab-checkbox-checkmark').click();
@@ -250,7 +250,7 @@ describe('Task Advanced', function () {
 
       // We check all fields are correctly filled
       feed.editCurrentCard();
-      cy.get("#taskDescription").should('have.value', 'Test task for monthly frequency (Nth weekday)');
+      cy.get("#taskDescription").should('contain.text', 'Test task for monthly frequency (Nth weekday)');
 
       cy.get('#radioButtonMonthlyFreq').should('be.checked');
 
@@ -284,5 +284,9 @@ describe('Task Advanced', function () {
 
   function checkHaveCircle(nb) {
     cy.get("of-custom-timeline-chart").find("ellipse").should('have.length', nb);
+  }
+
+  function typeInRichTextEditor(id, text) {
+    cy.get(id).find('p').eq(0).type(text);
   }
 });

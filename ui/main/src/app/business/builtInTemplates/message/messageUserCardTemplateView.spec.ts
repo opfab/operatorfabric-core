@@ -10,22 +10,7 @@
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
-
-class QuillEditorMock {
-    contents: string;
-
-    setContents(contents: string) {
-        this.contents = contents;
-    }
-
-    getContents() {
-        return this.contents;
-    }
-
-    isEmpty() {
-        return !this.contents || this.contents.length === 0;
-    }
-}
+import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;

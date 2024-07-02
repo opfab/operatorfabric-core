@@ -29,8 +29,9 @@ export class TaskCardTemplate extends HTMLElement {
         <br/>
         <center>
         <h3 >
-
+        <div id="taskRichTextDescription" style="text-align: justify;font-size: 24px">
         ${this.taskCardTemplateView.getTaskDescription()}
+        </div>
 
         <br/>
         ${opfab.utils.getTranslation('builtInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('builtInTemplate.taskCard.minutes')} <br/>
@@ -49,6 +50,8 @@ export class TaskCardTemplate extends HTMLElement {
     }
 
     fetchCardData() {
+        opfab.richTextEditor.showRichMessage(document.getElementById('taskRichTextDescription'));
+
         const fillingTexts = this.taskCardTemplateView.fillTexts();
 
         document.getElementById('bysetpos').innerHTML = fillingTexts?.textForBysetpos;

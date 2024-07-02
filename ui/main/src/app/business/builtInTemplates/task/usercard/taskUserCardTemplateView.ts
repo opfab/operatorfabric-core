@@ -12,7 +12,7 @@ declare const opfab;
 export class TaskCardTemplateView {
     public getSpecificCardInformation(
         taskTitle,
-        taskDescription,
+        quillTaskDescriptionEditor,
         freq,
         durationInMinutes,
         minutesForReminder,
@@ -42,7 +42,7 @@ export class TaskCardTemplateView {
             secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
             data: {
                 taskTitle: taskTitle,
-                taskDescription: taskDescription,
+                richTaskDescription: quillTaskDescriptionEditor.getContents(),
                 freq: freq,
                 byhour: byhour,
                 byminute: byminute,
@@ -104,16 +104,18 @@ export class TaskCardTemplateView {
     }
 
     public getTaskDescription() {
-        let taskDescription = '';
+        let description = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
-            const taskDescriptionField = opfab.currentCard.getCard()?.data?.taskDescription;
-            if (taskDescriptionField) {
-                taskDescription = opfab.utils.convertSpacesAndNewLinesInHTML(
-                    opfab.utils.escapeHtml(taskDescriptionField)
-                );
+            const richTaskDescription = opfab.currentCard.getCard()?.data?.richTaskDescription;
+            const taskDescription = opfab.currentCard.getCard()?.data?.taskDescription;
+
+            if (richTaskDescription) {
+                description = opfab.utils.escapeHtml(richTaskDescription);
+            } else if (taskDescription) {
+                description = opfab.utils.escapeHtml(opfab.richTextEditor.getDeltaFromText(taskDescription));
             }
         }
-        return taskDescription;
+        return description;
     }
 
     public getDurationInMinutes(default_value) {
