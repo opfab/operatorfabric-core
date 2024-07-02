@@ -14,6 +14,7 @@ To enhance consistency and avoid confusion, we made the following modifications 
   - When accessed via `web-ui`(nginx), the endpoint `/cards` has been replaced by `/cards-consultation`.
   - When accessed via `web-ui`(nginx), the endpoint `/cardspub` has been replaced by `/cards-publication`.
   - The base path for accessing the `businessconfig` service directly (without passing through `web-ui`) has been changed from `/businessconfig` to `/`.
+  - Added endpoints `/cards-reminder` and `/cards-external diffusion` to access cards-reminder and cards-external diffusion services via nginx for opfab cli
 
 Please note that the old endpoint `/businessconfig` is still available but will be removed in a future release.
 
@@ -70,6 +71,18 @@ This should be changed to:
     proxy_pass http://businessconfig:2100/;
     proxy_set_header X-Forwarded-For $remote_addr;
     client_max_body_size 100M;
+  }
+
+  location /cards-external-diffusion/ {
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-external-diffusion:2106/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+
+  location /cards-reminder/ {
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-reminder:2107/;
+    proxy_set_header X-Forwarded-For $remote_addr;
   }
 ....
 
