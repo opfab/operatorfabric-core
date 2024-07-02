@@ -25,7 +25,7 @@ describe('Question UserCard template', () => {
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
-                taskDescription: 'My task Description',
+                richTaskDescription: 'My task Description',
                 byhour: ['5'],
                 byminute: ['15'],
                 durationInMinutes: '15'
@@ -37,6 +37,22 @@ describe('Question UserCard template', () => {
         expect(view.getByMinute()).toEqual('15');
         expect(view.getDurationInMinutes()).toEqual('15');
     });
+
+    it('GIVEN a card taskDescription and not richTaskDescription WHEN get data THEN task description has rich text format', () => {
+        OpfabAPIService.currentCard.card = {
+            data: {
+                taskTitle: 'My task Title',
+                taskDescription: 'My task Description',
+                byhour: ['5'],
+                byminute: ['15'],
+                durationInMinutes: '15'
+            }
+        };
+        expect(view.getTaskDescription()).toEqual(
+            '{&quot;ops&quot;:[{&quot;insert&quot;:&quot;My task Description&quot;}]}'
+        );
+    });
+
     it('GIVEN a card WHEN filling content THEN text is correct', () => {
         OpfabAPIService.currentCard.card = {
             data: {

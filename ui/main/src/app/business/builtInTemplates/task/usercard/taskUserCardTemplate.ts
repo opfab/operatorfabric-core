@@ -59,9 +59,10 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <input size="50" type="text" id="taskTitle" value='${this.view.getTaskTitle()}'> 
         </div>
         <br/>
-        <div class="opfab-input">
-            <label for="taskDescription"> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.taskDescriptionLabel')}</label>
-            <input size="50" type="text" id="taskDescription" value='${this.view.getTaskDescription()}'> 
+
+        <div class="opfab-textarea">
+            <label>${opfab.utils.getTranslation('builtInTemplate.taskUserCard.taskDescriptionLabel')}</label>
+            <opfab-richtext-editor id="taskDescription">${this.view.getTaskDescription()}</opfab-richtext-editor>
         </div>
         <br/>
         
@@ -494,7 +495,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const durationInMinutes = (<HTMLInputElement>document.getElementById('durationInMinutes')).value;
         const minutesForReminder = (<HTMLInputElement>document.getElementById('minutesForReminder')).value;
         const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;
-        const taskDescription = (<HTMLInputElement>document.getElementById('taskDescription')).value;
+        const quillTaskDescriptionEditor = <HTMLInputElement>document.getElementById('taskDescription');
 
         const that = this;
 
@@ -573,7 +574,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
         return this.view.getSpecificCardInformation(
             taskTitle,
-            taskDescription,
+            quillTaskDescriptionEditor,
             freq,
             durationInMinutes,
             minutesForReminder,

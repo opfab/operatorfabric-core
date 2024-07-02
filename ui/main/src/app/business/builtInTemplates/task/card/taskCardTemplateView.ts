@@ -23,13 +23,16 @@ export class TaskCardTemplateView {
     }
 
     public getTaskDescription() {
-        let taskDescription = opfab.currentCard.getCard()?.data?.taskDescription;
-        if (taskDescription) {
-            taskDescription = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(taskDescription));
-        } else {
-            taskDescription = '';
+        let description = '';
+        const richTaskDescription = opfab.currentCard.getCard()?.data?.richTaskDescription;
+        const taskDescription = opfab.currentCard.getCard()?.data?.taskDescription;
+
+        if (richTaskDescription) {
+            description = opfab.utils.escapeHtml(richTaskDescription);
+        } else if (taskDescription) {
+            description = opfab.utils.escapeHtml(opfab.richTextEditor.getDeltaFromText(taskDescription));
         }
-        return taskDescription;
+        return description;
     }
 
     public getDurationInMinutes() {
