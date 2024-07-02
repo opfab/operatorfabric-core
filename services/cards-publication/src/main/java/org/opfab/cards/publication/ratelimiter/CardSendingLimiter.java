@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,13 +33,17 @@ public class CardSendingLimiter {
 
     public boolean isNewSendingAllowed(String login) {
         List<Long> cardSendings = getCardSendings(login.toUpperCase());
-
-        if (!isLimitReached(cardSendings)) {
-            registerNewSending(cardSendings);
-            return true;
+        // Synchronization is needed as :
+        //  - cardSendings is shared between threads
+        //  - cardSendings list is not thread-safe
+        // See https://github.com/opfab/operatorfabric-core/issues/6727
+        synchronized (cardSendings) {
+            if (!isLimitReached(cardSendings)) {
+                registerNewSending(cardSendings);
+                return true;
+            } else
+                return false;
         }
-        else
-            return false;
     }
 
     public void reset() {
@@ -61,7 +65,7 @@ public class CardSendingLimiter {
 
     private void registerNewSending(List<Long> cardSendings) {
         cardSendings.add(customClock.millis());
-        if(cardSendings.size() > limitCardCount)
+        if (cardSendings.size() > limitCardCount)
             cardSendings.remove(0);
     }
 }
