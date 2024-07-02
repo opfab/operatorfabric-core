@@ -10,6 +10,8 @@
 const prompts = require('prompts');
 const utils = require('./utils.js');
 
+const NODE_SERVICES = ['supervisor', 'cards-external-diffusion', 'cards-reminder']
+
 const serviceCommands = {
     async processServiceCommand(args) {
         let action = args[0];
@@ -51,14 +53,20 @@ const serviceCommands = {
         if (serviceName === '') return;
 
         const result = await utils.sendRequest(
-            serviceName + '/actuator/loggers/ROOT',
+            this.getServicePath(serviceName),
             'GET',
             undefined,
             'Log level got successfully',
             'Failed to get log level',
             'Failed to get log level not found error'
         );
-        if (result.ok) console.info(await result.json());
+
+        if (result.ok) {
+            if (this.isNodeService(serviceName))
+                console.log(this.fromNodeToStandardLevel(await result.text()))
+            else
+                console.info(await result.json());
+        }
     },
 
     async setLogLevel(args) {
@@ -88,15 +96,67 @@ const serviceCommands = {
                 return;
             }
         }
+        if (this.isNodeService(serviceName))
+            logLevel = this.fromStandardToNodeLevel(logLevel);
 
         await utils.sendRequest(
-            serviceName + '/actuator/loggers/ROOT',
+            this.getServicePath(serviceName),
             'POST',
             JSON.stringify({configuredLevel: logLevel}),
             'Log level set successfully',
             'Failed to set log level',
             'Failed to set log level not found error'
         );
+
+    },
+
+    getServicePath(serviceName) {
+        let path = serviceName + '/actuator/loggers/ROOT';
+        switch (serviceName) {
+            case 'supervisor':
+            case 'cards-reminder':
+            case 'cards-external-diffusion':
+                path = serviceName + '/logLevel';
+                break;
+            default:
+                break;
+        }
+        return path;
+    },
+
+    isNodeService(serviceName) {
+        return NODE_SERVICES.includes(serviceName);
+    },
+
+    fromStandardToNodeLevel(level) {
+        return level === 'trace' ? 'silly' : level;
+    },
+
+    fromNodeToStandardLevel(level) {
+        let nodeLevel = level;
+        switch (level) {
+            case 'silly':
+                nodeLevel = 'trace';
+                break;
+            case 'verbose':
+            case 'http':
+            case 'debug':
+                nodeLevel = 'debug';
+                break;
+            case 'info':
+                nodeLevel = 'info';
+                break;
+            case 'warn':
+                nodeLevel = 'warn';
+                break;
+            case 'error':
+            case 'fatal':
+                nodeLevel = 'error';
+                break;
+            default:
+                break;
+        }
+        return nodeLevel;
     },
 
     async fetchServiceName(args) {
@@ -113,7 +173,10 @@ const serviceCommands = {
                         {title: 'Businessconfig', value: 'businessconfig'},
                         {title: 'Cards-consultation', value: 'cards-consultation'},
                         {title: 'Cards-publication', value: 'cards-publication'},
-                        {title: 'External-devices', value: 'external-devices'}
+                        {title: 'External-devices', value: 'external-devices'},
+                        {title: 'Supervisor', value: 'supervisor'},
+                        {title: 'Cards-external-diffusion', value: 'cards-external-diffusion'},
+                        {title: 'Cards-reminder', value: 'cards-reminder'},
                     ]
                 })
             ).value;
@@ -140,6 +203,9 @@ Service list :
     cards-consultation
     cards-publication
     external-devices
+    supervisor
+    cards-external-diffusion
+    cards-reminder
     
 Level list : 
 
