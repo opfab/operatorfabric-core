@@ -184,18 +184,20 @@ describe('Time line moves', function () {
 
 
     it('Check timeline moves when unlocked in real time view', function () {
-
         const currentDate = new Date(2030, 2, 31, 23, 55)
+        
         opfab.loginWithClock(currentDate);
 
         setTimeLineDomain('TR');
         checkFirstTickLabel(" 21h30 ");
         checkTitle(" 31 March 2030 ");
 
+        const deltaTime = currentDate.getTime() - new Date().getTime();
+  
         // send a card with a bubble a the start of the time line 
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS + 15 * MINUTES), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime - (2 * HOURS + 15 * MINUTES), endDate: deltaTime + 5 * MINUTES});
         cy.tick(1 * SECONDS);
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10 * HOURS);
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime, endDate: deltaTime + 10 * HOURS});
 
         // Wait for the card to arrive
         cy.wait(500);
@@ -240,11 +242,11 @@ describe('Time line moves', function () {
         lockTimeLine();
         checkFirstTickLabel(" 21h30 ");
         checkTitle(" 31 March 2030 ")
-
+        const deltaTime = currentDate.getTime() - new Date().getTime();
         // send a card with a bubble a the start of the time line 
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS + 15 * MINUTES), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime - (2 * HOURS + 15 * MINUTES), endDate: deltaTime + 5 * MINUTES});
         cy.tick(1 * SECONDS);
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime(), currentDate.getTime() + 10 * HOURS);
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime, endDate: deltaTime + 10 * HOURS});
 
         cy.wait(500);
         cy.tick(1 * SECONDS);
@@ -286,8 +288,9 @@ describe('Time line moves', function () {
         setTimeLineDomain('J');
         checkFirstTickLabel(" 00h ");
         checkTitle(" 31 March 2030 ");
+        let deltaTime = currentDate.getTime() - new Date().getTime();
 
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:35 ");
@@ -306,7 +309,9 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(0);
 
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 5 * HOURS, endDate: deltaTime + 6 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -336,8 +341,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 00h ");
 
         checkTitle(" 31 March 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * 60 * 1000});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:35 ");
@@ -356,8 +361,9 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(1);
 
+        deltaTime = currentDate.getTime() - new Date().getTime();
         // send a card that should not be visible
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 5 * HOURS, endDate: deltaTime + 6 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -384,8 +390,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('7D');
         checkFirstTickLabel(" 08h ");
         checkTitle(" 31/03/2030 - 08/04/2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * 60 * 1000});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:35 ");
@@ -410,7 +416,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(0);
 
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 5 * HOURS, endDate: deltaTime + 6 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -438,8 +445,8 @@ describe('Time line moves', function () {
         lockTimeLine();
         checkFirstTickLabel(" 08h ");
         checkTitle(" 31/03/2030 - 08/04/2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * 60 * 1000);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * 60 * 1000});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:35 ");
@@ -463,8 +470,8 @@ describe('Time line moves', function () {
         checkTitle(" 31/03/2030 - 08/04/2030 ");
         checkFirstTickLabel(" 08h ");
         checkHaveCircle(1);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 5 * HOURS, currentDate.getTime() + 6 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 5 * HOURS, endDate: deltaTime + 6 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(2);
@@ -491,8 +498,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('W');
         checkFirstTickLabel(" 00h ");
         checkTitle(" 30/03/2030 - 06/04/2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 04/04/30 22:00 ");
@@ -510,8 +517,8 @@ describe('Time line moves', function () {
         checkTitle(" 06/04/2030 - 13/04/2030 ");
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(0);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -529,8 +536,8 @@ describe('Time line moves', function () {
 
         checkFirstTickLabel(" 00h ");
         checkTitle(" 30/03/2030 - 06/04/2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime , endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 04/04/30 22:00 ");
@@ -548,8 +555,8 @@ describe('Time line moves', function () {
         checkTitle(" 30/03/2030 - 06/04/2030 ");
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(1);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * HOURS);
         checkHaveCircle(1);
@@ -564,8 +571,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('M');
         checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 30/04/30 15:00 ");
@@ -576,8 +583,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" WED 01 ");
         checkTitle(" MAY 2030 ");
         checkHaveCircle(0);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -595,8 +602,8 @@ describe('Time line moves', function () {
 
         checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 30/04/30 15:00 ");
@@ -607,8 +614,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
         checkHaveCircle(1);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -625,8 +632,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('Y');
         checkFirstTickLabel(" 1 Jan ");
         checkTitle(" 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 30/12/30 08:00 ");
@@ -637,8 +644,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 1 Jan ");
         checkTitle(" 2031 ");
         checkHaveCircle(0);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -656,8 +663,8 @@ describe('Time line moves', function () {
 
         checkFirstTickLabel(" 1 Jan ");
         checkTitle(" 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        let deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 30/12/30 08:00 ");
@@ -668,8 +675,8 @@ describe('Time line moves', function () {
         checkFirstTickLabel(" 1 Jan ");
         checkTitle(" 2030 ");
         checkHaveCircle(1);
-
-        script.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 72 * HOURS, currentDate.getTime() + 80 * HOURS);
+        deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: deltaTime + 72 * HOURS, endDate: deltaTime + 80 * HOURS});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkHaveCircle(1);
@@ -684,8 +691,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('J');
         checkFirstTickLabel(" 00h ");
         checkTitle(" 31 March 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        const deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/03/30 23:55 ");
@@ -721,8 +728,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('W');
         checkFirstTickLabel(" 00h ");
         checkTitle(" 30/03/2030 - 06/04/2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        const deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 05/04/30 23:50 ");
@@ -752,8 +759,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('M');
         checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        const deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 30/04/30 23:52 ");
@@ -783,8 +790,8 @@ describe('Time line moves', function () {
         setTimeLineDomain('Y');
         checkFirstTickLabel(" 1 Jan ");
         checkTitle(" 2030 ");
-
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
+        const deltaTime = currentDate.getTime() - new Date().getTime();
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * MINUTES});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(" 31/12/30 23:46 ");
@@ -815,11 +822,10 @@ describe('Time line moves', function () {
       }, function () {
 
         opfab.loginWithUser("operator1_fr");
-        const currentDate = new Date(); 
 
         checkHaveCircle(0);
 
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() + 2 * HOURS, currentDate.getTime() + 5 * HOURS);
+        script.sendCard('cypress/feed/customEvent.json', {startDate: 2 * HOURS, endDate: 5 * HOURS});
         checkHaveCircle(1);
         checkNthCircleContains(0,"1");
 
@@ -830,10 +836,10 @@ describe('Time line moves', function () {
         clickNthCircle(0);
         cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
-    
-        const startDate = currentDate.getTime() + 1 * HOURS;
-        script.sendCard('cypress/feed/customAlarm.json', startDate, currentDate.getTime() + 5 * HOURS);
-        script.sendCard('cypress/feed/chartLineWithCustomDate.json',startDate);
+        const startSendfirstCard = new Date().getTime();
+        script.sendCard('cypress/feed/customAlarm.json', {startDate: 1 * HOURS, endDate: 5 * HOURS});
+        const timeforSendingCard = new Date().getTime() - startSendfirstCard;
+        script.sendCard('cypress/feed/chartLineWithCustomDate.json', {startDate: 1 * HOURS - timeforSendingCard});
 
          // wait we receive the cards (when we have 3 cards in the feed)
          cy.get('of-light-card').should('have.length',3);

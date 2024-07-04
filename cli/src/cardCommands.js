@@ -54,6 +54,7 @@ const cardCommands = {
 
     async sendCard(args) {
         let cardFile = args[0];
+        let cardCustomization = args[1];
        
         if (!cardFile) {
             cardFile = (
@@ -78,11 +79,13 @@ const cardCommands = {
             console.error('Error:', error);
             return;
         }
+        let card = this.prepareCard(fileContent, cardCustomization);
+
         const url = `${config.getConfig('url')}:2102/cards`;
         const token = config.getConfig('access_token');
         const options = {
             method: 'POST',
-            body: fileContent, 
+            body: card, 
             headers: {
                 'Content-Type': 'application/json', 
                 Authorization: `Bearer ${token}`
@@ -188,12 +191,51 @@ const cardCommands = {
         }
     },
 
+    prepareCard(card, cardCustomization) {
+        const now = new Date().getTime();
+        let jsonCard = JSON.parse(card);
+        if (cardCustomization) {
+            const jsonUpdate = JSON.parse(cardCustomization);
+            this.patchCard(jsonCard, jsonUpdate);
+        }
+
+        if (jsonCard.startDate != undefined) jsonCard.startDate = now + jsonCard.startDate;
+        if (jsonCard.endDate != undefined) jsonCard.endDate = now + jsonCard.endDate;
+        if (jsonCard.lttd != undefined) jsonCard.lttd = now + jsonCard.lttd;
+        if (jsonCard.expirationDate != undefined) jsonCard.expirationDate = now + jsonCard.expirationDate;
+
+        jsonCard.timeSpans?.forEach(timespan => {
+            if (timespan.start != undefined) timespan.start = now + timespan.start;
+            if (timespan.end != undefined) timespan.end = now + timespan.end;
+        });
+        return JSON.stringify(jsonCard);
+    },
+
+    patchCard(card, cardCustomization) {
+        try {
+            for (const [key, value] of Object.entries(cardCustomization)) {
+                if (
+                    Object.hasOwn(card, key) &&
+                    value != null
+                ) {
+                    card[key] = value;
+                }
+            }
+        } catch (error) {
+            this.logger.error(error);
+        }
+
+        return card;
+    },
+
     async printHelp() {
-        console.log(`Usage: opfab card <command> <cardId|cardFileName>
+        console.log(`Usage: opfab card <command> <cardId|cardFileName> [<cardCustomization>]
 
 Command list :
 
-    send               send a card : opfab card send <cardFileName>
+    send               send a card : opfab card send <cardFileName> [<cardCustomization>]
+                       (date values in card must be set as relative to current time.
+                       <cardCustomization> is a JSON-serialized string containing card fields to be overridden)
     delete             delete a card by id : opfab card delete <cardId>
     resetratelimiter   reset the rate limiter for sending cards : opfab card resetratelimiter
         

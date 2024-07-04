@@ -11,8 +11,8 @@
 		"Dispatcher"
 	],
 	"severity": "INFORMATION",
-	"startDate" : ${customEpochDate1},
-	"endDate" : ${customEpochDate2},
+	"startDate" : 7200000,
+	"endDate" : 18000000,
 	"summary": {
 		"key": "message.summary"
 	},
@@ -312,8 +312,8 @@
 	},
 	"timeSpans": [
 		{
-			"start" : ${customEpochDate1},
-			"end" : ${customEpochDate2}
+			"start" : 7200000,
+			"end" : 18000000
 		}
 	]
 }

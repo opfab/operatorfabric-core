@@ -651,9 +651,9 @@ describe('Acknowledgment tests', function () {
 
         opfab.loginWithUser('operator1_fr');
         cy.clock(currentDate);
-       
+        const deltaTime = currentDate.getTime() - new Date().getTime();
         // Send card with automaticPinWhenAcknowledged = true
-        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime - (2 * HOURS ), endDate: deltaTime + 5 * MINUTES});
 
         cy.waitDefaultTime();
 
@@ -695,12 +695,12 @@ describe('Acknowledgment tests', function () {
 
         script.deleteAllCards();
         // Send 6 card with automaticPinWhenAcknowledged = true
-        script.sendCard('cypress/ack/pinned.json');
-        script.sendCard('cypress/ack/pinned.json');
-        script.sendCard('cypress/ack/pinned.json');
-        script.sendCard('cypress/ack/pinned.json');
-        script.sendCard('cypress/ack/pinned.json');
-        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned1'});
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned2'});
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned3'});
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned4'});
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned5'});
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned6'});
 
 
         opfab.loginWithUser('operator1_fr');
@@ -716,7 +716,7 @@ describe('Acknowledgment tests', function () {
         //There are 6 pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 
-        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json', {processInstanceId: 'pinned7'});
 
         // Open and ack the new card
         cy.get('of-light-card').eq(0).click()

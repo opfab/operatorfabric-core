@@ -8,13 +8,13 @@
     "state": "messageState",
     "entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
     "severity" : "ACTION",
-    "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
-    "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+    "startDate" : 7200000,
+    "endDate" : 28800000 ,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "message.title"},
 	"data" : {"message": "Card test with location Amsterdam"},
 	"timeSpans" : [
-		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
-		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		{"start" :7200000},
+		{"start" : 28800000}
 		]
 }

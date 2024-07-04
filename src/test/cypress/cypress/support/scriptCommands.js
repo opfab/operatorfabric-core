@@ -42,19 +42,19 @@ export class ScriptCommands extends OpfabCommands {
 
 
     send6TestCards = function () {
-        cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
+        cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host') + ' 2002');
     }
 
-    sendCard = function (cardFile, customEpochDate1 = new Date().getTime(), customEpochDate2 = new Date().getTime() + 5 * 60 * 1000) {
+    sendCard = function (cardFile, cardCustomization = {}) {
         cy.exec(
             'cd ../resources/cards/ && ./sendCard.sh ' +
             cardFile +
             ' ' +
             Cypress.env('host') +
             ' ' +
-            customEpochDate1 +
+            '2002' +
             ' ' +
-            customEpochDate2
+            JSON.stringify(JSON.stringify(cardCustomization))
         );
     }
 

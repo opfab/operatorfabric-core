@@ -25,23 +25,23 @@ describe('Group Cards tests', function () {
         script.deleteAllCards();
 
         // Send four cards with the same tag
-        script.sendCard('cypress/group/message1.json');
-        script.sendCard('cypress/group/message1.json');
-        script.sendCard('cypress/group/message1.json');
-        script.sendCard('cypress/group/message1.json');
+        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_1'});
+        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_2'});
+        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_3'});
+        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_4'});
 
         // Send three others cards, all having the same tag
-        script.sendCard('cypress/group/message2.json');
-        script.sendCard('cypress/group/message2.json');
-        script.sendCard('cypress/group/message2.json');
+        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_1'});
+        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_2'});
+        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_3'});
 
         // Send three others cards (all having only the combined tags of the previous cards)
-        script.sendCard('cypress/group/message3.json');
-        script.sendCard('cypress/group/message3.json');
-        script.sendCard('cypress/group/message3.json');
+        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_1'});
+        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_2'});
+        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_3'});
 
         // Send one card, having a different tag, not grouped
-        script.sendCard('cypress/group/message4.json');
+        script.sendCard('cypress/group/message4.json', {processInstanceId: 'message4_1'});
     });
 
     it('Card grouping disabled -> all cards should be visible in the feed', function () {

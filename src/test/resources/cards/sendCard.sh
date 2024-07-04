@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,39 +15,22 @@ then
 	url="http://localhost"
 fi
 
-export customEpochDate1=$3
-export customEpochDate2=$4
-
-
-# MacOs doesn't have date, so check for that and use gdate instead.
-if [[ $OSTYPE == 'darwin'* ]]
+port=$3
+if [[ -z $port ]]
 then
-  if ! command -v gdate &> /dev/null
-  then
-      echo "You are running on macOs and gdate could not be found, please install with 'brew install coreutils'."
-      exit
-  fi
-  current_date_millis=$(gdate +%s%3N)
-else
-  current_date_millis=$(date +%s%3N)
+	port=2002
 fi
+
+cardCustomization=$4
 
 if [[ -z $1 ]]
 then
-    echo "Usage : sendCard cardFile opfab_url"
+    echo "Usage : sendCard cardFile opfab_url opfab_port cardCustomization"
 else
-    source ../getToken.sh $url "publisher_test"
-    export current_date_in_milliseconds_from_epoch=$(($current_date_millis))
-    export current_date_in_milliseconds_from_epoch_plus_3minutes=$(($current_date_millis + 3*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_1hours=$(($current_date_millis + 60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_2hours=$(($current_date_millis + 2*60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_4hours=$(($current_date_millis + 4*60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_8hours=$(($current_date_millis + 8*60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_12hours=$(($current_date_millis + 12*60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_24hours=$(($current_date_millis + 24*60*60*1000))
-    export current_date_in_milliseconds_from_epoch_plus_48hours=$(($current_date_millis + 48*60*60*1000))
+    opfab login $url $port publisher_test test
     echo "send card $1 (url: $url)"
-    curl -X POST $url:2102/cards -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$(envsubst <$1)"
+    
+    opfab card send $1 $cardCustomization
 fi
 
 echo 
