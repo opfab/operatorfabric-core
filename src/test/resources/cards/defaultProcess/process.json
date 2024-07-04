@@ -7,13 +7,13 @@
 	  "tags":["tag1", "tag2"],
 	  "groupRecipients": ["Dispatcher"],
 	  "severity" : "COMPLIANT",
-	  "startDate" : ${current_date_in_milliseconds_from_epoch_plus_4hours},
-	  "endDate" : ${current_date_in_milliseconds_from_epoch_plus_48hours},
+	  "startDate" : 14400000,
+	  "endDate" : 172800000,
 	  "summary" : {"key" : "message.summary"},
 	  "title" : {"key" : "processState.title" , "parameters" : {"status":"calcul"}},
 	  "data" : {"state":"calcul1","stateName":"CALCUL1"},
 	  "timeSpans" : [
-		  {"start" : ${current_date_in_milliseconds_from_epoch_plus_12hours}},
-		  {"start" : ${current_date_in_milliseconds_from_epoch_plus_48hours}}
+		  {"start" : 43200000},
+		  {"start" : 172800000}
 		  ]
   }

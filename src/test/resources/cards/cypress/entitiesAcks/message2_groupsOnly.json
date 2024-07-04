@@ -7,8 +7,8 @@
   "state": "stateWithUserHasAcknowledged",
   "groupRecipients": ["Dispatcher", "Planner"],
   "severity" : "INFORMATION",
-  "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
-  "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+  "startDate" : 7200000,
+  "endDate" : 28800000 ,
   "summary" : {"key" : "kitchenSink.title"},
   "title" : {"key" : "kitchenSink.title"},
   "data" : {"message":"test for entities acks for a state with consideredAcknowledgedForUserWhen=UserHasAcknowledged"}

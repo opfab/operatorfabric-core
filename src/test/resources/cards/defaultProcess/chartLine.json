@@ -7,7 +7,7 @@
 	"groupRecipients": ["Dispatcher", "Planner"],
 	"entityRecipients": ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"],
 	"severity" : "ALARM",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_1hours},
+	"startDate" : 3600000,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "chartLine.title"},
 	"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000]}

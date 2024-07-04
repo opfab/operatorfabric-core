@@ -6,14 +6,14 @@
 	"state": "stateOfTypeFINISHED",
 	"entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
 	"severity" : "INFORMATION",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
-	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
-	"lttd" : ${current_date_in_milliseconds_from_epoch},
+	"startDate" : 7200000,
+	"endDate" : 28800000 ,
+	"lttd" : 0,
 	"summary" : {"key" : "stateOfType.summary"},
 	"title" : {"key" : "stateOfTypeFINISHED.title"},
 	"data" : {"message":" State type tests card number 9"},
 	"timeSpans" : [
-		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
-		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		{"start" :7200000},
+		{"start" : 28800000}
 		]
 }

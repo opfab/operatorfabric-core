@@ -7,11 +7,11 @@
 	"state": "action-FrEs-IGCC-export-0",
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "ALARM",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"startDate" : 7200000,
 	"summary" : {"key" : "action-FrEs-IGCC-export-0.summary"},
 	"title" : {"key" : "action-FrEs-IGCC-export-0.title"},
 	"data" : {"message":" Information card number 1"},
 	"timeSpans" : [
-		{"start" : ${current_date_in_milliseconds_from_epoch_plus_2hours}}
+		{"start" : 7200000}
 		]
 }

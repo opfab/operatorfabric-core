@@ -6,7 +6,7 @@
 	"state": "processState",
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "COMPLIANT",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"startDate" : 7200000,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "processState.title" , "parameters" : {"status":"CALCUL3"}},
 	"data" : {"state":"calcul3","stateName":"CALCUL3"}

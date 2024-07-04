@@ -6,7 +6,7 @@
 	"state": "processState",
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"startDate" : 7200000,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "processState.title" , "parameters" : {"status":"STARTING"}},
 	"data" : {"state":"start","stateName":"STARTING"}

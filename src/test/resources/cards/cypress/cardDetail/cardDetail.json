@@ -7,13 +7,13 @@
 	"entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
 	"entitiesRequiredToRespond" : ["ENTITY1_FR"],
 	"severity" : "INFORMATION",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
-	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"startDate" : 7200000,
+	"endDate" : 28800000 ,
 	"summary" : {"key" : "kitchenSink.title"},
 	"title" : {"key" : "kitchenSink.title"},
 	"data" : {"message":"test","array":["1","2","3"]},
 	"timeSpans" : [
-		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
-		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		{"start" :7200000},
+		{"start" : 28800000}
 		]
 }
