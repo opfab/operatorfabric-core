@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,6 @@ public class AuthClient {
         map.add("username", "operator1_fr");
         map.add("password", "test");
         map.add("grant_type", "password");
-        map.add("client_id", "opfab-client");
  
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 

@@ -40,7 +40,6 @@ public class SseTest extends Simulation {
     .formParam("grant_type", "password")
     .formParam("username", "#{username}")
     .formParam("password", "test")
-    .formParam("client_id", "opfab-client")
     .check(jmesPath("access_token").ofString()
     .exists().saveAs("access_token")))
 

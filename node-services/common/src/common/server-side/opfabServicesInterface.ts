@@ -195,7 +195,7 @@ export default class OpfabServicesInterface {
             const response = await this.sendRequest({
                 method: 'post',
                 url: this.opfabGetTokenUrl,
-                data: `username=${this.login}&password=${this.password}&grant_type=password&client_id=opfab-client`
+                data: `username=${this.login}&password=${this.password}&grant_type=password`
             });
             this.token = response?.data?.access_token;
             if (this.token == null) throw new Error('No token provided , http response = ' + response);

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2020-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -15,7 +15,6 @@ Method: `POST`
 
 Body arguments:
 
-* client_id: `string` constant=`clientIdPassword`;
 * grant_type: `string` constant=`password`;
 - username: `string` any value, must match an OperatorFabric registered user name;
 * password: `string` any value;
@@ -28,7 +27,7 @@ command:
 
 ----
 curl -s -X POST -d 
-"username=admin&password=test&grant_type=password&client_id=clientIdPassword" 
+"username=admin&password=test&grant_type=password" 
 http://localhost:2002/auth/token
 ----
 
@@ -60,7 +59,7 @@ user_info","jti":"02d82e85-13f0-4678-974d-18eb06215a65"}
 
 ----
 http --form POST http://localhost:2002/auth/token username=admin password=test 
-grant_type=password client_id=clientIdPassword
+grant_type=password
 ----
 
 example of expected result:
@@ -225,7 +224,7 @@ Here is a way to do so.
 
 [source,shell]
 ----
- curl -d "username=${user}&password=${password}&grant_type=password&client_id=opfab-client" "http://localhost:2002/auth/token" | jq -r .access_token
+ curl -d "username=${user}&password=${password}&grant_type=password" "http://localhost:2002/auth/token" | jq -r .access_token
 ----
 
 where:

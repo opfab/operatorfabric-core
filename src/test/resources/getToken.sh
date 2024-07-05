@@ -31,7 +31,7 @@ fi
 getToken() {
 	echo "Get token for user $username on $url"
 	access_token_pattern='"access_token":"([^"]+)"'
-	response=$(curl -s -X POST -d "username="$username"&password="$password"&grant_type=password&client_id=opfab-client" $url:2002/auth/token)
+	response=$(curl -v -s -X POST -d "username="$username"&password="$password"&grant_type=password" $url:2002/auth/token)
 	if [[ $response =~ $access_token_pattern ]] ; then
 		export token=${BASH_REMATCH[1]}
 	fi
