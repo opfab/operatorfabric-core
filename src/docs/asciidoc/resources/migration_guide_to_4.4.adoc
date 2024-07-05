@@ -7,6 +7,11 @@
 
 = Migration Guide from release 4.3.X to release 4.4.0
 
+
+== Use of client_id to obtain token
+
+In the example script getToken.sh, a parameter client_id is set to `opfab-client`. This value was in fact not necessary and has been removed . The client_id is managed by the `web-ui` service and is not required in the authentication requests. You can remove the client_id from your scripts.
+
 == Endpoints configuration 
 
 To enhance consistency and avoid confusion, we made the following modifications to the endpoints:

@@ -223,7 +223,7 @@ source ../getToken.sh
 This will run the following command:
 
 ----
-curl -s -X POST -d "username=admin&password=test&grant_type=password&client_id=opfab-client" http://localhost:2002/auth/token
+curl -s -X POST -d "username=admin&password=test&grant_type=password" http://localhost:2002/auth/token
 ----
 
 This should return a JSON a response like this:

@@ -130,7 +130,7 @@ const loginCommands = {
         this.logout();
         console.log('Will try to login with user', this.login);
         const url = `${this.url}:${this.port}/auth/token`;
-        const body = `username=${this.login}&password=${this.password}&grant_type=password&client_id=opfab-client`;
+        const body = `username=${this.login}&password=${this.password}&grant_type=password`;
         const options = {
             method: 'POST',
             body: body,
