@@ -57,19 +57,19 @@
             [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
           </of-multi-select>
 
-          <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags" id="opfab-tags" multiSelectId="tags"
+          <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags?.length > 0" id="opfab-tags" multiSelectId="tags"
             [parentForm]="processMonitoringForm" [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions"
             [selectedOptions]="tagsSelected" (selectionChange)="tagsChoiceChanged($event)">>
           </of-multi-select>
         </div>
-        <div *ngIf="isProcessGroupFilterVisible && tags" style="min-width:300px;max-width:400px;max-height: 48px">
+        <div *ngIf="isProcessGroupFilterVisible && tags?.length > 0" style="min-width:300px;max-width:400px;max-height: 48px">
           <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="processMonitoringForm"
             [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected" (selectionChange)="tagsChoiceChanged($event)">
           </of-multi-select>
         </div>
       </div>
       <!--Second column-->
-      <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
+      <div style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
 
           <of-multi-select id="opfab-process" multiSelectId="process"
