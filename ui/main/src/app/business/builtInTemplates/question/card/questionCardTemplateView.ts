@@ -13,6 +13,7 @@ declare const opfab;
 
 export class QuestionCardTemplateView {
     showInputField: Function;
+    responses = [];
 
     public getRichQuestion() {
         let richQuestion = opfab.currentCard.getCard()?.data?.richQuestion;
@@ -24,26 +25,49 @@ export class QuestionCardTemplateView {
         return richQuestion;
     }
 
-    public setFunctionToGetResponseInput(getResponseInput: Function) {
-        opfab.currentCard.registerFunctionToGetUserResponse(() => {
+    public setFunctionToGetResponseInput(getResponseInput: Function, keepResponseHistory: boolean) {
+        opfab.currentCard.registerFunctionToGetUserResponse((emitter) => {
             const response = getResponseInput();
-            return {valid: true, responseCardData: {response: response}};
+            const responseHistory = [];
+            if (keepResponseHistory && emitter) {
+                const entityResponse = this.responses.find((resp) => resp.entityId === emitter);
+                if (entityResponse) {
+                    entityResponse.responses.forEach((resp) => responseHistory.push(resp));
+                }
+            }
+            responseHistory.push({
+                responseDate: new Date().getTime(),
+                response: response
+            });
+
+            return {valid: true, responseCardData: {responses: responseHistory}};
         });
     }
 
     public listenToResponses(setResponses: Function) {
         opfab.currentCard.listenToChildCards((childCards) => {
-            const responses = [];
+            this.responses = [];
+            const viewResponses = [];
             if (childCards?.forEach && childCards.length > 0) {
                 childCards?.forEach((element) => {
-                    responses.push({
+                    const cardResponses = [];
+                    element.data?.responses.forEach((response) => {
+                        cardResponses.push({
+                            responseDate: moment(response.responseDate).format('HH:mm DD/MM/yyyy'),
+                            response: response.response
+                        });
+                    });
+                    this.responses.push({
+                        entityId: element.publisher,
+                        responses: element.data?.responses
+                    });
+                    viewResponses.push({
                         entityName: opfab.utils.escapeHtml(opfab.users.entities.getEntityName(element.publisher)),
-                        response: opfab.utils.escapeHtml(element.data?.response),
-                        dateTime: moment(element.publishDate).format('HH:mm DD/MM/yyyy')
+                        responses: cardResponses
                     });
                 });
             }
-            setResponses(responses);
+            setResponses(viewResponses);
         });
     }
 

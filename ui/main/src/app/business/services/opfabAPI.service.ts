@@ -90,7 +90,7 @@ export class OpfabAPIService {
             setScreenSize: function (size) {},
 
             // OpFab calls this method to get the form result when the user wants to send a response
-            getUserResponse: function () {
+            getUserResponse: function (emitter) {
                 logger.info(` Template : no getUserResponse method provided , valid set to false`);
                 return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
             },

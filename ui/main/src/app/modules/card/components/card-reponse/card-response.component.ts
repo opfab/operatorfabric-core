@@ -153,7 +153,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse(
+            this.userEntityIdToUseForResponse
+        );
 
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;

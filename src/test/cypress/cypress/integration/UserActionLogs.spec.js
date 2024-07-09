@@ -126,7 +126,7 @@ describe('User action logs page', () => {
         cy.get('of-simplified-card-view').should('exist');
 
         // Check the response has been integrated in the template
-        cy.get('#template_responses').find('tr').should('have.length', 2);
+        cy.get('#template_responses').find('tr').should('have.length', 3);
     });
 
     function clickOnExportButton() {

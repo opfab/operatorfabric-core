@@ -44,8 +44,10 @@ export class QuestionCardTemplate extends HTMLElement {
     }
 
     private setFunctionToGetUserResponseInput() {
+        const keepResponseHistoryInCard = this.getAttribute('keepResponseHistoryInCard');
         this.questionCardTemplateView.setFunctionToGetResponseInput(
-            () => (<HTMLInputElement>document.getElementById('template_response_input')).value
+            () => (<HTMLInputElement>document.getElementById('template_response_input')).value,
+            keepResponseHistoryInCard?.toLocaleLowerCase() === 'true'
         );
     }
 
@@ -55,15 +57,24 @@ export class QuestionCardTemplate extends HTMLElement {
             if (responses?.forEach && responses.length > 0) {
                 html += `<center><h3> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
                 html += '<div class="opfab-table">';
-                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('builtInTemplate.questionCard.dateColumnLabel')} </th>`;
+                html += `<table width="100%"> <tr>`;
                 html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.questionCard.entityColumnLabel')} </th>`;
                 html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.questionCard.responseColumnLabel')} </th>`;
                 html += ' </tr>';
                 responses?.forEach((response) => {
                     html += '<tr>';
-                    html += '<td>' + response.dateTime + '</td>';
                     html += '<td>' + response.entityName + '</td>';
-                    html += '<td>' + response.response + '</td> </tr>';
+                    html += ' <td>';
+                    html += `<table width="100%" style="border-bottom:none">`;
+                    response.responses.forEach((resp) => {
+                        html +=
+                            ' <tr style="background-color: initial;"><td style="width:150px">' +
+                            resp.responseDate +
+                            '</td>';
+                        html += '<td>' + opfab.utils.escapeHtml(resp.response) + '</td> </tr>';
+                    });
+                    html += `</table></td>`;
+                    html += ' </tr>';
                 });
                 html += '</table> </div></center>';
                 document.getElementById('template_responses').innerHTML = html;
