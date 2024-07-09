@@ -68,10 +68,10 @@ export class NavbarComponent {
 
     openCardCreation() {
         /**
-     We can not have in the same time a card open in the feed and a preview of user card, so
-     we close the card if one is open in the feed
+     We can not have at the same time a card opened in the feed and a preview of a user card, so
+     we close the card if one is opened in the feed
 
-     This lead to a BUG :
+     This leads to a BUG :
 
      In case the user was watching in the feed a card with response activated
      he may not be able to see child cards after closing the usercard form

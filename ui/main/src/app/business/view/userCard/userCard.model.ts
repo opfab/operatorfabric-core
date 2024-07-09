@@ -18,6 +18,7 @@ export enum InputFieldName {
     Recipients = 'recipients',
     RecipientsForInformation = 'recipientsForInformation',
     Severity = 'severity',
+    KeepChildCards = 'keepChildCards',
     StartDate = 'startDate',
     State = 'state'
 }
@@ -47,6 +48,7 @@ export interface UserCardUIControl {
     setSelectedRecipients(selected: string[]);
     setSelectedRecipientsForInformation(selected: string[]);
     setSeverity(severity: Severity);
+    setKeepChildCards(keepChildCards: boolean);
     setStatesList(states: MultiselectItem[], selected: string);
     setUserNotAllowedToSendCard();
 }

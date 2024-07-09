@@ -122,7 +122,14 @@ describe('UserCard view ', () => {
                             'state2_1',
                             {name: 'State 2_1', userCard: {template: 'templateFile2_1', endDateVisible: false}}
                         ],
-                        ['state2_2', {name: 'State 2_2', userCard: {template: 'templateFile2_2'}}]
+                        [
+                            'state2_2',
+                            {
+                                name: 'State 2_2',
+                                userCard: {template: 'templateFile2_2'},
+                                response: {emittingEntityAllowedToRespond: true, state: 'state1_1'}
+                            }
+                        ]
                     ])
                 },
                 {
@@ -320,7 +327,6 @@ describe('UserCard view ', () => {
                 card: getOneCard({
                     process: 'process1',
                     state: 'state1_1',
-                    severity: 'COMPLIANT',
                     entityRecipients: ['ENTITY1', 'ENTITY2']
                 }),
                 childCards: []
@@ -801,6 +807,35 @@ describe('UserCard view ', () => {
             expect(childCards.length).toEqual(2);
             expect(childCards[0].data).toEqual('existingChildData');
             expect(childCards[1].data).toEqual('childData');
+        });
+        it('should update keepChildCards with user selection of checkbox', async () => {
+            await initUserCardView(
+                {
+                    card: getOneCard({
+                        process: 'process1',
+                        state: 'state1_1',
+                        startDate: 0,
+                        endDate: new Date().valueOf() + 10000,
+                        lttd: new Date().valueOf() + 5000,
+                        expirationDate: new Date().valueOf() + 8000,
+                        actions: [CardAction.KEEP_CHILD_CARDS]
+                    }),
+                    childCards: [
+                        getOneCard({
+                            process: 'process1',
+                            state: 'state1_1',
+                            publisher: 'ENTITY3',
+                            data: 'childData'
+                        })
+                    ]
+                },
+                EditionMode.EDITION
+            );
+            userCardView.userSetRecipients(['ENTITY1', 'ENTITY2']);
+            userCardView.userSelectsKeepChildCards(false);
+            await userCardView.prepareCardToSend();
+            const childCards = userCardView.getCardWithChildCardsForPreview().childCards;
+            expect(childCards.length).toEqual(0);
         });
     });
     describe('Send card', () => {

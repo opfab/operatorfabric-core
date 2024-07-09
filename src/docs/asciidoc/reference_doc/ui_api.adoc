@@ -574,6 +574,15 @@ Allowed severity values are:
        opfab.currentUserCard.setInitialSeverity('ACTION');
 ```
 
+=== Function setInitialKeepChildCards
+
+From the template it is possible to set the initial value to keep child cards or not by calling the function _setInitialKeepChildCards(keepChildCards)_ 
+
+'keepChildCards' is expected to be a boolean.
+
+```
+       opfab.currentUserCard.setInitialKeepChildCards(true);
+```
 
 === Function setInitialStartDate
 

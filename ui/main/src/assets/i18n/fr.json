@@ -6,6 +6,7 @@
             "compliant": "Conforme",
             "information": "Information"
         },
+        "keepChildCards" : "Conserver les réponses existantes",
         "typeOfState": {
             "typeOfState": "ÉTAT DU PROCESSUS",
             "FINISHED": "TERMINÉ",

@@ -57,6 +57,7 @@ export class UserCard {
     constructor(
         readonly template?: string,
         readonly severityVisible?: boolean,
+        readonly keepChildCardsVisible?: boolean,
         readonly startDateVisible?: boolean,
         readonly endDateVisible?: boolean,
         readonly lttdVisible?: boolean,

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder';
 import {
     AlertMessageReceiver,
@@ -123,6 +123,29 @@ describe('UserCard CardBuilder', () => {
             cardBuilder.setFieldVisible(InputFieldName.Severity, false);
             const card = await cardBuilder.getCard();
             expect(card.severity).toBe(Severity.INFORMATION);
+        });
+    });
+    describe('KeepChildCards', async () => {
+        it('should be selected by user if keepChildCards visible', async () => {
+            setSpecificCardInformation({
+                valid: true,
+                card: {keepChildCards: true, actions: [CardAction.KEEP_CHILD_CARDS]}
+            });
+            cardBuilder.setFieldVisible(InputFieldName.KeepChildCards, true);
+            cardBuilder.setKeepChildCards(false);
+            const card = await cardBuilder.getCard();
+            expect(card.keepChildCards).toBe(false);
+            expect(card.actions).toEqual([]);
+        });
+        it('should be keepChildCards provided by template if keepChildCards not visible', async () => {
+            setSpecificCardInformation({
+                valid: true,
+                card: {keepChildCards: true, actions: [CardAction.KEEP_CHILD_CARDS]}
+            });
+            cardBuilder.setFieldVisible(InputFieldName.KeepChildCards, false);
+            const card = await cardBuilder.getCard();
+            expect(card.keepChildCards).toBe(true);
+            expect(card.actions).toEqual([CardAction.KEEP_CHILD_CARDS]);
         });
     });
     describe('States and process', () => {

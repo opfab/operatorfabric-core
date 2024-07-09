@@ -8,7 +8,7 @@
  */
 
 import {Card, TimeSpan} from '@ofModel/card.model';
-import {Severity} from '@ofModel/light-card.model';
+import {CardAction, Severity} from '@ofModel/light-card.model';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageLevel} from '@ofModel/message.model';
@@ -36,6 +36,7 @@ export class CardBuilder {
     private recipientsForInformationSelectedByUser: string[];
     private recipientsSelectedByUser: string[];
     private severity: Severity;
+    private keepChildCards: boolean;
     private startDate: number;
     private stateId: string;
     private startDateEqualsToCurrentDate = false;
@@ -75,6 +76,9 @@ export class CardBuilder {
     public setSeveritySelectedByUser(severity: Severity) {
         this.severity = severity;
     }
+    public setKeepChildCards(keepChildCards: boolean) {
+        this.keepChildCards = keepChildCards;
+    }
     public setStartDate(startDate: number) {
         this.startDate = startDate;
     }
@@ -96,10 +100,19 @@ export class CardBuilder {
                 OpfabAPIService.userCardTemplateInterface.getSpecificCardInformation().card?.severity ??
                 Severity.INFORMATION;
         }
+        let actions = this.specificCardInformation.card.actions ?? undefined;
+        let keepChildCardsChoice = this.specificCardInformation.card.keepChildCards ?? this.keepChildCards ?? undefined;
+        if (this.inputFieldVisibility.get(InputFieldName.KeepChildCards)) {
+            actions = actions ?? [];
+            actions = this.keepChildCards
+                ? [...new Set([...actions, CardAction.KEEP_CHILD_CARDS])]
+                : actions.filter((item) => item !== CardAction.KEEP_CHILD_CARDS);
+            keepChildCardsChoice = this.keepChildCards;
+        }
         const titleTranslated = await this.getTitleTranslated(this.specificCardInformation.card.title);
         const {entityRecipients, entityRecipientsForInformation} = this.getRecipients();
         const card: Card = {
-            actions: this.specificCardInformation.card.actions,
+            actions: actions,
             data: this.specificCardInformation.card.data,
             endDate: this.endDate,
             entitiesAllowedToEdit: this.specificCardInformation.card.entitiesAllowedToEdit,
@@ -113,7 +126,7 @@ export class CardBuilder {
             hasBeenRead: false,
             hasChildCardFromCurrentUserEntity: false,
             id: 'dummyId', // will be set by the backend
-            keepChildCards: this.specificCardInformation.card.keepChildCards,
+            keepChildCards: keepChildCardsChoice,
             lttd: this.lttd,
             process: this.processId,
             processInstanceId: this.getProcessInstanceId(),
@@ -135,7 +148,7 @@ export class CardBuilder {
             wktGeometry: this.getWktGeometry(),
             wktProjection: this.getWktProjection()
         };
-        if (card.keepChildCards !== undefined)
+        if (this.specificCardInformation.card.keepChildCards !== undefined)
             logger.warn(
                 "Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead"
             );

@@ -75,7 +75,6 @@
                 </label>
             </div>
 
-
             <div [hidden]="templateLoadingInProgress" class="justify-content-center"
                 style="display:flex;width:100%;align-content:center;flex-wrap: wrap;">
                 <div style="width:280px; margin: 30px" class="nopaddingrow opfab-input"
@@ -146,6 +145,13 @@
                                 (selectionChange)="onRecipientForInformationChoiceChanged($event)">
                             </of-multi-select>
                         </div>
+                    </div>
+                    <div style="float: left; clear: both; margin-top: 10px; margin-right: 10px;" id="opfab-usercard-input-keepChildCards">
+                        <label class="opfab-checkbox" translate>
+                            shared.keepChildCards
+                            <input id="opfab-keepChildCards" type="checkbox" (change)="onKeepChildCardsChoiceChanged($event)" formControlName="keepChildCards">
+                                <span class="opfab-checkbox-checkmark"></span>
+                        </label>
                     </div>
                 </div>
             </div>

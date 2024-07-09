@@ -18,6 +18,7 @@ import {DetailContext} from '@ofModel/detail-context.model';
 import {DatesForm} from './datesForm/datesForm';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {SeverityForm} from './severityForm/severityForm';
+import {KeepChildCardsForm} from './keepChildCardsForm/keepChildCardsForm';
 import {PublisherForm} from './publisherForm/publisherForm';
 import {RecipientsForm} from './recipientsForm/recipientsForm';
 import {Card, CardWithChildCards} from '@ofModel/card.model';
@@ -71,12 +72,14 @@ export class UserCardView {
     private publisherForm: PublisherForm;
     private recipientsForm: RecipientsForm;
     private severityForm: SeverityForm;
+    private keepChildCardsForm: KeepChildCardsForm;
     private useCurrentDateForCardStartDate: boolean;
 
     constructor(private userCardUIControl: UserCardUIControl) {
         this.processStatesForm = new ProcessStatesForm(this.userCardUIControl);
         this.publisherForm = new PublisherForm(this.userCardUIControl);
         this.severityForm = new SeverityForm(this.userCardUIControl);
+        this.keepChildCardsForm = new KeepChildCardsForm(this.userCardUIControl);
     }
 
     async init(existingCardId?: string, editionMode: EditionMode = EditionMode.CREATE) {
@@ -152,6 +155,12 @@ export class UserCardView {
     private initFieldsThatNeedToBeSetAfterExecutingTemplateScripts() {
         this.datesForm.initDatesAfterTemplateScriptsExecution();
         this.severityForm.setProcessAndState(this.currentProcessId, this.currentStateId, this.existingCard);
+        this.keepChildCardsForm.setValueAndVisibility(
+            this.currentProcessId,
+            this.currentStateId,
+            this.existingCard,
+            this.editionMode
+        );
         this.publisherForm.setProcessAndState(
             this.currentProcessId,
             this.currentStateId,
@@ -185,6 +194,9 @@ export class UserCardView {
     public userSelectsSeverity(severity: Severity) {
         this.severityForm.userSelectsSeverity(severity);
     }
+    public userSelectsKeepChildCards(keepChildCards: boolean) {
+        this.keepChildCardsForm.userSelectsKeepChildCards(keepChildCards);
+    }
     public userSetStartDate(startDate: number) {
         this.datesForm.userSetsDate(InputFieldName.StartDate, startDate);
     }
@@ -212,6 +224,7 @@ export class UserCardView {
         cardBuilder.setStateId(this.currentStateId);
         cardBuilder.setProcessVersion(ProcessesService.getProcess(this.currentProcessId).version);
         cardBuilder.setFieldVisible(InputFieldName.Severity, this.severityForm.isSeverityVisible());
+        cardBuilder.setFieldVisible(InputFieldName.KeepChildCards, this.keepChildCardsForm.isKeepChildCardsVisible());
         cardBuilder.setFieldVisible(InputFieldName.StartDate, this.datesForm.isDateVisible(InputFieldName.StartDate));
         cardBuilder.setFieldVisible(InputFieldName.EndDate, this.datesForm.isDateVisible(InputFieldName.EndDate));
         cardBuilder.setFieldVisible(InputFieldName.Lttd, this.datesForm.isDateVisible(InputFieldName.Lttd));
@@ -220,6 +233,7 @@ export class UserCardView {
             this.datesForm.isDateVisible(InputFieldName.ExpirationDate)
         );
         cardBuilder.setSeveritySelectedByUser(this.severityForm.getSelectedSeverity());
+        cardBuilder.setKeepChildCards(this.keepChildCardsForm.getSelectedKeepChildCards());
         cardBuilder.setStartDate(this.datesForm.getDateValue(InputFieldName.StartDate));
         cardBuilder.setEndDate(this.datesForm.getDateValue(InputFieldName.EndDate));
         cardBuilder.setLttd(this.datesForm.getDateValue(InputFieldName.Lttd));
@@ -248,7 +262,7 @@ export class UserCardView {
     private getChildCardsForPreview(): Card[] {
         const existingChildCards =
             this.editionMode === EditionMode.EDITION &&
-            (this.existingCard?.keepChildCards || this.existingCard?.actions?.includes(CardAction.KEEP_CHILD_CARDS))
+            (this.cardToSend?.keepChildCards || this.cardToSend?.actions?.includes(CardAction.KEEP_CHILD_CARDS))
                 ? this.existingChildCards ?? []
                 : [];
         return this.addCurrentUserChildCardToSend(existingChildCards);

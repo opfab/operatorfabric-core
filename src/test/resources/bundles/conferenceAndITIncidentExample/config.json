@@ -30,6 +30,7 @@
       "userCard" : {
 		"template" : "usercard_incidentInProgress",
 		"severityVisible" : true,
+    "keepChildCardsVisible": true,
 		"startDateVisible" : false,
 		"endDateVisible" : false,
         "recipientVisible" : false

@@ -6,6 +6,7 @@
             "compliant": "Conform",
             "information": "Informatie"
         },
+        "keepChildCards": "Bestaande antwoorden behouden",
         "typeOfState": {
             "typeOfState": "PROCES STATUS",
             "FINISHED": "AFGEROND",
