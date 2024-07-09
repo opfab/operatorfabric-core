@@ -17,6 +17,9 @@ import {Entity} from '@ofModel/entity.model';
 describe('Question Card template', () => {
     let view: QuestionCardTemplateView;
     beforeEach(async () => {
+        jasmine.clock().uninstall();
+        jasmine.clock().install();
+        jasmine.clock().mockDate(new Date(0));
         const translationService = new TranslationServiceMock();
         OpfabAPIService.setTranslationService(translationService);
         OpfabAPIService.init();
@@ -27,6 +30,10 @@ describe('Question Card template', () => {
             new Entity('entity2', 'entity2 name', '', [RolesEnum.CARD_RECEIVER], [], null)
         ]);
         view = new QuestionCardTemplateView();
+    });
+
+    afterEach(() => {
+        jasmine.clock().uninstall();
     });
 
     it('GIVEN a card WHEN get question THEN question is provided', () => {
@@ -71,24 +78,24 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeTrue();
     });
 
-    it('GIVEN input is "my response" WHEN get user response THEN responseCardData.response is "my_response" and response is valid', () => {
+    it('GIVEN input is "my response" WHEN get user response THEN responseCardData.responses[0].response is] "my_response" and response is valid', () => {
         // Simulate input "my response"
-        view.setFunctionToGetResponseInput(() => 'my response');
+        view.setFunctionToGetResponseInput(() => 'my response', false);
 
         const userResponse = OpfabAPIService.templateInterface.getUserResponse();
         expect(userResponse.valid).toBeTrue();
-        expect(userResponse.responseCardData.response).toEqual('my response');
+        expect(userResponse.responseCardData.responses[0].response).toEqual('my response');
     });
 
     it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {
         const childcards = [
             {
                 publisher: 'entity1',
-                data: {response: 'response_entity1'}
+                data: {responses: [{response: 'response_entity1'}]}
             },
             {
                 publisher: 'entity2',
-                data: {response: 'response_entity2'}
+                data: {responses: [{response: 'response_entity2'}]}
             }
         ];
 
@@ -100,8 +107,67 @@ describe('Question Card template', () => {
 
         OpfabAPIService.templateInterface.setChildCards(childcards);
         expect(responsesResult[0].entityName).toEqual('entity1 name');
-        expect(responsesResult[0].response).toEqual('response_entity1');
+        expect(responsesResult[0].responses).toEqual([
+            {responseDate: '01:00 01/01/1970', response: 'response_entity1'}
+        ]);
         expect(responsesResult[1].entityName).toEqual('entity2 name');
-        expect(responsesResult[1].response).toEqual('response_entity2');
+        expect(responsesResult[1].responses).toEqual([
+            {responseDate: '01:00 01/01/1970', response: 'response_entity2'}
+        ]);
+    });
+
+    it('GIVEN 1 child card and keepResponseHistoryInCard="true" WHEN calling getUserResponse THEN response contains response history with 2 responses', () => {
+        const childcards = [
+            {
+                publisher: 'entity1',
+                data: {
+                    responses: [{responseDate: new Date('2024-06-01T09:15:00').getTime(), response: 'response_entity1'}]
+                }
+            }
+        ];
+
+        view.listenToResponses((responses) => {});
+
+        OpfabAPIService.templateInterface.setChildCards(childcards);
+
+        view.setFunctionToGetResponseInput(() => 'my 2nd response', true);
+        jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
+        const userResponse = OpfabAPIService.templateInterface.getUserResponse('entity1');
+
+        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.responseCardData.responses[0].response).toEqual('response_entity1');
+        expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
+            new Date('2024-06-01T09:15:00').getTime()
+        );
+        expect(userResponse.responseCardData.responses[1].response).toEqual('my 2nd response');
+        expect(userResponse.responseCardData.responses[1].responseDate).toEqual(
+            new Date('2024-06-01T09:24:00').getTime()
+        );
+    });
+
+    it('GIVEN 1 child card and keepResponseHistoryInCard="false" WHEN calling getUserResponse THEN response contains response history with only last response', () => {
+        const childcards = [
+            {
+                publisher: 'entity1',
+                data: {
+                    responses: [{responseDate: new Date('2024-06-01T09:15:00').getTime(), response: 'response_entity1'}]
+                }
+            }
+        ];
+
+        view.listenToResponses((responses) => {});
+
+        OpfabAPIService.templateInterface.setChildCards(childcards);
+
+        view.setFunctionToGetResponseInput(() => 'my 2nd response', false);
+        jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
+        const userResponse = OpfabAPIService.templateInterface.getUserResponse('entity1');
+
+        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.responseCardData.responses.length).toEqual(1);
+        expect(userResponse.responseCardData.responses[0].response).toEqual('my 2nd response');
+        expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
+            new Date('2024-06-01T09:24:00').getTime()
+        );
     });
 });
