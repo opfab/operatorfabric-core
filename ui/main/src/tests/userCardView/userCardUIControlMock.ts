@@ -26,6 +26,7 @@ export class UserCardUIControlMock implements UserCardUIControl {
     selectedProcess: string;
     selectedState: string;
     severity: Severity;
+    keepChildCards: boolean;
     states: MultiselectItem[];
     template: string;
     fctToRenderTemplate: (html: string) => Promise<void> = async (html) => {
@@ -96,6 +97,9 @@ export class UserCardUIControlMock implements UserCardUIControl {
     }
     setSeverity(severity: Severity): void {
         this.severity = severity;
+    }
+    setKeepChildCards(keepChildCards: boolean): void {
+        this.keepChildCards = keepChildCards;
     }
     setStatesList(states: MultiselectItem[], selected: string) {
         this.states = states;

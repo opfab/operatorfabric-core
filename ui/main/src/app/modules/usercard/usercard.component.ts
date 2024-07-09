@@ -79,6 +79,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         expirationDate: new FormControl(''),
         lttd: new FormControl(''),
         severity: new FormControl(''),
+        keepChildCards: new FormControl(true),
         startDate: new FormControl(''),
         userCardRecipients: new FormControl([]),
         userCardRecipientsForInformation: new FormControl([]),
@@ -168,6 +169,9 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     public setSeverity(severity: Severity): void {
         this.userCardForm.get('severity').setValue(severity);
     }
+    public setKeepChildCards(keepChildCards: boolean): void {
+        this.userCardForm.get('keepChildCards')?.setValue(keepChildCards);
+    }
     public setRecipientsList(recipients: MultiselectItem[]) {
         this.recipientsOptions = recipients.map((entity) => new MultiSelectOption(entity.id, entity.label));
     }
@@ -239,6 +243,10 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
 
     public onSeverityChoiceChanged(event: Event) {
         this.userCardView.userSelectsSeverity((<HTMLInputElement>event.target).value as Severity);
+    }
+
+    public onKeepChildCardsChoiceChanged(event: Event) {
+        this.userCardView.userSelectsKeepChildCards((<HTMLInputElement>event.target).checked);
     }
 
     public onStartDateChange() {

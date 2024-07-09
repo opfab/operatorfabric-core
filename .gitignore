@@ -157,3 +157,5 @@ node-services/*/coverage
 node-services/*/logs
 
 bin/dependencies/report*.txt
+
+.prettierignore*

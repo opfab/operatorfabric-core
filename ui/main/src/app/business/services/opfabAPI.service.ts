@@ -60,6 +60,7 @@ export class OpfabAPIService {
             endDate: null,
             expirationDate: null,
             initialSeverity: null,
+            initialKeepChildCards: null,
             lttd: null,
             processId: null,
             state: null,
@@ -355,6 +356,10 @@ export class OpfabAPIService {
 
         opfab.currentUserCard.setInitialSeverity = function (initialSeverity) {
             self.currentUserCard.initialSeverity = initialSeverity;
+        };
+
+        opfab.currentUserCard.setInitialKeepChildCards = function (initialKeepChildCards) {
+            self.currentUserCard.initialKeepChildCards = initialKeepChildCards;
         };
 
         opfab.currentUserCard.setInitialSelectedRecipients = function (recipients) {

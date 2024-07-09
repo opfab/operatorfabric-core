@@ -77,7 +77,7 @@ describe('InitChartComponent', () => {
         timelineButtonsComponent = fixture2.componentInstance;
     }));
 
-    it('check applyNewZoom function with only one button' + 'forward level activated is different', () => {
+    it('check applyNewZoom function with only one button' + ' forward level activated is different', () => {
         fixture.detectChanges();
         timelineButtonsComponent.selectedButtonTitle = 'W';
         timelineButtonsComponent.buttonList = [{buttonTitle: 'M', domainId: 'M'}];
@@ -90,7 +90,7 @@ describe('InitChartComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('check applyNewZoom function with only one button' + 'forward level activated is same than one button', () => {
+    it('check applyNewZoom function with only one button' + ' forward level activated is same than one button', () => {
         fixture.detectChanges();
         timelineButtonsComponent.selectedButtonTitle = 'W';
         timelineButtonsComponent.buttonList = [{buttonTitle: 'W'}];
@@ -103,7 +103,7 @@ describe('InitChartComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('check applyNewZoom function with two buttons' + 'forward level activated is same than last button', () => {
+    it('check applyNewZoom function with two buttons' + ' forward level activated is same than last button', () => {
         fixture.detectChanges();
         timelineButtonsComponent.selectedButtonTitle = 'W';
         timelineButtonsComponent.buttonList = [

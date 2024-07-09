@@ -624,6 +624,20 @@ describe('User Card ', function () {
       cy.get("#childs-div").find('tr').should('have.length', 2);
 
     })
+
+    it('Edit card and check card preview does not show the response when unchecking "Keep existing answers"', ()=>{
+
+      opfab.loginWithUser('operator1_fr');
+      feed.openFirstCard();
+      feed.editCurrentCard();
+      cy.get('#opfab-keepChildCards').should('be.checked');
+      cy.get('#opfab-usercard-input-keepChildCards').click();
+      cy.get('#opfab-keepChildCards').should('not.be.checked');
+      usercard.preview();
+      // Card preview show responses list
+      cy.get("#childs-div").should('be.empty');
+
+    })
   })
 
   describe('Send user card with operator4_fr, member of several entities', function () {

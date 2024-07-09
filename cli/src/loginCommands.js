@@ -96,7 +96,7 @@ const loginCommands = {
             }
         }
 
-        if ((!this.url.startsWith('http://')) && (!this.url.startsWith('https://'))) {
+        if (!this.url.startsWith('http://') && !this.url.startsWith('https://')) {
             this.url = 'http://' + this.url;
         }
 
@@ -116,13 +116,13 @@ const loginCommands = {
                 return false;
             }
         }
-        console.log('You are already logged in , no need to log in again');
+        console.log('You are already logged in, no need to log in again');
         return true;
     },
 
     checkIsLogged() {
         const isLogged = config.getConfig('access_token') !== undefined;
-        if (!isLogged) console.log('You need to log in first , use command opfab login <url> <port> <login> <password>');
+        if (!isLogged) console.log('You need to log in first, use command opfab login <url> <port> <login> <password>');
         return isLogged;
     },
 
@@ -175,8 +175,8 @@ const loginCommands = {
     getExpirationDate(token) {
         const payload = token.split('.')[1];
         const decodedPayload = Buffer.from(payload, 'base64').toString('utf8');
-        const { exp } = JSON.parse(decodedPayload);
-        return exp*1000; // to have it in ms since epoch 
+        const {exp} = JSON.parse(decodedPayload);
+        return exp * 1000; // to have it in ms since epoch
     },
 
     async printHelp() {

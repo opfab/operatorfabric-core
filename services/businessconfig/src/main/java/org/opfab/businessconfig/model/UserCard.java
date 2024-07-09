@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 public record UserCard(
     String template,
     @JsonInclude(JsonInclude.Include.NON_NULL) Boolean severityVisible,
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean keepChildCardsVisible,
     @JsonInclude(JsonInclude.Include.NON_NULL) Boolean startDateVisible,
     @JsonInclude(JsonInclude.Include.NON_NULL) Boolean endDateVisible,
     @JsonInclude(JsonInclude.Include.NON_NULL) Boolean expirationDateVisible,
