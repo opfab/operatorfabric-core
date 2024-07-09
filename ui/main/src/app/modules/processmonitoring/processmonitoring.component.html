@@ -59,7 +59,7 @@
 
           <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags?.length > 0" id="opfab-tags" multiSelectId="tags"
             [parentForm]="processMonitoringForm" [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions"
-            [selectedOptions]="tagsSelected" (selectionChange)="tagsChoiceChanged($event)">>
+            [selectedOptions]="tagsSelected" (selectionChange)="tagsChoiceChanged($event)">
           </of-multi-select>
         </div>
         <div *ngIf="isProcessGroupFilterVisible && tags?.length > 0" style="min-width:300px;max-width:400px;max-height: 48px">
@@ -74,7 +74,7 @@
 
           <of-multi-select id="opfab-process" multiSelectId="process"
             [parentForm]="processMonitoringForm" [config]="processMultiSelectConfig" [options]="processMultiSelectOptions"
-            [selectedOptions]="processSelected">
+            [selectedOptions]="processSelected" (selectionChange)="processChoiceChanged($event)">
           </of-multi-select>
 
         </div>

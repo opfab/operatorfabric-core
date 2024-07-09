@@ -162,6 +162,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         ['information', 4]
     ]);
     private processMonitoringFields: any[];
+    private readonly processMonitoringFieldsDefaultConfig: any[];
+    private readonly processMonitoringFieldsForProcesses: Map<string, any[]>;
     selectedCardId: string;
 
     isMapViewActivated: boolean;
@@ -171,7 +173,14 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.processMonitoringFields = ConfigService.getConfigValue('processMonitoring.fields');
+        this.processMonitoringFieldsDefaultConfig = ConfigService.getConfigValue('processMonitoring.fields');
+
+        const fieldsForProcesses = ConfigService.getConfigValue('processMonitoring.fieldsForProcesses');
+        if (fieldsForProcesses) {
+            this.processMonitoringFieldsForProcesses = new Map(Object.entries(fieldsForProcesses));
+        }
+
+        this.processMonitoringFields = this.processMonitoringFieldsDefaultConfig;
         this.processList = this.processMonitoringView.getProcessList();
         this.isAdminModeChecked =
             UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') === 'false';
@@ -264,6 +273,16 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     public tagsChoiceChanged(tags: string[]) {
         UserPreferencesService.setPreference('opfab.processMonitoring.tagsSelected', tags);
+    }
+
+    public processChoiceChanged(processes: string[]) {
+        if (processes?.length === 1) {
+            this.processMonitoringFields =
+                this.processMonitoringFieldsForProcesses?.get(processes[0]) ??
+                this.processMonitoringFieldsDefaultConfig;
+        } else {
+            this.processMonitoringFields = this.processMonitoringFieldsDefaultConfig;
+        }
     }
 
     changeProcessesWhenSelectProcessGroup(): void {
@@ -412,7 +431,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.columnFilters.forEach((filter) => localFilters.push(filter));
 
         const selectedFields: string[] = [];
-        this.processMonitoringFields.forEach((column) => {
+        this.processMonitoringFieldsDefaultConfig.forEach((column) => {
             selectedFields.push(column.field);
         });
         if (this.isMapEnabled && this.isMapViewActivated) {
