@@ -26,6 +26,7 @@ import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserSettings;
 import org.opfab.users.stubs.UserRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
@@ -44,6 +45,15 @@ public class UserSettingsServiceShould {
         void clear() {
                 userSettingsRepositoryStub.deleteAll();
                 userRepositoryStub.deleteAll();
+
+                User user1 = new User();
+                user1.setLogin("user1");
+                userRepositoryStub.insert(user1);
+
+                User userWithNoSettings = new User();
+                userWithNoSettings.setLogin("userWithNoSettings");
+                userRepositoryStub.insert(userWithNoSettings);
+
                 UserSettings settings1 = new UserSettings();
                 settings1.setLogin("user1");
                 settings1.setLocale("fr");
@@ -56,7 +66,7 @@ public class UserSettingsServiceShould {
                 userSettingsRepositoryStub.save(settings1);
                 userSettingsRepositoryStub.save(settings2);
 
-                usersServiceStub = new UsersServiceStub(null, null, null, null, null);
+                usersServiceStub = new UsersServiceStub(userRepositoryStub, null, null, null, null);
                 eventBusSpy = new EventBusSpy();
                 userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub,
                                 new NotificationService(userRepositoryStub, eventBusSpy));
@@ -106,11 +116,11 @@ public class UserSettingsServiceShould {
         class Fetch {
 
                 @Test
-                void GIVEN_Not_Existing_Settings_In_Repository_WHEN_Fetch_Settings_THEN_Return_NOT_FOUND() {
-                        OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("dummy");
-                        assertThat(settings.isSuccess()).isFalse();
-                        assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
-                        assertThat(settings.getErrorMessage()).isEqualTo("User setting for user dummy not found");
+                void GIVEN_Not_Existing_Settings_In_Repository_WHEN_Fetch_Settings_THEN_Success_And_Return_New_Empty_Settings() {
+                        OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("userWithNoSettings");
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getLogin()).isEqualTo("userWithNoSettings");
+                        assertThat(settings.getResult().getLocale()).isNull();
                 }
 
                 @Test
@@ -118,8 +128,16 @@ public class UserSettingsServiceShould {
                         OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("user1");
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLogin()).isEqualTo("user1");
+                        assertThat(settings.getResult().getLocale()).isEqualTo("fr");
                 }
 
+                @Test
+                void GIVEN_Not_Existing_User_WHEN_Fetch_Settings_THEN_Success_And_Return_NOT_FOUND() {
+                        OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("dummy");
+                        assertThat(settings.isSuccess()).isFalse();
+                        assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                        assertThat(settings.getErrorMessage()).isEqualTo("User setting for user dummy not found");
+                }
         }
 
         @Nested

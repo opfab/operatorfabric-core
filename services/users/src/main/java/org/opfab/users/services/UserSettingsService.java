@@ -28,8 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserSettingsService {
 
-    private static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     private static final String FILTERING_NOTIFICATION_NOT_ALLOWED = "Filtering notification not allowed for at least one process/state";
+
+    private static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
 
     private UserSettingsRepository userSettingsRepository;
 
@@ -45,12 +46,18 @@ public class UserSettingsService {
     }
 
     public OperationResult<UserSettings> fetchUserSettings(String login) {
-        Optional<UserSettings> user = userSettingsRepository.findById(login);
-        if (user.isPresent())
-            return new OperationResult<>(user.get(), true, null, null);
-        else
-            return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
+        Optional<UserSettings> foundUserSettings = userSettingsRepository.findById(login);
+        UserSettings userSettings;
+        if (foundUserSettings.isPresent()) userSettings = foundUserSettings.get();
+        else {
+            Optional<User> user = userService.fetchUserByLogin(login);
+            if (user.isPresent())
+                userSettings = userSettingsRepository.save(this.getNewUserSettings(login));
+            else return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(USER_SETTINGS_NOT_FOUND_MSG, login));
+        }
+        
+        return new OperationResult<>(userSettings, true, null, null);
     }
 
     @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 

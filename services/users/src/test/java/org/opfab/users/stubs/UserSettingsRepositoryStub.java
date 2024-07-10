@@ -31,8 +31,7 @@ public class UserSettingsRepositoryStub implements UserSettingsRepository{
     @Override
     public Optional<UserSettings> findById(String id) {
         UserSettings settings = userSettingsStorage.get(id);
-        if (settings == null)
-            return Optional.empty();
+        if (settings==null) return Optional.ofNullable(null);
         return Optional.of(cloneUserSettings(settings));
     }
 

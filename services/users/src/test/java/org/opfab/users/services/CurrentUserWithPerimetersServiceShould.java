@@ -165,6 +165,7 @@ class CurrentUserWithPerimetersServiceShould {
                 User user = new User();
                 user.setLogin("test");
                 user.addEntity("ENTITY_1");
+                initUserSettings();
 
                 CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
                                 usersServiceStub, userSettingsService, entityRepositoryStub);
