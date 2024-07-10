@@ -89,6 +89,7 @@ export class OpfabEventStreamService {
 
     public static resetAlreadyLoadingPeriod() {
         OpfabEventStreamService.startOfAlreadyLoadedPeriod = null;
+        OpfabEventStreamService.endOfAlreadyLoadedPeriod = null;
         OpfabEventStreamService.currentPeriod = null;
     }
 
