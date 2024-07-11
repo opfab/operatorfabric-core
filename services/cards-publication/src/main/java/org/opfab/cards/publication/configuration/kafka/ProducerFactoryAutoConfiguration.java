@@ -1,3 +1,12 @@
+/* Copyright (c) 2020, Alliander (http://www.alliander.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.opfab.cards.publication.configuration.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
@@ -29,7 +38,7 @@ public class ProducerFactoryAutoConfiguration {
     private final KafkaProperties kafkaProperties;
 
     private Map<String, Object> producerConfigs() {
-        Map<String,Object> props = kafkaProperties.buildProducerProperties();
+        Map<String,Object> props = kafkaProperties.buildProducerProperties(null);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "opfab-producer");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueDeserializer);

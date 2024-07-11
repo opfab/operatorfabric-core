@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@ class ConsumerFactoryAutoConfigurationShould {
     void SetUp() {
         ReflectionTestUtils.setField(cut, "valueDeserializer", "MyValueDeserializer");
         when(kafkaProperties.getBootstrapServers()).thenReturn(new ArrayList<>());
-        when(kafkaProperties.buildConsumerProperties()).thenReturn(props);
+        when(kafkaProperties.buildConsumerProperties(null)).thenReturn(props);
     }
 
     @Test
