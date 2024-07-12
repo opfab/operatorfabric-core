@@ -490,6 +490,11 @@ body {
         }
     }
 
+    // This is a workaround to avoid duplicated bottom border after page change 
+    .ag-sticky-bottom {
+        display: none;
+    }
+
     color: var(--opfab-text-color);
 
     .ag-root-wrapper {

@@ -249,7 +249,7 @@ export class LoggingTableComponent implements OnDestroy {
             cellClass: 'opfab-ag-cell-with-no-padding'
         });
 
-        this.gridApi.setColumnDefs(this.columnDefs);
+        this.gridApi.setGridOption('columnDefs', this.columnDefs);
     }
 
     updateResultPage(currentPage): void {

@@ -168,9 +168,9 @@ export abstract class AdminTableDirective implements OnDestroy {
         // Column definitions can't be managed in the constructor like the other grid options because they rely on the `fields`
         // property that is defined in the classes implementing AdminTableDirective. As such, it is still undefined when the
         // constructor from the supertype is called.
-        this.gridApi.setColumnDefs(this.createColumnDefs(this.fields, this.tableType + '.'));
+        this.gridApi.setGridOption('columnDefs', this.createColumnDefs(this.fields, this.tableType + '.'));
         this.dataHandlingService.paginationPageSize$.pipe(takeUntil(this.unsubscribe$)).subscribe((pageSize) => {
-            this.gridApi.paginationSetPageSize(pageSize);
+            this.gridApi.setGridOption('paginationPageSize', pageSize);
         });
         this.groupsDefinition = GroupsService.getGroups();
         this.entitiesDefinition = EntitiesService.getEntities();
@@ -354,6 +354,7 @@ export abstract class AdminTableDirective implements OnDestroy {
             // previous page
             if (this.gridApi.paginationGetTotalPages() < this.page) this.page--;
             this.gridApi.paginationGoToPage(this.page - 1);
+            this.gridApi.redrawRows();
             this.changeDetector.markForCheck();
         });
     }
@@ -374,8 +375,8 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     private getDataForExportFile(): Array<any> {
         const exportData = [];
-
-        this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
+        this.gridApi.forEachNode((line) => {
+            debugger;
             if (line) {
                 const item = {};
                 this.fields.forEach((field) => {

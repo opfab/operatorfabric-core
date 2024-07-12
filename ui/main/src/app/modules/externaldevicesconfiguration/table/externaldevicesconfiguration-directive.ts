@@ -127,9 +127,9 @@ export abstract class ExternalDevicesConfigurationDirective {
 
     onGridReady(params) {
         this.gridApi = params.api;
-        this.gridApi.paginationSetPageSize(this.pageSize);
+        this.gridApi.setGridOption('paginationPageSize', this.pageSize);
 
-        this.gridApi.setColumnDefs(this.createColumnDefs(this.fields));
+        this.gridApi.setGridOption('columnDefs', this.createColumnDefs(this.fields));
 
         this.refreshData();
     }

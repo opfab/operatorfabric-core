@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -178,7 +178,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     onGridReady(params) {
         this.gridApi = params.api;
-        this.gridApi.paginationSetPageSize(10);
+        this.gridApi.setGridOption('paginationPageSize', 10);
 
         const severityCellClassRules = {
             'opfab-sev-alarm': (field) => field.value === 1,
@@ -219,7 +219,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             }
         ];
 
-        this.gridApi.setColumnDefs(this.columnDefs);
+        this.gridApi.setGridOption('columnDefs', this.columnDefs);
         this.refreshData();
     }
 
@@ -298,7 +298,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     initStandardExportMonitoringData() {
         this.exportMonitoringData = [];
 
-        this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
+        this.gridApi.forEachNode((line) => {
             if (line) {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
@@ -357,7 +357,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
-                CardService.loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId).subscribe((card) => {
+                CardService.loadCard(this.gridApi.getRowNode(lineNumber).data.cardId).subscribe((card) => {
                     this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
                     this.processMonitoringForExport(++lineNumber);
                 });
