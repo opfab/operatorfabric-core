@@ -9,18 +9,18 @@
 	"process"  :"defaultProcess",
 	"wktGeometry": "POINT (5.8946407 51.9848624)",
 	"wktProjection": "EPSG:4326",
-	"processInstanceId" : $random,
+	"processInstanceId" : "randomId",
 	"state": "messageState",
 	"tags":["tag1"],
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "INFORMATION",
-	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
-	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"startDate" : 7200000,
+	"endDate" : 28800000 ,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "message.title"},
 	"data" : {"message":" Information card number 1"},
 	"timeSpans" : [
-		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
-		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		{"start" :7200000},
+		{"start" : 28800000}
 		]
 }
