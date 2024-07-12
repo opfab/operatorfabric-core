@@ -151,7 +151,7 @@ export class ProcessmonitoringTableComponent {
             });
         }
 
-        this.gridApi.setColumnDefs(this.columnDefs);
+        this.gridApi.setGridOption('columnDefs', this.columnDefs);
     }
 
     computeColumnSizeAverage(): number {
