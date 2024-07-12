@@ -18,13 +18,15 @@ then
 	url="http://localhost"
 fi
 
+echo "URL=$url"
+
+
 if [ -z $1 ]
 then
     echo "Usage : send6xN_TestCards.sh N with N being a number, the number of cards send will be 6 x N"
 
 else	
 (
-source ../getToken.sh $url "publisher_test"
 for i in `seq 1 $1`;
 do
 

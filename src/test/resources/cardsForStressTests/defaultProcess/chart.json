@@ -2,7 +2,7 @@
 	"publisher": "publisher_test",
 	"processVersion": "1",
 	"process": "defaultProcess",
-	"processInstanceId": $random,
+	"processInstanceId": "randomId",
 	"state": "dataQualityState",
 	"tags": [
 		"tag2"
@@ -11,8 +11,8 @@
 		"Dispatcher"
 	],
 	"severity": "INFORMATION",
-	"startDate": ${current_date_in_milliseconds_from_epoch_plus_2hours},
-	"endDate": ${current_date_in_milliseconds_from_epoch_plus_8hours},
+	"startDate": 7200000,
+	"endDate": 28800000,
 	"summary": {
 		"key": "message.summary"
 	},
@@ -312,8 +312,8 @@
 	},
 	"timeSpans": [
 		{
-			"start": ${current_date_in_milliseconds_from_epoch_plus_2hours},
-			"end": ${current_date_in_milliseconds_from_epoch_plus_8hours}
+			"start": 7200000,
+			"end": 28800000
 		}
 	]
 }
