@@ -438,7 +438,7 @@ class CardProcessServiceShould {
                 cardProcessingService.processUserCard(childCard, currentUserWithPerimeters, token);
                 Assertions.assertThat(cardRepositoryMock.count()).isEqualTo(2);
 
-                cardProcessingService.deleteCard(card.getId(), token);
+                cardProcessingService.deleteCardByIdWithUser(card.getId(),Optional.empty(), token);
 
                 Assertions.assertThat(checkCardCount(0)).isTrue();
         }
@@ -656,24 +656,11 @@ class CardProcessServiceShould {
 
                 Card firstCard = cards.get(0);
                 String id = firstCard.getId();
-                cardProcessingService.deleteCard(id, token);
+                cardProcessingService.deleteCardByIdWithUser(id,Optional.empty(), token);
+                
 
                 // one card should be deleted(the first one)
                  Assertions.assertThat(checkCardCount(4)).isTrue();
-        }
-
-        @Test
-        void GIVEN_an_existing_card_WHEN_deleting_card_with_no_id_provided_THEN_card_is_removed_from_database() {
-
-                List<Card> cards = generateFiveCards();
-
-                cards.forEach(card -> cardProcessingService.processCard(card));
-                Card firstCard = cards.get(0);
-                firstCard.setId(null);
-                cardProcessingService.prepareAndDeleteCard(firstCard);
-
-                // one card should be deleted(the first one)
-                Assertions.assertThat(checkCardCount(4)).isTrue();
         }
 
         @Test
@@ -691,7 +678,7 @@ class CardProcessServiceShould {
                                 .andExpect(method(HttpMethod.DELETE))
                                 .andRespond(withStatus(HttpStatus.ACCEPTED));
 
-                cardProcessingService.deleteCard(card.getId(), Optional.empty(), token);
+                cardProcessingService.deleteCardByIdWithUser(card.getId(), Optional.empty(), token);
                 Assertions.assertThat(checkCardCount(0)).isTrue();
         }
 
@@ -706,7 +693,7 @@ class CardProcessServiceShould {
                 cardProcessingService.processCard(card);
                 mockServer.expect(ExpectedCount.never(), requestTo(new URI(EXTERNALAPP_URL + "/" + card.getId())));
 
-                cardProcessingService.deleteCard(card.getId(), Optional.empty(), token);
+                cardProcessingService.deleteCardByIdWithUser(card.getId(), Optional.empty(), token);
 
                 Assertions.assertThat(checkCardCount(0)).isTrue();
         }
@@ -715,7 +702,7 @@ class CardProcessServiceShould {
         void GIVEN_existing_cards_WHEN_try_to_delete_card_with_none_existing_id_THEN_no_card_is_delete() {
                 List<Card> cards = generateFiveCards();
                 cards.forEach(card -> cardProcessingService.processCard(card));
-                cardProcessingService.deleteCard("dummyID", token);
+                cardProcessingService.deleteCardByIdWithUser("dummyID",Optional.empty(), token);
                 Assertions.assertThat(checkCardCount(5)).isTrue();
         }
 
@@ -868,7 +855,7 @@ class CardProcessServiceShould {
                 cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 String cardId = card.getId();
-                Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
+                Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCardByIdWithUser(cardId, optionalWrongUser, token))
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card publisher is set to dummyUser and account login is wrongUser, the card cannot be deleted");
                 Assertions.assertThat(checkCardCount(1)).isTrue();
@@ -940,7 +927,7 @@ class CardProcessServiceShould {
                 cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token, false);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
                 String cardId = card.getId();
-                Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCard(cardId, optionalWrongUser, token))
+                Assertions.assertThatThrownBy(() -> cardProcessingService.deleteCardByIdWithUser(cardId, optionalWrongUser, token))
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be deleted");
                 Assertions.assertThat(checkCardCount(1)).isTrue();
