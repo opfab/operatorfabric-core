@@ -103,7 +103,7 @@ public class CardController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public Void deleteCards(@RequestParam String endDateBefore) {
-        cardProcessingService.deleteCards(parseAsInstant(endDateBefore));
+        cardProcessingService.deleteCardsByEndDateBefore(parseAsInstant(endDateBefore));
         return null;
     }
 
@@ -148,7 +148,7 @@ public class CardController {
             user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
             token = jwtPrincipal.getToken();
         }
-        Optional<Card> deletedCard = cardProcessingService.deleteCard(id, Optional.ofNullable(user),
+        Optional<Card> deletedCard = cardProcessingService.deleteCardByIdWithUser(id, Optional.ofNullable(user),
                 Optional.ofNullable(token));
         if (!deletedCard.isPresent())
             response.setStatus(404);

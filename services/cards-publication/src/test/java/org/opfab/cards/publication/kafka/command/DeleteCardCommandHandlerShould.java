@@ -26,7 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,7 +61,8 @@ class DeleteCardCommandHandlerShould {
     @Test
     void executeCommand() throws JsonProcessingException {
         CardCommand cardCommandMock = mock(CardCommand.class);
-        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock (org.opfab.cards.publication.model.Card.class);
+        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock(
+                org.opfab.cards.publication.model.Card.class);
         Card cardMock = mock(Card.class);
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
@@ -69,7 +70,8 @@ class DeleteCardCommandHandlerShould {
         when(services.getCardProcessingService()).thenReturn(cardProcessingService);
         cut.executeCommand(cardCommandMock);
 
-        verify(cardProcessingService, times(1)).prepareAndDeleteCard(eq(cardPublicationDataMock));
+        verify(cardProcessingService, times(1))
+                .deleteCardById(any(),notNull(),any());
     }
 
 }

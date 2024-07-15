@@ -162,7 +162,7 @@ public class CardProcessingService {
         if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
             if (oldCard != null) {
                 processCardUpdate(card, oldCard);
-                deleteChildCardsProcess(card, jwt);
+                processChildCardsWhenCardUpdate(card, jwt);
             }
             processChildCard(card);
 
@@ -184,13 +184,17 @@ public class CardProcessingService {
                 card.getProcessInstanceId(), card.getState());
     }
 
-    private Void deleteChildCardsProcess(Card card, Optional<Jwt> jwt) {
+    private Card getExistingCard(String cardId, boolean dataFieldIncluded) {
+        return cardRepository.findCardById(cardId, dataFieldIncluded);
+    }
+
+    private Void processChildCardsWhenCardUpdate(Card card, Optional<Jwt> jwt) {
         String idCard = card.getProcess() + "." + card.getProcessInstanceId();
-        Optional<List<Card>> childCard = cardRepository
+        Optional<List<Card>> childCards = cardRepository
                 .findChildCard(cardRepository.findCardById(idCard, false));
-        if (childCard.isPresent()) {
+        if (childCards.isPresent()) {
             if (!shouldKeepChildCards(card)) {
-                deleteCards(childCard.get(), card.getPublishDate(), jwt);
+                deleteCards(childCards.get(), card.getPublishDate(), jwt);
             } else {
                 cardRepository.setChildCardDates(card.getId(), getChildStartDateFromParent(card),
                         getChildEndDateFromParent(card));
@@ -246,30 +250,21 @@ public class CardProcessingService {
     }
 
     private void deleteCards(List<Card> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {
-        cardPublicationData.forEach(x -> deleteCard(x.getId(), deletionDate, jwt));
+        cardPublicationData.forEach(x -> deleteCardById(x.getId(), deletionDate, jwt));
     }
 
-    private Card getExistingCard(String cardId, boolean dataFieldIncluded) {
-        return cardRepository.findCardById(cardId, dataFieldIncluded);
-    }
-
-    public void deleteCard(String id, Optional<Jwt> jwt) {
-        Card cardToDelete = cardRepository.findCardById(id, false);
-        deleteCard(cardToDelete, jwt);
-    }
-
-    public void deleteCard(String id, Instant deletionDate, Optional<Jwt> jwt) {
+    public void deleteCardById(String id, Instant deletionDate, Optional<Jwt> jwt) {
         Card cardToDelete = cardRepository.findCardById(id, false);
         deleteCard(cardToDelete, deletionDate, jwt);
     }
 
-    public void deleteCards(Instant endDateBefore) {
+    public void deleteCardsByEndDateBefore(Instant endDateBefore) {
         List<Card> deletedCards = cardRepository.deleteCardsByEndDateBefore(endDateBefore);
         deletedCards.stream().forEach(
                 deletedCard -> cardNotificationService.notifyOneCard(deletedCard, CardOperationTypeEnum.DELETE));
     }
 
-    public Optional<Card> deleteCard(String id, Optional<CurrentUserWithPerimeters> user,
+    public Optional<Card> deleteCardByIdWithUser(String id, Optional<CurrentUserWithPerimeters> user,
             Optional<Jwt> jwt) {
 
         Card cardToDelete = cardRepository.findCardById(id, false);
@@ -288,14 +283,7 @@ public class CardProcessingService {
             }
         }
 
-        return deleteCard(cardToDelete, jwt);
-    }
-
-    public Optional<Card> prepareAndDeleteCard(Card card) {
-        if (card.getId() == null || card.getId().isEmpty()) {
-            card.prepare(card.getPublishDate());
-        }
-        return deleteCard(card, Optional.empty());
+        return deleteCard(cardToDelete,Instant.now(), jwt);
     }
 
     public Optional<Card> deleteUserCard(String id, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
@@ -304,7 +292,7 @@ public class CardProcessingService {
             return Optional.empty();
 
         if (cardPermissionControlService.isUserAllowedToDeleteThisCard(cardToDelete, user)) {
-            return deleteCard(cardToDelete, jwt);
+            return deleteCard(cardToDelete,Instant.now(), jwt);
         } else {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.FORBIDDEN)
@@ -318,10 +306,6 @@ public class CardProcessingService {
                 .forEach(cardToDelete -> deleteCard(cardToDelete, expirationDate, Optional.empty()));
     }
 
-    private Optional<Card> deleteCard(Card cardToDelete, Optional<Jwt> jwt) {
-        return deleteCard(cardToDelete, Instant.now(), jwt);
-    }
-
     private Optional<Card> deleteCard(Card cardToDelete, Instant deletionDate,
             Optional<Jwt> jwt) {
         Optional<Card> deletedCard = Optional.ofNullable(cardToDelete);
@@ -332,7 +316,7 @@ public class CardProcessingService {
             externalAppService.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
             Optional<List<Card>> childCard = cardRepository.findChildCard(cardToDelete);
             if (childCard.isPresent()) {
-                childCard.get().forEach(x -> deleteCard(x.getId(), deletionDate, jwt));
+                childCard.get().forEach(x -> deleteCardById(x.getId(), deletionDate, jwt));
             }
         }
         return deletedCard;

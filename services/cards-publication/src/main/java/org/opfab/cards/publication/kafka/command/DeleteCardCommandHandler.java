@@ -12,6 +12,9 @@ package org.opfab.cards.publication.kafka.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.Instant;
+
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
@@ -37,8 +40,11 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
                 kafkaCard.getProcessInstanceId(), kafkaCard.getProcess(), kafkaCard.getData());
 
         org.opfab.cards.publication.model.Card card = buildCardPublicationData(cardCommand);
+        if (card.getId() == null || card.getId().isEmpty()) {
+            card.prepare(card.getPublishDate());
+        }
         if (card != null) {
-            services.getCardProcessingService().prepareAndDeleteCard(card);
+            services.getCardProcessingService().deleteCardById(card.getId(), Instant.now(), null);
         }
     }
 }
