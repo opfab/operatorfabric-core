@@ -16,6 +16,7 @@ import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.I18NRepository;
 import org.opfab.cards.publication.repositories.I18NRepositoryImpl;
 import org.opfab.cards.publication.repositories.ProcessRepositoryImpl;
+import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
@@ -31,6 +32,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class Services {
 
+    private final CardDeletionService cardDeletionService;
+
     private final CardProcessingService cardProcessingService;
 
     private final CardTranslationService cardTranslationService;
@@ -38,7 +41,6 @@ public class Services {
     private final UserActionLogService userActionLogService;
 
     private final CardValidationService cardValidationService;
-
 
     Services(
             UserActionLogService userActionLogService,
@@ -55,18 +57,28 @@ public class Services {
             @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter,
             @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl) {
         if (!i18nRepository.isPresent()) {
-            this.cardTranslationService = new CardTranslationService(new I18NRepositoryImpl(eventBus,businessconfigUrl));
+            this.cardTranslationService = new CardTranslationService(
+                    new I18NRepositoryImpl(eventBus, businessconfigUrl));
         } else {
             this.cardTranslationService = new CardTranslationService(i18nRepository.get());
         }
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
-        cardValidationService = new CardValidationService(cardRepository, new ProcessRepositoryImpl(businessconfigUrl, eventBus));
-        cardProcessingService = new CardProcessingService(cardNotificationService,
+        cardValidationService = new CardValidationService(cardRepository,
+                new ProcessRepositoryImpl(businessconfigUrl, eventBus));
+        cardDeletionService = new CardDeletionService(cardNotificationService, cardRepository, externalAppService,
+                checkAuthenticationForCardSending, checkPerimeterForCardSending);
+        cardProcessingService = new CardProcessingService(cardDeletionService, cardNotificationService,
                 cardRepository, externalAppService,
-                cardTranslationService, cardValidationService,checkAuthenticationForCardSending, checkPerimeterForCardSending,
-                authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod, activateCardSendingLimiter);
+                cardTranslationService, cardValidationService, checkAuthenticationForCardSending,
+                checkPerimeterForCardSending,
+                authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod,
+                activateCardSendingLimiter);
 
+    }
+
+    public CardDeletionService getCardDeletionService() {
+        return cardDeletionService;
     }
 
     public CardValidationService getCardValidationService() {

@@ -12,43 +12,23 @@
 package org.opfab.cards.publication.services;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.mocks.I18NRepositoryMock;
 import org.opfab.springtools.error.model.ApiErrorException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.Instant;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CardTranslationServiceShould {
   
-    CardTranslationService cardTranslationService;
-
-    I18NRepositoryMock i18nRepositoryMock = new I18NRepositoryMock();
-
-    @BeforeEach
-    void setUp() {
-        cardTranslationService = new CardTranslationService(i18nRepositoryMock);
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-
-        node.put("title", "Title translated");
-        node.put("summary", "Summary translated {{arg1}}");
-        
-        i18nRepositoryMock.setJsonNode(node);
-    }
     
-
+    I18NRepositoryMock i18nRepositoryMock = new I18NRepositoryMock();
+    CardTranslationService cardTranslationService = new CardTranslationService(i18nRepositoryMock);
 
     @Test
     void translateCardField(){
@@ -94,8 +74,6 @@ class CardTranslationServiceShould {
                 "process=processWithNonExistingI18nFile, processVersion=1 (processInstanceId=cardWithProcessWithNonExistingI18nFile)");
 
     }
-
-
 
     @Test
     void translateCardWithNonExistingI18nKey(){
