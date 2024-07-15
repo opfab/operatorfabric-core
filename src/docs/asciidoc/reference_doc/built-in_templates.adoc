@@ -51,11 +51,13 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-
 If you want to show a question and see user responses, you can use the question built-in template, to do that just put in your handlebar file:
 
 ```
-<opfab-question-card> </opfab-question-card>
+<opfab-question-card keepResponseHistoryInCard="false"> </opfab-question-card>
 
 ```
 
 The built-in template supposes the question is stored in the card in the field `data.question`.
+
+To keep response history in card data, set the `keepResponseHistoryInCard` attribute to true. In the card details, you will find all response history along with their corresponding response dates.
 
 
 === User card template 
