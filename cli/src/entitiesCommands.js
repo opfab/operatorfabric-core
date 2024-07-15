@@ -1,0 +1,72 @@
+/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+const prompts = require('prompts');
+const utils = require("./utils");
+const fs = require('fs').promises;
+
+const entitiesCommands = {
+    async processEntitiesCommand(args) {
+        let action = args[0];
+        if (!action) {
+            action = (
+                await prompts({
+                    type: 'select',
+                    name: 'value',
+                    message: 'Entities action',
+                    choices: [{title: 'Load a list of entities', value: 'load'}]
+                })
+            ).value;
+            if (!action) {
+                console.log('Entities action is required');
+                return;
+            }
+        }
+
+        if (action === 'load') {
+            await this.loadEntitiesFile(args[1]);
+        } else {
+            console.log(`Unknown entities action : ${action}
+            `);
+            await this.printHelp();
+        }
+    },
+
+    async loadEntitiesFile(entitiesFile) {
+        if (!entitiesFile) {
+            entitiesFile = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'Entities file name '
+                })
+            ).value;
+            if (!entitiesFile) {
+                console.log('Entities file name is required');
+                return;
+            }
+        }
+        const entitiesList = JSON.parse(await fs.readFile(entitiesFile, 'utf8'));
+        for (const entity of entitiesList) {
+            await utils.sendRequest(
+                'users/entities',
+                'POST',
+                JSON.stringify(entity),
+                `Entity ${entity.id} created successfully`,
+                `Failed to create entity ${entity.id}`,
+                `Failed to create entity ${entity.id} , not found error`
+            );
+        }
+    },
+
+    async printHelp() {
+        console.log(`Usage: opfab entities load <entities.json>`);
+    }
+};
+module.exports = entitiesCommands;
