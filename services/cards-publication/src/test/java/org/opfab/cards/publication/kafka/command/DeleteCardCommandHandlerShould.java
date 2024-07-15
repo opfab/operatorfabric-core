@@ -19,7 +19,7 @@ import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
-import org.opfab.cards.publication.services.CardProcessingService;
+import org.opfab.cards.publication.services.CardDeletionService;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -38,7 +38,7 @@ class DeleteCardCommandHandlerShould {
 
     private Services services;
 
-    private CardProcessingService cardProcessingService;
+    private CardDeletionService cardDeletionService;
 
     private CardObjectMapper objectMapper;
 
@@ -47,7 +47,7 @@ class DeleteCardCommandHandlerShould {
     @BeforeAll
     public void setUp() {
         services = mock(Services.class);
-        cardProcessingService = mock(CardProcessingService.class);
+        cardDeletionService = mock(CardDeletionService.class);
         objectMapper = mock(CardObjectMapper.class);
         cut = new DeleteCardCommandHandler(services);
         ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
@@ -67,10 +67,10 @@ class DeleteCardCommandHandlerShould {
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
         when(objectMapper.readCardPublicationDataValue(anyString())).thenReturn(cardPublicationDataMock);
-        when(services.getCardProcessingService()).thenReturn(cardProcessingService);
+        when(services.getCardDeletionService()).thenReturn(cardDeletionService);
         cut.executeCommand(cardCommandMock);
 
-        verify(cardProcessingService, times(1))
+        verify(cardDeletionService, times(1))
                 .deleteCardById(any(),notNull(),any());
     }
 

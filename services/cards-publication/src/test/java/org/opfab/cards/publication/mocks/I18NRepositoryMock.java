@@ -23,8 +23,8 @@ public class I18NRepositoryMock implements I18NRepository  {
     public I18NRepositoryMock() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("MyTitle", "Title translated");
-        node.put("MySummary", "Summary translated {{arg1}}");
+        node.put("title", "Title translated");
+        node.put("summary", "Summary translated {{arg1}}");
         jsonNode = node;
     }
 

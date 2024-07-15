@@ -18,7 +18,6 @@ import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.PermissionEnum;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,6 +34,7 @@ import java.util.Optional;
 @Slf4j
 public class CardProcessingService {
 
+    private CardDeletionService cardDeletionService;
     private CardNotificationService cardNotificationService;
     private CardRepository cardRepository;
     private ExternalAppService externalAppService;
@@ -49,6 +49,7 @@ public class CardProcessingService {
     boolean activateCardSendingLimiter;
 
     public CardProcessingService(
+            CardDeletionService cardDeletionService,
             CardNotificationService cardNotificationService,
             CardRepository cardRepository,
             ExternalAppService externalAppService,
@@ -60,6 +61,7 @@ public class CardProcessingService {
             int cardSendingLimitCardCount,
             int cardSendingLimitPeriod,
             boolean activateCardSendingLimiter) {
+        this.cardDeletionService = cardDeletionService;
         this.cardNotificationService = cardNotificationService;
         this.cardRepository = cardRepository;
         this.externalAppService = externalAppService;
@@ -88,7 +90,7 @@ public class CardProcessingService {
 
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.FORBIDDEN)
-                    .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin(), false))
+                    .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin()))
                     .build());
         }
         this.cardValidationService.validate(card);
@@ -250,87 +252,17 @@ public class CardProcessingService {
     }
 
     private void deleteCards(List<Card> cardPublicationData, Instant deletionDate, Optional<Jwt> jwt) {
-        cardPublicationData.forEach(x -> deleteCardById(x.getId(), deletionDate, jwt));
+        cardPublicationData.forEach(x -> cardDeletionService.deleteCardById(x.getId(), deletionDate, jwt));
     }
 
-    public void deleteCardById(String id, Instant deletionDate, Optional<Jwt> jwt) {
-        Card cardToDelete = cardRepository.findCardById(id, false);
-        deleteCard(cardToDelete, deletionDate, jwt);
-    }
-
-    public void deleteCardsByEndDateBefore(Instant endDateBefore) {
-        List<Card> deletedCards = cardRepository.deleteCardsByEndDateBefore(endDateBefore);
-        deletedCards.stream().forEach(
-                deletedCard -> cardNotificationService.notifyOneCard(deletedCard, CardOperationTypeEnum.DELETE));
-    }
-
-    public Optional<Card> deleteCardByIdWithUser(String id, Optional<CurrentUserWithPerimeters> user,
-            Optional<Jwt> jwt) {
-
-        Card cardToDelete = cardRepository.findCardById(id, false);
-        if (user.isPresent()) { // if user is not present it means we have checkAuthenticationForCardSending =
-                                // false
-            boolean isAdmin = cardPermissionControlService.hasCurrentUserAnyPermission(user.get(),
-                    PermissionEnum.ADMIN);
-            String login = user.get().getUserData().getLogin();
-            if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending
-                    && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete, login)) {
-
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message(buildPublisherErrorMessage(cardToDelete, login, true))
-                        .build());
-            }
-        }
-
-        return deleteCard(cardToDelete,Instant.now(), jwt);
-    }
-
-    public Optional<Card> deleteUserCard(String id, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
-        Card cardToDelete = cardRepository.findCardById(id, false);
-        if (cardToDelete == null)
-            return Optional.empty();
-
-        if (cardPermissionControlService.isUserAllowedToDeleteThisCard(cardToDelete, user)) {
-            return deleteCard(cardToDelete,Instant.now(), jwt);
-        } else {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.FORBIDDEN)
-                    .message("User not allowed to delete this card")
-                    .build());
-        }
-    }
-
-    public void deleteCardsByExpirationDate(Instant expirationDate) {
-        cardRepository.findCardsByExpirationDate(expirationDate)
-                .forEach(cardToDelete -> deleteCard(cardToDelete, expirationDate, Optional.empty()));
-    }
-
-    private Optional<Card> deleteCard(Card cardToDelete, Instant deletionDate,
-            Optional<Jwt> jwt) {
-        Optional<Card> deletedCard = Optional.ofNullable(cardToDelete);
-        if (null != cardToDelete) {
-            cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
-            cardRepository.deleteCard(cardToDelete);
-            cardRepository.setArchivedCardAsDeleted(cardToDelete.getProcess(), cardToDelete.getProcessInstanceId(),deletionDate);
-            externalAppService.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
-            Optional<List<Card>> childCard = cardRepository.findChildCard(cardToDelete);
-            if (childCard.isPresent()) {
-                childCard.get().forEach(x -> deleteCardById(x.getId(), deletionDate, jwt));
-            }
-        }
-        return deletedCard;
-    }
-
-    private String buildPublisherErrorMessage(Card card, String login, boolean delete) {
+    private String buildPublisherErrorMessage(Card card, String login) {
         String errorMessagePrefix = "Card publisher is set to " + card.getPublisher() + " and account login is "
                 + login;
         if (card.getRepresentative() != null) {
             errorMessagePrefix = "Card representative is set to " + card.getRepresentative() + " and account login is "
                     + login;
         }
-        String errorMessageSuffix = delete ? "deleted" : "sent";
-        return errorMessagePrefix + ", the card cannot be " + errorMessageSuffix;
+        return errorMessagePrefix + ", the card cannot be sent";
     }
 
     public UserBasedOperationResult processUserAcknowledgement(String cardUid, CurrentUserWithPerimeters user,

@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,6 @@ public class DeleteExpiredCardScheduler {
 
     @Scheduled(fixedDelayString = "${operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling:60000}")
     public void deleteExpiredCards() {
-        services.getCardProcessingService().deleteCardsByExpirationDate(Instant.now());
+        services.getCardDeletionService().deleteCardsByExpirationDate(Instant.now());
     }
 }

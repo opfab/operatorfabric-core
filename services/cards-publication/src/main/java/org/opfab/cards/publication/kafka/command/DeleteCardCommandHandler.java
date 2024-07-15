@@ -44,7 +44,7 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
             card.prepare(card.getPublishDate());
         }
         if (card != null) {
-            services.getCardProcessingService().deleteCardById(card.getId(), Instant.now(), null);
+            services.getCardDeletionService().deleteCardById(card.getId(), Instant.now(), null);
         }
     }
 }

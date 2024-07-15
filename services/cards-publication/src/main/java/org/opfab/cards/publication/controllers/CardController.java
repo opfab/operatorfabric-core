@@ -17,6 +17,7 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.FieldToTranslate;
 import org.opfab.cards.publication.model.TranslatedField;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
+import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
@@ -40,6 +41,7 @@ import java.util.UUID;
 
 public class CardController {
 
+    private CardDeletionService cardDeletionService;
     private CardProcessingService cardProcessingService;
     private CardTranslationService cardTranslationService;
     private UserActionLogService userActionLogService;
@@ -48,6 +50,7 @@ public class CardController {
 
     CardController(
             Services services) {
+        cardDeletionService = services.getCardDeletionService();
         cardTranslationService = services.getCardTranslationService();
         userActionLogService = services.getUserActionLogService();
         cardProcessingService = services.getCardProcessingService();
@@ -103,7 +106,7 @@ public class CardController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public Void deleteCards(@RequestParam String endDateBefore) {
-        cardProcessingService.deleteCardsByEndDateBefore(parseAsInstant(endDateBefore));
+        cardDeletionService.deleteCardsByEndDateBefore(parseAsInstant(endDateBefore));
         return null;
     }
 
@@ -128,7 +131,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         try {
-            Optional<Card> deletedCard = cardProcessingService.deleteUserCard(id, user,
+            Optional<Card> deletedCard = cardDeletionService.deleteUserCard(id, user,
                     Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
                 response.setStatus(404);
@@ -148,7 +151,7 @@ public class CardController {
             user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
             token = jwtPrincipal.getToken();
         }
-        Optional<Card> deletedCard = cardProcessingService.deleteCardByIdWithUser(id, Optional.ofNullable(user),
+        Optional<Card> deletedCard = cardDeletionService.deleteCardByIdWithUser(id, Optional.ofNullable(user),
                 Optional.ofNullable(token));
         if (!deletedCard.isPresent())
             response.setStatus(404);
