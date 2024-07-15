@@ -21,6 +21,7 @@ const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const connectedUsers = require('./connectedUsersCommands.js');
 const users = require('./usersCommands.js');
+const entities = require('./entitiesCommands');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -43,6 +44,10 @@ const args = process.argv.slice(2);
             case 'connectedusers':
                 exitIfNotLoggedIn();
                 await connectedUsers.processConnectedUsersCommand(args.slice(1));
+                break;
+            case 'entities':
+                exitIfNotLoggedIn();
+                await entities.processEntitiesCommand(args.slice(1));
                 break;
             case 'users':
                 exitIfNotLoggedIn();
@@ -107,7 +112,8 @@ Command list :
     businessdata    Send or delete business data
     card            Send a card, delete a card or reset the card limiter for sending cards 
     config          Set, get or list opfab cli configuration values
-    connectedusers  Send a message to subscriptions 
+    connectedusers  Send a message to subscriptions
+    entities        Load a list of entities
     help            Show help on a command using help <command> or all commands using help  
     login           Log in to opfab
     logout          Log out to opfab
@@ -130,6 +136,9 @@ Command list :
                 break;
             case 'connectedusers':
                 connectedUsers.printHelp();
+                break;
+            case 'entities':
+                entities.printHelp();
                 break;
             case 'perimeter':
                 perimeter.printHelp();
