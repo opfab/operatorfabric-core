@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import '../../../../../../src/scss/_variables.scss';
-
-/* import bootstrap*/
-@import '../../../../../../node_modules/bootstrap/scss/bootstrap.scss';
 
 .opfab-bg-right-receive {
-    background-color: $gray-500;
+    background-color: #adb5bd;
 }
 .opfab-bg-right-receiveandwrite {
-    background-color: $blue;
+    background-color: #0d6efd;
 }
 .opfab-bg-right-write {
-    background-color: lighten($blue, 30);
+    background-color: lighten(#0d6efd, 30);
 }
 
 .badge {
-    color: $dark;
+    color: black;
 }
