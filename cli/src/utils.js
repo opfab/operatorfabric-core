@@ -115,7 +115,7 @@ const utils = {
                     break;
                 default:
                     console.error(errorMessage);
-                    console.error('Response:', response);
+                    console.error(`Server response : ${await response.text()} \n`);
                     break;
             }
         }
