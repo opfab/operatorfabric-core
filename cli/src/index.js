@@ -137,6 +137,9 @@ Command list :
             case 'businessdata':
                 businessData.printHelp();
                 break;
+            case 'bundle':
+                bundleCommand.printHelp();
+                break;
             case 'card':
                 card.printHelp();
                 break;
@@ -169,6 +172,9 @@ Command list :
                 break;
             case 'monitoringconfig':
                 monitoringConfig.printHelp();
+                break;
+            case 'users':
+                users.printHelp();
                 break;
             case 'default':
                 console.log(`No help for command ${args[1]}`);
