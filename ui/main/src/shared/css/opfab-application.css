@@ -9,6 +9,18 @@
 
 /* CSS file intended for sharing the style with external applications */
 
+:root {
+    --opfab-color-blue: #2784FF; 
+    --opfab-color-darker-blue: #2268ff;
+    --opfab-color-orange: orange;
+    --opfab-color-darker-orange: #ff6600;
+    --opfab-color-red: red;
+    --opfab-color-green: green;
+    --opfab-color-severity-alarm: #a71a1a;
+    --opfab-color-severity-action: #fd9312;
+    --opfab-color-severity-compliant: #00bb03;
+    --opfab-color-severity-information: #1074ad;
+}
 
 [opfab-theme="NIGHT"]  {
     --opfab-bgcolor: #262f3d;
@@ -34,7 +46,7 @@
     --opfab-timeline-week-color: #B1B1B1;
     --opfab-timeline-week-color2: #B1B1B1;
     --opfab-timeline-week-bgcolor: #212B3A;
-    --opfab-timeline-realtimebar-color: #2784FF;
+    --opfab-timeline-realtimebar-color: var(--opfab-color-blue);
     --opfab-timeline-button-bgcolor: rgb(221, 221, 221);
     --opfab-timeline-button-text-color: black;
     --opfab-timeline-button-selected-bgcolor: black;
@@ -44,7 +56,7 @@
     --opfab-lightcard-detail-border-color: #222933;
     --opfab-lightcard-detail-selected-bgcolor: #0F161F;
     --opfab-lightcard-detail-unread-textcolor: white;
-    --opfab-light-card-lttd-timeleft: #ff6600;
+    --opfab-light-card-lttd-timeleft: var(--opfab-color-darker-orange);
     --opfab-card-tab-selected-text-color: #bababa;
     --opfab-card-tab-border-color: #bababa;
     --opfab-card-bgcolor :  #131D2B;
@@ -55,12 +67,7 @@
     --opfab-navbar-toggler-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
     --opfab-navbar-toggler-border-color: rgba(255,255,255,.1) ;
     --opfab-navbar-info-block-color: white;
-    --opfab-navbar-menu-link-color: #343a40;
-    --opfab-navbar-menu-link-hover-color: #121416;
-    --opfab-navbar-menu-bgcolor: white;
     --opfab-navbar-right-menu-bgcolor: #182638;
-    --opfab-navbar-menu-bgcolor-item-active: #007bff;
-    --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
     --opfab-timeline-cardlink: white;
     --opfab-timeline-cardlink-bgcolor-hover: #23272b;
     --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
@@ -99,7 +106,7 @@
     --opfab-timeline-week-color: #aaaaaa;
     --opfab-timeline-week-color2: #aaaaaa;
     --opfab-timeline-week-bgcolor: #ffffff;
-    --opfab-timeline-realtimebar-color: #2784FF;
+    --opfab-timeline-realtimebar-color: var(--opfab-color-blue);
     --opfab-timeline-button-bgcolor: #e5e5e5;
     --opfab-timeline-button-text-color: #49494a;
     --opfab-timeline-button-selected-bgcolor: #49494a;
@@ -109,7 +116,7 @@
     --opfab-lightcard-detail-border-color: #cccccc;
     --opfab-lightcard-detail-selected-bgcolor: #E1E1E1;
     --opfab-lightcard-detail-unread-textcolor: black;
-    --opfab-light-card-lttd-timeleft: #ff6600;
+    --opfab-light-card-lttd-timeleft: var(--opfab-color-darker-orange);
     --opfab-card-tab-selected-text-color: black;
     --opfab-card-tab-border-color: ##111D2D;
     --opfab-card-bgcolor : #F3F2F1;
@@ -121,12 +128,7 @@
     --opfab-navbar-toggler-icon: url("data:image/svg+xml, %3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0,0,0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
     --opfab-navbar-toggler-border-color: rgba(0,0,0,.1) ;
     --opfab-navbar-info-block-color: rgba(0,0,0,.9);
-    --opfab-navbar-menu-link-color: #343a40;
-    --opfab-navbar-menu-link-hover-color: #121416;
-    --opfab-navbar-menu-bgcolor: white;
     --opfab-navbar-right-menu-bgcolor: #f3f2f1;
-    --opfab-navbar-menu-bgcolor-item-active: #007bff;
-    --opfab-navbar-menu-bgcolor-item-hover: #f8f9fa;
     --opfab-timeline-cardlink: #212529;
     --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
     --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
@@ -178,14 +180,14 @@
 }
 
 .opfab-color-danger {
-    color: red;
+    color: var(--opfab-color-red);
 }
 
 .opfab-color-warning {
-    color: #ff6600;
+    color: var(--opfab-color-darker-orange);
 }
 .opfab-color-success {
-    color: green;
+    color: var(--opfab-color-green);
 }
 
 body {
@@ -364,7 +366,7 @@ input:-webkit-autofill {
     top: -6px;
     width: 10px;
     height: 20px;
-    border: solid #0082ff;
+    border: solid var(--opfab-color-blue);
     border-width: 0 4px 4px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -593,7 +595,7 @@ input:-webkit-autofill {
     border: 0px solid var(--opfab-form-border-color);
     border-radius: 2px;
     color: white;
-    background-color: #2784ff;
+    background-color: var(--opfab-color-blue);
     z-index: 1;
     font-family: var(--opfab-font-family);
     font-size: 13px;
@@ -648,8 +650,8 @@ input:-webkit-autofill {
 .vscomp-wrapper .checkbox-icon.checked::after,  /* select all */
 .vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after /* select option */
 {
-    border-right-color: #2784ff;
-    border-bottom-color: #2784ff;
+    border-right-color: var(--opfab-color-blue);
+    border-bottom-color: var(--opfab-color-blue);
 }
 
 /* END VIRTUAL MULTI SELECT */
@@ -741,10 +743,10 @@ input:-webkit-autofill {
 
 .opfab-btn {
     color: white;
-    background-color: #2784ff;
+    background-color: var(--opfab-color-blue);
     border-width: 0px;
     border-radius: 2px;
-    border-color: #2784ff ;
+    border-color: var(--opfab-color-blue);
     height: 40px;
     font-size: 14px;
     font-weight: 600;
@@ -758,7 +760,7 @@ input:-webkit-autofill {
 }
 
 .opfab-btn:hover {
-    background-color: #2268ff;
+    background-color: var(--opfab-color-darker-blue);
 }
 
 .opfab-btn:disabled {
@@ -767,7 +769,7 @@ input:-webkit-autofill {
 }
 
 .opfab-btn-cancel {
-    color: #2784ff;
+    color: var(--opfab-color-blue);
     outline:none;
     background-color: var(--opfab-bg-color);
     border-width: 0px;
@@ -781,7 +783,7 @@ input:-webkit-autofill {
 }
 
 .opfab-btn-cancel:hover {
-    color: #2268ff;
+    color: var(--opfab-color-darker-blue);
 }
 
 /* END BUTTON STYLE */

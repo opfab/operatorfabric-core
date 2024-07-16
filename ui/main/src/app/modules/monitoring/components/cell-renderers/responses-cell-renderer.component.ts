@@ -63,7 +63,9 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
                 entityHeader.push({
                     id: entity,
                     name: entityName,
-                    color: this.checkEntityAnswered(entity) ? 'green' : '#ff6600'
+                    color: this.checkEntityAnswered(entity)
+                        ? 'var(--opfab-color-green)'
+                        : 'var(--opfab-color-darker-orange)'
                 });
             }
         });

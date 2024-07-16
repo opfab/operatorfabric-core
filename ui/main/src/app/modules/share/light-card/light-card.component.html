@@ -33,7 +33,7 @@
                         <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-1"
                             [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover-unclickable" container="body"
                             triggers="mouseenter:mouseleave">
-                            <em style="color: #0082FF;" class="fa fa-reply"></em>
+                            <em style="color: var(--opfab-color-blue);" class="fa fa-reply"></em>
                         </span>
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
@@ -41,7 +41,7 @@
                         <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-1"
                               [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
-                            <em style="color: #0082FF;" class="fa fa-check"></em>
+                            <em style="color: var(--opfab-color-blue);" class="fa fa-check"></em>
                         </span>
                         <ng-template #tipTags>
                             <span translate>feed.tips.seeGroupedCards</span>
@@ -49,12 +49,12 @@
                         <span *ngIf="showGroupedCardsIcon" class="p-1"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
-                            <em id="opfab-feed-light-card-group-icon" style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
+                            <em id="opfab-feed-light-card-group-icon" style="color: var(--opfab-color-blue);" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
                         <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1"
                               placement="right" [ngbPopover]="tipSeeGeolocation" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
-                            <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
+                            <em style="color: var(--opfab-color-blue);" class="fa fa-location-crosshairs"></em>
                         </span>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                         <span *ngIf="lightCard.expirationDate" class="expiration-date" id="opfab-card-expiration-date"
                               [ngbPopover]="this.expirationDateToDisplay" popoverClass="opfab-popover-unclickable" container="body" placement="right"
                               triggers="mouseenter:mouseleave">
-                            <em style="color: #ff6600;margin-left: 8px;" class="fa fa-hourglass"></em>
+                            <em style="color: var(--opfab-color-darker-orange);margin-left: 8px;" class="fa fa-hourglass"></em>
                         </span>
                 </div>
             </div>

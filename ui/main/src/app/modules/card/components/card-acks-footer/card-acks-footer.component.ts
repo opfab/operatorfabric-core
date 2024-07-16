@@ -28,8 +28,8 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    private static ORANGE: string = '#ff6600';
-    private static GREEN: string = 'green';
+    private static ORANGE: string = 'var(--opfab-color-darker-orange)';
+    private static GREEN: string = 'var(--opfab-color-green)';
 
     ngOnInit() {
         OpfabStore.getLightCardStore()

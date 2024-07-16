@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-@import '../../../../src/scss/_variables.scss';
 
 .opfab-usercard-radio-button {
     margin-top: 20px;
@@ -21,7 +20,7 @@
     height: 18px;
     margin-right: 5px;
     margin-bottom: -3px;
-    background-color: $sev-alarm;
+    background-color: var(--opfab-color-severity-alarm);
 }
 
 .label-sev-action::before {
@@ -31,7 +30,7 @@
     height: 18px;
     margin-right: 5px;
     margin-bottom: -3px;
-    background-color: $sev-action;
+    background-color: var(--opfab-color-severity-action);
 }
 
 .label-sev-compliant::before {
@@ -41,7 +40,7 @@
     height: 18px;
     margin-right: 5px;
     margin-bottom: -3px;
-    background-color: $sev-compliant;
+    background-color: var(--opfab-color-severity-compliant);
 }
 
 .label-sev-information::before {
@@ -51,7 +50,7 @@
     height: 18px;
     margin-right: 5px;
     margin-bottom: -3px;
-    background-color: $sev-information;
+    background-color: var(--opfab-color-severity-information);
 }
 
 

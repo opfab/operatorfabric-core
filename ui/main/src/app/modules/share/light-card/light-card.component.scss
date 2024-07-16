@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import '../../../../../src/scss/_variables.scss';
 
 .light-card-detail {
     color: var(--opfab-lightcard-detail-textcolor);
@@ -58,16 +57,16 @@
 }
 
 .opfab-bg-sev-alarm {
-    background-color: $sev-alarm;
+    background-color: var(--opfab-color-severity-alarm);
 }
 .opfab-bg-sev-action {
-    background-color: $sev-action;
+    background-color: var(--opfab-color-severity-action);
 }
 .opfab-bg-sev-compliant {
-    background-color: $sev-compliant;
+    background-color: var(--opfab-color-severity-compliant);
 }
 .opfab-bg-sev-information {
-    background-color: $sev-information;
+    background-color: var(--opfab-color-severity-information);
 }
 
 .lttd-timeleft {

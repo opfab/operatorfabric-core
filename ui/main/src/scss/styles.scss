@@ -11,26 +11,14 @@
 /* You can add global styles to this file, and also import other style files */
 @use '../../node_modules/ag-grid-community/styles' as ag;
 
-@import 'variables';
-
-/* import bootstrap*/
-@import '../../node_modules/bootstrap/scss/bootstrap.scss';
-
 @import '../../node_modules/ngx-chips/core/styles/core/_core.scss';
 
-@each $color, $value in $theme-colors {
-    .brand-bg-#{$color} {
-        background-color: $value;
-        padding: 5px;
-        border-radius: 5px;
-    }
-}
 
 body {
-    color: $light;
+    color: #bababa;
     padding: 80px 0px 30px 0px;
     margin: 0px;
-    background-color: $dark;
+    background-color: #262f3d;
     height: 100vh;
     font-family: var(--opfab-font-family);
     font-size: 13px;
@@ -46,13 +34,13 @@ body {
 
 // Colors for state types
 .opfab-typeOfState-INPROGRESS {
-    color: #ff6600;
+    color: var(--opfab-color-darker-orange);
 }
 .opfab-typeOfState-FINISHED {
-    color: green;
+    color: var(--opfab-color-green)
 }
 .opfab-typeOfState-CANCELED {
-    color: red;
+    color: var(--opfab-color-red);
 }
 
 // CUSTOM SCROLLBAR STYLE
@@ -352,24 +340,6 @@ body {
     z-index: 9999 !important;
 }
 
-// Global colors
-
-.opfab-colors {
-    background-color: var(--opfab-bgcolor);
-    color: var(--opfab-text-color);
-}
-
-.opfab-color-danger {
-    color: red;
-}
-
-.opfab-color-warning {
-    color: #ff6600;
-}
-.opfab-color-success {
-    color: green;
-}
-
 .opfab-timeline-bgcolor {
     background-color: var(--opfab-timeline-bgcolor);
 }
@@ -519,7 +489,7 @@ body {
     }
 
     .ag-row:hover {
-        border: 2px solid #2268ff;
+        border: 2px solid var(--opfab-color-blue);
     }
 
     .opfab-ag-header-with-no-padding {
@@ -559,22 +529,22 @@ body {
     }
 
     .opfab-sev-alarm {
-        background-color: $sev-alarm;
+        background-color: var(--opfab-color-severity-alarm);
         font-size: 0px;
         padding-right: 0px;
     }
     .opfab-sev-action {
-        background-color: $sev-action;
+        background-color: var(--opfab-color-severity-action);
         font-size: 0px;
         padding-right: 0px;
     }
     .opfab-sev-compliant {
-        background-color: $sev-compliant;
+        background-color: var(--opfab-color-severity-compliant);
         font-size: 0px;
         padding-right: 0px;
     }
     .opfab-sev-information {
-        background-color: $sev-information;
+        background-color: var(--opfab-color-severity-information);
         font-size: 0px;
         padding-right: 0px;
     }
@@ -619,10 +589,10 @@ tag-input {
         tag {
             @include tag-theme(
                 (
-                    background: #2784ff,
-                    background-focused: #2784ff,
-                    background-active: #2784ff,
-                    background-hover: #2784ff,
+                    background: var(--opfab-color-blue),
+                    background-focused: var(--opfab-color-blue),
+                    background-active: var(--opfab-color-blue),
+                    background-hover: var(--opfab-color-blue),
                     color: #fff,
                     color-hover: #fff,
                     border-radius: 2px,

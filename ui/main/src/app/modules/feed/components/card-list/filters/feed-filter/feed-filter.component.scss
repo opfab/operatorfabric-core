@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import '../../../../../../../../src/scss/_variables.scss';
 
 .opfab-filter-header {
     margin-left: 2px;
@@ -33,7 +32,7 @@
     height: 15px;
     margin-right: 5px;
     margin-bottom: -2px;
-    background-color: $sev-alarm;
+    background-color: var(--opfab-color-severity-alarm);
 }
 
 .label-sev-action::before {
@@ -43,7 +42,7 @@
     height: 15px;
     margin-right: 5px;
     margin-bottom: -2px;
-    background-color: $sev-action;
+    background-color: var(--opfab-color-severity-action);
 }
 
 .label-sev-compliant::before {
@@ -53,7 +52,7 @@
     height: 15px;
     margin-right: 5px;
     margin-bottom: -2px;
-    background-color: $sev-compliant;
+    background-color: var(--opfab-color-severity-compliant);
 }
 
 .label-sev-information::before {
@@ -63,7 +62,7 @@
     height: 15px;
     margin-right: 5px;
     margin-bottom: -2px;
-    background-color: $sev-information;
+    background-color: var(--opfab-color-severity-information);
 }
 
 

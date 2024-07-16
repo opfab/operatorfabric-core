@@ -12,10 +12,7 @@
     background-color: #adb5bd;
 }
 .opfab-bg-right-receiveandwrite {
-    background-color: #0d6efd;
-}
-.opfab-bg-right-write {
-    background-color: lighten(#0d6efd, 30);
+    background-color: var(--opfab-color-blue);
 }
 
 .badge {
