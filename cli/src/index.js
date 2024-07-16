@@ -22,6 +22,7 @@ const monitoringConfig = require('./monitoringConfigCommands.js');
 const connectedUsers = require('./connectedUsersCommands.js');
 const users = require('./usersCommands.js');
 const entities = require('./entitiesCommands');
+const groups = require('./groupsCommands');
 const args = process.argv.slice(2);
 
 (async () => {
@@ -48,6 +49,10 @@ const args = process.argv.slice(2);
             case 'entities':
                 exitIfNotLoggedIn();
                 await entities.processEntitiesCommand(args.slice(1));
+                break;
+            case 'groups':
+                exitIfNotLoggedIn();
+                await groups.processGroupsCommand(args.slice(1));
                 break;
             case 'users':
                 exitIfNotLoggedIn();
@@ -114,6 +119,7 @@ Command list :
     config          Set, get or list opfab cli configuration values
     connectedusers  Send a message to subscriptions
     entities        Load a list of entities
+    groups          Load a list of groups
     help            Show help on a command using help <command> or all commands using help  
     login           Log in to opfab
     logout          Log out to opfab
@@ -139,6 +145,9 @@ Command list :
                 break;
             case 'entities':
                 entities.printHelp();
+                break;
+            case 'groups':
+                groups.printHelp();
                 break;
             case 'perimeter':
                 perimeter.printHelp();
