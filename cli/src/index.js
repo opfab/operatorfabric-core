@@ -104,7 +104,7 @@ function printHelp() {
 Command list :
 
     bundle          Load or delete a bundle
-    businessdata    Send or delete business data
+    businessdata    Load or delete business data
     card            Send a card, delete a card or reset the card limiter for sending cards 
     config          Set, get or list opfab cli configuration values
     connectedusers  Send a message to subscriptions 
@@ -113,7 +113,7 @@ Command list :
     logout          Log out to opfab
     monitoringconfig Load or delete a configuration for monitoring screen
     perimeter       Create or delete a perimeter
-    processgroups   Send or clear processgroups
+    processgroups   Load or clear processgroups
     realtimescreen  Load real time screen definition file
     service         Get or set log level for java services
     status          Show login status
