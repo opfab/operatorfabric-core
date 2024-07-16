@@ -92,6 +92,7 @@ to have to maintain these mentions (since this information is tracked by git any
 * Function shall start with a verb (Example :  `showAlertPopup()`)
 * When the return type is a boolean, the method name shall be a yes/no question (Example : `isUserDeleted() : boolean`)
 * Whenever possible use changeDetection: ChangeDetectionStrategy.OnPush in the component decorator to improve performance
+* Avoid using hardcoded colors directly in CSS or HTML components. Instead, always reference colors through variables defined in `ui/main/src/shared/css/opfab-application.css`. 
 
 ==== Back development 
 

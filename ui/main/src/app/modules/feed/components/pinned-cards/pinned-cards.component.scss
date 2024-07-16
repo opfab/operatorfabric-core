@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-@import '../../../../../../src/scss/_variables.scss';
 
 .opfab-pinned-cards {
     display: flex;
@@ -34,19 +33,19 @@
 }
 
 .opfab-bg-sev-alarm:before {
-    background-color: $sev-alarm;
+    background-color: var(--opfab-color-severity-alarm);
 }
 
 .opfab-bg-sev-action:before {
-    background-color: $sev-action;
+    background-color: var(--opfab-color-severity-action);
 }
 
 .opfab-bg-sev-compliant:before {
-    background-color: $sev-compliant;
+    background-color: var(--opfab-color-severity-compliant);
 }
 
 .opfab-bg-sev-information:before {
-    background-color: $sev-information;
+    background-color: var(--opfab-color-severity-information);
 }
 
 span {

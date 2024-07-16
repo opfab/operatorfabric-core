@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,7 +16,7 @@
       <div id="opfab-card-details-address-to" *ngIf="listEntitiesAcknowledged.length > 1">
             <span translate="feed.addressedTo"></span>
             <span *ngFor="let entity of listEntitiesAcknowledged; let isLast = last"> {{entity.entityName}} <em
-                        *ngIf="entity.acknowledged" style="color: #0082FF;" class="fa fa-check"></em><span
+                        *ngIf="entity.acknowledged" style="color: var(--opfab-color-blue);" class="fa fa-check"></em><span
                         *ngIf="!isLast" style="margin-right: 5px;">, </span></span>
       </div>
       <div *ngIf="!!this.lastResponse">

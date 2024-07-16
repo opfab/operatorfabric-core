@@ -92,7 +92,9 @@ export class CardHeaderComponent implements OnChanges {
                 entityHeader.push({
                     id: entity,
                     name: entityName,
-                    color: this.hasEntityAnswered(entity) ? 'green' : '#ff6600'
+                    color: this.hasEntityAnswered(entity)
+                        ? 'var(--opfab-color-green)'
+                        : 'var(--opfab-color-darker-orange)'
                 });
             }
         });

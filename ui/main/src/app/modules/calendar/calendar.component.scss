@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-@import '../../../../src/scss/_variables.scss';
 
 ::ng-deep .opfab-app-calendar {
     // GLOBAL SETTINGS
@@ -54,19 +52,19 @@
     }
 
     .opfab-calendar-event-action {
-        border-color: $sev-action;
+        border-color: var(--opfab-color-severity-action);
     }
 
     .opfab-calendar-event-alarm {
-        border-color: $sev-alarm;
+        border-color: var(--opfab-color-severity-alarm);
     }
 
     .opfab-calendar-event-compliant {
-        border-color: $sev-compliant;
+        border-color: var(--opfab-color-severity-compliant);
     }
 
     .opfab-calendar-event-information {
-        border-color: $sev-information;
+        border-color: var(--opfab-color-severity-information);
     }
 
     // LINKS IN CALENDAR HEADER
@@ -122,7 +120,7 @@
     // Current Day
     .fc-daygrid .fc-daygrid-day.fc-day-today {
         border-width: 2px;
-        border-color: #2268ff;
+        border-color: var(--opfab-color-blue);
     }
 
     // Day name in uppercase
@@ -151,19 +149,19 @@
 
     // change the color of default bullet point
     .opfab-calendar-event-action .fc-daygrid-event-dot {
-        border-color: $sev-action;
+        border-color: var(--opfab-color-severity-action);
     }
 
     .opfab-calendar-event-alarm .fc-daygrid-event-dot {
-        border-color: $sev-alarm;
+        border-color: var(--opfab-color-severity-alarm);
     }
 
     .opfab-calendar-event-compliant .fc-daygrid-event-dot {
-        border-color: $sev-compliant;
+        border-color: var(--opfab-color-severity-compliant);
     }
 
     .opfab-calendar-event-information .fc-daygrid-event-dot {
-        border-color: $sev-information;
+        border-color: var(--opfab-color-severity-information);
     }
 
     // END MONTH VIEW

@@ -94,9 +94,9 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
                     html += '<tr>';
                     html += '<td>' + response.entityName + '</td>';
                     if (response.agreement)
-                        html += `<td> <span style="color:green"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.yes')} </span></td>`;
+                        html += `<td> <span style="color:var(--opfab-color-green)"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.yes')} </span></td>`;
                     else
-                        html += `<td> <span style="color:red"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.no')} </span></td>`;
+                        html += `<td> <span style="color:var(--opfab-color-red)"> ${opfab.utils.getTranslation('builtInTemplate.message-or-question-listCard.no')} </span></td>`;
                     html += '<td>' + response.comment + '</td> </tr>';
                 });
                 html += '</table> </div></center>';
