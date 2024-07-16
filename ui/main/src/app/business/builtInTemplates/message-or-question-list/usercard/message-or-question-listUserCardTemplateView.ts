@@ -62,14 +62,6 @@ export class MessageOrQuestionListUserCardTemplateView {
             severity = this.selectedMessage.severity;
         }
 
-        let entitiesAllowedToRespond;
-
-        if (this.selectedMessage.question) {
-            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients;
-        } else {
-            entitiesAllowedToRespond = [];
-        }
-
         const card = {
             title: {key: 'message_or_question_list.title', parameters: {messageTitle: title}},
             summary: {
@@ -84,8 +76,7 @@ export class MessageOrQuestionListUserCardTemplateView {
                 richMessage: quillEditor.getContents(),
                 question: question
             },
-            severity: severity,
-            entitiesAllowedToRespond: entitiesAllowedToRespond
+            severity: severity
         };
 
         return {
