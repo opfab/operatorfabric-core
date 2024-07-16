@@ -11,10 +11,13 @@ declare const opfab;
 
 export class QuestionUserCardTemplateView {
     public getSpecificCardInformation(quillEditor: any, title: string) {
+        const severity = opfab.currentUserCard.severity ?? 'ACTION';
+
         const card = {
             summary: {key: 'question.summary'},
             title: {key: 'question.title', parameters: {questionTitle: title}},
-            data: {richQuestion: quillEditor.getContents(), questionTitle: title}
+            data: {richQuestion: quillEditor.getContents(), questionTitle: title},
+            severity: severity
         };
         if (quillEditor.isEmpty())
             return {

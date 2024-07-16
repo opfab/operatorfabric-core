@@ -73,6 +73,7 @@ describe('Question UserCard template', () => {
         quillEditor.setContents('My question');
         const title = 'Question title';
         const specificCardInformation = view.getSpecificCardInformation(quillEditor, title);
+        expect(specificCardInformation.card.severity).toEqual('ACTION');
         expect(specificCardInformation.card.data.richQuestion).toEqual('My question');
         expect(specificCardInformation.card.data.questionTitle).toEqual('Question title');
         expect(specificCardInformation.valid).toEqual(true);

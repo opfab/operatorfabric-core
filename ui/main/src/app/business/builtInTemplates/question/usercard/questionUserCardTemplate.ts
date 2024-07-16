@@ -32,6 +32,12 @@ export class QuestionUserCardTemplate extends BaseUserCardTemplate {
                 style="width:100%">${this.view.getRichQuestion()}</opfab-richtext-editor>
         </div>
         `;
+
+        this.initSeverity();
+    }
+
+    initSeverity() {
+        opfab.currentUserCard.setInitialSeverity('ACTION');
     }
 
     getSpecificCardInformation() {
