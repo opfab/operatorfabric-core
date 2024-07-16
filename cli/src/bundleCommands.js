@@ -46,9 +46,9 @@ const bundleCommand = {
     },
 
     async loadBundle(args) {
-        let bundleDirectory = args[0];
-        if (!bundleDirectory) {
-            bundleDirectory = (
+        let bundleDirectories = args;
+        if (bundleDirectories.length === 0) {
+            const bundleDirectory = (
                 await prompts({
                     type: 'text',
                     name: 'value',
@@ -59,19 +59,22 @@ const bundleCommand = {
                 console.log('Bundle directory is required');
                 return;
             }
+            bundleDirectories = [bundleDirectory]
         }
-        let gzippedBundle;
-        try {
-            gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
-            await utils.sendFile('businessconfig/processes', gzippedBundle, false);
-        } catch (error) {
-            console.log(`Error reading directory ${bundleDirectory}: ${error}`);
-            return;
-        } finally {
-            await fs.unlink(gzippedBundle);
-        }
+        for (const bundleDirectory of bundleDirectories) {
+            let gzippedBundle;
+            try {
+                gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
+                await utils.sendFile('businessconfig/processes', gzippedBundle, false);
+            } catch (error) {
+                console.log(`Error reading directory ${bundleDirectory}: ${error}`);
+                return;
+            } finally {
+                await fs.unlink(gzippedBundle);
+            }
 
-        console.log(`Bundle ${bundleDirectory} loaded`);
+            console.log(`Bundle ${bundleDirectory} loaded`);
+        }
     },
 
     async tarGZipBundleDirectory(bundleDirectory) {
@@ -119,7 +122,7 @@ const bundleCommand = {
 
  Commands list : 
 
-            load     Load bundle from directory: opfab bundle load <bundleDirectory>  
+            load     Load bundle from directory: opfab bundle load <bundleDirectory>... 
             delete   Delete bundle by process : opfab bundle delete <processId>
         `);
     }
