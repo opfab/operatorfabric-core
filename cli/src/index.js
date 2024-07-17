@@ -12,7 +12,7 @@
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
-const perimeter = require('./perimeterCommands.js');
+const perimeters = require('./perimetersCommands.js');
 const processGroups = require('./processGroupsCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
@@ -83,8 +83,8 @@ const args = process.argv.slice(2);
                 exitIfNotLoggedIn();
                 await card.processCardCommand(args.slice(1));
                 break;
-            case 'perimeter':
-                await perimeter.processPerimeterCommand(args.slice(1));
+            case 'perimeters':
+                await perimeters.processPerimetersCommand(args.slice(1));
                 break;
             case 'service':
                 exitIfNotLoggedIn();
@@ -113,23 +113,23 @@ function printHelp() {
 
 Command list :
 
-    bundle          Load or delete a bundle
-    businessdata    Load or delete business data
-    card            Send a card, delete a card or reset the card limiter for sending cards 
-    config          Set, get or list opfab cli configuration values
-    connectedusers  Send a message to subscriptions
-    entities        Load a list of entities
-    groups          Load a list of groups
-    help            Show help on a command using help <command> or all commands using help  
-    login           Log in to opfab
-    logout          Log out to opfab
+    bundle           Load or delete a bundle
+    businessdata     Load or delete business data
+    card             Send a card, delete a card or reset the card limiter for sending cards 
+    config           Set, get or list opfab cli configuration values
+    connectedusers   Send a message to subscriptions
+    entities         Load a list of entities
+    groups           Load a list of groups
+    help             Show help on a command using help <command> or all commands using help  
+    login            Log in to opfab
+    logout           Log out to opfab
     monitoringconfig Load or delete a configuration for monitoring screen
-    perimeter       Create or delete a perimeter
-    processgroups   Load or clear processgroups
-    realtimescreen  Load real time screen definition file
-    service         Get or set log level for java services
-    status          Show login status
-    users           Set or unset process/state notifications
+    perimeters       Create or delete perimeters
+    processgroups    Load or clear processgroups
+    realtimescreen   Load real time screen definition file
+    service          Get or set log level for java services
+    status           Show login status
+    users            Set or unset process/state notifications
 
 `);
     } else {
@@ -152,8 +152,8 @@ Command list :
             case 'groups':
                 groups.printHelp();
                 break;
-            case 'perimeter':
-                perimeter.printHelp();
+            case 'perimeters':
+                perimeters.printHelp();
                 break;
             case 'config':
                 config.printHelp();
