@@ -1,10 +1,12 @@
-{
-	"id" : "taskExample",
-	"process" : "taskExample",
-	"stateRights" : [
-	  {
-		"state" : "taskState",
-		"right" : "ReceiveAndWrite"
-	  }
-	]
-}
+[
+	{
+		"id" : "taskExample",
+		"process" : "taskExample",
+		"stateRights" : [
+		{
+			"state" : "taskState",
+			"right" : "ReceiveAndWrite"
+		}
+		]
+	}
+]

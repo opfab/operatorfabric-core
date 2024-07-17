@@ -1,10 +1,12 @@
-{
-	"id" : "externalRecipient",
-	"process" : "api_test",
-	"stateRights" : [
-	  {
-		"state" : "messageState",
-		"right" : "ReceiveAndWrite"
-	  }
-	]
-  }
+[
+	{
+		"id" : "externalRecipient",
+		"process" : "api_test",
+		"stateRights" : [
+		{
+			"state" : "messageState",
+			"right" : "ReceiveAndWrite"
+		}
+		]
+	}
+]

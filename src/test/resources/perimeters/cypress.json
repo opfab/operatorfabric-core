@@ -1,54 +1,56 @@
-{
-  "id": "cypress",
-  "process": "cypress",
-  "stateRights": [
-    {
-      "state": "messageState",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "messageStateWithNoAck",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "messageStateWithOnlyWhenResponseDisabledForUserAck",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateOfTypeINPROGRESS",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateOfTypeFINISHED",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateOfTypeCANCELED",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateOfTypeNull",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateWithNoType",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "dummyResponseState",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "kitchenSink",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateWithUserHasAcknowledged",
-      "right": "ReceiveAndWrite"
-    },
-    {
-      "state": "stateWithAllEntitiesOfUserHaveAcknowledged",
-      "right": "ReceiveAndWrite"
-    }
-  ]
-}
+[
+  {
+    "id": "cypress",
+    "process": "cypress",
+    "stateRights": [
+      {
+        "state": "messageState",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "messageStateWithNoAck",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "messageStateWithOnlyWhenResponseDisabledForUserAck",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateOfTypeINPROGRESS",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateOfTypeFINISHED",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateOfTypeCANCELED",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateOfTypeNull",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateWithNoType",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "dummyResponseState",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "kitchenSink",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateWithUserHasAcknowledged",
+        "right": "ReceiveAndWrite"
+      },
+      {
+        "state": "stateWithAllEntitiesOfUserHaveAcknowledged",
+        "right": "ReceiveAndWrite"
+      }
+    ]
+  }
+]
