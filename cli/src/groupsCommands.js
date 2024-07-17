@@ -20,7 +20,10 @@ const groupsCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'groups action',
-                    choices: [{title: 'Load a list of groups', value: 'load'}]
+                    choices: [
+                        {title: 'Load a list of groups', value: 'load'},
+                        {title: 'Delete group', value: 'delete'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -28,13 +31,18 @@ const groupsCommands = {
                 return;
             }
         }
-
-        if (action === 'load') {
-            await this.loadGroupsFile(args[1]);
-        } else {
-            console.log(`Unknown groups action : ${action}
-            `);
-            await this.printHelp();
+        switch (action) {
+            case 'load':
+                await this.loadGroupsFile(args[1]);
+                break;
+            case 'delete': 
+                await this.deleteGroups(args.slice(1));
+                break;
+            default:
+                console.log(`Unknown groups action : ${action}
+                `);
+                await this.printHelp();
+                break;
         }
     },
 
@@ -65,8 +73,43 @@ const groupsCommands = {
         }
     },
 
+    async deleteGroups(args) {
+        let groups = args;
+        if (groups?.length === 0) {
+            const groupId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'group ID'
+                })
+            ).value;
+            if (!groupId) {
+                console.log('Group ID is required');
+                return;
+            }
+            groups = [groupId];
+        }
+        for (const groupId of groups) {
+            await utils.sendRequest(
+                `users/groups/${groupId}`,
+                'DELETE',
+                undefined,
+                `Group ${groupId} deleted successfully`,
+                `Failed to delete group`,
+                `Group ${groupId} not found`
+            );
+        }
+    },
+
     async printHelp() {
-        console.log(`Usage: opfab groups load <groups.json>`);
+        console.log(`Usage: opfab groups <command> <groupId|groupsFileName>
+
+            Command list :
+            
+                load      load a list of groups from json file: opfab groups load <groupsFileName>
+                delete    delete group by id : opfab groups delete <groupId>...
+                    
+                    `);
     }
 };
 module.exports = groupsCommands;
