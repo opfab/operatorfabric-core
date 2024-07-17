@@ -60,17 +60,24 @@ const groupsCommands = {
                 return;
             }
         }
-        const groupsList = JSON.parse(await fs.readFile(groupsFile, 'utf8'));
-        for (const group of groupsList) {
-            await utils.sendRequest(
-                'users/groups',
-                'POST',
-                JSON.stringify(group),
-                `group ${group.id} created successfully`,
-                `Failed to create group ${group.id}`,
-                `Failed to create group ${group.id} , not found error`
-            );
-        }
+        try {
+            await fs.access(groupsFile, fs.constants.F_OK);
+            const groupsList = JSON.parse(await fs.readFile(groupsFile, 'utf8'));
+            for (const group of groupsList) {
+                await utils.sendRequest(
+                    'users/groups',
+                    'POST',
+                    JSON.stringify(group),
+                    `group ${group.id} created successfully`,
+                    `Failed to create group ${group.id}`,
+                    `Failed to create group ${group.id} , not found error`
+                );
+            }
+        } catch (error) {
+            console.log(`Error reading groups file ${groupsFile}: ${error}`);
+            return;
+        } 
+
     },
 
     async deleteGroups(args) {
