@@ -1,14 +1,16 @@
-{
-  "id" : "supervisor",
-  "process" : "supervisor",
-  "stateRights" : [
-    {
-      "state" : "disconnectedEntity",
-      "right" : "ReceiveAndWrite"
-    },
-    {
-      "state" : "unacknowledgedCards",
-      "right" : "ReceiveAndWrite"
-    }
-  ]
-}
+[
+  {
+    "id" : "supervisor",
+    "process" : "supervisor",
+    "stateRights" : [
+      {
+        "state" : "disconnectedEntity",
+        "right" : "ReceiveAndWrite"
+      },
+      {
+        "state" : "unacknowledgedCards",
+        "right" : "ReceiveAndWrite"
+      }
+    ]
+  }
+]

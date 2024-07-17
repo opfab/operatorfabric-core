@@ -1,10 +1,12 @@
-{
-	"id" : "taskAdvancedExample",
-	"process" : "taskAdvancedExample",
-	"stateRights" : [
-	  {
-		"state" : "taskAdvancedState",
-		"right" : "ReceiveAndWrite"
-	  }
-	]
-}
+[
+	{
+		"id" : "taskAdvancedExample",
+		"process" : "taskAdvancedExample",
+		"stateRights" : [
+		{
+			"state" : "taskAdvancedState",
+			"right" : "ReceiveAndWrite"
+		}
+		]
+	}
+]

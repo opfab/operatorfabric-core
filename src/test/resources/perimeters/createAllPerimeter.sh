@@ -12,8 +12,7 @@
 # is called from another folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-for d in *.json; do
-    perimeter=${d:0:$((${#d} - 5))} #remove last 5 character
+for perimeter in *.json; do
     ./createPerimeter.sh  $perimeter $1
 done
 

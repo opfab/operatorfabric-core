@@ -1,26 +1,28 @@
-{
-	"id" : "question",
-	"process" : "defaultProcess",
-	"stateRights" : [
-	  {
-		"state" : "responseState",
-		"right" : "ReceiveAndWrite"
-	  },
-		  {
-		"state" : "questionState",
-		"right" : "ReceiveAndWrite"
-	  },
-			  {
-		"state" : "multipleOptionsResponseState",
-		"right" : "ReceiveAndWrite"
-	  },
-	  {
-		"state" : "messageState",
-		"right" : "ReceiveAndWrite"
-	  },
-	  {
-		"state" : "processState",
-		"right" : "ReceiveAndWrite"
-	  }
-	]
-  }
+[
+	{
+		"id" : "question",
+		"process" : "defaultProcess",
+		"stateRights" : [
+		{
+			"state" : "responseState",
+			"right" : "ReceiveAndWrite"
+		},
+			{
+			"state" : "questionState",
+			"right" : "ReceiveAndWrite"
+		},
+				{
+			"state" : "multipleOptionsResponseState",
+			"right" : "ReceiveAndWrite"
+		},
+		{
+			"state" : "messageState",
+			"right" : "ReceiveAndWrite"
+		},
+		{
+			"state" : "processState",
+			"right" : "ReceiveAndWrite"
+		}
+		]
+	}
+]
