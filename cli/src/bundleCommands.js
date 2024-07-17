@@ -64,16 +64,20 @@ const bundleCommand = {
         for (const bundleDirectory of bundleDirectories) {
             let gzippedBundle;
             try {
-                gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
-                await utils.sendFile('businessconfig/processes', gzippedBundle, false);
+                const stat = await fs.stat(bundleDirectory);
+                if (stat.isDirectory()) {
+                    gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
+                    await utils.sendFile('businessconfig/processes', gzippedBundle, false);
+                    console.log(`Bundle ${bundleDirectory} loaded`);
+                } else {
+                    console.log(`Error: ${bundleDirectory} is not a directory`);
+                }
             } catch (error) {
                 console.log(`Error reading directory ${bundleDirectory}: ${error}`);
                 return;
             } finally {
-                await fs.unlink(gzippedBundle);
+                if (gzippedBundle) await fs.unlink(gzippedBundle);
             }
-
-            console.log(`Bundle ${bundleDirectory} loaded`);
         }
     },
 
