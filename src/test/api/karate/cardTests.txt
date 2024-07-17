@@ -26,7 +26,7 @@
       cards/deleteUserCard.feature                \
       cards/deleteCardsByEndDate.feature          \
       cards/cardsWithRepresentative.feature       \
-      cards/externalRecipentErrors.feature        \
+      cards/externalRecipientErrors.feature        \
       cards/postCardWithRRuleRecurrence.feature   \
       cards/cardsReminder.feature                 \
       cards/cardIdWithSpecialCharacters.feature   \

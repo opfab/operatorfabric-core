@@ -11,15 +11,15 @@ const prompts = require('prompts');
 const utils = require('./utils.js');
 const fs = require('fs').promises;
 
-const perimeterCommands = {
-    async processPerimeterCommand(args) {
+const perimetersCommands = {
+    async processPerimetersCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Perimeter action',
+                    message: 'Perimeters action',
                     choices: [
                         {title: 'Create', value: 'create'},
                         {title: 'Add to group', value: 'addtogroup'},
@@ -28,13 +28,13 @@ const perimeterCommands = {
                 })
             ).value;
             if (!action) {
-                console.log('Perimeter action is required');
+                console.log('Perimeters action is required');
                 return;
             }
         }
         switch (action) {
             case 'create':
-                await this.createPerimeter(args.slice(1));
+                await this.createPerimeters(args.slice(1));
                 break;
             case 'addtogroup':
                 await this.addPerimeterToGroup(args.slice(1));
@@ -43,49 +43,55 @@ const perimeterCommands = {
                 await this.deletePerimeter(args.slice(1));
                 break;
             default:
-                console.log(`Unknown perimeter action : ${action}
+                console.log(`Unknown perimeters action : ${action}
                 `);
                 await this.printHelp();
                 break;
         }
     },
 
-    async createPerimeter(args) {
-        let perimeterFiles = args;
+    async createPerimeters(args) {
+        let perimetersFiles = args;
 
-        if (perimeterFiles.length === 0) {
+        if (perimetersFiles.length === 0) {
             const fileName = (
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'JSON perimeter file name '
+                    message: 'JSON perimeters file name '
                 })
             ).value;
             if (!fileName) {
-                console.log('JSON perimeter file name is required');
+                console.log('JSON perimeters file name is required');
                 return;
             }
-            perimeterFiles = [fileName];
+            perimetersFiles = [fileName];
         }
-        for (const perimeterFile of perimeterFiles) {
+        for (const perimetersFile of perimetersFiles) {
             let fileContent;
             try {
-                fileContent = await fs.readFile(perimeterFile, 'utf8');
+                fileContent = await fs.readFile(perimetersFile, 'utf8');
             } catch (error) {
-                console.error('Failed to read perimeter file', perimeterFile);
+                console.error('Failed to read perimeters file', perimetersFile);
                 console.error('Error:', error);
             }
             if (fileContent) {
-
-                await utils.sendRequest(
-                    'users/perimeters',
-                    'POST',
-                    fileContent,
-                    `Perimeter created successfully (${perimeterFile})`,
-                    `Failed to create perimeter  ${perimeterFile}`,
-                    `Failed to create perimeter ${perimeterFile} , not found error`
-                )
+                await this.createPerimetersInFileContent(fileContent);
             }
+        }
+    },
+
+    async createPerimetersInFileContent(fileContent) {
+        const perimetersList = JSON.parse(fileContent);
+        for (const perimeter of perimetersList) {
+            await utils.sendRequest(
+                'users/perimeters',
+                'POST',
+                JSON.stringify(perimeter),
+                `Perimeter ${perimeter.id} created successfully`,
+                `Failed to create perimeter ${perimeter.id}`,
+                `Failed to create perimeter ${perimeter.id} , not found error`
+            );
         }
     },
 
@@ -176,4 +182,4 @@ Command list :
         `);
     }
 };
-module.exports = perimeterCommands;
+module.exports = perimetersCommands;

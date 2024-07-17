@@ -761,7 +761,7 @@ describe('AdmininstrationPages', () => {
                     expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
                     expect(rows[2].TYPE).to.be.undefined;
                     expect(rows[2].PERIMETERS).to.equal(
-                        'conferenceAndITIncidentExample, cypress, defaultProcess, externalRecipent, gridCooperation, messageOrQuestionExample, question, supervisor, taskAdvancedExample, taskExample'
+                        'conferenceAndITIncidentExample, cypress, defaultProcess, externalRecipient, gridCooperation, messageOrQuestionExample, question, supervisor, taskAdvancedExample, taskExample'
                     );
                 });
             });
