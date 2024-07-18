@@ -184,7 +184,8 @@ public class CardSubscriptionService implements EventListener {
         cache.put(subId, cardSubscription);
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
 
-        logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, "Ver: " + uiVersion);
+        String cardSubscriptionId = cardSubscription.getId().split("#")[1];
+        logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, "ClientId: " + cardSubscriptionId + " Ver: " + uiVersion);
 
         return cardSubscription;
     }
@@ -223,8 +224,8 @@ public class CardSubscriptionService implements EventListener {
         cache.remove(subId); 
         log.info("Subscription with id {} evicted (user {})", subId , sub.getUserLogin());
 
-
-        logUserAction(sub.getUserLogin(), UserActionEnum.CLOSE_SUBSCRIPTION, sub.getCurrentUserWithPerimeters().getUserData().getEntities(), null, null);
+        String cardSubscriptionId = subId.split("#")[1];
+        logUserAction(sub.getUserLogin(), UserActionEnum.CLOSE_SUBSCRIPTION, sub.getCurrentUserWithPerimeters().getUserData().getEntities(), null, "ClientId: " + cardSubscriptionId);
     }
 
     /**
