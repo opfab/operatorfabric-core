@@ -72,6 +72,30 @@ public class OpfabKafkaProducer {
                         .setEntityRecipients(getListFromCvsString(cardMap.get("entityRecipients")))
                         .build())
                 .build();
+        sendCommand(topic, cardCommand);
+    }
+
+    public void delete(String topic, Map<String, Object> cardMap) throws InterruptedException, ExecutionException {
+
+        CardCommand cardCommand = CardCommand.newBuilder()
+                .setCommand(CommandType.DELETE_CARD)
+                .setCard(Card.newBuilder()
+                        .setProcessInstanceId((String) cardMap.get("processInstanceId"))
+                        .setProcess((String)cardMap.get("process"))
+                        .setState((String)cardMap.get("state"))
+                        .setPublisher((String)cardMap.get("publisher"))
+                        .setProcessVersion((String)cardMap.get("processVersion"))
+                        .setStartDate(Instant.ofEpochMilli((Long) cardMap.get("startDate")))
+                        .setSeverity(getSeverity((String) cardMap.get("processVersion")))
+                        .setTitle(new I18n("message.title", null))
+                        .setSummary(new I18n("message.summary", null))
+                        .setEntityRecipients(getListFromCvsString((String) cardMap.get("entityRecipients")))
+                        .build())
+                .build();
+        sendCommand(topic, cardCommand);
+    }
+
+    private void sendCommand(String topic, CardCommand cardCommand) throws InterruptedException, ExecutionException {
         ProducerRecord<Object, Object> cardRecord = new ProducerRecord<>(topic, cardCommand);
         java.util.concurrent.Future<RecordMetadata> result = kafka.send(cardRecord);
         result.get();
@@ -79,6 +103,25 @@ public class OpfabKafkaProducer {
 
     private List<String> getListFromCvsString(String input) {
         return input != null ? List.of(input.split(",")): null;
+    }
+
+    private SeverityType getSeverity(String severity) {
+        SeverityType severityType;
+        switch (severity) {
+            case "COMPLIANT":
+                severityType = SeverityType.COMPLIANT;
+                break;
+            case "ACTION":
+                severityType = SeverityType.ACTION;
+                break;
+            case "ALARM":
+                severityType = SeverityType.ALARM;
+                break;
+            default:
+                severityType = SeverityType.INFORMATION;
+                break;
+        }
+        return severityType;
     }
 
     public void close() {
