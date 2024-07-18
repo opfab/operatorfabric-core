@@ -127,7 +127,7 @@ Command list :
     perimeters       Create or delete perimeters
     processgroups    Load or clear processgroups
     realtimescreen   Load real time screen definition file
-    service          Get or set log level for java services
+    service          Get or set log level for services
     status           Show login status
     users            Set or unset process/state notifications
 
