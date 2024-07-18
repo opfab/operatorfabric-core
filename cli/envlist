@@ -1,2 +1,2 @@
-dev DEV LOCALHOST_IP 2002 admin test
+dev DEV 172.17.0.1 2002 admin test
 prod  PROD PROD_URL  80
