@@ -16,8 +16,14 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
 
     constructor() {
         super();
+        this.setInitialSeverity();
         this.initRecipients();
         this.registerFunctionToGetSpecificCardInformation();
+    }
+
+    private setInitialSeverity() {
+        const initialSeverity = this.getAttribute('initialSeverity');
+        if (initialSeverity) opfab.currentUserCard.setInitialSeverity(initialSeverity);
     }
 
     private initRecipients() {

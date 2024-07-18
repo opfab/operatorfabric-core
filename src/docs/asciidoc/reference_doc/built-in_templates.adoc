@@ -153,6 +153,7 @@ in the feed will be 'Message received : xxx'. If left empty the summary input fi
 
 For each user card templates, you can set : 
 
+- The initial severity
 - The entity recipient list 
 - The initial selected recipients 
 - The entity recipient for information list 
@@ -162,6 +163,7 @@ For each user card templates, you can set :
 For example :
 ```
 <opfab-message-usercard
+    initialSeverity="INFORMATION"
     entityRecipientList='[{"id": "ENTITY_FR", "levels": [0, 1]}, {"id": "ENTITY_IT"},{"id": "IT_SUPERVISOR_ENTITY"}]'
     initialSelectedRecipients='["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"]'
     entityRecipientForInformationList='[{"id": "ENTITY_FR", "levels": [0, 1]},{"id": "IT_SUPERVISOR_ENTITY"}]'
