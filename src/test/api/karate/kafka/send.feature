@@ -30,7 +30,7 @@ Feature: Kafka Producer and Consumer Demo
     """
 
 
-  Scenario: Write card to opfab topic and check card was published
+  Scenario: Write card to opfab topic, check card was published and then delete it
 
 
   # Create new perimeter
@@ -57,9 +57,11 @@ Feature: Kafka Producer and Consumer Demo
   }
   """
     
-
+  # Send card 
     * def kp = new KafkaProducer(kafkaServer)
     * kp.send(topic, card );
+
+  # Check card is published
 
   	* def filter =
 	"""
@@ -85,6 +87,16 @@ Feature: Kafka Producer and Consumer Demo
     And match response.content[0].processInstanceId == "process.kafka.1"
     And match response.content[0].process == "api_test"
     And match response.content[0].state == "messageState"
+    And def publishedCard = response.content[0]
 
-    #delete perimeter created previously
+  # Delete card via kafka
+    * kp.delete(topic, publishedCard );
+
+  # Check card was deleted
+    * configure retry = { count: 5, interval: 1000 }
+	  Given url opfabUrl + 'cards-consultation/cards/api_test.process.kafka.1'
+	  And header Authorization = 'Bearer ' + authToken
+    And retry until responseStatus == 404
+
+  # Delete perimeter created previously
   * callonce read('../common/deletePerimeter.feature') { perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)' }
