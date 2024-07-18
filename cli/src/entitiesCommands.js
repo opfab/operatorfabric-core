@@ -20,7 +20,10 @@ const entitiesCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'Entities action',
-                    choices: [{title: 'Load a list of entities', value: 'load'}]
+                    choices: [
+                        {title: 'Load a list of entities', value: 'load'},
+                        {title: 'Delete a list of entities', value: 'delete'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -29,12 +32,18 @@ const entitiesCommands = {
             }
         }
 
-        if (action === 'load') {
-            await this.loadEntitiesFile(args[1]);
-        } else {
-            console.log(`Unknown entities action : ${action}
-            `);
-            await this.printHelp();
+        switch (action) {
+            case 'load':
+                await this.loadEntitiesFile(args[1]);
+                break;
+            case 'delete':
+                await this.deleteEntities(args.slice(1));
+                break;
+            default:
+                console.log(`Unknown entities action : ${action}
+                `);
+                await this.printHelp();
+                break;
         }
     },
 
@@ -65,8 +74,46 @@ const entitiesCommands = {
         }
     },
 
+    async deleteEntities(args) {
+        let entityIds = args;
+        if (entityIds.length === 0) {
+            entityIds = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: 'Entity ID(s)'
+                })
+            ).value;
+            if (!entityIds) {
+                console.log('Entity ID(s) is required');
+                return;
+            }
+            entityIds = entityIds.split(' ');
+        }
+
+        for (const entityId of entityIds) {
+            if (entityId.length > 0) {
+                await utils.sendRequest(
+                    `users/entities/${entityId}`,
+                    'DELETE',
+                    undefined,
+                    `Entity ${entityId} deleted successfully`,
+                    `Failed to delete entity`,
+                    `Entity ${entityId} not found`
+                );
+            }
+        }
+    },
+
     async printHelp() {
-        console.log(`Usage: opfab entities load <entities.json>`);
+        console.log(`Usage: opfab entities <command> <entityId...|entitiesFileName>
+
+Command list :
+
+    load      create entities : opfab entities load <entitiesFileName>
+    delete    delete entities : opfab entities delete <entityId>...
+        
+        `);
     }
 };
 module.exports = entitiesCommands;
