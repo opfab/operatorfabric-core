@@ -109,7 +109,7 @@ const cardCommands = {
         else 
         {
             console.error('Failed to send card');
-            console.error('Response:', response);
+            console.error(`Server response : ${await response.text()} \n`);
         }
     },
 
