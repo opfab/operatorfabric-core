@@ -389,6 +389,7 @@ public class ProcessesService implements ResourceLoaderAware {
         Process process = objectMapper.readValue(outConfigPath.toFile(), Process.class);
 
         this.checkInputDoesNotContainForbiddenCharacters("id of the process", process.id());
+        this.checkInputDoesNotContainForbiddenCharacters("version", process.version());
 
         // process root
         Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
