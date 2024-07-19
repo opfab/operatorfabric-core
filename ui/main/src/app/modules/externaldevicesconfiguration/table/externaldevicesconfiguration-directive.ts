@@ -148,7 +148,8 @@ export abstract class ExternalDevicesConfigurationDirective {
                 type: field.type,
                 headerName: field.name,
                 field: field.name,
-                colId: field.name
+                colId: field.name,
+                cellClass: field.name === 'supportedSignals' ? 'opfab-ag-cell-with-no-padding-right' : null
             };
 
             columnDefs[index] = columnDef;
