@@ -9,6 +9,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+const omelette = require('omelette'); // For completion
+
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
@@ -24,6 +26,74 @@ const users = require('./usersCommands.js');
 const entities = require('./entitiesCommands');
 const groups = require('./groupsCommands');
 const args = process.argv.slice(2);
+
+const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
+
+omelette('opfab').tree({
+    bundle: ['load', 'delete'],
+    businessdata: ['load', 'delete'],
+    card: ['send', 'delete', 'resetratelimiter'],
+    config: ['set', 'get', 'list'],
+    connectedusers: {
+        sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
+    },
+    entities: ['load'],
+    groups: ['load'],
+    help: [
+        'bundle',
+        'businessdata',
+        'card',
+        'config',
+        'connectedusers',
+        'entities',
+        'groups',
+        'login',
+        'logout',
+        'monitoringconfig',
+        'perimeter',
+        'processgroups',
+        'realtimescreen',
+        'service',
+        'status',
+        'users'
+    ],
+    login: [],
+    logout: [],
+    monitoringconfig: ['load', 'delete'],
+    perimeter: ['create', 'addtogroup', 'delete'],
+    processgroups: ['clear', 'load'],
+    realtimescreen: ['load'],
+    service: {
+        'get-log-level': [
+            'users',
+            'businessconfig',
+            'cards-consultation',
+            'cards-publication',
+            'external-devices',
+            'supervisor',
+            'cards-external-diffusion',
+            'cards-reminder'
+        ],
+        'set-log-level': {
+            users: levels,
+            businessconfig: levels,
+            'cards-consultation': levels,
+            'cards-publication': levels,
+            'external-devices': levels,
+            supervisor: levels,
+            'cards-external-diffusion': levels,
+            'cards-reminder': levels
+        }
+
+    },
+    status: [],
+    users: [
+        'set-notified',
+        'set-not-notified',
+        'set-notified-mail',
+        'set-not-notified-mail'
+    ]
+}).init();
 
 (async () => {
     if (args[0] === undefined) {
