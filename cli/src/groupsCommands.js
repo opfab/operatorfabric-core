@@ -22,7 +22,7 @@ const groupsCommands = {
                     message: 'groups action',
                     choices: [
                         {title: 'Load a list of groups', value: 'load'},
-                        {title: 'Delete group', value: 'delete'}
+                        {title: 'Delete a list of groups', value: 'delete'}
                     ]
                 })
             ).value;
@@ -83,28 +83,29 @@ const groupsCommands = {
     async deleteGroups(args) {
         let groups = args;
         if (groups?.length === 0) {
-            const groupId = (
+            const groupIds = (
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'group ID'
+                    message: 'group ID(s)'
                 })
             ).value;
-            if (!groupId) {
-                console.log('Group ID is required');
+            if (!groupIds) {
+                console.log('Group ID(s) is required');
                 return;
             }
-            groups = [groupId];
+            groups = groupIds.split(' ');
         }
         for (const groupId of groups) {
-            await utils.sendRequest(
-                `users/groups/${groupId}`,
-                'DELETE',
-                undefined,
-                `Group ${groupId} deleted successfully`,
-                `Failed to delete group`,
-                `Group ${groupId} not found`
-            );
+            if (groupId.length > 0)
+                await utils.sendRequest(
+                    `users/groups/${groupId}`,
+                    'DELETE',
+                    undefined,
+                    `Group ${groupId} deleted successfully`,
+                    `Failed to delete group`,
+                    `Group ${groupId} not found`
+                );
         }
     },
 
