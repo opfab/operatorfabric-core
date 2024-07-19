@@ -40,10 +40,10 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
                 kafkaCard.getProcessInstanceId(), kafkaCard.getProcess(), kafkaCard.getData());
 
         org.opfab.cards.publication.model.Card card = buildCardPublicationData(cardCommand);
-        if (card.getId() == null || card.getId().isEmpty()) {
-            card.prepare(card.getPublishDate());
-        }
         if (card != null) {
+            if (card.getId() == null || card.getId().isEmpty()) {
+                card.prepare(card.getPublishDate());
+            }
             services.getCardDeletionService().deleteCardById(card.getId(), Instant.now(), null);
         }
     }
