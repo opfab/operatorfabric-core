@@ -22,3 +22,7 @@ nvm use v20.15.1
     npm install #Need first an install to download all necessary module
     npm install -g #Need global install to have the command opfab available
 )
+
+opfab --completion > ${BASH_SOURCE%/*}/opfab.completion.sh
+source ${BASH_SOURCE%/*}/opfab.completion.sh
+rm ${BASH_SOURCE%/*}/opfab.completion.sh
