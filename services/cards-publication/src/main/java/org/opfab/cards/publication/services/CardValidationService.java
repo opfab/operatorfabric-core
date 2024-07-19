@@ -54,9 +54,21 @@ public class CardValidationService {
      *                                      based on object annotation configuration
      */
     void validate(Card c) throws ConstraintViolationException {
-        if (!checkIsParentCardIdExisting(c))
-            throw new ConstraintViolationException(
-                    "The parentCardId " + c.getParentCardId() + " is not the id of any card", null);
+        String parentCardId = c.getParentCardId();
+
+        if (Optional.ofNullable(parentCardId).isPresent()) {
+            Card parentCard = cardRepository.findCardById(parentCardId, false);
+
+            if (parentCard == null) {
+                throw new ConstraintViolationException(
+                        "The parentCardId " + c.getParentCardId() + " is not the id of any card", null);
+            } else {
+                if (checkIsCardAChildCard(parentCard)) {
+                    throw new ConstraintViolationException(
+                            "The parentCardId " + c.getParentCardId() + " is a child card", null);
+                }
+            }
+        }
 
         if (!checkIsInitialParentCardUidExisting(c))
             throw new ConstraintViolationException(
@@ -117,6 +129,13 @@ public class CardValidationService {
                     "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
     }
 
+    boolean checkIsCardAChildCard(Card card) {
+        if ((card.getParentCardId() != null) && (card.getParentCardId().length() > 0)) {
+            return true;
+        }
+        return false;
+    }
+
     void validateCardForPatch(Card cardForPatch, Card initialCard) throws ConstraintViolationException {
         if ((cardForPatch.getProcess() != null) && !cardForPatch.getProcess().equals(initialCard.getProcess()))
             throw new ConstraintViolationException("The current process field " + initialCard.getProcess()
@@ -132,14 +151,6 @@ public class CardValidationService {
         if (field == null) {
             throw new ConstraintViolationException(String.format("Impossible to publish card because there is no %s", fieldName), null);
         }
-    }
-
-    boolean checkIsCardIdExisting(String cardId) {
-        return !((Optional.ofNullable(cardId).isPresent()) && (cardRepository.findCardById(cardId, false) == null));
-    }
-
-    boolean checkIsParentCardIdExisting(Card c) {
-        return checkIsCardIdExisting(c.getParentCardId());
     }
 
     // The check of existence of uid is done in archivedCards collection
