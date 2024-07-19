@@ -8,37 +8,31 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-# This starts by moving to the directory where the script is located so the paths below still work even if the script
-# is called from another folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
 
-for perimeter in *.json; do
-    ./createPerimeter.sh  $perimeter $1
-done
-
- ./addPerimeterToGroup.sh question Dispatcher
- ./addPerimeterToGroup.sh question Planner
- ./addPerimeterToGroup.sh defaultProcess Dispatcher
- ./addPerimeterToGroup.sh defaultProcess Planner
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Dispatcher
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Planner
- ./addPerimeterToGroup.sh conferenceAndITIncidentExample Supervisor
- ./addPerimeterToGroup.sh messageOrQuestionExample Dispatcher
- ./addPerimeterToGroup.sh messageOrQuestionExample Planner
- ./addPerimeterToGroup.sh messageOrQuestionExample Supervisor
- ./addPerimeterToGroup.sh taskExample Dispatcher
- ./addPerimeterToGroup.sh taskExample Planner
- ./addPerimeterToGroup.sh taskExample Supervisor
- ./addPerimeterToGroup.sh taskAdvancedExample Dispatcher
- ./addPerimeterToGroup.sh taskAdvancedExample Planner
- ./addPerimeterToGroup.sh taskAdvancedExample Supervisor
- ./addPerimeterToGroup.sh gridCooperation Dispatcher
- ./addPerimeterToGroup.sh gridCooperation Planner
- ./addPerimeterToGroup.sh gridCooperation Supervisor
- ./addPerimeterToGroup.sh cypress Dispatcher
- ./addPerimeterToGroup.sh cypress Planner
- ./addPerimeterToGroup.sh cypress Supervisor
- ./addPerimeterToGroup.sh questionReceiveOnly Supervisor
- ./addPerimeterToGroup.sh externalRecipient Dispatcher
- ./addPerimeterToGroup.sh supervisor Dispatcher
+opfab perimeters create *.json
+opfab perimeters addtogroup question Dispatcher
+opfab perimeters addtogroup question Planner
+opfab perimeters addtogroup defaultProcess Dispatcher
+opfab perimeters addtogroup defaultProcess Planner
+opfab perimeters addtogroup conferenceAndITIncidentExample Dispatcher
+opfab perimeters addtogroup conferenceAndITIncidentExample Planner
+opfab perimeters addtogroup conferenceAndITIncidentExample Supervisor
+opfab perimeters addtogroup messageOrQuestionExample Dispatcher
+opfab perimeters addtogroup messageOrQuestionExample Planner
+opfab perimeters addtogroup messageOrQuestionExample Supervisor
+opfab perimeters addtogroup taskExample Dispatcher
+opfab perimeters addtogroup taskExample Planner
+opfab perimeters addtogroup taskExample Supervisor
+opfab perimeters addtogroup taskAdvancedExample Dispatcher
+opfab perimeters addtogroup taskAdvancedExample Planner
+opfab perimeters addtogroup taskAdvancedExample Supervisor
+opfab perimeters addtogroup gridCooperation Dispatcher
+opfab perimeters addtogroup gridCooperation Planner
+opfab perimeters addtogroup gridCooperation Supervisor
+opfab perimeters addtogroup cypress Dispatcher
+opfab perimeters addtogroup cypress Planner
+opfab perimeters addtogroup cypress Supervisor
+opfab perimeters addtogroup questionReceiveOnly Supervisor
+opfab perimeters addtogroup externalRecipient Dispatcher
+opfab perimeters addtogroup supervisor Dispatcher
  

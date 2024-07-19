@@ -18,7 +18,6 @@ then
 	url="http://localhost"
 fi
 (
-	source ./getToken.sh $url "publisher_test"
 	cd cards
 	./sendCard.sh defaultProcess/message.json $url
 	./sendCard.sh defaultProcess/chart.json $url
