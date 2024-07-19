@@ -23,11 +23,11 @@ fi
 	./deleteAllBundles.sh $url
 	./loadAllBundles.sh
 	cd ../processGroups
-	./loadProcessGroups.sh processGroups.json
+	opfab processgroups load processGroups.json
 	cd ../perimeters
 	./createAllPerimeter.sh
 	cd ../realTimeScreens
-	./loadRealTimeScreens.sh realTimeScreens.json
+	opfab realtimescreen load realTimeScreens.json
 	cd ../businessData
 	./loadAllBusinessData.sh
 )
