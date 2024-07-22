@@ -239,7 +239,7 @@
         },
         "sort": {
             "title": "Sort by",
-            "severity": "Criticality then reception date",
+            "severity": "Severity then reception date",
             "publish": "Reception date",
             "unread": "Unread then reception date",
             "startDate": "Start date",
