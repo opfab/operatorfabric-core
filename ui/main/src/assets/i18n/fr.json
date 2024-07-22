@@ -239,7 +239,7 @@
         },
         "sort": {
             "title": "Triées par",
-            "severity": "Criticité puis date de réception",
+            "severity": "Sévérité puis date de réception",
             "publish": "Date de réception",
             "unread": "Non lu puis date de réception",
             "startDate": "Date de début",
