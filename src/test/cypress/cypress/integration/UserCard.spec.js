@@ -631,7 +631,8 @@ describe('User Card ', function () {
       feed.openFirstCard();
       feed.editCurrentCard();
       cy.get('#opfab-keepChildCards').should('be.checked');
-      cy.get('#opfab-usercard-input-keepChildCards').click();
+      cy.waitDefaultTime();
+      cy.get('#opfab-keepChildCards').click({force: true});
       cy.get('#opfab-keepChildCards').should('not.be.checked');
       usercard.preview();
       // Card preview show responses list
