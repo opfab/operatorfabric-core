@@ -662,7 +662,7 @@
         "deviceId": "ID",
         "host": "SERVEUR",
         "port": "PORT",
-        "signalMapping": "MAPPAGES DE SIGNAUX",
+        "signalMapping": "MAPPINGS DE SIGNAUX",
         "isEnabled": "EST ACTIVÉ"
     },
     "useractionlogs": {
