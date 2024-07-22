@@ -102,7 +102,7 @@ const cardCommands = {
         }
 
         if (response.ok) {
-            console.error('Card sent successfully');
+            console.log('\x1b[32m%s\x1b[0m', 'Card sent successfully');
             const result = await response.json();
             console.error(result);
         }
