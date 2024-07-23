@@ -67,8 +67,12 @@ const bundleCommand = {
                 const stat = await fs.stat(bundleDirectory);
                 if (stat.isDirectory()) {
                     gzippedBundle = await this.tarGZipBundleDirectory(bundleDirectory);
-                    await utils.sendFile('businessconfig/processes', gzippedBundle, false);
-                    console.log(`Bundle ${bundleDirectory} loaded`);
+                    try {
+                        await utils.sendFile('businessconfig/processes', gzippedBundle, false);
+                        console.log(`Bundle ${bundleDirectory} loaded`);
+                    } catch (error) {
+                        console.log(`Bundle ${bundleDirectory} not loaded`);
+                    }
                 } else {
                     console.log(`Error: ${bundleDirectory} is not a directory`);
                 }
