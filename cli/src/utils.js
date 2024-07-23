@@ -41,6 +41,7 @@ const utils = {
             if (logSuccess) console.log(`${fileName} loaded successfully`);
         } catch (error) {
             console.error(`Failed to load ${fileName} : ${error.message}`);
+            throw error;
         }
     },
     async sendStringAsFile(path, content, action) {
