@@ -51,7 +51,7 @@
     "prettier": "3.3.3",
     "rimraf": "5.0.9",
     "sinon": "18.0.0",
-    "ts-jest": "29.2.2",
+    "ts-jest": "29.2.3",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
   }
