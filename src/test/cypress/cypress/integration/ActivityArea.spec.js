@@ -203,8 +203,6 @@ describe('ActivityAreaPage', () => {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
         cy.delayRequestResponse('/users/users/**');
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // uncheck
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // re-check
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
         cy.waitDefaultTime();

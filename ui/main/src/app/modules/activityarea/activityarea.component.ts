@@ -31,7 +31,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     messageAfterSavingSettings: string;
     displaySendResultError = false;
     isScreenLoaded = false;
-    areThereFormChanges = false;
 
     confirmationPopup: NgbModalRef;
 
@@ -73,7 +72,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                 .get(key)
                 .valueChanges.pipe(takeUntil(this.ngUnsubscribe$))
                 .subscribe((value) => {
-                    this.areThereFormChanges = true;
                     this.activityAreaView.setEntityConnected(key, value);
                 });
         });
@@ -83,9 +81,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
-        if (this.confirmationPopup) {
-            this.confirmationPopup.close();
-        }
+        if (this.confirmationPopup) this.confirmationPopup.close();
 
         const resp = await firstValueFrom(this.activityAreaView.saveActivityArea());
         this.saveSettingsInProgress = false;
@@ -93,12 +89,8 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         if (!resp) {
             this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
             this.displaySendResultError = true;
-        } else {
-            this.areThereFormChanges = false;
         }
-        if (this.confirmationPopup) {
-            this.confirmationPopup.close();
-        }
+        if (this.confirmationPopup) this.confirmationPopup.close();
         this.confirm.emit();
     }
 
@@ -112,7 +104,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     openConfirmSaveSettingsModal(content) {
-        if (this.askConfirmation && this.areThereFormChanges)
+        if (this.askConfirmation)
             this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
         else this.confirmSaveSettings();
     }
