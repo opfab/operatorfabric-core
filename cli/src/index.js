@@ -10,6 +10,7 @@
  */
 
 const omelette = require('omelette'); // For completion
+const fs = require('fs');
 
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
@@ -29,16 +30,34 @@ const args = process.argv.slice(2);
 
 const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 
+function listFiles() {
+    return fs.readdirSync('./');
+}
+
 omelette('opfab').tree({
-    bundle: ['load', 'delete'],
-    businessdata: ['load', 'delete'],
-    card: ['send', 'delete', 'resetratelimiter'],
+    bundle: {
+        load: listFiles,
+        delete: []
+    },
+    businessdata: {
+        load: listFiles,
+        delete: []
+    },
+    card: {
+        send: listFiles,
+        delete: [],
+        resetratelimiter: []
+    },
     config: ['set', 'get', 'list'],
     connectedusers: {
         sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
     },
-    entities: ['load'],
-    groups: ['load'],
+    entities: {
+        load: listFiles
+    },
+    groups: {
+        load: listFiles
+    },
     help: [
         'bundle',
         'businessdata',
@@ -59,10 +78,22 @@ omelette('opfab').tree({
     ],
     login: [],
     logout: [],
-    monitoringconfig: ['load', 'delete'],
-    perimeter: ['create', 'addtogroup', 'delete'],
-    processgroups: ['clear', 'load'],
-    realtimescreen: ['load'],
+    monitoringconfig: {
+        load: listFiles,
+        delete: []
+    },
+    perimeter: {
+        create: listFiles,
+        addtogroup: [],
+        delete: []
+    },
+    processgroups: {
+        load: listFiles,
+        clear: []
+    },
+    realtimescreen: {
+        load: listFiles
+    },
     service: {
         'get-log-level': [
             'users',
@@ -84,7 +115,6 @@ omelette('opfab').tree({
             'cards-external-diffusion': levels,
             'cards-reminder': levels
         }
-
     },
     status: [],
     users: [

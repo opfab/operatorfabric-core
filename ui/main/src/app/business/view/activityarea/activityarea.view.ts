@@ -171,7 +171,7 @@ export class ActivityAreaView {
                     if (response.status === ServerResponseStatus.OK) {
                         OpfabStore.getLightCardStore().removeAllLightCards();
                         UserService.loadUserWithPerimetersData().subscribe(() => {
-                            // needed to trigger change in the list of entities on the top right corner
+                            // needed to trigger change in the list of entities in the top right corner
                             ApplicationEventsService.setUserConfigChange();
                         });
                         return true;
