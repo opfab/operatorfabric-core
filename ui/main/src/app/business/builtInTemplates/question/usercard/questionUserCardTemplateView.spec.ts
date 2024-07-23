@@ -90,4 +90,32 @@ describe('Question UserCard template', () => {
             'Translation (en) of builtInTemplate.questionUserCard.noQuestionError'
         );
     });
+
+    it('GIVEN a user WHEN create card with empty title AND question text has multiple lines THEN title is the first line of question text', () => {
+        const view = new QuestionUserCardTemplateView();
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents(
+            '{"ops":[{"insert":"Question\\n"},{"attributes":{"bold":true},"insert":"first line in bold"},{"insert":"\\n"},{"attributes":{"color":"#e60000"},"insert":"second line red"},{"insert":"\\n"}]}'
+        );
+        const title = '';
+
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor, title);
+        expect(specificCardInformation.valid).toEqual(true);
+        expect(specificCardInformation.card.title.parameters.questionTitle).toEqual('Question');
+    });
+
+    it('GIVEN a user WHEN create card with empty title AND question text is longer than 30 characters THEN title is the first 30 characters of question text', () => {
+        const view = new QuestionUserCardTemplateView();
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents(
+            '{"ops":[{"insert":"France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>"}]}'
+        );
+        const title = '';
+
+        const specificCardInformation = view.getSpecificCardInformation(quillEditor, title);
+        expect(specificCardInformation.valid).toEqual(true);
+        expect(specificCardInformation.card.title.parameters.questionTitle).toEqual(
+            "France-England's interconnecti..."
+        );
+    });
 });
