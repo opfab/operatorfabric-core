@@ -12,10 +12,15 @@ declare const opfab;
 export class QuestionUserCardTemplateView {
     public getSpecificCardInformation(quillEditor: any, title: string) {
         const severity = opfab.currentUserCard.severity ?? 'ACTION';
-
+        let question_title = title;
+        if (title?.length === 0) {
+            question_title = opfab.richTextEditor.getPlainText(quillEditor.getContents());
+            question_title = question_title.split(/\r\n|\r|\n/g)[0];
+            if (question_title.length > 33) question_title = question_title.substring(0, 30) + '...';
+        }
         const card = {
             summary: {key: 'question.summary'},
-            title: {key: 'question.title', parameters: {questionTitle: title}},
+            title: {key: 'question.title', parameters: {questionTitle: question_title}},
             data: {richQuestion: quillEditor.getContents(), questionTitle: title},
             severity: severity
         };
