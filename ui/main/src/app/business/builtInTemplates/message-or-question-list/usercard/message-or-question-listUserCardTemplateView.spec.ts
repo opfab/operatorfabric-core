@@ -140,6 +140,18 @@ describe('MessageOrQuestionList UserCard template', () => {
         expect(message.message).toEqual('my message');
     });
 
+    it('GIVEN a message list WHEN message is not a question THEN entitiesAllowedToRespond is []', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+
+        const selectedMessage = {title: 'title', question: false};
+        view.selectedMessage = selectedMessage;
+
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents('My message');
+        const specficCardInformation = view.getSpecificCardInformation(quillEditor, '');
+        expect(specficCardInformation.card.entitiesAllowedToRespond).toEqual([]);
+    });
+
     it('GIVEN a user WHEN create card THEN card is the correct severity', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
 
