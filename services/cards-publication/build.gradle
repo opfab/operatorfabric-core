@@ -5,8 +5,6 @@ dependencies {
 
 //Transitive dependencies udpate needed for security reasons 
     implementation misc.guava
-    implementation misc.snappy
-    implementation cloud.avro
     implementation misc.compress
 //End transitive dependencies
 
