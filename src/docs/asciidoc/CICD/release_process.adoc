@@ -203,9 +203,9 @@ For example:
   external_devices_api: true
 - id: X.X.X-RC.RELEASE
   external_devices_api: true
-  badge: current
 - id: D.E.F.RELEASE
   external_devices_api: true
+  badge: current
 - id: A.B.C.RELEASE
   #... end of file omitted
 ----
