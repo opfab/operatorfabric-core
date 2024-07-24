@@ -62,12 +62,8 @@ public class CardValidationService {
             if (parentCard == null) {
                 throw new ConstraintViolationException(
                         "The parentCardId " + c.getParentCardId() + " is not the id of any card", null);
-            } else {
-                if (checkIsCardAChildCard(parentCard)) {
-                    throw new ConstraintViolationException(
-                            "The parentCardId " + c.getParentCardId() + " is a child card", null);
-                }
             }
+            checkIsCardAChildCard(parentCard);
         }
 
         if (!checkIsInitialParentCardUidExisting(c))
@@ -129,11 +125,11 @@ public class CardValidationService {
                     "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
     }
 
-    boolean checkIsCardAChildCard(Card card) {
-        if ((card.getParentCardId() != null) && (card.getParentCardId().length() > 0)) {
-            return true;
+    void checkIsCardAChildCard(Card card) {
+        if ((card != null) && (card.getParentCardId() != null) && (card.getParentCardId().length() > 0)) {
+            throw new ConstraintViolationException(
+                    "The parentCardId " + card.getParentCardId() + " is a child card", null);
         }
-        return false;
     }
 
     void validateCardForPatch(Card cardForPatch, Card initialCard) throws ConstraintViolationException {
