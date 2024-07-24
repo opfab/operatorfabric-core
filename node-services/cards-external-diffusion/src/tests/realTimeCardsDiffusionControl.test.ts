@@ -52,7 +52,8 @@ describe('Cards external diffusion', function () {
             .setMailService(mailService)
             .setFrom('test@opfab.com')
             .setSubjectPrefix('Subject')
-            .setBodyPrefix('Body')
+            .setBodyPrefix('Prefix')
+            .setBodyPostfix('Postfix')
             .setOpfabUrlInMailContent('http://localhost')
             .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
             .setWindowInSecondsForCardSearch(120);
@@ -139,7 +140,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Body <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a>'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br/>Postfix'
         );
     });
 
@@ -193,7 +194,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Body <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br> Title1'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br> Title1 <br/>Postfix'
         );
     });
 
@@ -245,7 +246,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            'Body <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt;</a> <br> Title1 &amp; &lt;br&gt;'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt;</a> <br> Title1 &amp; &lt;br&gt; <br/>Postfix'
         );
     });
 

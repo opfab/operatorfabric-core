@@ -19,6 +19,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     private windowInSecondsForCardSearch: number;
     private subjectPrefix: string;
     private bodyPrefix: string;
+    private bodyPostfix: string;
     private activateCardsDiffusionRateLimiter: boolean;
     private cardsDiffusionRateLimiter: CardsDiffusionRateLimiter;
 
@@ -29,6 +30,11 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
     public setBodyPrefix(bodyPrefix: string): this {
         this.bodyPrefix = bodyPrefix;
+        return this;
+    }
+
+    public setBodyPostfix(bodyPostfix: string): this {
+        this.bodyPostfix = bodyPostfix;
         return this;
     }
 
@@ -57,6 +63,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         this.from = updated.mailFrom;
         this.subjectPrefix = updated.subjectPrefix;
         this.bodyPrefix = updated.bodyPrefix;
+        this.bodyPostfix = updated.bodyPostfix;
         this.secondsAfterPublicationToConsiderCardAsNotRead = updated.secondsAfterPublicationToConsiderCardAsNotRead;
         this.windowInSecondsForCardSearch = updated.windowInSecondsForCardSearch;
         this.activateCardsDiffusionRateLimiter = updated.activateCardsDiffusionRateLimiter;
@@ -225,6 +232,11 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                     );
                     cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
                 }
+            }
+            if (this.bodyPostfix) {
+                cardBodyHtml = cardBodyHtml +
+                ' <br/>'+
+                this.bodyPostfix;
             }
         } catch (e) {
             this.logger.warn(`Couldn't parse email for : ${card.state}, ${e}`);

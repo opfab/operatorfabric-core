@@ -39,6 +39,7 @@ operatorfabric:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
       bodyPrefix: 'You received a card in opfab : '
+      bodyPostfix: 'This email has been sent by Opfab, there is no need to reply.'
       dailyEmailTitle: 'Cards received during the day'
       hourToSendDailyEmail: 7
       minuteToSendDailyEmail: 30
