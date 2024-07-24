@@ -78,7 +78,6 @@ ext {
 
 //Transitive dependencies udpate needed for security reasons 
             snakeyaml       : "org.yaml:snakeyaml:2.2",
-            snappy          : "org.xerial.snappy:snappy-java:1.1.10.5"
 //End transitive dependencies
     ]
 
