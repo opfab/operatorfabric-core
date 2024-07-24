@@ -60,6 +60,7 @@ export default class CardsExternalDiffusionService {
             .setFrom(serviceConfig.mailFrom as string)
             .setSubjectPrefix(serviceConfig.subjectPrefix as string)
             .setBodyPrefix(serviceConfig.bodyPrefix as string)
+            .setBodyPostfix(serviceConfig.bodyPostfix as string)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(
                 serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead as number
