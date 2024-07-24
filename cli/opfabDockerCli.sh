@@ -11,7 +11,7 @@
 
 CONFIG_FILE=$1
 if [[ ! -f "$CONFIG_FILE" ]]; then
-    docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it lfeoperatorfabric/of-opfab-cli:SNAPSHOT
+    docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it lfeoperatorfabric/of-opfab-cli:4.4.0-RC.RELEASE
     exit
 fi
 
@@ -38,4 +38,4 @@ while IFS= read -r line; do
 done < "$CONFIG_FILE"
 
 # Run the Docker command with the selected configuration
-docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it -e ENV_NAME="$ENV_NAME" -e OPFAB_URL="$OPFAB_URL" -e OPFAB_PORT="$OPFAB_PORT" -e OPFAB_LOGIN="$OPFAB_LOGIN" -e OPFAB_PASSWORD="$OPFAB_PASSWORD" lfeoperatorfabric/of-opfab-cli:SNAPSHOT
+docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it -e ENV_NAME="$ENV_NAME" -e OPFAB_URL="$OPFAB_URL" -e OPFAB_PORT="$OPFAB_PORT" -e OPFAB_LOGIN="$OPFAB_LOGIN" -e OPFAB_PASSWORD="$OPFAB_PASSWORD" lfeoperatorfabric/of-opfab-cli:4.4.0-RC.RELEASE
