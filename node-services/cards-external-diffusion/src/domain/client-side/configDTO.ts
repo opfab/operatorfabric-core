@@ -11,6 +11,7 @@ export default class ConfigDTO {
     public mailFrom: string;
     public subjectPrefix: string;
     public bodyPrefix: string;
+    public bodyPostfix: string;
     public dailyEmailTitle: string;
     public hourToSendDailyEmail: 0;
     public minuteToSendDailyEmail: 0;
