@@ -1,0 +1,6 @@
+card send cards/defaultProcess/message.json
+card send cards/defaultProcess/chart.json
+card send cards/defaultProcess/process.json
+card send cards/defaultProcess/question.json
+card send cards/defaultProcess/chartLine.json
+card send cards/defaultProcess/contingencies.json
