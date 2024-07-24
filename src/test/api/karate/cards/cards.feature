@@ -365,6 +365,44 @@ Scenario: Post card with correct parentCardId and initialParentCardUid
   When method post
   Then status 201
 
+
+  # Try to push child card for a child card and check if constraint violation is raised
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  And header Authorization = 'Bearer ' + authToken
+  When method get
+  Then status 200
+  And def cardId = response.card.id
+  And def cardUid = response.card.uid
+
+  * def childCardOfChildCard =
+    """
+    {
+      "publisher": "operator1_fr",
+      "processVersion": "1",
+      "process": "api_test",
+      "processInstanceId": "childCardOfChildCard",
+      "state": "messageState",
+      "groupRecipients": ["Dispatcher"],
+      "severity": "INFORMATION",
+      "startDate": 1553186770681,
+      "summary": {"key": "defaultProcess.summary"},
+      "title": {"key": "defaultProcess.title2"},
+      "data": {"message": "test externalRecipients"}
+    }
+    """
+  * childCardOfChildCard.parentCardId = cardId
+  * childCardOfChildCard.initialParentCardUid = cardUid
+
+  # Push card
+  Given url opfabPublishCardUrl + 'cards'
+  And header Authorization = 'Bearer ' + authToken
+  And request childCardOfChildCard
+  When method post
+  Then status 400
+  And match response.message contains "Constraint violation in the request"
+  And match response.errors[0] contains "The parentCardId " + cardId + " is a child card"
+
+
 Scenario: Push card and its two child cards, then get the parent card
   * def parentCard =
     """
