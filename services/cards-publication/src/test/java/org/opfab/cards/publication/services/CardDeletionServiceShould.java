@@ -90,7 +90,7 @@ class CardDeletionServiceShould {
                 CardValidationService cardValidationService = new CardValidationService(cardRepositoryMock,
                                 processRepositoryMock);
                 cardDeletionService = new CardDeletionService(cardNotificationService, cardRepositoryMock,
-                                externalAppService, true, true);
+                                externalAppService, true);
                 cardProcessingService = new CardProcessingService(cardDeletionService,
                                 cardNotificationService,
                                 cardRepositoryMock, externalAppService,

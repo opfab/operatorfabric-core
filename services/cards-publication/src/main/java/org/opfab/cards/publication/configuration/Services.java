@@ -67,7 +67,7 @@ public class Services {
         cardValidationService = new CardValidationService(cardRepository,
                 new ProcessRepositoryImpl(businessconfigUrl, eventBus));
         cardDeletionService = new CardDeletionService(cardNotificationService, cardRepository, externalAppService,
-                checkAuthenticationForCardSending, checkPerimeterForCardSending);
+                checkAuthenticationForCardSending);
         cardProcessingService = new CardProcessingService(cardDeletionService, cardNotificationService,
                 cardRepository, externalAppService,
                 cardTranslationService, cardValidationService, checkAuthenticationForCardSending,
