@@ -69,7 +69,7 @@ omelette('opfab').tree({
         'login',
         'logout',
         'monitoringconfig',
-        'perimeter',
+        'perimeters',
         'processgroups',
         'realtimescreen',
         'service',
@@ -82,7 +82,7 @@ omelette('opfab').tree({
         load: listFiles,
         delete: []
     },
-    perimeter: {
+    perimeters: {
         create: listFiles,
         addtogroup: [],
         delete: []
