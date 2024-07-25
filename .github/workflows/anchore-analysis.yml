@@ -37,7 +37,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for cards-consultation
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: consultation
@@ -48,7 +48,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for cards-publication
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: publication
@@ -59,7 +59,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for users
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: users
@@ -70,7 +70,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for businessConfig
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: businessconfig
@@ -81,7 +81,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for external devices
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: external-devices
@@ -92,7 +92,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for web-ui
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: web-ui
@@ -103,7 +103,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for external-diffusion
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: external-diffusion
@@ -114,7 +114,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for cards-reminder
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: cards-reminder
@@ -125,7 +125,7 @@ jobs:
         acs-report-enable: true
         fail-build: false
     - name: Upload Anchore Scan Report for supervisor
-      uses: github/codeql-action/upload-sarif@2d790406f505036ef40ecba973cc774a50395aac # v3.25.13
+      uses: github/codeql-action/upload-sarif@5cf07d8b700b67e235fbb65cbc84f69c0cf10464 # v3.25.14
       with:
         sarif_file: results.sarif
         category: supervisor
