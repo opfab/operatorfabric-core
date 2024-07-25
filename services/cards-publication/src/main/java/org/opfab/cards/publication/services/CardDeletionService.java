@@ -30,21 +30,17 @@ public class CardDeletionService {
     private CardPermissionControlService cardPermissionControlService;
 
     boolean checkAuthenticationForCardSending;
-    boolean checkPerimeterForCardSending;
 
     public CardDeletionService(
             CardNotificationService cardNotificationService,
             CardRepository cardRepository,
             ExternalAppService externalAppService,
-            boolean checkAuthenticationForCardSending,
-            boolean checkPerimeterForCardSending) {
+            boolean checkAuthenticationForCardSending) {
         this.cardNotificationService = cardNotificationService;
         this.cardRepository = cardRepository;
         this.externalAppService = externalAppService;
         this.cardPermissionControlService = new CardPermissionControlService();
         this.checkAuthenticationForCardSending = checkAuthenticationForCardSending;
-        this.checkPerimeterForCardSending = checkPerimeterForCardSending;
-
     }
 
     public void deleteCardById(String id, Instant deletionDate, Optional<Jwt> jwt) {
