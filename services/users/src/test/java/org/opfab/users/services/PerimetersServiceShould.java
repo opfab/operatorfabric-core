@@ -314,6 +314,64 @@ public class PerimetersServiceShould {
             assertThat(perimeterRepositoryStub.findById("perimeter1").get().getProcess()).isEqualTo("processTest");
         }
 
+        @Test
+        void GIVEN_A_Perimeter_With_A_State_And_No_Corresponding_Right_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
+
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("INVALID");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state2", null, true);
+
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
+
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+        }
+
+        @Test
+        void GIVEN_A_Perimeter_With_A_Right_And_No_Corresponding_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
+
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("INVALID");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight(null, RightsEnum.ReceiveAndWrite, true);
+
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
+
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+        }
+
+        @Test
+        void GIVEN_A_Perimeter_With_A_Null_StateRight_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
+
+            Perimeter perimeter = new Perimeter();
+            perimeter.setId("INVALID");
+            perimeter.setProcess("process2");
+            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = null;
+            List<StateRight> stateRights = new ArrayList<>();
+            stateRights.add(stateRight1);
+            stateRights.add(stateRight2);
+            perimeter.setStateRights(stateRights);
+
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+        }
     }
 
     @Nested

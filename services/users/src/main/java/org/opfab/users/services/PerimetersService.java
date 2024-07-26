@@ -28,6 +28,7 @@ public class PerimetersService {
 
     private static final String PERIMETER_NOT_FOUND_MSG = "Perimeter %s not found";
     private static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
+    private static final String STATE_OR_RIGHT_MISSING = "Bad stateRights list : state or right field is missing for perimeter %s";
     private static final String PERIMETER_ALREADY_EXIST = "Creation failed because perimeter %s already exist";
     private static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
     private static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
@@ -78,6 +79,17 @@ public class PerimetersService {
 
     }
 
+    private boolean areStateAndRightFilled(Perimeter perimeter) {
+        if ((perimeter != null) && (perimeter.getStateRights() != null)) {
+            for (StateRight stateRight : perimeter.getStateRights()) {
+                if ((stateRight == null) || (stateRight.getState() == null) || (stateRight.getRight() == null)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private boolean isEachStateUniqueInPerimeter(Perimeter perimeter) {
 
         if ((perimeter != null) && (perimeter.getStateRights().size() > 1)) {
@@ -97,6 +109,12 @@ public class PerimetersService {
 
     public OperationResult<EntityCreationReport<Perimeter>> updatePerimeter(Perimeter perimeter) {
         IdFormatChecker.IdCheckResult formatCheckResult = IdFormatChecker.check(perimeter.getId());
+
+        if (!areStateAndRightFilled(perimeter)) {
+            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
+                    String.format(STATE_OR_RIGHT_MISSING, perimeter.getId()));
+        }
+
         if (formatCheckResult.isValid()) {
             boolean isAlreadyExisting = perimeterRepository.findById(perimeter.getId()).isPresent();
             if (!isEachStateUniqueInPerimeter(perimeter))
