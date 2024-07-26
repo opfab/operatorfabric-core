@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-console.log(new Date().toISOString(), 'Custom getTags function loaded');  
+{
+console.log(new Date().toISOString(), 'INFO Custom getTags function loaded');  
 
 async function getTags(screenName ) {
    let tags;
@@ -24,3 +25,4 @@ async function getTags(screenName ) {
 };
 
 opfab.businessconfig.registerFunctionToGetTags(getTags);
+}
