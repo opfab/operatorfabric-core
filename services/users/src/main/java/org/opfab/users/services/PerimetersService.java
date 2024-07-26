@@ -29,7 +29,6 @@ public class PerimetersService {
     private static final String PERIMETER_NOT_FOUND_MSG = "Perimeter %s not found";
     private static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
     private static final String STATE_OR_RIGHT_MISSING = "Bad stateRights list : state or right field is missing for perimeter %s";
-    private static final String PERIMETER_ALREADY_EXIST = "Creation failed because perimeter %s already exist";
     private static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
     private static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
 
@@ -56,27 +55,6 @@ public class PerimetersService {
         else
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(PERIMETER_NOT_FOUND_MSG, perimeterId));
-    }
-
-    public OperationResult<EntityCreationReport<Perimeter>> createPerimeter(Perimeter perimeter) {
-        IdFormatChecker.IdCheckResult formatCheckResult = IdFormatChecker.check(perimeter.getId());
-        if (formatCheckResult.isValid()) {
-            boolean isAlreadyExisting = perimeterRepository.findById(perimeter.getId()).isPresent();
-            if (isAlreadyExisting)
-                return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                        String.format(PERIMETER_ALREADY_EXIST, perimeter.getId()));
-
-            if (!isEachStateUniqueInPerimeter(perimeter))
-                return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                        DUPLICATE_STATE_IN_PERIMETER);
-            Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
-            EntityCreationReport<Perimeter> report = new EntityCreationReport<>(isAlreadyExisting, insertedPerimeter);
-            return new OperationResult<>(report, true, null, null);
-
-        } else
-            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    formatCheckResult.getErrorMessage());
-
     }
 
     private boolean areStateAndRightFilled(Perimeter perimeter) {
@@ -107,7 +85,7 @@ public class PerimetersService {
         return true;
     }
 
-    public OperationResult<EntityCreationReport<Perimeter>> updatePerimeter(Perimeter perimeter) {
+    public OperationResult<EntityCreationReport<Perimeter>> savePerimeter(Perimeter perimeter) {
         IdFormatChecker.IdCheckResult formatCheckResult = IdFormatChecker.check(perimeter.getId());
 
         if (!areStateAndRightFilled(perimeter)) {
