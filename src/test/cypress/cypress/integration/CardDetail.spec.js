@@ -91,6 +91,8 @@ describe('Card detail', function () {
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
             cy.get('#opfab-card-details-address-to').should('not.exist');
+
+            cy.get('#severityColor').contains('#1074ad');
         });
 
         it(`Check card footer for operator4_fr (member of several entities)`, function () {

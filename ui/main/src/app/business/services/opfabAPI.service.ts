@@ -18,6 +18,7 @@ export class OpfabAPIService {
     public static currentCard;
     public static currentUserCard;
     public static businessconfig;
+    public static handlebars;
 
     public static templateInterface: any;
     public static userCardTemplateInterface: any;
@@ -148,6 +149,7 @@ export class OpfabAPIService {
         OpfabAPIService.initCurrentCardApi();
         OpfabAPIService.initCurrentUserCardApi();
         OpfabAPIService.initBusinessConfigApi();
+        OpfabAPIService.initHandlebarsHelper();
         OpfabAPIService.initAPIDone = true;
     }
 
@@ -171,6 +173,23 @@ export class OpfabAPIService {
         };
         // prevent unwanted modifications from templates code or custom scripts
         Object.freeze(opfab.businessconfig);
+    }
+
+    private static initHandlebarsHelper() {
+        const self = this;
+        this.handlebars = {
+            getHandlebarHelpers: async function () {
+                return undefined;
+            }
+        };
+
+        opfab.handlebars.registerCustomHelpers = function (getHandlebarHelpers) {
+            self.handlebars.getHandlebarHelpers = getHandlebarHelpers;
+            logger.info('Registered function to get handlebar helpers', LogOption.LOCAL_AND_REMOTE);
+        };
+
+        // prevent unwanted modifications from templates code or custom scripts
+        Object.freeze(opfab.handlebars);
     }
 
     private static initUserApi() {

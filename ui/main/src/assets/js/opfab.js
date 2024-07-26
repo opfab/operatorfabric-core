@@ -82,6 +82,8 @@ opfab.businessconfig = {
     }
 };
 
+opfab.handlebars = {};
+
 opfab.users = {
     entities: {
         getEntityName: function (entityId) {},

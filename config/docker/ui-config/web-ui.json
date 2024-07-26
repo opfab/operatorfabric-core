@@ -190,5 +190,5 @@
       }
     }
   },
-  "customJsToLoad": ["http://localhost:2002/externalJs/example.js","http://localhost:2002/externalJs/loadTags.js"]
+  "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"]
 }

@@ -14,6 +14,7 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {HandlebarsHelper} from './handlebarsHelper';
+import {OpfabAPIService} from '../opfabAPI.service';
 
 export class HandlebarsService {
     private static templateCache: Map<string, Function> = new Map();
@@ -25,6 +26,13 @@ export class HandlebarsService {
             ConfigService.getConfigValueAsObservable('settings.locale').subscribe((locale) => {
                 HandlebarsHelper.changeLocale(locale);
             });
+
+            OpfabAPIService.handlebars.getHandlebarHelpers().then((helpers) => {
+                helpers?.forEach((helper) => {
+                    Handlebars.registerHelper(helper.name, helper);
+                });
+            });
+
             HandlebarsService.initDone = true;
         }
     }

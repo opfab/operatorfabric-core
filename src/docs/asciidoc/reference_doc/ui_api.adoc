@@ -72,6 +72,24 @@ https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJ
 
 In no custon function is registered or if the registered function returns `undefined`, then Opfab will take the tags values configured in web-ui.json
 
+== Handlebars API
+
+=== Function registerCustomHelpers
+
+It is possible to register at startup the function to be used to retrieve a list of custom handlebars helpers:
+
+```
+opfab.handlebars.registerCustomHelpers([function]);
+```
+
+The function takes as argument a list of functions that will be registered as handlebars helpers, each helper will be registered with the same name of the helper function.
+
+To avoid conflict with existing helpers, it is recommended to prefix your helper (For example : myapp_xxx)
+
+An example of usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJs/handlebarsExample.js[config/docker/externalJs/handlebarsExample.js].
+
+
 == Navigate API 
 
 === Function redirectToBusinessMenu
