@@ -121,10 +121,10 @@ export class ApplicationLoader {
         if (await this.isUserToBeDisconnectedBecauseIsNotAssociatedToAnyGroups()) return false;
         GlobalStyleService.loadUserStyle();
         await this.setActivityArea();
-        this.initServices();
-        loadBuiltInTemplates();
         this.initOpfabAPI();
         await this.loadCustomScripts();
+        this.initServices();
+        loadBuiltInTemplates();
         await this.waitForStreamInitDone();
         logger.info('Card stream connection established');
         RealtimeDomainService.init(); // important to be after the stream init done
