@@ -142,19 +142,10 @@ public class PerimetersServiceShould {
         @Test
         void GIVEN_An_Invalid_PerimeterId__WHEN_Creating_Perimeter_THEN_Return_Bad_Request() {
             Perimeter perimeter = new Perimeter("invalid?id", "invalid id", null);
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
-        }
-
-        @Test
-        void GIVEN_A_Valid_Perimeter_WHEN_Create_An_Already_Existing_Perimeter_THEN_Return_Bad_Request() {
-            Perimeter perimeter = new Perimeter("perimeter1", "processId", null);
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Creation failed because perimeter perimeter1 already exist");
         }
 
         @Test
@@ -162,11 +153,11 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("newPerimeter");
             perimeter.setProcess("processId");
-            StateRight stateRight = new StateRight("state1", RightsEnum.Receive, true);   
+            StateRight stateRight = new StateRight("state1", RightsEnum.Receive, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight);
             perimeter.setStateRights(stateRights);
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
             assertThat(result.getResult().getEntity().getProcess()).isEqualTo("processId");
@@ -186,7 +177,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
             assertThat(result.getResult().getEntity().getProcess()).isEqualTo("processId");
@@ -206,7 +197,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
@@ -220,7 +211,7 @@ public class PerimetersServiceShould {
             perimeter.setProcess("process2");
             StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
             StateRight stateRight2 = new StateRight("state2", RightsEnum.Receive, true);
-            StateRight stateRight3 = new StateRight("state1", RightsEnum.Receive, true);    
+            StateRight stateRight3 = new StateRight("state1", RightsEnum.Receive, true);
 
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
@@ -228,7 +219,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight3);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
@@ -239,18 +230,9 @@ public class PerimetersServiceShould {
     @DisplayName("Update")
     class Update {
         @Test
-        void GIVEN_An_Invalid_PerimeterId__WHEN_Updating_Perimeter_THEN_Return_Bad_Request() {
-            Perimeter perimeter = new Perimeter("invalid?id", "invalid id", null);
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
-        }
-
-        @Test
         void GIVEN_A_Valid_Perimeter_WHEN_Update_An_Existing_Perimeter_THEN_Return_Success_And_Perimeter_Updated() {
             Perimeter perimeter = new Perimeter("perimeter1", "process2", null);
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isTrue();
             assertThat(result.getResult().getEntity().getProcess()).isEqualTo("process2");
@@ -267,7 +249,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
             assertThat(result.getResult().getEntity().getProcess()).isEqualTo("processId");
@@ -287,7 +269,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newPerimeter");
             assertThat(result.getResult().getEntity().getProcess()).isEqualTo("processId");
@@ -307,10 +289,10 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Creation failed because perimeter perimeter1 already exist");
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
             assertThat(perimeterRepositoryStub.findById("perimeter1").get().getProcess()).isEqualTo("processTest");
         }
 
@@ -328,7 +310,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
@@ -348,7 +330,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
@@ -367,7 +349,7 @@ public class PerimetersServiceShould {
             stateRights.add(stateRight2);
             perimeter.setStateRights(stateRights);
 
-            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");

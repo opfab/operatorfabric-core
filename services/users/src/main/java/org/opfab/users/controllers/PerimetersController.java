@@ -86,7 +86,7 @@ public class PerimetersController {
             @Valid @RequestBody Perimeter perimeter)
             throws ApiErrorException {
 
-        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
         if (result.isSuccess()) {
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
@@ -112,7 +112,7 @@ public class PerimetersController {
                             .message(NO_MATCHING_PERIMETER_ID_MSG)
                             .build());
         }
-        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
         if (result.isSuccess()) {
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
