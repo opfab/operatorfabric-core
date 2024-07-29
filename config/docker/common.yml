@@ -24,9 +24,6 @@ operatorfabric:
     jwt:
       login-claim: preferred_username
 
-### activate the following if you want to the groups or entities to come from the token and not mongo DB
-#    jwt:
-
 ### activate the folLowing if you want the entities of the user to come from the token and not mongoDB
 ### entitiesIdClaim is the name of the field in the token     
 #      entitiesIdClaim : entitiesId
