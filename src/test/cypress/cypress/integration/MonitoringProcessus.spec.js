@@ -38,8 +38,7 @@ describe('Monitoring processus screen tests', function () {
 
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 2, 'have.text', 'Message');
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 3, 'have.text', '');
-        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 4, 'have.text',
-            '{\"ops\":[{\"insert\":\"France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 4, 'have.text', '');
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 5, 'have.text',
             'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 6, 'have.text', '');
@@ -57,6 +56,17 @@ describe('Monitoring processus screen tests', function () {
         // Closes the card content and check card body is no longer visible
         cy.get("#opfab-close-card").click();
         cy.get('of-card').should('not.exist');
+
+        // We check the column with data.stateName is filled
+        clickSeeOnlyTheCardsIAmRecipientOf(); // we uncheck
+        clickSearch();
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 2, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 3, 'have.text', '');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 4, 'have.text', 'CALCUL1');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 5, 'have.text',
+            'Message received');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 6, 'have.text', '');
+        clickSeeOnlyTheCardsIAmRecipientOf(); // we re-check
     });
 
 
@@ -99,5 +109,13 @@ describe('Monitoring processus screen tests', function () {
 
     function clickMonthPeriod() {
         cy.get('#opfab-processmonitoring-period-month').click();
+    }
+
+    function clickSeeOnlyTheCardsIAmRecipientOf() {
+        cy.get('#opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox').click();
+    }
+
+    function clickSearch() {
+        cy.get('#opfab-process-monitoring-btn-search').click();
     }
 });

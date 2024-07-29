@@ -61,7 +61,7 @@ Here is an example of processMonitoring configuration :
     { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
     { "field": "titleTranslated", "colName": "Title", "size": "250"},
     { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"},
-    { "field": "data.richMessage", "colName": "My field", "size": "300"},
+    { "field": "data.stateName", "colName": "My field", "size": "300"},
     { "field": "summaryTranslated", "colName": "Summary", "size": "250"},
     { "field": "data.error", "colName": "My second field", "size": "100"}
   ],
