@@ -114,7 +114,8 @@ sonar {
                                               node-services/**/server-side/**,**/*config.js,**/*.conf.js,\
                                               client/**,**/spring-test-utilities/**,tools/spring/spring-mongo-utilities,\
                                               tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**,\
-                                              tools/generic/test-utilities/**,tools/swagger-spring-generators/**'
+                                              tools/generic/test-utilities/**,tools/swagger-spring-generators/**,\
+                                              tools/kafka-test/**'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
