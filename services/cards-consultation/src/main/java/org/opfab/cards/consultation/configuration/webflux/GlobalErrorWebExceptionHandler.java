@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.stereotype.Component;
@@ -56,17 +57,29 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults().including(ErrorAttributeOptions.Include.STACK_TRACE));
-        ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status((Integer) errorPropertiesMap.get("status"))
+        HttpStatus errorStatus = getHttpStatus(errorPropertiesMap.get("status"));
+
+        ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status(errorStatus)
                 .contentType(MediaType.APPLICATION_JSON);
         Throwable originThrowable = (Throwable) errorPropertiesMap.get("origin");
         log.error("Error during http request processing.", originThrowable);
-        if (originThrowable instanceof ApiErrorException apiErrorException){
+        if (originThrowable instanceof ApiErrorException apiErrorException) {
             return bodyBuilder
                     .body(BodyInserters.fromValue(apiErrorException.getError()));
         }
+
+        if (errorStatus.equals(HttpStatus.BAD_REQUEST)) {
+            errorPropertiesMap.remove("trace");
+            errorPropertiesMap.remove("origin");
+            errorPropertiesMap.put("error", originThrowable.getMessage());
+        }
+
         return bodyBuilder
            .body(BodyInserters.fromValue(errorPropertiesMap));
     }
 
-}
+    private HttpStatus getHttpStatus(Object status) {
+        return status instanceof Integer intStatus ? HttpStatus.valueOf(intStatus) : (HttpStatus) status;
+    }
 
+}
