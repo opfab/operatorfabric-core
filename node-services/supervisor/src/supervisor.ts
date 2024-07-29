@@ -229,7 +229,7 @@ app.get('/logLevel', (req, res) => {
             if (!isAdmin) {
                 authorizationService.handleUnauthorizedAccess(req, res);
             } else {
-                res.send(logger.transports[0].level);
+                res.send(Logger.getLogLevel());
             }
         })
         .catch((err) => {

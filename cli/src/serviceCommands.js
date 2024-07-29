@@ -9,6 +9,7 @@
 
 const prompts = require('prompts');
 const utils = require('./utils.js');
+const { validKeys } = require('./configCommands.js');
 
 const NODE_SERVICES = ['supervisor', 'cards-external-diffusion', 'cards-reminder']
 
@@ -63,7 +64,7 @@ const serviceCommands = {
 
         if (result.ok) {
             if (this.isNodeService(serviceName))
-                console.log(this.fromNodeToStandardLevel(await result.text()))
+                console.log(this.fromNodeToStandardLevel(await result.json()))
             else
                 console.info(await result.json());
         }
@@ -132,31 +133,34 @@ const serviceCommands = {
         return level === 'trace' ? 'silly' : level;
     },
 
-    fromNodeToStandardLevel(level) {
-        let nodeLevel = level;
+    fromNodeToStandardLevel(logLevel) {
+        const level = logLevel.effectiveLevel;
+        let standardLevel = level;
         switch (level) {
-            case 'silly':
-                nodeLevel = 'trace';
+            case 'SILLY':
+                standardLevel = 'TRACE';
                 break;
-            case 'verbose':
-            case 'http':
-            case 'debug':
-                nodeLevel = 'debug';
+            case 'VERBOSE':
+            case 'HTTP':
+            case 'DEBUG':
+                standardLevel = 'DEBUG';
                 break;
-            case 'info':
-                nodeLevel = 'info';
+            case 'INFO':
+                standardLevel = 'INFO';
                 break;
-            case 'warn':
-                nodeLevel = 'warn';
+            case 'WARN':
+                standardLevel = 'WARN';
                 break;
-            case 'error':
-            case 'fatal':
-                nodeLevel = 'error';
+            case 'ERROR':
+            case 'FATAL':
+                standardLevel = 'ERROR';
                 break;
             default:
                 break;
         }
-        return nodeLevel;
+        logLevel.effectiveLevel = standardLevel
+        logLevel.configuredLevel = standardLevel
+        return logLevel;
     },
 
     async fetchServiceName(args) {
