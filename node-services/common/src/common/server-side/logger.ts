@@ -65,8 +65,8 @@ export default class Logger {
         return this.logger;
     }
 
-    public static getLogLevel(): string | undefined {
-        return this.logger.transports[0].level;
+    public static getLogLevel(): LogLevel {
+        return new LogLevel(this.logger.transports[0].level, this.logger.transports[0].level)
     }
 
     public static setLogLevel(level: string): boolean {
@@ -81,5 +81,16 @@ export default class Logger {
 
     private static prefixNewLinesToAvoidLogInjection(message: string): string {
         return message.replace(/[\n\r\b\v\f]/g, '\n       ... ');
+    }
+
+}
+
+export class LogLevel {
+    configuredLevel: string|undefined;
+    effectiveLevel: string|undefined;
+
+    constructor(configuredLevel: string|undefined, effectiveLevel: string|undefined) {
+        this.configuredLevel = configuredLevel?.toUpperCase();
+        this.effectiveLevel = effectiveLevel?.toUpperCase();
     }
 }
