@@ -81,7 +81,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
-        if (this.confirmationPopup) this.confirmationPopup.close();
+        if (this.confirmationPopup) {
+            this.confirmationPopup.close();
+        }
 
         const resp = await firstValueFrom(this.activityAreaView.saveActivityArea());
         this.saveSettingsInProgress = false;
@@ -90,7 +92,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
             this.displaySendResultError = true;
         }
-        if (this.confirmationPopup) this.confirmationPopup.close();
+        if (this.confirmationPopup) {
+            this.confirmationPopup.close();
+        }
         this.confirm.emit();
     }
 
@@ -100,13 +104,17 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         // it results with nothing in the feed
         // This happens because the method this.LightCardsStoreService.removeAllLightCards();
         // is called too late (in activityAreaView)
-        if (!this.saveSettingsInProgress) this.confirmationPopup.close();
+        if (!this.saveSettingsInProgress) {
+            this.confirmationPopup.close();
+        }
     }
 
     openConfirmSaveSettingsModal(content) {
-        if (this.askConfirmation)
+        if (this.askConfirmation && this.activityAreaView.doesActivityAreasNeedToBeSaved()) {
             this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
-        else this.confirmSaveSettings();
+        } else {
+            this.confirmSaveSettings();
+        }
     }
 
     isEllipsisActive(id: string): boolean {
