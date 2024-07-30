@@ -1,3 +1,3 @@
 {
-    "service" = wrongformat
+    "wrongformat": "trailing comma",
 }

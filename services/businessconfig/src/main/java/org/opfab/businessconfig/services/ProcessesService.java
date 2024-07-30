@@ -441,7 +441,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void delete(String id) throws IOException {
 
-         // this condition avoids path traversal security issues
+        // this condition avoids path traversal security issues
         if (!defaultCache.containsKey(id)) {
             throw new FileNotFoundException("Unable to find a bundle with the given id");
         }
@@ -488,7 +488,7 @@ public class ProcessesService implements ResourceLoaderAware {
         } else {// case: multiple versions => to delete only the given version
             Path processVersionPath = processRootPath.resolve(version);
             if (process.version().equals(version)) {// case: version to delete is the default one => root config
-                                                       // replacement
+                                                    // replacement
                 // replace default
                 // choose the most recent through filesystem walk
                 try (Stream<Path> files = Files.list(processRootPath)
@@ -638,7 +638,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     private void isResourceJSON(String fileContent) throws ParseException {
-        (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(fileContent);
+        new JSONParser(JSONParser.MODE_RFC4627).parse(fileContent);
     }
 
     /**
@@ -650,16 +650,12 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateBusinessDataFile(String fileContent, String resourceName)
             throws IOException, ParseException {
-        
+
         resourceName = StringUtils.sanitize(resourceName);
         Path businessDataPath = Paths.get(this.storagePath + "/businessdata").normalize();
 
         if (!businessDataPath.toFile().exists()) {
-            try {
-                Files.createDirectories(businessDataPath);
-            } catch (IOException e) {
-                log.error("Impossible to create the necessary folder", businessDataPath.toString(), e);
-            }
+            Files.createDirectories(businessDataPath);
         }
 
         this.isResourceJSON(fileContent);

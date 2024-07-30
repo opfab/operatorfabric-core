@@ -13,6 +13,7 @@ Feature: deleteBusinessData
       And multipart file file = { read: 'resources/businessdatawrongformat.json' }
       When method POST
       Then status 400
+      And match response.message == "The file businessdatawrongformat.json is not json compliant"
 
     Scenario: post file with wrong authentication
       Given url opfabUrl + 'businessconfig/businessData/businessdata'
