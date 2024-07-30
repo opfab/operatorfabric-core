@@ -15,6 +15,7 @@ import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {OpfabAPIService} from '../opfabAPI.service';
 
 describe('Handlebars Services', () => {
     let processServerMock: ProcessServerMock;
@@ -22,6 +23,7 @@ describe('Handlebars Services', () => {
     const now = moment(Date.now());
 
     beforeAll(() => {
+        OpfabAPIService.initAPI();
         HandlebarsService.init();
     });
 
