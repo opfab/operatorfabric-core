@@ -43,7 +43,7 @@ import net.minidev.json.parser.ParseException;
 
 @RestController
 @Slf4j
-@RequestMapping({"/businessconfig","/"}) // /businessconfig is a legacy path  ,shall be removed in a future version
+@RequestMapping({ "/businessconfig", "/" }) // /businessconfig is a legacy path, shall be removed in a future version
 public class BusinessconfigController {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
@@ -295,7 +295,6 @@ public class BusinessconfigController {
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file,
             String endPointName, String resourceName) {
 
-
         try {
             if (endPointName.equals("processgroups"))
                 processService.updateProcessGroupsFile(new String(file.getBytes()));
@@ -326,11 +325,11 @@ public class BusinessconfigController {
                             .build(),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (ParseException e) {
-            log.error("ParseException while posting the " + resourceName + FILE, e);
+            log.error("ParseException while posting the " + file.getOriginalFilename() + FILE, e);
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
-                            .message("The file " + resourceName + " is not json compliant")
+                            .message("The file " + file.getOriginalFilename() + " is not json compliant")
                             .error(e.getMessage())
                             .build(),
                     UNABLE_TO_POST_FILE_MSG, e);
@@ -401,8 +400,6 @@ public class BusinessconfigController {
     public Void deleteBusinessData(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("resourceName") String resourceName)
             throws ApiErrorException {
-
-       
 
         try {
             processService.deleteFile(resourceName);
