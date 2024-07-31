@@ -236,6 +236,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         );
         this.resetFormEvent.emit(null);
         this.loadValuesForFilters();
+        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
     }
 
     transformFiltersListToMap = (filters: any): void => {
