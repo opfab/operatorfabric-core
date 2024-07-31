@@ -330,7 +330,8 @@
         "settingsSaved": "Paramètres sauvegardés",
         "input": {
             "errors": {
-                "invalidEmail": "Email invalide"
+                "invalidEmail": "Email invalide",
+                "emailAddressMissing": "Une adresse mail est requise"
             }
         }
     },

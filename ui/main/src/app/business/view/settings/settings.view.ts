@@ -50,6 +50,31 @@ export class SettingsView {
         }
     }
 
+    private areEmailCheckboxesTicked(): boolean {
+        const emailToPlainText: boolean = Boolean(
+            this.newSettings?.emailToPlainText ?? this.getSetting('emailToPlainText')
+        );
+        const sendDailyEmail: boolean = Boolean(this.newSettings?.sendDailyEmail ?? this.getSetting('sendDailyEmail'));
+        const sendCardsByEmail: boolean = Boolean(
+            this.newSettings?.sendCardsByEmail ?? this.getSetting('sendCardsByEmail')
+        );
+
+        return emailToPlainText || sendDailyEmail || sendCardsByEmail;
+    }
+
+    private isEmailFilled(): boolean {
+        return Boolean(this.newSettings?.email ?? this.getSetting('email'));
+    }
+
+    public isEmailAndEmailCheckboxesCoherent(): boolean {
+        if (this.areEmailCheckboxesTicked()) {
+            if (!this.isEmailFilled()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public async saveSettings(): Promise<ServerResponse<any>> {
         if (this.doesSettingsNeedToBeSaved()) {
             const serverResponse = await firstValueFrom(SettingsService.patchUserSettings(this.newSettings));

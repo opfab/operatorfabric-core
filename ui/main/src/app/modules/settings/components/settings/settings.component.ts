@@ -17,6 +17,9 @@ import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {ErrorService} from 'app/business/services/error-service';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {MessageLevel} from '@ofModel/message.model';
 
 @Component({
     selector: 'of-settings',
@@ -115,6 +118,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     saveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
+        if (!this.settingsView.isEmailAndEmailCheckboxesCoherent()) {
+            AlertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'setting.input.errors.emailAddressMissing'},
+                level: MessageLevel.ERROR
+            });
+            return;
+        }
         this.saveSettingsInProgress = true;
         this.settingsView.saveSettings().then((result) => {
             this.saveSettingsInProgress = false;
@@ -122,6 +133,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 ModalService.openInformationModal(new I18n('settings.settingsSaved')).then(() => {
                     this.canDeactivateSubject.next(true);
                 });
+            else {
+                ErrorService.handleServerResponseError(result);
+            }
         });
     }
 

@@ -215,8 +215,8 @@ describe ('Feed notification configuration tests',function () {
 
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
-        settings.clickOnSendNotificationByEmailAndSave();
         settings.setEmailAddressAndSave('mail@test.com');
+        settings.clickOnSendNotificationByEmailAndSave();
 
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
@@ -230,8 +230,8 @@ describe ('Feed notification configuration tests',function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToSettings();
-        settings.clickOnSendNotificationByEmailAndSave();
         settings.setEmailAddressAndSave('mail@test.com');
+        settings.clickOnSendNotificationByEmailAndSave();
 
         opfab.navigateToNotificationConfiguration();
         cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
