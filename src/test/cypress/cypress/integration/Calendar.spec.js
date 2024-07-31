@@ -74,7 +74,7 @@ describe('Calendar screen tests', function () {
         cy.get('of-card-body').should('be.visible');
         cy.get('#opfab-card-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('#opfab-div-card-template-processed')
-            .find('span')
+            .find('div')
             .first()
             .should('contain.text', 'Info on quality degradation of the main server');
         cy.get('#opfab-close-card').click({force: true});
