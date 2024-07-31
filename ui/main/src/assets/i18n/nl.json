@@ -330,7 +330,8 @@
         "settingsSaved": "Instellingen bewaard",
         "input": {
             "errors": {
-                "invalidEmail": "Ongeldige e-mail"
+                "invalidEmail": "Ongeldige e-mail",
+                "emailAddressMissing": "Een e-mailadres is vereist"
             }
         }
     },

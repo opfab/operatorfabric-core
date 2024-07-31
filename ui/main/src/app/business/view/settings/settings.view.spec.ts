@@ -201,4 +201,26 @@ describe('Settings view ', () => {
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(false);
         });
     });
+    describe('areEmailSettingsCoherent', () => {
+        let settingsView: SettingsView;
+
+        beforeEach(async () => {
+            await loadWebUIConf({settings: {}});
+            settingsView = new SettingsView();
+        });
+
+        it('should detect if one email checkbox is ticked and no email address is given', async () => {
+            const alertSubject = new ReplaySubject<Message>();
+            AlertMessageService.getAlertMessage().subscribe((Message) => {
+                alertSubject.next(Message);
+            });
+            settingsView.setSetting('emailToPlainText', false);
+            settingsView.setSetting('sendDailyEmail', false);
+            settingsView.setSetting('sendCardsByEmail', true);
+            settingsView.setSetting('email', null);
+
+            const emailSettingsAreCoherent = settingsView.isEmailAndEmailCheckboxesCoherent();
+            expect(emailSettingsAreCoherent).toBeFalse();
+        });
+    });
 });
