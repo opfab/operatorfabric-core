@@ -52,7 +52,7 @@ HTTP/1.1 200 OK
             "RTE",
             "ADMIN",
             "CORESO",
-            "ReadOnly",
+            "Maintainer",
             "TEST"
         ],
         "lastName": null,
@@ -78,7 +78,7 @@ HTTP/1.1 200 OK
         "firstName": null,
         "groups": [
             "Dispatcher",
-            "ReadOnly",
+            "Maintainer",
             "TEST"
         ],
         "entities": [
@@ -91,7 +91,7 @@ HTTP/1.1 200 OK
         "firstName": null,
         "groups": [
             "Planner",
-            "ReadOnly"
+            "Maintainer"
         ],
         "entities": [
             "ENTITY2_FR"
@@ -255,9 +255,9 @@ HTTP/1.1 200 OK
         "id": "Planner"
     },
     {
-        "description": "ReadOnly Group",
-        "name": "ReadOnly",
-        "id": "ReadOnly"
+        "description": "Maintainer Group",
+        "name": "Maintainer",
+        "id": "Maintainer"
     }
 ]
 ....

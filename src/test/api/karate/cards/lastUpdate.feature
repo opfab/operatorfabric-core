@@ -33,7 +33,7 @@ Scenario: Configuration
 * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
-    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    Given url opfabUrl + 'users/groups/Maintainer/perimeters'
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeterArray
     When method patch
@@ -49,7 +49,7 @@ Scenario: Create a card, update it, read it and acknowledge it
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["ReadOnly"],
+	"groupRecipients": ["Maintainer"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -66,7 +66,7 @@ Scenario: Create a card, update it, read it and acknowledge it
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
 	"state": "messageState",
-	"groupRecipients": ["ReadOnly"],
+	"groupRecipients": ["Maintainer"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},

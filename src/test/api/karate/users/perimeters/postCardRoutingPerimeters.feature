@@ -115,7 +115,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * callonce read('../../common/createPerimeter.feature') {perimeter: '#(perimeterWrite)', token: '#(authToken)'}
 
   #Attach perimeter to group
-    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    Given url opfabUrl + 'users/groups/Maintainer/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeterArray
     When method patch

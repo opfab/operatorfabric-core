@@ -50,7 +50,7 @@ Feature: Cards with special character in id
   * callonce read('../common/createPerimeter.feature') {perimeter: '#(perimeter)', token: '#(authTokenAdmin)'}
 
 #Attach perimeter to group
-    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    Given url opfabUrl + 'users/groups/Maintainer/perimeters'
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeterArray
     When method patch

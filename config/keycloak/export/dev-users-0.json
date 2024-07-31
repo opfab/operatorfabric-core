@@ -88,7 +88,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Planner;ReadOnly" ],
+      "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY1_EU" ]
     },
     "credentials" : [ {
@@ -114,7 +114,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly;Supervisor" ],
+      "groups" : [ "Dispatcher;Maintainer;Supervisor" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY3_FR" ]
     },
     "credentials" : [ {
@@ -140,7 +140,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly" ],
+      "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_IT" ]
     },
     "credentials" : [ {
@@ -166,7 +166,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;Planner,ReadOnly" ],
+      "groups" : [ "Dispatcher;Planner,Maintainer" ],
       "entitiesId" : [ "ENTITY1_NL" ]
     },
     "credentials" : [ {
@@ -192,7 +192,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Planner;ReadOnly" ],
+      "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY2_EU" ]
     },
     "credentials" : [ {
@@ -218,7 +218,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Planner;ReadOnly;Manager" ],
+      "groups" : [ "Planner;Maintainer;Manager" ],
       "entitiesId" : [ "ENTITY2_FR;IT_SUPERVISOR_ENTITY" ]
     },
     "credentials" : [ {
@@ -244,7 +244,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Planner;ReadOnly" ],
+      "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY2_IT" ]
     },
     "credentials" : [ {
@@ -270,7 +270,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;Planner,ReadOnly" ],
+      "groups" : [ "Dispatcher;Planner,Maintainer" ],
       "entitiesId" : [ "ENTITY2_NL" ]
     },
     "credentials" : [ {
@@ -296,7 +296,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "RTE;ADMIN;ReadOnly" ]
+      "groups" : [ "RTE;ADMIN;Maintainer" ]
     },
     "credentials" : [ {
       "id" : "b4781247-e520-4578-8508-23055c96bf46",
@@ -321,7 +321,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly" ],
+      "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_IT" ]
     },
     "credentials" : [ {
@@ -347,7 +347,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly" ],
+      "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR" ]
     },
     "credentials" : [ {
@@ -373,7 +373,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "RTE;ADMIN;ReadOnly" ]
+      "groups" : [ "RTE;ADMIN;Maintainer" ]
     },
     "credentials" : [ {
       "id" : "a800635a-9fe4-4015-b784-1379f4eb1dd9",
@@ -420,7 +420,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly;Manager;ADMIN" ]
+      "groups" : [ "Dispatcher;Maintainer;Manager;ADMIN" ]
     },
     "credentials" : [ {
       "id" : "62ab3cd5-54f4-43c2-8675-cb818b4ed12f",
@@ -445,7 +445,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly;Manager" ]
+      "groups" : [ "Dispatcher;Maintainer;Manager" ]
     },
     "credentials" : [ {
       "id" : "16d22ee6-00f1-4202-93f4-c22bc3a77c2c",
@@ -575,7 +575,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : [ "Dispatcher;ReadOnly" ],
+      "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR" ]
     },
     "credentials" : [ {
