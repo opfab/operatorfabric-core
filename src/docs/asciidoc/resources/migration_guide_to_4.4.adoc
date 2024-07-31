@@ -97,3 +97,32 @@ For a smooth, real-time migration, you can temporarily keep endpoints '/cards' a
 If you are using the `businessconfig` service directly via some scripts, you need to update these scripts.
 
 
+== Tooltips
+
+For templates and external applications, the tooltip styling now allows HTML inside of it and the implementation syntax changed from:
+
+[source,HTML]
+----
+<span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip">Some tooltip text</span>
+----
+
+to :
+
+[source,HTML]
+----
+<div class="opfab-tooltip">Some tooltip text
+    <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
+</div>
+----
+For positioning, it is done in the element with class `opfab-tooltip-content` instead of the element with class `opfab-tooltip`. You need to change for example from: 
+[source,HTML]
+----
+  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip left">Some tooltip text</span>
+----
+to: 
+[source,HTML]
+----
+<div class="opfab-tooltip">Some tooltip text
+    <div class="opfab-tooltip-content left">Here is an example of tooltip</div>
+</div>
+----

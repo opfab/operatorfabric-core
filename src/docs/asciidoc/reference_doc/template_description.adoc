@@ -601,12 +601,16 @@ where the tooltip will be displayed using `left`, `top` or `bottom` (by default,
 example :
 
 ....
-  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip">Some tooltip text</span>
+<div class="opfab-tooltip">Some tooltip text
+    <div class="opfab-tooltip-content">Here is an example of tooltip</div>
+</div>
 ....
 
-or for a tooltip displyed on the left :
+or for a tooltip displayed on the left :
 ....
-  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip left">Some tooltip text</span>
+<div class="opfab-tooltip">Some tooltip text
+    <div class="opfab-tooltip-content left">Here is an example of tooltip</div>
+</div>
 ....
 
 == Multi Select
