@@ -18,3 +18,22 @@ You can find more information in the docker documentation : https://docs.docker.
 OperatorFabric is now using `date-fns` library instead of `Moment.js`. The format used for defining a formatted date string
 is now different. So, if needed, in the file `web-ui.json`, you have to modify your fields : `settings.dateTimeformat`
 and `settings.dateFormat`. You can find the available formats here : https://date-fns.org/v3.6.0/docs/format
+
+== Tooltips
+
+For templates and external applications, the tooltip styling now allows HTML inside of it and the implementation syntax changed from:
+
+[source,HTML]
+----
+<span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip">Some tooltip text</span>
+----
+
+to :
+
+[source,HTML]
+----
+<div class="opfab-tooltip">Some tooltip text
+    <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
+</div>
+----
+
