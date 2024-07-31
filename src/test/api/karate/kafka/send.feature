@@ -37,7 +37,7 @@ Feature: Kafka Producer and Consumer Demo
   * callonce read('../common/createPerimeter.feature') { perimeter: '#(perimeter)', token: '#(authTokenAdmin)' }
 
   # Attach perimeter to group
-  Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+  Given url opfabUrl + 'users/groups/Maintainer/perimeters'
   And header Authorization = 'Bearer ' + authTokenAdmin
   And request perimeterArray
   When method patch
@@ -53,7 +53,7 @@ Feature: Kafka Producer and Consumer Demo
     "state": "messageState",
     "title": "message.title", 
     "summary": "message.summary",
-    "groupRecipients": "Dispatcher,ReadOnly"
+    "groupRecipients": "Dispatcher,Maintainer"
   }
   """
     

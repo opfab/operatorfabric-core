@@ -40,7 +40,7 @@ describe('Card detail', function () {
             cy.get('#userContext-token').contains('eyJhb');
             cy.get('#userContext-firstName').contains(/^John$/);
             cy.get('#userContext-lastName').contains(/^Doe$/);
-            cy.get('#userContext-groups').contains(/^ReadOnly,Dispatcher$/);
+            cy.get('#userContext-groups').contains(/^Maintainer,Dispatcher$/);
             cy.get('#userContext-entities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
             // Check opfab API  calls
@@ -135,7 +135,7 @@ describe('Card detail', function () {
             cy.get('#userContext-token').contains('eyJhb');
             cy.get('#userContext-firstName').contains(/^John$/);
             cy.get('#userContext-lastName').contains(/^Doe$/);
-            cy.get('#userContext-groups').contains(/^ReadOnly,Dispatcher$/);
+            cy.get('#userContext-groups').contains(/^Maintainer,Dispatcher$/);
             cy.get('#userContext-entities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
             // Check opfab API calls

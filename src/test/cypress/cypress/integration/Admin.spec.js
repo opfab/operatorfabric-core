@@ -90,7 +90,7 @@ describe('AdmininstrationPages', () => {
         // Deselect old group
         cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
         // Select new group
-        cy.get('#opfab-groups').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(3).click({force: true});
         cy.get('#opfab-groups').click();
 
         cy.get('#opfab-entities').click();
@@ -681,7 +681,7 @@ describe('AdmininstrationPages', () => {
                     expect(rows[1].LOGIN).to.equal('operator1_fr');
                     expect(rows[1]['FIRST NAME']).to.equal('John');
                     expect(rows[1]['LAST NAME']).to.equal('Doe');
-                    expect(rows[1].GROUPS).to.equal('Dispatcher, ReadOnly');
+                    expect(rows[1].GROUPS).to.equal('Dispatcher, Maintainer');
                     expect(rows[1].ENTITIES).to.equal('Control Center FR North');
                 });
             });

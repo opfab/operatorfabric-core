@@ -9,22 +9,22 @@ operatorfabric.users.default:
     - login: operator1_fr
       firstname : John
       lastname : Doe
-      groups: ["Dispatcher","ReadOnly"]
+      groups: ["Dispatcher","Maintainer"]
       entities: ["ENTITY1_FR"]
     - login: operator2_fr
-      groups: ["Planner", "ReadOnly", "Manager"]
+      groups: ["Planner", "Maintainer", "Manager"]
       entities: ["ENTITY2_FR"]
     - login: operator3_fr
-      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
+      groups: [ "RTE","ADMIN","Maintainer","Dispatcher"]
       entities: [ "ENTITY3_FR" ]
     - login: operator4_fr
-      groups: ["ReadOnly","Dispatcher"]
+      groups: ["Maintainer","Dispatcher"]
       entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR",  "ENTITY4_FR" ]
     - login: operator5_fr
-      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
+      groups: [ "RTE","ADMIN","Maintainer","Dispatcher"]
       entities: [ "ENTITY1_FR" ]
     - login: operator6_fr
-      groups: ["ReadOnly"] 
+      groups: ["Maintainer"]
       entities: ["ENTITY1_FR"]
     - login: itsupervisor1
       groups: ["ADMIN", "Supervisor"]
@@ -33,30 +33,30 @@ operatorfabric.users.default:
       groups: ["Supervisor"]
       entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
     - login: operator1_it
-      groups: ["Dispatcher", "ReadOnly"]
+      groups: ["Dispatcher", "Maintainer"]
       entities: ["ENTITY1_IT"]
     - login: operator2_it
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "Maintainer"]
       entities: ["ENTITY2_IT"]
     - login: operator3_it
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "Maintainer"]
       entities: ["ENTITY3_IT"]
     - login: operator1_nl
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "Maintainer"]
       entities: ["ENTITY1_NL"]
     - login: operator2_nl
-      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      groups: ["Dispatcher", "Planner", "Maintainer"]
       entities: ["ENTITY2_NL"]
     - login: operator1_eu
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "Maintainer"]
       entities: ["ENTITY1_EU"]
     - login: operator2_eu
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "Maintainer"]
       entities: ["ENTITY2_EU"]
     - login: publisher_test
-      groups: ["Dispatcher", "ReadOnly", "Manager"]
+      groups: ["Dispatcher", "Maintainer", "Manager"]
     - login: opfab
-      groups: ["Dispatcher", "ReadOnly", "Manager","ADMIN"]
+      groups: ["Dispatcher", "Maintainer", "Manager","ADMIN"]
   groups:
     - id: ADMIN
       name: ADMINISTRATORS
@@ -84,9 +84,9 @@ operatorfabric.users.default:
       description: Manager Group
       realtime: false
       permissions: ["VIEW_ALL_ARCHIVED_CARDS","VIEW_ALL_CARDS"]
-    - id: ReadOnly
-      name: ReadOnly
-      description: ReadOnly Group
+    - id: Maintainer
+      name: Maintainer
+      description: Maintainer Group
       realtime: false
   entities:
    - id: ENTITY1_FR

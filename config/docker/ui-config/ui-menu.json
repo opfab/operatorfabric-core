@@ -40,7 +40,7 @@
                     "url": "https://opfab.github.io/",
                     "label": "entry.entry1",
                     "linkType": "BOTH",
-                    "showOnlyForGroups": ["ReadOnly", "Planner"]
+                    "showOnlyForGroups": ["Maintainer", "Planner"]
                 },
                 {
                     "customMenuId": "uid_test_2",
