@@ -13,7 +13,7 @@ import ReminderService from '../domain/application/reminderService';
 import {RRuleReminderService} from '../domain/application/rruleReminderService';
 import {HourAndMinutes, RRule, Recurrence, TimeSpan, Day, Frequency} from '../domain/model/card.model';
 import CardsReminderControl from '../domain/application/cardsReminderControl';
-import {CardOperation, CardOperationType} from '../domain/model/card-operation.model';
+import {type CardOperation, CardOperationType} from '../domain/model/card-operation.model';
 import {RemindDatabaseServiceStub} from './remindDataBaseServiceStub';
 import {OpfabServicesInterfaceStub} from './opfabServicesInterfaceStub';
 

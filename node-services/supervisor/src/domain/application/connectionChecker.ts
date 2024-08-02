@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import GetResponse from '../../common/server-side/getResponse';
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import type GetResponse from '../../common/server-side/getResponse';
+import type OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 import ConnectionsStates from './connectionsStates';
-import {EntityToSupervise} from './entityToSupervise';
+import {type EntityToSupervise} from './entityToSupervise';
 
 export default class ConnectionChecker {
     private opfabInterface: OpfabServicesInterface;

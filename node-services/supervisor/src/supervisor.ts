@@ -17,7 +17,7 @@ import OpfabServicesInterface from './common/server-side/opfabServicesInterface'
 import Logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
 import MongoSupervisorDatabaseServer from './domain/server-side/mongoSupervisorDatabaseServer';
-import {EntityToSupervise} from './domain/application/entityToSupervise';
+import {type EntityToSupervise} from './domain/application/entityToSupervise';
 
 const app = express();
 app.disable('x-powered-by');

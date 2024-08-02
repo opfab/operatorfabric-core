@@ -8,11 +8,11 @@
  */
 
 import GetResponse from '../common/server-side/getResponse';
-import ReminderService from '../domain/application/reminderService';
-import {RRuleReminderService} from '../domain/application/rruleReminderService';
+import type ReminderService from '../domain/application/reminderService';
+import {type RRuleReminderService} from '../domain/application/rruleReminderService';
 import {CardOperationType} from '../domain/model/card-operation.model';
 import CardsReminderOpfabServicesInterface from '../domain/server-side/cardsReminderOpfabServicesInterface';
-import RemindDatabaseService from '../domain/server-side/remindDatabaseService';
+import type RemindDatabaseService from '../domain/server-side/remindDatabaseService';
 
 export class OpfabServicesInterfaceStub extends CardsReminderOpfabServicesInterface {
     sentReminders = new Array<any>();

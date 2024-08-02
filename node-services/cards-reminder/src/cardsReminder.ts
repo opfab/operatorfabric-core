@@ -8,7 +8,7 @@
  */
 
 import express from 'express';
-import {expressjwt, GetVerificationKey} from 'express-jwt';
+import {expressjwt, type GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';

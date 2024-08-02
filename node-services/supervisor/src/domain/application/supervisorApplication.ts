@@ -9,11 +9,11 @@
 
 import AcknowledgementChecker from './acknowledgmentChecker';
 import ConnectionChecker from './connectionChecker';
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import type OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 import Config from './config';
-import SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
-import {EntityToSupervise} from './entityToSupervise';
-import ConfigDTO from './../client-side/configDTO';
+import type SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
+import {type EntityToSupervise} from './entityToSupervise';
+import type ConfigDTO from './../client-side/configDTO';
 
 export default class SupervisorApplication {
     private connectionChecker: ConnectionChecker;
@@ -23,13 +23,13 @@ export default class SupervisorApplication {
     private readonly config: Config;
 
     constructor(
-        defaulConfig: any,
+        defaultConfig: any,
         configFilePath: string | null,
         private readonly supervisorDatabaseServer: SupervisorDatabaseServer,
         opfabInterface: OpfabServicesInterface,
         private readonly logger: any
     ) {
-        this.config = new Config(supervisorDatabaseServer, defaulConfig, configFilePath, logger);
+        this.config = new Config(supervisorDatabaseServer, defaultConfig, configFilePath, logger);
         this.opfabInterface = opfabInterface;
     }
 

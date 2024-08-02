@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntityToSupervise} from '../application/entityToSupervise';
+import {type EntityToSupervise} from '../application/entityToSupervise';
 
 export default class ConfigDTO {
     public secondsBetweenConnectionChecks = 0;

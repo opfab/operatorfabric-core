@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
-import SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
-import {EntityToSupervise} from '../application/entityToSupervise';
-import ConfigDTO from './configDTO';
+import type OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import type SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
+import {type EntityToSupervise} from '../application/entityToSupervise';
+import type ConfigDTO from './configDTO';
 import SupervisorApplication from '../application/supervisorApplication';
 
 export default class SupervisorService {

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Reminder} from '../domain/model/reminder.model';
+import type {Reminder} from '../domain/model/reminder.model';
 import RemindDatabaseService from '../domain/server-side/remindDatabaseService';
 
 export class RemindDatabaseServiceStub extends RemindDatabaseService {

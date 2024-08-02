@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from './card.model';
+import type {Card} from './card.model';
 
 export class CardOperation {
     public type: CardOperationType;

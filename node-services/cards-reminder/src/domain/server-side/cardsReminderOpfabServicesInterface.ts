@@ -10,7 +10,7 @@
 import GetResponse from '../../common/server-side/getResponse';
 
 import EventBus from '../../common/server-side/eventBus';
-import {EventListener} from '../../common/server-side/eventListener';
+import type {EventListener} from '../../common/server-side/eventListener';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
 export default class CardsReminderOpfabServicesInterface extends OpfabServicesInterface {

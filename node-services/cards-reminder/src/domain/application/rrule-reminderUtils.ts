@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, Frequency as OpfabFrequency} from '../model/card.model';
+import {type Card, Frequency as OpfabFrequency} from '../model/card.model';
 import {Frequency, Weekday, RRule} from 'rrule';
 
 const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute

@@ -7,10 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Db, MongoClient} from 'mongodb';
-import {Logger} from 'winston';
-import {MongoConfig} from './MongoConfig';
-import {Reminder} from '../model/reminder.model';
+import {MongoClient} from 'mongodb';
+import type {Db} from 'mongodb';
+import type {Logger} from 'winston';
+import type {MongoConfig} from './MongoConfig';
+import type {Reminder} from '../model/reminder.model';
 
 export default class RemindDatabaseService {
     logger: Logger;

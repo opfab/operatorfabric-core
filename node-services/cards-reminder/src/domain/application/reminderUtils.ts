@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, Recurrence, HourAndMinutes, TimeSpan} from '../model/card.model';
+import {type Card, type Recurrence, HourAndMinutes, type TimeSpan} from '../model/card.model';
 import moment from 'moment-timezone';
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {

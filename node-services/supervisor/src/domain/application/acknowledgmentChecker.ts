@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import GetResponse from '../../common/server-side/getResponse';
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
-import {Card} from './card';
+import type GetResponse from '../../common/server-side/getResponse';
+import type OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import {type Card} from './card';
 
 export default class AcknowledgementChecker {
     private opfabInterface: OpfabServicesInterface;

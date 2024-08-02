@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EventListener} from '../../common/server-side/eventListener';
+import type {EventListener} from '../../common/server-side/eventListener';
 import {getNextTimeForRepeating} from '../application/reminderUtils';
-import {Card} from '../model/card.model';
+import type {Card} from '../model/card.model';
 import {Reminder} from '../model/reminder.model';
-import {CardOperation} from '../model/card-operation.model';
-import RemindDatabaseService from '../server-side/remindDatabaseService';
+import type {CardOperation} from '../model/card-operation.model';
+import type RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class ReminderService implements EventListener {
     private databaseService: RemindDatabaseService;

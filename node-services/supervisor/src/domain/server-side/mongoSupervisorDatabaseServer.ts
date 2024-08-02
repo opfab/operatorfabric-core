@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Db, MongoClient} from 'mongodb';
-import {Logger} from 'winston';
-import {MongoConfig} from './mongoConfig';
-import {EntityToSupervise} from '../application/entityToSupervise';
-import SupervisorDatabaseServer from './supervisorDatabaseServer';
+import {type Db, MongoClient} from 'mongodb';
+import {type Logger} from 'winston';
+import {type MongoConfig} from './mongoConfig';
+import {type EntityToSupervise} from '../application/entityToSupervise';
+import type SupervisorDatabaseServer from './supervisorDatabaseServer';
 
 export default class MongoSupervisorDatabaseServer implements SupervisorDatabaseServer {
     logger: Logger;

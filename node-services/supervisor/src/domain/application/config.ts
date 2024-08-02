@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {EntityToSupervise} from './entityToSupervise';
-import SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
+import {type EntityToSupervise} from './entityToSupervise';
+import type SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
 import ConfigDTO from '../client-side/configDTO';
 import fs from 'fs';
 

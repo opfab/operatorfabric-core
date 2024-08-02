@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import SupervisorDatabaseServer from '../../domain/server-side/supervisorDatabaseServer';
+import type SupervisorDatabaseServer from '../../domain/server-side/supervisorDatabaseServer';
 
 export class SupervisorDatabaseServerStub implements SupervisorDatabaseServer {
     public async openConnection(): Promise<void> {

@@ -8,10 +8,10 @@
  */
 
 import CardsReminderControl from '../application/cardsReminderControl';
-import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
-import ReminderService from '../application/reminderService';
-import {RRuleReminderService} from '../application/rruleReminderService';
-import RemindDatabaseService from '../server-side/remindDatabaseService';
+import type CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
+import type ReminderService from '../application/reminderService';
+import type {RRuleReminderService} from '../application/rruleReminderService';
+import type RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderService {
     private readonly cardsReminderControl: CardsReminderControl;

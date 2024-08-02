@@ -9,7 +9,7 @@
 
 import GetResponse from '../../common/server-side/getResponse';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
-import {Card} from '../../domain/application/card';
+import {type Card} from '../../domain/application/card';
 
 export class OpfabServicesInterfaceStub extends OpfabServicesInterface {
     public numberOfCardSend = 0;

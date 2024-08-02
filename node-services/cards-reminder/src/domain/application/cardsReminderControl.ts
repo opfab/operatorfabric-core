@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
+import type CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
 
-import ReminderService from '../application/reminderService';
-import {RRuleReminderService} from './rruleReminderService';
-import {Card} from '../model/card.model';
-import RemindDatabaseService from '../server-side/remindDatabaseService';
+import type ReminderService from '../application/reminderService';
+import type {RRuleReminderService} from './rruleReminderService';
+import type {Card} from '../model/card.model';
+import type RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderControl {
     private opfabServicesInterface: CardsReminderOpfabServicesInterface;
