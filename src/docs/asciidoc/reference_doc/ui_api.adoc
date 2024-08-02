@@ -65,12 +65,12 @@ It is possible to register at startup the function to be used to retrieve the li
 opfab.businessconfig.registerFunctionToGetTags(function);
 ```
 
-The registered function must take as input parameter the screen name. The possible values for screen name are : 'archives', 'logging', 'processMonitoring'
+The registered function must take as input parameter the screen name. The possible values for screen name are : 'archive', 'logging', 'processMonitoring'.
 
 An example of usage can be found in the file
 https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJs/loadTags.js[config/docker/externalJs/loadTags.js].
 
-In no custon function is registered or if the registered function returns `undefined`, then Opfab will take the tags values configured in web-ui.json
+If no custom function is registered or if the registered function returns `undefined`, then Opfab will take the tags values configured in web-ui.json.
 
 == Handlebars API
 
@@ -123,7 +123,7 @@ It is possible from the template to redirect the user to another "card detail" i
 
 === Function displayLoadingSpinner
 
-Once the card is loaded, there may be some processing that is time consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template .
+Once the card is loaded, there may be some processing that is time-consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template .
 
 ```
         opfab.currentCard.displayLoadingSpinner();
@@ -187,7 +187,7 @@ If inside your template, you want to get the id of the entity used by the user t
 
 === Function  getEntitiesUsableForUserResponse
 
-If inside your template, you want to get the ids of the entities the user can answer on behalf of, you can call the method getEntitiesUsableForUserResponse. This method will return an array containing the entities' ids
+If inside your template, you want to get the ids of the entities the user can answer on behalf of, you can call the method getEntitiesUsableForUserResponse. This method will return an array containing the entities' ids.
 
 ```
     const entities = opfab.currentCard.getEntitiesUsableForUserResponse()
@@ -295,7 +295,7 @@ It can be used by a template to launch some processing when loading is complete
 
 === Function registerFunctionToGetUserResponse
 
-Register the template function to call to get user response. This function will be called by opfab when user clicks on the "send reponse" button. More explanation can be found in the <<response_cards, response card chapter>>.
+Register the template function to call to get user response. This function will be called by opfab when user clicks on the "send response" button. More explanation can be found in the <<response_cards, response card chapter>>.
 
 For example : 
 
