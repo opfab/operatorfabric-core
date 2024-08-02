@@ -9,7 +9,8 @@
 import {TestBed} from '@angular/core/testing';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {AngularTranslationService} from './angularTranslationService';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('AngularTranslationService', () => {
     let service: AngularTranslationService;
@@ -17,8 +18,8 @@ describe('AngularTranslationService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, TranslateModule.forRoot()],
-            providers: [TranslateService]
+            imports: [TranslateModule.forRoot()],
+            providers: [TranslateService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
 
         translateService = TestBed.inject(TranslateService);

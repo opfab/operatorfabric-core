@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment, {Moment} from 'moment';
+import {I18nService} from 'app/business/services/translation/i18n.service';
+import {add, format, sub, startOfDay, startOfMonth} from 'date-fns';
 
 export class Rectangle {
     public start: number;
@@ -19,61 +20,68 @@ export class Rectangle {
 export class XAxis {
     private domainId: string;
     private gridTimeDomain: Array<number>;
-    private ticks: Array<Moment> = [];
+    private ticks: Array<Date> = [];
     private ticksLabel: Map<number, string> = new Map<number, string>();
+    private localeOption;
+
     private tickSizeMap = {
-        TR: {amount: 15 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
-        J: {amount: 30 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
-        '7D': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
-        W: {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
-        M: {amount: 1 as moment.DurationInputArg1, unit: 'day' as moment.DurationInputArg2}
+        TR: {minutes: 15},
+        J: {minutes: 30},
+        '7D': {hours: 4},
+        W: {hours: 4},
+        M: {days: 1}
     };
     private dayRectangles;
 
     public setupAxis(domainId: string, gridTimeDomain: Array<number>): void {
         this.domainId = domainId;
         this.gridTimeDomain = gridTimeDomain;
+        this.localeOption = I18nService.getDateFnsLocaleOption();
         this.computeTickValues();
         this.computeTickLabels();
         this.computeDayRectangles();
     }
 
     private computeTickValues(): void {
-        const startDomain = moment(this.gridTimeDomain[0]);
+        const startDomain = new Date(this.gridTimeDomain[0]);
         this.ticks = [startDomain];
-        const currentTick = moment(startDomain);
+        let currentTick = startDomain;
 
-        while (currentTick.valueOf() < this.gridTimeDomain[1].valueOf()) {
-            this.goToNextTick(currentTick);
-            this.ticks.push(moment(currentTick));
+        while (currentTick.getTime() < this.gridTimeDomain[1]) {
+            currentTick = this.goToNextTick(currentTick);
+            this.ticks.push(currentTick);
         }
     }
 
-    private goToNextTick(currentTick: moment.Moment) {
+    private goToNextTick(currentTick: Date): Date {
         if (this.domainId === 'Y') {
-            if (currentTick.isSame(moment(currentTick).startOf('month'))) {
-                currentTick.add(15, 'day');
+            if (currentTick.getTime() === startOfMonth(currentTick).getTime()) {
+                currentTick = add(currentTick, {days: 15});
             } else {
-                currentTick.add(1, 'month').startOf('month');
+                currentTick = add(currentTick, {months: 1});
+                currentTick = startOfMonth(currentTick);
             }
-            return;
+            return currentTick;
         }
         const tickSize = this.tickSizeMap[this.domainId];
-        currentTick.add(tickSize.amount, tickSize.unit);
+        currentTick = add(currentTick, tickSize);
         if (this.domainId === '7D' || this.domainId === 'W') {
-            this.adjustForDaylightSaving(currentTick);
+            currentTick = this.adjustForDaylightSaving(currentTick);
         }
+        return currentTick;
     }
 
-    private adjustForDaylightSaving(tick: moment.Moment) {
+    private adjustForDaylightSaving(tick: Date): Date {
         // Deal with winter/summer time changes
         // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
         // if hour is 3, we are switching from summer to winter time, we add 1 hour to keep  ticks  to 04 / 08 / 12 ...
-        if (tick.hour() === 5) {
-            tick.subtract(1, 'hour');
-        } else if (tick.hour() === 3) {
-            tick.add(1, 'hour');
+
+        if (tick.getHours() === 5) {
+            tick = sub(tick, {hours: 1});
+        } else if (tick.getHours() === 3) {
+            tick = add(tick, {hours: 1});
         }
+        return tick;
     }
 
     private computeTickLabels() {
@@ -98,26 +106,29 @@ export class XAxis {
 
     private computeTickLabelsForTR(): void {
         this.ticks.forEach((tick) => {
-            if (tick.minute() === 0 || tick.minute() === 30)
+            if (tick.getMinutes() === 0 || tick.getMinutes() === 30)
                 this.ticksLabel.set(tick.valueOf(), this.computeTickLabel(tick, 'TR'));
             else this.ticksLabel.set(tick.valueOf(), '');
         });
     }
 
-    private computeTickLabel = (value: Moment, domainId: string): string => {
+    private computeTickLabel = (value: Date, domainId: string): string => {
         switch (domainId) {
             case 'TR':
-                if (value.minute() === 0) return value.format('HH') + 'h';
-                return value.format('HH') + 'h30';
+                if (value.getMinutes() === 0) return format(value, 'HH', this.localeOption) + 'h';
+                return format(value, 'HH', this.localeOption) + 'h30';
             case 'J':
-                return value.format('HH') + 'h';
+                return format(value, 'HH', this.localeOption) + 'h';
             case '7D':
             case 'W':
-                return value.format('HH') + 'h';
+                return format(value, 'HH', this.localeOption) + 'h';
             case 'M':
-                return value.format('ddd').toLocaleUpperCase().substring(0, 3) + value.format(' DD');
+                return (
+                    format(value, 'eee', this.localeOption).toLocaleUpperCase().substring(0, 3) +
+                    format(value, ' dd', this.localeOption)
+                );
             case 'Y':
-                return value.format('D MMM');
+                return format(value, 'd MMM', this.localeOption);
             default:
                 return '';
         }
@@ -135,7 +146,7 @@ export class XAxis {
 
     private computeTickLabelsFor7DW(): void {
         this.ticks.forEach((tick) => {
-            if (tick.hour() === 0 || tick.hour() === 8 || tick.hour() === 16)
+            if (tick.getHours() === 0 || tick.getHours() === 8 || tick.getHours() === 16)
                 this.ticksLabel.set(tick.valueOf(), this.computeTickLabel(tick, this.domainId));
             else this.ticksLabel.set(tick.valueOf(), '');
         });
@@ -144,19 +155,22 @@ export class XAxis {
     private computeDayRectangles() {
         this.dayRectangles = new Array();
         if (this.domainId === 'W' || this.domainId === '7D') {
-            let startOfDay = this.gridTimeDomain[0];
+            let beginningOfDay = this.gridTimeDomain[0];
             let changeBgColor = true;
-            while (startOfDay < this.gridTimeDomain[1]) {
-                let endOfDay = moment(startOfDay).set('hour', 23).set('minute', 59).valueOf();
-                if (endOfDay.valueOf() > this.gridTimeDomain[1]) endOfDay = this.gridTimeDomain[1];
+            while (beginningOfDay < this.gridTimeDomain[1]) {
+                const endOfDayDate = new Date(beginningOfDay);
+                endOfDayDate.setHours(23);
+                endOfDayDate.setMinutes(59);
+                let endOfDay = endOfDayDate.getTime();
+                if (endOfDay > this.gridTimeDomain[1]) endOfDay = this.gridTimeDomain[1];
                 const rectangle: Rectangle = {
-                    start: startOfDay,
+                    start: beginningOfDay,
                     end: endOfDay,
                     changeBgColor: changeBgColor,
-                    dateToDisplay: this.getWeekFormatting(startOfDay, endOfDay)
+                    dateToDisplay: this.getWeekFormatting(beginningOfDay, endOfDay)
                 };
                 this.dayRectangles.push(rectangle);
-                startOfDay = moment(startOfDay).add(1, 'day').set('hour', 0).set('minute', 0).valueOf();
+                beginningOfDay = startOfDay(add(beginningOfDay, {days: 1})).getTime();
                 changeBgColor = !changeBgColor;
             }
         }
@@ -164,7 +178,7 @@ export class XAxis {
 
     private getWeekFormatting(start: number, end: number) {
         if (end - start < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
-        return moment(start).format('ddd DD MMM');
+        return format(start, 'eee dd MMM', this.localeOption);
     }
 
     public getTickLabel = (value): string => {

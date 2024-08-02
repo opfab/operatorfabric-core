@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as moment from 'moment';
+import moment from 'moment';
 import {ConfigService} from './config.service';
 
 export class DateTimeFormatterService {

@@ -11,7 +11,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './router/app-routing.module';
@@ -86,6 +86,20 @@ import {NgbModalServer} from './server/ngbModal.server';
 import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.component';
 
 @NgModule({
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        AlertComponent,
+        ConnectionLostComponent,
+        SessionEndComponent,
+        ActivityAreaChoiceAfterLoginComponent,
+        AppLoadedInAnotherTabComponent,
+        ApplicationLoadingComponent,
+        ReloadRequiredComponent,
+        LoadingInProgressComponent,
+        OpfabNgbModalComponent
+    ],
+    bootstrap: [AppComponent],
     imports: [
         CommonModule,
         BrowserModule,
@@ -94,7 +108,6 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         ReactiveFormsModule,
         TagInputModule,
         OAuthModule.forRoot(),
-        HttpClientModule,
         NgbModule,
         TranslateModule.forRoot(),
         SpinnerModule,
@@ -112,20 +125,6 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         RichTextModule,
         ServiceWorkerModule.register('ngsw-worker.js')
     ],
-    declarations: [
-        AppComponent,
-        LoginComponent,
-        AlertComponent,
-        ConnectionLostComponent,
-        SessionEndComponent,
-        ActivityAreaChoiceAfterLoginComponent,
-        AppLoadedInAnotherTabComponent,
-        ApplicationLoadingComponent,
-        ReloadRequiredComponent,
-        LoadingInProgressComponent,
-        OpfabNgbModalComponent
-    ],
-
     providers: [
         {
             provide: SwRegistrationOptions,
@@ -156,9 +155,9 @@ import {OpfabNgbModalComponent} from './modules/share/modal/opfabNgbModal.compon
         {provide: CardServer, useClass: AngularCardServer},
         {provide: SoundServer, useClass: AngularSoundServer},
         {provide: TranslationService, useClass: AngularTranslationService},
-        {provide: ModalServer, useClass: NgbModalServer}
-    ],
-    bootstrap: [AppComponent]
+        {provide: ModalServer, useClass: NgbModalServer},
+        provideHttpClient(withInterceptorsFromDi())
+    ]
 })
 export class AppModule {}
 

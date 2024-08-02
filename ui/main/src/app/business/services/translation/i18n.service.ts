@@ -7,7 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as moment from 'moment';
+import moment from 'moment';
+import {fr, enGB, nl} from 'date-fns/locale';
+
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/business/services/config.service';
@@ -91,6 +93,22 @@ export class I18nService {
 
     public static get locale() {
         return this._locale;
+    }
+
+    public static getDateFnsLocaleOption() {
+        let fnsLocale;
+        switch (this._locale) {
+            case 'fr':
+                fnsLocale = fr;
+                break;
+            case 'nl':
+                fnsLocale = nl;
+                break;
+            default:
+                fnsLocale = {...enGB, options: {...enGB.options, weekStartsOn: 6}};
+                break;
+        }
+        return {locale: fnsLocale};
     }
 
     public static loadLocale(locale: string): Observable<any> {

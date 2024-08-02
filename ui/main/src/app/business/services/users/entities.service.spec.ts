@@ -8,21 +8,26 @@
  */
 
 import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {environment} from '../../../../environments/environment';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {AngularEntitiesServer} from 'app/server/angularEntities.server';
 import {RolesEnum} from '@ofModel/roles.model';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [{provide: RemoteLoggerServer, useValue: null}],
-            imports: [HttpClientTestingModule]
+            imports: [],
+            providers: [
+                {provide: RemoteLoggerServer, useValue: null},
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting()
+            ]
         });
         httpMock = TestBed.inject(HttpTestingController);
         EntitiesService.setEntitiesServer(TestBed.inject(AngularEntitiesServer));
