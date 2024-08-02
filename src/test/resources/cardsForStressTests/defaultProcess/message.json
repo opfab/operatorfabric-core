@@ -18,7 +18,7 @@
 	"endDate" : 28800000 ,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "message.title"},
-	"data" : {"message":" Information card number 1"},
+	"data" : {"richMessage":" Information card number 1"},
 	"timeSpans" : [
 		{"start" :7200000},
 		{"start" : 28800000}
