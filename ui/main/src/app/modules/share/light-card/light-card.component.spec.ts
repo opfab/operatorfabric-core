@@ -13,7 +13,6 @@ import {LightCardComponent} from './light-card.component';
 import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Router} from '@angular/router';
 import {I18nService} from 'app/business/services/translation/i18n.service';
@@ -36,6 +35,7 @@ import {AcknowledgeServer} from '../../../business/server/acknowledge.server';
 import {ConfigService} from 'app/business/services/config.service';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -50,10 +50,9 @@ describe('LightCardComponent', () => {
         ConfigService.setConfigServer(new ConfigServerMock());
         ProcessesService.setProcessServer(new ProcessServerMock());
         TestBed.configureTestingModule({
+            declarations: [LightCardComponent],
             imports: [
-                HttpClientTestingModule,
                 RouterTestingModule,
-                HttpClientTestingModule,
                 CountDownModule,
                 PipesModule,
                 TranslateModule.forRoot({
@@ -65,7 +64,6 @@ describe('LightCardComponent', () => {
                 }),
                 NgbModule
             ],
-            declarations: [LightCardComponent],
             providers: [
                 {provide: Router, useValue: myrout},
                 {provide: 'TimeEventSource', useValue: null},
@@ -78,7 +76,8 @@ describe('LightCardComponent', () => {
                 {provide: ExternalDevicesServer, use: null},
                 {provide: SoundServer, use: null},
                 {provide: TranslationService, useClass: TranslationServiceMock},
-                {provide: AcknowledgeServer, useClass: null}
+                {provide: AcknowledgeServer, useClass: null},
+                provideHttpClient(withInterceptorsFromDi())
             ]
         }).compileComponents();
         // avoid exceptions during construction and init of the component

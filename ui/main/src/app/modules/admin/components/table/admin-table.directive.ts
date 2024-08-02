@@ -376,7 +376,6 @@ export abstract class AdminTableDirective implements OnDestroy {
     private getDataForExportFile(): Array<any> {
         const exportData = [];
         this.gridApi.forEachNode((line) => {
-            debugger;
             if (line) {
                 const item = {};
                 this.fields.forEach((field) => {

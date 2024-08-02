@@ -32,7 +32,7 @@ import {
     ScaleType,
     ViewDimensions
 } from '@swimlane/ngx-charts';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Router} from '@angular/router';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/business/view/timeline/timeline.view';

@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
 import {Circle, Circles} from './circles';
 import {XAxis} from './xaxis';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Observable, Subject, takeUntil} from 'rxjs';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {I18nService} from 'app/business/services/translation/i18n.service';
+import {format} from 'date-fns';
 
 export class TimelineView {
     private circles: Circles;
@@ -65,23 +66,24 @@ export class TimelineView {
     }
 
     private setTitle() {
+        const localeOption = I18nService.getDateFnsLocaleOption();
         switch (this.domainId) {
             case 'TR':
             case 'J':
-                this.title = moment(this.gridTimeDomain[0]).format('DD MMMM YYYY');
+                this.title = format(this.gridTimeDomain[0], 'dd MMMM yyyy', localeOption);
                 break;
             case 'M':
-                this.title = moment(this.gridTimeDomain[0]).format('MMMM YYYY').toLocaleUpperCase();
+                this.title = format(this.gridTimeDomain[0], 'MMMM yyyy', localeOption).toLocaleUpperCase();
                 break;
             case 'Y':
-                this.title = moment(this.gridTimeDomain[0]).format('YYYY').toLocaleUpperCase();
+                this.title = format(this.gridTimeDomain[0], 'yyyy', localeOption).toLocaleUpperCase();
                 break;
             case '7D':
             case 'W':
                 this.title =
-                    moment(this.gridTimeDomain[0]).format('DD/MM/YYYY').toLocaleUpperCase() +
+                    format(this.gridTimeDomain[0], 'dd/MM/yyyy', localeOption).toLocaleUpperCase() +
                     ' - ' +
-                    moment(this.gridTimeDomain[1]).format('DD/MM/YYYY');
+                    format(this.gridTimeDomain[1], 'dd/MM/yyyy', localeOption);
                 break;
             default:
         }

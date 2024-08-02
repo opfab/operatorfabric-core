@@ -7,15 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {TimelineView} from './timeline.view';
+import {I18nService} from 'app/business/services/translation/i18n.service';
 
 describe('TimeLine view title', () => {
     let timeLineView: TimelineView;
 
     beforeEach(() => {
         timeLineView = new TimelineView();
-        moment.locale('en');
+        const translationService = new TranslationServiceMock();
+        I18nService.setTranslationService(translationService);
+        I18nService.initLocale();
     });
 
     afterEach(() => {

@@ -8,7 +8,7 @@
  */
 
 import * as Handlebars from 'handlebars/dist/handlebars.js';
-import * as moment from 'moment';
+import moment from 'moment';
 import {LoggerService as logger} from '../logs/logger.service';
 
 export class HandlebarsHelper {

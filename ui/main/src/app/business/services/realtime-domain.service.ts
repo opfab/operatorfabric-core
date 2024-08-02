@@ -10,9 +10,10 @@
 import {FilteredLightCardsStore} from '../store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../store/opfabStore';
 import {UserPreferencesService} from './users/user-preference.service';
-import moment from 'moment';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {FilterType} from '@ofModel/feed-filter.model';
+import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
+import {I18nService} from './translation/i18n.service';
 
 export class RealtimeDomainService {
     private static OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
@@ -22,15 +23,11 @@ export class RealtimeDomainService {
     private static filteredLightCardStore: FilteredLightCardsStore;
     private static overlap = 0;
     private static followClockTick: boolean = true;
+    private static localeOption;
 
     public static init() {
-        moment.updateLocale('en', {
-            week: {
-                dow: 6, // First day of week is Saturday
-                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
-            }
-        });
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+        this.localeOption = I18nService.getDateFnsLocaleOption();
         this.currentDomainId = UserPreferencesService.getPreference('opfab.timeLine.domain');
         if (this.currentDomainId) {
             this.setDefaultStartAndEndDomain();
@@ -62,39 +59,39 @@ export class RealtimeDomainService {
         switch (this.currentDomainId) {
             case 'TR': {
                 startDomain = this.getRealTimeStartDate();
-                endDomain = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
+                endDomain = startOfHour(add(new Date(), {hours: 10}));
                 break;
             }
             case 'J': {
-                startDomain = moment().hours(0).minutes(0).second(0).millisecond(0);
-                endDomain = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
+                startDomain = startOfDay(new Date());
+                endDomain = startOfDay(add(new Date(), {days: 1}));
                 break;
             }
             case '7D': {
-                startDomain = moment().minutes(0).second(0).millisecond(0).subtract(12, 'hours');
+                startDomain = sub(startOfHour(new Date()), {hours: 12});
                 // set position to a multiple of 4
                 for (let i = 0; i < 4; i++) {
-                    if ((startDomain.hours() - i) % 4 === 0) {
-                        startDomain.subtract(i, 'hours');
+                    if ((startDomain.getHours() - i) % 4 === 0) {
+                        startDomain = sub(startDomain, {hours: i});
                         break;
                     }
                 }
-                endDomain = moment(startDomain).add(8, 'day');
+                endDomain = add(startDomain, {days: 8});
                 break;
             }
             case 'W': {
-                startDomain = moment().startOf('week').minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('week').minutes(0).second(0).millisecond(0).add(1, 'week');
+                startDomain = startOfWeek(new Date(), this.localeOption);
+                endDomain = add(startOfWeek(new Date(), this.localeOption), {weeks: 1});
                 break;
             }
             case 'M': {
-                startDomain = moment().startOf('month').minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('month').hour(0).minutes(0).second(0).millisecond(0).add(1, 'month');
+                startDomain = startOfMonth(new Date());
+                endDomain = add(startOfMonth(new Date()), {months: 1});
                 break;
             }
             case 'Y': {
-                startDomain = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0);
-                endDomain = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).add(1, 'year');
+                startDomain = startOfYear(new Date());
+                endDomain = add(startOfYear(new Date()), {years: 1});
                 break;
             }
         }
@@ -102,9 +99,13 @@ export class RealtimeDomainService {
     }
 
     private static getRealTimeStartDate() {
-        const currentMinutes = moment().minutes();
+        const currentMinutes = new Date().getMinutes();
         const roundedMinutes = Math.floor(currentMinutes / 15) * 15; // rounds minutes to previous quarter
-        return moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
+        const realStartDate = new Date();
+        realStartDate.setMinutes(roundedMinutes);
+        realStartDate.setSeconds(0);
+        realStartDate.setMilliseconds(0);
+        return sub(sub(realStartDate, {hours: 2}), {minutes: 15});
     }
 
     /**
@@ -120,22 +121,10 @@ export class RealtimeDomainService {
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
              * to a locale with monday as first day of week
              */
-            const startOfWeek = moment(startDomain)
-                .add(2, 'day')
-                .startOf('week')
-                .minutes(0)
-                .second(0)
-                .millisecond(0)
-                .valueOf();
-            const endOfWeek = moment(startDomain)
-                .add(2, 'day')
-                .startOf('week')
-                .minutes(0)
-                .second(0)
-                .millisecond(0)
-                .add(1, 'week');
-            startDomain = startOfWeek.valueOf();
-            endDomain = endOfWeek.valueOf();
+            const startOfWeekTime = startOfWeek(add(new Date(startDomain), {days: 2}), this.localeOption).getTime();
+            const endOfWeekTime = add(startOfWeekTime, {weeks: 1}).getTime();
+            startDomain = startOfWeekTime;
+            endDomain = endOfWeekTime;
         }
 
         if (useOverlap) {
@@ -164,53 +153,53 @@ export class RealtimeDomainService {
      */
     public static moveDomain(moveForward: boolean) {
         this.followClockTick = false;
-        let startDomain = moment(this.currentDomain.startDate);
-        let endDomain = moment(this.currentDomain.endDate);
+        let startDomain = new Date(this.currentDomain.startDate);
+        let endDomain = new Date(this.currentDomain.endDate);
 
         if (moveForward) {
             logger.info('Move domain forward', LogOption.REMOTE);
-            startDomain = this.goForward(startDomain.add(this.overlap, 'milliseconds'));
+            startDomain = this.goForward(addMilliseconds(startDomain, this.overlap));
             endDomain = this.goForward(endDomain);
         } else {
             logger.info('Move domain backward', LogOption.REMOTE);
-            startDomain = this.goBackward(startDomain.add(this.overlap, 'milliseconds'));
+            startDomain = this.goBackward(addMilliseconds(startDomain, this.overlap));
             endDomain = this.goBackward(endDomain);
         }
 
         return this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
     }
 
-    private static goForward(dateToMove: moment.Moment) {
+    private static goForward(dateToMove: Date) {
         switch (this.currentDomainId) {
             case 'TR':
-                return dateToMove.add(2, 'hour');
+                return add(dateToMove, {hours: 2});
             case 'J':
-                return dateToMove.add(1, 'day');
+                return add(dateToMove, {days: 1});
             case '7D':
-                return dateToMove.add(8, 'hour').startOf('day').add(1, 'day'); // the feed is not always at the beginning of the day
+                return add(startOfDay(add(dateToMove, {hours: 8})), {days: 1}); // the feed is not always at the beginning of the day
             case 'W':
-                return dateToMove.add(7, 'day');
+                return add(dateToMove, {days: 7});
             case 'M':
-                return dateToMove.add(1, 'month');
+                return add(dateToMove, {months: 1});
             case 'Y':
-                return dateToMove.add(1, 'year');
+                return add(dateToMove, {years: 1});
         }
     }
 
-    private static goBackward(dateToMove: moment.Moment) {
+    private static goBackward(dateToMove: Date) {
         switch (this.currentDomainId) {
             case 'TR':
-                return dateToMove.subtract(2, 'hour');
+                return sub(dateToMove, {hours: 2});
             case 'J':
-                return dateToMove.subtract(1, 'day');
+                return sub(dateToMove, {days: 1});
             case '7D':
-                return dateToMove.add(8, 'hour').startOf('day').subtract(1, 'day'); // the feed is not always at the beginning of the day
+                return sub(startOfDay(add(dateToMove, {hours: 8})), {days: 1}); // the feed is not always at the beginning of the day
             case 'W':
-                return dateToMove.subtract(7, 'day');
+                return sub(dateToMove, {days: 7});
             case 'M':
-                return dateToMove.subtract(1, 'month');
+                return sub(dateToMove, {months: 1});
             case 'Y':
-                return dateToMove.subtract(1, 'year');
+                return sub(dateToMove, {years: 1});
         }
     }
 

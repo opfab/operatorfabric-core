@@ -34,7 +34,7 @@ describe('Time line moves', function () {
     beforeEach('Reset UI configuration file ', function () {
         script.deleteAllCards();
     })
-  
+
     it('Check timelime manual moves in TR mode', function () {
 
         // NB : month  starts at 0

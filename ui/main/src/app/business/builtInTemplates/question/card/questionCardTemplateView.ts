@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as moment from 'moment/moment';
+import moment from 'moment';
 
 declare const opfab;
 
