@@ -30,7 +30,7 @@ Alternatively there is also another flow available:
 
 - none flow: referred as `NONE` mode flow.
 
-The `NONE` flow assumes that the application is behind a secured proxy wich handles login and token generation.
+The `NONE` flow assumes that the application is behind a secured proxy which handles login and token generation.
 Calls to backend services will get a valid token added to the headers and the token will not be visible for the (web)client.
 
 === Nginx Configuration
@@ -44,7 +44,7 @@ There are 3 properties to configure within `nginx.conf` file:
 * `$KeycloakBaseUrl`: the base url of keycloak;
 * `$OperatorFabricRealm`: the realm configure within keycloak instance to provide authentication to OperatorFabric;
 * `$ClientPairOFAuthentication`: base64 encoded string of the pair of client authentication used by OperatorFabric
-to log to the Authentication Provider (keycloak). The cient-id and the client-secret are separated by a colon(':').
+to log to the Authentication Provider (keycloak). The client-id and the client-secret are separated by a colon(':').
 
 [NOTE]
 ====
@@ -97,7 +97,7 @@ There are several common properties:
 
 - `security.logout-url`: url used when a user is logged out of the UI;
 - `security.oauth2.flow.delegate-url`: url used to connect to the Authentication provider;
-- `security.oauth2.flow.mode`: technical way to be authenticated by the Autentication provider.
+- `security.oauth2.flow.mode`: technical way to be authenticated by the Authentication provider.
 - `security.oauth2.client-id` : the OAuth2 client ID
 - `security.jwt.login-claim` : the field in the token that will be used to identify your account (default value : sub)
 
@@ -131,8 +131,8 @@ These two modes share the same way of declaring the delegate URL. This has to be
 ----
 
 Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
-For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
-Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named `dev` on the dev keycloak instance.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registered.
+Here, the `client-id` value is `opfab-client` which is defined as client under the `realm` named `dev` on the dev keycloak instance.
 
 === OAuth2 IMPLICIT Flow
 
@@ -170,7 +170,7 @@ Be careful that the configured value should be one of the valid post logout redi
 ----
 
 Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
-For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registered.
 The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
 
 ===  NONE Flow
