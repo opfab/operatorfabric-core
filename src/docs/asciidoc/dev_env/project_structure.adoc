@@ -12,7 +12,7 @@
 build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
-* link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
+* link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker compose files to help with tests and demonstrations
 * link:https://github.com/opfab/operatorfabric-core/tree/master/node-services[node-services]: contains the node microservices that make up
 OperatorFabric
 * link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the java microservices that make up
@@ -35,7 +35,7 @@ the OperatorFabric UI
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/asciidoc[asciidoc]: General documentation (Architecture,
 Getting Started Guide, etc.)
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main[main]
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker-compose files to help with
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker compose files to help with
 tests and demonstrations
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test[test]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/api[api] : karate code for automatic api testing (non-regression tests)
