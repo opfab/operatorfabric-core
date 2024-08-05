@@ -12,7 +12,7 @@
 = Troubleshooting
 
 +++ <details><summary> +++
-**Proxy error when running businessconfig-party docker-compose**
+**Proxy error when running businessconfig-party docker compose**
 +++ </summary><div> +++
 
 .Error message
@@ -289,7 +289,7 @@ The following error appears:
 .Possible causes
 
 A `docker compose up` has been run previously without `nginx.conf`.
-A folder named `nginx.conf` has been created by `docker-compose`.
+A folder named `nginx.conf` has been created by `docker compose`.
 
 .Resolution
 
