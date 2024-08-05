@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -23,7 +23,7 @@ ERROR: Get https://registry-1.docker.io/v2/: Proxy Authentication Required
 ----
 
 .Possible causes & resolution
-When running docker-compose files using businessconfig-party images(such as rabbitmq,
+When running docker compose files using businessconfig-party images(such as rabbitmq,
 mongodb etc.) the first time, docker will need to pull these images from
 their repositories.
 If the docker proxy isn't set properly, you will see the above message.
@@ -227,14 +227,14 @@ For this example, `businessconfig/processes` is a correct end-point whereas `bus
 +++ </div></details> +++
 
 +++ <details><summary> +++
-**`ERROR: for web-ui` when running docker-compose in `${OF_HOME}/config/dev`**
+**`ERROR: for web-ui` when running docker compose in `${OF_HOME}/config/dev`**
 +++ </summary><div> +++
 
 When using the following commands:
 [source]
 ----
 cd ${OF_HOME}/config/dev
-docker-compose up -d
+docker compose up -d
 ----
 
 The following error appears:
@@ -251,17 +251,17 @@ where `…` is specific to the runtime environment.
 
 There is no `nginx.conf` file in the `${OF_HOME}/conf/dev` directory.
 
-A first run of OperatorFabric `docker-compose` in dev config needs a `nginx.conf` file.
-To create it, and run a docker-compose environment use:
+A first run of OperatorFabric `docker compose` in dev config needs a `nginx.conf` file.
+To create it, and run a docker compose environment use:
 [source]
 ----
 cd ${OF_HOME}/config/dev
 ./docker-compose.sh
 ----
 
-If docker-compose has created a `nginx.conf` directory, delete it before running the previous commands.
+If docker compose has created a `nginx.conf` directory, delete it before running the previous commands.
 
-Once this `nginx.conf` file created a simple `docker-compose up -d` is enough to run a dev docker-compose environment.
+Once this `nginx.conf` file created a simple `docker compose up -d` is enough to run a dev docker compose environment.
 Sometimes a `nginx.conf` has been created as an attempt to launch the `web-ui` docker.
 See the following section to resolve this.
 
@@ -288,7 +288,7 @@ The following error appears:
 
 .Possible causes
 
-A `docker-compose up` has been run previously without `nginx.conf`.
+A `docker compose up` has been run previously without `nginx.conf`.
 A folder named `nginx.conf` has been created by `docker-compose`.
 
 .Resolution

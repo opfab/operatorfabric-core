@@ -63,7 +63,7 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 # That's why oldVersion is part of the pattern, as it is less likely that another version key would appear with the exact same value.
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 
-echo "Using $newVersion for lfeoperatorfabric images in dev and docker environment docker-compose files"
+echo "Using $newVersion for lfeoperatorfabric images in dev and docker environment docker compose files"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/docker/docker-compose.yml;
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;

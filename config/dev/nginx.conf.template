@@ -1,4 +1,4 @@
-# docker-compose DNS used to resolved keycloak services
+# docker compose DNS used to resolved keycloak services
 resolver 127.0.0.11 ipv6=off;
 
 # Log format to have msec in time + request processing time 

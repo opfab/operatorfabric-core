@@ -1,7 +1,7 @@
 // Copyright (c) 2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
-// If a copy of the licensewas not distributed with this
+// If a copy of the license was not distributed with this
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -76,7 +76,7 @@ OperatorFabric is designed to be used with TLS/SSL. However, the default configu
 
 The services within OperatorFabric communicate with each other using HTTP. This communication is not encrypted. The components should not be exposed to the internet and should be deployed in a secure network, either by:
 
--  Using a single instance with docker-compose that does not expose the services to the outside world
+-  Using a single instance with docker compose that does not expose the services to the outside world
 -  Using a Kubernetes cluster with a private network
 
 === Access to card publication without authentication
