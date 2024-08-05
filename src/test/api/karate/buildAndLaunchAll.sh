@@ -17,16 +17,16 @@ echo "Hard stop for cleaning if needed"
 bin/run_all.sh hardstop
 echo "Stop existing running opfab docker"
 cd config/dev
-docker-compose down
+docker compose down
 cd ../docker
-docker-compose down
+docker compose down
 cd ../..
 echo "Start docker compose for building" 
-docker-compose -f ${dockerComposeFile} up -d
+docker compose -f ${dockerComposeFile} up -d
 echo "Build all" 
 ./gradlew clean buildDocker
-echo "Stop docker-compose for building"
-docker-compose -f ${dockerComposeFile} down
+echo "Stop docker compose for building"
+docker compose -f ${dockerComposeFile} down
 echo "Start opfab"
 cd config/docker
 ./startOpfabInProductionMode.sh

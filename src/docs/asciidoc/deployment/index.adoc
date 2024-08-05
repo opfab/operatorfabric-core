@@ -17,7 +17,7 @@ the project or by using images releases from link:https://hub.docker.com/[Docker
 Service images are all based on link:https://hub.docker.com/_/openjdk[openjdk:8-jre-alpine].
 
 For simple one instance per service deployment, you can find a sample
-deployment as a docker-compose file
+deployment as a docker compose file
 link:https://github.com/opfab/operatorfabric-core/tree/master/config/docker[here]
 
 

@@ -96,7 +96,7 @@ describe('Resilience tests', function () {
     }
 
     function restartMongoDB() {
-        cy.exec('docker restart docker_mongodb_1');
+        cy.exec('docker restart docker-mongodb-1');
         cy.wait(25000); // Wait for mongoDB to be fully up
     }
 

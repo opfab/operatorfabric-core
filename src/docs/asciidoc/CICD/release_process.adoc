@@ -59,7 +59,7 @@ Current version is SNAPSHOT (based on VERSION file)
 Preparing X.X.X-RC.RELEASE
 Updating version for pipeline in VERSION file
 Replacing SNAPSHOT with X.X.X-RC.RELEASE in swagger.yaml files
-Using X.X.X-RC.RELEASE for lfeoperatorfabric images in dev and docker environment docker-compose files
+Using X.X.X-RC.RELEASE for lfeoperatorfabric images in dev and docker environment docker compose files
 The following files have been updated:
  M VERSION
  M config/dev/docker-compose.yml
@@ -72,7 +72,7 @@ The following files have been updated:
 This script performs the following changes:
 +
 * Replace SNAPSHOT with X.X.X-RC.RELEASE in swagger.yaml files and the VERSION file at the root operator-fabric folder
-* Change the version from SNAPSHOT to X.X.X-RC.RELEASE in the docker-compose files for dev and docker deployments
+* Change the version from SNAPSHOT to X.X.X-RC.RELEASE in the docker compose files for dev and docker deployments
 +
 . Commit the changes with the template message:
 +
@@ -256,7 +256,7 @@ Current version is SNAPSHOT (based on VERSION file)
 Preparing X.X.X.RELEASE
 Updating version for pipeline in VERSION file
 Replacing SNAPSHOT with X.X.X.RELEASE in swagger.yaml files
-Using X.X.X.RELEASE for lfeoperatorfabric images in dev and docker environment docker-compose files
+Using X.X.X.RELEASE for lfeoperatorfabric images in dev and docker environment docker compose files
 The following files have been updated:
  M VERSION
  M config/dev/docker-compose.yml
@@ -269,7 +269,7 @@ The following files have been updated:
 This script performs the following changes:
 +
 * Replace SNAPSHOT with X.X.X.RELEASE in swagger.yaml files and the VERSION file at the root operator-fabric folder
-* Change the version from SNAPSHOT to X.X.X.RELEASE in the docker-compose files for dev and docker deployments
+* Change the version from SNAPSHOT to X.X.X.RELEASE in the docker compose files for dev and docker deployments
 +
 . Commit the changes with the template message:
 +
@@ -375,16 +375,16 @@ NOTE: The `external_devices_api` property should be set to true for all new vers
 the External Devices API is displayed on the website.
 
 [[checking_docker_compose]]
-=== Checking the docker-compose files
+=== Checking the docker compose files
 
-While the docker-compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `X.X.release`
+While the docker compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `X.X.release`
 branch they should rely on the latest RELEASE version available on DockerHub. Once the CI pipeline triggered by the
 previous steps has completed successfully, and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
 
 . Remove your locally built X.X.X.RELEASE images if any
-. Run the config/docker docker-compose file to make sure it pulls the images from DockerHub and behaves as intended.
+. Run the config/docker docker compose file to make sure it pulls the images from DockerHub and behaves as intended.
 
-People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
+People who want to experiment with OperatorFabric are pointed to this docker compose so it's important to make sure
 that it's working correctly.
 
 === Publishing the jars for the client library to Maven Central
@@ -482,7 +482,7 @@ You then have to follow the following steps as for a classic release:
 
 * <<publish_release_on_docker_hub_and_documentation, Publish the release on docker hub and documentation>>
 * <<update_version_list_on_website, Updating the version list on the website>>.
-* <<checking_docker_compose, Checking the docker-compose files>>.
+* <<checking_docker_compose, Checking the docker compose files>>.
 * <<publishing_release_on_github, Publishing the release on GitHub>>.
 * <<publishing_client_lib_release, Release the client library jars>>.
 * <<supported_versions, Update supported versions>>.
