@@ -179,7 +179,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                         <td style="width: 90px">
                             <div class="opfab-input">
                                 <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dayNumber')} </label>
-                                <input size="1" maxlength="2" type="number" id="nthDay" min="1" max="31" oninput="if (this.value > 31) this.value = '';">
+                                <input size="1" maxlength="2" type="number" id="nthDay" min="-31" max="31" oninput="if ((this.value > 31) || (this.value < -31)) this.value = '';">
                             </div>
                         </td>
                         <td style="font-size:13px"> &nbsp; ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dayOfTheMonth')} </td>
