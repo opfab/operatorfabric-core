@@ -72,6 +72,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             this.doesTheUserHavePermissionToDeleteCard();
 
         this.showCreateCopyButton =
+            !this.isReadOnlyUser &&
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
             UserService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
