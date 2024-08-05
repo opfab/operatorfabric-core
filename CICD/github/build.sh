@@ -9,10 +9,10 @@
 # This file is part of the OperatorFabric project.
 
 
-# Script launch form the root of the git projet by github actions 
+# Script launch form the root of the git project by github actions
 
 export OF_VERSION=$(<VERSION)
-docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+docker compose -f src/main/docker/test-environment/docker-compose.yml up -d
 source $HOME/.sdkman/bin/sdkman-init.sh;
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -26,6 +26,6 @@ export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx2g"
 ./gradlew --version
 ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker sonar
 status_code=$?
-docker-compose -f src/main/docker/test-environment/docker-compose.yml down
-# propage the status code for github actions 
+docker compose -f src/main/docker/test-environment/docker-compose.yml down
+# propagate the status code for github actions
 exit $status_code

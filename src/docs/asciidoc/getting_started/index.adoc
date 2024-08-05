@@ -35,7 +35,7 @@ image::empty-opfab-page.png[empty opfab screenshot]
 To stop the server (if you started it in background), use:
 
 ----
-docker-compose down & 
+docker compose down &
 ----
 
 == Examples 

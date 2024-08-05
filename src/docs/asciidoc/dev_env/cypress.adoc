@@ -38,7 +38,7 @@ instance in docker mode, just substitute `dev` for `docker` to launch it in dev 
 [source,bash]
 ----
 cd config/docker
-docker-compose down <1>
+docker compose down <1>
 ./startOpfabForCypress.sh <2>
 ----
 <1> Remove existing config/docker containers to avoid conflicts
@@ -50,12 +50,12 @@ side-effects from previous tests) with the following commands:
 [source,bash]
 ----
 cd config/docker
-docker-compose down
+docker compose down
 ----
 
 === Explanation
 
-The Cypress tests rely on a running OpFab instance that is an adaptation from the config/docker docker-compose file
+The Cypress tests rely on a running OpFab instance that is an adaptation from the config/docker docker compose file
 (environment name, shorter time before lttd clock display, etc.).
 
 The `generateUIConfigForCypress.sh` script performs this adaptation to create this base Cypress configuration.
@@ -138,7 +138,7 @@ associated collections through the MongoDB shell with the following commands:
 
 [source,bash]
 ----
-docker exec -it docker_mongodb_1 bash
+docker exec -it docker-mongodb-1 bash
 mongo "mongodb://root:password@localhost:27017/?authSource=admin"
 use operator-fabric
 db.cards.remove({})
