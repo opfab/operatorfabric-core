@@ -37,9 +37,9 @@ export class RRuleReminderService implements EventListener {
                     `RRuleReminder - ADD or UPDATE received from event bus for card ${cardOperation.card.id} (uid=${cardOperation.card.uid})`
                 );
                 await this.addCardReminder(cardOperation.card);
-            } else if (cardOperation.type === 'DELETE') {
-                this.logger.debug(`RRuleReminder - DELETE received for card id=${cardOperation.cardId}`);
-                if (cardOperation.cardId != null) await this.databaseService.removeReminder(cardOperation.cardId);
+            } else if (cardOperation.type === 'DELETE' && cardOperation.cardId != null) {
+                this.logger.info(`RRuleReminder - Delete reminder for card id=${cardOperation.cardId} if exists...`);
+                await this.databaseService.removeReminder(cardOperation.cardId);
             }
         } catch (error) {
             this.logger.warn('RRuleReminder - Error on card operation received ' + error);
