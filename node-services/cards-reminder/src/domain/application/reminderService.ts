@@ -38,7 +38,7 @@ export default class ReminderService implements EventListener {
                 );
                 await this.addCardReminder(cardOperation.card);
             } else if (cardOperation.type === 'DELETE' && cardOperation.cardId != null) {
-                this.logger.debug(`Reminder - DELETE received for card id=${cardOperation.cardId}`);
+                this.logger.info(`Reminder - Delete reminder for card id=${cardOperation.cardId} if exists...`);
                 await this.databaseService.removeReminder(cardOperation.cardId);
             }
         } catch (error) {
