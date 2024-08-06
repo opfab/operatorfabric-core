@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Feature, Map as OpenLayersMap} from 'ol';
+import {Map as OpenLayersMap} from 'ol';
 import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
@@ -35,7 +35,7 @@ let self;
 export abstract class OpfabMap {
     unsubscribe$ = new Subject<void>();
     map: OpenLayersMap;
-    vectorLayer: VectorLayer<Feature<any>>;
+    vectorLayer: VectorLayer<VectorSource<any>>;
     graphChart = null;
     public lightCardsToDisplay: LightCard[] = [];
     popupContent: string;
