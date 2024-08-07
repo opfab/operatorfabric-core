@@ -18,7 +18,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
-import moment from 'moment';
+import {format, sub} from 'date-fns';
 import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './userActionLogLine';
 import {UserActionLogsResult} from './userActionLogsResult';
@@ -57,9 +57,7 @@ export class UserActionLogsView {
     }
 
     private setDefaultFromDate() {
-        const pubDate = moment(Date.now());
-        pubDate.subtract(10, 'day');
-        this.dateFrom = pubDate.valueOf();
+        this.dateFrom = sub(Date.now(), {days: 10}).valueOf();
     }
 
     private isUserAuthorized() {
@@ -178,7 +176,7 @@ export class UserActionLogsView {
     }
 
     private getFormattedDateTime(epochDate: number): string {
-        return moment(epochDate).format('HH:mm:ss DD/MM/YYYY');
+        return format(epochDate, 'HH:mm:ss dd/MM/yyyy');
     }
 
     private getEntitiesNames(ids: string[]): string {
