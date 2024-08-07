@@ -53,7 +53,7 @@ export class QuestionCardTemplateView {
                     const cardResponses = [];
                     element.data?.responses.forEach((response) => {
                         cardResponses.push({
-                            responseDate: moment(response.responseDate).format('HH:mm DD/MM/yyyy'),
+                            responseDate: moment(response.responseDate).format('HH:mm DD/MM/YYYY'),
                             response: response.response
                         });
                     });

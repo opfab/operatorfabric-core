@@ -7,8 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
 import {ConfigService} from './config.service';
+import {format} from 'date-fns';
+import {I18nService} from './translation/i18n.service';
 
 export class DateTimeFormatterService {
     private static timeFormat;
@@ -16,27 +17,33 @@ export class DateTimeFormatterService {
     private static dateTimeFormat;
 
     public static init() {
-        DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'LT');
-        DateTimeFormatterService.dateFormat = ConfigService.getConfigValue('settings.dateFormat', 'L');
+        DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'p');
+        DateTimeFormatterService.dateFormat = ConfigService.getConfigValue('settings.dateFormat', 'P');
         DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat');
     }
 
     public static getFormattedDateFromEpochDate(epochDate: number): string {
-        if (!epochDate) return '';
-        return moment(epochDate).format(DateTimeFormatterService.dateFormat);
+        if (!epochDate) {
+            return '';
+        }
+        return format(epochDate, DateTimeFormatterService.dateFormat, I18nService.getDateFnsLocaleOption());
     }
 
     public static getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
-        if (!epochDate) return '';
-        return moment(epochDate).format(
-            DateTimeFormatterService.dateTimeFormat
-                ? DateTimeFormatterService.dateTimeFormat
-                : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`
-        );
+        const formatToUse = DateTimeFormatterService.dateTimeFormat
+            ? DateTimeFormatterService.dateTimeFormat
+            : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`;
+
+        if (!epochDate) {
+            return '';
+        }
+        return format(epochDate, formatToUse, I18nService.getDateFnsLocaleOption());
     }
 
     public static getFormattedTimeFromEpochDate(epochDate: number): string {
-        if (!epochDate) return '';
-        return moment(epochDate).format(DateTimeFormatterService.timeFormat);
+        if (!epochDate) {
+            return '';
+        }
+        return format(epochDate, DateTimeFormatterService.timeFormat, I18nService.getDateFnsLocaleOption());
     }
 }

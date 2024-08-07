@@ -8,7 +8,7 @@
  */
 
 import moment from 'moment';
-import {fr, enGB, nl} from 'date-fns/locale';
+import {fr, enUS, nl} from 'date-fns/locale';
 
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
@@ -105,7 +105,7 @@ export class I18nService {
                 fnsLocale = nl;
                 break;
             default:
-                fnsLocale = {...enGB, options: {...enGB.options, weekStartsOn: 6}};
+                fnsLocale = {...enUS, options: {...enUS.options, weekStartsOn: 6}};
                 break;
         }
         return {locale: fnsLocale};

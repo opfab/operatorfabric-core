@@ -8,7 +8,13 @@
 = Migration Guide from release 4.4.X to release 4.5.0
 
 
-== Use of docker compose v2
+== Use of `docker compose v2`
 
-OperatorFabric is now using docker compose v2, so you have to upgrade this tool to continue using opfab.
+OperatorFabric is now using `docker compose v2`, so you have to upgrade this tool to continue using opfab.
 You can find more information in the docker documentation : https://docs.docker.com/compose/migrate/
+
+== Use of `date-fns` instead of `Moment.js` library
+
+OperatorFabric is now using `date-fns` library instead of `Moment.js`. The format used for defining a formatted date string
+is now different. So, if needed, in the file `web-ui.json`, you have to modify your fields : `settings.dateTimeformat`
+and `settings.dateFormat`. You can find the available formats here : https://date-fns.org/v3.6.0/docs/format

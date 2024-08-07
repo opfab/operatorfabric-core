@@ -17,7 +17,7 @@ import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-time
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 import {HttpClient, HttpHandler} from '@angular/common/http';
@@ -28,13 +28,16 @@ import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.serve
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
+import {enUS} from 'date-fns/locale';
+import {setDefaultOptions} from 'date-fns';
+import {DateTimeFormatterService} from '../../../../../business/services/date-time-formatter.service';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
     let timelineButtonsComponent: TimelineButtonsComponent;
     let fixture: ComponentFixture<InitChartComponent>;
     let fixture2: ComponentFixture<TimelineButtonsComponent>;
-    let translate: TranslateService;
+    setDefaultOptions({locale: enUS});
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -70,6 +73,7 @@ describe('InitChartComponent', () => {
         }).compileComponents();
         OpfabEventStreamService.setEventStreamServer(new OpfabEventStreamServerMock());
         RealtimeDomainService.init();
+        DateTimeFormatterService.init();
         fixture = TestBed.createComponent(InitChartComponent);
         component = fixture.componentInstance;
 
