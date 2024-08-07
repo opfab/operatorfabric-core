@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,16 +11,15 @@ import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
-import moment from 'moment';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {format} from 'date-fns';
 
 export class Dashboard {
     private dashboardSubject = new ReplaySubject<DashboardPage>(1);
     private dashboardPage;
-    public dashboardTimeFilter;
     public noSeverityColor = '#717274';
     private ngUnsubscribe$ = new Subject<void>();
     private filteredLightCardStore: FilteredLightCardsStore;
@@ -80,7 +79,7 @@ export class Dashboard {
                     const dashboardCard = new CardForDashboard();
                     dashboardCard.title = lightCard.titleTranslated;
                     dashboardCard.id = lightCard.id;
-                    dashboardCard.publishDate = moment(lightCard.publishDate).format('DD/MM - HH:mm :');
+                    dashboardCard.publishDate = format(lightCard.publishDate, 'dd/MM - HH:mm :');
                     this.dashboardPage.processes.forEach((processContent) => {
                         if (processContent.id === lightCard.process) {
                             processContent.states.forEach((stateContent) => {
