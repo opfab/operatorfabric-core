@@ -151,8 +151,8 @@ a|authentication mode, available options:
 
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login
 
-|settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
-|settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm DD/MM/YYYY )
+|settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : dd/MM/yyyy )
+|settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm dd/MM/yyyy )
 |settings.locale|en|no|Default user locale (use en if not set)
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
@@ -205,8 +205,8 @@ Replace the following invalid settings config
       },
     }
     "locale": "en",
-    "dateTimeFormat": "HH:mm DD/MM/YYYY",
-    "dateFormat": "DD/MM/YYYY",
+    "dateTimeFormat": "HH:mm dd/MM/yyyy",
+    "dateFormat": "dd/MM/yyyy",
     "styleWhenNightDayModeDesactivated": "NIGHT"
   },
 ```
@@ -225,8 +225,8 @@ By this valid one :
       },
     }
     "locale": "en",
-    "dateTimeFormat": "HH:mm DD/MM/YYYY",
-    "dateFormat": "DD/MM/YYYY",
+    "dateTimeFormat": "HH:mm dd/MM/yyyy",
+    "dateFormat": "dd/MM/yyyy",
     "styleWhenNightDayModeDesactivated": "NIGHT"
   },
 ```
