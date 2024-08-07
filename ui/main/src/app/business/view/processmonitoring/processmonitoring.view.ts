@@ -13,7 +13,8 @@ import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import moment from 'moment';
+import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';
+import {I18nService} from '../../services/translation/i18n.service';
 
 export class ProcessMonitoringView {
     private processesToMonitor: ProcessToMonitor[] = null;
@@ -196,13 +197,25 @@ export class ProcessMonitoringView {
     ): {activeFrom: any; activeTo: any} {
         if (isForward) {
             return {
-                activeFrom: moment(activeFrom, 'YYYY-MM-DDTHH:mm').add(7, 'days').format('YYYY-MM-DDTHH:mm'),
-                activeTo: moment(activeTo, 'YYYY-MM-DDTHH:mm').add(7, 'days').format('YYYY-MM-DDTHH:mm')
+                activeFrom: format(
+                    add(parse(activeFrom, "yyyy-MM-dd'T'HH:mm", new Date()), {days: 7}),
+                    "yyyy-MM-dd'T'HH:mm"
+                ),
+                activeTo: format(
+                    add(parse(activeTo, "yyyy-MM-dd'T'HH:mm", new Date()), {days: 7}),
+                    "yyyy-MM-dd'T'HH:mm"
+                )
             };
         } else {
             return {
-                activeFrom: moment(activeFrom, 'YYYY-MM-DDTHH:mm').subtract(7, 'days').format('YYYY-MM-DDTHH:mm'),
-                activeTo: moment(activeTo, 'YYYY-MM-DDTHH:mm').subtract(7, 'days').format('YYYY-MM-DDTHH:mm')
+                activeFrom: format(
+                    sub(parse(activeFrom, "yyyy-MM-dd'T'HH:mm", new Date()), {days: 7}),
+                    "yyyy-MM-dd'T'HH:mm"
+                ),
+                activeTo: format(
+                    sub(parse(activeTo, "yyyy-MM-dd'T'HH:mm", new Date()), {days: 7}),
+                    "yyyy-MM-dd'T'HH:mm"
+                )
             };
         }
     }
@@ -277,22 +290,24 @@ export class ProcessMonitoringView {
             };
         }
         if (periodClicked === 'week') {
-            const startOfWeek = moment().startOf('week').toDate();
-            const endOfWeek = moment().endOf('week').add(1, 'days').toDate();
+            const localeOption = I18nService.getDateFnsLocaleOption();
+
+            const startOfWeekDate = startOfWeek(new Date(), localeOption);
+            const endOfWeekDate = add(endOfWeek(new Date(), localeOption), {days: 1});
             return {
                 activeFrom:
-                    startOfWeek.getFullYear() +
+                    startOfWeekDate.getFullYear() +
                     '-' +
-                    String(startOfWeek.getMonth() + 1).padStart(2, '0') +
+                    String(startOfWeekDate.getMonth() + 1).padStart(2, '0') +
                     '-' +
-                    String(startOfWeek.getDate()).padStart(2, '0') +
+                    String(startOfWeekDate.getDate()).padStart(2, '0') +
                     'T00:00',
                 activeTo:
-                    endOfWeek.getFullYear() +
+                    endOfWeekDate.getFullYear() +
                     '-' +
-                    String(endOfWeek.getMonth() + 1).padStart(2, '0') +
+                    String(endOfWeekDate.getMonth() + 1).padStart(2, '0') +
                     '-' +
-                    String(endOfWeek.getDate()).padStart(2, '0') +
+                    String(endOfWeekDate.getDate()).padStart(2, '0') +
                     'T00:00'
             };
         }
