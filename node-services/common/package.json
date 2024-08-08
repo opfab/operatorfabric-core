@@ -19,7 +19,7 @@
     "momentjs": "2.0.0",
     "amqp-connection-manager": "4.1.14",
     "amqplib": "0.10.4",
-    "winston": "3.13.1",
+    "winston": "3.14.1",
     "winston-daily-rotate-file": "5.0.0"
   },
   "devDependencies": {
