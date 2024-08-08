@@ -23,11 +23,9 @@ export class RealtimeDomainService {
     private static filteredLightCardStore: FilteredLightCardsStore;
     private static overlap = 0;
     private static followClockTick: boolean = true;
-    private static localeOption;
 
     public static init() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-        this.localeOption = I18nService.getDateFnsLocaleOption();
         this.currentDomainId = UserPreferencesService.getPreference('opfab.timeLine.domain');
         if (this.currentDomainId) {
             this.setDefaultStartAndEndDomain();
@@ -80,8 +78,8 @@ export class RealtimeDomainService {
                 break;
             }
             case 'W': {
-                startDomain = startOfWeek(new Date(), this.localeOption);
-                endDomain = add(startOfWeek(new Date(), this.localeOption), {weeks: 1});
+                startDomain = startOfWeek(new Date(), I18nService.getDateFnsLocaleOption());
+                endDomain = add(startOfWeek(new Date(), I18nService.getDateFnsLocaleOption()), {weeks: 1});
                 break;
             }
             case 'M': {
@@ -121,7 +119,10 @@ export class RealtimeDomainService {
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
              * to a locale with monday as first day of week
              */
-            const startOfWeekTime = startOfWeek(add(new Date(startDomain), {days: 2}), this.localeOption).getTime();
+            const startOfWeekTime = startOfWeek(
+                add(new Date(startDomain), {days: 2}),
+                I18nService.getDateFnsLocaleOption()
+            ).getTime();
             const endOfWeekTime = add(startOfWeekTime, {weeks: 1}).getTime();
             startDomain = startOfWeekTime;
             endDomain = endOfWeekTime;

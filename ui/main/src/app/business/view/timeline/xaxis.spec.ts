@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,8 @@
 
 import moment from 'moment';
 import {XAxis} from './xaxis';
+import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {I18nService} from 'app/business/services/translation/i18n.service';
 
 describe('XAxis', () => {
     let xAxis: XAxis;
@@ -16,6 +18,9 @@ describe('XAxis', () => {
     beforeEach(() => {
         xAxis = new XAxis();
         moment.locale('en');
+        const translationService = new TranslationServiceMock();
+        I18nService.setTranslationService(translationService);
+        I18nService.initLocale();
     });
 
     it('should set xTicks correctly for Realtime Mode (TR) , one tick per 15 minutes ', () => {
