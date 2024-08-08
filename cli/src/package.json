@@ -14,7 +14,7 @@
     "description": "",
     "dependencies": {
         "prompts": "2.4.2",
-        "tar": "7.4.2",
+        "tar": "7.4.3",
         "omelette": "0.4.17"
     }
 }
