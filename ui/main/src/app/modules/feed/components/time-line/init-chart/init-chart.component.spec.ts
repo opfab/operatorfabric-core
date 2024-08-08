@@ -68,8 +68,8 @@ describe('InitChartComponent', () => {
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
-        RealtimeDomainService.init();
         OpfabEventStreamService.setEventStreamServer(new OpfabEventStreamServerMock());
+        RealtimeDomainService.init();
         fixture = TestBed.createComponent(InitChartComponent);
         component = fixture.componentInstance;
 

@@ -22,7 +22,6 @@ export class XAxis {
     private gridTimeDomain: Array<number>;
     private ticks: Array<Date> = [];
     private ticksLabel: Map<number, string> = new Map<number, string>();
-    private localeOption;
 
     private tickSizeMap = {
         TR: {minutes: 15},
@@ -36,7 +35,7 @@ export class XAxis {
     public setupAxis(domainId: string, gridTimeDomain: Array<number>): void {
         this.domainId = domainId;
         this.gridTimeDomain = gridTimeDomain;
-        this.localeOption = I18nService.getDateFnsLocaleOption();
+
         this.computeTickValues();
         this.computeTickLabels();
         this.computeDayRectangles();
@@ -115,20 +114,20 @@ export class XAxis {
     private computeTickLabel = (value: Date, domainId: string): string => {
         switch (domainId) {
             case 'TR':
-                if (value.getMinutes() === 0) return format(value, 'HH', this.localeOption) + 'h';
-                return format(value, 'HH', this.localeOption) + 'h30';
+                if (value.getMinutes() === 0) return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
+                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h30';
             case 'J':
-                return format(value, 'HH', this.localeOption) + 'h';
+                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
             case '7D':
             case 'W':
-                return format(value, 'HH', this.localeOption) + 'h';
+                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
             case 'M':
                 return (
-                    format(value, 'eee', this.localeOption).toLocaleUpperCase().substring(0, 3) +
-                    format(value, ' dd', this.localeOption)
+                    format(value, 'eee', I18nService.getDateFnsLocaleOption()).toLocaleUpperCase().substring(0, 3) +
+                    format(value, ' dd', I18nService.getDateFnsLocaleOption())
                 );
             case 'Y':
-                return format(value, 'd MMM', this.localeOption);
+                return format(value, 'd MMM', I18nService.getDateFnsLocaleOption());
             default:
                 return '';
         }
@@ -178,7 +177,7 @@ export class XAxis {
 
     private getWeekFormatting(start: number, end: number) {
         if (end - start < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
-        return format(start, 'eee dd MMM', this.localeOption);
+        return format(start, 'eee dd MMM', I18nService.getDateFnsLocaleOption());
     }
 
     public getTickLabel = (value): string => {
