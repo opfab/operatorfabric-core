@@ -334,10 +334,10 @@ describe('Handlebars Services', () => {
             processServerMock.setResponseTemplateForGetTemplate('{{now}}');
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
-                    // As it takes times to execute and the test are asynchronous we could not test the exact value
+                    // As it takes times to execute and the test are asynchronous we could not test the exact value,
                     // so we test the range of the result
-                    // taking into account asynchronous mechansim for test tool
-                    // it can take more than 10s to have the execution done
+                    // taking into account asynchronous mechanism for test tool
+                    // it can take more than 10s to have the execution done,
                     // so we set the range starting form now to now plus one minute
                     expect(result).toBeGreaterThan(now.valueOf());
                     expect(result).toBeLessThan(now.valueOf() + 60000);
@@ -348,7 +348,7 @@ describe('Handlebars Services', () => {
 
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {
             now.locale('en');
-            testTemplate('{{dateFormat 1626685587000 format="MMMM Do YYYY"}}', 'July 19th 2021', done);
+            testTemplate('{{dateFormat 1626685587000 format="MMMM do yyyy"}}', 'July 19th 2021', done);
         });
 
         it('compile preserveSpace', (done) => {

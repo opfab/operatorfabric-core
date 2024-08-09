@@ -18,6 +18,7 @@
     "amqplib": "0.10.4",
     "axios": "1.7.4",
     "config": "3.3.12",
+    "date-fns": "3.6.0",
     "express": "4.19.2",
     "express-jwt": "8.4.1",
     "handlebars": "4.7.8",
