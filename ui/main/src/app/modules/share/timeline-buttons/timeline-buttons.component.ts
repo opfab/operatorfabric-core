@@ -9,11 +9,12 @@
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import moment from 'moment';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
+import {add, Duration, format} from 'date-fns';
+import {I18nService} from '../../../business/services/translation/i18n.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -129,7 +130,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     getDateFormatting(value): string {
-        const date = moment(value);
+        const date = new Date(value);
         switch (this.currentDomainId) {
             case 'TR':
                 return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
@@ -142,7 +143,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             case 'M':
                 return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case 'Y':
-                return date.format('yyyy');
+                return format(date, 'yyyy', I18nService.getDateFnsLocaleOption());
             default:
                 return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
         }
@@ -199,7 +200,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private shiftTimeLineIfNecessary() {
         if (!RealtimeDomainService.isTimelineLocked()) {
-            const currentDate = moment().valueOf();
+            const currentDate = new Date().valueOf();
 
             switch (this.currentDomainId) {
                 case 'TR':
@@ -208,7 +209,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'J':
-                    this.shiftIfNecessaryDomainUsingOverlap('days');
+                    this.shiftIfNecessaryDomainUsingOverlap({days: 1});
                     break;
                 case '7D':
                     if (currentDate > 16 * 60 * 60 * 1000 + this.currentDomain.startDate) {
@@ -216,35 +217,38 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'W':
-                    this.shiftIfNecessaryDomainUsingOverlap('week');
+                    this.shiftIfNecessaryDomainUsingOverlap({weeks: 1});
                     break;
                 case 'M':
-                    this.shiftIfNecessaryDomainUsingOverlap('months');
+                    this.shiftIfNecessaryDomainUsingOverlap({months: 1});
                     break;
                 case 'Y':
-                    this.shiftIfNecessaryDomainUsingOverlap('years');
+                    this.shiftIfNecessaryDomainUsingOverlap({years: 1});
                     break;
             }
         }
         if (!this.isDestroyed) setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
     }
 
-    private shiftIfNecessaryDomainUsingOverlap(domainDuration: moment.unitOfTime.DurationConstructor): void {
-        const currentDate = moment().valueOf();
+    private shiftIfNecessaryDomainUsingOverlap(domainDuration: Duration): void {
+        const currentDate = new Date().valueOf();
 
         // shift domain one minute before change of cycle
         if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-            const startDomain = moment(currentDate + 60 * 1000)
-                .hours(0)
-                .minutes(0)
-                .second(0)
-                .millisecond(0);
-            const endDomain = moment(currentDate + 60 * 1000)
-                .hours(0)
-                .minutes(0)
-                .second(0)
-                .millisecond(0)
-                .add(1, domainDuration);
+            const startDomain = new Date(currentDate + 60 * 1000);
+            startDomain.setHours(0);
+            startDomain.setMinutes(0);
+            startDomain.setSeconds(0);
+            startDomain.setMilliseconds(0);
+
+            let endDomain = new Date(currentDate + 60 * 1000);
+            endDomain.setHours(0);
+            endDomain.setMinutes(0);
+            endDomain.setSeconds(0);
+            endDomain.setMilliseconds(0);
+
+            endDomain = add(endDomain, domainDuration);
+
             this.currentDomain = RealtimeDomainService.setStartAndEndDomain(
                 startDomain.valueOf(),
                 endDomain.valueOf(),
