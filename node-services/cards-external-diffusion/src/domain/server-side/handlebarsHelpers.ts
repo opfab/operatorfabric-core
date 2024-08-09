@@ -8,9 +8,10 @@
  */
 
 import * as Handlebars from 'handlebars';
-import moment from 'moment';
 import {JSDOM} from 'jsdom';
 import * as fs from 'fs';
+import {format} from 'date-fns';
+import {enUS, fr, nl} from 'date-fns/locale';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 export class HandlebarsHelper {
@@ -320,10 +321,20 @@ export class HandlebarsHelper {
             if (typeof value === 'string') {
                 value = parseInt(value);
             }
-            const m = moment(new Date(value));
-            m.locale(HandlebarsHelper._locale);
-            return m.format(options.hash.format as string);
+            const m = new Date(value);
+            return format(m, options.hash.format as string, this.getDateFnsLocaleOption(HandlebarsHelper._locale));
         });
+    }
+
+    private static getDateFnsLocaleOption(locale: string): any {
+        switch (locale) {
+            case 'fr':
+                return {locale: fr};
+            case 'nl':
+                return {locale: nl};
+            default:
+                return {locale: {...enUS, options: {...enUS.options, weekStartsOn: 6}}};
+        }
     }
 
     private static registerNumberFormat(): void {
@@ -335,7 +346,7 @@ export class HandlebarsHelper {
 
     private static registerNow(): void {
         Handlebars.registerHelper('now', function () {
-            return moment().valueOf();
+            return new Date().valueOf();
         });
     }
 

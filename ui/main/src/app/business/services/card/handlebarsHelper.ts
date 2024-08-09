@@ -8,8 +8,9 @@
  */
 
 import * as Handlebars from 'handlebars/dist/handlebars.js';
-import moment from 'moment';
 import {LoggerService as logger} from '../logs/logger.service';
+import {format, FormatOptions} from 'date-fns';
+import {enUS, fr, nl} from 'date-fns/locale';
 
 export class HandlebarsHelper {
     public static init() {
@@ -299,14 +300,24 @@ export class HandlebarsHelper {
         });
     }
 
+    private static getDateFnsLocaleOption(locale: string): FormatOptions {
+        switch (locale) {
+            case 'fr':
+                return {locale: fr};
+            case 'nl':
+                return {locale: nl};
+            default:
+                return {locale: {...enUS, options: {...enUS.options, weekStartsOn: 6}}};
+        }
+    }
+
     private static registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
             if (typeof value == 'string') {
                 value = parseInt(value);
             }
-            const m = moment(new Date(value));
-            m.locale(HandlebarsHelper._locale);
-            return m.format(options.hash.format);
+            const m = new Date(value);
+            return format(m, options.hash.format, this.getDateFnsLocaleOption(HandlebarsHelper._locale));
         });
     }
 
@@ -319,7 +330,7 @@ export class HandlebarsHelper {
 
     private static registerNow() {
         Handlebars.registerHelper('now', function () {
-            return moment().valueOf();
+            return new Date().valueOf();
         });
     }
 }
