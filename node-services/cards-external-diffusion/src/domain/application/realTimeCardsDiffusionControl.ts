@@ -21,6 +21,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     private subjectPrefix: string;
     private bodyPrefix: string;
     private bodyPostfix: string;
+    private publisherEntityPrefix: string;
     private activateCardsDiffusionRateLimiter: boolean;
     private cardsDiffusionRateLimiter: CardsDiffusionRateLimiter;
 
@@ -36,6 +37,11 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
     public setBodyPostfix(bodyPostfix: string): this {
         this.bodyPostfix = bodyPostfix;
+        return this;
+    }
+
+    public setPublisherEntityPrefix(publisherEntityPrefix: string): this {
+        this.publisherEntityPrefix = publisherEntityPrefix;
         return this;
     }
 
@@ -238,10 +244,12 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                     cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
                 }
             }
+            if (this.publisherEntityPrefix && card.publisher && card.publisherType === 'ENTITY') {
+                const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(card.publisher);
+                cardBodyHtml = cardBodyHtml + ' <br/>' + this.publisherEntityPrefix + entity.name;
+            }
             if (this.bodyPostfix) {
-                cardBodyHtml = cardBodyHtml +
-                ' <br/>'+
-                this.bodyPostfix;
+                cardBodyHtml = cardBodyHtml + ' <br/>' + this.bodyPostfix;
             }
         } catch (e) {
             this.logger.warn(`Couldn't parse email for : ${card.state}, ${e}`);
