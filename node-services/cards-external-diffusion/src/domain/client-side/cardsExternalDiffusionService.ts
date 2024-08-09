@@ -61,6 +61,7 @@ export default class CardsExternalDiffusionService {
             .setSubjectPrefix(serviceConfig.subjectPrefix as string)
             .setBodyPrefix(serviceConfig.bodyPrefix as string)
             .setBodyPostfix(serviceConfig.bodyPostfix as string)
+            .setPublisherEntityPrefix(serviceConfig.publisherEntityPrefix as string)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(
                 serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead as number

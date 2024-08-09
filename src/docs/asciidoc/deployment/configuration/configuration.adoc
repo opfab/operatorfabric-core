@@ -398,6 +398,8 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.cardsExternalDiffusion.defaultConfig.minuteToSendDailyEmail||30|Minute at which to send the daily recap email
 |operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix|'Opfab card received'|no|Mail subject prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPostfix|'This email has been sent by Opfab, there is no need to reply.'|no|Mail body postfix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.publisherEntityPrefix|'The card has been sent by '|no|Publisher entity text prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.opfabUrlInMailContent||yes|Url to write in mail to access the opfab server (example : https://opfab_url/)
 |operatorfabric.cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|360|no|Max time interval used to query new cards (in seconds)
 |operatorfabric.cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|60|no|Time period after card publication before sending mail notification
