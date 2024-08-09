@@ -55,6 +55,7 @@ describe('Cards external diffusion', function () {
             .setSubjectPrefix('Subject')
             .setBodyPrefix('Prefix')
             .setBodyPostfix('Postfix')
+            .setPublisherEntityPrefix('Sent by ')
             .setOpfabUrlInMailContent('http://localhost')
             .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
             .setWindowInSecondsForCardSearch(120);
@@ -203,6 +204,64 @@ describe('Cards external diffusion', function () {
                 startDateString +
                 ' - ' +
                 '</a> <br> Title1 <br/>Postfix'
+        );
+    });
+
+    it('Body of email should contain publisherEntityPrefix when publisher is an entity', async function () {
+        const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                email: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    emailBodyTemplate: 'testTemplateMail'
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '8101',
+            id: 'defaultProcess.process1',
+            publisher: 'ENTITY2',
+            publisherType: 'ENTITY',
+            publishDate: publishDateAfterAlertingPeriod,
+            startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 </br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
+
+        const startDateString = getFormattedDateAndTimeFromEpochDate(publishDateAfterAlertingPeriod);
+
+        await realTimeCardsDiffusionControl.checkUnreadCards();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt; - ' +
+                startDateString +
+                ' - ' +
+                '</a> <br> Title1 &amp; &lt;br&gt; <br/>Sent by ENTITY2 name <br/>Postfix'
         );
     });
 

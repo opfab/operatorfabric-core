@@ -22,6 +22,8 @@ export default class CardsExternalDiffusionOpfabServicesInterface
 
     private readonly listener: EventBusListener;
 
+    private readonly entitiesCache = new Map<string, any>();
+
     constructor() {
         super();
         this.listener = new EventBusListener().addListener(this);
@@ -31,7 +33,11 @@ export default class CardsExternalDiffusionOpfabServicesInterface
         const username: string = message.content.toString();
         this.logger.info('EventBusListener received user update event: ' + username);
         if (username != null && username.length > 0) await this.clearCacheForUser(username);
-        else await this.loadUsersData();
+        else {
+            await this.loadUsersData();
+            this.userWithPerimeters.clear();
+            this.entitiesCache.clear();
+        }
     }
 
     public setEventBusConfiguration(eventBusConfig: any): this {
@@ -76,7 +82,7 @@ export default class CardsExternalDiffusionOpfabServicesInterface
         return response;
     }
 
-    public async fetchAllUsers(): Promise<GetResponse> {
+    public async loadUsersData(): Promise<GetResponse> {
         const response = await super.fetchAllUsers();
         if (response.isValid()) {
             this.users = response.getData();
@@ -92,11 +98,6 @@ export default class CardsExternalDiffusionOpfabServicesInterface
             this.userWithPerimeters.set(login, response.getData());
         }
         return response;
-    }
-
-    public async loadUsersData(): Promise<void> {
-        await this.fetchAllUsers();
-        this.userWithPerimeters.clear();
     }
 
     public async clearCacheForUser(login: string): Promise<void> {
@@ -129,5 +130,15 @@ export default class CardsExternalDiffusionOpfabServicesInterface
             this.logger.warn('Impossible to get user with perimeters', e);
             return new GetResponse(null, false);
         }
+    }
+
+    public async getEntityById(id: string): Promise<any> {
+        let entity = this.entitiesCache.get(id);
+        if (!entity) {
+            const response = await this.getEntity(id);
+            entity = response.getData();
+            this.entitiesCache.set(id, entity);
+        }
+        return entity;
     }
 }

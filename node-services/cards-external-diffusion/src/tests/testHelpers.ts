@@ -36,6 +36,10 @@ export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServi
         const foundIndex = this.usersWithPerimeters.findIndex((u) => u.userData.login === login);
         return new GetResponse(foundIndex >= 0 ? this.usersWithPerimeters[foundIndex] : null, true);
     }
+
+    public async getEntity(entityId: string): Promise<GetResponse> {
+        return new GetResponse({id: entityId, name: entityId + ' name'}, this.isResponseValid);
+    }
 }
 
 export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfabServicesInterface {
