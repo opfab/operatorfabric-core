@@ -110,6 +110,8 @@ export default class CardsExternalDiffusionDatabaseService {
                     userRecipients: 1,
                     groupRecipients: 1,
                     entityRecipients: 1,
+                    publisher: 1,
+                    publisherType: 1,
                     severity: 1,
                     _id: 0
                 })
