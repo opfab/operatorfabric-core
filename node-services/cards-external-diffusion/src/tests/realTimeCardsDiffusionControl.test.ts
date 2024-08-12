@@ -15,7 +15,8 @@ import {
     OpfabServicesInterfaceStub,
     OpfabBusinessConfigServicesInterfaceStub,
     DatabaseServiceStub,
-    SendMailServiceStub
+    SendMailServiceStub,
+    getFormattedDateAndTimeFromEpochDate
 } from './testHelpers';
 
 const logger = Logger.getLogger();
@@ -135,12 +136,15 @@ describe('Cards external diffusion', function () {
 
         await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
+        const startDateString = getFormattedDateAndTimeFromEpochDate(publishDateAfterAlertingPeriod);
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br/>Postfix'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1 - ' +
+                startDateString +
+                ' - </a> <br/>Postfix'
         );
     });
 
@@ -184,6 +188,7 @@ describe('Cards external diffusion', function () {
         };
 
         databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        const startDateString = getFormattedDateAndTimeFromEpochDate(publishDateAfterAlertingPeriod);
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
 
@@ -194,7 +199,10 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a> <br> Title1 <br/>Postfix'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1 - ' +
+                startDateString +
+                ' - ' +
+                '</a> <br> Title1 <br/>Postfix'
         );
     });
 
@@ -243,10 +251,14 @@ describe('Cards external diffusion', function () {
 
         await realTimeCardsDiffusionControl.checkUnreadCards();
         await new Promise((resolve) => setTimeout(resolve, 1));
+        const startDateString = getFormattedDateAndTimeFromEpochDate(publishDateAfterAlertingPeriod);
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt;</a> <br> Title1 &amp; &lt;br&gt; <br/>Postfix'
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; ' +
+                'Summary1 &lt;/br&gt; - ' +
+                startDateString +
+                ' - </a> <br> Title1 &amp; &lt;br&gt; <br/>Postfix'
         );
     });
 

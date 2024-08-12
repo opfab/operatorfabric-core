@@ -215,6 +215,10 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.escapeHtml(card.titleTranslated) +
             ' - ' +
             this.escapeHtml(card.summaryTranslated) +
+            ' - ' +
+            this.getFormattedDateAndTimeFromEpochDate(card.startDate) +
+            ' - ' +
+            this.getFormattedDateAndTimeFromEpochDate(card.endDate) +
             '</a>';
         try {
             const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
