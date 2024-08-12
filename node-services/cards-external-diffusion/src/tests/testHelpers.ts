@@ -14,6 +14,7 @@ import Handlebars from 'handlebars';
 import CardsExternalDiffusionOpfabServicesInterface from '../domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionDatabaseService from '../domain/server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from '../domain/server-side/BusinessConfigOpfabServicesInterface';
+import {format} from 'date-fns';
 
 export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
     public isResponseValid = true;
@@ -90,3 +91,11 @@ export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
 
     public async deleteMailsSentBefore(dateLimit: number): Promise<void> {}
 }
+
+export function getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
+    if (!epochDate) {
+        return '';
+    }
+    return format(epochDate, 'dd/MM/yyyy HH:mm');
+}
+
