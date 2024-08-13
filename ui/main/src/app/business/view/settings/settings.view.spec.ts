@@ -119,6 +119,40 @@ describe('Settings view ', () => {
             expect(ConfigService.getConfigValue('settings.locale')).toBe('en');
         });
 
+        it(
+            'should return the default value of 5 if replayInterval is set to a string value in the local configuration ' +
+                'when saveSettings is called',
+            async () => {
+                settingsView.setSetting('replayInterval', 'aStringValue');
+                await settingsView.saveSettings();
+                expect(ConfigService.getConfigValue('settings.replayInterval')).toBe(5);
+            }
+        );
+
+        it(
+            'should return the default value of 5 if replayInterval is set to null in the local configuration ' +
+                'when saveSettings is called',
+            async () => {
+                settingsView.setSetting('replayInterval', null);
+                await settingsView.saveSettings();
+                expect(ConfigService.getConfigValue('settings.replayInterval')).toBe(5);
+            }
+        );
+
+        it(
+            'should return the previous value set by the user (here, 28) if replayInterval is set to null in the local configuration ' +
+                'when saveSettings is called',
+            async () => {
+                settingsView.setSetting('replayInterval', 28);
+                await settingsView.saveSettings();
+                expect(ConfigService.getConfigValue('settings.replayInterval')).toBe(28);
+
+                settingsView.setSetting('replayInterval', null);
+                await settingsView.saveSettings();
+                expect(ConfigService.getConfigValue('settings.replayInterval')).toBe(28);
+            }
+        );
+
         it('should save settings in the back end when saveSettings is called', async () => {
             const serverResponse = await settingsView.saveSettings();
             expect(serverResponse.status).toBe(ServerResponseStatus.OK);
