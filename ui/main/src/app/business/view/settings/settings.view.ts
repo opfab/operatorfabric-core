@@ -25,11 +25,10 @@ export class SettingsView {
     }
 
     public getSetting(setting: string): string | boolean | number {
-        const settingValue = ConfigService.getConfigValue('settings.' + setting);
-        if (settingValue == null && setting === 'replayInterval') {
-            return 5;
+        if (setting === 'replayInterval') {
+            return ConfigService.getConfigValue('settings.replayInterval', 5);
         }
-        return settingValue;
+        return ConfigService.getConfigValue('settings.' + setting);
     }
 
     public async isExternalDeviceSettingVisible(): Promise<boolean> {
@@ -75,8 +74,16 @@ export class SettingsView {
         return true;
     }
 
+    private isReplayIntervalInvalid(): boolean {
+        return this.newSettings?.replayInterval == null || isNaN(this.newSettings?.replayInterval);
+    }
+
     public async saveSettings(): Promise<ServerResponse<any>> {
         if (this.doesSettingsNeedToBeSaved()) {
+            if (this.isReplayIntervalInvalid()) {
+                this.newSettings.replayInterval = ConfigService.getConfigValue('settings.replayInterval', 5);
+            }
+
             const serverResponse = await firstValueFrom(SettingsService.patchUserSettings(this.newSettings));
             if (serverResponse.status === ServerResponseStatus.OK) {
                 for (const setting in this.newSettings) {
