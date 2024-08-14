@@ -120,13 +120,13 @@ export class TaskCardTemplateView {
 
     public getDurationInMinutes(default_value) {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.durationInMinutes ?? default_value
+            ? (opfab.currentCard.getCard()?.data?.durationInMinutes ?? default_value)
             : default_value;
     }
 
     public getMinutesForReminder(default_value) {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value
+            ? (opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value)
             : default_value;
     }
 

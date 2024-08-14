@@ -8,8 +8,8 @@
  */
 
 import {Card, Recurrence, HourAndMinutes, TimeSpan} from '@ofModel/card.model';
-import moment from 'moment-timezone';
-
+import {add, getISODay} from 'date-fns';
+import {fromZonedTime, toZonedTime} from 'date-fns-tz';
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
@@ -53,46 +53,53 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
         return -1;
     }
 
-    const nextDateTime = moment(StartingDate).tz(recurrence.timeZone);
+    let nextDateTime = new Date(StartingDate);
+    if (recurrence.timeZone == null || !isValidTimeZone(recurrence.timeZone)) {
+        recurrence.timeZone = 'Europe/Paris';
+    }
+    nextDateTime = toZonedTime(nextDateTime, recurrence.timeZone);
 
-    const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
+    const startingHoursMinutes = new HourAndMinutes(nextDateTime.getHours(), nextDateTime.getMinutes());
     if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
-        nextDateTime.add(1, 'day');
-        nextDateTime.set('hours', 0);
-        nextDateTime.set('minutes', 0);
+        nextDateTime = add(nextDateTime, {days: 1, hours: 0, minutes: 0});
     }
 
-    moveToValidMonth(nextDateTime, recurrence);
+    nextDateTime = moveToValidMonth(nextDateTime, recurrence);
 
     if (isDaysOfWeekFieldSet(recurrence)) {
-        if (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday())) {
+        if (!recurrence.daysOfWeek.includes(getISODay(nextDateTime))) {
             // we keep the month found previously
-            const monthForNextDateTime = nextDateTime.month();
+            const monthForNextDateTime = nextDateTime.getMonth();
 
-            nextDateTime.set('hours', 0);
-            nextDateTime.set('minutes', 0);
+            nextDateTime.setHours(0);
+            nextDateTime.setMinutes(0);
             let nb_add = 0;
             do {
                 nb_add++;
-                nextDateTime.add(1, 'day');
+                nextDateTime = add(nextDateTime, {days: 1});
 
-                if (nextDateTime.month() !== monthForNextDateTime) {
+                if (nextDateTime.getMonth() !== monthForNextDateTime) {
                     // in case incrementing took us into the next month
-                    moveToValidMonth(nextDateTime, recurrence);
+                    nextDateTime = moveToValidMonth(nextDateTime, recurrence);
                 }
-            } while (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday()));
-            nextDateTime.set('hours', recurrence.hoursAndMinutes.hours);
-            nextDateTime.set('minutes', recurrence.hoursAndMinutes.minutes);
-            nextDateTime.set('seconds', 0);
-            nextDateTime.set('milliseconds', 0);
+            } while (!recurrence.daysOfWeek.includes(getISODay(nextDateTime)));
+
+            nextDateTime.setHours(recurrence.hoursAndMinutes.hours);
+            nextDateTime.setMinutes(recurrence.hoursAndMinutes.minutes);
+            nextDateTime.setSeconds(0);
+            nextDateTime.setMilliseconds(0);
+            nextDateTime = fromZonedTime(nextDateTime, recurrence.timeZone);
+
             return nextDateTime.valueOf();
         }
     }
 
-    nextDateTime.set('hours', recurrence.hoursAndMinutes.hours);
-    nextDateTime.set('minutes', recurrence.hoursAndMinutes.minutes);
-    nextDateTime.set('seconds', 0);
-    nextDateTime.set('milliseconds', 0);
+    nextDateTime.setHours(recurrence.hoursAndMinutes.hours);
+    nextDateTime.setMinutes(recurrence.hoursAndMinutes.minutes);
+    nextDateTime.setSeconds(0);
+    nextDateTime.setMilliseconds(0);
+    nextDateTime = fromZonedTime(nextDateTime, recurrence.timeZone);
+
     return nextDateTime.valueOf();
 }
 
@@ -115,16 +122,21 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
     return true;
 }
 
-function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
-    if (!recurrence.months || recurrence.months.length === 0) return;
-    if (recurrence.months.includes(nextDateTime.month())) return;
-    let nb_add = 0;
-    do {
-        nb_add++;
-        if (nb_add > 12) return; // in case we have an invalid recurrence months array
-        nextDateTime.add(1, 'month');
-        nextDateTime.set('date', 1);
-    } while (!recurrence.months.includes(nextDateTime.month()));
+function moveToValidMonth(nextDateTime: Date, recurrence: Recurrence): Date {
+    if (
+        recurrence.months != null &&
+        recurrence.months.length > 0 &&
+        !recurrence.months.includes(nextDateTime.getMonth())
+    ) {
+        let nb_add = 0;
+        do {
+            nb_add++;
+            if (nb_add > 12) return; // in case we have an invalid recurrence months array
+            nextDateTime = add(nextDateTime, {months: 1});
+            nextDateTime.setDate(1);
+        } while (!recurrence.months.includes(nextDateTime.getMonth()));
+    }
+    return nextDateTime;
 }
 
 function isFirstHoursMinutesInferiorOrEqualToSecondOne(hm1: HourAndMinutes, hm2: HourAndMinutes): boolean {
@@ -135,4 +147,13 @@ function isFirstHoursMinutesInferiorOrEqualToSecondOne(hm1: HourAndMinutes, hm2:
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {
     return recurrence.daysOfWeek?.length > 0;
+}
+
+function isValidTimeZone(tz): boolean {
+    try {
+        Intl.DateTimeFormat(undefined, {timeZone: tz});
+        return true;
+    } catch (ex) {
+        return false;
+    }
 }
