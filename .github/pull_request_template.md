@@ -1,3 +1,3 @@
-- In release note :
-  -  In chapter :  Features Bugs Tasks
+- In release notes :
+  -  In chapter : Features Bugs Tasks
   -  Text : #xxx ... 
