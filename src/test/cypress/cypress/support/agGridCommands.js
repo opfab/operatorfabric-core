@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,10 @@ export class AgGridCommands extends OpfabCommands {
 
     countTableRows = function (table, rowsNum) {
         cy.get(table).find('.ag-center-cols-container').find('.ag-row').should('have.length', rowsNum);
+    }
+
+    countTableColumns = function (table, columnsNum) {
+        cy.get(table).find('.ag-header-container').find('.ag-header-cell').should('have.length', columnsNum);
     }
 
     // Check ag-grid cell value
