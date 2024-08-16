@@ -755,7 +755,7 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples')
+        usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Message');
         cy.waitDefaultTime();
