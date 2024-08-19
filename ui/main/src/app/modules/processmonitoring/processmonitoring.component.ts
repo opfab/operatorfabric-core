@@ -431,7 +431,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.columnFilters.forEach((filter) => localFilters.push(filter));
 
         const selectedFields: string[] = [];
-        this.processMonitoringFieldsDefaultConfig.forEach((column) => {
+        this.processMonitoringFields.forEach((column) => {
             selectedFields.push(column.field);
         });
         if (this.isMapEnabled && this.isMapViewActivated) {
