@@ -27,6 +27,10 @@ on:
         description: 'Cypress Test files'
         required: false
         default: '*'
+      gatling:
+        description: 'Load tests'
+        required: false
+        default: 'true'
       doc:
         description: 'Build and publish documentation '     
         required: false
@@ -102,6 +106,9 @@ jobs:
             path: |
               src/test/cypress/cypress/screenshots
               opfab.log
+      - name: Load tests
+        if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
+        run: ./CICD/github/launch_load_tests.sh
   publish:
     runs-on: ubuntu-latest
     environment: publishVersion

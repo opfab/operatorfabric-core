@@ -9,7 +9,7 @@
 # This file is part of the OperatorFabric project.
 
 
-# Script launch form the root of the git projet by github actions 
+# Script launched from the root of the git project by github actions  
 
 source $HOME/.sdkman/bin/sdkman-init.sh;
 export NVM_DIR="$HOME/.nvm"
