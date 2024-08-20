@@ -328,6 +328,7 @@
         "sendDailyEmail": "Send daily email to recap the cards of the day",
         "email": "Email",
         "settingsSaved": "Settings saved",
+        "invalidSettings": "Please correct the invalid fields",
         "input": {
             "errors": {
                 "invalidEmail": "Invalid email",

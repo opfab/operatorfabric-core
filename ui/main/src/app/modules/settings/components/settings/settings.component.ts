@@ -141,19 +141,25 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     canDeactivate() {
         if (this.settingsView.doesSettingsNeedToBeSaved()) {
-            ModalService.openSaveBeforeExitModal().then((result) => {
-                switch (result) {
-                    case 'save':
-                        this.saveSettings();
-                        break;
-                    case 'cancel':
-                        this.canDeactivateSubject.next(false);
-                        break;
-                    default:
-                        this.canDeactivateSubject.next(true);
-                        break;
-                }
-            });
+            if (this.settingsForm.invalid) {
+                ModalService.openInformationModal(new I18n('settings.invalidSettings')).then(() => {
+                    this.canDeactivateSubject.next(false);
+                });
+            } else {
+                ModalService.openSaveBeforeExitModal().then((result) => {
+                    switch (result) {
+                        case 'save':
+                            this.saveSettings();
+                            break;
+                        case 'cancel':
+                            this.canDeactivateSubject.next(false);
+                            break;
+                        default:
+                            this.canDeactivateSubject.next(true);
+                            break;
+                    }
+                });
+            }
             return this.canDeactivateSubject;
         }
         return true;

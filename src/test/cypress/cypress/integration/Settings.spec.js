@@ -21,12 +21,13 @@ describe('Settings', function () {
         script.deleteAllSettings();
     });
 
-    it('Should proposed to save settings ', () => {
+    it('Should propose to save settings ', () => {
         opfab.loginWithUser('operator1_fr');
         checkEmailValidation();
         checkCancelNavigation();
         checkExitWithoutSaving();
         checkAcceptSaving();
+        checkLeavingWithInvalidForms()
     });
 
 
@@ -47,6 +48,7 @@ describe('Settings', function () {
     }
 
     function checkExitWithoutSaving() {
+        cy.get('#opfab-setting-input-email').clear();
         cy.get('#opfab-setting-input-email').type('test@test.fr');
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('#opfab-btn-doNotSave').click();
@@ -63,5 +65,14 @@ describe('Settings', function () {
         cy.get('of-archives').should('exist');
         opfab.navigateToSettings();
         cy.get('#opfab-setting-input-email').should('have.value', 'test@test.fr');
+    }
+
+    function checkLeavingWithInvalidForms() {
+        cy.get('#opfab-setting-input-email').clear();
+        cy.get('#opfab-setting-input-email').type('test');
+        cy.get('#opfab-navbar-menu-archives').click();
+        cy.get('#opfab-btn-ok').click();
+        cy.get('of-archives').should('not.exist');
+        cy.get('#opfab-setting-input-email').should('have.value', 'test');
     }
 });
