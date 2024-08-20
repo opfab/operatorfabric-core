@@ -30,7 +30,7 @@ on:
       gatling:
         description: 'Load tests'
         required: false
-        default: 'true'
+        default: 'false'
       doc:
         description: 'Build and publish documentation '     
         required: false
@@ -167,6 +167,10 @@ jobs:
         with:
             name: cypress-screenshots
             path: src/test/cypress/cypress/screenshots
+
+      - name: Load tests
+        if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
+        run: ./CICD/github/launch_load_tests.sh
 
       - name : Publish Documentation
         if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
