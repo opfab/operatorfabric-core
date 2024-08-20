@@ -15,12 +15,15 @@
 .opfab-logging-sev-alarm {
     background-color: var(--opfab-color-severity-alarm);
 }
+
 .opfab-logging-sev-action {
     background-color: var(--opfab-color-severity-action);
 }
+
 .opfab-logging-sev-compliant {
     background-color: var(--opfab-color-severity-compliant);
 }
+
 .opfab-logging-sev-information {
     background-color: var(--opfab-color-severity-information);
 }
@@ -43,7 +46,7 @@ th {
 
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-logging {
         padding-left: 2%;
     }

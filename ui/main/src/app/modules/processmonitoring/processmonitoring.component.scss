@@ -13,6 +13,7 @@
     background-color: var(--opfab-bgcolor-darker);
     padding-left: 5%;
 }
+
 .opfab-vertical-bar {
     border-left-width: 1px;
     border-left-style: solid;
@@ -33,14 +34,14 @@
 
 
 // Remove vertical line when screen to small
-@media all and (max-width: 1600px) {
+@media all and (width <= 1600px) {
     .opfab-vertical-bar {
-        border-left-width: 0px;
-        margin: 0px;
+        border-left-width: 0;
+        margin: 0;
     }
 }
 
-@media all and (max-width: 1550px) {
+@media all and (width <= 1550px) {
     .opfab-buttons {
         margin-left: 20px;
     }
@@ -48,7 +49,7 @@
 
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-processmonitoring-header {
         padding-left: 2%;
     }
@@ -61,12 +62,15 @@
 .opfab-processmonitoring-sev-alarm {
     background-color: var(--opfab-color-severity-alarm);
 }
+
 .opfab-processmonitoring-sev-action {
     background-color: var(--opfab-color-severity-action);
 }
+
 .opfab-processmonitoring-sev-compliant {
     background-color: var(--opfab-color-severity-compliant);
 }
+
 .opfab-processmonitoring-sev-information {
     background-color: var(--opfab-color-severity-information);
 }
@@ -96,7 +100,7 @@
         justify-content: flex-end;
 
         li {
-            padding-left: 0px;
+            padding-left: 0;
             padding-right: 25px;
 
             .link-selected {
@@ -134,7 +138,7 @@ th {
 
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-processmonitoring {
         padding-left: 2%;
     }

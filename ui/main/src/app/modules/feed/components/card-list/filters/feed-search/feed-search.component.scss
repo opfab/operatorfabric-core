@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,12 +17,12 @@ input {
   width: 270px;
 }
 
-#searchTerm::-webkit-search-cancel-button {
-  -webkit-appearance: none;
+#search-term::-webkit-search-cancel-button {
+  appearance: none;
   height: 10px;
   width: 10px;
   background: var(--opfab-text-color-stronger);
-  mask: url(../../../../../../../assets/images/icons/clear.svg);
+  mask: url("../../../../../../../assets/images/icons/clear.svg");
   cursor: pointer;
 }
 

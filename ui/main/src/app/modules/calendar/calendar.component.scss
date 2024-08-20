@@ -7,6 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+ /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
 ::ng-deep .opfab-app-calendar {
     // GLOBAL SETTINGS
     .fc-header-toolbar,
@@ -112,6 +113,7 @@
     .fc .fc-scrollgrid {
         border-style: hidden;
     }
+
     // remove grid border on header
     .fc-scrollgrid-section-header td {
         border-style: hidden;
@@ -140,7 +142,7 @@
     .fc-daygrid tbody td {
         border-left-width: 0;
         border-bottom-width: 1px;
-        border-top-width: 0px;
+        border-top-width: 0;
     }
 
     .fc-h-event .fc-event-main {
@@ -183,7 +185,7 @@
 
     // remove line on bottom
     hr {
-        padding: 0px;
+        padding: 0;
     }
 
     // END DAY AND WEEK VIEW

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,7 +87,7 @@ describe('State type tests', function () {
                 // appropriate color, but no pipe or countdown element as there is no lttd
                 cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
                     .contains('Process Status')
-                cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+                cy.get('#opfab-card-response-header-left').find(`[class^="opfab-type-of-state-${test_data.type}"]`)
                     .should('have.text',`${test_data.en_label}`)
                     .should('have.css','color',`${test_data.color}`);
                 cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');
@@ -118,7 +118,7 @@ describe('State type tests', function () {
             // appropriate color, then pipe and countdown
             cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
                 .contains('Process Status')
-            cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+            cy.get('#opfab-card-response-header-left').find('[class^="opfab-type-of-state-"]')
                 .should('have.text',"FINISHED")
                 .should('have.css','color',green);
             cy.get('#opfab-card-response-header-left').contains('|');
@@ -145,7 +145,7 @@ describe('State type tests', function () {
             // appropriate color, then pipe and text mesage
             cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
                 .contains('Process Status')
-            cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+            cy.get('#opfab-card-response-header-left').find('[class^="opfab-type-of-state-"]')
                 .should('have.text',"IN PROGRESS")
                 .should('have.css','color',orange);
             cy.get('#opfab-card-response-header-left').contains('|');
@@ -161,7 +161,7 @@ describe('State type tests', function () {
             // appropriate color, no pipe, no time icon and no text message
             cy.get('#opfab-card-response-header-left').find('#opfab-card-response-header-status')
                 .contains('Process Status')
-            cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
+            cy.get('#opfab-card-response-header-left').find('[class^="opfab-type-of-state-"]')
                 .should('have.text',"FINISHED")
                 .should('have.css','color',green);
             cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');;

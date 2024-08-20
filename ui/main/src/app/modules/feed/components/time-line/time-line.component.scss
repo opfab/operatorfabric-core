@@ -11,7 +11,7 @@
     margin-right: 30px;
     padding-right: 20px;
     margin-left: 10px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     color: var(--opfab-text-color);
     background-color: var(--opfab-timeline-bgcolor);
 
@@ -30,6 +30,7 @@
 .opfab-move-domain {
     padding-bottom: 12px;
 }
+
 .opfab-move-domain a:hover {
     color: var(--opfab-navbar-color-active);
     font-weight: bold;

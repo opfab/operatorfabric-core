@@ -1,0 +1,6 @@
+{ 
+    "extends": ["stylelint-config-standard", "stylelint-config-standard-scss"],
+    "rules": {
+        "selector-type-no-unknown": [null]
+      }
+}

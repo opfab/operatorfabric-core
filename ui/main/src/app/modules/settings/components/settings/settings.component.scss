@@ -30,7 +30,7 @@
 }
 
 // if screen too small use only one column
-@media all and (max-width: 1400px) {
+@media all and (width <= 1400px) {
     .opfab-settings {
         grid-template-columns: 1fr;
     }
@@ -49,13 +49,13 @@
 }
 
 // if screen too small use only one column
-@media all and (max-width: 700px) {
+@media all and (width <= 700px) {
     .opfab-settings-sounds {
         grid-template-columns: 1fr;
     }
 
     .opfab-sound-checkbox-label {
-        margin-top: 0px;
+        margin-top: 0;
         margin-bottom: 20px;
     }
 }
@@ -102,10 +102,10 @@ label {
 }
 
 .label-replay,
-.label-sendCardsByEmail,
-.label-emailToPlainText,
-.label-sendDailyEmail,
+.label-send-cards-by-email,
+.label-email-to-plain-text,
+.label-send-daily-email,
 .label-external-devices,
-.label-remoteLoggingEnabled {
+.label-remote-logging-enabled {
     margin-left: 15px;
 }

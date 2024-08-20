@@ -16,6 +16,7 @@
     color: var(--opfab-navbar-color);
     text-decoration: none;
     padding-left: 0.5rem;
+
     &:hover,
     &:focus {
         color: var(--opfab-navbar-color-hover);
@@ -69,10 +70,7 @@
 
 .opfab-dropdown-menu {
     color: var(--opfab-navbar-color);
-    margin-top: -16px;
-    margin-left: -12px;
-    margin-right: -12px;
-    margin-bottom: -10px;
+    margin: -16px -12px -10px;
     padding-top: 10px;
     letter-spacing: normal;
 }
@@ -94,10 +92,7 @@
     background-color: var(--opfab-navbar-right-menu-bgcolor);
     color: var(--opfab-navbar-color);
     border-top: 2px solid var(--opfab-navbar-color);
-    margin-top: -16px;
-    margin-left: -12px;
-    margin-right: -12px;
-    margin-bottom: -10px;
+    margin: -16px -12px -10px;
     padding-top: 10px;
     letter-spacing: normal;
     padding-bottom: 20px
@@ -139,48 +134,48 @@
 }
 
 .opfab-menu-icon-settings {
-    mask: url(../../../assets/images/icons/parameters.svg);
+    mask: url("../../../assets/images/icons/parameters.svg");
 }
 
 .opfab-menu-icon-realtimeusers {
-    mask: url(../../../assets/images/icons/clock.svg);
+    mask: url("../../../assets/images/icons/clock.svg");
 }
 
 .opfab-menu-icon-activityarea {
-    mask: url(../../../assets/images/icons/user-gear.svg);
+    mask: url("../../../assets/images/icons/user-gear.svg");
 }
 
 .opfab-menu-icon-externaldevicesconfiguration {
-    mask: url(../../../assets/images/icons/volume-high.svg);
+    mask: url("../../../assets/images/icons/volume-high.svg");
 }
 
 .opfab-menu-icon-feedconfiguration {
-    mask: url(../../../assets/images/icons/notification.svg);
+    mask: url("../../../assets/images/icons/notification.svg");
 }
 
 .opfab-menu-icon-useractionlogs {
-    mask: url(../../../assets/images/icons/logs.svg);
+    mask: url("../../../assets/images/icons/logs.svg");
 }
 
 .opfab-menu-icon-about {
-    mask: url(../../../assets/images/icons/about.svg);
+    mask: url("../../../assets/images/icons/about.svg");
 }
 
 .opfab-menu-icon-changepassword {
-    mask: url(../../../assets/images/icons/change-password.svg);
+    mask: url("../../../assets/images/icons/change-password.svg");
 }
 
 // a space is added to the logout icon
 .opfab-menu-icon-logout {
-    mask: url(../../../assets/images/icons/logout.svg);
+    mask: url("../../../assets/images/icons/logout.svg");
 }
 
 .opfab-menu-icon-admin {
-    mask: url(../../../assets/images/icons/administration.svg);
+    mask: url("../../../assets/images/icons/administration.svg");
 }
 
 .opfab-menu-icon-nightdaymode {
-    mask: url(../../../assets/images/icons/dark-light.svg);
+    mask: url("../../../assets/images/icons/dark-light.svg");
 }
 
 .opfab-right-menu-item:hover .opfab-menu-icon-admin,
@@ -205,7 +200,7 @@
     margin-right: 10px;
     margin-top: -5px;
     background: var(--opfab-text-color);
-    mask: url(../../../assets/images/icons/newcard.svg);
+    mask: url("../../../assets/images/icons/newcard.svg");
 }
 
 .opfab-menu-icon-calendar {
@@ -215,7 +210,7 @@
     margin-right: 10px;
     margin-top: -5px;
     background: var(--opfab-text-color);
-    mask: url(../../../assets/images/icons/calendar.svg);
+    mask: url("../../../assets/images/icons/calendar.svg");
 }
 
 .opfab-menu-icon-calendar.active {
@@ -244,14 +239,14 @@
     color: var(--opfab-text-color-stronger);
 }
 
-@media all and (max-width: 400px) {
+@media all and (width <= 400px) {
     .navbar-brand {
         margin-right: 5px;
     }
 
     .navbar-toggler {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .opfab-navbar {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,6 @@
  */
 
 .sort-header {
-    margin-top: 10px;
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 10px;
+    margin: 10px 2px;
     border-bottom: 1px solid var(--opfab-text-color);
 }

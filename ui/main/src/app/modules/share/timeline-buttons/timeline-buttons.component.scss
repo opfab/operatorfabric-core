@@ -36,8 +36,9 @@
             justify-content: flex-end;
 
             li {
-                padding-left: 0px;
+                padding-left: 0;
                 padding-right: 25px;
+
                 // The following 3 lines avoid having the text go an a new line
                 // Arise only on chrome (OC-1563)
                 text-overflow: clip;
@@ -77,10 +78,6 @@
     width: 100%;
     background-color: var(--opfab-timeline-bgcolor);
     text-align: center;
-}
-
-.paddingTop {
-    padding-top: 0.15em;
 }
 
 .fa-lock {

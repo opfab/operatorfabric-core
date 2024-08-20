@@ -200,7 +200,7 @@ describe ('Monitoring screen tests',function () {
         // All found cards should be IN PROGRESS
         cy.get('#opfab-monitoring-table-grid').find('.ag-center-cols-container')
                                               .find('.ag-row')
-                                              .find(".opfab-typeOfState-INPROGRESS")
+                                              .find(".opfab-type-of-state-INPROGRESS")
                                               .should('have.length', 3);
 
         

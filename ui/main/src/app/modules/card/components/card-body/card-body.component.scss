@@ -37,6 +37,7 @@
     margin-right: 5px;
     background: var(--opfab-navbar-color);
     mask-size: cover;
+
     &:hover,
     &:focus {
         background: var(--opfab-navbar-color-hover);
@@ -54,11 +55,11 @@
 }
 
 .opfab-icon-maximize {
-    mask: url(../../../../../assets/images/icons/maximize.svg);
+    mask: url("../../../../../assets/images/icons/maximize.svg");
 }
 
 .opfab-icon-reduce {
-    mask: url(../../../../../assets/images/icons/reduce.svg);
+    mask: url("../../../../../assets/images/icons/reduce.svg");
 }
 
 .opfab-right-menu-item {
@@ -68,6 +69,7 @@
     letter-spacing: 0.54px;
     font-size: 16px;
     line-height: 40px;
+
     &:hover,
     &:focus {
         color: var(--opfab-navbar-color-hover);
@@ -82,18 +84,21 @@
     line-height: 40px;
     font-size: 30px;
     cursor: pointer;
+
     &:hover,
     &:focus {
         color: var(--opfab-navbar-color-hover);
     }
+
     display: flex;
 }
 
 .opfab-max-and-reduce-icons {
     margin-top: 12px;
-    margin-right: 0px;
+    margin-right: 0;
     color: var(--opfab-navbar-color);
     cursor: pointer;
+
     &:hover,
     &:focus {
         color: var(--opfab-navbar-color-hover);
