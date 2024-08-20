@@ -10,10 +10,10 @@
 /* CSS file intended for sharing the style with external applications */
 
 :root {
-    --opfab-color-blue: #2784FF; 
+    --opfab-color-blue: #2784ff;
     --opfab-color-darker-blue: #2268ff;
     --opfab-color-orange: orange;
-    --opfab-color-darker-orange: #ff6600;
+    --opfab-color-darker-orange: #f60;
     --opfab-color-red: red;
     --opfab-color-green: green;
     --opfab-color-severity-alarm: #a71a1a;
@@ -22,132 +22,129 @@
     --opfab-color-severity-information: #1074ad;
 }
 
-[opfab-theme="NIGHT"]  {
+[opfab-theme='NIGHT'] {
     --opfab-bgcolor: #262f3d;
-    --opfab-bgcolor-darker: #131D2B;
+    --opfab-bgcolor-darker: #131d2b;
     --opfab-font-family: 'Open Sans', sans-serif;
     --opfab-text-color: #bababa;
     --opfab-text-color-stronger: white;
     --opfab-table-border-color: white;
     --opfab-input-text-color: white;
-    --opfab-form-border-color:  #606267;
+    --opfab-form-border-color: #606267;
     --opfab-form-label-text-color: #bababa;
-    --opfab-button-disable-bgcolor: #2B353F;
+    --opfab-button-disable-bgcolor: #2b353f;
     --opfab-popover-bgcolor: #182638;
     --opfab-tooltip-template-bgcolor: #182638;
     --opfab-tooltip-template-bgcolor-for-form-lighter: #182638;
     --opfab-feedbar-icon-color: white;
-    --opfab-feedbar-icon-hover-color:white;
-    --opfab-feedbar-icon-hover-bgcolor:#131D2B;
-    --opfab-timeline-bgcolor: #131D2B;
-    --opfab-timeline-text-color: #ffffff;
+    --opfab-feedbar-icon-hover-color: white;
+    --opfab-feedbar-icon-hover-bgcolor: #131d2b;
+    --opfab-timeline-bgcolor: #131d2b;
+    --opfab-timeline-text-color: #fff;
     --opfab-timeline-grid-text-color: #bababa;
     --opfab-timeline-grid-color: #575757;
-    --opfab-timeline-week-color: #B1B1B1;
-    --opfab-timeline-week-color2: #B1B1B1;
-    --opfab-timeline-week-bgcolor: #212B3A;
+    --opfab-timeline-week-color: #b1b1b1;
+    --opfab-timeline-week-color2: #b1b1b1;
+    --opfab-timeline-week-bgcolor: #212b3a;
     --opfab-timeline-realtimebar-color: var(--opfab-color-blue);
-    --opfab-timeline-button-bgcolor: rgb(221, 221, 221);
+    --opfab-timeline-button-bgcolor: rgb(221 221 221);
     --opfab-timeline-button-text-color: black;
     --opfab-timeline-button-selected-bgcolor: black;
     --opfab-timeline-button-selected-text-color: white;
-    --opfab-lightcard-detail-bgcolor: #131D2B;
+    --opfab-lightcard-detail-bgcolor: #131d2b;
     --opfab-lightcard-detail-textcolor: #bababa;
     --opfab-lightcard-detail-border-color: #222933;
-    --opfab-lightcard-detail-selected-bgcolor: #0F161F;
+    --opfab-lightcard-detail-selected-bgcolor: #0f161f;
     --opfab-lightcard-detail-unread-textcolor: white;
     --opfab-light-card-lttd-timeleft: var(--opfab-color-darker-orange);
     --opfab-card-tab-selected-text-color: #bababa;
     --opfab-card-tab-border-color: #bababa;
-    --opfab-card-bgcolor :  #131D2B;
-    --opfab-card-detail-border-color : #343a40 ;
-    --opfab-navbar-color: #BABABA;
-    --opfab-navbar-color-hover:white;
-    --opfab-navbar-color-active:white;
+    --opfab-card-bgcolor: #131d2b;
+    --opfab-card-detail-border-color: #343a40;
+    --opfab-navbar-color: #bababa;
+    --opfab-navbar-color-hover: white;
+    --opfab-navbar-color-active: white;
     --opfab-navbar-toggler-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    --opfab-navbar-toggler-border-color: rgba(255,255,255,.1) ;
+    --opfab-navbar-toggler-border-color: rgb(255 255 255 / 10%);
     --opfab-navbar-info-block-color: white;
     --opfab-navbar-right-menu-bgcolor: #182638;
     --opfab-timeline-cardlink: white;
     --opfab-timeline-cardlink-bgcolor-hover: #23272b;
     --opfab-timeline-cardlink-bordercolor-hover: #1d2124;
-    --opfab-calendar-grid-color : #303237;
-    --opfab-scrollbar-bgcolor: #131D2B;
-    --opfab-scrollbar-border-color: #131D2B;
+    --opfab-calendar-grid-color: #303237;
+    --opfab-scrollbar-bgcolor: #131d2b;
+    --opfab-scrollbar-border-color: #131d2b;
     --opfab-scrollbar-bar-bgcolor: #262f3d;
     --opfab-scrollbar-bar-border-color: #979797;
-    --opfab-scrollbar-bgcolor-firefox: #131D2B;
-    --opfab-scrollbar-bar-bgcolor-firefox: #333D4B;
+    --opfab-scrollbar-bgcolor-firefox: #131d2b;
+    --opfab-scrollbar-bar-bgcolor-firefox: #333d4b;
     --opfab-pagination-active-page-background: #bababa;
     --opfab-pagination-disabled-link: #606060;
     --opfab-richtexteditor-button-active: #474f5b;
 }
 
-[opfab-theme="DAY"] {
+[opfab-theme='DAY'] {
     --opfab-bgcolor: white;
-    --opfab-bgcolor-darker: #F3F2F1;
+    --opfab-bgcolor-darker: #f3f2f1;
     --opfab-font-family: 'Open Sans', sans-serif;
     --opfab-text-color: black;
     --opfab-text-color-stronger: black;
     --opfab-table-border-color: grey;
-    --opfab-input-text-color : black;
+    --opfab-input-text-color: black;
     --opfab-form-label-text-color: black;
-    --opfab-form-border-color:  #9C9B9B;
-    --opfab-button-disable-bgcolor: #DBDBDB;
-    --opfab-popover-bgcolor: #F3F2F1;
+    --opfab-form-border-color: #9c9b9b;
+    --opfab-button-disable-bgcolor: #dbdbdb;
+    --opfab-popover-bgcolor: #f3f2f1;
     --opfab-tooltip-template-bgcolor: white;
-    --opfab-tooltip-template-bgcolor-for-form-lighter: #F3F2F1;
+    --opfab-tooltip-template-bgcolor-for-form-lighter: #f3f2f1;
     --opfab-feedbar-icon-color: black;
-    --opfab-feedbar-icon-hover-color:#212529;
-    --opfab-feedbar-icon-hover-bgcolor: #F3F2F1;
-    --opfab-timeline-bgcolor: #F3F2F1;
-    --opfab-timeline-text-color: #000000;
-    --opfab-timeline-grid-color: #C9CCD1;
-    --opfab-timeline-week-color: #aaaaaa;
-    --opfab-timeline-week-color2: #aaaaaa;
-    --opfab-timeline-week-bgcolor: #ffffff;
+    --opfab-feedbar-icon-hover-color: #212529;
+    --opfab-feedbar-icon-hover-bgcolor: #f3f2f1;
+    --opfab-timeline-bgcolor: #f3f2f1;
+    --opfab-timeline-text-color: #000;
+    --opfab-timeline-grid-color: #c9ccd1;
+    --opfab-timeline-week-color: #aaa;
+    --opfab-timeline-week-color2: #aaa;
+    --opfab-timeline-week-bgcolor: #fff;
     --opfab-timeline-realtimebar-color: var(--opfab-color-blue);
     --opfab-timeline-button-bgcolor: #e5e5e5;
     --opfab-timeline-button-text-color: #49494a;
     --opfab-timeline-button-selected-bgcolor: #49494a;
     --opfab-timeline-button-selected-text-color: #fcfdfd;
-    --opfab-lightcard-detail-bgcolor: #F3F2F1;
+    --opfab-lightcard-detail-bgcolor: #f3f2f1;
     --opfab-lightcard-detail-textcolor: black;
-    --opfab-lightcard-detail-border-color: #cccccc;
-    --opfab-lightcard-detail-selected-bgcolor: #E1E1E1;
+    --opfab-lightcard-detail-border-color: #ccc;
+    --opfab-lightcard-detail-selected-bgcolor: #e1e1e1;
     --opfab-lightcard-detail-unread-textcolor: black;
     --opfab-light-card-lttd-timeleft: var(--opfab-color-darker-orange);
     --opfab-card-tab-selected-text-color: black;
-    --opfab-card-tab-border-color: ##111D2D;
-    --opfab-card-bgcolor : #F3F2F1;
-    --opfab-card-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-    --opfab-card-detail-border-color : #dddddd;
+    --opfab-card-tab-border-color: ##111d2d;
+    --opfab-card-bgcolor: #f3f2f1;
+    --opfab-card-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
+    --opfab-card-detail-border-color: #ddd;
     --opfab-navbar-color: black;
-    --opfab-navbar-color-hover:#aaaaaa;
-    --opfab-navbar-color-active:black;
+    --opfab-navbar-color-hover: #aaa;
+    --opfab-navbar-color-active: black;
     --opfab-navbar-toggler-icon: url("data:image/svg+xml, %3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0,0,0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    --opfab-navbar-toggler-border-color: rgba(0,0,0,.1) ;
-    --opfab-navbar-info-block-color: rgba(0,0,0,.9);
+    --opfab-navbar-toggler-border-color: rgb(0 0 0 / 10%) ;
+    --opfab-navbar-info-block-color: rgb(0 0 0 / 90%);
     --opfab-navbar-right-menu-bgcolor: #F3F2F1;
     --opfab-timeline-cardlink: #212529;
     --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
     --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
-    --opfab-calendar-grid-color : #C9CCD1;
-    --opfab-scrollbar-bgcolor: #ffffff;
+    --opfab-calendar-grid-color: #c9ccd1;
+    --opfab-scrollbar-bgcolor: #fff;
     --opfab-scrollbar-border-color: #979797;
-    --opfab-scrollbar-bar-bgcolor: #BFC1C7;
+    --opfab-scrollbar-bar-bgcolor: #bfc1c7;
     --opfab-scrollbar-bar-border-color: #979797;
-    --opfab-scrollbar-bgcolor-firefox: #dddddd;
-    --opfab-scrollbar-bar-bgcolor-firefox: #bbbbbb;
+    --opfab-scrollbar-bgcolor-firefox: #ddd;
+    --opfab-scrollbar-bar-bgcolor-firefox: #bbb;
     --opfab-pagination-active-page-background: #909090;
     --opfab-pagination-disabled-link: #808080;
     --opfab-richtexteditor-button-active: #ccc;
-
 }
 
-
-
- @font-face {
+@font-face {
     font-family: 'Open Sans';
     src: url('shared/fonts/OpenSans-Bold.ttf') format('truetype');
     font-weight: bold;
@@ -171,7 +168,6 @@
     font-display: swap;
 }
 
-
 /* Global colors */
 
 .opfab-colors {
@@ -186,6 +182,7 @@
 .opfab-color-warning {
     color: var(--opfab-color-darker-orange);
 }
+
 .opfab-color-success {
     color: var(--opfab-color-green);
 }
@@ -202,7 +199,6 @@ body {
     color: var(--opfab-input-text-color);
     background-color: var(--opfab-bgcolor-darker);
     box-sizing: border-box;
-
     border: 0.5px solid var(--opfab-form-border-color);
     border-radius: 3px;
     font-size: 13px;
@@ -218,7 +214,7 @@ body {
     height: 42px;
     border: none;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 .opfab-select > select option {
@@ -226,7 +222,7 @@ body {
     font-size: 16px;
 }
 
-.opfab-select  label {
+.opfab-select label {
     margin-left: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -264,13 +260,13 @@ body {
     height: 42px;
     border: none;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
     -webkit-autofill: none;
 
     /* Firefox : to avoid browser styling when auto-filling input field (example password)
     * see https://stackoverflow.com/questions/55228377/remove-new-firefox-autofill-color
     */
-    filter: none; 
+    filter: none;
 }
 
 .opfab-input,
@@ -293,8 +289,9 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
+    box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
 }
+
 input:-webkit-autofill {
     -webkit-text-fill-color: var(--opfab-input-text-color) !important;
 }
@@ -313,6 +310,8 @@ input:-webkit-autofill {
 
 /* CHECKBOX */
 
+ /* stylelint-disable property-no-vendor-prefix */
+
 /* The opfab-checkbox */
 .opfab-checkbox {
     display: block;
@@ -321,12 +320,14 @@ input:-webkit-autofill {
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 13px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* Internet Explorer */
+    user-select: none; 
     width: max-content;
 }
+ /* stylelint-enable property-no-vendor-prefix */
 
 /* Hide the browser's default checkbox */
 .opfab-checkbox input {
@@ -349,45 +350,44 @@ input:-webkit-autofill {
 }
 
 /* Create the opfab-checkbox-checkmark/indicator (hidden when not checked) */
-.opfab-checkbox-checkmark:after {
+.opfab-checkbox-checkmark::after {
     content: '';
     position: absolute;
     display: none;
 }
 
-/* Show the opfab-checkbox-checkmark when checked */
-.opfab-checkbox input:checked ~ .opfab-checkbox-checkmark:after {
-    display: block;
-}
-
 /* Style the opfab-checkbox-checkmark/indicator */
-.opfab-checkbox .opfab-checkbox-checkmark:after {
+.opfab-checkbox .opfab-checkbox-checkmark::after {
     left: 8px;
     top: -6px;
     width: 10px;
     height: 20px;
     border: solid var(--opfab-color-blue);
     border-width: 0 4px 4px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+/* Show the opfab-checkbox-checkmark when checked */
+.opfab-checkbox input:checked ~ .opfab-checkbox-checkmark::after {
+    display: block;
+}
+
 /* set disabled checkbox checkmark in grey */
-.opfab-checkbox input:disabled~.opfab-checkbox-checkmark:after {
+.opfab-checkbox input:disabled ~ .opfab-checkbox-checkmark::after {
     left: 8px;
     top: -6px;
     width: 10px;
     height: 20px;
     border: solid gray;
     border-width: 0 4px 4px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 
 /* END CHECKBOX */
 
 /* RADIO BUTTON */
+
+ /* stylelint-disable property-no-vendor-prefix */
 
 /* The container */
 .opfab-radio-button {
@@ -397,11 +397,13 @@ input:-webkit-autofill {
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 13px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* Internet Explorer */
+    user-select: none; 
 }
+ /* stylelint-enable property-no-vendor-prefix */
 
 /* Hide the browser's default radio button */
 .opfab-radio-button input {
@@ -422,25 +424,25 @@ input:-webkit-autofill {
 }
 
 /* Create the indicator (the dot/circle - hidden when not checked) */
-.opfab-radio-button-checkmark:after {
+.opfab-radio-button-checkmark::after {
     content: '';
     position: absolute;
     display: none;
 }
 
-/* Show the indicator (dot/circle) when checked */
-.opfab-radio-button input:checked ~ .opfab-radio-button-checkmark:after {
-    display: block;
-}
-
 /* Style the indicator (dot/circle) */
-.opfab-radio-button .opfab-radio-button-checkmark:after {
+.opfab-radio-button .opfab-radio-button-checkmark::after {
     top: 17%;
     left: 17%;
     width: 65%;
     height: 65%;
     border-radius: 50%;
     background: var(--opfab-text-color);
+}
+
+/* Show the indicator (dot/circle) when checked */
+.opfab-radio-button input:checked ~ .opfab-radio-button-checkmark::after {
+    display: block;
 }
 
 /* END RADIO BUTTON */
@@ -451,7 +453,6 @@ input:-webkit-autofill {
     color: var(--opfab-input-text-color);
     background-color: var(--opfab-bgcolor-darker);
     box-sizing: border-box;
-
     border: 1px solid var(--opfab-form-border-color);
     border-radius: 3px;
     font-size: 13px;
@@ -465,7 +466,7 @@ input:-webkit-autofill {
     width: calc(100% - 4px);
     border: none;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 .opfab-textarea > label {
@@ -488,36 +489,36 @@ input:-webkit-autofill {
     padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
-    }
+}
 
-.opfab-table table{
-        text-align: left;
-        border-bottom: 1px solid var(--opfab-table-border-color);
-        width: 100%;
-        border-collapse: collapse;
-    }
+.opfab-table table {
+    text-align: left;
+    border-bottom: 1px solid var(--opfab-table-border-color);
+    width: 100%;
+    border-collapse: collapse;
+}
 
 .opfab-table tr {
-        height: 42px;
-        color: var(--opfab-text-color);
-    }
+    height: 42px;
+    color: var(--opfab-text-color);
+}
 
 .opfab-table tr:nth-child(even) {
-        background-color: var(--opfab-bgcolor);
-    }
+    background-color: var(--opfab-bgcolor);
+}
 
 .opfab-table th {
-        color: var(--opfab-text-color);
-        height: 70px;
-        border-top: 1px solid var(--opfab-table-border-color);
-        border-bottom: 1px solid var(--opfab-table-border-color);
-    }
+    color: var(--opfab-text-color);
+    height: 70px;
+    border-top: 1px solid var(--opfab-table-border-color);
+    border-bottom: 1px solid var(--opfab-table-border-color);
+}
 
 /* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
 .opfab-table td {
     overflow: hidden;
     word-break: break-all;
-    }
+}
 
 .opfab-pagination {
     padding-top: 6px;
@@ -592,7 +593,7 @@ input:-webkit-autofill {
 
 /* Tags */
 .vscomp-wrapper.show-value-as-tags .vscomp-value-tag {
-    border: 0px solid var(--opfab-form-border-color);
+    border: 0 solid var(--opfab-form-border-color);
     border-radius: 2px;
     color: white;
     background-color: var(--opfab-color-blue);
@@ -612,10 +613,12 @@ input:-webkit-autofill {
 .vscomp-clear-button > .vscomp-clear-icon::after {
     background-color: var(--opfab-text-color);
 }
+
 .vscomp-wrapper.show-value-as-tags.has-value .vscomp-clear-button {
     right: 28px;
     top: 10px;
 }
+
 /* Avoid tags to override the cross */
 .vscomp-value {
     padding-right: 25px;
@@ -648,14 +651,12 @@ input:-webkit-autofill {
 
 /* Check icon in dropdown */
 .vscomp-wrapper .checkbox-icon.checked::after,  /* select all */
-.vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after /* select option */
-{
+.vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after /* select option */ {
     border-right-color: var(--opfab-color-blue);
     border-bottom-color: var(--opfab-color-blue);
 }
 
 /* END VIRTUAL MULTI SELECT */
-
 
 /* Class to use when background form is lighter */
 
@@ -711,51 +712,12 @@ input:-webkit-autofill {
     background-color: var(--opfab-bgcolor);
 }
 
-.opfab-form-lighter .opfab-tooltip-content {
-    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-}
-
-.opfab-form-lighter .opfab-tooltip-content.left {
-    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-}
-
-.opfab-form-lighter .opfab-tooltip-content.top {
-    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-}
-
-.opfab-form-lighter .opfab-tooltip-content.bottom {
-    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-}
-
-.opfab-form-lighter .opfab-tooltip-content:after {
-    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-    border-color: transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent;
-}
-
-.opfab-form-lighter .opfab-tooltip-content.left:after {
-    /* the arrow */
-    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-}
-
-.opfab-form-lighter .opfab-tooltip-content.top:after {
-    /* the arrow */
-    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-    border-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent transparent;
-}
-
-.opfab-form-lighter .opfab-tooltip-content.bottom:after {
-    /* the arrow */
-    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
-    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent;
-}
-
 /* BUTTON STYLE */
 
 .opfab-btn {
     color: white;
     background-color: var(--opfab-color-blue);
-    border-width: 0px;
+    border-width: 0;
     border-radius: 2px;
     border-color: var(--opfab-color-blue);
     height: 40px;
@@ -767,7 +729,7 @@ input:-webkit-autofill {
 }
 
 .opfab-btn:focus {
-    outline:none;
+    outline: none;
 }
 
 .opfab-btn:hover {
@@ -781,9 +743,9 @@ input:-webkit-autofill {
 
 .opfab-btn-cancel {
     color: var(--opfab-color-blue);
-    outline:none;
+    outline: none;
     background-color: var(--opfab-bg-color);
-    border-width: 0px;
+    border-width: 0;
     border-radius: 2px;
     height: 40px;
     font-size: 14px;
@@ -808,6 +770,7 @@ input:-webkit-autofill {
 
 .opfab-tooltip-content {
     position: absolute;
+
     /* vertically center */
     top: 50%;
     transform: translateY(-50%);
@@ -824,19 +787,12 @@ input:-webkit-autofill {
     background: var(--opfab-tooltip-template-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
-
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
-.opfab-tooltip:hover .opfab-tooltip-content {
-    display: block;
-    opacity: 1;
-}
-
-.opfab-tooltip-content:after {
-  
+.opfab-tooltip-content::after {
     content: "";
     position: absolute;
 
@@ -856,6 +812,7 @@ input:-webkit-autofill {
 
 .opfab-tooltip-content.left {
     position: absolute;
+
     /* vertically center */
     top: 50%;
     transform: translateY(-50%);
@@ -876,14 +833,12 @@ input:-webkit-autofill {
     background: var(--opfab-tooltip-template-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
-
     display: none; /* hide by default */
     opacity: 0;
     transition: opacity .3s;
 }
 
-.opfab-tooltip-content.left:after {
-  
+.opfab-tooltip-content.left::after {
     content: "";
     position: absolute;
 
@@ -903,6 +858,7 @@ input:-webkit-autofill {
 
 .opfab-tooltip-content.top {
     position: absolute;
+
     /* reset defaults */
     top: initial;
     margin: initial;
@@ -923,13 +879,12 @@ input:-webkit-autofill {
     background: var(--opfab-tooltip-template-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
-
     display: none; /* hide by default */
     opacity: 0;
     transition: opacity .3s;
 }
 
-.opfab-tooltip-content.top:after {
+.opfab-tooltip-content.top::after {
     content: "";
     position: absolute;
 
@@ -949,6 +904,7 @@ input:-webkit-autofill {
 
 .opfab-tooltip-content.bottom {
     position: absolute;
+
     /* reset defaults */
     bottom: initial;
     margin: initial;
@@ -969,14 +925,13 @@ input:-webkit-autofill {
     background: var(--opfab-tooltip-template-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
-
     display: none; /* hide by default */
     opacity: 0;
     transition: opacity .3s;
 }
 
-.opfab-tooltip-content.bottom:after {
-    content: "";
+.opfab-tooltip-content.bottom::after {
+    content: '';
     position: absolute;
 
     /* reset defaults */
@@ -994,4 +949,48 @@ input:-webkit-autofill {
     /* the arrow */
     border: 10px solid var(--opfab-tooltip-template-bgcolor);
     border-color:  transparent transparent var(--opfab-tooltip-template-bgcolor) transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip-content {
+    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip-content.left {
+    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip-content.top {
+    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip-content.bottom {
+    background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip-content::after {
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip-content.left::after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip-content.top::after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip-content.bottom::after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent;
+}
+
+.opfab-tooltip:hover .opfab-tooltip-content {
+    display: block;
+    opacity: 1;
 }

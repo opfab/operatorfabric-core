@@ -15,9 +15,9 @@
     margin-top: 10px;
     margin-right: 10px;
     margin-left: 10px;
-    border-width: 0px;
+    border-width: 0;
     background: var(--opfab-text-color-stronger);
-    mask: url(../../../../../../../assets/images/icons/filter.svg);
+    mask: url("../../../../../../../assets/images/icons/filter.svg");
 }
 
 .opfab-icon-filter-open {
@@ -27,9 +27,9 @@
     margin-top: 10px;
     margin-right: 10px;
     margin-left: 10px;
-    border-width: 0px;
+    border-width: 0;
     background: var(--opfab-text-color-stronger);
-    mask: url(../../../../../../../assets/images/icons/filter-open.svg);
+    mask: url("../../../../../../../assets/images/icons/filter-open.svg");
 }
 
 .opfab-icon-filter-active {
@@ -39,9 +39,9 @@
     margin-top: 10px;
     margin-right: 10px;
     margin-left: 10px;
-    border-width: 0px;
+    border-width: 0;
     background: red;
-    mask: url(../../../../../../../assets/images/icons/filter-active.svg);
+    mask: url("../../../../../../../assets/images/icons/filter-active.svg");
 }
 
 .opfab-icon-filter-open-active {
@@ -51,9 +51,9 @@
     margin-top: 10px;
     margin-right: 10px;
     margin-left: 10px;
-    border-width: 0px;
+    border-width: 0;
     background: red;
-    mask: url(../../../../../../../assets/images/icons/filter-open-active.svg);
+    mask: url("../../../../../../../assets/images/icons/filter-open-active.svg");
 }
 
 .opfab-icon-filter:hover {
@@ -61,7 +61,7 @@
 }
 
 .opfab-icon-bg-color {
-    margin: 0px;
+    margin: 0;
     border-radius: 3px;
     padding: 5px;
 }

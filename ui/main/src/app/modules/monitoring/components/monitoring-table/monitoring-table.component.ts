@@ -187,9 +187,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             'opfab-sev-information': (field) => field.value === 4
         };
         const typeOfStateCellClassRules = {
-            'opfab-typeOfState-INPROGRESS': (parameters) => parameters.data.typeOfState === 'INPROGRESS',
-            'opfab-typeOfState-FINISHED': (parameters) => parameters.data.typeOfState === 'FINISHED',
-            'opfab-typeOfState-CANCELED': (parameters) => parameters.data.typeOfState === 'CANCELED'
+            'opfab-type-of-state-INPROGRESS': (parameters) => parameters.data.typeOfState === 'INPROGRESS',
+            'opfab-type-of-state-FINISHED': (parameters) => parameters.data.typeOfState === 'FINISHED',
+            'opfab-type-of-state-CANCELED': (parameters) => parameters.data.typeOfState === 'CANCELED'
         };
 
         this.columnDefs = [

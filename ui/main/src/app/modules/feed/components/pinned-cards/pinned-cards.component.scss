@@ -32,19 +32,19 @@
     margin-top: 5px;
 }
 
-.opfab-bg-sev-alarm:before {
+.opfab-bg-sev-alarm::before {
     background-color: var(--opfab-color-severity-alarm);
 }
 
-.opfab-bg-sev-action:before {
+.opfab-bg-sev-action::before {
     background-color: var(--opfab-color-severity-action);
 }
 
-.opfab-bg-sev-compliant:before {
+.opfab-bg-sev-compliant::before {
     background-color: var(--opfab-color-severity-compliant);
 }
 
-.opfab-bg-sev-information:before {
+.opfab-bg-sev-information::before {
     background-color: var(--opfab-color-severity-information);
 }
 
@@ -52,7 +52,7 @@ span {
     white-space: nowrap;
 }
 
-span:before {
+span::before {
     content: '';
     display: inline-flex;
     width: 5px;

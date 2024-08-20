@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,6 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+ /* stylelint-disable property-no-vendor-prefix */
 .ngx-charts {
     /*
       Block text selection
@@ -16,10 +17,9 @@
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
+    -ms-user-select: none; /* Internet Explorer */
     user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+                        supported by Chrome, Edge, Firefox and Opera */
     float: left;
     overflow: visible;
     background-color: var(--opfab-timeline-bgcolor);
@@ -35,6 +35,7 @@
         transform: translate(0, -10px);
     }
 }
+/* stylelint-enable property-no-vendor-prefix */
 
 .btn-cardlink {
     color: var(--opfab-timeline-cardlink);
@@ -48,5 +49,5 @@
     color: var(--opfab-timeline-cardlink);
     background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
     border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
-    box-shadow: 0 0 0 0rem;
+    box-shadow: 0 0 0 0;
 }

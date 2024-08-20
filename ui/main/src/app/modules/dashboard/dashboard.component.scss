@@ -13,11 +13,8 @@
     grid-template-columns: repeat(auto-fill, minmax(100px, 300px));
     margin-left: 15px;
     margin-right: 15px;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding: 10px 10%;
     margin-top: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 
@@ -51,7 +48,7 @@
     color: var(--opfab-timeline-cardlink);
     background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
     border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
-    box-shadow: 0 0 0 0rem;
+    box-shadow: 0 0 0 0;
 }
 
 .opfab-feed-link {

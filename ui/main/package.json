@@ -85,6 +85,9 @@
     "karma-jasmine-html-reporter": "2.1.0",
     "karma-junit-reporter": "2.0.1",
     "karma-mocha-reporter": "2.2.5",
+    "stylelint": "^16.8.2",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard-scss": "^13.1.0",
     "typescript": "5.4.5",
     "zone.js": "0.14.10"
   },

@@ -34,7 +34,7 @@
     z-index: 1;
 }
 
-.opfab-ol-popup-closer:after {
+.opfab-ol-popup-closer::after {
     content: '✖';
 }
 
@@ -50,5 +50,5 @@
     color: var(--opfab-timeline-cardlink);
     background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
     border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
-    box-shadow: 0 0 0 0rem;
+    box-shadow: 0 0 0 0;
 }

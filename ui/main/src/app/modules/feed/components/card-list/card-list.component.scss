@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,11 @@
 .feed-content {
     height: 100%;
     margin: -6px;
-    padding: 0px;
+    padding: 0;
 }
 
 .opfab-card-list {
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
 }
 
 .opfab-filters {
@@ -35,7 +34,7 @@
     border-top-width: 1px;
     border-top-style: solid;
     height: 10px;
-    margin-top: 0px;
+    margin-top: 0;
     margin-right: 20px;
     margin-left: 1px;
     border-color: var(--opfab-card-tab-border-color);

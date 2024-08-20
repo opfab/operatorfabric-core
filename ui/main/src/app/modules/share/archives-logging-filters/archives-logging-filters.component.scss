@@ -14,7 +14,7 @@
 
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-archives-logging {
         padding-left: 2%;
     }
@@ -47,30 +47,32 @@
 .opfab-btn-search-admin-mode {
     margin-bottom: 0;
 }
+
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-archives {
         padding-left: 2%;
     }
 }
+
 // Remove vertical line when screen to small
-@media all and (max-width: 1600px) {
+@media all and (width <= 1600px) {
     .opfab-vertical-bar {
-        border-left-width: 0px;
-        margin: 0px;
+        border-left-width: 0;
+        margin: 0;
     }
 }
 
-@media all and (max-width: 1550px) {
+@media all and (width <= 1550px) {
     .opfab-buttons {
         margin-left: 20px;
     }
 }
 
-@media all and (max-width: 1500px) {
+@media all and (width <= 1500px) {
     .opfab-publish-date {
-        margin: 0px;
+        margin: 0;
     }
 }
 

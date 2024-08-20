@@ -14,12 +14,15 @@
 .opfab-archive-sev-alarm {
     background-color: var(--opfab-color-severity-alarm);
 }
+
 .opfab-archive-sev-action {
     background-color: var(--opfab-color-severity-action);
 }
+
 .opfab-archive-sev-compliant {
     background-color: var(--opfab-color-severity-compliant);
 }
+
 .opfab-archive-sev-information {
     background-color: var(--opfab-color-severity-information);
 }
@@ -31,7 +34,7 @@
 
 // ADAPT MARGINS TO SCREEN SIZE
 
-@media all and (max-width: 1700px) {
+@media all and (width <= 1700px) {
     .opfab-archives {
         padding-left: 2%;
     }
@@ -49,7 +52,7 @@
     width: 32px;
     margin-top: 5px;
     background: var(--opfab-text-color-stronger);
-    mask: url(../../../assets/images/icons/plus.svg);
+    mask: url("../../../assets/images/icons/plus.svg");
 }
 
 .opfab-archives-icon-minus {
@@ -58,7 +61,7 @@
     width: 32px;
     margin-top: 5px;
     background: var(--opfab-text-color-stronger);
-    mask: url(../../../assets/images/icons/minus.svg);
+    mask: url("../../../assets/images/icons/minus.svg");
 }
 
 .opfab-archives-detail-modal {
