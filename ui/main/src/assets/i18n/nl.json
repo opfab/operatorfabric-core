@@ -328,6 +328,7 @@
         "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
         "email": "Email",
         "settingsSaved": "Instellingen bewaard",
+        "invalidSettings": "Corrigeer de ongeldige velden alstublieft",
         "input": {
             "errors": {
                 "invalidEmail": "Ongeldige e-mail",

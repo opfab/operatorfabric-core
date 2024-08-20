@@ -328,6 +328,7 @@
         "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
         "email": "Email",
         "settingsSaved": "Paramètres sauvegardés",
+        "invalidSettings": "Veuillez corriger les champs invalides",
         "input": {
             "errors": {
                 "invalidEmail": "Email invalide",

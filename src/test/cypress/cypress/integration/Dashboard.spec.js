@@ -34,8 +34,6 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
         opfab.navigateToDashboard();
 
-        const currentDate = new Date(); 
-
         // There are 35 grey bubbles on the dashboard because there are 35 empty states in testconf
         cy.get('of-dashboard').find("ellipse").should('have.length', 35)
 
@@ -87,9 +85,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator1_fr');
     
         opfab.navigateToDashboard();
-    
-        const currentDate = new Date(); 
-    
+        
         script.sendCard('defaultProcess/message.json');
         script.sendCard('defaultProcess/process.json');
 
