@@ -121,7 +121,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         if (!this.settingsView.isEmailAndEmailCheckboxesCoherent()) {
             AlertMessageService.sendAlertMessage({
                 message: '',
-                i18n: {key: 'setting.input.errors.emailAddressMissing'},
+                i18n: {key: 'settings.input.errors.emailAddressMissing'},
                 level: MessageLevel.ERROR
             });
             return;
