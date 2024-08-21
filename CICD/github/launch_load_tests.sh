@@ -18,10 +18,10 @@ export NVM_DIR="$HOME/.nvm"
 source ./bin/load_environment_light.sh;
 cd config/docker
 ./startOpfabInProductionMode.sh
-cd ../../src/test/api/gatling
-../../gradlew clean gatlingRun
+cd ../../src/test/gatling
+../../../gradlew clean gatlingRun
 status_code=$?
-cd ../../../../config/docker
+cd ../../../config/docker
 docker compose down --remove-orphans
 # propagate the status code for github actions
 exit $status_code
