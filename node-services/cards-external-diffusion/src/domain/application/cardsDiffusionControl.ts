@@ -11,6 +11,7 @@ import SendMailService from '../server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
+import {format} from 'date-fns';
 
 export default class CardsDiffusionControl {
     protected opfabUrlInMailContent: any;
@@ -92,27 +93,10 @@ export default class CardsDiffusionControl {
             .replace(/'/g, '&#39;');
     }
 
-    protected getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
-        if (epochDate == null) return '';
-        const date = new Date(epochDate);
-
-        return (
-            this.pad(date.getDate()) +
-            '-' +
-            this.pad(date.getMonth()) +
-            '-' +
-            date.getFullYear() +
-            ' ' +
-            this.pad(date.getHours()) +
-            ':' +
-            this.pad(date.getMinutes())
-        );
-    }
-
-    protected pad(num: number): string {
-        if (num < 10) {
-            return '0' + num;
+    getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
+        if (!epochDate) {
+            return '';
         }
-        return '' + num;
+        return format(epochDate, 'dd/MM/yyyy HH:mm');
     }
 }
