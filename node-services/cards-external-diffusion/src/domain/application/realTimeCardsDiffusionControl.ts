@@ -13,6 +13,7 @@ import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
 import CardsDiffusionControl from './cardsDiffusionControl';
 import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
+import {format} from 'date-fns';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
     private secondsAfterPublicationToConsiderCardAsNotRead: number;
@@ -260,26 +261,9 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
-        if (epochDate == null) return '';
-        const date = new Date(epochDate);
-
-        return (
-            this.pad(date.getDate()) +
-            '-' +
-            this.pad(date.getMonth()) +
-            '-' +
-            date.getFullYear() +
-            ' ' +
-            this.pad(date.getHours()) +
-            ':' +
-            this.pad(date.getMinutes())
-        );
-    }
-
-    pad(num: number): string {
-        if (num < 10) {
-            return '0' + num;
+        if (!epochDate) {
+            return '';
         }
-        return '' + num;
+        return format(epochDate, 'dd/MM/yyyy HH:mm');
     }
 }
