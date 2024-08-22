@@ -18,17 +18,21 @@ import org.opfab.users.mongo.repositories.UserRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = UsersApplication.class)
 @EnableConfigurationProperties
+@ImportRuntimeHints(UsersApplication.UsersRuntimeHints.class)
 @Import({ UserActionLogsConfiguration.class,UserActionLogRepositoryImpl.class, EntityRepositoryImpl.class, CachedGroupRepositoryImpl.class,
         PerimeterRepositoryImpl.class,UserRepositoryImpl.class, UserSettingsRepositoryImpl.class, RabbitEventBus.class })
 public class UsersApplication {
@@ -38,4 +42,12 @@ public class UsersApplication {
         assert (ctx != null);
     }
 
+    static class UsersRuntimeHints implements RuntimeHintsRegistrar {
+
+		@Override
+		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+			hints.resources().registerPattern("config/*");
+            hints.resources().registerPattern("external-config/*");
+		}
+	}
 }
