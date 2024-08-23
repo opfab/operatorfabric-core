@@ -15,7 +15,7 @@ import {takeUntil} from 'rxjs/operators';
 import {ConfigService} from 'app/business/services/config.service';
 import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 
@@ -26,15 +26,20 @@ import {OpfabMap} from 'app/modules/share/map/opfab-map';
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {
     private filteredLightCardStore: FilteredLightCardsStore;
+    private initialZoomToLocation: any;
 
     constructor(
         private translateService: TranslateService,
         private superChangeDetector: ChangeDetectorRef,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute
     ) {
         super(translateService, superChangeDetector);
         this.targetElementId = 'ol-map';
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+        this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe((params) => {
+            this.initialZoomToLocation = params.zoomToLocation;
+        });
     }
 
     ngOnInit() {
@@ -51,7 +56,9 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
                 .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {
-                    setTimeout(() => this.updateMap(cards, maxZoom), 500);
+                    setTimeout(() => {
+                        this.updateMap(cards, maxZoom, this.initialZoomToLocation);
+                    }, 500);
                     if (enableGraph) {
                         setTimeout(() => this.updateGraph(cards), 500);
                     }

@@ -10,7 +10,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import {delay, map} from 'rxjs/operators';
+import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/business/services/config.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -41,7 +41,7 @@ export class FeedComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute
     ) {
-        this.route.queryParams.subscribe((params) => {
+        this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.processFilter = params.processFilter;
             this.stateFilter = params.stateFilter;
         });
