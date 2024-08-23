@@ -140,7 +140,7 @@ export abstract class OpfabMap {
         }
     }
 
-    updateMap(cards: LightCard[], maxZoom: number) {
+    updateMap(cards: LightCard[], maxZoom: number, initialZoomToLocation?: string) {
         if (this.map) {
             const featureArray = [];
             this.map.removeLayer(this.vectorLayer);
@@ -149,6 +149,10 @@ export abstract class OpfabMap {
             const defaultDataProjection = ConfigService.getConfigValue(
                 'feed.geomap.defaultDataProjection',
                 'EPSG:4326'
+            );
+            const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue(
+                'feed.geomap.zoomLevelWhenZoomToLocation',
+                14
             );
 
             cards
@@ -179,13 +183,30 @@ export abstract class OpfabMap {
                 }
             });
             this.map.addLayer(this.vectorLayer);
+
             if (this.vectorLayer.getSource().getFeatures().length > 0) {
-                this.map.getView().fit(this.vectorLayer.getSource().getExtent(), {
-                    duration: zoomDuration,
-                    maxZoom: maxZoom,
-                    padding: [20, 20, 20, 20],
-                    callback: (_) => this.updateMapSize()
-                });
+                if (initialZoomToLocation) {
+                    this.vectorLayer
+                        .getSource()
+                        .getFeatures()
+                        .forEach((feature) => {
+                            if (feature.get('lightCard')?.id === initialZoomToLocation) {
+                                const ext = feature.getGeometry().getExtent();
+                                this.map.getView().fit(ext, {
+                                    duration: 0,
+                                    maxZoom: zoomLevelWhenZoomToLocation,
+                                    padding: [20, 20, 20, 20],
+                                    callback: (_) => this.map.updateSize()
+                                });
+                            }
+                        });
+                } else
+                    this.map.getView().fit(this.vectorLayer.getSource().getExtent(), {
+                        duration: zoomDuration,
+                        maxZoom: maxZoom,
+                        padding: [20, 20, 20, 20],
+                        callback: (_) => this.updateMapSize()
+                    });
 
                 this.map.getControls().push(
                     new ZoomToExtent({

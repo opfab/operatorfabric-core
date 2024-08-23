@@ -24,6 +24,7 @@ import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RouterStore} from 'app/business/store/router.store';
 import {Utilities} from 'app/business/common/utilities';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-light-card',
@@ -170,6 +171,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         SoundNotificationService.clearOutstandingNotifications();
-        MapService.zoomToLocation(this.lightCard);
+        if (SelectedCardService.getSelectedCardId()) {
+            SelectedCardService.clearSelectedCardId();
+            this.router.navigate(['/feed'], {queryParams: {zoomToLocation: this.lightCard.id}});
+        } else MapService.zoomToLocation(this.lightCard);
     }
 }
