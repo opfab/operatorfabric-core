@@ -1,3 +1,5 @@
+apply plugin: 'org.graalvm.buildtools.native'
+
 dependencies {
     implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
@@ -10,11 +12,24 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     implementation boot.starterWeb, boot.starterUndertow
+    implementation group: 'org.wildfly.common', name: 'wildfly-common', version: '2.0.0'
     implementation project(':tools:spring:spring-utilities')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:generic:utilities')
     implementation project(':tools:user-action-tracing')
+}
+
+graalvmNative {
+    binaries {
+        main {
+            imageName = "users"
+            mainClass = "org.opfab.users.UsersApplication"
+        }
+    }
+    binaries.all {
+        buildArgs.add("--verbose")
+    }
 }
 
 bootJar {
@@ -28,3 +43,6 @@ bootJar {
     }
 }
 
+tasks.named("bootBuildImage") {
+	imageName = "lfeoperatorfabric/of-users-service:SNAPSHOT"
+}
