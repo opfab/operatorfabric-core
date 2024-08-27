@@ -93,9 +93,8 @@ export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
 }
 
 export function getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
-    if (!epochDate) {
+    if (epochDate == null || epochDate === undefined) {
         return '';
     }
     return format(epochDate, 'dd/MM/yyyy HH:mm');
 }
-
