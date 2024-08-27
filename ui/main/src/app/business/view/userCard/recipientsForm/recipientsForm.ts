@@ -52,7 +52,7 @@ export class RecipientsForm {
     private buildMultiSelectItems(entities: Entity[]): MultiselectItem[] {
         const recipients: MultiselectItem[] = [];
         entities?.forEach((entity) => {
-            if (entity.roles.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
                 const label = this.useDescriptionFieldForEntityList ? entity.description : entity.name || entity.id;
                 recipients.push({
                     id: entity.id,
