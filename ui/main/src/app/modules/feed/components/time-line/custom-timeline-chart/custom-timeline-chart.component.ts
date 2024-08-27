@@ -32,11 +32,11 @@ import {
     ScaleType,
     ViewDimensions
 } from '@swimlane/ngx-charts';
-import moment from 'moment';
 import {Router} from '@angular/router';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/business/view/timeline/timeline.view';
 import {Observable} from 'rxjs';
+import {format} from 'date-fns';
 
 @Component({
     selector: 'of-custom-timeline-chart',
@@ -67,7 +67,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public xScale: any;
     public translateGraph: string;
 
-    public xRealTimeLine: moment.Moment;
+    public xRealTimeLine: Date;
 
     public currentCircleHovered;
     public openPopover: NgbPopover;
@@ -102,7 +102,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      *  Stop it when destroying component to avoid memory leak
      */
     updateRealtime(): void {
-        this.xRealTimeLine = moment();
+        this.xRealTimeLine = new Date();
         this.changeDetectorRef.markForCheck();
         setTimeout(() => {
             if (!this.isDestroyed) this.updateRealtime();
@@ -168,7 +168,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     getXRealTimeLineFormatting(xRealTimeLine) {
-        return moment(xRealTimeLine).format('DD/MM/YY HH:mm');
+        return format(xRealTimeLine, 'dd/MM/yy HH:mm');
     }
 
     getRealTimeTextPosition() {
