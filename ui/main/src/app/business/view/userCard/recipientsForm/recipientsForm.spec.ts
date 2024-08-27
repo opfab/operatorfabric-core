@@ -39,7 +39,8 @@ async function setEntitiesConfiguration() {
         ),
         new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_RECEIVER], [], ['PARENT_ENTITY']),
         new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.ACTIVITY_AREA], [], []),
-        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_RECEIVER], [], null)
+        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_RECEIVER], [], null),
+        new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
     ]);
 }
 
