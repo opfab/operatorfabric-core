@@ -30,12 +30,13 @@ import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {MessageLevel} from '@ofModel/message.model';
-import moment from 'moment';
+
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {sub} from 'date-fns';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -353,9 +354,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     setDefaultPublishDateFilter() {
         const defaultPublishDateInterval = ConfigService.getConfigValue('archive.filters.publishDate.days', 10);
 
-        const min = moment(Date.now());
-        min.subtract(defaultPublishDateInterval, 'day');
-        const minDate = min.toDate();
+        const min = new Date();
+        const minDate = sub(min, {days: defaultPublishDateInterval});
 
         this.defaultMinPublishDateStringFormat =
             minDate.getFullYear() +
