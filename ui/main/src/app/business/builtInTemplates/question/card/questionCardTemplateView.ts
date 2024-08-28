@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
+import {format} from 'date-fns';
 
 declare const opfab;
 
@@ -52,8 +52,9 @@ export class QuestionCardTemplateView {
                 childCards?.forEach((element) => {
                     const cardResponses = [];
                     element.data?.responses.forEach((response) => {
+                        const responseDate = response.responseDate ?? new Date(null);
                         cardResponses.push({
-                            responseDate: moment(response.responseDate).format('HH:mm DD/MM/YYYY'),
+                            responseDate: format(responseDate, 'HH:mm dd/MM/yyyy'),
                             response: response.response
                         });
                     });
