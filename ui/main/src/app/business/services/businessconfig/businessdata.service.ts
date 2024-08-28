@@ -14,6 +14,9 @@ import {LogOption, LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {ErrorService} from '../error-service';
+import {AlertMessageService} from '../alert-message.service';
+import {I18n} from '@ofModel/i18n.model';
+import {Message, MessageLevel} from '@ofModel/message.model';
 
 export class BusinessDataService {
     private static _cachedResources = new Map<string, string>();
@@ -97,6 +100,9 @@ export class BusinessDataService {
         return BusinessDataService.businessDataServer.updateBusinessData(resourceName, data).pipe(
             map((responseBusinessData) => {
                 if (responseBusinessData.status === ServerResponseStatus.OK) {
+                    AlertMessageService.sendAlertMessage(
+                        new Message(null, MessageLevel.INFO, new I18n('admin.input.businessData.uploadSuccess'))
+                    );
                     return responseBusinessData.data;
                 } else {
                     ErrorService.handleServerResponseError(responseBusinessData);

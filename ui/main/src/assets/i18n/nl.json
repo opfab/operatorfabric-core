@@ -524,7 +524,8 @@
             "businessData": {
                 "name": "ZAKELIJKE GEGEVENS",
                 "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
-                "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
+                "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen",
+                "uploadSuccess": "Zakelijke gegevens bestand geüpload"
             },
             "supervisedEntity": {
                 "entityName": "ENTITEIT",
