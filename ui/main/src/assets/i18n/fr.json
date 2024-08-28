@@ -524,7 +524,8 @@
             "businessData": {
                 "name": "DONNÉES MÉTIER",
                 "add": "AJOUTER UN FICHIER DE DONNÉES MÉTIER",
-                "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
+                "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier",
+                "uploadSuccess": "Fichier de données métier téléchargé "
             },
             "supervisedEntity": {
                 "entityName": "ENTITÉ",

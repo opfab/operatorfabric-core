@@ -524,7 +524,8 @@
             "businessData": {
                 "name": "BUSINESS DATA",
                 "add": "ADD NEW BUSINESS DATA FILE",
-                "confirmDelete": "Do you really want to delete the business data file"
+                "confirmDelete": "Do you really want to delete the business data file",
+                "uploadSuccess": "Business data file uploaded"
             },
             "supervisedEntity": {
                 "entityName": "ENTITY",
