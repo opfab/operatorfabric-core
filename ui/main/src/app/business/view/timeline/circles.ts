@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment, {Moment} from 'moment';
 import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUtils';
 import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
+import {add, format} from 'date-fns';
 
 export class Circle {
     public start: number;
-    public date: moment.Moment;
+    public date: Date;
     public count: number;
     public width: number;
     public color: string;
@@ -29,11 +29,11 @@ export class SummaryLine {
 export class Circles {
     public circles: Circle[] = [];
     private cardsForTimeLine;
-    private xTicks: Array<Moment>;
+    private xTicks: Array<Date>;
     private gridTimeDomain: Array<number>;
     private cardsTimeDomain: any;
 
-    public setDomain(cardsTimeDomain: any, gridTimeDomain: Array<number>, xTicks: Array<Moment>): void {
+    public setDomain(cardsTimeDomain: any, gridTimeDomain: Array<number>, xTicks: Array<Date>): void {
         this.gridTimeDomain = gridTimeDomain;
         this.cardsTimeDomain = cardsTimeDomain;
         this.xTicks = xTicks;
@@ -81,7 +81,7 @@ export class Circles {
                 severity: card.severity,
                 titleTranslated: card.titleTranslated
             });
-            const nextDate = moment(dateForReminder).add(1, 'minute');
+            const nextDate = add(dateForReminder, {minutes: 1});
 
             dateForReminder = getNextTimeForRepeatingUsingRRule(
                 card,
@@ -107,7 +107,7 @@ export class Circles {
                 severity: card.severity,
                 titleTranslated: card.titleTranslated
             });
-            const nextDate = moment(dateForReminder).add(1, 'minute');
+            const nextDate = add(dateForReminder, {minutes: 1});
 
             dateForReminder = getNextTimeForRepeating(
                 card,
@@ -159,7 +159,7 @@ export class Circles {
         if (cardsData[cardIndex] && cardsData[cardIndex].date < endLimit) {
             const circle: Circle = {
                 start: cardsData[cardIndex].date,
-                date: moment(this.xTicks[tickIndex - 1].valueOf()),
+                date: this.xTicks[tickIndex - 1],
                 count: 0,
                 width: 10,
                 color: this.getCircleColor(cardsData[cardIndex].severity),
@@ -173,7 +173,7 @@ export class Circles {
                 const summary = new SummaryLine();
                 summary.cardId = cardsData[cardIndex].id;
                 summary.titleTranslated = cardsData[cardIndex].titleTranslated;
-                summary.summaryDate = moment(cardsData[cardIndex].date).format('DD/MM - HH:mm :');
+                summary.summaryDate = format(cardsData[cardIndex].date, 'dd/MM - HH:mm :');
                 circle.summary.push(summary);
                 cardIndex++;
             }
