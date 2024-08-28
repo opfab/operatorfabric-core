@@ -1,4 +1,6 @@
 FROM node:20.17.0-alpine@sha256:1a526b97cace6b4006256570efa1a29cd1fe4b96a5301f8d48e87c5139438a45
+RUN apk add --no-cache tzdata
+ENV TZ=Europe/Paris
 WORKDIR /usr/app
 RUN chown node:node /usr/app
 RUN mkdir -m777 /var/log/opfab

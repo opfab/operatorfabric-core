@@ -56,7 +56,7 @@ task deleteRuntimeConfigFile(type: Delete) {
 
 task buildDocker(type: Exec) {
     workingDir project.projectDir
-    commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-${project.name}:${project.version}", '.'
+    commandLine 'docker', 'build', '--build-arg', "https_proxy=${proxy.https}",'-t', "lfeoperatorfabric/of-${project.name}:${project.version}", '.'
 }
 
 tasks.runBuild.dependsOn(':node-services:node-common:npmInstall')
