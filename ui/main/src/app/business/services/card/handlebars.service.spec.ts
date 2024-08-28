@@ -10,17 +10,18 @@
 import {getOneCard} from '@tests/helpers';
 
 import {HandlebarsService} from './handlebars.service';
-import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {OpfabAPIService} from '../opfabAPI.service';
+import {setDefaultOptions} from 'date-fns';
+import {enUS} from 'date-fns/locale';
 
 describe('Handlebars Services', () => {
     let processServerMock: ProcessServerMock;
 
-    const now = moment(Date.now());
+    const now = Date.now();
 
     beforeAll(() => {
         OpfabAPIService.initAPI();
@@ -347,7 +348,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {
-            now.locale('en');
+            setDefaultOptions({locale: enUS});
             testTemplate('{{dateFormat 1626685587000 format="MMMM do yyyy"}}', 'July 19th 2021', done);
         });
 
