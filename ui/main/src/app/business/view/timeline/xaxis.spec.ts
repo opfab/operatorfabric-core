@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
 import {XAxis} from './xaxis';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {I18nService} from 'app/business/services/translation/i18n.service';
@@ -17,7 +16,6 @@ describe('XAxis', () => {
 
     beforeEach(() => {
         xAxis = new XAxis();
-        moment.locale('en');
         const translationService = new TranslationServiceMock();
         I18nService.setTranslationService(translationService);
         I18nService.initLocale();
