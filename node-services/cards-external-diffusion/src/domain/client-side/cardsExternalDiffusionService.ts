@@ -117,22 +117,18 @@ export default class CardsExternalDiffusionService {
     }
 
     private checkDaily(): void {
-        if (this.active) {
-            this.logger.info('Daily email scheduler launch');
-            const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingDailyEmail();
+        this.logger.info('Daily email scheduler launch');
+        const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingDailyEmail();
 
-            setTimeout(() => {
-                this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
-                setInterval(
-                    () => {
-                        this.dailyCardsDiffusionControl
-                            .checkCardsOfTheDay()
-                            .catch((error) => this.logger.error('error during daily email sending' + error));
-                    },
-                    24 * 60 * 60 * 1000
-                );
-            }, millisBeforeSendingDailyEmail);
-        }
+        setTimeout(() => {
+            if (this.active) this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
+            setInterval(
+                () => {
+                    if (this.active) this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
+                },
+                24 * 60 * 60 * 1000
+            );
+        }, millisBeforeSendingDailyEmail);
     }
 
     private getMillisBeforeSendingDailyEmail(): number {
