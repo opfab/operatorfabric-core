@@ -6,28 +6,15 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription} from 'rxjs';
-import * as moment from 'moment';
-import {ConfigService} from 'app/business/services/config.service';
+import {Component, ViewChild} from '@angular/core';
+import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
 
 @Component({
     selector: 'of-time-line',
-    templateUrl: './time-line.component.html'
+    templateUrl: './time-line.component.html',
+    styleUrls: ['./time-line.component.scss']
 })
-export class TimeLineComponent implements OnInit, OnDestroy {
-    localSubscription: Subscription;
-
-    ngOnInit() {
-        this.localSubscription = ConfigService.getConfigValueAsObservable('settings.locale').subscribe((l) =>
-            moment.locale(l)
-        );
-    }
-
-    ngOnDestroy() {
-        if (this.localSubscription) {
-            this.localSubscription.unsubscribe();
-        }
-    }
+export class TimeLineComponent {
+    @ViewChild('timelineButtons')
+    timelineButtons: TimelineButtonsComponent;
 }
