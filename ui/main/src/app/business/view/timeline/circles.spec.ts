@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
 import {Circles} from './circles';
 import {XAxis} from './xaxis';
 import {getOneCard} from '@tests/helpers';
 import {Frequency} from '@ofModel/light-card.model';
 import {Recurrence, TimeSpan} from '@ofModel/card.model';
+import {add, startOfYear, sub} from 'date-fns';
 
 describe('Timeline Circles', () => {
-    const startDate = moment().startOf('year');
-    const endDate = moment().startOf('year').add(1, 'year');
+    const startDate = startOfYear(new Date());
+    const endDate = add(startOfYear(new Date()), {years: 1});
     const circles = new Circles();
 
     const RED = '#A71A1A';
@@ -25,8 +25,8 @@ describe('Timeline Circles', () => {
     const BLUE = '#1074AD';
 
     beforeEach(() => {
-        const gridTimeDomain = [moment(startDate).valueOf(), moment(endDate).valueOf()];
-        const cardsTimeDomain = {startDate: moment(startDate).valueOf(), endDate: moment(endDate).valueOf()};
+        const gridTimeDomain = [startDate.valueOf(), endDate.valueOf()];
+        const cardsTimeDomain = {startDate: startDate.valueOf(), endDate: endDate.valueOf()};
         const domainId = 'Y';
         const xAxis = new XAxis();
         xAxis.setupAxis(domainId, gridTimeDomain);
@@ -40,7 +40,7 @@ describe('Timeline Circles', () => {
 
     it('set one circle with count=1 if one card ', () => {
         const card = getOneCard({
-            startDate: moment(startDate).add(5, 'days').add(1, 'hours').valueOf(),
+            startDate: add(startDate, {days: 5, hours: 1}).valueOf(),
             severity: 'ACTION'
         });
 
@@ -53,7 +53,7 @@ describe('Timeline Circles', () => {
 
     it('set one circle with severity information if  one card with unknown severity ', () => {
         const card = getOneCard({
-            startDate: moment(startDate).add(5, 'days').add(1, 'hours').valueOf(),
+            startDate: add(startDate, {days: 5, hours: 1}).valueOf(),
             severity: 'DUMMY'
         });
 
@@ -66,7 +66,7 @@ describe('Timeline Circles', () => {
 
     it('set no circle if one card is after time domain ', () => {
         const card = getOneCard({
-            startDate: moment(endDate).add(1, 'hours').valueOf(),
+            startDate: add(endDate, {hours: 1}).valueOf(),
             severity: 'ALARM'
         });
 
@@ -76,7 +76,7 @@ describe('Timeline Circles', () => {
 
     it('set no circle if one card is before time domain ', () => {
         const card = getOneCard({
-            startDate: moment().startOf('year').subtract(1, 'month').valueOf(),
+            startDate: sub(startOfYear(new Date()), {months: 1}).valueOf(),
             severity: 'ALARM'
         });
 
@@ -86,12 +86,12 @@ describe('Timeline Circles', () => {
 
     it('set one circle with count=2 if two card in the same interval and same severity ', () => {
         const card1 = getOneCard({
-            startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 2, hours: 1}).valueOf(),
             severity: 'ALARM'
         });
 
         const card2 = getOneCard({
-            startDate: moment(startDate).add(4, 'day').add(2, 'hour').valueOf(),
+            startDate: add(startDate, {days: 4, hours: 2}).valueOf(),
             severity: 'ALARM'
         });
 
@@ -102,11 +102,11 @@ describe('Timeline Circles', () => {
 
     it('set two circles with count=1 if two card are not in the same interval but same severity ', () => {
         const card1 = getOneCard({
-            startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 2, hours: 1}).valueOf(),
             severity: 'COMPLIANT'
         });
         const card2 = getOneCard({
-            startDate: moment(startDate).add(2, 'month').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {months: 2, hours: 1}).valueOf(),
             severity: 'COMPLIANT'
         });
 
@@ -122,11 +122,11 @@ describe('Timeline Circles', () => {
 
     it('set two circles with count=1 if two cards are in the same interval but not same severity ', () => {
         const card1 = getOneCard({
-            startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 2, hours: 1}).valueOf(),
             severity: 'ALARM'
         });
         const card2 = getOneCard({
-            startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 2, hours: 1}).valueOf(),
             severity: 'INFORMATION'
         });
         circles.setCardsToDrawOnTimeLine([card1, card2]);
@@ -142,16 +142,16 @@ describe('Timeline Circles', () => {
 
     it('set two circles with one count=1 and one count= 2 if three cards of same severity  and 2 in the same interval ', () => {
         const card1 = getOneCard({
-            startDate: moment(startDate).add(2, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 2, hours: 1}).valueOf(),
             severity: 'ALARM'
         });
         const card2 = getOneCard({
-            startDate: moment(startDate).add(4, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 4, hours: 1}).valueOf(),
             severity: 'ALARM'
         });
 
         const card3 = getOneCard({
-            startDate: moment(startDate).add(6, 'month').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {months: 6, hours: 1}).valueOf(),
             severity: 'ALARM'
         });
 
@@ -162,24 +162,24 @@ describe('Timeline Circles', () => {
         expect(circles.circles[1].count).toEqual(1);
     });
 
-    it('set three cards in the same interval and same severity , there shoud be one circle with 3 summary  ', () => {
+    it('set three cards in the same interval and same severity , there should be one circle with 3 summary  ', () => {
         const card1 = getOneCard({
             id: 'card1',
-            startDate: moment(startDate).add(5, 'day').add(1, 'hour').valueOf(),
+            startDate: add(startDate, {days: 5, hours: 1}).valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title1'
         });
 
         const card2 = getOneCard({
             id: 'card2',
-            startDate: moment(startDate).add(6, 'day').add(3, 'hour').valueOf(),
+            startDate: add(startDate, {days: 6, hours: 3}).valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title2'
         });
 
         const card3 = getOneCard({
             id: 'card3',
-            startDate: moment(startDate).add(8, 'day').add(8, 'hour').valueOf(),
+            startDate: add(startDate, {days: 8, hours: 8}).valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title3'
         });
@@ -198,8 +198,8 @@ describe('Timeline Circles', () => {
     it('1 rRule recurrence per month shall generate 12 circles on timeline in year mode', () => {
         const card1 = getOneCard({
             id: 'card1',
-            startDate: moment(startDate).valueOf(),
-            endDate: moment(endDate).valueOf(),
+            startDate: startDate.valueOf(),
+            endDate: endDate.valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title1',
             secondsBeforeTimeSpanForReminder: 5,
@@ -225,8 +225,8 @@ describe('Timeline Circles', () => {
 
         const card1 = getOneCard({
             id: 'card1',
-            startDate: moment(startDate).valueOf(),
-            endDate: moment(endDate).valueOf(),
+            startDate: startDate.valueOf(),
+            endDate: endDate.valueOf(),
             severity: 'ALARM',
             titleTranslated: 'title1',
             secondsBeforeTimeSpanForReminder: 5,
@@ -239,11 +239,11 @@ describe('Timeline Circles', () => {
 
     it('set two circle with if one card with two timespans', () => {
         const card = getOneCard({
-            startDate: moment(startDate).valueOf(),
+            startDate: startDate.valueOf(),
             severity: 'ALARM',
             timeSpans: [
                 new TimeSpan(startDate.valueOf(), endDate.valueOf(), null),
-                new TimeSpan(moment(startDate).add('2', 'month').valueOf(), endDate.valueOf(), null)
+                new TimeSpan(add(startDate, {months: 2}).valueOf(), endDate.valueOf(), null)
             ]
         });
 
