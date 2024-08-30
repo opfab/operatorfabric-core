@@ -32,10 +32,9 @@ After connection, you should see the following screen
 
 image::empty-opfab-page.png[empty opfab screenshot]
 
-To stop the server (if you started it in background), use:
-
+To stop the server, use:
 ----
-docker compose down &
+./stopServer.sh
 ----
 
 == Examples 
