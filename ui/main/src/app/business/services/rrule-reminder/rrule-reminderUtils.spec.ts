@@ -9,20 +9,20 @@
 
 import {Card, TimeSpan} from '@ofModel/card.model';
 import {getOneCard} from '@tests/helpers';
-import moment from 'moment-timezone';
 import {getNextTimeForRepeating} from './rrule-reminderUtils';
 import {Day, Frequency} from '@ofModel/light-card.model';
+import {fromZonedTime} from 'date-fns-tz';
 
 describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {
     let testCard: Card;
 
     beforeAll(() => {
-        const cardTemplate = {startDate: moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf()};
+        const cardTemplate = {startDate: fromZonedTime('2000-01-01 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00  => 2000/01/02 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -36,7 +36,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
     });
 
     it('2000/01/01 10:00 , Recurrence :10:10  => 2000/01/01 10:10 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -44,13 +44,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [10]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 10:10', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 10:00 , Recurrence :09:00  => 2000/01/02 09:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -58,13 +58,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-02 09:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-02 09:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:10 , 10:15   => 2000/01/01 10:10 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -72,13 +72,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [10, 15]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 10:10', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:15 , 10:10   => 2000/01/01 10:10 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -86,13 +86,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [15, 10]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-01 10:10', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 10:10', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:15 , 10:10 ,10:06  => 2000/01/01 10:06 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -100,13 +100,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [15, 10, 6]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-01 10:06', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 10:06', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 15:00 , Recurrence :10:15 , 10:10 ,10:06  => 2000/01/02 10:06 ', () => {
-        const date = moment.tz('2000-01-01 15:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 15:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -114,13 +114,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             byminute: [15, 10, 6]
         };
 
-        const expectedResponseDate = moment.tz('2000-01-02 10:06', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-02 10:06', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 11:00 , Recurrence :10:15 , 10:10 , 10:06 / Time Zone : London  => 2000/01/02 10:06 ', () => {
-        const date = moment.tz('2000-01-01 11:00', 'Europe/London').valueOf();
+        const date = fromZonedTime('2000-01-01 11:00', 'Europe/London').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -129,13 +129,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             tzid: 'Europe/London'
         };
 
-        const expectedResponseDate = moment.tz('2000-01-02 10:06', 'Europe/London').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-02 10:06', 'Europe/London').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2000/01/01 14:00 TimeZone London , Recurrence :10:15 , 10:10 , 10:06 / TimeZone Paris => 2000/01/02 9:06 TimeZone London ', () => {
-        const date = moment.tz('2000-01-01 14:00', 'Europe/London').valueOf();
+        const date = fromZonedTime('2000-01-01 14:00', 'Europe/London').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
@@ -144,7 +144,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
             tzid: 'Europe/Paris'
         };
 
-        const expectedResponseDate = moment.tz('2000-01-02 09:06', 'Europe/London').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-02 09:06', 'Europe/London').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
@@ -154,13 +154,12 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
     let testCard: Card;
 
     beforeAll(() => {
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence :10:30 / Monday => 2020/11/09 Monday 10:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -169,15 +168,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-09 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-09 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     // Test to be sure the chosen user locale has no influence on the result
     it('2020/11/09 Monday 10:00  , locale = fr , Recurrence :10:30 / Monday => 2020/11/09 Monday 10:30 ', () => {
-        moment.locale('fr');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -186,13 +184,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-09 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-09 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 15:00 ,  Recurrence :15:45 / Monday => 2020/11/09 Monday 15:45 ', () => {
-        const date = moment.tz('2020-11-09 15:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 15:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -201,13 +199,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [45]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-09 15:45', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-09 15:45', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/10 Tuesday 8:00 , Recurrence :10:30 / Monday => 2020/11/16 Monday 10:30 ', () => {
-        const date = moment.tz('2020-11-10 8:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-10 08:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -216,13 +214,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = new Date('2020-11-16 10:30').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-16 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 12:00 , Recurrence :10:30 / Monday => 2020/11/16 Monday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 12:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -231,13 +229,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-16 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-16 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 10:30 , Recurrence :10:30 / Monday => 2020/11/16 Monday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 10:30', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:30', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -246,13 +244,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-16 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-16 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 10:00 , Recurrence :10:30 / Tuesday => 2020/11/10 Tuesday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -261,13 +259,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-10 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-10 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 10:00 , Recurrence :10:30 / Sunday => 2020/11/15 Sunday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -276,13 +274,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-15 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-15 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 10:00 , Recurrence :10:30 / Saturday Sunday => 2020/11/14 Saturday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -291,13 +289,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-14 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-14 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 10:00 , Recurrence :10:30 / Sunday Saturday => 2020/11/14 Saturday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -306,13 +304,13 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-14 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-14 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('2020/11/09 Monday 12:00 , Recurrence :10:30 / Saturday Sunday Wednesday => 2020/11/11 Wednesday 10:30 ', () => {
-        const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2020-11-09 12:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
@@ -321,7 +319,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-11 10:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-11 10:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
@@ -331,7 +329,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             'Recurrence : 10:30 5:30 18:30 / Saturday Sunday Wednesday ' +
             '=> 2020/11/11 Wednesday 5:30 ',
         () => {
-            const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
+            const date = fromZonedTime('2020-11-09 12:00', 'Europe/Paris').valueOf();
 
             testCard.rRule = {
                 freq: Frequency.WEEKLY,
@@ -340,7 +338,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
                 byminute: [30]
             };
 
-            const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/Paris').valueOf();
+            const expectedResponseDate = fromZonedTime('2020-11-11 05:30', 'Europe/Paris').valueOf();
             const dateForRepeating = getNextTimeForRepeating(testCard, date);
             expect(dateForRepeating).toEqual(expectedResponseDate);
         }
@@ -351,7 +349,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             'Recurrence : 10:30 5:30 18:30  TimeZone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
             '=> 2020/11/11 Wednesday 5:30  TimeZone : London ',
         () => {
-            const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
+            const date = fromZonedTime('2020-11-09 12:00', 'Europe/London').valueOf();
 
             testCard.rRule = {
                 freq: Frequency.WEEKLY,
@@ -361,7 +359,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
                 tzid: 'Europe/London'
             };
 
-            const expectedResponseDate = moment.tz('2020-11-11 05:30', 'Europe/London').valueOf();
+            const expectedResponseDate = fromZonedTime('2020-11-11 05:30', 'Europe/London').valueOf();
             const dateForRepeating = getNextTimeForRepeating(testCard, date);
             expect(dateForRepeating).toEqual(expectedResponseDate);
         }
@@ -372,7 +370,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
             'Recurrence : 10:30 5:30 18:30 TimeZone Paris / Saturday(6) Sunday(7) Wednesday(3) ' +
             '=> 2020/11/11 Wednesday 4:30 TimeZone : London ',
         () => {
-            const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
+            const date = fromZonedTime('2020-11-09 11:00', 'Europe/London').valueOf();
 
             testCard.rRule = {
                 freq: Frequency.WEEKLY,
@@ -381,7 +379,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
                 byminute: [30]
             };
 
-            const expectedResponseDate = moment.tz('2020-11-11 04:30', 'Europe/London').valueOf();
+            const expectedResponseDate = fromZonedTime('2020-11-11 04:30', 'Europe/London').valueOf();
             const dateForRepeating = getNextTimeForRepeating(testCard, date);
             expect(dateForRepeating).toEqual(expectedResponseDate);
         }
@@ -392,9 +390,8 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
     let testCard: Card;
 
     it('2020/11/09 10:00 , locale = en , Recurrence : 16:30 / November => 2020/11/09 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -404,15 +401,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-09 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-09 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 16:30 , locale = en , Recurrence : 10:00 / November => 2020/11/10 10:00 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 16:30', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 16:30', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -422,15 +418,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-10 10:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-10 10:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 16:30 , locale = en , Recurrence : 10:00 / March => 2021/03/01 10:00 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 16:30', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 16:30', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -440,15 +435,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2021-03-01 10:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2021-03-01 10:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 10:00 , locale = en , Recurrence : 16:30 / December => 2020/12/01 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -458,15 +452,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-12-01 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-12-01 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/08/03 10:00 , locale = en , Recurrence : 16:30 / February , December => 2020/12/01 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-08-03 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-08-03 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-08-03 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-08-03 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -476,15 +469,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-12-01 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-12-01 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/08/03 10:00 , locale = en , Recurrence : 16:30 / December, February => 2020/12/01 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-08-03 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-08-03 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-08-03 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-08-03 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -494,7 +486,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months o
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-12-01 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-12-01 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
@@ -504,9 +496,8 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
     let testCard: Card;
 
     it('2020/11/12 Thursday 10:00 , locale = en , Recurrence : 16:30 / Wednesday / November => 2020/11/18 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-12 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-12 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-12 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-12 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -517,15 +508,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-18 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-18 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence : 16:30 / Wednesday / November => 2020/11/11 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -536,15 +526,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-11 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-11 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence : 09:00 / Monday, Wednesday / November => 2020/11/11 09:00 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -555,15 +544,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-11 09:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-11 09:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence : 16:30 / Monday, Wednesday / November => 2020/11/09 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -574,15 +562,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-09 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-09 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence : 09:00 / Monday, Wednesday / January , November => 2020/11/11 09:00 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -593,15 +580,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-11 09:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-11 09:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/09 Monday 10:00 , locale = en , Recurrence : 09:00 / Monday, Wednesday / March , January => 2021/01/04 09:00 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-09 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-09 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-09 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-09 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -612,15 +598,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [0]
         };
 
-        const expectedResponseDate = moment.tz('2021-01-04 09:00', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2021-01-04 09:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/30 Monday 18:00 , locale = en , Recurrence : 16:30 / Wednesday / November => 2021/11/03 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-30 18:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-30 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-30 18:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-30 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -631,15 +616,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2021-11-03 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2021-11-03 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/29 Sunday 10:00 , locale = en , Recurrence : 16:30 / Wednesday / November => 2021/11/03 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-29 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-29 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-29 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-29 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -650,15 +634,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2021-11-03 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2021-11-03 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/29 Sunday 10:00 , locale = en , Recurrence : 16:30 / Wednesday / November, February => 2021/11/03 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-29 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-29 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-29 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-29 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -669,15 +652,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2021-02-03 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2021-02-03 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/11/29 Sunday 10:00 , locale = en , Recurrence : 16:30 / Wednesday, Monday / November, February => 2021/11/03 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-11-29 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-11-29 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-11-29 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-11-29 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -688,15 +670,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-11-30 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-11-30 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/08/29 Saturday 10:00 , locale = en , Recurrence : 16:30 / Wednesday, Monday / December, October => 2020/10/05 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-08-29 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-08-29 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-08-29 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-08-29 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -707,15 +688,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-10-05 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-10-05 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/08/29 Saturday 10:00 , locale = en , Recurrence : 16:30 / Wednesday, Friday / August, October => 2020/10/02 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-08-29 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-08-29 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-08-29 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-08-29 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -726,15 +706,14 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-10-02 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-10-02 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
 
     it('2020/08/26 Wednesday 10:00 , locale = en , Recurrence : 16:30 / Tuesday / August, october => 2020/10/06 16:30 ', () => {
-        moment.locale('en');
-        const date = moment.tz('2020-08-26 10:00', 'Europe/Paris').valueOf();
-        const cardTemplate = {startDate: moment.tz('2020-08-26 08:00', 'Europe/Paris').valueOf()};
+        const date = fromZonedTime('2020-08-26 10:00', 'Europe/Paris').valueOf();
+        const cardTemplate = {startDate: fromZonedTime('2020-08-26 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
 
         testCard.rRule = {
@@ -745,7 +724,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on days and
             byminute: [30]
         };
 
-        const expectedResponseDate = moment.tz('2020-10-06 16:30', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2020-10-06 16:30', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(new Date(dateForRepeating)).toEqual(new Date(expectedResponseDate));
     });
@@ -755,23 +734,24 @@ describe('RRuleReminderUtils:getNextTimeForRepeating without or invalid recurren
     let testCard: Card;
 
     beforeAll(() => {
-        const cardTemplate = {startDate: moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf()};
+        const cardTemplate = {startDate: fromZonedTime('2000-01-01 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
     });
 
     it('No recurrence , date for remind is startdate ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
-        const cardStartdate = moment.tz('2000-01-01 10:01', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const cardStartdate = fromZonedTime('2000-01-01 10:01', 'Europe/Paris').valueOf();
         testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
-        const expectedResponseDate = moment.tz('2000-01-01 10:01', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 10:01', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
     it('No recurrence , date for remind is startdate ,  currentDate is 16 minutes after startDate , should return no date (-1) ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
-        const cardStartdate = moment.tz('2000-01-01 09:44', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const cardStartdate = fromZonedTime('2000-01-01 09:44', 'Europe/Paris').valueOf();
+
         testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
@@ -779,11 +759,11 @@ describe('RRuleReminderUtils:getNextTimeForRepeating without or invalid recurren
     });
 
     it('No recurrence , date for remind is startdate ,  currentDate is 14 minutes after startDate , should return startDate ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
-        const cardStartdate = moment.tz('2000-01-01 09:46', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const cardStartdate = fromZonedTime('2000-01-01 09:46', 'Europe/Paris').valueOf();
         testCard.timeSpans = [new TimeSpan(cardStartdate)];
 
-        const expectedResponseDate = moment.tz('2000-01-01 09:46', 'Europe/Paris').valueOf();
+        const expectedResponseDate = fromZonedTime('2000-01-01 09:46', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
@@ -793,12 +773,12 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     let testCard: Card;
 
     beforeAll(() => {
-        const cardTemplate = {startDate: moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf()};
+        const cardTemplate = {startDate: fromZonedTime('2000-01-01 08:00', 'Europe/Paris').valueOf()};
         testCard = getOneCard(cardTemplate);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, first day of months  => 2000/02/01 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -813,7 +793,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, first day of december and april  => 2000/04/01 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -829,7 +809,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, last day of months  => 2000/01/31 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -844,7 +824,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, last day of february  => 2000/02/29 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -860,7 +840,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2001/01/01 10:00 , Recurrence :10:00, last day of february  => 2001/02/28 10:00 ', () => {
-        const date = moment.tz('2001-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2001-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -876,7 +856,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00, first and last days of months  => 2000/01/31 10:00 ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-01 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -891,7 +871,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :10:00, first and last days of months  => 2000/02/01 10:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -906,7 +886,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :10:00, first and last days of september and july => 2000/07/01 10:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -922,7 +902,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :10:00, first and last mondays of june and september=> 2000/06/05 10:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -939,7 +919,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :10:00, second and last mondays of june and september=> 2000/06/12 10:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -956,7 +936,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :16:00, every 26 of each months=> 2000/02/26 16:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -971,7 +951,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/01/31 10:00 , Recurrence :16:00, every last friday of each months=> 2000/02/25 16:00 ', () => {
-        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-01-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -987,7 +967,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/07/20 10:00 , Recurrence :16:00, every last friday of each months except august => 2000/07/28 16:00 ', () => {
-        const date = moment.tz('2000-07-20 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-07-20 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
@@ -1004,7 +984,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
     });
 
     it('2000/07/31 10:00 , Recurrence :16:00, every last friday of each months except august => 2000/09/29 16:00 ', () => {
-        const date = moment.tz('2000-07-31 10:00', 'Europe/Paris').valueOf();
+        const date = fromZonedTime('2000-07-31 10:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.MONTHLY,
