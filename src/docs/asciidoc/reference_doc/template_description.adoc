@@ -133,19 +133,19 @@ You should specify the substring to find, what to replace it with and the input 
 === dateFormat
 
 formats the submitted parameters (millisecond since epoch) using
-https://momentjs.com/[mement.format]. The locale used is the current user
+https://date-fns.org//[date-fns format]. The locale used is the current user
 selected one, the format is "format" hash parameter
 (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
-{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+{{dateFormat card.data.birthday format="MMMM Do yyyy, h:mm:ss a"}}
 ....
 
 _Note_ +
 You can also pass a milliseconds value as a string.
 
 ....
-{{dateFormat card.data.birthdayAsString format="MMMM Do YYYY, h:mm:ss a"}}
+{{dateFormat card.data.birthdayAsString format="MMMM Do yyyy, h:mm:ss a"}}
 ....
 
 
