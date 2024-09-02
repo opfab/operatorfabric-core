@@ -168,8 +168,7 @@ Scenario: Check mail for operator 1 is sent
     * def updateConfig =
     """
     {
-        "checkPeriodInSeconds" : 5, 
-        "secondsAfterPublicationToConsiderCardAsNotRead": 1
+        "checkPeriodInSeconds" : 5
     }
     """
 
@@ -258,8 +257,7 @@ Scenario: Restore email config
     * def defaultConfig =
     """
     {
-        "checkPeriodInSeconds" : 30, 
-        "secondsAfterPublicationToConsiderCardAsNotRead": 120
+        "checkPeriodInSeconds" : 30
     }
     """
     # restore default configuration

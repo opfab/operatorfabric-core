@@ -62,10 +62,7 @@ export default class CardsExternalDiffusionService {
             .setBodyPrefix(serviceConfig.bodyPrefix as string)
             .setBodyPostfix(serviceConfig.bodyPostfix as string)
             .setPublisherEntityPrefix(serviceConfig.publisherEntityPrefix as string)
-            .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
-            .setSecondsAfterPublicationToConsiderCardAsNotRead(
-                serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead as number
-            );
+            .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number);
 
         if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
@@ -103,7 +100,7 @@ export default class CardsExternalDiffusionService {
         if (this.active) {
             this.logger.info('Check regularly');
             this.realTimeCardsDiffusionControl
-                .checkUnreadCards()
+                .checkCardsNeedToBeSent()
                 .catch((error) => this.logger.error('error during periodic check' + error))
                 .finally(() =>
                     setTimeout(() => {

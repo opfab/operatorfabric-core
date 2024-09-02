@@ -16,7 +16,6 @@ import {Card} from './card';
 import {format} from 'date-fns';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
-    private secondsAfterPublicationToConsiderCardAsNotRead: number;
     private windowInSecondsForCardSearch: number;
     private subjectPrefix: string;
     private bodyPrefix: string;
@@ -45,13 +44,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return this;
     }
 
-    public setSecondsAfterPublicationToConsiderCardAsNotRead(
-        secondsAfterPublicationToConsiderCardAsNotRead: number
-    ): this {
-        this.secondsAfterPublicationToConsiderCardAsNotRead = secondsAfterPublicationToConsiderCardAsNotRead;
-        return this;
-    }
-
     public setWindowInSecondsForCardSearch(windowInSecondsForCardSearch: number): this {
         this.windowInSecondsForCardSearch = windowInSecondsForCardSearch;
         return this;
@@ -71,7 +63,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         this.subjectPrefix = updated.subjectPrefix;
         this.bodyPrefix = updated.bodyPrefix;
         this.bodyPostfix = updated.bodyPostfix;
-        this.secondsAfterPublicationToConsiderCardAsNotRead = updated.secondsAfterPublicationToConsiderCardAsNotRead;
         this.windowInSecondsForCardSearch = updated.windowInSecondsForCardSearch;
         this.activateCardsDiffusionRateLimiter = updated.activateCardsDiffusionRateLimiter;
         if (this.activateCardsDiffusionRateLimiter) {
@@ -81,7 +72,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    public async checkUnreadCards(): Promise<void> {
+    public async checkCardsNeedToBeSent(): Promise<void> {
         const users = this.cardsExternalDiffusionOpfabServicesInterface.getUsers();
         const userLogins: string[] = users.map((u) => u.login);
 
@@ -114,26 +105,24 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         ' with mail ' +
                         userWithPerimeters.email
                 );
-                const unreadCards: Card[] = await this.getCardsForUser(cards, userWithPerimeters);
-                for (const unreadCard of unreadCards) {
-                    await this.sendCardIfAllowed(unreadCard, userWithPerimeters.email, emailToPlainText);
+                const cardsForUser: Card[] = await this.getCardsForUser(cards, userWithPerimeters);
+                for (const cardForUser of cardsForUser) {
+                    await this.sendCardIfAllowed(cardForUser, userWithPerimeters.email, emailToPlainText);
                 }
             }
         }
     }
 
-    async sendCardIfAllowed(unreadCard: Card, userEmail: string | undefined, emailToPlainText: boolean): Promise<void> {
+    async sendCardIfAllowed(card: Card, userEmail: string | undefined, emailToPlainText: boolean): Promise<void> {
         if (userEmail == null) return;
         try {
-            const alreadySent = await this.wasCardsAlreadySentToUser(unreadCard.uid, userEmail);
+            const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(unreadCard, userEmail, emailToPlainText);
+                    await this.sendMail(card, userEmail, emailToPlainText);
                 } else {
-                    this.logger.warn(
-                        `Send rate limit reached for ${userEmail}, not sending mail for card ${unreadCard.uid}`
-                    );
-                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(unreadCard.uid, userEmail);
+                    this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
+                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
                 }
             }
         } catch (error) {
@@ -150,11 +139,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     async getCardsForUser(cards: Card[], userWithPerimeters: UserWithPerimeters): Promise<any[]> {
-        return cards.filter(
-            (card: Card) =>
-                CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card) &&
-                this.isCardUnreadForUser(card, userWithPerimeters.userData)
-        );
+        return cards.filter((card: Card) => CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card));
     }
 
     async wasCardsAlreadySentToUser(cardUid: string, email: string): Promise<boolean> {
@@ -167,14 +152,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
     shouldEmailBePlainText(userWithPerimeters: any): boolean {
         return userWithPerimeters.emailToPlainText ?? false;
-    }
-
-    isCardUnreadForUser(card: Card, user: any): boolean {
-        if (card.publishDate == null) return false;
-        return (
-            card.publishDate < Date.now() - 1000 * this.secondsAfterPublicationToConsiderCardAsNotRead &&
-            (card.usersReads == null || !card.usersReads?.includes(user.login as string))
-        );
     }
 
     async sendMail(card: Card, to: string, emailToPlainText: boolean): Promise<void> {

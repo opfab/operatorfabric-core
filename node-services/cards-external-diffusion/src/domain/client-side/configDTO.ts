@@ -18,7 +18,6 @@ export default class ConfigDTO {
     public minuteToSendDailyEmail: 0;
     public opfabUrlInMailContent: string;
     public windowInSecondsForCardSearch = 0;
-    public secondsAfterPublicationToConsiderCardAsNotRead = 0;
     public checkPeriodInSeconds = 0;
     public activateCardsDiffusionRateLimiter: boolean;
     public sendRateLimit: number = 100;
