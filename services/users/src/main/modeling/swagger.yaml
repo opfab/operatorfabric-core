@@ -208,7 +208,7 @@ definitions:
           right: ReceiveAndWrite
   UserSettings:
     type: object
-    description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
+    description: User associated settings.
     properties:
       login:
         type: string
@@ -299,8 +299,7 @@ definitions:
       - login
     example:
       login: jcleese
-      description: once played Sir Lancelot
-      locale: en-GB
+      locale: en
   CurrentUserWithPerimeters:
     type: object
     description: Information about the user connected and his perimeters
