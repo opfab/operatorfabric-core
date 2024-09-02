@@ -6,9 +6,6 @@ dependencies {
     implementation misc.guava
     implementation misc.commonsIO
 
-//Transitive dependencies udpate needed for security reasons 
-    implementation misc.snakeyaml
-//End transitive dependencies
     
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
