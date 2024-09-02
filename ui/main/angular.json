@@ -52,8 +52,7 @@
               "rxjs/internal/Subject",
               "@tweenjs/tween.js",
               "xlsx",
-              "file-saver",
-              "moment-timezone"
+              "file-saver"
             ],
             "vendorChunk": true,
             "extractLicenses": false,

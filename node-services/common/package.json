@@ -15,8 +15,6 @@
     "config": "3.3.12",
     "express": "^4.18.2",
     "jwt-decode": "4.0.0",
-    "moment-timezone": "0.5.45",
-    "momentjs": "2.0.0",
     "amqp-connection-manager": "4.1.14",
     "amqplib": "0.10.4",
     "winston": "3.14.2",
