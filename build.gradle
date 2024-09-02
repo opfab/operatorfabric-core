@@ -74,11 +74,7 @@ ext {
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsLang    : "org.apache.commons:commons-lang3:$apacheCommonsLang",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
-            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
-
-//Transitive dependencies udpate needed for security reasons 
-            snakeyaml       : "org.yaml:snakeyaml:2.2",
-//End transitive dependencies
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
     ]
 
 

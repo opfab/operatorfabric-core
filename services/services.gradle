@@ -11,10 +11,6 @@ subprojects {
         annotationProcessor misc.lombok
         implementation misc.lombok
 
-    //Transitive dependencies udpate needed for security reasons 
-        implementation misc.snakeyaml
-    //End transitive dependencies
-
         testAnnotationProcessor misc.lombok
         testCompileOnly misc.lombok
 
