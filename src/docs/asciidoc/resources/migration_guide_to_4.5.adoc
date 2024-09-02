@@ -18,3 +18,9 @@ You can find more information in the docker documentation : https://docs.docker.
 OperatorFabric is now using `date-fns` library instead of `Moment.js`. The format used for defining a formatted date string
 is now different. So, if needed, in the file `web-ui.json`, you have to modify your fields : `settings.dateTimeformat`
 and `settings.dateFormat`. You can find the available formats here : https://date-fns.org/v3.6.0/docs/format
+
+== Deletion of the parameter `secondsAfterPublicationToConsiderCardAsNotRead`
+
+OperatorFabric is now sending emails whether a card is read or not. So, the parameter
+`secondsAfterPublicationToConsiderCardAsNotRead` having become useless, it was deleted, and
+you can safely remove it from your configuration file.

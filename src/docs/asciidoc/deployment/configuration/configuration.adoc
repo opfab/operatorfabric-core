@@ -402,7 +402,6 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.cardsExternalDiffusion.defaultConfig.publisherEntityPrefix|'The card has been sent by '|no|Publisher entity text prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.opfabUrlInMailContent||yes|Url to write in mail to access the opfab server (example : https://opfab_url/)
 |operatorfabric.cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|360|no|Max time interval used to query new cards (in seconds)
-|operatorfabric.cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|60|no|Time period after card publication before sending mail notification
 |operatorfabric.cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|10|no|Time interval between consecutive checks
 |operatorfabric.cardsExternalDiffusion.defaultConfig.activateCardsDiffusionRateLimiter|true|no|Flag to activate mail sending rate limiting
 |operatorfabric.cardsExternalDiffusion.defaultConfig.sendRateLimit|100|no|Max number of mail sent allowed for a single destination in the configured period

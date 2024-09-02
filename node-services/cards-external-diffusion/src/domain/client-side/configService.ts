@@ -36,8 +36,6 @@ export default class ConfigService {
                 this.config.publisherEntityPrefix = defaultConfig.publisherEntityPrefix;
                 this.config.opfabUrlInMailContent = defaultConfig.opfabUrlInMailContent;
                 this.config.windowInSecondsForCardSearch = defaultConfig.windowInSecondsForCardSearch;
-                this.config.secondsAfterPublicationToConsiderCardAsNotRead =
-                    defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead;
                 this.config.checkPeriodInSeconds = defaultConfig.checkPeriodInSeconds;
                 this.config.activateCardsDiffusionRateLimiter = defaultConfig.activateCardsDiffusionRateLimiter;
                 this.config.sendRateLimit = defaultConfig.sendRateLimit;
