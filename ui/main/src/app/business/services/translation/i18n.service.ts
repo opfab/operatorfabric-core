@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import moment from 'moment';
 import {fr, enUS, nl} from 'date-fns/locale';
 
 import {Observable} from 'rxjs';
@@ -48,7 +47,6 @@ export class I18nService {
         } else {
             this._locale = 'en';
         }
-        moment.locale(this._locale);
         this.translationService.setLang(this._locale);
         this.setTranslationForMultiSelectUsedInTemplates();
         this.setTranslationForRichTextEditor();
