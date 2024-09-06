@@ -35,9 +35,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
     settingsForm: FormGroup;
     settingsView = new SettingsView();
     isExternalDeviceSettingVisible = false;
+
     languageOptionList: {value: string; label: string}[];
     languageSelectedOption = new Array();
     languageMultiSelectConfig: MultiSelectConfig;
+
+    timezoneForEmailsMultiSelectConfig: MultiSelectConfig;
+    timezoneForEmailsOptionList: {value: string; label: string}[];
+    timezoneForEmailsSelectedOption = new Array();
+
     saveSettingsInProgress = false;
     private ngUnsubscribe$ = new Subject<void>();
     canDeactivateSubject = new Subject<boolean>();
@@ -78,7 +84,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'emailToPlainText',
             'sendDailyEmail',
             'email',
-            'remoteLoggingEnabled'
+            'remoteLoggingEnabled',
+            'timezoneForEmails'
         ];
 
         const formGroupConfig = {};
@@ -89,6 +96,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         });
         this.settingsForm = new FormGroup(formGroupConfig, {updateOn: 'change'});
         this.initLocaleMultiselect();
+        this.initTimezoneForEmailsMultiselect();
     }
 
     private initLocaleMultiselect() {
@@ -102,6 +110,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
         const locales = this.translateService.getLangs();
         this.languageOptionList = locales.map((locale) => ({value: locale, label: locale}));
         this.languageSelectedOption[0] = this.settingsView.getSetting('locale');
+    }
+
+    private initTimezoneForEmailsMultiselect() {
+        this.timezoneForEmailsMultiSelectConfig = {
+            labelKey: 'settings.timezoneForEmails',
+            multiple: false,
+            search: true,
+            sortOptions: true
+        };
+
+        this.timezoneForEmailsOptionList = Intl.supportedValuesOf('timeZone').map((timezone) => ({
+            value: timezone,
+            label: timezone
+        }));
+        this.timezoneForEmailsSelectedOption[0] = this.settingsView.getSetting('timezoneForEmails');
     }
 
     private listenToFormChanges() {

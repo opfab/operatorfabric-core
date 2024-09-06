@@ -11,7 +11,7 @@ import SendMailService from '../server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
-import {format} from 'date-fns';
+import {formatInTimeZone} from 'date-fns-tz';
 
 export default class CardsDiffusionControl {
     protected opfabUrlInMailContent: any;
@@ -93,10 +93,10 @@ export default class CardsDiffusionControl {
             .replace(/'/g, '&#39;');
     }
 
-    getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
+    getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined, timezoneForEmails: string): string {
         if (epochDate == null) {
             return '';
         }
-        return format(epochDate, 'dd/MM/yyyy HH:mm');
+        return formatInTimeZone(epochDate, timezoneForEmails, 'dd/MM/yyyy HH:mm');
     }
 }

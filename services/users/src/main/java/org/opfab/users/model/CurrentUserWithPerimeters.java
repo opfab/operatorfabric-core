@@ -33,6 +33,7 @@ public class CurrentUserWithPerimeters {
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
     private String email;
+    private String timezoneForEmails;
 
     @Valid
     private Set<PermissionEnum> permissions;
@@ -84,6 +85,10 @@ public class CurrentUserWithPerimeters {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getTimezoneForEmails() { return timezoneForEmails; }
+
+    public void setTimezoneForEmails(String timezoneForEmails) { this.timezoneForEmails = timezoneForEmails; }
 
     public User getUserData() {
         return userData;

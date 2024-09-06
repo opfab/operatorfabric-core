@@ -295,6 +295,9 @@ definitions:
       email:
         type: string
         description: Email address to use as recipient for email notifications
+      timezoneForEmails:
+        type: string
+        description: Timezone used for emails sent by opfab
     required:
       - login
     example:
@@ -343,6 +346,9 @@ definitions:
       email:
         type: string
         description: Email address to use as recipient for email notifications
+      timezoneForEmails:
+        type: string
+        description: Timezone used for emails sent by opfab
       permissions:
         type: array
         items:

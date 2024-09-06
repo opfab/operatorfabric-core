@@ -308,6 +308,7 @@
         "title": "SETTINGS",
         "description": "DESCRIPTION",
         "locale": "LANGUAGE",
+        "timezoneForEmails": "TIMEZONE FOR EMAILS",
         "playSoundLabel": "PLAY SOUNDS FOR CARDS WITH SEVERITY",
         "playSoundForAlarm": "Alarm",
         "playSoundForAction": "Action",
@@ -326,7 +327,7 @@
         "sendCardsByEmail": "Send notification by email",
         "emailToPlainText": "Send emails in plain text",
         "sendDailyEmail": "Send daily email to recap the cards of the day",
-        "email": "Email",
+        "email": "EMAIL",
         "settingsSaved": "Settings saved",
         "invalidSettings": "Please correct the invalid fields",
         "input": {

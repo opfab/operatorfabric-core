@@ -25,10 +25,16 @@ export class SettingsView {
     }
 
     public getSetting(setting: string): string | boolean | number {
-        if (setting === 'replayInterval') {
-            return ConfigService.getConfigValue('settings.replayInterval', 5);
+        switch (setting) {
+            case 'replayInterval':
+                return ConfigService.getConfigValue('settings.replayInterval', 5);
+
+            case 'timezoneForEmails':
+                return ConfigService.getConfigValue('settings.timezoneForEmails', 'Europe/Paris');
+
+            default:
+                return ConfigService.getConfigValue('settings.' + setting);
         }
-        return ConfigService.getConfigValue('settings.' + setting);
     }
 
     public async isExternalDeviceSettingVisible(): Promise<boolean> {

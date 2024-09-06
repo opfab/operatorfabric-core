@@ -308,6 +308,7 @@
         "title": "PARAMÈTRES",
         "description": "DESCRIPTION",
         "locale": "LANGUE",
+        "timezoneForEmails": "FUSEAU HORAIRE POUR LES EMAILS",
         "playSoundLabel": "JOUER DES SONS POUR LES CARTES DE TYPE",
         "playSoundForAlarm": "Alarme",
         "playSoundForAction": "Action",
@@ -326,7 +327,7 @@
         "sendCardsByEmail": "Envoi des notifications par mail",
         "emailToPlainText": "Envoi des mails en texte brut",
         "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
-        "email": "Email",
+        "email": "EMAIL",
         "settingsSaved": "Paramètres sauvegardés",
         "invalidSettings": "Veuillez corriger les champs invalides",
         "input": {

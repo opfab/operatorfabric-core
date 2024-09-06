@@ -13,6 +13,8 @@ OpFab can send card notifications via email. These notifications are sent when a
 == Configuring Email Notifications
 
 Users can enable email notifications in their user settings. They must provide an email address for receiving notifications and select the processes/states they want to be notified about.
+Users can specify the desired timezone for displaying dates and times in emails. To do this, they must fill in
+the "timezone for mails" field in the user settings screen.
 
 == Email Content
 

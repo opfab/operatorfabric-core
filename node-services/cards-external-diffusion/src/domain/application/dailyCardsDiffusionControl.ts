@@ -44,13 +44,20 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
                 );
                 if (resp.isValid()) {
                     const userWithPerimeters = resp.getData() as UserWithPerimeters;
+                    const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? 'Europe/Paris';
+
                     if (userWithPerimeters.sendDailyEmail) {
                         const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
                         const visibleCards = cards.filter((card: Card) =>
                             CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card)
                         );
                         if (visibleCards.length > 0) {
-                            await this.sendDailyRecap(visibleCards, userWithPerimeters.email, emailToPlainText);
+                            await this.sendDailyRecap(
+                                visibleCards,
+                                userWithPerimeters.email,
+                                emailToPlainText,
+                                timezoneForEmails
+                            );
                             this.logger.info(`Sent daily recap to user ${login}`);
                         }
                     }
@@ -64,18 +71,20 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
     async sendDailyRecap(
         cards: Card[],
         userEmailAddress: string | undefined,
-        emailToPlainText: boolean
+        emailToPlainText: boolean,
+        timezoneForEmails: string
     ): Promise<void> {
         if (userEmailAddress == null) return;
-        const emailBody = this.dailyFormat(cards);
+        const emailBody = this.dailyFormat(cards, timezoneForEmails);
         await this.mailService.sendMail(this.dailyEmailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
     }
 
-    dailyFormat(cards: Card[]): string {
+    dailyFormat(cards: Card[], timezoneForEmails: string): string {
         let body = '';
         for (const card of cards) {
-            body += this.getFormattedDateAndTimeFromEpochDate(card.startDate) + ' - ';
-            if (card.endDate != null) body += this.getFormattedDateAndTimeFromEpochDate(card.endDate) + ' - ';
+            body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';
+            if (card.endDate != null)
+                body += this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails) + ' - ';
             body +=
                 card.severity +
                 ' - ' +
