@@ -308,6 +308,7 @@
         "title": "INSTELLINGEN",
         "description": "OMSCHRIJVING",
         "locale": "TAAL",
+        "timezoneForEmails": "TIJDZONE VOOR E-MAILS",
         "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
         "playSoundForAlarm": "Alarm",
         "playSoundForAction": "Actie",
@@ -326,7 +327,7 @@
         "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
         "emailToPlainText": "De e-mails versturen in platte tekst",
         "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
-        "email": "Email",
+        "email": "EMAIL",
         "settingsSaved": "Instellingen bewaard",
         "invalidSettings": "Corrigeer de ongeldige velden alstublieft",
         "input": {

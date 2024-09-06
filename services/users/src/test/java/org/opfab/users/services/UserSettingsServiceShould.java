@@ -290,6 +290,34 @@ public class UserSettingsServiceShould {
                 }
 
                 @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_TimezoneForEmails_THEN_Settings_Are_Updated() {
+                        String timezoneForEmails = "Europe/London";
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setTimezoneForEmails(timezoneForEmails);
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getTimezoneForEmails()).isEqualTo("Europe/London");
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                .getTimezoneForEmails())
+                                .isEqualTo("Europe/London");
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_TimezoneForEmails_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        String timezoneForEmails = "Europe/Sofia";
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setTimezoneForEmails(timezoneForEmails);
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_With_ProcessesStatesNotifiedByEmail_THEN_Settings_Are_Updated() {
                         Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
                         processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
@@ -470,6 +498,33 @@ public class UserSettingsServiceShould {
                         UserSettings newSettings = new UserSettings();
                         newSettings.setLogin("user1");
                         newSettings.setEmail(email);
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_TimezoneForEmails_THEN_Settings_Are_Updated() {
+                        String timezoneForEmails = "America/New_York";
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setTimezoneForEmails(timezoneForEmails);
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getTimezoneForEmails()).isEqualTo("America/New_York");
+                        assertThat(userSettingsRepositoryStub.findById("user1").get().getTimezoneForEmails())
+                                .isEqualTo("America/New_York");
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_TimezoneForEmails_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        String timezoneForEmails = "America/Nassau";
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("user1");
+                        newSettings.setTimezoneForEmails(timezoneForEmails);
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                 newSettings);
                         assertThat(settings.isSuccess()).isTrue();

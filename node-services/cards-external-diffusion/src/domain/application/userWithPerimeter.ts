@@ -10,6 +10,7 @@
 export class UserWithPerimeters {
     readonly sendDailyEmail?: true;
     readonly email?: string;
+    readonly timezoneForEmails?: string;
     readonly userData: UserData;
     readonly processesStatesNotNotified?: any;
     readonly processesStatesNotifiedByEmail?: any;

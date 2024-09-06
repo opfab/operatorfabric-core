@@ -86,6 +86,7 @@ public class CurrentUserWithPerimetersService {
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
+            userWithPerimeterData.setTimezoneForEmails(operationResult.getResult().getTimezoneForEmails());
         }
     }
 

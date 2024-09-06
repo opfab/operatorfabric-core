@@ -40,6 +40,7 @@ public class UserSettings {
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
     private String email;
+    private String timezoneForEmails;
     private Map<String, List<String>> processesStatesNotNotified;
     private Map<String, List<String>> processesStatesNotifiedByEmail;
     private List<String> entitiesDisconnected;
@@ -66,6 +67,7 @@ public class UserSettings {
         this.emailToPlainText = settings.getEmailToPlainText();
         this.sendDailyEmail = settings.getSendDailyEmail();
         this.email = settings.getEmail();
+        this.timezoneForEmails = settings.getTimezoneForEmails();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
@@ -227,6 +229,14 @@ public class UserSettings {
         this.email = email;
     }
 
+    public String getTimezoneForEmails() {
+        return timezoneForEmails;
+    }
+
+    public void setTimezoneForEmails(String timezoneForEmails) {
+        this.timezoneForEmails = timezoneForEmails;
+    }
+
     public Map<String, List<String>> getProcessesStatesNotNotified() {
         return processesStatesNotNotified;
     }
@@ -314,6 +324,8 @@ public class UserSettings {
         result.sendDailyEmail = ObjectUtils.getNotNullOrDefault(other.getSendDailyEmail(),
                 this.getSendDailyEmail());
         result.email = ObjectUtils.getNotNullOrDefault(other.getEmail(), this.getEmail());
+        result.timezoneForEmails = ObjectUtils.getNotNullOrDefault(other.getTimezoneForEmails(),
+                this.getTimezoneForEmails());
 
         return result;
     }

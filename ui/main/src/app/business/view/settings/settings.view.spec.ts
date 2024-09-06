@@ -110,6 +110,7 @@ describe('Settings view ', () => {
             settingsView.setSetting('remoteLoggingEnabled', true);
             settingsView.setSetting('replayInterval', 10);
             settingsView.setSetting('locale', 'en');
+            settingsView.setSetting('timezoneForEmails', 'Europe/Sofia');
         });
 
         it('should save settings in the local configuration when saveSettings is called', async () => {
@@ -117,6 +118,7 @@ describe('Settings view ', () => {
             expect(ConfigService.getConfigValue('settings.remoteLoggingEnabled')).toBe(true);
             expect(ConfigService.getConfigValue('settings.replayInterval')).toBe(10);
             expect(ConfigService.getConfigValue('settings.locale')).toBe('en');
+            expect(ConfigService.getConfigValue('settings.timezoneForEmails')).toBe('Europe/Sofia');
         });
 
         it(
@@ -159,7 +161,8 @@ describe('Settings view ', () => {
             expect(settingsServerMock.settingsPatch).toEqual({
                 remoteLoggingEnabled: true,
                 replayInterval: 10,
-                locale: 'en'
+                locale: 'en',
+                timezoneForEmails: 'Europe/Sofia'
             });
         });
 
@@ -193,6 +196,7 @@ describe('Settings view ', () => {
             expect(ConfigService.getConfigValue('settings.remoteLoggingEnabled')).toBeNull();
             expect(ConfigService.getConfigValue('settings.replayInterval')).toBeNull();
             expect(ConfigService.getConfigValue('settings.locale')).toBeNull();
+            expect(ConfigService.getConfigValue('settings.timezoneForEmails')).toBeNull();
         });
     });
 
@@ -213,7 +217,7 @@ describe('Settings view ', () => {
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(true);
         });
 
-        it('should return false is settings have been modified and then saved', async () => {
+        it('should return false if settings have been modified and then saved', async () => {
             const settingsServerMock = new SettingsServerMock();
             settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
             SettingsService.setSettingsServer(settingsServerMock);

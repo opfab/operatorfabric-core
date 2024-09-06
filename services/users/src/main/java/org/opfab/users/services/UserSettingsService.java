@@ -78,7 +78,8 @@ public class UserSettingsService {
                 || (userSettingsPatch.getSendCardsByEmail() != null)
                 || (userSettingsPatch.getEmailToPlainText() != null)
                 || (userSettingsPatch.getSendDailyEmail() != null)
-                || (userSettingsPatch.getEmail() != null))
+                || (userSettingsPatch.getEmail() != null)
+                || (userSettingsPatch.getTimezoneForEmails() != null))
             notificationService.publishUpdatedUserMessage(login);
 
         return new OperationResult<>(newSettings, true, null, null);
