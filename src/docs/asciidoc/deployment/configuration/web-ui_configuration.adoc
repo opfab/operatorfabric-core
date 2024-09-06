@@ -174,7 +174,7 @@ a|authentication mode, available options:
 "sounds" : if present, the checkboxes for sound notifications won't be displayed +
 "systemNotifications" : if present, the checkboxes for systemNotifications won't be displayed +
 "sendCardsByEmail"  : if present, the email options won't be displayed +
-"emailToPlainText"  : if present, the email option to have the emails sent as plain text won't be displayed
+"emailToPlainText"  : if present, the email option to have the emails sent as plain text won't be displayed +
 "sendDailyEmail"  : if present, the email option to have the daily email recap won't be displayed
 
 |showUserEntitiesOnTopRightOfTheScreen|false|no|If set to true, the user's entities with the "ACTIVITY_AREA" role will be displayed under the login on the top right of the screen
