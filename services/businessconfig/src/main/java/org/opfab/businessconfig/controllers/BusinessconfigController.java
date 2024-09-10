@@ -117,6 +117,23 @@ public class BusinessconfigController {
         return loadResource(resource);
     }
 
+
+    @GetMapping(value = "/processes/{processId}/renderingComponents/{renderingComponent}", produces = { "application/json",
+            "application/handlebars" })
+    public byte[] getRenderingComponent(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("processId") String processId,
+            @PathVariable("renderingComponent") String renderingComponent,
+            @Valid @RequestParam(value = "version", required = false) String version) throws IOException {
+
+        processId = StringUtils.sanitize(processId);
+        renderingComponent = StringUtils.sanitize(renderingComponent);
+        version = StringUtils.sanitize(version);
+
+        Resource resource;
+        resource = processService.fetchResource(processId, ResourceTypeEnum.RENDERING_COMPONENT, version, renderingComponent);
+        return loadResource(resource);
+    }
+
     @GetMapping(value = "/processes/{processId}", produces = { "application/json" })
     public Process getProcess(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("processId") String processId,

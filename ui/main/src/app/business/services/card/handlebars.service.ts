@@ -18,6 +18,7 @@ import {OpfabAPIService} from '../opfabAPI.service';
 
 export class HandlebarsService {
     private static templateCache: Map<string, Function> = new Map();
+    private static templateStringCache: Map<string, Function> = new Map();
     private static initDone = false;
 
     public static init() {
@@ -57,5 +58,16 @@ export class HandlebarsService {
 
     public static clearCache() {
         HandlebarsService.templateCache = new Map();
+        HandlebarsService.templateStringCache = new Map();
+    }
+
+    public static executeTemplateString(templateName: string, templateString: string, context: DetailContext): string {
+        const key = `${context.card.process}.${context.card.processVersion}.${templateName}`;
+        let template = HandlebarsService.templateStringCache[key];
+        if (!template) {
+            template = Handlebars.compile(templateString);
+            HandlebarsService.templateStringCache[key] = template;
+        }
+        return template(context);
     }
 }

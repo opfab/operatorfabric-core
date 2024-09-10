@@ -30,6 +30,7 @@ export class UiVisibility {
 export class State {
     constructor(
         public templateName?: string,
+        public renderingComponent?: string,
         public styles?: string[],
         public response?: Response,
         public acknowledgmentAllowed?: AcknowledgmentAllowedEnum,

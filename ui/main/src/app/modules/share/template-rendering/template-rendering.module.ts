@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TemplateRenderingComponent} from './template-rendering.component';
@@ -16,6 +16,7 @@ import {SpinnerModule} from '../spinner/spinner.module';
 @NgModule({
     declarations: [TemplateRenderingComponent],
     imports: [CommonModule, NgbModule, SpinnerModule],
-    exports: [TemplateRenderingComponent]
+    exports: [TemplateRenderingComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA] // This is necessary to use custom elements "rendering-place-holder" in the template
 })
 export class TemplateRenderingModule {}

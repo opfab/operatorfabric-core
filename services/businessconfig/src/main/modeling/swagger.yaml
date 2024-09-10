@@ -579,7 +579,11 @@ definitions:
               $ref: '#/definitions/UserCard'
             templateName:
               description: >-
-                Name of the template to use
+                Name of the template to use if any 
+              type: string
+            renderingComponent:
+              description: >-
+                Name of the rendering component to use if any 
               type: string
             emailBodyTemplate:
               description: >-

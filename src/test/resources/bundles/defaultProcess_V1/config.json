@@ -20,6 +20,7 @@
                 "publisherList": [{"id": "ENTITY_FR", "levels": [1]}]
             },
             "templateName": "template",
+            "renderingComponent": "message",
             "emailBodyTemplate": "templateMail",
             "styles": ["style"],
             "acknowledgmentAllowed": "Always",
@@ -30,6 +31,7 @@
             "description": "Data quality state",
             "color": "#DA00DA",
             "templateName": "chart",
+            "renderingComponent": "chart",
             "styles": ["style"],
             "acknowledgmentAllowed": "Always"
         },
@@ -38,6 +40,7 @@
             "description": "Chart line state",
             "color": "#6666FF",
             "templateName": "chart-line",
+            "renderingComponent": "chart-line",
             "styles": ["style"],
             "acknowledgmentAllowed": "Always",
             "cancelAcknowledgmentAllowed": false,
@@ -53,6 +56,7 @@
                 "publisherList": [{"id": "ENTITY1_FR"}, {"id": "ENTITY3_FR"}]
             },
             "templateName": "process",
+            "renderingComponent": "process",
             "styles": ["style"],
             "acknowledgmentAllowed": "Always",
             "closeCardWhenUserAcknowledges": false,

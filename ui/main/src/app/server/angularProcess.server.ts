@@ -108,6 +108,20 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
         );
     }
 
+    getRenderingComponent(
+        processId: string,
+        version: string,
+        componentName: string
+    ): Observable<ServerResponse<string>> {
+        const params = new HttpParams().set('version', version);
+        return this.processHttpResponse(
+            this.httpClient.get(`${this.processesUrl}/${processId}/renderingComponents/${componentName}`, {
+                params,
+                responseType: 'text'
+            })
+        );
+    }
+
     getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>> {
         return null;
     }

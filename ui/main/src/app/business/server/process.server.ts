@@ -21,5 +21,10 @@ export abstract class ProcessServer {
         processVersion: string,
         templateName: string
     ): Observable<ServerResponse<string>>;
+    abstract getRenderingComponent(
+        processId: string,
+        version: string,
+        componentName: string
+    ): Observable<ServerResponse<string>>;
     abstract getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>>;
 }

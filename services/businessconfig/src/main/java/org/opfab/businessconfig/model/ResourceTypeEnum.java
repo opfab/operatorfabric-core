@@ -12,7 +12,8 @@ package org.opfab.businessconfig.model;
 public enum ResourceTypeEnum {
   CSS("css", ".css"),
   TEMPLATE("template", ".handlebars"),
-  I18N(".", ".json");
+  I18N(".", ".json"),
+  RENDERING_COMPONENT("renderingComponents", ".js"), ;
 
   ResourceTypeEnum(String folder, String suffix) {
     this.folder = folder;

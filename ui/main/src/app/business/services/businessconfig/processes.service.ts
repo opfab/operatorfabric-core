@@ -219,6 +219,15 @@ export class ProcessesService {
         );
     }
 
+    public static fetchRenderingComponent(process: string, version: string, name: string): Observable<string> {
+        return ProcessesService.processServer.getRenderingComponent(process, version, name).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Rendering component not available');
+                return serverResponse.data;
+            })
+        );
+    }
+
     public static findProcessGroupIdForProcessId(processId: string): string {
         const data = ProcessesService.findProcessGroupForProcess(processId);
 

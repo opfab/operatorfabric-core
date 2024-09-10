@@ -36,6 +36,7 @@ import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
 import {ModalServer} from 'app/business/server/modal.server';
 import {SoundServer} from 'app/business/server/sound.server';
+import {RenderingPlaceHolder} from 'app/modules/share/template-rendering/renderingPlaceHolder';
 
 declare const opfab: any;
 @Component({
@@ -105,6 +106,7 @@ export class ApplicationLoadingComponent implements OnInit {
             authService: this.authService,
             soundServer: this.soundServer
         });
+        customElements.define('rendering-place-holder', RenderingPlaceHolder);
         setTimeout(() => this.loadApplication(), 0);
     }
     private async loadApplication(): Promise<void> {

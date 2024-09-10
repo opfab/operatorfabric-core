@@ -34,6 +34,7 @@ public record ProcessStates(
     UserCard userCard,
     Response response,
     String templateName,
+    String renderingComponent,
     String emailBodyTemplate,
     List<String> styles,
     TypeOfStateEnum type,

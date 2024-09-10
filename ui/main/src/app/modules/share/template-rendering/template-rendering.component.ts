@@ -20,6 +20,7 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
@@ -38,6 +39,7 @@ import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 
 @Component({
     selector: 'of-template-rendering',
@@ -60,8 +62,11 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     @Output() renderingDone = new EventEmitter();
 
+    @ViewChild('renderingPlaceHolder') renderingPlaceHolder: ElementRef;
+
     public htmlTemplateContent: SafeHtml;
     public isLoadingSpinnerToDisplay = false;
+    public useRenderComponent = false;
 
     private userContext: UserContext;
     private unsubscribeToGlobalStyle$: Subject<void> = new Subject<void>();
@@ -93,6 +98,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private render() {
         this.isLoadingSpinnerToDisplay = false;
+        this.useRenderComponent = this.cardState.renderingComponent !== undefined;
         OpfabAPIService.initTemplateInterface();
         this.enableSpinnerForTemplate();
         this.getUserContextAndRenderTemplate();
@@ -127,7 +133,38 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private computeAndRenderTemplate() {
+        if (this.useRenderComponent) {
+            this.htmlTemplateContent = '';
+            this.isLoadingSpinnerToDisplay = true;
+            if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
+            OpfabAPIService.currentCard.displayContext = this.displayContext;
+            ProcessesService.fetchRenderingComponent(
+                this.card.process,
+                this.card.processVersion,
+                this.cardState.renderingComponent
+            ).subscribe({
+                next: (componentContent) => {
+                    const componentCode = eval(componentContent);
+                    this.renderingPlaceHolder.nativeElement.setOpfabRenderingComponent(
+                        this.cardState.renderingComponent,
+                        componentCode,
+                        new DetailContext(this.card, this.userContext, this.cardState.response)
+                    );
+                    this.isLoadingSpinnerToDisplay = false;
+                    this.changeDetector.markForCheck();
+                },
+                error: (error) => {
+                    logger.error(`ERROR impossible to process rendering component : ${error} `);
+                    this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
+                    this.isLoadingSpinnerToDisplay = false;
+                }
+            });
+            this.isLoadingSpinnerToDisplay = false;
+            this.changeDetector.markForCheck();
+            return;
+        }
         if (this.cardState.templateName) {
+            this.renderingPlaceHolder.nativeElement.reset();
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
             OpfabAPIService.currentCard.displayContext = this.displayContext;
