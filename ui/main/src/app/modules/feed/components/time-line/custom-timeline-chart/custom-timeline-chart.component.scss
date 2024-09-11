@@ -8,18 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
- /* stylelint-disable property-no-vendor-prefix */
 .ngx-charts {
-    /*
-      Block text selection
-      Usefull for drag only scaleTime
-    */
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -ms-user-select: none; /* Internet Explorer */
-    user-select: none; /* Non-prefixed version, currently
-                        supported by Chrome, Edge, Firefox and Opera */
     float: left;
     overflow: visible;
     background-color: var(--opfab-timeline-bgcolor);
@@ -35,7 +24,6 @@
         transform: translate(0, -10px);
     }
 }
-/* stylelint-enable property-no-vendor-prefix */
 
 .btn-cardlink {
     color: var(--opfab-timeline-cardlink);
