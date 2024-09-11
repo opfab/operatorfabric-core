@@ -79,7 +79,7 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-users-service:4.4.1.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -95,7 +95,7 @@ services:
     - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-businessconfig-service:4.4.1.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -111,7 +111,7 @@ services:
      - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-publication-service:4.4.1.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -127,7 +127,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-consultation-service:4.4.1.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -144,7 +144,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   web-ui:
     container_name: web-ui
-    image: "lfeoperatorfabric/of-web-ui:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-web-ui:4.4.1.RELEASE"
     ports:
     - "2002:80"
     depends_on:
@@ -158,7 +158,7 @@ services:
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
-    image: "lfeoperatorfabric/of-cards-external-diffusion-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-external-diffusion-service:4.4.1.RELEASE"
     depends_on:
       - cards-consultation
       - users
@@ -172,7 +172,7 @@ services:
       - "./common.yml:/usr/app/config/common.yml"
   cards-reminder:
     container_name: cards-reminder
-    image: "lfeoperatorfabric/of-cards-reminder:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-reminder:4.4.1.RELEASE"
     depends_on:
       - cards-publication
       - users
@@ -187,7 +187,7 @@ services:
       - "./common.yml:/usr/app/config/common.yml"
   supervisor:
     container_name: supervisor
-    image: "lfeoperatorfabric/of-supervisor:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-supervisor:4.4.1.RELEASE"
     depends_on:
       - cards-publication
       - users
@@ -204,7 +204,7 @@ services:
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
-    image: "lfeoperatorfabric/of-external-devices-service:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-external-devices-service:4.4.1.RELEASE"
     depends_on:
       - mongodb
       - users
@@ -223,7 +223,7 @@ services:
 # External application example
   ext-app:
     container_name: external-app
-    image: "lfeoperatorfabric/of-external-app:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-external-app:4.4.1.RELEASE"
     ports:
       - "8090:8090"
     volumes:
@@ -233,7 +233,7 @@ services:
 # Dummy external devices using Modbus Protocol
   dummy-modbus-device_1:
     container_name: dummy-modbus-device_1
-    image: "lfeoperatorfabric/of-dummy-modbus-device:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.4.1.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4031:4030"
@@ -242,7 +242,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   dummy-modbus-device_2:
     container_name: dummy-modbus-device_2
-    image: "lfeoperatorfabric/of-dummy-modbus-device:4.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.4.1.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4032:4030"
