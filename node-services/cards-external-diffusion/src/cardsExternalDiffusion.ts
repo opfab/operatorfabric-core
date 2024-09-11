@@ -81,8 +81,6 @@ const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInte
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
 
-opfabServicesInterface.loadUsersData().catch((error) => logger.error('error during loadUsersData', error));
-
 const cardsExternalDiffusionDatabaseService = new CardsExternalDiffusionDatabaseService()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
     .setLogger(logger);
@@ -256,6 +254,11 @@ app.post('/sendDailyEmail', (req, res) => {
 
 async function start(): Promise<void> {
     await cardsExternalDiffusionDatabaseService.connectToMongoDB();
+    const response = await opfabServicesInterface.loadUsersData();
+    if (!response.isValid()) {
+        logger.error('Impossible to load users data, exiting');
+        process.exit(1);
+    }
     opfabServicesInterface.startListener();
     opfabBusinessConfigServicesInterface.startListener();
 
