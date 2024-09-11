@@ -11,7 +11,7 @@ services:
       - "./mongodump:/dump"
   rabbitmq:
     container_name: rabbit
-    image: lfeoperatorfabric/of-rabbitmq:SNAPSHOT
+    image: "lfeoperatorfabric/of-rabbitmq:SNAPSHOT"
     hostname: rabbit
 
 
