@@ -84,19 +84,31 @@ export default class OpfabServicesInterface {
     }
 
     public async fetchAllUsers(): Promise<GetResponse> {
-        try {
-            await this.getToken();
-            const response = await this.sendGetAllUsersRequest();
-            if (response?.data != null) {
-                return new GetResponse(response.data, true);
-            } else {
-                this.logger.warn('No users defined in HTTP response');
-                return new GetResponse([], false);
+        const retryDelay = 5000; // Delay in milliseconds between retries (5 seconds)
+        const maxRetries = 120; // So max time is 5 * 120 = 600 seconds (10 minutes)
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                await this.getToken();
+                const response = await this.sendGetAllUsersRequest();
+                if (response?.data != null) {
+                    return new GetResponse(response.data, true);
+                } else {
+                    this.logger.warn('No users defined in HTTP response');
+                    return new GetResponse([], false);
+                }
+            } catch (e) {
+                this.logger.warn('Impossible to get users', e);
+                this.logger.warn(
+                    `Attempt ${attempt} to get users data failed. Retrying in ${retryDelay / 1000} seconds...`
+                );
+                await new Promise((resolve) => {
+                    return setTimeout(resolve, retryDelay);
+                });
             }
-        } catch (e) {
-            this.logger.warn('Impossible to get users', e);
-            return new GetResponse([], false);
         }
+        this.logger.warn('Impossible to get users');
+        return new GetResponse(null, false);
     }
 
     public async getUsersConnected(): Promise<GetResponse> {
