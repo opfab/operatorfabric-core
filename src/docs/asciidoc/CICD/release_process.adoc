@@ -304,6 +304,7 @@ documentation).
 To do so , go to 
 link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
 and launch the workflow on X.X.release branch with the following options :
+
 - Build : true 
 - Karate tests : false
 - Cypress tests : false 
