@@ -310,7 +310,6 @@ input:-webkit-autofill {
 
 /* CHECKBOX */
 
- /* stylelint-disable property-no-vendor-prefix */
 
 /* The opfab-checkbox */
 .opfab-checkbox {
@@ -320,14 +319,8 @@ input:-webkit-autofill {
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 13px;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* Internet Explorer */
-    user-select: none; 
     width: max-content;
 }
- /* stylelint-enable property-no-vendor-prefix */
 
 /* Hide the browser's default checkbox */
 .opfab-checkbox input {
@@ -387,8 +380,6 @@ input:-webkit-autofill {
 
 /* RADIO BUTTON */
 
- /* stylelint-disable property-no-vendor-prefix */
-
 /* The container */
 .opfab-radio-button {
     display: block;
@@ -397,13 +388,7 @@ input:-webkit-autofill {
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 13px;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* Internet Explorer */
-    user-select: none; 
 }
- /* stylelint-enable property-no-vendor-prefix */
 
 /* Hide the browser's default radio button */
 .opfab-radio-button input {
