@@ -94,7 +94,7 @@ export default class CardsDiffusionControl {
     }
 
     getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
-        if (!epochDate) {
+        if (epochDate == null) {
             return '';
         }
         return format(epochDate, 'dd/MM/yyyy HH:mm');

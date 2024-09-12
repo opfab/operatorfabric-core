@@ -9,7 +9,7 @@
     "start": "npm run build && node build/cardsReminder.js",
     "test": "jest --coverage --verbose",
     "test:watch": "jest --watch --verbose",
-    "lint": "eslint ./src/**/*.ts"
+    "lint": "eslint ./src/"
   },
   "author": "",
   "license": "ISC",

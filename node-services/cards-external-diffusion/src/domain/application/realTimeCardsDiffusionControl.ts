@@ -221,15 +221,15 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                     cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
                 }
             }
-            if (this.publisherEntityPrefix && card.publisher && card.publisherType === 'ENTITY') {
+            if (this.publisherEntityPrefix != null && card.publisher != null && card.publisherType === 'ENTITY') {
                 const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(card.publisher);
                 cardBodyHtml = cardBodyHtml + ' <br/>' + this.publisherEntityPrefix + entity.name;
             }
-            if (this.bodyPostfix) {
+            if (this.bodyPostfix != null) {
                 cardBodyHtml = cardBodyHtml + ' <br/>' + this.bodyPostfix;
             }
         } catch (e) {
-            this.logger.warn(`Couldn't parse email for : ${card.state}, ${e}`);
+            this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);
         }
         return cardBodyHtml;
     }
@@ -250,7 +250,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined): string {
-        if (!epochDate) {
+        if (epochDate == null) {
             return '';
         }
         return format(epochDate, 'dd/MM/yyyy HH:mm');

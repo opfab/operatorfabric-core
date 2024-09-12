@@ -8,8 +8,6 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-
-  "ignorePatterns": ["src/common/**/*"],
   "plugins": ["ban"],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "off",

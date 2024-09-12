@@ -61,7 +61,11 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
         }
     }
 
-    async sendDailyRecap(cards: Card[], userEmailAddress: string | undefined, emailToPlainText: boolean): Promise<void> {
+    async sendDailyRecap(
+        cards: Card[],
+        userEmailAddress: string | undefined,
+        emailToPlainText: boolean
+    ): Promise<void> {
         if (userEmailAddress == null) return;
         const emailBody = this.dailyFormat(cards);
         await this.mailService.sendMail(this.dailyEmailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
