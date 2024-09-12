@@ -118,10 +118,14 @@ export default class CardsExternalDiffusionService {
         const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingDailyEmail();
 
         setTimeout(() => {
-            if (this.active) this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
+            if (this.active)
+                this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
             setInterval(
                 () => {
-                    if (this.active) this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
+                    if (this.active)
+                        this.sendDailyRecap().catch((error) =>
+                            this.logger.error('error during daily email sending' + error)
+                        );
                 },
                 24 * 60 * 60 * 1000
             );

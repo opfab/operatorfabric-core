@@ -15,8 +15,7 @@ export default class AuthorizationService {
     opfabServicesInterface: OpfabServicesInterface;
     jwtToken: JwtTokenUtils = new JwtTokenUtils();
     logger: any;
-    loginClaim: string = "sub";
-
+    loginClaim: string = 'sub';
 
     public setLogger(logger: any): this {
         this.logger = logger;
@@ -29,7 +28,7 @@ export default class AuthorizationService {
         return this;
     }
 
-    public setLoginClaim(loginClaim: string) {
+    public setLoginClaim(loginClaim: string): this {
         this.loginClaim = loginClaim;
         return this;
     }
@@ -55,6 +54,7 @@ export default class AuthorizationService {
         );
         res.status(403).send();
     }
+
     private hasUserAnyPermission(user: any, permissions: string[]): boolean {
         if (user == null || permissions == null) return false;
         return user.permissions?.filter((permission: string) => permissions.includes(permission)).length > 0;

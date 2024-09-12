@@ -134,7 +134,7 @@ export default class CardsExternalDiffusionOpfabServicesInterface
 
     public async getEntityById(id: string): Promise<any> {
         let entity = this.entitiesCache.get(id);
-        if (!entity) {
+        if (entity == null) {
             const response = await this.getEntity(id);
             entity = response.getData();
             this.entitiesCache.set(id, entity);

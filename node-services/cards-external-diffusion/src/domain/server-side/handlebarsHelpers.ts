@@ -10,7 +10,7 @@
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'fs';
-import {format} from 'date-fns';
+import {format, FormatOptions} from 'date-fns';
 import {enUS, fr, nl} from 'date-fns/locale';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -326,7 +326,7 @@ export class HandlebarsHelper {
         });
     }
 
-    private static getDateFnsLocaleOption(locale: string): any {
+    private static getDateFnsLocaleOption(locale: string): FormatOptions {
         switch (locale) {
             case 'fr':
                 return {locale: fr};

@@ -9,7 +9,7 @@
     "start": "npm run build && node build/supervisor.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "eslint ./src/**/*.ts"
+    "lint": "eslint ./src/"
   },
   "author": "",
   "license": "ISC",

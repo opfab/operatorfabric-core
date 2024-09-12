@@ -11,6 +11,8 @@ import winston, {format} from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import config from 'config';
 
+// TO DO : Solve eslint issue
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Logger {
     static logger: winston.Logger;
 
@@ -24,11 +26,13 @@ export default class Logger {
     static readonly logConfiguration: any = config.get('operatorfabric.logConfig');
 
     public static getLogger(): winston.Logger {
+        // TO DO : Solve eslint issue
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!this.logger) {
             this.logger = winston.createLogger({
                 format: format.combine(
                     format((info) => {
-                        info.message = this.prefixNewLinesToAvoidLogInjection(info.message);
+                        info.message = this.prefixNewLinesToAvoidLogInjection(info.message as string);
                         return info;
                     })(),
                     this.logFormat
@@ -36,7 +40,7 @@ export default class Logger {
                 transports: [new winston.transports.Console({level: this.logConfiguration.logLevel})]
             });
 
-            if (this.logConfiguration.logFile) {
+            if (this.logConfiguration.logFile != null) {
                 const transport = new DailyRotateFile({
                     filename: this.logConfiguration.logFolder + this.logConfiguration.logFile,
                     datePattern: 'YYYY-MM-DD',
@@ -53,7 +57,7 @@ export default class Logger {
                 this.logger = winston.createLogger({
                     format: format.combine(
                         format((info) => {
-                            info.message = this.prefixNewLinesToAvoidLogInjection(info.message);
+                            info.message = this.prefixNewLinesToAvoidLogInjection(info.message as string);
                             return info;
                         })(),
                         this.logFormat
@@ -66,11 +70,11 @@ export default class Logger {
     }
 
     public static getLogLevel(): LogLevel {
-        return new LogLevel(this.logger.transports[0].level, this.logger.transports[0].level)
+        return new LogLevel(this.logger.transports[0].level, this.logger.transports[0].level);
     }
 
     public static setLogLevel(level: string): boolean {
-        if (this.logger.levels[level]) {
+        if (this.logger.levels[level] != null) {
             this.logger.transports.forEach((transport) => {
                 transport.level = level;
             });
@@ -82,14 +86,13 @@ export default class Logger {
     private static prefixNewLinesToAvoidLogInjection(message: string): string {
         return message.replace(/[\n\r\b\v\f]/g, '\n       ... ');
     }
-
 }
 
 export class LogLevel {
-    configuredLevel: string|undefined;
-    effectiveLevel: string|undefined;
+    configuredLevel: string | undefined;
+    effectiveLevel: string | undefined;
 
-    constructor(configuredLevel: string|undefined, effectiveLevel: string|undefined) {
+    constructor(configuredLevel: string | undefined, effectiveLevel: string | undefined) {
         this.configuredLevel = configuredLevel?.toUpperCase();
         this.effectiveLevel = effectiveLevel?.toUpperCase();
     }
