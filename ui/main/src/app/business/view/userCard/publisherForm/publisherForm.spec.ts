@@ -45,7 +45,8 @@ describe('UserCard PublisherForm', () => {
             new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.ACTIVITY_AREA], [], []),
             new Entity('ENTITY4', 'ENTITY4_NAME', '', [RolesEnum.CARD_SENDER], [], []),
             new Entity('ENTITY_WITH_NO_NAME', '', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_SENDER], [], null)
+            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_SENDER], [], null),
+            new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
         ]);
     }
 
@@ -86,8 +87,16 @@ describe('UserCard PublisherForm', () => {
                 publisherForm.setProcessAndState('testProcessId', 'testStateId');
                 expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(true);
             });
-            it('Should set a list of 2 publishers to the userCardUIControl if user has 2 entity to send card', async () => {
+            it('Should set a list of 2 publishers to the userCardUIControl if user has 2 entities to send card', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2']);
+                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                expect(userCardUIControl.publishers).toEqual([
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                ]);
+            });
+            it('Should set a list of 2 publishers to the userCardUIControl if user has 2 entities to send card and one entity with no roles', async () => {
+                await setUserWithEntities(['ENTITY1', 'ENTITY2', 'NO_ROLES_ENTITY']);
                 publisherForm.setProcessAndState('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},

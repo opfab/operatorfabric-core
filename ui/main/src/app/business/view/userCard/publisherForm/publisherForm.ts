@@ -44,7 +44,7 @@ export class PublisherForm {
     private getUserEntitiesWithCardSenderRole(): string[] {
         const user = UserService.getCurrentUserWithPerimeters();
         return user.userData.entities?.filter((entity) => {
-            return EntitiesService.getEntity(entity)?.roles.includes(RolesEnum.CARD_SENDER);
+            return EntitiesService.getEntity(entity)?.roles?.includes(RolesEnum.CARD_SENDER);
         });
     }
 
