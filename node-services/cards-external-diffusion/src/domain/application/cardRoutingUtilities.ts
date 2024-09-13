@@ -67,8 +67,8 @@ export default class CardsRoutingUtilities {
         ) {
             return true;
         }
-        const isNotNodify = userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
-        return isNotNodify === false || isNotNodify === undefined;
+        const isNotNotified = userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
+        return isNotNotified === false || isNotNotified === undefined;
     }
 
     private static checkUserRecipients(user: UserWithPerimeters, card: Card): boolean {

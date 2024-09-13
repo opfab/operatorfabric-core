@@ -371,15 +371,24 @@ describe('Notification configuration view ', () => {
             expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
         });
 
+        it('email configuration should be enabled if sendDailyEmail and email set', () => {
+            ConfigService.setConfigValue('settings.sendDailyEmail', true);
+            ConfigService.setConfigValue('settings.email', 'test@mail');
+            notificationConfigurationPage = getNotificationConfigurationPage();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
+        });
+
         it('email configuration should not be enabled if email is not set', () => {
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
+            ConfigService.setConfigValue('settings.sendDailyEmail', true);
             ConfigService.setConfigValue('settings.email', '');
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
         });
 
-        it('mail configuration should not be enabled if sendCardsByEmail is false', () => {
+        it('mail configuration should not be enabled if sendCardsByEmail and sendDailyEmail are false', () => {
             ConfigService.setConfigValue('settings.sendCardsByEmail', false);
+            ConfigService.setConfigValue('settings.sendDailyEmail', false);
             ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
