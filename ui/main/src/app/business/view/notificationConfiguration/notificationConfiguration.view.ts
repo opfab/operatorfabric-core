@@ -53,7 +53,8 @@ export class NotificationConfigurationView {
         );
 
         this.notificationConfigurationPage.isEmailEnabled =
-            ConfigService.getConfigValue('settings.sendCardsByEmail', false) &&
+            (ConfigService.getConfigValue('settings.sendDailyEmail', false) ||
+                ConfigService.getConfigValue('settings.sendCardsByEmail', false)) &&
             ConfigService.getConfigValue('settings.email')?.length > 0;
 
         this.notificationConfigurationPage.isThereProcessStatesToDisplay =
