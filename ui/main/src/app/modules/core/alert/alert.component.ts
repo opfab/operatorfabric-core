@@ -12,11 +12,14 @@ import {Component} from '@angular/core';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {AlertView} from 'app/business/view/core/alert/alert.view';
 import {AlertPage} from 'app/business/view/core/alert/alertPage';
+import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-alert',
     styleUrls: ['./alert.component.scss'],
-    templateUrl: './alert.component.html'
+    templateUrl: './alert.component.html',
+    standalone: true,
+    imports: [NgIf]
 })
 export class AlertComponent {
     public alertView: AlertView;

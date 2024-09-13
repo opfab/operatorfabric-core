@@ -12,7 +12,7 @@ import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@an
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {Observable, Subject} from 'rxjs';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbProgressbar} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
@@ -28,11 +28,17 @@ import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {AgGridAngular} from 'ag-grid-angular';
+import {NgIf, AsyncPipe} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {CardComponent} from '../../../card/card.component';
 
 @Component({
     selector: 'of-monitoring-table',
     templateUrl: './monitoring-table.component.html',
-    styleUrls: ['./monitoring-table.component.scss']
+    styleUrls: ['./monitoring-table.component.scss'],
+    standalone: true,
+    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent, NgbProgressbar, AsyncPipe]
 })
 export class MonitoringTableComponent implements OnChanges, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;

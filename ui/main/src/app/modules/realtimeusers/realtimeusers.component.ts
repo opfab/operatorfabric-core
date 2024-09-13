@@ -8,17 +8,33 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {ConfigServer} from 'app/business/server/config.server';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgFor} from '@angular/common';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-realtimeusers',
     templateUrl: './realtimeusers.component.html',
-    styleUrls: ['./realtimeusers.component.scss']
+    styleUrls: ['./realtimeusers.component.scss'],
+    standalone: true,
+    imports: [
+        TranslateModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgIf,
+        SpinnerComponent,
+        MultiSelectComponent,
+        NgFor,
+        NgbPopover
+    ]
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
     realTimeScreensForm: FormGroup<{

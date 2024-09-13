@@ -15,11 +15,30 @@ import {SoundNotificationService} from 'app/business/services/notifications/soun
 import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
 import {RouterNavigationService} from 'app/router/router-navigation.service';
 import {PageType, RouterStore} from './business/store/router.store';
+import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
+import {NgIf} from '@angular/common';
+import {AlertComponent} from './modules/core/alert/alert.component';
+import {NavbarComponent} from './modules/navbar/navbar.component';
+import {RouterOutlet} from '@angular/router';
+import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
+import {SessionEndComponent} from './modules/core/session-end/session-end.component';
+import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 
 @Component({
     selector: 'of-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [
+        ApplicationLoadingComponent,
+        NgIf,
+        AlertComponent,
+        NavbarComponent,
+        RouterOutlet,
+        ConnectionLostComponent,
+        SessionEndComponent,
+        ReloadRequiredComponent
+    ]
 })
 export class AppComponent {
     reloadCanceled: boolean;

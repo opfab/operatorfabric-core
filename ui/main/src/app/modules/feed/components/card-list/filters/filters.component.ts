@@ -11,11 +11,18 @@ import {Component, Input, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {Subject} from 'rxjs';
+import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/feed-filter-and-sort-icons.component';
+import {FeedSearchComponent} from './feed-search/feed-search.component';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-filters',
     templateUrl: './filters.component.html',
-    styleUrls: ['./filters.component.scss']
+    styleUrls: ['./filters.component.scss'],
+    standalone: true,
+    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule, NgbPopover]
 })
 export class FiltersComponent implements OnInit {
     @Input() filterActive: boolean;

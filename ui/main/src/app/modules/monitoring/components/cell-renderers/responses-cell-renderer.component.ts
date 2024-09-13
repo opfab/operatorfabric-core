@@ -14,10 +14,14 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {filter, Subject, takeUntil} from 'rxjs';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {NgIf, NgFor, NgStyle} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-responses-cell-renderer',
-    templateUrl: './responses-cell-renderer.component.html'
+    templateUrl: './responses-cell-renderer.component.html',
+    standalone: true,
+    imports: [NgIf, NgFor, NgStyle, NgbPopover]
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {
     // For explanations regarding ag-grid CellRenderers see

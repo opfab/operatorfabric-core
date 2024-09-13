@@ -16,10 +16,14 @@ import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RolesEnum} from '@ofModel/roles.model';
 import {CardOperationType} from '@ofModel/card-operation.model';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgFor, NgStyle} from '@angular/common';
 
 @Component({
     selector: 'of-card-acks-footer',
-    templateUrl: './card-acks-footer.component.html'
+    templateUrl: './card-acks-footer.component.html',
+    standalone: true,
+    imports: [TranslateModule, NgFor, NgStyle]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     @Input() card: Card;

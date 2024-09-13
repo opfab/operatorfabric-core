@@ -19,11 +19,16 @@ import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {NgIf} from '@angular/common';
+import {SpinnerComponent} from '../spinner/spinner.component';
+import {TemplateRenderingComponent} from '../template-rendering/template-rendering.component';
 
 @Component({
     selector: 'of-simplified-card-view',
     templateUrl: './simplified-card-view.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, SpinnerComponent, TemplateRenderingComponent]
 })
 export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     @Input() card: Card;

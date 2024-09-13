@@ -8,18 +8,22 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {Card} from '@ofModel/card.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Utilities} from '../../../../business/common/utilities';
+import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/simplified-card-view.component';
+import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-archived-card-detail',
     templateUrl: './archived-card-detail.component.html',
     styleUrls: ['./archived-card-detail.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [SimplifiedCardViewComponent, TranslateModule, NgIf]
 })
 export class ArchivedCardDetailComponent implements OnInit {
     fromEntityOrRepresentativeSelectedCard = null;

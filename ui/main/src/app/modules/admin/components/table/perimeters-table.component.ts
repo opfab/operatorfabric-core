@@ -14,12 +14,19 @@ import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 import {Utilities} from 'app/business/common/utilities';
 import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {FormsModule} from '@angular/forms';
+import {AgGridAngular} from 'ag-grid-angular';
+import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
     selector: 'of-perimeters-table',
     styleUrls: ['admin-table.directive.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, AgGridAngular, NgbPagination]
 })
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PERIMETER;

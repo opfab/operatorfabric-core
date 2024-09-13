@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
@@ -16,11 +16,16 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-edit-supervised-entity-modal',
     templateUrl: './edit-supervised-entity-modal.component.html',
-    styleUrls: ['./edit-supervised-entity-modal.component.scss']
+    styleUrls: ['./edit-supervised-entity-modal.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditSupervisedEntityModalComponent implements OnInit {
     entityForm: FormGroup;

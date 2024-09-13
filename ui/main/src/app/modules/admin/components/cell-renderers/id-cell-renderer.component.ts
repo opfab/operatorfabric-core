@@ -14,7 +14,8 @@ import {ICellRendererParams} from 'ag-grid-community';
 @Component({
     selector: 'of-id-cell-renderer',
     templateUrl: './id-cell-renderer.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class IdCellRendererComponent implements ICellRendererAngularComp {
     value: string;

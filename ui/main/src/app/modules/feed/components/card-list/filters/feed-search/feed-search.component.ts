@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,15 +9,18 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-feed-search',
     templateUrl: './feed-search.component.html',
-    styleUrls: ['./feed-search.component.scss']
+    styleUrls: ['./feed-search.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule]
 })
 export class FeedSearchComponent implements OnInit {
     @Input() showSearchFilter: boolean;

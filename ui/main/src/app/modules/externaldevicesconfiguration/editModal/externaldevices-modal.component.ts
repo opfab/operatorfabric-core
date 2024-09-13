@@ -8,17 +8,32 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {DeviceConfiguration} from '@ofModel/external-devices.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {Observable, of} from 'rxjs';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../../share/spinner/spinner.component';
+import {MultiSelectComponent} from '../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-externaldevices-modal',
     templateUrl: './externaldevices-modal.component.html',
-    styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
+    styleUrls: ['./externaldevicesconfiguration-modal.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class ExternaldevicesModalComponent implements OnInit {
     signalMappingMultiSelectOptions = [];

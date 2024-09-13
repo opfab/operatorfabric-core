@@ -20,11 +20,17 @@ import {Filter} from '@ofModel/feed-filter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
 
 @Component({
     selector: 'of-monitoring',
     templateUrl: './monitoring.component.html',
-    styleUrls: ['./monitoring.component.scss']
+    styleUrls: ['./monitoring.component.scss'],
+    standalone: true,
+    imports: [TranslateModule, NgIf, MonitoringFiltersComponent, NgbPopover, MonitoringTableComponent]
 })
 export class MonitoringComponent implements OnInit, OnDestroy {
     @ViewChild('filters')

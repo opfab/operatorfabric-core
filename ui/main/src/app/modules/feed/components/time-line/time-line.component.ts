@@ -8,11 +8,17 @@
  */
 import {Component, ViewChild} from '@angular/core';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
+import {CustomTimelineChartComponent} from './custom-timeline-chart/custom-timeline-chart.component';
+import {PinnedCardsComponent} from '../pinned-cards/pinned-cards.component';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-time-line',
     templateUrl: './time-line.component.html',
-    styleUrls: ['./time-line.component.scss']
+    styleUrls: ['./time-line.component.scss'],
+    standalone: true,
+    imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, NgIf, TranslateModule]
 })
 export class TimeLineComponent {
     @ViewChild('timelineButtons')

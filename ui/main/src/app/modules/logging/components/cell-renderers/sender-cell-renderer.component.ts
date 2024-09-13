@@ -13,7 +13,8 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
     selector: 'of-sender-cell-renderer',
-    templateUrl: './sender-cell-renderer.component.html'
+    templateUrl: './sender-cell-renderer.component.html',
+    standalone: true
 })
 export class SenderCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

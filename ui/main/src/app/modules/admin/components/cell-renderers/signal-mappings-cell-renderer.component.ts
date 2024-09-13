@@ -10,11 +10,14 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-signal-mappings-cell-renderer',
     templateUrl: './signal-mappings-cell-renderer.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TranslateModule]
 })
 export class SignalMappingsCellRendererComponent implements ICellRendererAngularComp {
     supportedSignals: Map<string, number>;

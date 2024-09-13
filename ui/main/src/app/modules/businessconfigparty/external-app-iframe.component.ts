@@ -16,7 +16,8 @@ import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externa
     selector: 'of-iframedisplay',
     templateUrl: './external-app-iframe.component.html',
     styleUrls: ['./external-app-iframe.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();

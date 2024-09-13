@@ -14,7 +14,8 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
     selector: 'of-time-cell-renderer',
-    templateUrl: './time-cell-renderer.component.html'
+    templateUrl: './time-cell-renderer.component.html',
+    standalone: true
 })
 export class TimeCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

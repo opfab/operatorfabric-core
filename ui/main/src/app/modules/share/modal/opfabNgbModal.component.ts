@@ -11,12 +11,16 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalConfig} from '@ofModel/modal-config.model';
 import {I18n} from '@ofModel/i18n.model';
+import {NgIf, NgClass, NgFor} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-ngb-modal',
     templateUrl: './opfabNgbModal.component.html',
     styleUrls: ['./opfabNgbModal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, NgClass, NgFor, TranslateModule]
 })
 export class OpfabNgbModalComponent {
     @Input() modalConfig: ModalConfig;

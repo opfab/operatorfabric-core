@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateFn, RouterModule, RouterStateSnapshot, Routes} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, Routes} from '@angular/router';
 import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
 import {DevicesTableComponent} from './table/devices.table.component';
 import {UsersTableComponent} from './table/users.table.component';
@@ -46,8 +45,4 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class ExternaldevicesconfigurationRoutingModule {}
+export default routes;

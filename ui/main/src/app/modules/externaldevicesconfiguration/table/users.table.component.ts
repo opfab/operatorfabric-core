@@ -12,11 +12,18 @@ import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {UsersconfigurationModalComponent} from '../editModal/usersconfiguration-modal.component';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../../share/spinner/spinner.component';
+import {AgGridAngular} from 'ag-grid-angular';
+import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-externaldevices',
     templateUrl: './externaldevicesconfiguration-directive.html',
-    styleUrls: ['../externaldevicesconfiguration.component.scss']
+    styleUrls: ['../externaldevicesconfiguration.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class UsersTableComponent extends ExternalDevicesConfigurationDirective {
     fields = [

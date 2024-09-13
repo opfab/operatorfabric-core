@@ -11,13 +11,16 @@ import {ChangeDetectionStrategy, Component, OnInit, Renderer2} from '@angular/co
 
 import {Clipboard} from '@angular/cdk/clipboard';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslateModule} from '@ngx-translate/core';
 
 declare const opfab;
 
 @Component({
     selector: 'of-richtext-helper',
     templateUrl: './richtext.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TranslateModule]
 })
 export class RichTextComponent implements OnInit {
     modules = {

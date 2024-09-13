@@ -8,18 +8,23 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from 'app/business/services/modal.service';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgFor} from '@angular/common';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-activityarea',
     templateUrl: './activityarea.component.html',
-    styleUrls: ['./activityarea.component.scss']
+    styleUrls: ['./activityarea.component.scss'],
+    standalone: true,
+    imports: [TranslateModule, NgIf, SpinnerComponent, FormsModule, ReactiveFormsModule, NgFor, NgbPopover]
 })
 export class ActivityareaComponent implements OnInit, OnDestroy {
     @Input() titleI18nKey = 'activityArea.title';

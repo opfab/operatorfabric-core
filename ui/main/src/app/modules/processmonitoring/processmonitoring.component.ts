@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -37,6 +37,12 @@ import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonit
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgClass} from '@angular/common';
+import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {ProcessmonitoringTableComponent} from './components/processmonitoring-table/processmonitoring-table.component';
+import {MonitoringMapComponent} from './components/map/map.component';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -61,7 +67,19 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
     selector: 'of-processmonitoring',
     templateUrl: './processmonitoring.component.html',
     styleUrls: ['./processmonitoring.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        TranslateModule,
+        NgIf,
+        NgClass,
+        MultiSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        SpinnerComponent,
+        ProcessmonitoringTableComponent,
+        MonitoringMapComponent
+    ]
 })
 export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewInit {
     processMonitoringView = new ProcessMonitoringView();

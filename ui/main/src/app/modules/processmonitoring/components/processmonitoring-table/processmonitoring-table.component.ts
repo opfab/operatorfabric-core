@@ -8,18 +8,23 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from '../../../../business/services/card/selectedCard.service';
+import {AgGridAngular} from 'ag-grid-angular';
+import {NgIf} from '@angular/common';
+import {CardComponent} from '../../../card/card.component';
 
 @Component({
     selector: 'of-processmonitoring-table',
     templateUrl: './processmonitoring-table.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent]
 })
 export class ProcessmonitoringTableComponent {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;

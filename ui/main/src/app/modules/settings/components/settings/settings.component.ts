@@ -9,9 +9,9 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SettingsView} from 'app/business/view/settings/settings.view';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -20,12 +20,16 @@ import {I18n} from '@ofModel/i18n.model';
 import {ErrorService} from 'app/business/services/error-service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
+import {NgIf} from '@angular/common';
+import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, MultiSelectComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     settingsForm: FormGroup;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,17 +8,20 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-feed-sort',
     templateUrl: './feed-sort.component.html',
-    styleUrls: ['./feed-sort.component.scss']
+    styleUrls: ['./feed-sort.component.scss'],
+    standalone: true,
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule]
 })
 export class FeedSortComponent implements OnInit, OnDestroy {
     @Input() defaultSorting: string;

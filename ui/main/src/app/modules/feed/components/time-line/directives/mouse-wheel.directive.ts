@@ -14,7 +14,10 @@ import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
  * https://github.com/SodhanaLibrary/angular2-examples/blob/master/app/mouseWheelDirective/mousewheel.directive.ts
  * @export
  */
-@Directive({selector: '[ofMouseWheel]'})
+@Directive({
+    selector: '[ofMouseWheel]',
+    standalone: true
+})
 export class MouseWheelDirective {
     @Output()
     mouseWheelUp = new EventEmitter();

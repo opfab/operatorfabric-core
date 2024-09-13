@@ -38,13 +38,17 @@ import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {NgIf} from '@angular/common';
+import {SpinnerComponent} from '../spinner/spinner.component';
 
 @Component({
     selector: 'of-template-rendering',
     templateUrl: './template-rendering.component.html',
     styleUrls: ['./template-rendering.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, SpinnerComponent]
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
     @Input() cardState: State;

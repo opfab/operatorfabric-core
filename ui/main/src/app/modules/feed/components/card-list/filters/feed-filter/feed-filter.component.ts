@@ -9,7 +9,7 @@
 
 import {Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Subject, timer} from 'rxjs';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -22,12 +22,18 @@ import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf} from '@angular/common';
+import {FeedSortComponent} from '../feed-sort/feed-sort.component';
+import {MultiSelectComponent} from '../../../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-feed-filter',
     templateUrl: './feed-filter.component.html',
     styleUrls: ['./feed-filter.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, TranslateModule, NgIf, FeedSortComponent, MultiSelectComponent]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;

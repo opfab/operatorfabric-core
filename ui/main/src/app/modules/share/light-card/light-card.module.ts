@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,17 +8,18 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, LowerCasePipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightCardComponent} from './light-card.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {CountDownModule} from '../countdown/countdown.module';
+
 import {GroupedCardListComponent} from './grouped-card-list/grouped-card-list.component';
-import {PipesModule} from '../pipes/pipes.module';
+import {CountDownComponent} from '../countdown/countdown.component';
+import {OpfabTitleCasePipe} from '../pipes/opfab-title-case.pipe';
 
 @NgModule({
     declarations: [LightCardComponent, GroupedCardListComponent],
-    imports: [CommonModule, TranslateModule, CountDownModule, NgbModule, PipesModule],
+    imports: [CommonModule, TranslateModule, CountDownComponent, NgbModule, OpfabTitleCasePipe, LowerCasePipe],
     exports: [LightCardComponent]
 })
 export class LightCardModule {}

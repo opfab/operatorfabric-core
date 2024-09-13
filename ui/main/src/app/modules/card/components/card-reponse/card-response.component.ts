@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {CardAction, Severity} from '@ofModel/light-card.model';
@@ -28,6 +28,9 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 
 class FormResult {
     valid: boolean;
@@ -46,7 +49,9 @@ const enum ResponseI18nKeys {
 
 @Component({
     selector: 'of-card-response',
-    templateUrl: './card-response.component.html'
+    templateUrl: './card-response.component.html',
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class CardResponseComponent implements OnChanges, OnInit {
     @Input() card: Card;

@@ -19,11 +19,17 @@ import {Router} from '@angular/router';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {NgIf} from '@angular/common';
+import {CardBodyComponent} from './components/card-body/card-body.component';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-card',
     templateUrl: './card.component.html',
-    styleUrls: ['./card.component.scss']
+    styleUrls: ['./card.component.scss'],
+    standalone: true,
+    imports: [NgIf, CardBodyComponent, SpinnerComponent, TranslateModule]
 })
 export class CardComponent implements OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;

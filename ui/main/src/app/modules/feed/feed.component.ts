@@ -13,16 +13,22 @@ import {LightCard} from '@ofModel/light-card.model';
 import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/business/services/config.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {UserService} from 'app/business/services/users/user.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {LoggerService} from 'app/business/services/logs/logger.service';
+import {TimeLineComponent} from './components/time-line/time-line.component';
+import {NgIf, AsyncPipe} from '@angular/common';
+import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
+import {CardListComponent} from './components/card-list/card-list.component';
 
 @Component({
     selector: 'of-cards',
     templateUrl: './feed.component.html',
-    styleUrls: ['./feed.component.scss']
+    styleUrls: ['./feed.component.scss'],
+    standalone: true,
+    imports: [TimeLineComponent, NgIf, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
 export class FeedComponent implements OnInit, OnDestroy {
     processFilter: string;

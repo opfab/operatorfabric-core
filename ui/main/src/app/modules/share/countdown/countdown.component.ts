@@ -8,14 +8,18 @@
  */
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {CountDown} from '../../../business/common/countdown/countdown';
+import {NgIf} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-countdown',
     templateUrl: './countdown.component.html',
-    styleUrls: ['./countdown.component.scss']
+    styleUrls: ['./countdown.component.scss'],
+    standalone: true,
+    imports: [TranslateModule, NgIf, NgbPopover]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     @Input() public lttd: number;

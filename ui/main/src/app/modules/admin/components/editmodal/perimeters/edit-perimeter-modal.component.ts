@@ -8,7 +8,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    FormControl,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
@@ -19,12 +26,17 @@ import {MessageLevel} from '@ofModel/message.model';
 
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {NgIf, NgFor} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-edit-perimeter-modal',
     templateUrl: './edit-perimeter-modal.component.html',
     styleUrls: ['./edit-perimeter-modal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, NgFor]
 })
 export class EditPerimeterModalComponent implements OnInit {
     constructor(

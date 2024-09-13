@@ -9,12 +9,16 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-connection-lost',
     styleUrls: ['./connection-lost.component.scss'],
     templateUrl: './connection-lost.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule]
 })
 export class ConnectionLostComponent implements OnInit {
     connectionLostForMoreThanTenSeconds = false;

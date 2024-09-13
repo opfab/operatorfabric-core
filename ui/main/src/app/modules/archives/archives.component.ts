@@ -19,9 +19,9 @@ import {
 import {Observable, Subject} from 'rxjs';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil, tap} from 'rxjs/operators';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
@@ -38,12 +38,31 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {NgIf, NgFor} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {ArchivedCardDetailComponent} from './components/archived-card-detail/archived-card-detail.component';
+import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
 
 @Component({
     selector: 'of-archives',
     templateUrl: './archives.component.html',
     styleUrls: ['./archives.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        ArchivesLoggingFiltersComponent,
+        NgIf,
+        TranslateModule,
+        NgFor,
+        NgbPopover,
+        NgbPagination,
+        SpinnerComponent,
+        ArchivedCardDetailComponent,
+        OpfabTitleCasePipe
+    ]
 })
 export class ArchivesComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();

@@ -11,12 +11,16 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {I18n} from '@ofModel/i18n.model';
 import {ModalService} from 'app/business/services/modal.service';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-session-end',
     styleUrls: ['./session-end.component.scss'],
     templateUrl: './session-end.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule]
 })
 export class SessionEndComponent implements OnInit {
     public isDisconnectedByNewUser = false;

@@ -9,15 +9,19 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
+import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SharingService} from './services/sharing.service';
+import {NgFor} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: 'of-admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet, NgFor, FormsModule]
 })
 export class AdminComponent implements OnInit {
     public paginationDefaultPageSize = 10;

@@ -15,12 +15,16 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
 import {RolesEnum} from '@ofModel/roles.model';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {NgIf, NgFor} from '@angular/common';
 
 @Component({
     selector: 'of-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgbPopover, NgIf, NgFor]
 })
 export class InfoComponent implements OnInit {
     userName: string;

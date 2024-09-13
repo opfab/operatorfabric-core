@@ -27,11 +27,15 @@ import {TranslateService} from '@ngx-translate/core';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
+import {NgFor} from '@angular/common';
+import {CardComponent} from '../../../card/card.component';
 
 @Component({
     selector: 'of-monitoring-map',
     templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss']
+    styleUrls: ['./map.component.scss'],
+    standalone: true,
+    imports: [NgFor, CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
     @Input() result: LightCard[];
