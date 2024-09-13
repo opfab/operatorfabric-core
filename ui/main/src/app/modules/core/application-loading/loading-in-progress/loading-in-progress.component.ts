@@ -9,10 +9,15 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {SpinnerComponent} from '../../../share/spinner/spinner.component';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-loading-in-progress',
-    templateUrl: './loading-in-progress.component.html'
+    templateUrl: './loading-in-progress.component.html',
+    standalone: true,
+    imports: [SpinnerComponent, NgIf, TranslateModule]
 })
 export class LoadingInProgressComponent implements OnInit, OnDestroy {
     showReloadButton = false;

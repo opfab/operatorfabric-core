@@ -15,7 +15,8 @@ import {ConfigService} from 'app/business/services/config.service';
     selector: 'of-changepassword',
     templateUrl: './changepassword.component.html',
     styleUrls: ['./changepassword.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class ChangepasswordComponent implements OnInit {
     public changePasswordUrl: SafeUrl;

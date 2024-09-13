@@ -8,8 +8,8 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
@@ -17,12 +17,31 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
 import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
 import {UserActionLogsPageDescription} from 'app/business/view/useractionlogs/userActionLogsPageDescription';
+import {NgIf, NgFor} from '@angular/common';
+import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/archived-card-detail.component';
+import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
 
 @Component({
     selector: 'of-useractionlogs',
     templateUrl: './useractionlogs.component.html',
     styleUrls: ['./useractionlogs.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MultiSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        NgFor,
+        NgbPagination,
+        SpinnerComponent,
+        ArchivedCardDetailComponent,
+        OpfabTitleCasePipe
+    ]
 })
 export class UserActionLogsComponent implements OnInit {
     userActionLogsView: UserActionLogsView;

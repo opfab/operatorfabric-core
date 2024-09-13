@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -18,12 +18,17 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-edit-user-modal',
     templateUrl: './edit-user-modal.component.html',
     styleUrls: ['./edit-user-modal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditUserModalComponent implements OnInit {
     userForm: FormGroup<{

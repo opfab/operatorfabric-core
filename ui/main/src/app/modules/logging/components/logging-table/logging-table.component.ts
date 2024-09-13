@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
@@ -18,10 +18,15 @@ import {StateCellRendererComponent} from '../cell-renderers/state-cell-renderer.
 import {StateDescriptionCellRendererComponent} from '../cell-renderers/state-description-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {Subject} from 'rxjs';
+import {AgGridAngular} from 'ag-grid-angular';
+import {NgIf} from '@angular/common';
+import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-logging-table',
-    templateUrl: './logging-table.component.html'
+    templateUrl: './logging-table.component.html',
+    standalone: true,
+    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
     @Input() result: LightCard[];

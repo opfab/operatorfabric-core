@@ -28,11 +28,18 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {RolesEnum} from '@ofModel/roles.model';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {FiltersComponent} from './filters/filters.component';
+import {FeedFilterComponent} from './filters/feed-filter/feed-filter.component';
+import {NgIf, NgFor, AsyncPipe} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
 
 @Component({
     selector: 'of-card-list',
     templateUrl: './card-list.component.html',
-    styleUrls: ['./card-list.component.scss']
+    styleUrls: ['./card-list.component.scss'],
+    standalone: true,
+    imports: [FiltersComponent, FeedFilterComponent, NgIf, NgFor, LightCardModule, TranslateModule, AsyncPipe]
 })
 export class CardListComponent implements AfterViewChecked, OnInit {
     @Input() public lightCards: LightCard[];

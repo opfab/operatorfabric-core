@@ -23,7 +23,7 @@ import {
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -37,6 +37,9 @@ import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {sub} from 'date-fns';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgClass} from '@angular/common';
+import {MultiSelectComponent} from '../multi-select/multi-select.component';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -61,7 +64,9 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
     selector: 'of-archives-logging-filters',
     templateUrl: './archives-logging-filters.component.html',
     styleUrls: ['./archives-logging-filters.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TranslateModule, NgIf, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgClass]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;

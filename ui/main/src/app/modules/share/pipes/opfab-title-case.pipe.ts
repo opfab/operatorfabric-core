@@ -12,7 +12,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 
 @Pipe({
-    name: 'opfabTitleCase'
+    name: 'opfabTitleCase',
+    standalone: true
 })
 export class OpfabTitleCasePipe implements PipeTransform {
     private titleToUppercase;

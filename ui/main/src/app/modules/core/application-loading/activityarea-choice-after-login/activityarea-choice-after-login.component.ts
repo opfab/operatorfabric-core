@@ -14,10 +14,13 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
+import {ActivityareaComponent} from '../../../activityarea/activityarea.component';
 
 @Component({
     selector: 'of-activityarea-choice-after-login',
-    templateUrl: './activityarea-choice-after-login.component.html'
+    templateUrl: './activityarea-choice-after-login.component.html',
+    standalone: true,
+    imports: [ActivityareaComponent]
 })
 export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingComponent {
     private modalRef: NgbModalRef;

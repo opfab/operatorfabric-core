@@ -24,11 +24,17 @@ import {Router} from '@angular/router';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {UserCardComponent} from '../../../usercard/usercard.component';
+import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-card-actions',
     templateUrl: './card-actions.component.html',
-    styleUrls: ['./card-actions.component.scss']
+    styleUrls: ['./card-actions.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, UserCardComponent, SpinnerComponent]
 })
 export class CardActionsComponent implements OnChanges, OnDestroy {
     @Input() card: Card;

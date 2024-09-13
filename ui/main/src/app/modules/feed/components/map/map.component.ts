@@ -18,11 +18,14 @@ import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
+import {NgFor} from '@angular/common';
 
 @Component({
     selector: 'of-map',
     templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss']
+    styleUrls: ['./map.component.scss'],
+    standalone: true,
+    imports: [NgFor]
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {
     private filteredLightCardStore: FilteredLightCardsStore;

@@ -18,6 +18,8 @@ import {ArchivesComponent} from '../modules/archives/archives.component';
 import {LoggingComponent} from '../modules/logging/logging.component';
 import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
 import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
+import {RealtimeusersComponent} from 'app/modules/realtimeusers/realtimeusers.component';
+import {ChangepasswordComponent} from 'app/modules/changepassword/changepassword.component';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -26,7 +28,7 @@ import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.componen
 const routes: Routes = [
     {
         path: 'feed',
-        loadChildren: () => import('../modules/feed/feed.module').then((m) => m.FeedModule)
+        loadChildren: () => import('../modules/feed/feed-routing')
     },
     {
         path: 'archives',
@@ -54,12 +56,11 @@ const routes: Routes = [
     },
     {
         path: 'businessconfigparty',
-        loadChildren: () =>
-            import('../modules/businessconfigparty/businessconfigparty.module').then((m) => m.BusinessconfigpartyModule)
+        loadChildren: () => import('../modules/businessconfigparty/businessconfigparty-routing')
     },
     {
         path: 'settings',
-        loadChildren: () => import('../modules/settings/settings.module').then((m) => m.SettingsModule)
+        loadChildren: () => import('../modules/settings/settings-routing')
     },
     {
         path: 'navbar',
@@ -67,34 +68,27 @@ const routes: Routes = [
     },
     {
         path: 'admin',
-        loadChildren: () => import('../modules/admin/admin.module').then((m) => m.AdminModule)
+        loadChildren: () => import('../modules/admin/admin-routing')
     },
     {
         path: 'realtimeusers',
-        loadChildren: () => import('../modules/realtimeusers/realtimeusers.module').then((m) => m.RealtimeusersModule)
+        component: RealtimeusersComponent
     },
     {
         path: 'activityarea',
-        loadChildren: () => import('../modules/activityarea/activityarea.module').then((m) => m.ActivityareaModule)
+        loadChildren: () => import('../modules/activityarea/activityarea-routing')
     },
     {
         path: 'feedconfiguration',
-        loadChildren: () =>
-            import('../modules/notificationconfiguration/notificationconfiguration.module').then(
-                (m) => m.NotificationConfigurationModule
-            )
+        loadChildren: () => import('../modules/notificationconfiguration/notificationconfiguration-routing')
     },
     {
         path: 'changepassword',
-        loadChildren: () =>
-            import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
+        component: ChangepasswordComponent
     },
     {
         path: 'externaldevicesconfiguration',
-        loadChildren: () =>
-            import('../modules/externaldevicesconfiguration/externaldevicesconfiguration.module').then(
-                (m) => m.ExternaldevicesModule
-            )
+        loadChildren: () => import('../modules/externaldevicesconfiguration/externaldevicesconfiguration-routing')
     },
     {
         path: 'useractionlogs',

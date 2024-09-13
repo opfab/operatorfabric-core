@@ -21,7 +21,7 @@ import {Subject} from 'rxjs';
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -35,12 +35,26 @@ import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {NgIf} from '@angular/common';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {LoggingTableComponent} from './components/logging-table/logging-table.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-logging',
     templateUrl: './logging.component.html',
     styleUrls: ['./logging.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        ArchivesLoggingFiltersComponent,
+        NgIf,
+        SpinnerComponent,
+        LoggingTableComponent,
+        TranslateModule
+    ]
 })
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();

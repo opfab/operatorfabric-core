@@ -10,10 +10,13 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
+import {NgStyle} from '@angular/common';
 
 @Component({
     selector: 'of-state-description-cell-renderer',
-    templateUrl: './state-description-cell-renderer.component.html'
+    templateUrl: './state-description-cell-renderer.component.html',
+    standalone: true,
+    imports: [NgStyle]
 })
 export class StateDescriptionCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

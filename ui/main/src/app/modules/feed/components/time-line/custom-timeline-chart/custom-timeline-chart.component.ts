@@ -30,20 +30,26 @@ import {
     calculateViewDimensions,
     ChartComponent,
     ScaleType,
-    ViewDimensions
+    ViewDimensions,
+    ChartCommonModule,
+    AxesModule
 } from '@swimlane/ngx-charts';
 import {Router} from '@angular/router';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/business/view/timeline/timeline.view';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
+import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
+import {NgFor, NgIf, AsyncPipe} from '@angular/common';
 
 @Component({
     selector: 'of-custom-timeline-chart',
     templateUrl: './custom-timeline-chart.component.html',
     styleUrls: ['./custom-timeline-chart.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [ChartCommonModule, MouseWheelDirective, NgFor, NgIf, AxesModule, NgbPopover, AsyncPipe]
 })
 export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {
     @Input() domainId;

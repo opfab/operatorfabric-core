@@ -8,16 +8,30 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {SignalMapping} from '@ofModel/external-devices.model';
 import {Observable, of} from 'rxjs';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-signal-mappings-modal',
     templateUrl: './signal-mappings-modal.component.html',
-    styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
+    styleUrls: ['./externaldevicesconfiguration-modal.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class SignalMappingsModalComponent implements OnInit {
     signalMappingsForm: FormGroup;

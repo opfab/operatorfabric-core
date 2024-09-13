@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {ExternalAppIFrameComponent} from './external-app-iframe.component';
 
 const routes: Routes = [
@@ -17,9 +16,4 @@ const routes: Routes = [
         component: ExternalAppIFrameComponent
     }
 ];
-
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class BusinessconfigpartyRoutingModule {}
+export default routes;

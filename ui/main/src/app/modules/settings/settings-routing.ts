@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
-import {CanDeactivateFn, RouterModule, Routes} from '@angular/router';
+import {CanDeactivateFn, Routes} from '@angular/router';
 import {SettingsComponent} from './components/settings/settings.component';
 
 const canDeactivate: CanDeactivateFn<SettingsComponent> = (component: SettingsComponent) => {
@@ -23,8 +22,4 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class SettingsRoutingModule {}
+export default routes;

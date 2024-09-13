@@ -14,10 +14,16 @@ import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
+import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-buttons.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgFor, NgClass} from '@angular/common';
+import {CardComponent} from '../card/card.component';
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
+    standalone: true,
+    imports: [TimelineButtonsComponent, TranslateModule, NgIf, NgFor, NgClass, NgbPopover, CardComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;

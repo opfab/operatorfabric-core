@@ -28,6 +28,9 @@ import {RolesEnum} from '@ofModel/roles.model';
 import {CardAction} from '@ofModel/light-card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {CardOperationType} from '@ofModel/card-operation.model';
+import {NgIf} from '@angular/common';
+import {SpinnerComponent} from '../../../share/spinner/spinner.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -38,7 +41,9 @@ const enum AckI18nKeys {
 
 @Component({
     selector: 'of-card-ack',
-    templateUrl: './card-ack.component.html'
+    templateUrl: './card-ack.component.html',
+    standalone: true,
+    imports: [NgIf, SpinnerComponent, TranslateModule]
 })
 export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;

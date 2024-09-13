@@ -15,12 +15,15 @@ import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Utilities} from 'app/business/common/utilities';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {NgFor} from '@angular/common';
 
 @Component({
     selector: 'of-role-cell-renderer',
     templateUrl: './role-cell-renderer.component.html',
     styleUrls: ['./role-cell-renderer.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgFor]
 })
 export class RoleCellRendererComponent implements ICellRendererAngularComp {
     itemType = AdminItemType.ENTITY;

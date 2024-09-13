@@ -15,11 +15,16 @@ import {LogOption, LoggerService as logger} from 'app/business/services/logs/log
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 import {add, Duration, format} from 'date-fns';
 import {I18nService} from '../../../business/services/translation/i18n.service';
+import {NgIf, NgFor, NgClass} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-timeline-buttons',
     templateUrl: './timeline-buttons.component.html',
-    styleUrls: ['./timeline-buttons.component.scss']
+    styleUrls: ['./timeline-buttons.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, NgFor, NgClass, NgbPopover]
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public hideTimeLine = false;

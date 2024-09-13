@@ -9,25 +9,39 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, of} from 'rxjs';
 import {RolesEnum} from '@ofModel/roles.model';
+import {NgIf} from '@angular/common';
+import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {TagInputModule} from 'ngx-chips';
 
 @Component({
     selector: 'of-edit-entity-modal',
     templateUrl: './edit-entity-modal.component.html',
     styleUrls: ['./edit-entity-modal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, TagInputModule]
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{

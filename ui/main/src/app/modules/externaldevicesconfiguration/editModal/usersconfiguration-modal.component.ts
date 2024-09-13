@@ -8,18 +8,24 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {DeviceConfiguration, UserConfiguration} from '@ofModel/external-devices.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {SpinnerComponent} from '../../share/spinner/spinner.component';
+import {MultiSelectComponent} from '../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-externaldevices-users-modal',
     templateUrl: './usersconfiguration-modal.component.html',
-    styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
+    styleUrls: ['./externaldevicesconfiguration-modal.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class UsersconfigurationModalComponent implements OnInit {
     userdeviceForm = new FormGroup({

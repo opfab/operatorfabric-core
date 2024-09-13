@@ -8,16 +8,20 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {AuthService} from 'app/authentication/auth.service';
+import {NgClass, NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-login',
     templateUrl: './login.component.html',
     styles: ['.btn-primary {margin-right: 8px;}'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule, NgIf]
 })
 export class LoginComponent implements OnInit {
     userForm: FormGroup<{

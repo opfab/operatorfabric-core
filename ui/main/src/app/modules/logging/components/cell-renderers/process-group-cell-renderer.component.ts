@@ -14,7 +14,8 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
     selector: 'of-process-group-cell-renderer',
-    templateUrl: './process-group-cell-renderer.component.html'
+    templateUrl: './process-group-cell-renderer.component.html',
+    standalone: true
 })
 export class ProcessGroupCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

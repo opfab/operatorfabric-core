@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterLinkActive, RouterLink} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
 import {NavbarView} from 'app/business/view/navbar/navbar.view';
@@ -16,12 +16,33 @@ import {NavbarMenuElement, NavbarPage} from 'app/business/view/navbar/navbarPage
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NavbarMenuView} from 'app/business/view/navbar/navbarMenu.view';
+import {NgClass, NgTemplateOutlet, NgFor, NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {InfoComponent} from './info/info.component';
+import {UserCardComponent} from '../usercard/usercard.component';
+import {AboutComponent} from '../core/about/about.component';
+import {SpinnerComponent} from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        NgFor,
+        NgIf,
+        NgbPopover,
+        TranslateModule,
+        RouterLinkActive,
+        RouterLink,
+        InfoComponent,
+        UserCardComponent,
+        AboutComponent,
+        SpinnerComponent
+    ]
 })
 export class NavbarComponent {
     openDropdownPopover: NgbPopover;

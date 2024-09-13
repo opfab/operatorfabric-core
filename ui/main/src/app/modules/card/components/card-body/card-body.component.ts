@@ -41,12 +41,33 @@ import {Utilities} from '../../../../business/common/utilities';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
+import {NgIf} from '@angular/common';
+import {CardActionsComponent} from '../card-actions/card-actions.component';
+import {CardHeaderComponent} from '../card-header/card-header.component';
+import {TemplateRenderingComponent} from '../../../share/template-rendering/template-rendering.component';
+import {CardAcksFooterComponent} from '../card-acks-footer/card-acks-footer.component';
+import {CardFooterTextComponent} from '../card-footer-text/card-footer-text.component';
+import {CardResponseComponent} from '../card-reponse/card-response.component';
+import {CardAckComponent} from '../card-ack/card-ack.component';
+import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 
 @Component({
     selector: 'of-card-body',
     templateUrl: './card-body.component.html',
     styleUrls: ['./card-body.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        NgIf,
+        CardActionsComponent,
+        CardHeaderComponent,
+        TemplateRenderingComponent,
+        CardAcksFooterComponent,
+        CardFooterTextComponent,
+        CardResponseComponent,
+        CardAckComponent,
+        OpfabTitleCasePipe
+    ]
 })
 export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() cardState: State;

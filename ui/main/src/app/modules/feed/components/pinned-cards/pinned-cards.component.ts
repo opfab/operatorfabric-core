@@ -14,11 +14,16 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {Utilities} from 'app/business/common/utilities';
 import {OpfabStore} from 'app/business/store/opfabStore';
+import {NgFor, NgIf, LowerCasePipe} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-pinned-cards',
     templateUrl: './pinned-cards.component.html',
-    styleUrls: ['./pinned-cards.component.scss']
+    styleUrls: ['./pinned-cards.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, NgbPopover, TranslateModule, LowerCasePipe]
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();

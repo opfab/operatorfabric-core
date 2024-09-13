@@ -8,10 +8,14 @@
  */
 
 import {Component} from '@angular/core';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-externaldevices',
     templateUrl: './externaldevicesconfiguration.component.html',
-    styleUrls: ['./externaldevicesconfiguration.component.scss']
+    styleUrls: ['./externaldevicesconfiguration.component.scss'],
+    standalone: true,
+    imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet]
 })
 export class ExternaldevicesconfigurationComponent {}

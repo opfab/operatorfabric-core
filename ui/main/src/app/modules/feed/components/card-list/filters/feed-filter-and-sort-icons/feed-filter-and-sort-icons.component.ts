@@ -9,11 +9,14 @@
 
 import {Component, Input, OnChanges, Output} from '@angular/core';
 import {Subject} from 'rxjs';
+import {NgClass} from '@angular/common';
 
 @Component({
     selector: 'of-feed-filter-icon',
     templateUrl: './feed-filter-and-sort-icons.component.html',
-    styleUrls: ['./feed-filter-and-sort-icons.component.scss']
+    styleUrls: ['./feed-filter-and-sort-icons.component.scss'],
+    standalone: true,
+    imports: [NgClass]
 })
 export class FeedFilterAndSortIconsComponent implements OnChanges {
     @Input() filterActive: boolean;

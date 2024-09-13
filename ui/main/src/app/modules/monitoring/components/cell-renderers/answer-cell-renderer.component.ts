@@ -10,10 +10,15 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-answer-cell-renderer',
-    templateUrl: './answer-cell-renderer.component.html'
+    templateUrl: './answer-cell-renderer.component.html',
+    standalone: true,
+    imports: [TranslateModule, NgIf, NgbPopover]
 })
 export class AnswerCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

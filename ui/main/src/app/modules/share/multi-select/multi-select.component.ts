@@ -9,7 +9,7 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import * as _ from 'lodash-es';
 
@@ -17,7 +17,9 @@ declare const VirtualSelect: any;
 
 @Component({
     selector: 'of-multi-select ',
-    templateUrl: './multi-select.component.html'
+    templateUrl: './multi-select.component.html',
+    standalone: true,
+    imports: [TranslateModule]
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
     @Input() public parentForm: UntypedFormGroup;

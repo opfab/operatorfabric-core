@@ -12,6 +12,10 @@ import {Card} from '@ofModel/card.model';
 import {State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {NgIf, NgFor, NgStyle} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {CountDownComponent} from '../../../share/countdown/countdown.component';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 const maxVisibleEntitiesForCardHeader = 3;
 
@@ -24,7 +28,9 @@ class EntityForCardHeader {
 @Component({
     selector: 'of-card-header',
     templateUrl: './card-header.component.html',
-    styleUrls: ['./card-header.component.scss']
+    styleUrls: ['./card-header.component.scss'],
+    standalone: true,
+    imports: [NgIf, TranslateModule, CountDownComponent, NgbPopover, NgFor, NgStyle]
 })
 export class CardHeaderComponent implements OnChanges {
     @Input() card: Card;

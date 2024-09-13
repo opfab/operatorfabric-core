@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {AdminComponent} from './admin.component';
 import {UsersTableComponent} from './components/table/users-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
@@ -58,8 +57,4 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class AdminRoutingModule {}
+export default routes;

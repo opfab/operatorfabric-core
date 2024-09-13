@@ -11,12 +11,16 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, V
 import {NotificationConfigurationView} from 'app/business/view/notificationConfiguration/notificationConfiguration.view';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NotificationConfigurationPage} from 'app/business/view/notificationConfiguration/notificationConfigurationPage';
+import {TranslateModule} from '@ngx-translate/core';
+import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
 
 @Component({
     selector: 'of-notificationconfiguration',
     templateUrl: './notificationconfiguration.component.html',
     styleUrls: ['./notificationconfiguration.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [TranslateModule, NgIf, NgFor, NgTemplateOutlet]
 })
 export class NotificationConfigurationComponent implements OnInit, AfterViewInit {
     notificationConfigurationView: NotificationConfigurationView;

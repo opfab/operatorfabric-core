@@ -16,6 +16,8 @@ import {SoundNotificationService} from 'app/business/services/notifications/soun
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {ModalService} from '../../../../business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 /** This component checks if the url of opfab is already in use
  *  in the browser (there should not be several accounts connected
@@ -27,7 +29,9 @@ import {I18n} from '@ofModel/i18n.model';
 @Component({
     selector: 'of-app-loaded-in-another-tab',
     styleUrls: ['./app-loaded-in-another-tab.component.scss'],
-    templateUrl: './app-loaded-in-another-tab.component.html'
+    templateUrl: './app-loaded-in-another-tab.component.html',
+    standalone: true,
+    imports: [NgIf, TranslateModule]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {
     @HostListener('window:beforeunload')

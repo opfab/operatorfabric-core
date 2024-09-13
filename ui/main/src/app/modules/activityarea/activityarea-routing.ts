@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
-import {CanDeactivateFn, RouterModule, Routes} from '@angular/router';
+import {CanDeactivateFn, Routes} from '@angular/router';
 import {ActivityareaComponent} from './activityarea.component';
 
 const canDeactivate: CanDeactivateFn<ActivityareaComponent> = (component: ActivityareaComponent) => {
@@ -23,8 +22,4 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class ActivityareaRoutingModule {}
+export default routes;

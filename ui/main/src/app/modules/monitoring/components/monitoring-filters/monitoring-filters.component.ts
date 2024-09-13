@@ -8,18 +8,23 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {TranslateService} from '@ngx-translate/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MonitoringFilterBuilder} from './monitoring-filter-builder';
 import {DEFAULT_PROCESS_GROUP_ID, MonitoringProcessList} from './monitoring-process-list';
+import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';
+import {NgIf} from '@angular/common';
+import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-monitoring-filters',
     templateUrl: './monitoring-filters.component.html',
-    styleUrls: ['./monitoring-filters.component.scss']
+    styleUrls: ['./monitoring-filters.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, TimelineButtonsComponent, NgIf, MultiSelectComponent, TranslateModule]
 })
 export class MonitoringFiltersComponent implements OnInit {
     monitoringForm = new FormGroup({

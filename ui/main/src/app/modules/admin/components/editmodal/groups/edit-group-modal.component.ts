@@ -9,7 +9,16 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {
+    AbstractControl,
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
@@ -22,12 +31,17 @@ import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {NgIf} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 
 @Component({
     selector: 'of-edit-group-modal',
     templateUrl: './edit-group-modal.component.html',
     styleUrls: ['./edit-group-modal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditGroupModalComponent implements OnInit {
     groupForm: FormGroup<{

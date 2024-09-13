@@ -36,12 +36,25 @@ import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
 import {ModalServer} from 'app/business/server/modal.server';
 import {SoundServer} from 'app/business/server/sound.server';
+import {NgIf} from '@angular/common';
+import {LoadingInProgressComponent} from './loading-in-progress/loading-in-progress.component';
+import {LoginComponent} from './login/login.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 declare const opfab: any;
 @Component({
     selector: 'of-application-loading',
     styleUrls: ['./application-loading.component.scss'],
-    templateUrl: './application-loading.component.html'
+    templateUrl: './application-loading.component.html',
+    standalone: true,
+    imports: [
+        NgIf,
+        LoadingInProgressComponent,
+        AppLoadedInAnotherTabComponent,
+        LoginComponent,
+        ActivityAreaChoiceAfterLoginComponent,
+        TranslateModule
+    ]
 })
 export class ApplicationLoadingComponent implements OnInit {
     @Output() applicationLoadedDone: Subject<boolean> = new Subject();

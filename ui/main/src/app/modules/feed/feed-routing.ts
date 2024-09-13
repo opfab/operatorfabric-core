@@ -7,9 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {CardBodyComponent} from '../card/components/card-body/card-body.component';
 import {CardComponent} from '../card/card.component';
 import {MapComponent} from './components/map/map.component';
@@ -46,8 +45,4 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class FeedRoutingModule {}
+export default routes;

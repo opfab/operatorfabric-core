@@ -7,6 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {NgFor} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {AboutView} from 'app/business/view/core/about/about.view';
 
@@ -14,7 +15,9 @@ import {AboutView} from 'app/business/view/core/about/about.view';
     selector: 'of-about',
     styleUrls: ['./about.component.scss'],
     templateUrl: './about.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgFor],
+    standalone: true
 })
 export class AboutComponent {
     aboutElements = [];

@@ -10,7 +10,7 @@
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FullCalendarComponent} from '@fullcalendar/angular';
+import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -27,11 +27,15 @@ import {SelectedCardService} from 'app/business/services/card/selectedCard.servi
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
+import {NgIf} from '@angular/common';
+import {CardComponent} from '../card/card.component';
 
 @Component({
     selector: 'of-calendar',
     templateUrl: './calendar.component.html',
-    styleUrls: ['./calendar.component.scss']
+    styleUrls: ['./calendar.component.scss'],
+    standalone: true,
+    imports: [NgIf, FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     private filteredLightCardStore: FilteredLightCardsStore;
