@@ -8,18 +8,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../modules/core/application-loading/login/login.component';
-import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
-import {CalendarComponent} from '../modules/calendar/calendar.component';
-import {UserActionLogsComponent} from '../modules/useractionlogs/useractionlogs.component';
-import {DashboardComponent} from 'app/modules/dashboard/dashboard.component';
-import {ArchivesComponent} from '../modules/archives/archives.component';
-import {LoggingComponent} from '../modules/logging/logging.component';
-import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
-import {RichTextComponent} from 'app/modules/devtools/richtext/richtext.component';
-import {RealtimeusersComponent} from 'app/modules/realtimeusers/realtimeusers.component';
-import {ChangepasswordComponent} from 'app/modules/changepassword/changepassword.component';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -32,27 +22,28 @@ const routes: Routes = [
     },
     {
         path: 'archives',
-        component: ArchivesComponent
+        loadComponent: () => import('../modules/archives/archives.component').then((m) => m.ArchivesComponent)
     },
     {
         path: 'monitoring',
-        component: MonitoringComponent
+        loadComponent: () => import('../modules/monitoring/monitoring.component').then((m) => m.MonitoringComponent)
     },
     {
         path: 'dashboard',
-        component: DashboardComponent
+        loadComponent: () => import('../modules/dashboard/dashboard.component').then((m) => m.DashboardComponent)
     },
     {
         path: 'logging',
-        component: LoggingComponent
+        loadComponent: () => import('../modules/logging/logging.component').then((m) => m.LoggingComponent)
     },
     {
         path: 'processmonitoring',
-        component: ProcessMonitoringComponent
+        loadComponent: () =>
+            import('../modules/processmonitoring/processmonitoring.component').then((m) => m.ProcessMonitoringComponent)
     },
     {
         path: 'calendar',
-        component: CalendarComponent
+        loadComponent: () => import('../modules/calendar/calendar.component').then((m) => m.CalendarComponent)
     },
     {
         path: 'businessconfigparty',
@@ -72,7 +63,8 @@ const routes: Routes = [
     },
     {
         path: 'realtimeusers',
-        component: RealtimeusersComponent
+        loadComponent: () =>
+            import('../modules/realtimeusers/realtimeusers.component').then((m) => m.RealtimeusersComponent)
     },
     {
         path: 'activityarea',
@@ -84,7 +76,8 @@ const routes: Routes = [
     },
     {
         path: 'changepassword',
-        component: ChangepasswordComponent
+        loadComponent: () =>
+            import('../modules/changepassword/changepassword.component').then((m) => m.ChangepasswordComponent)
     },
     {
         path: 'externaldevicesconfiguration',
@@ -92,11 +85,12 @@ const routes: Routes = [
     },
     {
         path: 'useractionlogs',
-        component: UserActionLogsComponent
+        loadComponent: () =>
+            import('../modules/useractionlogs/useractionlogs.component').then((m) => m.UserActionLogsComponent)
     },
     {
         path: 'devtools/richtext',
-        component: RichTextComponent
+        loadComponent: () => import('../modules/devtools/richtext/richtext.component').then((m) => m.RichTextComponent)
     }
 ];
 const startIndex = 0;
@@ -110,7 +104,6 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
     imports: [
         RouterModule.forRoot(routes, {
             enableTracing: false,
-            preloadingStrategy: PreloadAllModules,
             /* sets initialNavigation to false is needed to enable authentication implicit flow
              * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
              */
