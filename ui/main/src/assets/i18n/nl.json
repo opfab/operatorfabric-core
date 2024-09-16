@@ -457,7 +457,9 @@
             "ackAndClose": "BEVESTIG EN SLUIT",
             "unack": "ANNULEER BEVESTIGING"
         },
-        "acknowledged": "Bevestigd"
+        "acknowledged": "Bevestigd",
+        "acknowledgedHeader": "Bevestigd",
+        "notAcknowledgedHeader": "Niet bevestigd"
     },
     "admin": {
         "input": {

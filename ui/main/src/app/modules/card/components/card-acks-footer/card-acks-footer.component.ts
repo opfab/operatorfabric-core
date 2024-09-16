@@ -18,17 +18,21 @@ import {RolesEnum} from '@ofModel/roles.model';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-card-acks-footer',
     templateUrl: './card-acks-footer.component.html',
+    styleUrls: ['./card-acks-footer.component.scss'],
     standalone: true,
-    imports: [TranslateModule, NgFor, NgStyle]
+    imports: [TranslateModule, NgFor, NgStyle, NgbPopover]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     @Input() card: Card;
 
     public listEntitiesToAck = [];
+    public acknowledgedList: any[];
+    public notAcknowledgedList: any[];
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -59,6 +63,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
                             : CardAcksFooterComponent.ORANGE;
                 }
             });
+            this.computeAcknowlegmentLists();
         }
     }
 
@@ -100,6 +105,16 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
             })
         );
         this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));
+        this.computeAcknowlegmentLists();
+    }
+
+    private computeAcknowlegmentLists() {
+        this.acknowledgedList = this.listEntitiesToAck.filter(
+            (entity) => entity.color === CardAcksFooterComponent.GREEN
+        );
+        this.notAcknowledgedList = this.listEntitiesToAck.filter(
+            (entity) => entity.color === CardAcksFooterComponent.ORANGE
+        );
     }
 
     private checkEntityAcknowledged(entityId: string): boolean {

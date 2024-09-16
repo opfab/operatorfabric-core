@@ -389,6 +389,11 @@ body {
     pointer-events: none;
 }
 
+.opfab-popover-wide {
+    @extend %opfab-popover;
+    max-width: 100%;
+}
+
 .opfab-popover-with-scrolling {
     max-width: 800px;
 
