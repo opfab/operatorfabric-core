@@ -11,9 +11,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
-import {NgFor, NgIf, AsyncPipe} from '@angular/common';
-import {LightCardComponent} from '../light-card.component';
-import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-grouped-card-list',
