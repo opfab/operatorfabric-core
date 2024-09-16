@@ -457,7 +457,9 @@
             "ackAndClose": "ACQUITTER ET FERMER",
             "unack": "ANNULER L'ACQUITTEMENT"
         },
-        "acknowledged": "Acquittements"
+        "acknowledged": "Acquittements",
+        "acknowledgedHeader": "Acquitté",
+        "notAcknowledgedHeader": "Non-acquitté"
     },
     "admin": {
         "input": {

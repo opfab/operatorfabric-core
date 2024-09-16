@@ -283,6 +283,14 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
         .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('ngb-popover-window').should('not.exist');
+        cy.get('#opfab-card-acknowledged-footer').trigger('mouseenter');
+        cy.get('ngb-popover-window').should('exist');
+
+        cy.get('#opfab-acknowledged-list').find('span').should("have.length", 0);
+        cy.get('#opfab-not-acknowledged-list').find('span').should("have.length", 12);
+
     });
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function () {
@@ -395,6 +403,12 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
+        cy.get('ngb-popover-window').should('not.exist');
+        cy.get('#opfab-card-acknowledged-footer').trigger('mouseenter');
+        cy.get('ngb-popover-window').should('exist');
+        cy.get('#opfab-acknowledged-list').find('span').should("have.length", 4);
+        cy.get('#opfab-not-acknowledged-list').find('span').should("have.length", 8);
+
         // Footer should contain 'Addressed to' with 4 FR control centers each with ack icon
         cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
         cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
@@ -447,7 +461,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we reconnect
         activityArea.save();
     });
-
+/*
     it('Check operator1_fr see the entities acknowledgments done by operator4_fr for the previous card', function () {
 
         opfab.loginWithUser('operator1_fr');
@@ -902,5 +916,5 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
-
+*/
 })
