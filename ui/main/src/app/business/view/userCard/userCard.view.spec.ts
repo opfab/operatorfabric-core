@@ -450,6 +450,30 @@ describe('UserCard view ', () => {
                     {id: 'ENTITY3', label: 'ENTITY3_NAME'}
                 ]);
             });
+            it('should reset initially selected recipients in UI if a new state is selected', async () => {
+                userCardUIControlMock = new UserCardUIControlMock();
+                userCardUIControlMock.setFunctionToRenderTemplate(async () => {
+                    opfab.currentUserCard.setInitialSelectedRecipients(['ENTITY1', 'ENTITY2']);
+                });
+                userCardView = new UserCardView(userCardUIControlMock);
+                await userCardView.init();
+                expect(userCardUIControlMock.selectedRecipients).toEqual(['ENTITY1', 'ENTITY2']);
+                userCardUIControlMock.setFunctionToRenderTemplate(async () => {});
+                await userCardView.userClicksOnState('state1_2');
+                expect(userCardUIControlMock.selectedRecipients).toEqual([]);
+            });
+            it('should reset initially selected recipients for information in UI if a new state is selected', async () => {
+                userCardUIControlMock = new UserCardUIControlMock();
+                userCardUIControlMock.setFunctionToRenderTemplate(async () => {
+                    opfab.currentUserCard.setInitialSelectedRecipientsForInformation(['ENTITY1', 'ENTITY2']);
+                });
+                userCardView = new UserCardView(userCardUIControlMock);
+                await userCardView.init();
+                expect(userCardUIControlMock.selectedRecipientsForInformation).toEqual(['ENTITY1', 'ENTITY2']);
+                userCardUIControlMock.setFunctionToRenderTemplate(async () => {});
+                await userCardView.userClicksOnState('state1_2');
+                expect(userCardUIControlMock.selectedRecipientsForInformation).toEqual([]);
+            });
         });
         describe('The current state', () => {
             it('Should not render again template', async () => {
