@@ -8,9 +8,9 @@
   "heartbeatSendingInterval": 30,
   "defaultEntryPage": "feed",
   "alerts": {
-    "messageBusinessAutoClose": false,
+    "alarmLevelAutoClose": false,
     "messageOnBottomOfTheScreen": false,
-    "hideBusinessMessages": false
+    "doNotAlertForHiddenCardReceived": false
   },
   "archive": {
     "filters": {

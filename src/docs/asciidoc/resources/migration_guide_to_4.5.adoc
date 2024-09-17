@@ -24,3 +24,9 @@ and `settings.dateFormat`. You can find the available formats here : https://dat
 OperatorFabric is now sending emails whether a card is read or not. So, the parameter
 `secondsAfterPublicationToConsiderCardAsNotRead` having become useless, it was deleted, and
 you can safely remove it from your configuration file.
+
+== UI Configuration
+Some fields of the `web-ui.json` file have changed and renamed:
+
+* `alerts.messageBusinessAutoClose` has been renamed as `alerts.alarmLevelAutoClose`
+* `alerts.hideBusinessMessages` has been renamed as `alerts.doNotAlertForHiddenCardReceived`

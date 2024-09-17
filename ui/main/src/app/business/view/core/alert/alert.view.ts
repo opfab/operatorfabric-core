@@ -15,26 +15,21 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 export class AlertView {
-    private alertMessageBusinessAutoClose: boolean;
+    private alarmMessageAutoClose: boolean;
     private alertPage: AlertPage;
     private lastMessageDate: number;
-    private hideMessagesLevel: MessageLevel[] = [];
 
     constructor(private translationService: TranslationService) {
-        this.alertMessageBusinessAutoClose = ConfigService.getConfigValue('alerts.messageBusinessAutoClose', false);
+        this.alarmMessageAutoClose = ConfigService.getConfigValue('alerts.alarmLevelAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';
         if (ConfigService.getConfigValue('alerts.messageOnBottomOfTheScreen', false))
             this.alertPage.style = 'bottom: 0';
-        if (ConfigService.getConfigValue('alerts.hideBusinessMessages', false))
-            this.hideMessagesLevel.push(MessageLevel.BUSINESS);
 
         AlertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
     }
 
     private processAlertMessage(message: Message) {
-        if (this.hideMessagesLevel.includes(message.level)) return;
-
         this.alertPage.display = true;
         if (message.i18n?.key)
             this.alertPage.message = this.translationService.getTranslation(message.i18n.key, message.i18n.parameters);
@@ -42,7 +37,7 @@ export class AlertView {
         logger.debug(`AlertMessage : ${this.alertPage.message}`, LogOption.LOCAL_AND_REMOTE);
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);
         this.lastMessageDate = new Date().valueOf();
-        if (message.level !== MessageLevel.BUSINESS || this.alertMessageBusinessAutoClose)
+        if (message.level !== MessageLevel.ALARM || this.alarmMessageAutoClose)
             setTimeout(() => {
                 // to avoid closing a message which replace a previous one
                 if (new Date().valueOf() - this.lastMessageDate >= 5000) this.alertPage.display = false;
@@ -57,7 +52,7 @@ export class AlertView {
                 return '#67a854';
             case MessageLevel.ERROR:
                 return '#e87a08';
-            case MessageLevel.BUSINESS:
+            case MessageLevel.ALARM:
                 return '#a71a1a';
             default:
                 return '#0070da';

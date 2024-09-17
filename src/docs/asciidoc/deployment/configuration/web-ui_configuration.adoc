@@ -60,8 +60,8 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
     }
   }
 ----
-|alerts.hideBusinessMessages|false|no| if set to true, the business alert messages are hidden
-|alerts.messageBusinessAutoClose|false|no| if set to true, the (red) business alert message will automatically close after a few seconds
+|alerts.doNotAlertForHiddenCardReceived|false|no| if set to true, alert messages are not shown when receiving cards not visible in the feed
+|alerts.alarmLevelAutoClose|false|no| if set to true, the ALARM (red) alert message will automatically close after a few seconds
 |alerts.messageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page
 
 |archive.filters.page.size|10|no|The page size of archive filters
