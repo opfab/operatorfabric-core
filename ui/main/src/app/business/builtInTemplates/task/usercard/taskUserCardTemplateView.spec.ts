@@ -9,10 +9,10 @@
 
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import {TaskCardTemplateView} from './taskUserCardTemplateView';
+import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 
-describe('Question UserCard template', () => {
+describe('Task UserCard Template View', () => {
     beforeEach(() => {
         const translationService = new TranslationServiceMock();
         OpfabAPIService.setTranslationService(translationService);
@@ -22,27 +22,27 @@ describe('Question UserCard template', () => {
     });
 
     it('GIVEN a user WHEN create card THEN task title is empty', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'CREATE';
         OpfabAPIService.currentCard.card = {data: {taskTitle: 'My task Title'}};
         expect(view.getTaskTitle()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'CREATE';
         OpfabAPIService.currentCard.card = {data: {richTaskDescription: 'My task Description'}};
         expect(view.getTaskDescription()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card with data THEN card is provided with data', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         const taskTitle = 'My task Title';
         const taskDescriptionQuillEditor = new QuillEditorMock();
         taskDescriptionQuillEditor.setContents('My task Description');
         const freq = 'DAILY';
-        const durationInMinutes = '15';
-        const minutesForReminder = '5';
+        const durationInMinutes = 15;
+        const minutesForReminder = 5;
         const byweekday = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
         const bymonth = [1, 2, 3];
         const bysetpos = [];
@@ -63,29 +63,33 @@ describe('Question UserCard template', () => {
         expect(specficCardInformation.valid).toEqual(true);
         expect(specficCardInformation.card.data.taskTitle).toEqual('My task Title');
         expect(specficCardInformation.card.data.richTaskDescription).toEqual('My task Description');
-        expect(specficCardInformation.card.data.freq).toEqual('DAILY');
-        expect(specficCardInformation.card.data.durationInMinutes).toEqual('15');
-        expect(specficCardInformation.card.data.minutesForReminder).toEqual('5');
-        expect(specficCardInformation.card.data.byweekday).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
-        expect(specficCardInformation.card.data.bymonth).toEqual([1, 2, 3]);
-        expect(specficCardInformation.card.data.bysetpos).toEqual([]);
-        expect(specficCardInformation.card.data.bymonthday).toEqual([]);
-        expect(specficCardInformation.card.data.byhour).toEqual(['15']);
-        expect(specficCardInformation.card.data.byminute).toEqual(['15']);
+        expect(specficCardInformation.card.rRule.freq).toEqual('DAILY');
+        expect(specficCardInformation.card.rRule.durationInMinutes).toEqual(15);
+        expect(specficCardInformation.card.data.minutesForReminder).toEqual(5);
+        expect(specficCardInformation.card.rRule.byweekday).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
+        expect(specficCardInformation.card.rRule.bymonth).toEqual([1, 2, 3]);
+        expect(specficCardInformation.card.rRule.bysetpos).toEqual([]);
+        expect(specficCardInformation.card.rRule.bymonthday).toEqual([]);
+        expect(specficCardInformation.card.rRule.byhour).toEqual([15]);
+        expect(specficCardInformation.card.rRule.byminute).toEqual([15]);
+        expect(specficCardInformation.card.secondsBeforeTimeSpanForReminder).toEqual(300); // 300s = 5 minutes
     });
 
     it('GIVEN an existing card WHEN user edit card THEN card data is current card data', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'EDITION';
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
+                minutesForReminder: 5
+            },
+            rRule: {
                 freq: 'DAILY',
-                byhour: ['15'],
-                byminute: ['15'],
-                durationInMinutes: '15',
-                minutesForReminder: '5',
+                byhour: [15],
+                byminute: [15],
+                durationInMinutes: 15,
+                minutesForReminder: 5,
                 byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
                 bymonth: [1, 2, 3],
                 bysetpos: [],
@@ -96,8 +100,8 @@ describe('Question UserCard template', () => {
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');
-        expect(view.getDurationInMinutes(null)).toEqual('15');
-        expect(view.getMinutesForReminder(null)).toEqual('5');
+        expect(view.getDurationInMinutes(null)).toEqual(15);
+        expect(view.getMinutesForReminder(null)).toEqual(5);
         expect(view.getWeekDay()).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
         expect(view.getSetPos()).toEqual([]);
         expect(view.getMonth()).toEqual([1, 2, 3]);
@@ -105,17 +109,19 @@ describe('Question UserCard template', () => {
     });
 
     it('GIVEN an existing card WHEN user copy card THEN data is current card data', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'COPY';
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
+                minutesForReminder: 5
+            },
+            rRule: {
                 freq: 'DAILY',
-                byhour: ['15'],
-                byminute: ['15'],
-                durationInMinutes: '15',
-                minutesForReminder: '5',
+                byhour: [15],
+                byminute: [15],
+                durationInMinutes: 15,
                 byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
                 bymonth: [1, 2, 3],
                 bysetpos: [],
@@ -126,8 +132,8 @@ describe('Question UserCard template', () => {
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
         expect(view.getByHourAndMinutes()).toEqual('15:15');
-        expect(view.getDurationInMinutes(null)).toEqual('15');
-        expect(view.getMinutesForReminder(null)).toEqual('5');
+        expect(view.getDurationInMinutes(null)).toEqual(15);
+        expect(view.getMinutesForReminder(null)).toEqual(5);
         expect(view.getWeekDay()).toEqual(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
         expect(view.getSetPos()).toEqual([]);
         expect(view.getMonth()).toEqual([1, 2, 3]);
@@ -135,17 +141,19 @@ describe('Question UserCard template', () => {
     });
 
     it('GIVEN an existing card with taskDescription and not richTaskDescription WHEN user edit card THEN task description has rich text format', () => {
-        const view = new TaskCardTemplateView();
+        const view = new TaskUserCardTemplateView();
         OpfabAPIService.currentUserCard.editionMode = 'EDITION';
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 taskDescription: 'My task Description',
+                minutesForReminder: 5
+            },
+            rRule: {
                 freq: 'DAILY',
-                byhour: ['15'],
-                byminute: ['15'],
-                durationInMinutes: '15',
-                minutesForReminder: '5',
+                byhour: [15],
+                byminute: [15],
+                durationInMinutes: 15,
                 byweekday: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
                 bymonth: [1, 2, 3],
                 bysetpos: [],

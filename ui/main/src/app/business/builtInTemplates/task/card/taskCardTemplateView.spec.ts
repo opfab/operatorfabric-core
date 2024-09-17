@@ -11,7 +11,7 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskCardTemplateView} from './taskCardTemplateView';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 
-describe('Question UserCard template', () => {
+describe('Task Card Template View', () => {
     let view: TaskCardTemplateView;
     beforeEach(() => {
         const translationService = new TranslationServiceMock();
@@ -25,27 +25,30 @@ describe('Question UserCard template', () => {
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
-                richTaskDescription: 'My task Description',
-                byhour: ['5'],
-                byminute: ['15'],
-                durationInMinutes: '15'
+                richTaskDescription: 'My task Description'
+            },
+            rRule: {
+                byhour: [5],
+                byminute: [15],
+                durationInMinutes: 15
             }
         };
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
-        expect(view.getByHour()).toEqual('05');
-        expect(view.getByMinute()).toEqual('15');
-        expect(view.getDurationInMinutes()).toEqual('15');
+        expect(view.getHourAndMinutes()).toEqual('05:15');
+        expect(view.getDurationInMinutes()).toEqual(15);
     });
 
     it('GIVEN a card taskDescription and not richTaskDescription WHEN get data THEN task description has rich text format', () => {
         OpfabAPIService.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
-                taskDescription: 'My task Description',
-                byhour: ['5'],
-                byminute: ['15'],
-                durationInMinutes: '15'
+                taskDescription: 'My task Description'
+            },
+            rRule: {
+                byhour: [5],
+                byminute: [15],
+                durationInMinutes: 15
             }
         };
         expect(view.getTaskDescription()).toEqual(
@@ -55,23 +58,24 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a card WHEN filling content THEN text is correct', () => {
         OpfabAPIService.currentCard.card = {
-            data: {
+            data: {},
+            rRule: {
                 freq: 'MONTHLY',
-                bysetpos: ['1'],
+                bysetpos: [1],
                 byweekday: ['MO'],
-                bymonthday: ['1'],
+                bymonthday: [1],
                 bymonth: [1]
             }
         };
-        const text = view.fillTexts();
-        expect(text.textForBysetpos).toEqual(
+        const text = view.getTexts();
+        expect(text.textForBySetPos).toEqual(
             'Translation (en) of builtInTemplate.taskCard.the Translation (en) of builtInTemplate.taskCard.first '
         );
-        expect(text.textForByWeekday).toEqual(' Translation (en) of shared.calendar.monday');
-        expect(text.textForBymonthday).toEqual(
+        expect(text.textForByWeekDay).toEqual(' Translation (en) of shared.calendar.monday');
+        expect(text.textForByMonthDay).toEqual(
             'Translation (en) of builtInTemplate.taskCard.firstDayOfTheMonth<br/><br/>'
         );
-        expect(text.textForBymonth).toEqual(
+        expect(text.textForByMonth).toEqual(
             'Translation (en) of builtInTemplate.taskCard.in Translation (en) of shared.calendar.january'
         );
     });
