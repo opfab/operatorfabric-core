@@ -97,9 +97,9 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private setSelectedOptionsToParentForm() {
-        if (this.oldSelectedOptions !== this.virtualSelectComponent.value) {
+        if (!_.isEqual(this.oldSelectedOptions, this.virtualSelectComponent.value)) {
             this.parentForm.get(this.multiSelectId).setValue(this.virtualSelectComponent.value);
-            this.oldSelectedOptions = this.virtualSelectComponent.value;
+            this.oldSelectedOptions = _.clone(this.virtualSelectComponent.value);
             this.selectionChange.emit(this.virtualSelectComponent.value);
         }
     }

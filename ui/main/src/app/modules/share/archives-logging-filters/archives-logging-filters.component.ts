@@ -180,6 +180,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processesWithoutProcessGroupMultiSelectOptions = [];
         this.processMultiSelectOptionsPerProcessGroups.clear();
         this.processGroupMultiSelectOptions = [];
+        this.tagsSelected = [];
+        this.processGroupSelected = [];
+        this.processSelected = [];
+        this.stateSelected = [];
     }
 
     loadValuesforTags() {
@@ -224,7 +228,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processMultiSelectOptions = this.visibleProcesses.filter((visibleProcess) =>
             processesIds.includes(visibleProcess.value)
         );
-
         this.setDefaultPublishDateFilter();
     }
 
@@ -234,8 +237,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             'opfab.seeOnlyCardsForWhichUserIsRecipient',
             String(!this.isAdminModeChecked)
         );
-        this.resetFormEvent.emit(null);
         this.loadValuesForFilters();
+        this.resetFormEvent.emit(null);
+        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
     }
 
     transformFiltersListToMap = (filters: any): void => {
