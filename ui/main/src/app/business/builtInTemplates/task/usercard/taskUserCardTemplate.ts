@@ -8,12 +8,12 @@
  */
 
 import {BaseUserCardTemplate} from '../../baseUserCardTemplate';
-import {TaskCardTemplateView} from './taskUserCardTemplateView';
+import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 
 declare const opfab;
 
 export class TaskUserCardTemplate extends BaseUserCardTemplate {
-    view: TaskCardTemplateView;
+    view: TaskUserCardTemplateView;
     occurrenceNumberSelect;
     weekdaySelect;
 
@@ -51,7 +51,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
     constructor() {
         super();
-        this.view = new TaskCardTemplateView();
+        this.view = new TaskUserCardTemplateView();
         this.innerHTML = `
         <br/>
         <div class="opfab-input">
@@ -409,14 +409,14 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             if (bymonthday) {
                 for (const monthday of bymonthday) {
                     switch (monthday) {
-                        case '1':
+                        case 1:
                             (<HTMLInputElement>document.getElementById('firstDay')).checked = true;
                             break;
-                        case '-1':
+                        case -1:
                             (<HTMLInputElement>document.getElementById('lastDay')).checked = true;
                             break;
                         default:
-                            (<HTMLInputElement>document.getElementById('nthDay')).value = monthday;
+                            (<HTMLInputElement>document.getElementById('nthDay')).value = monthday.toString();
                     }
                 }
             }
@@ -492,18 +492,20 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
     getSpecificCardInformation() {
         const time = (<HTMLInputElement>document.getElementById('time')).value;
-        const durationInMinutes = (<HTMLInputElement>document.getElementById('durationInMinutes')).value;
-        const minutesForReminder = (<HTMLInputElement>document.getElementById('minutesForReminder')).value;
+        const durationInMinutes: number = parseInt(
+            (<HTMLInputElement>document.getElementById('durationInMinutes')).value
+        );
+        const minutesForReminder: number = parseInt(
+            (<HTMLInputElement>document.getElementById('minutesForReminder')).value
+        );
         const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;
         const quillTaskDescriptionEditor = <HTMLInputElement>document.getElementById('taskDescription');
 
-        const that = this;
-
         let freq = '';
-        let byweekday = [];
-        let bymonth = [];
-        const bymonthday = [];
-        let bysetpos = [];
+        let byweekday: string[] = [];
+        let bymonth: number[] = [];
+        const bymonthday: number[] = [];
+        let bysetpos: number[] = [];
 
         if ((<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked === true) {
             freq = 'MONTHLY';
@@ -511,13 +513,14 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
             if ((<HTMLInputElement>document.getElementById('radioButtonNthDay')).checked === true) {
                 if ((<HTMLInputElement>document.getElementById('nthDay')).value) {
-                    bymonthday.push((<HTMLInputElement>document.getElementById('nthDay')).value);
+                    const nthDay = parseInt((<HTMLInputElement>document.getElementById('nthDay')).value);
+                    bymonthday.push(nthDay);
                 }
                 if ((<HTMLInputElement>document.getElementById('firstDay')).checked === true) {
-                    bymonthday.push('1');
+                    bymonthday.push(1);
                 }
                 if ((<HTMLInputElement>document.getElementById('lastDay')).checked === true) {
-                    bymonthday.push('-1');
+                    bymonthday.push(-1);
                 }
 
                 if (bymonthday.length === 0) {
@@ -531,9 +534,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             }
 
             if ((<HTMLInputElement>document.getElementById('radioButtonNthWeekday')).checked === true) {
-                bysetpos = that.occurrenceNumberSelect.getSelectedValues();
-                if (that.weekdaySelect.getSelectedValues().length > 0) {
-                    byweekday = [that.weekdaySelect.getSelectedValues()];
+                bysetpos = this.occurrenceNumberSelect.getSelectedValues().map((selectedValue) => {
+                    return parseInt(selectedValue);
+                });
+                if (this.weekdaySelect.getSelectedValues().length > 0) {
+                    byweekday = [this.weekdaySelect.getSelectedValues()];
                 }
 
                 if (bysetpos.length === 0 || byweekday.length === 0) {

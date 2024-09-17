@@ -12,7 +12,7 @@ declare const opfab;
 export class TaskCardTemplateView {
     showInputField: Function;
 
-    public getTaskTitle() {
+    public getTaskTitle(): string {
         let taskTitle = opfab.currentCard.getCard()?.data?.taskTitle;
         if (taskTitle) {
             taskTitle = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(taskTitle));
@@ -22,7 +22,7 @@ export class TaskCardTemplateView {
         return taskTitle;
     }
 
-    public getTaskDescription() {
+    public getTaskDescription(): string {
         let description = '';
         const richTaskDescription = opfab.currentCard.getCard()?.data?.richTaskDescription;
         const taskDescription = opfab.currentCard.getCard()?.data?.taskDescription;
@@ -35,144 +35,137 @@ export class TaskCardTemplateView {
         return description;
     }
 
-    public getDurationInMinutes() {
-        return opfab.currentCard.getCard()?.data?.durationInMinutes;
+    public getDurationInMinutes(): number {
+        return opfab.currentCard.getCard()?.rRule?.durationInMinutes;
     }
 
-    public getByHour() {
-        return opfab.currentCard.getCard()?.data?.byhour[0].padStart(2, '0');
+    public getHourAndMinutes(): string {
+        const hour = opfab.currentCard.getCard()?.rRule?.byhour[0]?.toString().padStart(2, '0');
+        const minute = opfab.currentCard.getCard()?.rRule?.byminute[0]?.toString().padStart(2, '0');
+        return hour + ':' + minute;
     }
 
-    public getByMinute() {
-        return opfab.currentCard.getCard()?.data?.byminute[0].padStart(2, '0');
-    }
+    public getTexts() {
+        const freq = opfab.currentCard.getCard()?.rRule?.freq;
+        const bySetPos = opfab.currentCard.getCard()?.rRule?.bysetpos;
+        const byMonthDay = opfab.currentCard.getCard()?.rRule?.bymonthday;
+        const byWeekDay = opfab.currentCard.getCard()?.rRule?.byweekday;
+        const byMonth = opfab.currentCard.getCard()?.rRule?.bymonth;
 
-    public fillTexts() {
-        const freq = opfab.currentCard.getCard()?.data?.freq;
-        const bysetpos = opfab.currentCard.getCard()?.data?.bysetpos;
-        const bymonthday = opfab.currentCard.getCard()?.data?.bymonthday;
-        const byweekday = opfab.currentCard.getCard()?.data?.byweekday;
-        const bymonth = opfab.currentCard.getCard()?.data?.bymonth;
-
-        const textForBysetpos = this.writeTextBySetPos(freq, bysetpos, byweekday);
-        const textForByWeekDay = this.writeTextByWeekDay(freq, byweekday);
-        const textForBymonthday = this.writeTextByMonthDay(bymonthday);
-        const textForBymonth = this.writeTextByMonth(bymonth);
+        const textForBySetPos = this.getTextBySetPos(freq, bySetPos, byWeekDay);
+        const textForByWeekDay = this.getTextByWeekDay(freq, byWeekDay);
+        const textForByMonthDay = this.getTextByMonthDay(byMonthDay);
+        const textForByMonth = this.getTextByMonth(byMonth);
 
         return {
-            textForBysetpos: textForBysetpos,
-            textForByWeekday: textForByWeekDay,
-            textForBymonthday: textForBymonthday,
-            textForBymonth: textForBymonth
+            textForBySetPos,
+            textForByWeekDay,
+            textForByMonthDay,
+            textForByMonth
         };
     }
 
-    writeTextBySetPos(freq: any, bysetpos: any, byweekday: any) {
-        let textForBysetpos = '';
-        if (freq === 'MONTHLY' && bysetpos !== [].valueOf() && byweekday !== [].valueOf()) {
-            if (bysetpos.includes('1'))
-                textForBysetpos += opfab.utils.getTranslation('builtInTemplate.taskCard.first') + ', ';
-            if (bysetpos.includes('2'))
-                textForBysetpos += opfab.utils.getTranslation('builtInTemplate.taskCard.second') + ', ';
-            if (bysetpos.includes('3'))
-                textForBysetpos += opfab.utils.getTranslation('builtInTemplate.taskCard.third') + ', ';
-            if (bysetpos.includes('4'))
-                textForBysetpos += opfab.utils.getTranslation('builtInTemplate.taskCard.fourth') + ', ';
-            if (bysetpos.includes('-1'))
-                textForBysetpos += opfab.utils.getTranslation('builtInTemplate.taskCard.last') + ', ';
+    private getTextBySetPos(freq: string, bySetPos: number[], byWeekDay: string[]): string {
+        let textForBySetPos = '';
+        if (bySetPos == null) return textForBySetPos;
+        if (freq === 'MONTHLY' && bySetPos !== [].valueOf() && byWeekDay !== [].valueOf()) {
+            if (bySetPos.includes(1))
+                textForBySetPos += opfab.utils.getTranslation('builtInTemplate.taskCard.first') + ', ';
+            if (bySetPos.includes(2))
+                textForBySetPos += opfab.utils.getTranslation('builtInTemplate.taskCard.second') + ', ';
+            if (bySetPos.includes(3))
+                textForBySetPos += opfab.utils.getTranslation('builtInTemplate.taskCard.third') + ', ';
+            if (bySetPos.includes(4))
+                textForBySetPos += opfab.utils.getTranslation('builtInTemplate.taskCard.fourth') + ', ';
+            if (bySetPos.includes(-1))
+                textForBySetPos += opfab.utils.getTranslation('builtInTemplate.taskCard.last') + ', ';
 
-            if (textForBysetpos !== '') {
-                textForBysetpos = textForBysetpos.slice(0, -2); //we delete the last comma
-                textForBysetpos =
-                    opfab.utils.getTranslation('builtInTemplate.taskCard.the') + ' ' + textForBysetpos + ' ';
+            if (textForBySetPos !== '') {
+                textForBySetPos = textForBySetPos.slice(0, -2); //we delete the last comma
+                textForBySetPos =
+                    opfab.utils.getTranslation('builtInTemplate.taskCard.the') + ' ' + textForBySetPos + ' ';
             }
         }
-        return textForBysetpos;
+        return textForBySetPos;
     }
 
-    writeTextByWeekDay(freq: any, byweekday: any) {
+    private getTextByWeekDay(freq: string, byWeekDay: string[]): string {
         let textForByWeekDay = '';
-        if (byweekday.includes('MO')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.monday');
-        if (byweekday.includes('TU')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.tuesday');
-        if (byweekday.includes('WE')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.wednesday');
-        if (byweekday.includes('TH')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.thursday');
-        if (byweekday.includes('FR')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.friday');
-        if (byweekday.includes('SA')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.saturday');
-        if (byweekday.includes('SU')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.sunday');
+        if (byWeekDay == null) return textForByWeekDay;
+        if (byWeekDay.includes('MO')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.monday');
+        if (byWeekDay.includes('TU')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.tuesday');
+        if (byWeekDay.includes('WE')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.wednesday');
+        if (byWeekDay.includes('TH')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.thursday');
+        if (byWeekDay.includes('FR')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.friday');
+        if (byWeekDay.includes('SA')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.saturday');
+        if (byWeekDay.includes('SU')) textForByWeekDay += ' ' + opfab.utils.getTranslation('shared.calendar.sunday');
         if (freq === 'DAILY' && textForByWeekDay !== '')
             textForByWeekDay = opfab.utils.getTranslation('builtInTemplate.taskCard.on') + textForByWeekDay;
 
         return textForByWeekDay;
     }
 
-    writeTextByMonthDay(bymonthday: any) {
-        let textForBymonthday = '';
-        if (bymonthday.includes('1'))
-            textForBymonthday += opfab.utils.getTranslation('builtInTemplate.taskCard.firstDayOfTheMonth') + ', ';
-        if (bymonthday.includes('-1'))
-            textForBymonthday += opfab.utils.getTranslation('builtInTemplate.taskCard.lastDayOfTheMonth') + ', ';
-        if (bymonthday.length > 0) {
-            this.replaceZero(bymonthday);
-            if (bymonthday[0] !== '1' && bymonthday[0] !== '-1') {
-                if (bymonthday[0].startsWith('-')) {
-                    textForBymonthday +=
-                        bymonthday[0].substring(1) +
+    private getTextByMonthDay(byMonthDay: number[]): string {
+        let textForByMonthDay = '';
+        if (byMonthDay == null) return textForByMonthDay;
+        if (byMonthDay.includes(1))
+            textForByMonthDay += opfab.utils.getTranslation('builtInTemplate.taskCard.firstDayOfTheMonth') + ', ';
+        if (byMonthDay.includes(-1))
+            textForByMonthDay += opfab.utils.getTranslation('builtInTemplate.taskCard.lastDayOfTheMonth') + ', ';
+        if (byMonthDay.length > 0) {
+            if (byMonthDay[0] !== 1 && byMonthDay[0] !== -1) {
+                if (byMonthDay[0] < 0) {
+                    textForByMonthDay +=
+                        -byMonthDay[0] +
                         ' ' +
                         opfab.utils.getTranslation('builtInTemplate.taskCard.daysBeforeEndOfTheMonth') +
                         ' , ';
                 } else {
-                    textForBymonthday +=
+                    textForByMonthDay +=
                         opfab.utils.getTranslation('builtInTemplate.taskCard.the') +
                         ' ' +
-                        bymonthday[0] +
-                        this.getOrdinalMonthDaySuffix(bymonthday[0]) +
+                        byMonthDay[0] +
+                        this.getOrdinalMonthDaySuffix(byMonthDay[0]) +
                         ' ' +
                         opfab.utils.getTranslation('builtInTemplate.taskCard.dayOfTheMonth') +
                         ' , ';
                 }
             }
         }
-        if (textForBymonthday !== '') {
-            textForBymonthday = textForBymonthday.slice(0, -2);
-            textForBymonthday += '<br/><br/>';
+        if (textForByMonthDay !== '') {
+            textForByMonthDay = textForByMonthDay.slice(0, -2);
+            textForByMonthDay += '<br/><br/>';
         }
-        return textForBymonthday;
+        return textForByMonthDay;
     }
 
-    writeTextByMonth(bymonth: any) {
-        let textForBymonth = '';
-        if (bymonth.includes(1)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.january');
-        if (bymonth.includes(2)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.february');
-        if (bymonth.includes(3)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.march');
-        if (bymonth.includes(4)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.april');
-        if (bymonth.includes(5)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.may');
-        if (bymonth.includes(6)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.june');
-        if (bymonth.includes(7)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.july');
-        if (bymonth.includes(8)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.august');
-        if (bymonth.includes(9)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.september');
-        if (bymonth.includes(10)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.october');
-        if (bymonth.includes(11)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.november');
-        if (bymonth.includes(12)) textForBymonth += ' ' + opfab.utils.getTranslation('shared.calendar.december');
-        if (textForBymonth !== '') {
-            textForBymonth = opfab.utils.getTranslation('builtInTemplate.taskCard.in') + textForBymonth;
+    private getTextByMonth(byMonth: number[]): string {
+        let textForByMonth = '';
+        if (byMonth == null) return textForByMonth;
+        if (byMonth.includes(1)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.january');
+        if (byMonth.includes(2)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.february');
+        if (byMonth.includes(3)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.march');
+        if (byMonth.includes(4)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.april');
+        if (byMonth.includes(5)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.may');
+        if (byMonth.includes(6)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.june');
+        if (byMonth.includes(7)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.july');
+        if (byMonth.includes(8)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.august');
+        if (byMonth.includes(9)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.september');
+        if (byMonth.includes(10)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.october');
+        if (byMonth.includes(11)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.november');
+        if (byMonth.includes(12)) textForByMonth += ' ' + opfab.utils.getTranslation('shared.calendar.december');
+        if (textForByMonth !== '') {
+            textForByMonth = opfab.utils.getTranslation('builtInTemplate.taskCard.in') + textForByMonth;
         }
-        return textForBymonth;
+        return textForByMonth;
     }
 
-    getOrdinalMonthDaySuffix(cardinal: string) {
-        const cardinalNumber = Number(cardinal);
-        if (Number.isNaN(cardinalNumber)) {
+    private getOrdinalMonthDaySuffix(cardinal: number): string {
+        if (Number.isNaN(cardinal)) {
             return null;
         }
         const standard_suffix_day = opfab.utils.getTranslation('shared.ordinal.suffix.default');
 
-        return cardinalNumber > 31
-            ? standard_suffix_day
-            : opfab.utils.getTranslation('shared.ordinal.suffix.' + cardinalNumber);
-    }
-
-    replaceZero(days: any[]) {
-        const zeroIndex = days.findIndex((d) => d === '0');
-        if (zeroIndex >= 0) days[zeroIndex] = '1';
+        return cardinal > 31 ? standard_suffix_day : opfab.utils.getTranslation('shared.ordinal.suffix.' + cardinal);
     }
 }

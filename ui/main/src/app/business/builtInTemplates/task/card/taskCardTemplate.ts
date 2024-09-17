@@ -37,7 +37,7 @@ export class TaskCardTemplate extends HTMLElement {
         ${opfab.utils.getTranslation('builtInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('builtInTemplate.taskCard.minutes')} <br/>
         <br/> 
 
-        ${opfab.utils.getTranslation('builtInTemplate.taskCard.at')} ${this.taskCardTemplateView.getByHour()}:${this.taskCardTemplateView.getByMinute()}
+        ${opfab.utils.getTranslation('builtInTemplate.taskCard.at')} ${this.taskCardTemplateView.getHourAndMinutes()}
         <span id="bysetpos"></span><span id="byweekday"></span><br/>
         <br/>
         <span id="bymonthday"></span>
@@ -52,11 +52,11 @@ export class TaskCardTemplate extends HTMLElement {
     fetchCardData() {
         opfab.richTextEditor.showRichMessage(document.getElementById('taskRichTextDescription'));
 
-        const fillingTexts = this.taskCardTemplateView.fillTexts();
+        const fillingTexts = this.taskCardTemplateView.getTexts();
 
-        document.getElementById('bysetpos').innerHTML = fillingTexts?.textForBysetpos;
-        document.getElementById('byweekday').innerHTML = fillingTexts?.textForByWeekday;
-        document.getElementById('bymonthday').innerHTML = fillingTexts?.textForBymonthday;
-        document.getElementById('bymonth').innerHTML = fillingTexts?.textForBymonth;
+        document.getElementById('bysetpos').innerHTML = fillingTexts?.textForBySetPos;
+        document.getElementById('byweekday').innerHTML = fillingTexts?.textForByWeekDay;
+        document.getElementById('bymonthday').innerHTML = fillingTexts?.textForByMonthDay;
+        document.getElementById('bymonth').innerHTML = fillingTexts?.textForByMonth;
     }
 }
