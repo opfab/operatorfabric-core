@@ -9,21 +9,21 @@
 
 declare const opfab;
 
-export class TaskCardTemplateView {
+export class TaskUserCardTemplateView {
     public getSpecificCardInformation(
-        taskTitle,
-        quillTaskDescriptionEditor,
-        freq,
-        durationInMinutes,
-        minutesForReminder,
-        byweekday,
-        bymonth,
-        bysetpos,
-        bymonthday,
-        time
+        taskTitle: string,
+        quillTaskDescriptionEditor: any,
+        freq: string,
+        durationInMinutes: number,
+        minutesForReminder: number,
+        byweekday: string[],
+        bymonth: number[],
+        bysetpos: number[],
+        bymonthday: number[],
+        time: string
     ) {
-        const byhour = [time.slice(0, 2)]; // the hours are the 2 first characters
-        const byminute = [time.slice(-2)]; // the minutes are the 2 last characters
+        const byhour = [parseInt(time.slice(0, 2))]; // the hours are the 2 first characters
+        const byminute = [parseInt(time.slice(-2))]; // the minutes are the 2 last characters
 
         const rRule = {
             freq: freq,
@@ -43,15 +43,7 @@ export class TaskCardTemplateView {
             data: {
                 taskTitle: taskTitle,
                 richTaskDescription: quillTaskDescriptionEditor.getContents(),
-                freq: freq,
-                byhour: byhour,
-                byminute: byminute,
-                durationInMinutes: durationInMinutes,
-                minutesForReminder: minutesForReminder,
-                byweekday: byweekday,
-                bymonth: bymonth,
-                bysetpos: bysetpos,
-                bymonthday: bymonthday
+                minutesForReminder: minutesForReminder
             },
             rRule: rRule
         };
@@ -62,37 +54,37 @@ export class TaskCardTemplateView {
         };
     }
 
-    public getFrequency() {
+    public getFrequency(): string {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.freq
+            ? opfab.currentCard.getCard()?.rRule?.freq
             : undefined;
     }
 
-    public getWeekDay() {
+    public getWeekDay(): string[] {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.byweekday
+            ? opfab.currentCard.getCard()?.rRule?.byweekday
             : undefined;
     }
 
-    public getMonth() {
+    public getMonth(): number[] {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.bymonth
+            ? opfab.currentCard.getCard()?.rRule?.bymonth
             : undefined;
     }
 
-    public getMonthDay() {
+    public getMonthDay(): number[] {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.bymonthday
+            ? opfab.currentCard.getCard()?.rRule?.bymonthday
             : undefined;
     }
 
-    public getSetPos() {
+    public getSetPos(): number[] {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.bysetpos
+            ? opfab.currentCard.getCard()?.rRule?.bysetpos
             : undefined;
     }
 
-    public getTaskTitle() {
+    public getTaskTitle(): string {
         let taskTitle = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             const taskTitleField = opfab.currentCard.getCard()?.data?.taskTitle;
@@ -103,7 +95,7 @@ export class TaskCardTemplateView {
         return taskTitle;
     }
 
-    public getTaskDescription() {
+    public getTaskDescription(): string {
         let description = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             const richTaskDescription = opfab.currentCard.getCard()?.data?.richTaskDescription;
@@ -118,28 +110,28 @@ export class TaskCardTemplateView {
         return description;
     }
 
-    public getDurationInMinutes(default_value) {
+    public getDurationInMinutes(default_value): number {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.data?.durationInMinutes ?? default_value
+            ? opfab.currentCard.getCard()?.rRule?.durationInMinutes ?? default_value
             : default_value;
     }
 
-    public getMinutesForReminder(default_value) {
+    public getMinutesForReminder(default_value): number {
         return opfab.currentUserCard.getEditionMode() !== 'CREATE'
             ? opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value
             : default_value;
     }
 
-    public getByHourAndMinutes() {
+    public getByHourAndMinutes(): string {
         const currentDate = new Date();
         let hour = currentDate.getHours().toString().padStart(2, '0');
         let minute = currentDate.getMinutes().toString().padStart(2, '0');
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             hour =
-                opfab.currentCard.getCard()?.data?.byhour[0].padStart(2, '0') ??
+                opfab.currentCard.getCard()?.rRule?.byhour[0]?.toString().padStart(2, '0') ??
                 currentDate.getHours().toString().padStart(2, '0');
             minute =
-                opfab.currentCard.getCard()?.data?.byminute[0].padStart(2, '0') ??
+                opfab.currentCard.getCard()?.rRule?.byminute[0]?.toString().padStart(2, '0') ??
                 currentDate.getMinutes().toString().padStart(2, '0');
         }
         return hour + ':' + minute;
