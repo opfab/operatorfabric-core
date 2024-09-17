@@ -54,7 +54,7 @@ export class SystemNotificationService {
             if (Notification.permission === 'denied') {
                 AlertMessageService.sendAlertMessage({
                     message: null,
-                    level: MessageLevel.BUSINESS,
+                    level: MessageLevel.ALARM,
                     i18n: {key: 'settings.systemNotificationsDisabledInBrowser'}
                 });
             }

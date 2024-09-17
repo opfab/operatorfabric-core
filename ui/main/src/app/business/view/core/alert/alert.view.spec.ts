@@ -88,11 +88,11 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().backgroundColor).toEqual('#e87a08');
     });
 
-    it('GIVEN a message WHEN message is BUSINESS level THEN message background color is red (#a71a1a) ', async () => {
+    it('GIVEN a message WHEN message is ALARM level THEN message background color is red (#a71a1a) ', async () => {
         await loadWebUIConf({});
 
         const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
@@ -172,13 +172,13 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 
-    it('GIVEN a message of level BUSINESS WHEN messageBusinessAutoClose is false or not set THEN message never disappear automatically', async () => {
+    it('GIVEN a message of level ALARM WHEN alarmLevelAutoClose is false or not set THEN message never disappear automatically', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
         const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
@@ -193,13 +193,13 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().message).toEqual('message');
     });
 
-    it('GIVEN a message of level BUSINESS WHEN messageBusinessAutoClose is true THEN message disappear after 5 seconds', async () => {
-        await loadWebUIConf({alerts: {messageBusinessAutoClose: true}});
+    it('GIVEN a message of level ALARM WHEN alarmLevelAutoClose is true THEN message disappear after 5 seconds', async () => {
+        await loadWebUIConf({alerts: {alarmLevelAutoClose: true}});
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
         const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
@@ -208,32 +208,5 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().message).toEqual('message');
         jasmine.clock().tick(1100);
         expect(alertView.getAlertPage().display).toBeFalsy();
-    });
-
-    it('Given a message of level BUSINESS WHEN hideBusinessMessages is true THEN message should not appear', async () => {
-        await loadWebUIConf({alerts: {hideBusinessMessages: true}});
-
-        const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
-        await waitForAllPromises();
-        expect(alertView.getAlertPage().display).toBeFalsy();
-    });
-
-    it('Given a message of level BUSINESS WHEN hideBusinessMessages is false THEN message should appear', async () => {
-        await loadWebUIConf({alerts: {hideBusinessMessages: false}});
-
-        const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
-        await waitForAllPromises();
-        expect(alertView.getAlertPage().display).toBeTruthy();
-    });
-
-    it('Given a message of level BUSINESS WHEN hideBusinessMessages is not set THEN message should appear', async () => {
-        await loadWebUIConf({});
-
-        const alertView = new AlertView(translationService);
-        AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
-        await waitForAllPromises();
-        expect(alertView.getAlertPage().display).toBeTruthy();
     });
 });

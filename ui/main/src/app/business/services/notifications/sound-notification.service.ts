@@ -49,6 +49,7 @@ export class SoundNotificationService {
     private static isServiceActive = true;
 
     private static soundServer: SoundServer;
+    private static doNotAlertForHiddenCardReceived: boolean;
 
     public static setSoundServer(soundServer: SoundServer) {
         SoundNotificationService.soundServer = soundServer;
@@ -98,10 +99,13 @@ export class SoundNotificationService {
         ).subscribe((x) => {
             this.replayInterval = Math.max(3, x);
         });
-
         this.activateBrowserSoundIfNotActivated();
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
         this.initSoundPlayingForSessionEnd();
+        SoundNotificationService.doNotAlertForHiddenCardReceived = ConfigService.getConfigValue(
+            'alerts.doNotAlertForHiddenCardReceived',
+            false
+        );
 
         this.listenForCardUpdate();
     }
@@ -146,10 +150,13 @@ export class SoundNotificationService {
     public static handleLoadedCard(card: LightCard) {
         if (NotificationDecision.isSoundToBePlayedForCard(card)) {
             this.incomingCard.next(card);
-            if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card))
+            if (
+                !OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(card) &&
+                !SoundNotificationService.doNotAlertForHiddenCardReceived
+            )
                 AlertMessageService.sendAlertMessage({
                     message: null,
-                    level: MessageLevel.BUSINESS,
+                    level: MessageLevel.ALARM,
                     i18n: {key: 'feed.hiddenCardReceived'}
                 });
         }
@@ -159,10 +166,13 @@ export class SoundNotificationService {
         if (NotificationDecision.isNotificationNeededForChildCard(lightCard)) {
             const parentCard = OpfabStore.getLightCardStore().getLightCard(lightCard.parentCardId);
             this.incomingCard.next(parentCard);
-            if (!OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(parentCard))
+            if (
+                !OpfabStore.getFilteredLightCardStore().isCardVisibleInFeed(parentCard) &&
+                !SoundNotificationService.doNotAlertForHiddenCardReceived
+            )
                 AlertMessageService.sendAlertMessage({
                     message: null,
-                    level: MessageLevel.BUSINESS,
+                    level: MessageLevel.ALARM,
                     i18n: {key: 'feed.hiddenCardReceived'}
                 });
         }

@@ -21,5 +21,5 @@ export enum MessageLevel {
     ERROR,
     INFO,
     DEBUG,
-    BUSINESS
+    ALARM
 }
