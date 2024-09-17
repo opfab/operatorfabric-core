@@ -167,7 +167,7 @@ describe('UserCard RecipientsForm', () => {
                 await setProcessConfigWithUserCardConfig({});
                 await setEntitiesConfiguration();
                 recipientsForm.setProcessAndState('process1', 'state1_1');
-                expect(userCardUIControl.selectedRecipients).toEqual(undefined);
+                expect(userCardUIControl.selectedRecipients).toEqual([]);
             });
             it('Should be recipients of existing card if editing or copying a card', async () => {
                 await setProcessConfigWithUserCardConfig({});
@@ -339,7 +339,7 @@ describe('UserCard RecipientsForm', () => {
                 await setProcessConfigWithUserCardConfig({});
                 await setEntitiesConfiguration();
                 recipientsForm.setProcessAndState('process1', 'state1_1');
-                expect(userCardUIControl.selectedRecipientsForInformation).toEqual(undefined);
+                expect(userCardUIControl.selectedRecipientsForInformation).toEqual([]);
             });
             it('Should be recipientsForInformation of existing card if editing or copying a card', async () => {
                 await setProcessConfigWithUserCardConfig({});

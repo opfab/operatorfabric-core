@@ -47,6 +47,9 @@ export class RecipientsForm {
 
     private loadRecipients(entities: Entity[]) {
         this.userCardUIControl.setRecipientsList(this.buildMultiSelectItems(entities));
+        if (this.isInCreationMode) {
+            this.userCardUIControl.setSelectedRecipients([]);
+        }
     }
 
     private buildMultiSelectItems(entities: Entity[]): MultiselectItem[] {
@@ -74,6 +77,9 @@ export class RecipientsForm {
 
     private loadRecipientsForInformation(entities: Entity[]) {
         this.userCardUIControl.setRecipientsForInformationList(this.buildMultiSelectItems(entities));
+        if (this.isInCreationMode) {
+            this.userCardUIControl.setSelectedRecipientsForInformation([]);
+        }
     }
 
     private listenForSelectRecipients() {
