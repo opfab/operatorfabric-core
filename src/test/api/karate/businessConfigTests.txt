@@ -13,3 +13,4 @@
       businessconfig/getResponseBusinessconfig.feature    \
       businessconfig/getBusinessconfigHistory.feature     \
       businessconfig/security.feature                     \
+      businessconfig/uploadAndGetProcessMonitoringFile.feature \

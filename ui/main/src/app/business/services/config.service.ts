@@ -15,11 +15,13 @@ import {ConfigServer} from '../server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponseStatus} from '../server/serverResponse';
 import {LoggerService} from './logs/logger.service';
+import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
 
 export class ConfigService {
     private static configServer: ConfigServer;
     private static config;
     private static monitoringConfig: MonitoringConfig;
+    private static processMonitoringConfig: ProcessMonitoringConfig;
 
     private static menuConfig: UIMenuFile;
 
@@ -106,7 +108,26 @@ export class ConfigService {
         );
     }
 
-    public static getMonitoringConfig(): any {
+    public static loadProcessMonitoringConfig(): Observable<ProcessMonitoringConfig> {
+        return ConfigService.configServer.getProcessMonitoringConfiguration().pipe(
+            map((serverResponse) => {
+                const processMonitoringConfig = serverResponse.data;
+                if (processMonitoringConfig) {
+                    ConfigService.processMonitoringConfig = processMonitoringConfig;
+                    LoggerService.info('Process Monitoring config loaded');
+                } else LoggerService.info('No process monitoring config to load');
+                if (serverResponse.status !== ServerResponseStatus.OK)
+                    LoggerService.error('An error occurred when loading processMonitoringConfig');
+                return processMonitoringConfig;
+            })
+        );
+    }
+
+    public static getMonitoringConfig(): MonitoringConfig {
         return ConfigService.monitoringConfig;
+    }
+
+    public static getProcessMonitoringConfig(): ProcessMonitoringConfig {
+        return ConfigService.processMonitoringConfig;
     }
 }

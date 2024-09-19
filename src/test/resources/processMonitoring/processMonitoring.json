@@ -1,0 +1,39 @@
+{
+    "fields": [
+      { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+      { "field": "titleTranslated", "colName": "Title", "size": 250},
+      { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400},
+      { "field": "data.stateName", "colName": "My field", "size": 300},
+      { "field": "summaryTranslated", "colName": "Summary", "size": 250},
+      { "field": "data.error", "colName": "My second field", "size": 100}
+    ],
+    "fieldsForProcesses": [
+      {
+        "process": "conferenceAndITIncidentExample",
+        "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]}, {
+        "process" : "messageOrQuestionExample",
+        "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "endDate", "type": "date", "colName": "End Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]}
+    ],
+    "filters": {
+      "tags": [
+          {
+            "label": "Label for tag 1",
+            "value": "tag1"
+          },
+          {
+            "label": "Label for tag 2",
+            "value": "tag2"
+          }
+        ],
+        "pageSize": 10
+      }
+  }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ import {ConfigServer} from 'app/business/server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {RealTimeScreens} from '@ofModel/real-time-screens.model';
+import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
 
 export class ConfigServerMock implements ConfigServer {
     private webUiConf = new ReplaySubject<ServerResponse<any>>();
@@ -19,6 +20,7 @@ export class ConfigServerMock implements ConfigServer {
     private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>();
     private locale = new ReplaySubject<ServerResponse<any>>();
     private realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>();
+    private processmonitoringconfiguration = new ReplaySubject<ServerResponse<ProcessMonitoringConfig>>();
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();
@@ -40,6 +42,10 @@ export class ConfigServerMock implements ConfigServer {
         return this.realtimescreenconfiguration.asObservable();
     }
 
+    getProcessMonitoringConfiguration(): Observable<ServerResponse<ProcessMonitoringConfig>> {
+        return this.processmonitoringconfiguration.asObservable();
+    }
+
     setResponseForWebUIConfiguration(webuiConf: ServerResponse<any>) {
         this.webUiConf.next(webuiConf);
     }
@@ -54,5 +60,9 @@ export class ConfigServerMock implements ConfigServer {
 
     setResponseForRealTimeScreenConfiguration(realtimeScreenConf: ServerResponse<any>) {
         this.realtimescreenconfiguration.next(realtimeScreenConf);
+    }
+
+    setResponseForProcessMonitoringConfiguration(processMonitoringConf: ServerResponse<ProcessMonitoringConfig>) {
+        this.processmonitoringconfiguration.next(processMonitoringConf);
     }
 }

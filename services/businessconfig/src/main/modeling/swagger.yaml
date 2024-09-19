@@ -514,7 +514,45 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-
+  '/businessconfig/processmonitoring':
+    get:
+      summary: Get the process monitoring configuration
+      description: >-
+         Get the process monitoring configuration
+      operationId: getProcessMonitoring
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ProcessMonitoring'
+        '401':
+          description: Authentication required
+    post:
+      summary: Post the json defining the process monitoring config
+      description: >-
+        Post the json defining the process monitoring config
+        This json is saved to disk, under the name 'processmonitoring.json'.
+        The uploaded file should be a valid JSON file containing the ProcessMonitoring object structure as defined in the schema
+      operationId: uploadProcessMonitoring
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: file
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+      responses:
+        '201':
+          description: Successful creation
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
 definitions:
   Process:
     type: object
@@ -575,7 +613,7 @@ definitions:
               type: string
               description: color for the state in the logging screen (optional) 
             userCard:
-              description : User card template and visibility options
+              description: User card template and visibility options
               $ref: '#/definitions/UserCard'
             templateName:
               description: >-
@@ -777,19 +815,19 @@ definitions:
     properties:
       template:
         type: string
-      severityVisible: 
+      severityVisible:
         type: boolean
-      keepChildCardsVisible: 
+      keepChildCardsVisible:
         type: boolean
         description: Sets the visibility of the keepChildCards checkbox on the usercard. Default value set to false.
       startDateVisible: 
         type: boolean      
-      endDateVisible: 
+      endDateVisible:
         type: boolean
       expirationDateVisible:
         type: boolean
         description: Default value set to false.
-      lttdVisible: 
+      lttdVisible:
         type: boolean
         description: Default value set to false.
       recipientVisible: # tells whether to display recipient dropdown when creating a user card
@@ -802,7 +840,7 @@ definitions:
           $ref: '#/definitions/EntitiesTree'
   EntitiesTree:
     description: >- 
-      Object containing the id of the entity and an optional list of connection levels 
+      Object containing the id of the entity and an optional list of connection levels
       with 0 meaning the entity itself, 1 for first level children, 2 for 2nd level connections, etc.
     properties:
       id:
@@ -815,9 +853,9 @@ definitions:
   
   Monitoring:
     description: Configuration for the monitoring screen
-    properties: 
-      export : 
-        description : export configuration
+    properties:
+      export:
+        description: export configuration
         $ref: '#/definitions/MonitoringExport'
   
   MonitoringExport:
@@ -827,23 +865,23 @@ definitions:
         type: array
         items: 
           $ref: '#/definitions/MonitoringExportField'
-  
-  MonitoringExportField: 
-    description: Configuration for Field to export 
+
+  MonitoringExportField:
+    description: Configuration for Field to export
     properties:
       columnName:
-        description: Name of the colum in export 
+        description: Name of the colum in export
         type: string
       jsonField:
-        description: Name of the field corresponding to the column name 
+        description: Name of the field corresponding to the column name
         type: string
       type:
-        description: Type of the field (for now only type EPOCHDATE is used) 
+        description: Type of the field (for now only type EPOCHDATE is used)
         type: MonitoringExportFieldTypeEnum
       fields:
         description: Nested fields description
         type: array
-        items: 
+        items:
           $ref: '#/definitions/MonitoringExportField'
 
   MonitoringExportFieldTypeEnum:
@@ -852,3 +890,64 @@ definitions:
     enum:
       - STRING
       - EPOCHDATE
+  ProcessMonitoring:
+    description: Configuration for the process monitoring screen
+    properties:
+      fields:
+        description: monitoring fields configuration
+        type: array
+        items:
+          $ref: '#/definitions/ProcessMonitoringField'
+      fieldsForProcesses:
+        description: monitoring fields configuration for processes
+        type: array
+        items:
+          $ref: '#/definitions/ProcessMonitoringFields'
+      filters:
+        description: process monitoring filters
+        properties:
+          tags:
+            description: Array of filter tags for process monitoring
+            type: array
+            items:
+              $ref: '#/definitions/ProcessMonitoringFilterTag'
+          pageSize:
+            description: Number of items to display per page in the process monitoring view
+            type: integer
+          
+  ProcessMonitoringFields:
+    properties:
+      process:
+        description: process name
+        type: string
+      fields:
+        description: monitoring fields configuration for process
+        type: array
+        items:
+          $ref: '#/definitions/ProcessMonitoringField'
+  ProcessMonitoringField:
+    description: process monitoring field
+    properties:
+      field:
+        type: string
+      type:
+        type: ProcessMonitoringFieldTypeEnum
+      colName:
+        type: string
+      size:
+        description: The size of the field
+        type: integer
+  ProcessMonitoringFilterTag:
+    description: process monitoring filter tag
+    properties:
+      label:
+        type: string
+      value:
+        type: string
+  ProcessMonitoringFieldTypeEnum:
+    type: string
+    description: Type of field
+    enum:
+      - string
+      - date
+      - array

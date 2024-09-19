@@ -11,11 +11,13 @@ import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {RealTimeScreens} from '@ofModel/real-time-screens.model';
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
+import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
 
 export abstract class ConfigServer {
     abstract getWebUiConfiguration(): Observable<ServerResponse<any>>;
     abstract getMenuConfiguration(): Observable<ServerResponse<any>>;
     abstract getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>>;
+    abstract getProcessMonitoringConfiguration(): Observable<ServerResponse<ProcessMonitoringConfig>>;
     abstract getLocale(locale: string): Observable<ServerResponse<any>>;
     abstract getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>>;
 }
