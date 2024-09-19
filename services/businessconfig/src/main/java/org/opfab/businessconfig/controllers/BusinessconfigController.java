@@ -302,7 +302,9 @@ public class BusinessconfigController {
                 processService.updateRealTimeScreensFile(new String(file.getBytes()));
             if (endPointName.equals("businessdata"))
                 processService.updateBusinessDataFile(new String(file.getBytes()), resourceName);
-
+            if (endPointName.equals("processmonitoring"))
+                processService.updateProcessMonitoringFile(new String(file.getBytes()));
+                
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);
             return null;
@@ -418,6 +420,18 @@ public class BusinessconfigController {
                     .message("unable to delete submitted resource").error(e.getMessage()).build(),
                     message, e);
         }
+    }
+
+    @PostMapping(value = "/processmonitoring", produces = { "application/json" }, consumes = {
+        "multipart/form-data" })
+    public Void uploadProcessMonitoring(HttpServletRequest request, HttpServletResponse response,
+            @Valid @RequestPart("file") MultipartFile file) {
+        return uploadFile(request, response, file, "processmonitoring", null);
+    }
+
+    @GetMapping(value = "/processmonitoring", produces = { "application/json" })
+    public ProcessMonitoring getProcessMonitoring(HttpServletRequest request, HttpServletResponse response) {
+        return processService.getProcessMonitoring();
     }
 
 }

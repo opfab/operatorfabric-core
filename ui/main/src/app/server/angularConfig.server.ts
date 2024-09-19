@@ -18,6 +18,7 @@ import {map, Observable} from 'rxjs';
 import {ConfigServer} from '../business/server/config.server';
 import {AngularServer} from './angular.server';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +27,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     private configUrl: string;
     private menuUrl: string;
     private monitoringConfigUrl: string;
+    private processMonitoringConfigUrl: string;
     private localUrl: string;
     readonly realTimeScreensUrl: string;
 
@@ -34,6 +36,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
         this.configUrl = `${environment.url}config/web-ui.json`;
         this.menuUrl = `${environment.url}config/ui-menu.json`;
         this.monitoringConfigUrl = `${environment.url}businessconfig/monitoring`;
+        this.processMonitoringConfigUrl = `${environment.url}businessconfig/processmonitoring`;
         this.localUrl = `${environment.url}assets/i18n`;
         this.realTimeScreensUrl = `${environment.url}businessconfig/realtimescreens`;
     }
@@ -61,6 +64,9 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
         return this.processHttpResponse(this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl));
     }
 
+    getProcessMonitoringConfiguration(): Observable<ServerResponse<ProcessMonitoringConfig>> {
+        return this.processHttpResponse(this.httpClient.get<ProcessMonitoringConfig>(this.processMonitoringConfigUrl));
+    }
     getLocale(locale: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.get(`${this.localUrl}/${locale}.json`));
     }

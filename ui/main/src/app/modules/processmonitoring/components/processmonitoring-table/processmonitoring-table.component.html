@@ -23,7 +23,7 @@
         <span translate> shared.resultsNumber </span> : {{totalElements}}
         </div>
         <div style="width:40%;margin-top:5px">
-        <ngb-pagination *ngIf="totalPages > 1" [collectionSize]="totalElements"
+        <ngb-pagination *ngIf="totalPages > 1" [collectionSize]="totalElements" [pageSize]="pageSize"
             [page]="page" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
         </ngb-pagination>
         </div>

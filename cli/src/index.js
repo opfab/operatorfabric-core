@@ -61,6 +61,7 @@ omelette('opfab').tree({
         'monitoringconfig',
         'perimeters',
         'processgroups',
+        'processmonitoring',
         'realtimescreen',
         'service',
         'status',
@@ -80,6 +81,9 @@ omelette('opfab').tree({
     processgroups: {
         load: listFiles,
         clear: []
+    },
+    processmonitoring: {
+        load: listFiles
     },
     realtimescreen: {
         load: listFiles

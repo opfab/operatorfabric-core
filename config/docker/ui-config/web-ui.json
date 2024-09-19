@@ -152,43 +152,5 @@
   "usercard": {
     "useDescriptionFieldForEntityList": false
   },
-  "processMonitoring": {
-    "fields": [
-      { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-      { "field": "titleTranslated", "colName": "Title", "size": "250"},
-      { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"},
-      { "field": "data.stateName", "colName": "My field", "size": "300"},
-      { "field": "summaryTranslated", "colName": "Summary", "size": "250"},
-      { "field": "data.error", "colName": "My second field", "size": "100"}
-    ],
-    "fieldsForProcesses": {
-      "conferenceAndITIncidentExample" : [
-        { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-        { "field": "titleTranslated", "colName": "Title", "size": "250"},
-        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
-      ],
-      "messageOrQuestionExample" : [
-        { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-        { "field": "endDate", "type": "date", "colName": "End Date", "size": "200"},
-        { "field": "titleTranslated", "colName": "Title", "size": "250"},
-        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
-      ]
-    },
-
-    "filters": {
-      "tags": {
-        "list": [
-          {
-            "label": "Label for tag 1",
-            "value": "tag1"
-          },
-          {
-            "label": "Label for tag 2",
-            "value": "tag2"
-          }
-        ]
-      }
-    }
-  },
   "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"]
 }

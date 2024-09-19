@@ -21,6 +21,7 @@ const businessData = require('./businessDataCommands.js');
 const service = require('./serviceCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
+const processMonitoring = require('./processMonitoringCommands.js');
 const connectedUsers = require('./connectedUsersCommands.js');
 const users = require('./usersCommands.js');
 const entities = require('./entitiesCommands');
@@ -69,6 +70,10 @@ const commands = {
             case 'monitoringconfig':
                 this.exitIfNotLoggedIn();
                 await monitoringConfig.processMonitoringConfigCommand(args.slice(1));
+                break;
+            case 'processmonitoring':
+                this.exitIfNotLoggedIn();
+                await processMonitoring.processProcessMonitoringCommand(args.slice(1));
                 break;
             case 'processgroups':
                 this.exitIfNotLoggedIn();
@@ -167,24 +172,25 @@ const commands = {
     
     Command list :
     
-        bundle           Load or delete a bundle
-        businessdata     Load or delete business data
-        card             Send a card, delete a card or reset the card limiter for sending cards 
-        commands         Executes commands list read from input file
-        config           Set, get or list opfab cli configuration values
-        connectedusers   Send a message to subscriptions
-        entities         Load a list of entities
-        groups           Load a list of groups
-        help             Show help on a command using help <command> or all commands using help  
-        login            Log in to opfab
-        logout           Log out to opfab
-        monitoringconfig Load or delete a configuration for monitoring screen
-        perimeters       Create or delete perimeters
-        processgroups    Load or clear processgroups
-        realtimescreen   Load real time screen definition file
-        service          Get or set log level for services
-        status           Show login status
-        users            Set or unset process/state notifications
+        bundle                  Load or delete a bundle
+        businessdata            Load or delete business data
+        card                    Send a card, delete a card or reset the card limiter for sending cards 
+        commands                Executes commands list read from input file
+        config                  Set, get or list opfab cli configuration values
+        connectedusers          Send a message to subscriptions
+        entities                Load a list of entities
+        groups                  Load a list of groups
+        help                    Show help on a command using help <command> or all commands using help  
+        login                   Log in to opfab
+        logout                  Log out to opfab
+        monitoringconfig        Load or delete a configuration for monitoring screen
+        perimeters              Create or delete perimeters
+        processgroups           Load or clear processgroups
+        processmonitoring       Load configuration for monitoring processus screen
+        realtimescreen          Load real time screen definition file
+        service                 Get or set log level for services
+        status                  Show login status
+        users                   Set or unset process/state notifications
     
     `);
         } else {
@@ -227,6 +233,9 @@ const commands = {
                     break;
                 case 'monitoringconfig':
                     monitoringConfig.printHelp();
+                    break;
+                case 'processmonitoring':
+                    processmonitoring.printHelp();
                     break;
                 case 'users':
                     users.printHelp();

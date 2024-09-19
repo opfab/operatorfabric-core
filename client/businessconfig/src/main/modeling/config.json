@@ -19,6 +19,7 @@
     "TypeOfStateEnum": "org.opfab.businessconfig.model.TypeOfStateEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long",
-    "MonitoringExportFieldTypeEnum":"org.opfab.cards.model.MonitoringExportFieldTypeEnum"
+    "MonitoringExportFieldTypeEnum": "org.opfab.cards.model.MonitoringExportFieldTypeEnum",
+    "ProcessMonitoringFieldTypeEnum": "org.opfab.cards.model.ProcessMonitoringFieldTypeEnum"
   }
 }

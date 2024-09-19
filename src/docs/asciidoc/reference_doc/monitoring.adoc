@@ -42,45 +42,41 @@ The process monitoring screen has the following similarities with the monitoring
 this screen, the parameter `uiVisibility.processmonitoring` must be set to `true` in the `config.json` file of its
 process.
 
-This screen provides the following features :
 
-- the columns displayed on this screen can be configured. To do that, you have to define the `processMonitoring.fields` field
-in the `web-ui.json` configuration file. This object is a list of the fields you want to see in the array.
-You also have the possibility to define the columns displayed per process. To do that, you have to configure the field
-`processMonitoring.fieldsForProcesses`.
-If more than one process is selected by the user or if a process has no configuration, the columns displayed will
-be those of the default config (`processMonitoring.fields`).
-- depending on the permissions of the groups to which the user is attached, he can also see the cards he is not the
-recipient of.
-- if geographical map view is enabled ('feed.geomap.enableMap' set to 'true' in web-ui.json) it is possible to view the cards on the map by checking the "View Results on a Geographical Map" checkbox.
+The columns displayed on this screen can be configured. To do that, you have to define a JSON file and load the file by sending an HTTP POST request to the `/processmonitoring` API of businessconfig service or using CLI command `opfab processmonitoring load <file>`.
 
-Here is an example of processMonitoring configuration :
+Here is an example of processMonitoring configuration file:
 ```
-"processMonitoring": {
+{
   "fields": [
-    { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-    { "field": "titleTranslated", "colName": "Title", "size": "250"},
-    { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"},
-    { "field": "data.stateName", "colName": "My field", "size": "300"},
-    { "field": "summaryTranslated", "colName": "Summary", "size": "250"},
-    { "field": "data.error", "colName": "My second field", "size": "100"}
+    { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+    { "field": "titleTranslated", "colName": "Title", "size": 250},
+    { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400},
+    { "field": "data.stateName", "colName": "My field", "size": 300},
+    { "field": "summaryTranslated", "colName": "Summary", "size": 250},
+    { "field": "data.error", "colName": "My second field", "size": 100}
   ],
-  "fieldsForProcesses": {
-    "process1" : [
-      { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-      { "field": "titleTranslated", "colName": "Title", "size": "250"},
-      { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
-    ],
-    "process2" : [
-      { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
-      { "field": "endDate", "type": "date", "colName": "End Date", "size": "200"},
-      { "field": "titleTranslated", "colName": "Title", "size": "250"},
-      { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
-    ]
-  },
+  "fieldsForProcesses": [
+    {
+      "process": "process1",
+      "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]
+    },
+    {
+      "process": "process2",
+      "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "endDate", "type": "date", "colName": "End Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]
+    }
+  ],
   "filters": {
-    "tags": {
-      "list": [
+    "tags": [
         {
           "label": "Label for tag 1",
           "value": "tag1"
@@ -90,10 +86,22 @@ Here is an example of processMonitoring configuration :
           "value": "tag2"
         }
       ]
-    }
+    "pageSize": 10
   }
 }
 ```
+
+The `fields` field in the process monitoring configuration file defines the list of the fields you want to see in the array.
+
+You also have the possibility to define the columns displayed per process. To do that, you have to configure the field `fieldsForProcesses`.
+
+If more than one process is selected by the user or if a process has no configuration, the columns displayed will be those of the default config (`fields`).
+Depending on the permissions of the groups to which the user is attached, he can also see the cards he is not the recipient of.
+
+In the process monitoring config file it is possible to configure the page size `filters.pageSize` and the list of available tags used in the UI to filter the results `filters.tags`.
+
+If geographical map view is enabled ('feed.geomap.enableMap' set to 'true' in web-ui.json) it is possible to view the cards on the map by checking the "View Results on a Geographical Map" checkbox.
+
 
 Here is the description of the fields :
 

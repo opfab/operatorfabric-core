@@ -143,7 +143,7 @@
   </div>
   <div *ngIf="!isMapViewActivated" style="margin-left:5%;margin-right:5%">
     <of-processmonitoring-table  [result]="results" [processGroupVisible]="isProcessGroupFilterVisible" [page]="page"
-      [totalElements]="totalElements" [totalPages]="totalPages" [processStateNameMap]="processStateName"
+      [totalElements]="totalElements" [pageSize]="size" [totalPages]="totalPages" [processStateNameMap]="processStateName"
       [processStateDescriptionMap]="processStateDescription" [processMonitoringFields]="processMonitoringFields"
       (filterChange)="onTableFilterChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
     </of-processmonitoring-table>

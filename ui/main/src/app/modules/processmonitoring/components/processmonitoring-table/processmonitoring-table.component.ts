@@ -18,6 +18,7 @@ import {SelectedCardStore} from '../../../../business/store/selectedCard.store';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/card.component';
+import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofModel/process-monitoring-config.model';
 
 @Component({
     selector: 'of-processmonitoring-table',
@@ -33,9 +34,10 @@ export class ProcessmonitoringTableComponent {
     @Input() totalElements: number;
     @Input() totalPages: number;
     @Input() page: number;
+    @Input() pageSize: number;
     @Input() processStateNameMap: Map<string, string>;
     @Input() processStateDescriptionMap: Map<string, string>;
-    @Input() processMonitoringFields: any[];
+    @Input() processMonitoringFields: ProcessMonitoringField[];
 
     @Output() pageChange = new EventEmitter<number>();
     @Output() filterChange = new EventEmitter<number>();
@@ -132,7 +134,7 @@ export class ProcessmonitoringTableComponent {
             const columnSizeAverage = this.computeColumnSizeAverage();
 
             this.processMonitoringFields.forEach((column) => {
-                if (column.type === 'date') {
+                if (column.type === ProcessMonitoringFieldEnum.DATE) {
                     this.columnDefs.push({
                         type: 'summaryColumn',
                         headerName: column.colName,

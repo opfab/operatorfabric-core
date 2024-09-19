@@ -43,6 +43,11 @@ import {MultiSelectComponent} from '../share/multi-select/multi-select.component
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ProcessmonitoringTableComponent} from './components/processmonitoring-table/processmonitoring-table.component';
 import {MonitoringMapComponent} from './components/map/map.component';
+import {
+    ProcessMonitoringConfig,
+    ProcessMonitoringField,
+    ProcessMonitoringFieldEnum
+} from '@ofModel/process-monitoring-config.model';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -179,9 +184,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         ['compliant', 3],
         ['information', 4]
     ]);
-    private processMonitoringFields: any[];
-    private readonly processMonitoringFieldsDefaultConfig: any[];
-    private readonly processMonitoringFieldsForProcesses: Map<string, any[]>;
+    private processMonitoringDefaultConfig: ProcessMonitoringConfig;
+    private processMonitoringFields: ProcessMonitoringField[];
+    private readonly processMonitoringFieldsDefaultConfig: ProcessMonitoringField[];
+    private readonly processMonitoringFieldsForProcesses: Map<string, ProcessMonitoringField[]>;
     selectedCardId: string;
 
     isMapViewActivated: boolean;
@@ -191,11 +197,15 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.processMonitoringFieldsDefaultConfig = ConfigService.getConfigValue('processMonitoring.fields');
+        this.processMonitoringDefaultConfig = ConfigService.getProcessMonitoringConfig();
+        this.processMonitoringFieldsDefaultConfig = this.processMonitoringDefaultConfig?.fields;
 
-        const fieldsForProcesses = ConfigService.getConfigValue('processMonitoring.fieldsForProcesses');
+        const fieldsForProcesses = this.processMonitoringDefaultConfig?.fieldsForProcesses;
         if (fieldsForProcesses) {
-            this.processMonitoringFieldsForProcesses = new Map(Object.entries(fieldsForProcesses));
+            this.processMonitoringFieldsForProcesses = new Map();
+            fieldsForProcesses.forEach((processFields) => {
+                this.processMonitoringFieldsForProcesses.set(processFields.process, processFields.fields);
+            });
         }
 
         this.processMonitoringFields = this.processMonitoringFieldsDefaultConfig;
@@ -224,7 +234,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     isThereProcessStateToDisplay(): boolean {
-        return this.processList.length > 0;
+        return this.processMonitoringFields && this.processList.length > 0;
     }
 
     moveDomain(isForward: boolean): void {
@@ -265,10 +275,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
 
-        this.size = ConfigService.getConfigValue('processMonitoring.filters.page.size', 10);
+        this.size = this.processMonitoringDefaultConfig?.filters?.pageSize ?? 10;
         OpfabAPIService.businessconfig.getTags('processMonitoring').then((customTags) => {
-            this.tags = customTags ?? ConfigService.getConfigValue('processMonitoring.filters.tags.list');
-
+            this.tags = customTags ?? this.processMonitoringDefaultConfig?.filters?.tags;
             this.tagsMultiSelectOptions = this.tags.map((tag) => {
                 return new MultiSelectOption(tag.value, tag.label);
             });
@@ -342,8 +351,10 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     ngAfterViewInit() {
-        document.getElementById('opfab-processmonitoring-period-year').click();
-        this.sendFilterQuery(0, false);
+        if (this.isThereProcessStateToDisplay()) {
+            document.getElementById('opfab-processmonitoring-period-year').click();
+            this.sendFilterQuery(0, false);
+        }
     }
 
     resetPeriodClicked() {
@@ -449,7 +460,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.columnFilters.forEach((filter) => localFilters.push(filter));
 
         const selectedFields: string[] = [];
-        this.processMonitoringFields.forEach((column) => {
+        this.processMonitoringFields?.forEach((column) => {
             selectedFields.push(column.field);
         });
         if (this.isMapEnabled && this.isMapViewActivated) {
@@ -599,9 +610,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                 const lineForExport = {};
                 lineForExport[severityColumnName] = card.severity;
                 this.processMonitoringFields.forEach((column) => {
-                    if (column.type === 'date') {
+                    if (column.type === ProcessMonitoringFieldEnum.DATE) {
                         lineForExport[column.colName] = this.displayTime(card[String(column.field).split('.').pop()]);
-                    } else if (column.type === 'array') {
+                    } else if (column.type === ProcessMonitoringFieldEnum.ARRAY) {
                         lineForExport[column.colName] = this.displayArray(card[String(column.field).split('.').pop()]);
                     } else {
                         lineForExport[column.colName] = card[String(column.field).split('.').pop()];

@@ -1,0 +1,6 @@
+{
+    "fields": [
+      { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+      { "field": "data.stateName", "colName": "My field", "size": 300}
+    ]
+  }

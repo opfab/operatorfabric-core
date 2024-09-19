@@ -1,0 +1,5 @@
+{
+    "fields": [
+      { "field": "titleTranslated", "colName": "Title", "size": 250}
+    ]
+  }

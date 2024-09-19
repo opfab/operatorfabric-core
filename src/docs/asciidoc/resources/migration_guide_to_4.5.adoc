@@ -30,3 +30,83 @@ Some fields of the `web-ui.json` file have changed and renamed:
 
 * `alerts.messageBusinessAutoClose` has been renamed as `alerts.alarmLevelAutoClose`
 * `alerts.hideBusinessMessages` has been renamed as `alerts.doNotAlertForHiddenCardReceived`
+
+== Process monitoring configuration
+The configuration for process monitoring screen has been removed from `web-ui.json` and externalized in a dedicated JSON file. The process monitoring configuration file has to be loaded by sending an HTTP POST request to the `/processmonitoring` API of businessconfig service or using the CLI command `opfab processmonitoring load <file>`.
+The structure of the process monitoring configuration fields has to be modified as follows:
+
+- "fieldsForProcesses" is now an array of objects with "process" and "fields" fields.
+
+- The "size" attribute in now a number, not a string as before
+
+- "filters" is now an object with "pageSize" and "tags" fields
+
+So for example the configuration should be changed from:
+[source,json] 
+----
+"fieldsForProcesses": {
+      "conferenceAndITIncidentExample" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
+        { "field": "titleTranslated", "colName": "Title", "size": "250"},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
+      ],
+      "messageOrQuestionExample" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
+        { "field": "endDate", "type": "date", "colName": "End Date", "size": "200"},
+        { "field": "titleTranslated", "colName": "Title", "size": "250"},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": "400"}
+      ]
+    },
+    "filters": {
+      "tags": {
+        "list": [
+          {
+            "label": "Label for tag 1",
+            "value": "tag1"
+          },
+          {
+            "label": "Label for tag 2",
+            "value": "tag2"
+          }
+        ]
+      },
+      "page": {
+        "size": 10
+      }
+    }
+----
+
+to 
+
+[source,json] 
+----
+   "fieldsForProcesses": [
+      {
+        "process": "conferenceAndITIncidentExample",
+        "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]}, {
+        "process" : "messageOrQuestionExample",
+        "fields" : [
+        { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
+        { "field": "endDate", "type": "date", "colName": "End Date", "size": 200},
+        { "field": "titleTranslated", "colName": "Title", "size": 250},
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+      ]}
+    ],
+    "filters": {
+      "tags": [
+          {
+            "label": "Label for tag 1",
+            "value": "tag1"
+          },
+          {
+            "label": "Label for tag 2",
+            "value": "tag2"
+          }
+        ],
+        "pageSize": 10
+      }
+----

@@ -26,6 +26,8 @@ fi
 	opfab processgroups load processGroups.json
 	cd ../perimeters
 	./createAllPerimeter.sh
+	cd ../processMonitoring
+	opfab processmonitoring load processMonitoring.json
 	cd ../realTimeScreens
 	opfab realtimescreen load realTimeScreens.json
 	cd ../businessData

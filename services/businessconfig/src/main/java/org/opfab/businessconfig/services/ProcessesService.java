@@ -65,6 +65,8 @@ public class ProcessesService implements ResourceLoaderAware {
     private LocalValidatorFactoryBean validator;
     private ProcessGroups processGroupsCache;
     private RealTimeScreens realTimeScreensCache;
+    private ProcessMonitoring processMonitoringCache;
+
     private EventBus eventBus;
 
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, EventBus eventBus) {
@@ -81,6 +83,7 @@ public class ProcessesService implements ResourceLoaderAware {
         loadCache();
         loadProcessGroupsCache();
         loadRealTimeScreensCache();
+        loadProcessMonitoringCache();
     }
 
     public ProcessGroups getProcessGroupsCache() {
@@ -148,6 +151,27 @@ public class ProcessesService implements ResourceLoaderAware {
             }
         } catch (IOException e) {
             log.warn("Unreadable realtimescreens.json file at  {}", storagePath);
+        }
+    }
+
+        /**
+     * Loads realTimeScreens data to realTimeScreensCache
+     */
+    public void loadProcessMonitoringCache() {
+
+        this.processMonitoringCache = new ProcessMonitoring(null, null, null);
+        try {
+            Path rootPath = Paths
+                    .get(this.storagePath)
+                    .normalize();
+
+            File f = new File(rootPath.toString() + "/processmonitoring.json");
+            if (f.exists() && f.isFile()) {
+                log.info("loading processmonitoring.json file from {}", new File(storagePath).getAbsolutePath());
+                this.processMonitoringCache = objectMapper.readValue(f, ProcessMonitoring.class);
+            }
+        } catch (IOException e) {
+            log.warn("Unreadable processmonitoring.json file at  {}", storagePath);
         }
     }
 
@@ -666,6 +690,29 @@ public class ProcessesService implements ResourceLoaderAware {
 
         eventBus.sendEvent("process", "BUSINESS_DATA_CHANGE");
 
+    }
+
+    public void updateProcessMonitoringFile(String fileContent)
+            throws IOException, ParseException {
+
+        Path rootPath = Paths
+        .get(this.storagePath)
+        .normalize();
+        if (!rootPath.toFile().exists())
+            throw new FileNotFoundException("No directory available to copy processmonitoring file");
+
+        this.isResourceJSON(fileContent);
+
+        ProcessMonitoring processMonitoring = objectMapper.readValue(fileContent, ProcessMonitoring.class);
+
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),
+        rootPath.toString() + "/processmonitoring.json");
+
+        processMonitoringCache = processMonitoring;
+    }
+
+    public ProcessMonitoring getProcessMonitoring() {
+        return this.processMonitoringCache;
     }
 
     public Resource getBusinessData(String resourceName) throws FileNotFoundException {
