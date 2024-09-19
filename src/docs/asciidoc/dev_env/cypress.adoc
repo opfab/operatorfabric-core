@@ -139,7 +139,7 @@ associated collections through the MongoDB shell with the following commands:
 [source,bash]
 ----
 docker exec -it docker-mongodb-1 bash
-mongo "mongodb://root:password@localhost:27017/?authSource=admin"
+mongosh "mongodb://root:password@localhost:27017/?authSource=admin"
 use operator-fabric
 db.cards.remove({})
 db.archivedCards.remove({})
