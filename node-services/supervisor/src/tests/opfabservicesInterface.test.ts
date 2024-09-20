@@ -50,7 +50,6 @@ describe('Opfab interface', function () {
     it('Should return invalid response when error in user request', async function () {
         const opfabServicesInterface = getOpfabServicesInterface();
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake(async (request) => {
-            'test'.includes('test');
             if ((request.url as string).includes('token')) return {status: 200, data: {access_token: 'fakeToken'}};
             else throw new Error('error message');
         });
