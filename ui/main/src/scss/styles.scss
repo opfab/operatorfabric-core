@@ -394,6 +394,14 @@ body {
     max-width: 100%;
 }
 
+.opfab-popover-arrow-shift-right {
+    @extend %opfab-popover;
+    max-width: 100%;
+    .popover-arrow::after, .popover-arrow::before {
+        left: 150px;
+    }
+}
+
 .opfab-popover-with-scrolling {
     max-width: 800px;
 

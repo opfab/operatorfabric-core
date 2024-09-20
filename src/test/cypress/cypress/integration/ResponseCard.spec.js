@@ -583,16 +583,14 @@ describe('Response card tests', function () {
         usercard.previewThenSendCard();
         feed.openFirstCard();
 
+        card.openEntityDropdownInCardHeader();
+        cy.get('ngb-popover-window').should('exist');
+        cy.get('#opfab-answered-list').find('span').should("have.length", 0);
+        cy.get('#opfab-not-answered-list').find('span').should("have.length", 6);
+
         card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
         card.checkEntityIsOrangeInCardHeader('ENTITY3_FR');
-        card.checkEntityIsNotVisibleInCardHeader('ENTITY4_FR');
-        card.checkEntityIsNotVisibleInCardHeader('ENTITY1_IT');
-        card.checkEntityIsNotVisibleInCardHeader('ENTITY2_IT');
-
-        card.openEntityDropdownInCardHeader();
-
-        // The other entities are now visible
         card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
         card.checkEntityIsOrangeInCardHeader('ENTITY1_IT');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');
@@ -604,7 +602,8 @@ describe('Response card tests', function () {
         card.sendResponse();
 
         card.openEntityDropdownInCardHeader();
-
+        cy.get('#opfab-answered-list').find('span').should("have.length", 1);
+        cy.get('#opfab-not-answered-list').find('span').should("have.length", 5);
         card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
         card.checkEntityIsGreenInCardHeader('ENTITY1_IT');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');

@@ -17,8 +17,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CountDownComponent} from '../../../share/countdown/countdown.component';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
-const maxVisibleEntitiesForCardHeader = 3;
-
 class EntityForCardHeader {
     id: string;
     name: string;
@@ -41,9 +39,12 @@ export class CardHeaderComponent implements OnChanges {
     public showExpiredIcon = true;
     public showExpiredLabel = true;
     public expiredLabel = 'feed.lttdFinished';
+    public entitiesForCardHeader: EntityForCardHeader[];
+    public answeredList: EntityForCardHeader[];
+    public notAnsweredList: EntityForCardHeader[];
 
-    public listVisibleEntitiesToRespond = [];
-    public listDropdownEntitiesToRespond = [];
+    private static readonly ANSWERED_COLOR = 'var(--opfab-color-green)';
+    private static readonly NOT_ANSWERED_COLOR = 'var(--opfab-color-darker-orange)';
 
     ngOnChanges(): void {
         this.computeExpireLabelAndIcon();
@@ -85,9 +86,9 @@ export class CardHeaderComponent implements OnChanges {
     }
 
     private setEntitiesForCardHeader(entities) {
-        const entitiesForCardHeader = this.getEntitiesForCardHeaderFromEntityIds(entities);
-        entitiesForCardHeader.sort((a, b) => a.name?.localeCompare(b.name));
-        this.separateEntitiesBetweenVisibleAndDropdown(entitiesForCardHeader);
+        this.entitiesForCardHeader = this.getEntitiesForCardHeaderFromEntityIds(entities);
+        this.entitiesForCardHeader.sort((a, b) => a.name?.localeCompare(b.name));
+        this.computeAnswersLists();
     }
 
     private getEntitiesForCardHeaderFromEntityIds(entities: string[]) {
@@ -99,8 +100,8 @@ export class CardHeaderComponent implements OnChanges {
                     id: entity,
                     name: entityName,
                     color: this.hasEntityAnswered(entity)
-                        ? 'var(--opfab-color-green)'
-                        : 'var(--opfab-color-darker-orange)'
+                        ? CardHeaderComponent.ANSWERED_COLOR
+                        : CardHeaderComponent.NOT_ANSWERED_COLOR
                 });
             }
         });
@@ -111,13 +112,12 @@ export class CardHeaderComponent implements OnChanges {
         return this.childCards.some((childCard) => childCard.publisher === entity);
     }
 
-    private separateEntitiesBetweenVisibleAndDropdown(entities) {
-        this.listVisibleEntitiesToRespond =
-            entities.length > maxVisibleEntitiesForCardHeader
-                ? entities.slice(0, maxVisibleEntitiesForCardHeader)
-                : entities;
-
-        this.listDropdownEntitiesToRespond =
-            entities.length > maxVisibleEntitiesForCardHeader ? entities.slice(maxVisibleEntitiesForCardHeader) : [];
+    private computeAnswersLists() {
+        this.answeredList = this.entitiesForCardHeader.filter(
+            (entity) => entity.color === CardHeaderComponent.ANSWERED_COLOR
+        );
+        this.notAnsweredList = this.entitiesForCardHeader.filter(
+            (entity) => entity.color === CardHeaderComponent.NOT_ANSWERED_COLOR
+        );
     }
 }
