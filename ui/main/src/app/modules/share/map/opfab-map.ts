@@ -267,7 +267,7 @@ export abstract class OpfabMap {
         if (this.popupContent === 'summary') {
             return `${lightCard.summaryTranslated}`;
         } else {
-            const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+            const publishDate = DateTimeFormatterService.getFormattedDateAndTime(lightCard.publishDate);
             return `${publishDate} : ${lightCard.titleTranslated}`;
         }
     }

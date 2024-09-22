@@ -14,7 +14,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';
-import {I18nService} from '../../services/translation/i18n.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 export class ProcessMonitoringView {
     private processesToMonitor: ProcessToMonitor[] = null;
@@ -290,7 +290,7 @@ export class ProcessMonitoringView {
             };
         }
         if (periodClicked === 'week') {
-            const localeOption = I18nService.getDateFnsLocaleOption();
+            const localeOption = DateTimeFormatterService.getDateFnsLocaleOption();
 
             const startOfWeekDate = startOfWeek(new Date(), localeOption);
             const endOfWeekDate = add(endOfWeek(new Date(), localeOption), {days: 1});

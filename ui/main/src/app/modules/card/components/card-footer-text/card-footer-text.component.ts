@@ -66,11 +66,11 @@ export class CardFooterTextComponent implements OnChanges, OnInit {
     }
 
     public formatDate(date: number) {
-        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDate(date);
     }
 
     public formatTime(date: number) {
-        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTime(date);
     }
 
     private computeFromEntityOrRepresentative() {

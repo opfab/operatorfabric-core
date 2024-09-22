@@ -9,6 +9,7 @@
 
 import {XAxis} from './xaxis';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 
 describe('XAxis', () => {
@@ -19,6 +20,7 @@ describe('XAxis', () => {
         const translationService = new TranslationServiceMock();
         I18nService.setTranslationService(translationService);
         I18nService.initLocale();
+        DateTimeFormatterService.init();
     });
 
     it('should set xTicks correctly for Realtime Mode (TR) , one tick per 15 minutes ', () => {

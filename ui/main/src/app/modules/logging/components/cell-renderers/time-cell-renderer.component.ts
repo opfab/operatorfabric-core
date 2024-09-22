@@ -24,7 +24,7 @@ export class TimeCellRendererComponent implements ICellRendererAngularComp {
     timestamp: string;
 
     agInit(params: any): void {
-        this.timestamp = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(params.value);
+        this.timestamp = DateTimeFormatterService.getFormattedDateAndTime(params.value);
     }
 
     // noinspection JSUnusedLocalSymbols

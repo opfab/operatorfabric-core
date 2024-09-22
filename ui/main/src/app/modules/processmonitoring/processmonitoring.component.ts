@@ -570,7 +570,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     displayTime(date) {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTime(date);
     }
 
     displayArray(values: string[]) {

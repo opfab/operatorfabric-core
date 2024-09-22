@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18nService} from 'app/business/services/translation/i18n.service';
-import {add, format, sub, startOfDay, startOfMonth} from 'date-fns';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {add, sub, startOfDay, startOfMonth} from 'date-fns';
 
 export class Rectangle {
     public start: number;
@@ -114,20 +114,20 @@ export class XAxis {
     private computeTickLabel = (value: Date, domainId: string): string => {
         switch (domainId) {
             case 'TR':
-                if (value.getMinutes() === 0) return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
-                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h30';
+                if (value.getMinutes() === 0) return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
+                return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h30';
             case 'J':
-                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
+                return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
             case '7D':
             case 'W':
-                return format(value, 'HH', I18nService.getDateFnsLocaleOption()) + 'h';
+                return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
             case 'M':
                 return (
-                    format(value, 'eee', I18nService.getDateFnsLocaleOption()).toLocaleUpperCase().substring(0, 3) +
-                    format(value, ' dd', I18nService.getDateFnsLocaleOption())
+                    DateTimeFormatterService.getFormattedDate(value, 'eee').toLocaleUpperCase().substring(0, 3) +
+                    DateTimeFormatterService.getFormattedDate(value, ' dd')
                 );
             case 'Y':
-                return format(value, 'd MMM', I18nService.getDateFnsLocaleOption());
+                return DateTimeFormatterService.getFormattedDate(value, 'd MMM');
             default:
                 return '';
         }
@@ -177,7 +177,7 @@ export class XAxis {
 
     private getWeekFormatting(start: number, end: number) {
         if (end - start < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
-        return format(start, 'eee dd MMM', I18nService.getDateFnsLocaleOption());
+        return DateTimeFormatterService.getFormattedDate(start, 'eee dd MMM');
     }
 
     public getTickLabel = (value): string => {

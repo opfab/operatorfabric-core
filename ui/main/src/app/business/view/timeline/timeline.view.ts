@@ -12,8 +12,7 @@ import {XAxis} from './xaxis';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Observable, Subject, takeUntil} from 'rxjs';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {I18nService} from 'app/business/services/translation/i18n.service';
-import {format} from 'date-fns';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 export class TimelineView {
     private circles: Circles;
@@ -66,24 +65,26 @@ export class TimelineView {
     }
 
     private setTitle() {
-        const localeOption = I18nService.getDateFnsLocaleOption();
         switch (this.domainId) {
             case 'TR':
             case 'J':
-                this.title = format(this.gridTimeDomain[0], 'dd MMMM yyyy', localeOption);
+                this.title = DateTimeFormatterService.getFormattedDate(this.gridTimeDomain[0], 'dd MMMM yyyy');
                 break;
             case 'M':
-                this.title = format(this.gridTimeDomain[0], 'MMMM yyyy', localeOption).toLocaleUpperCase();
+                this.title = DateTimeFormatterService.getFormattedDate(
+                    this.gridTimeDomain[0],
+                    'MMMM yyyy'
+                ).toLocaleUpperCase();
                 break;
             case 'Y':
-                this.title = format(this.gridTimeDomain[0], 'yyyy', localeOption).toLocaleUpperCase();
+                this.title = DateTimeFormatterService.getFormattedDate(this.gridTimeDomain[0], 'yyyy');
                 break;
             case '7D':
             case 'W':
                 this.title =
-                    format(this.gridTimeDomain[0], 'dd/MM/yyyy', localeOption).toLocaleUpperCase() +
+                    DateTimeFormatterService.getFormattedDate(this.gridTimeDomain[0], 'dd/MM/yyyy') +
                     ' - ' +
-                    format(this.gridTimeDomain[1], 'dd/MM/yyyy', localeOption);
+                    DateTimeFormatterService.getFormattedDate(this.gridTimeDomain[1], 'dd/MM/yyyy');
                 break;
             default:
         }

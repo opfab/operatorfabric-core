@@ -105,14 +105,14 @@ export class ArchivedCardDetailComponent implements OnInit {
     }
 
     getFormattedDateAndTime(date: number): any {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTime(date);
     }
 
     getFormattedDate(date: number): any {
-        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDate(date);
     }
 
     getFormattedTime(date: number): any {
-        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTime(date);
     }
 }

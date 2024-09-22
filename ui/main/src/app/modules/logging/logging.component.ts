@@ -256,7 +256,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     displayTime(date) {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTime(date);
     }
 
     exportToExcel(): void {
@@ -293,7 +293,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                 card.publishDate
                             ),
                             [processGroupColumnName]: this.translateColumn(
@@ -310,7 +310,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                 card.publishDate
                             ),
                             [processColumnName]: card.processName,

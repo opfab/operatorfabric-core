@@ -322,7 +322,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTime(date);
     }
 
     // EXPORT TO EXCEL
@@ -356,7 +356,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
@@ -373,7 +373,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
@@ -437,11 +437,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedDate(date: number): any {
-        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDate(date);
     }
 
     getFormattedTime(date: number): any {
-        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTime(date);
     }
 
     getEntityRecipientsNames(entityRecipients: string[], maxLength?: number): string[] {
