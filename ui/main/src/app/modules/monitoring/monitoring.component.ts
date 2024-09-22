@@ -24,6 +24,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
+import {UserService} from 'app/business/services/users/user.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -94,7 +95,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
-        this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
+        this.isThereProcessStateToDisplay = this.hasStatesToDisplay();
 
         SelectedCardService.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
@@ -107,6 +108,17 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             if (!filter) correctlySet = false;
         });
         return correctlySet;
+    }
+
+    private hasStatesToDisplay(): boolean {
+        for (const process of ProcessesService.getAllProcesses()) {
+            for (const [stateId] of process.states) {
+                if (UserService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     ngOnDestroy() {
