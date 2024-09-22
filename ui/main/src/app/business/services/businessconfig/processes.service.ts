@@ -16,7 +16,6 @@ import {
     TypeOfStateEnum
 } from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
-import {UserService} from 'app/business/services/users/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
@@ -287,26 +286,6 @@ export class ProcessesService {
     public static getTypeOfStatesPerProcessAndState(): Map<string, TypeOfStateEnum> {
         if (!ProcessesService.typeOfStatesPerProcessAndState) ProcessesService.loadTypeOfStatesPerProcessAndState();
         return ProcessesService.typeOfStatesPerProcessAndState;
-    }
-
-    public static getStatesListPerProcess(isAdminMode: boolean, hideChildStates: boolean): Map<string, any[]> {
-        const statesListPerProcess = new Map();
-
-        ProcessesService.getAllProcesses().forEach((process) => {
-            const statesDropdownList = [];
-            process.states.forEach((state, stateid) => {
-                if (
-                    !(hideChildStates && state.isOnlyAChildState) &&
-                    (isAdminMode || UserService.isReceiveRightsForProcessAndState(process.id, stateid))
-                ) {
-                    statesDropdownList.push({
-                        id: process.id + '.' + stateid
-                    });
-                }
-            });
-            if (statesDropdownList.length) statesListPerProcess.set(process.id, statesDropdownList);
-        });
-        return statesListPerProcess;
     }
 
     public static getConsideredAcknowledgedForUserWhenForALightCard(
