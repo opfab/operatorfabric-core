@@ -15,8 +15,7 @@ import {DetailContext} from '@ofModel/detail-context.model';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {OpfabAPIService} from '../opfabAPI.service';
-import {setDefaultOptions} from 'date-fns';
-import {enUS} from 'date-fns/locale';
+import {HandlebarsHelper} from './handlebarsHelper';
 
 describe('Handlebars Services', () => {
     let processServerMock: ProcessServerMock;
@@ -324,6 +323,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile numberFormat using en locale fallback', (done) => {
+            HandlebarsHelper.changeLocale('en');
             testTemplate(
                 '{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}',
                 new Intl.NumberFormat('en', {style: 'currency', currency: 'EUR'}).format(5),
@@ -348,7 +348,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {
-            setDefaultOptions({locale: enUS});
+            HandlebarsHelper.changeLocale('en');
             testTemplate('{{dateFormat 1626685587000 format="MMMM do yyyy"}}', 'July 19th 2021', done);
         });
 

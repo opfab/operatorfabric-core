@@ -49,7 +49,7 @@ export class InfoComponent implements OnInit {
     }
 
     updateTime(): void {
-        this.timeToDisplay = DateTimeFormatterService.getFormattedTimeFromEpochDate(new Date().valueOf());
+        this.timeToDisplay = DateTimeFormatterService.getFormattedTime(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
             this.changeDetector.markForCheck();

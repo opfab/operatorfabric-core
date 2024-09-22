@@ -277,7 +277,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     getFormattedDateTime(epochDate: number): string {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(epochDate);
+        return DateTimeFormatterService.getFormattedDateAndTime(epochDate);
     }
 
     getResponses(cardId: string, entities: string[]) {

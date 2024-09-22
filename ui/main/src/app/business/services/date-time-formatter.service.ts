@@ -7,43 +7,70 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {fr, enUS, nl} from 'date-fns/locale';
 import {ConfigService} from './config.service';
 import {format} from 'date-fns';
-import {I18nService} from './translation/i18n.service';
 
 export class DateTimeFormatterService {
     private static timeFormat;
-    private static dateFormat;
+    private static defaultDateFormat;
     private static dateTimeFormat;
+    private static dateFnsLocaleOption: {locale: any};
 
     public static init() {
         DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'p');
-        DateTimeFormatterService.dateFormat = ConfigService.getConfigValue('settings.dateFormat', 'P');
+        DateTimeFormatterService.defaultDateFormat = ConfigService.getConfigValue('settings.dateFormat', 'P');
         DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat');
+        ConfigService.getConfigValueAsObservable('settings.locale', 'en').subscribe((locale) =>
+            DateTimeFormatterService.setDateFnsLocaleOption(locale)
+        );
     }
 
-    public static getFormattedDateFromEpochDate(epochDate: number): string {
-        if (!epochDate) {
+    private static setDateFnsLocaleOption(locale) {
+        let fnsLocale;
+        switch (locale) {
+            case 'fr':
+                fnsLocale = fr;
+                break;
+            case 'nl':
+                fnsLocale = nl;
+                break;
+            default:
+                fnsLocale = {...enUS, options: {...enUS.options, weekStartsOn: 6}};
+                break;
+        }
+        DateTimeFormatterService.dateFnsLocaleOption = {locale: fnsLocale};
+    }
+
+    public static getDateFnsLocaleOption(): {locale: any} {
+        return DateTimeFormatterService.dateFnsLocaleOption;
+    }
+
+    public static getFormattedDate(
+        date: number | Date,
+        dateFormat: string = DateTimeFormatterService.defaultDateFormat
+    ): string {
+        if (!date) {
             return '';
         }
-        return format(epochDate, DateTimeFormatterService.dateFormat, I18nService.getDateFnsLocaleOption());
+        return format(date, dateFormat, DateTimeFormatterService.dateFnsLocaleOption);
     }
 
-    public static getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
+    public static getFormattedDateAndTime(epochDate: number): string {
         const formatToUse = DateTimeFormatterService.dateTimeFormat
             ? DateTimeFormatterService.dateTimeFormat
-            : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`;
+            : `${DateTimeFormatterService.defaultDateFormat} ${DateTimeFormatterService.timeFormat}`;
 
         if (!epochDate) {
             return '';
         }
-        return format(epochDate, formatToUse, I18nService.getDateFnsLocaleOption());
+        return format(epochDate, formatToUse, DateTimeFormatterService.dateFnsLocaleOption);
     }
 
-    public static getFormattedTimeFromEpochDate(epochDate: number): string {
+    public static getFormattedTime(epochDate: number): string {
         if (!epochDate) {
             return '';
         }
-        return format(epochDate, DateTimeFormatterService.timeFormat, I18nService.getDateFnsLocaleOption());
+        return format(epochDate, DateTimeFormatterService.timeFormat, DateTimeFormatterService.dateFnsLocaleOption);
     }
 }

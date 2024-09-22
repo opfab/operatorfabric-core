@@ -13,7 +13,7 @@ import {UserPreferencesService} from './users/user-preference.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
-import {I18nService} from './translation/i18n.service';
+import {DateTimeFormatterService} from './date-time-formatter.service';
 
 export class RealtimeDomainService {
     private static OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
@@ -78,8 +78,8 @@ export class RealtimeDomainService {
                 break;
             }
             case 'W': {
-                startDomain = startOfWeek(new Date(), I18nService.getDateFnsLocaleOption());
-                endDomain = add(startOfWeek(new Date(), I18nService.getDateFnsLocaleOption()), {weeks: 1});
+                startDomain = startOfWeek(new Date(), DateTimeFormatterService.getDateFnsLocaleOption());
+                endDomain = add(startOfWeek(new Date(), DateTimeFormatterService.getDateFnsLocaleOption()), {weeks: 1});
                 break;
             }
             case 'M': {
@@ -121,7 +121,7 @@ export class RealtimeDomainService {
              */
             const startOfWeekTime = startOfWeek(
                 add(new Date(startDomain), {days: 2}),
-                I18nService.getDateFnsLocaleOption()
+                DateTimeFormatterService.getDateFnsLocaleOption()
             ).getTime();
             const endOfWeekTime = add(startOfWeekTime, {weeks: 1}).getTime();
             startDomain = startOfWeekTime;

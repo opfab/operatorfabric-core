@@ -10,6 +10,7 @@
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {TimelineView} from './timeline.view';
 import {I18nService} from 'app/business/services/translation/i18n.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 describe('TimeLine view title', () => {
     let timeLineView: TimelineView;
@@ -19,6 +20,7 @@ describe('TimeLine view title', () => {
         const translationService = new TranslationServiceMock();
         I18nService.setTranslationService(translationService);
         I18nService.initLocale();
+        DateTimeFormatterService.init();
     });
 
     afterEach(() => {

@@ -13,11 +13,10 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
-import {add, Duration, format} from 'date-fns';
-import {I18nService} from '../../../business/services/translation/i18n.service';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {add, Duration} from 'date-fns';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -135,22 +134,21 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     getDateFormatting(value): string {
-        const date = new Date(value);
         switch (this.currentDomainId) {
             case 'TR':
-                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTime(value);
             case 'J':
-                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDate(value);
             case '7D':
-                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTime(value);
             case 'W':
-                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDate(value);
             case 'M':
-                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDate(value);
             case 'Y':
-                return format(date, 'yyyy', I18nService.getDateFnsLocaleOption());
+                return DateTimeFormatterService.getFormattedDate(value, 'yyyy');
             default:
-                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDate(value);
         }
     }
 

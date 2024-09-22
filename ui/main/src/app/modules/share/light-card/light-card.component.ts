@@ -132,7 +132,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     handleDate(timeStamp: number): string {
-        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(timeStamp);
+        return DateTimeFormatterService.getFormattedDateAndTime(timeStamp);
     }
 
     public select($event) {
