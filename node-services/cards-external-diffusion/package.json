@@ -46,7 +46,7 @@
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
-    "eslint-config-love": "43.1.0",
+    "eslint-config-love": "71.0.0",
     "eslint-plugin-ban": "^1.6.0",
     "eslint-plugin-import": "2.30.0",
     "eslint-plugin-n": "16.6.2",
