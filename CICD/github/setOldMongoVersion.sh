@@ -8,5 +8,5 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
  
-echo "Set mongo version to 4.4-bionic"
-sed -i "s/mongo:.*$/mongo:4.4-bionic/g" config/docker/docker-compose.yml
+echo "Set mongo version to mongo:5.0.28-focal"
+sed -i "s/mongo:.*$/mongo:5.0.28-focal/g" config/docker/docker-compose.yml
