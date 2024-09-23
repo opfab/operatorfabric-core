@@ -14,12 +14,8 @@ The aim of this document is to explain how to configure and deploy OperatorFabri
 For now OperatorFabric consist of Docker images available either by compiling
 the project or by using images releases from link:https://hub.docker.com/[Dockerhub]
 
-Service images are all based on link:https://hub.docker.com/_/openjdk[openjdk:8-jre-alpine].
-
-For simple one instance per service deployment, you can find a sample
-deployment as a docker compose file
-link:https://github.com/opfab/operatorfabric-core/tree/master/config/docker[here]
-
+For simple one instance per service deployment, you can find in our "Getting Started" a 
+link:https://github.com/opfab/operatorfabric-getting-started/blob/master/server/docker-compose.yml[sample deployment as a docker compose file]
 
 To run OperatorFabric in development mode, see
 ifdef::single-page-doc[<<dev_env, the development environment documentation>>]

@@ -39,6 +39,7 @@ See link:{mongo_doc}connection-string/[mongo connection string] for the complete
 
 This configuration is mandatory (no default configuration is provided).
 
+Operator Fabric is supporting mongo version 5.0.0 and above.
 
 === RabbitMQ
 
