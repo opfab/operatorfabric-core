@@ -14,7 +14,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {SelectedCard, SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {Router} from '@angular/router';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 import {ModalService} from 'app/business/services/modal.service';
@@ -50,7 +50,7 @@ export class CardComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        SelectedCardService.getSelectCard()
+        SelectedCardStore.getSelectedCard()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((selectedCard: SelectedCard) => {
                 if (selectedCard.card) {
@@ -90,14 +90,14 @@ export class CardComponent implements OnInit, OnDestroy {
 
     // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        SelectedCardService.getSelectCardIdChanges()
+        SelectedCardStore.getSelectCardIdChanges()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
                 // a new card has been selected and will be downloaded
                 //this.cardNotFound = false;
                 this.currentSelectedCardId = cardId;
                 setTimeout(() => {
-                    if (SelectedCardService.isSelectedCardNotFound()) {
+                    if (SelectedCardStore.isSelectedCardNotFound()) {
                         this.cardLoadingInProgress = false;
                         return;
                     }
@@ -111,7 +111,7 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     checkForCardDeleted() {
-        SelectedCardService.getSelectedCardsDeleted()
+        SelectedCardStore.getSelectedCardsDeleted()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
                 setTimeout(() => {
@@ -128,9 +128,9 @@ export class CardComponent implements OnInit, OnDestroy {
         this.detailClosed = true;
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
         } else {
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
             this.router.navigate(['/feed']);
         }
     }

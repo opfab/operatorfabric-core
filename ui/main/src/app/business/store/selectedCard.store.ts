@@ -10,7 +10,7 @@
 import {Card} from '@ofModel/card.model';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 
-export class SelectedCardService {
+export class SelectedCardStore {
     private static selectedCardId: string;
     private static selectedCardIdChange = new ReplaySubject<string>(1);
     private static selectedCardNotFound = false;
@@ -20,50 +20,50 @@ export class SelectedCardService {
     private static selectedCardDeleted = new Subject<any>();
 
     public static setSelectedCardId(cardId: string): void {
-        SelectedCardService.selectedCardId = cardId;
-        SelectedCardService.selectedCardNotFound = false;
-        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(null, null, false));
-        SelectedCardService.selectedCardIdChange.next(cardId);
+        SelectedCardStore.selectedCardId = cardId;
+        SelectedCardStore.selectedCardNotFound = false;
+        SelectedCardStore.selectedCardWithChildrenChange.next(new SelectedCard(null, null, false));
+        SelectedCardStore.selectedCardIdChange.next(cardId);
     }
 
     public static setSelectedCardWithChildren(card: Card, childCards: Card[]): void {
-        SelectedCardService.selectedCardNotFound = false;
+        SelectedCardStore.selectedCardNotFound = false;
         if (!childCards) childCards = [];
-        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(card, childCards, false));
+        SelectedCardStore.selectedCardWithChildrenChange.next(new SelectedCard(card, childCards, false));
     }
 
     public static setSelectedCardNotFound(): void {
-        SelectedCardService.selectedCardNotFound = true;
-        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(null, null, true));
+        SelectedCardStore.selectedCardNotFound = true;
+        SelectedCardStore.selectedCardWithChildrenChange.next(new SelectedCard(null, null, true));
     }
 
     public static isSelectedCardNotFound(): boolean {
-        return SelectedCardService.selectedCardNotFound;
+        return SelectedCardStore.selectedCardNotFound;
     }
 
     public static getSelectedCardId(): string {
-        return SelectedCardService.selectedCardId;
+        return SelectedCardStore.selectedCardId;
     }
 
     public static clearSelectedCardId(): void {
-        SelectedCardService.selectedCardId = null;
-        SelectedCardService.selectedCardIdChange.next(null);
+        SelectedCardStore.selectedCardId = null;
+        SelectedCardStore.selectedCardIdChange.next(null);
     }
 
     public static getSelectCardIdChanges(): Observable<string> {
-        return SelectedCardService.selectedCardIdChange.asObservable();
+        return SelectedCardStore.selectedCardIdChange.asObservable();
     }
 
-    public static getSelectCard(): Observable<SelectedCard> {
-        return SelectedCardService.selectedCardWithChildrenChange.asObservable();
+    public static getSelectedCard(): Observable<SelectedCard> {
+        return SelectedCardStore.selectedCardWithChildrenChange.asObservable();
     }
 
     public static setCardDeleted(cardId: string): void {
-        if (SelectedCardService.selectedCardId === cardId) SelectedCardService.selectedCardDeleted.next(cardId);
+        if (SelectedCardStore.selectedCardId === cardId) SelectedCardStore.selectedCardDeleted.next(cardId);
     }
 
     public static getSelectedCardsDeleted(): Observable<any> {
-        return SelectedCardService.selectedCardDeleted.asObservable();
+        return SelectedCardStore.selectedCardDeleted.asObservable();
     }
 }
 

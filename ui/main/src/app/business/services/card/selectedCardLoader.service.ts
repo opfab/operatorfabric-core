@@ -9,7 +9,7 @@
 
 import {catchError, filter, map, switchMap} from 'rxjs';
 import {CardService} from './card.service';
-import {SelectedCardService} from './selectedCard.service';
+import {SelectedCardStore} from '../../store/selectedCard.store';
 
 export class SelectedCardLoaderService {
     public static init() {
@@ -17,15 +17,15 @@ export class SelectedCardLoaderService {
     }
 
     private static loadCardWhenUserSelectCard() {
-        SelectedCardService.getSelectCardIdChanges()
+        SelectedCardStore.getSelectCardIdChanges()
             .pipe(
                 filter((id) => id !== null),
                 switchMap((id) => CardService.loadCard(id)),
-                map((cardData) => SelectedCardService.setSelectedCardWithChildren(cardData.card, cardData.childCards)),
+                map((cardData) => SelectedCardStore.setSelectedCardWithChildren(cardData.card, cardData.childCards)),
                 catchError((err, caught) => {
-                    SelectedCardService.setSelectedCardId(null);
-                    SelectedCardService.setSelectedCardWithChildren(null, null);
-                    SelectedCardService.setSelectedCardNotFound();
+                    SelectedCardStore.setSelectedCardId(null);
+                    SelectedCardStore.setSelectedCardWithChildren(null, null);
+                    SelectedCardStore.setSelectedCardNotFound();
                     return caught;
                 })
             )

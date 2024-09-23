@@ -31,7 +31,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
-import {SelectedCardService} from '../../business/services/card/selectedCard.service';
+import {SelectedCardStore} from '../../business/store/selectedCard.store';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
@@ -282,7 +282,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.page = 1;
         this.results = [];
 
-        SelectedCardService.getSelectCardIdChanges().subscribe(
+        SelectedCardStore.getSelectCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
 
