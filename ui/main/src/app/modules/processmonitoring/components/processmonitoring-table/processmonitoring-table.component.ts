@@ -14,7 +14,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCardService} from '../../../../business/services/card/selectedCard.service';
+import {SelectedCardStore} from '../../../../business/store/selectedCard.store';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/card.component';
@@ -176,7 +176,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     selectCard(info) {
-        SelectedCardService.setSelectedCardId(info);
+        SelectedCardStore.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -185,7 +185,7 @@ export class ProcessmonitoringTableComponent {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
         });
     }
 }

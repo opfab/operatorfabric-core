@@ -24,7 +24,7 @@ import {
 import {LightCard} from '@ofModel/light-card.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {TranslateService} from '@ngx-translate/core';
-import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 import {NgFor} from '@angular/common';
@@ -99,7 +99,7 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
     }
 
     showCard(lightCardId) {
-        SelectedCardService.setSelectedCardId(lightCardId);
+        SelectedCardStore.setSelectedCardId(lightCardId);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -108,7 +108,7 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
         });
     }
 

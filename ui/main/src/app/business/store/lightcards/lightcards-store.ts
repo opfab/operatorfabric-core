@@ -26,7 +26,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {AcknowledgeService} from '../../services/acknowledge.service';
 
 /**
@@ -158,8 +158,8 @@ export class LightCardsStore {
                                 LogOption.LOCAL_AND_REMOTE
                             );
                             this.addOrUpdateLightCard(operation.card);
-                            if (operation.card.id === SelectedCardService.getSelectedCardId())
-                                SelectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
+                            if (operation.card.id === SelectedCardStore.getSelectedCardId())
+                                SelectedCardStore.setSelectedCardId(operation.card.id); // to update the selected card
                             break;
                         case CardOperationType.DELETE:
                             logger.info(
@@ -354,8 +354,8 @@ export class LightCardsStore {
     }
 
     private closeCardIfOpen(cardId) {
-        if (cardId === SelectedCardService.getSelectedCardId()) {
-            SelectedCardService.setCardDeleted(cardId);
+        if (cardId === SelectedCardStore.getSelectedCardId()) {
+            SelectedCardStore.setCardDeleted(cardId);
         }
     }
 

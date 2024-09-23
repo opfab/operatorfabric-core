@@ -33,7 +33,7 @@ import {DisplayContext} from '@ofModel/template.model';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
@@ -389,9 +389,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
         } else {
-            SelectedCardService.clearSelectedCardId();
+            SelectedCardStore.clearSelectedCardId();
             this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
         }
     }

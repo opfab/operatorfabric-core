@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {filter} from 'rxjs';
 import {RouterStore} from 'app/business/store/router.store';
 
@@ -40,7 +40,7 @@ export class RouterNavigationService {
     clearSelectedCardWhenUserNavigateAwayFromTheFeed() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             if (!event.url.startsWith('/feed/cards')) {
-                SelectedCardService.clearSelectedCardId();
+                SelectedCardStore.clearSelectedCardId();
             }
         });
     }
@@ -49,7 +49,7 @@ export class RouterNavigationService {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             if (event.url.startsWith('/feed/cards/')) {
                 const cardId = event.url.split('cards/')[1];
-                SelectedCardService.setSelectedCardId(decodeURI(cardId));
+                SelectedCardStore.setSelectedCardId(decodeURI(cardId));
             }
         });
     }
