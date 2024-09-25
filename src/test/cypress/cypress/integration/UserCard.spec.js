@@ -311,7 +311,7 @@ describe('User Card ', function () {
       // a report name and a report link : no error
       cy.get('#report_title').type("report name");
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('#div-detail-msg').should('not.exist'); // no error message
+      cy.get('#opfab-alert-detail-msg').should('not.exist'); // no error message
       usercard.cancelCardSending();
     });
   })
