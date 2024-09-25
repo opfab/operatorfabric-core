@@ -217,17 +217,17 @@ describe('Sound notification test', function () {
         cy.tick(1000);
         feed.checkNumberOfDisplayedCardsIs(0);
         sendCardWithSeverityAlarm();
-        cy.get('#div-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
+        cy.get('#opfab-alert-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
         cy.tick(100);
         sound.checkNumberOfEmittedSoundIs(1);
         feed.checkNumberOfDisplayedCardsIs(0);
 
         cy.tick(6000);
         // Check that alert message is not closed automatically after 6 seconds
-        cy.get('#div-detail-msg').should('exist');
+        cy.get('#opfab-alert-detail-msg').should('exist');
         // close it
         cy.get('#opfab-close-alert').click();
-        cy.get('div-detail-msg').should('not.exist');
+        cy.get('#opfab-alert-detail-msg').should('not.exist');
     }
 
     function setTimeLineDomain(domain) {

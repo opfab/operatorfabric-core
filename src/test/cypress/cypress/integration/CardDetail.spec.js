@@ -245,13 +245,42 @@ describe('Card detail', function () {
             feed.openFirstCard();
             cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
 
-            
             // We click on show card link
             cy.get('#showCardLink').click();
   
             cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
             cy.get('#opfab-div-card-template-processed').contains('Hello operator1_fr, you received the following message');
             
+        });
+  
+
+        it(`Check show alert message links`, function () {
+            script.sendCard('cypress/cardDetail/cardDetail.json');
+
+            opfab.loginWithUser('operator1_fr');
+
+            feed.openFirstCard();
+            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
+
+            cy.get('#showDebugMessage').click();
+            cy.get('#opfab-alert-detail-msg').contains('Debug message');
+            cy.get('#opfab-alert-detail-msg').should('have.css', 'background-color', 'rgb(0, 112, 218)');
+            cy.get('.opfab-alert-close').click();
+
+            cy.get('#showInfoMessage').click();
+            cy.get('#opfab-alert-detail-msg').contains('Info message');
+            cy.get('#opfab-alert-detail-msg').should('have.css', 'background-color', 'rgb(103, 168, 84)');
+            cy.get('.opfab-alert-close').click();
+
+            cy.get('#showErrorMessage').click();
+            cy.get('#opfab-alert-detail-msg').contains('Error message');
+            cy.get('#opfab-alert-detail-msg').should('have.css', 'background-color', 'rgb(232, 122, 8)');
+            cy.get('.opfab-alert-close').click();
+
+            cy.get('#showAlarmMessage').click();
+            cy.get('#opfab-alert-detail-msg').contains('Alarm message');
+            cy.get('#opfab-alert-detail-msg').should('have.css', 'background-color', 'rgb(167, 26, 26)');
+            cy.get('.opfab-alert-close').click();
 
         });
     });

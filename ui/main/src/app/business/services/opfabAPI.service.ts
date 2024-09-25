@@ -11,6 +11,8 @@ import {BusinessDataService} from './businessconfig/businessdata.service';
 import {TranslationService} from './translation/translation.service';
 import {EntitiesService} from './users/entities.service';
 import {LogOption, LoggerService as logger} from './logs/logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {Message, MessageLevel} from '@ofModel/message.model';
 
 declare const opfab: any;
 
@@ -19,6 +21,7 @@ export class OpfabAPIService {
     public static currentUserCard;
     public static businessconfig;
     public static handlebars;
+    public static readonly alertMessage;
 
     public static templateInterface: any;
     public static userCardTemplateInterface: any;
@@ -143,6 +146,14 @@ export class OpfabAPIService {
 
         opfab.utils.getTranslation = function (key, params) {
             return OpfabAPIService.translationService.getTranslation(key, params);
+        };
+
+        opfab.alertMessage = {
+            messageLevel: Object.freeze(MessageLevel),
+            show(message, messageLevel) {
+                const msg = new Message(message, messageLevel);
+                return AlertMessageService.sendAlertMessage(msg);
+            }
         };
 
         OpfabAPIService.initUserApi();

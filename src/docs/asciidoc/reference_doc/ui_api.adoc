@@ -634,3 +634,21 @@ To avoid script injection, OperatorFabric provides a utility function 'opfab.uti
 
 </script>
 ```
+
+== AlertMessage API 
+
+=== Function show
+
+It’s possible to show an alert message as a popover by calling  by calling the following function from the template :
+
+```
+opfab.alertMessage.show('message', opfab.alertMessage.messageLevel.INFO);
+```
+
+The popover will have a different backgroung color based on the message level specified.
+The available message levels are:
+
+- DEBUG (blue)
+- INFO (green)
+- ERROR (orange)
+- ALARM (red)
