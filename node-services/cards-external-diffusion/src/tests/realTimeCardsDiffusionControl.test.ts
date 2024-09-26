@@ -9,7 +9,7 @@
 
 import 'jest';
 import RealTimeCardsDiffusionControl from '../domain/application/realTimeCardsDiffusionControl';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import CardsDiffusionRateLimiter from '../domain/application/cardsDiffusionRateLimiter';
 import {
     OpfabServicesInterfaceStub,
@@ -19,7 +19,7 @@ import {
     getFormattedDateAndTimeFromEpochDate
 } from './testHelpers';
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 describe('Cards external diffusion', function () {
     let realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;

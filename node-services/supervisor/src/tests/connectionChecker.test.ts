@@ -9,12 +9,12 @@
 
 import 'jest';
 import ConnectionChecker from '../domain/application/connectionChecker';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import {OpfabServicesInterfaceStub} from './helpers/opfabServicesInterfaceStub';
 import {EntityToSupervise} from '../domain/application/entityToSupervise';
 import GetResponse from '../common/server-side/getResponse';
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 describe('connection checker', function () {
     let connectionChecker: ConnectionChecker;

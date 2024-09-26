@@ -8,14 +8,14 @@
  */
 
 import 'jest';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import ConfigDTO from '../domain/client-side/configDTO';
 import {SupervisorDatabaseServerStub} from './helpers/supervisorDatabasServerStub';
 import {OpfabServicesInterfaceStub} from './helpers/opfabServicesInterfaceStub';
 import SupervisorService from '../domain/client-side/supervisorService';
 import {EntityToSupervise} from '../domain/application/entityToSupervise';
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 describe('supervisor config service', function () {
     function getDefaultConfig(): ConfigDTO {

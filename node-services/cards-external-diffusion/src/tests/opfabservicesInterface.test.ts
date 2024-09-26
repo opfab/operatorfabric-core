@@ -9,7 +9,7 @@
 
 import 'jest';
 import sinon from 'sinon';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import CardsExternalDiffusionOpfabServicesInterface from '../domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 
 function getOpfabServicesInterface(): CardsExternalDiffusionOpfabServicesInterface {
@@ -22,7 +22,7 @@ function getOpfabServicesInterface(): CardsExternalDiffusionOpfabServicesInterfa
         .setLogger(logger);
 }
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 describe('Opfab interface', function () {
     it('Should return invalid response when impossible to authenticate to opfab ', async function () {

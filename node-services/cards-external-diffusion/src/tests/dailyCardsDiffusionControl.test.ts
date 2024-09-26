@@ -9,7 +9,7 @@
 
 import 'jest';
 import DailyCardsDiffusionControl from '../domain/application/dailyCardsDiffusionControl';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import {
     DatabaseServiceStub,
     OpfabBusinessConfigServicesInterfaceStub,
@@ -19,7 +19,7 @@ import {
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 describe('Cards external diffusion', function () {
     let dailyCardsDiffusionControl: DailyCardsDiffusionControl;
