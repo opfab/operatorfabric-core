@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import Logger from '../common/server-side/logger';
+import * as Logger from '../common/server-side/logger';
 import ReminderService from '../domain/application/reminderService';
 import {RRuleReminderService} from '../domain/application/rruleReminderService';
 import {RRule, Day, Frequency} from '../domain/model/card.model';

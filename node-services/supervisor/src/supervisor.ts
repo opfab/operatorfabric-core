@@ -14,7 +14,7 @@ import bodyParser from 'body-parser';
 import config from 'config';
 import SupervisorService from './domain/client-side/supervisorService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
-import Logger from './common/server-side/logger';
+import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
 import MongoSupervisorDatabaseServer from './domain/server-side/mongoSupervisorDatabaseServer';
 import {EntityToSupervise} from './domain/application/entityToSupervise';
@@ -46,7 +46,7 @@ app.use(express.static('public'));
 const adminPort: string = config.get('operatorfabric.supervisor.adminPort');
 const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 const supervisorDatabaseService = new MongoSupervisorDatabaseServer()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
@@ -229,7 +229,7 @@ app.get('/logLevel', (req, res) => {
             if (!isAdmin) {
                 authorizationService.handleUnauthorizedAccess(req, res);
             } else {
-                res.send(Logger.getLogLevel());
+                res.send(getLogLevel());
             }
         })
         .catch((err) => {
@@ -248,8 +248,8 @@ app.post('/logLevel', (req, res) => {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level: string =
                     req.body.configuredLevel !== null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
-                if (Logger.setLogLevel(level)) {
-                    res.contentType('text/plain').send(Logger.getLogLevel());
+                if (setLogLevel(level)) {
+                    res.contentType('text/plain').send(getLogLevel());
                 } else {
                     res.status(400).send('Bad log level');
                 }

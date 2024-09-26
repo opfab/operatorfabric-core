@@ -8,11 +8,11 @@
  */
 
 import 'jest';
-import Logger from '../common/server-side/logger';
+import {getLogger} from '../common/server-side/logger';
 import ConfigService from '../domain/client-side/configService';
 import ConfigDTO from '../domain/client-side/configDTO';
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 function getDefaultConfig(): ConfigDTO {
     const defaultConfig = new ConfigDTO();

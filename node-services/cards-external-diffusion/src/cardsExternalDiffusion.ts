@@ -13,7 +13,6 @@ import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
-import Logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
 import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
@@ -21,6 +20,7 @@ import CardsExternalDiffusionService from './domain/client-side/cardsExternalDif
 import ConfigService from './domain/client-side/configService';
 import CardsExternalDiffusionDatabaseService from './domain/server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
+import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
 
 const app = express();
 app.disable('x-powered-by');
@@ -49,7 +49,7 @@ app.use(express.static('public'));
 const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
 const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
 
-const logger = Logger.getLogger();
+const logger = getLogger();
 
 const activeOnStartUp = config.get('operatorfabric.cardsExternalDiffusion.activeOnStartup');
 
@@ -184,7 +184,7 @@ app.get('/logLevel', (req, res) => {
         .then((isAdmin) => {
             if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
-                res.send(Logger.getLogLevel());
+                res.send(getLogLevel());
             }
         })
         .catch((err) => {
@@ -203,8 +203,8 @@ app.post('/logLevel', (req, res) => {
                 const level =
                     req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
 
-                if (Logger.setLogLevel(level as string)) {
-                    res.contentType('text/plain').send(Logger.getLogLevel());
+                if (setLogLevel(level as string)) {
+                    res.contentType('text/plain').send(getLogLevel());
                 } else {
                     res.status(400).send('Bad log level');
                 }

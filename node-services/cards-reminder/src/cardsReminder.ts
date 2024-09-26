@@ -19,7 +19,7 @@ import CardsReminderService from './domain/client-side/cardsReminderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
 import AuthorizationService from './common/server-side/authorizationService';
-import Logger from './common/server-side/logger';
+import * as Logger from './common/server-side/logger';
 
 const app = express();
 app.disable('x-powered-by');
