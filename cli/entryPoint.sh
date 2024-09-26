@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (c) 2024, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
@@ -33,4 +33,4 @@ else
 fi
 
 cd /opfab/host
-/bin/sh
+/bin/bash
