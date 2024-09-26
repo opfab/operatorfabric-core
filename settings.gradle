@@ -9,8 +9,6 @@ dependencyResolutionManagement {
     }
 }
 
-
-
 rootProject.name = 'operator-fabric'
 
 include 'tools:swagger-generator'

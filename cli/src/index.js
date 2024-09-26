@@ -18,35 +18,17 @@ const args = process.argv.slice(2);
 
 const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 
-function listFiles() {
-    return fs.readdirSync('./');
-}
-
 omelette('opfab').tree({
-    bundle: {
-        load: listFiles,
-        delete: []
-    },
-    businessdata: {
-        load: listFiles,
-        delete: []
-    },
-    card: {
-        send: listFiles,
-        delete: [],
-        resetratelimiter: []
-    },
-    commands: listFiles,
+    bundle: ['load', 'delete'],
+    businessdata: ['load','delete'],
+    card: ['send', 'delete','resetratelimiter'],
+    commands : [],
     config: ['set', 'get', 'list'],
     connectedusers: {
         sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
     },
-    entities: {
-        load: listFiles
-    },
-    groups: {
-        load: listFiles
-    },
+    entities: ['load'],
+    groups: ['load'],
     help: [
         'bundle',
         'businessdata',
@@ -69,25 +51,11 @@ omelette('opfab').tree({
     ],
     login: [],
     logout: [],
-    monitoringconfig: {
-        load: listFiles,
-        delete: []
-    },
-    perimeters: {
-        create: listFiles,
-        addtogroup: [],
-        delete: []
-    },
-    processgroups: {
-        load: listFiles,
-        clear: []
-    },
-    processmonitoring: {
-        load: listFiles
-    },
-    realtimescreen: {
-        load: listFiles
-    },
+    monitoringconfig: ['load', 'delete'],
+    perimeters: ['create', 'addtogroup', 'delete'],
+    processgroups: ['load','clear'],
+    processmonitoring: ['load'],
+    realtimescreen: ['load'],
     service: {
         'get-log-level': [
             'users',
