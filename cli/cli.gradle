@@ -4,7 +4,7 @@ plugins {
 
 task buildDocker(type: Exec) {
     workingDir project.projectDir
-    commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-opfab-cli:${project.version}", '.'
+    commandLine 'docker', 'build', '--build-arg', "https_proxy=${proxy.https}",'-t', "lfeoperatorfabric/of-opfab-cli:${project.version}", '.'
 }
 
 tasks.named("buildDocker") {
