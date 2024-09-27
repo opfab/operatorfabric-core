@@ -79,11 +79,11 @@ describe('UserCard DatesForm', () => {
     });
     describe('Dates initialization before template script execution', () => {
         beforeEach(() => {
-            jasmine.clock().install();
-            jasmine.clock().mockDate();
+            jest.useFakeTimers();
+            jest.setSystemTime();
         });
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('startDate = current date + one minute if startDate visible', async () => {
             await setProcessConfigWithUserCardConfig({startDateVisible: true});

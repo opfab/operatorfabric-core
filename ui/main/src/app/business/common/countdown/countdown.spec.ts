@@ -11,13 +11,13 @@ import {CountDown} from './countdown';
 
 describe('countdown testing ', () => {
     beforeEach(() => {
-        jasmine.clock().uninstall();
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useRealTimers();
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
     });
 
     it('endDate is 10ms before current time , countdown is ended ', () => {
@@ -84,7 +84,7 @@ describe('countdown testing ', () => {
             countDown.stopCountDown();
             done();
         }, 1500);
-        jasmine.clock().tick(3000);
+        jest.advanceTimersByTime(3000);
     });
 
     it('endDate is 10s after current time , countdown value  shall still be 00:10 after 1.5s if countDown has been stopped', (done) => {
@@ -94,7 +94,7 @@ describe('countdown testing ', () => {
             expect(countDown.getCountDown()).toEqual('00:10');
             done();
         }, 1500);
-        jasmine.clock().tick(3000);
+        jest.advanceTimersByTime(3000);
     });
 
     it('endDate is 1s after current time , after 2s isEnded shall be true', (done) => {
@@ -103,7 +103,7 @@ describe('countdown testing ', () => {
             expect(countDown.isEnded()).toEqual(true);
             done();
         }, 2000);
-        jasmine.clock().tick(3000);
+        jest.advanceTimersByTime(3000);
     });
 
     it('endDate is 10s after current time , count start 9s before end date , countdown value  shall still be 00:08 after 2.5s if countDown has been stopped', (done) => {
@@ -115,6 +115,6 @@ describe('countdown testing ', () => {
             countDown.stopCountDown();
             done();
         }, 2500);
-        jasmine.clock().tick(3000);
+        jest.advanceTimersByTime(3000);
     });
 });

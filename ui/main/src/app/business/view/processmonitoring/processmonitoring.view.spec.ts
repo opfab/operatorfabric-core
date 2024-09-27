@@ -363,7 +363,7 @@ describe('Process Monitoring view ', () => {
             await setUserPerimeter([], []);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-            expect(mustViewAllCardsFeatureBeDisplayed).toBeFalse();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeFalsy();
         });
 
         it(
@@ -376,7 +376,7 @@ describe('Process Monitoring view ', () => {
                 );
                 const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
                 const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-                expect(mustViewAllCardsFeatureBeDisplayed).toBeFalse();
+                expect(mustViewAllCardsFeatureBeDisplayed).toBeFalsy();
             }
         );
 
@@ -391,7 +391,7 @@ describe('Process Monitoring view ', () => {
             );
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTruthy();
         });
 
         it('should return true if the user has permission VIEW_ALL_CARDS', async () => {
@@ -405,7 +405,7 @@ describe('Process Monitoring view ', () => {
             );
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTruthy();
         });
 
         it('should return true if the user has permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS', async () => {
@@ -419,7 +419,7 @@ describe('Process Monitoring view ', () => {
             );
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTruthy();
         });
 
         it('should return true if the user has permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS and ADMIN', async () => {
@@ -434,7 +434,7 @@ describe('Process Monitoring view ', () => {
             );
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
-            expect(mustViewAllCardsFeatureBeDisplayed).toBeTrue();
+            expect(mustViewAllCardsFeatureBeDisplayed).toBeTruthy();
         });
     });
 
@@ -443,28 +443,28 @@ describe('Process Monitoring view ', () => {
             I18nService.setTranslationService(new TranslationServiceMock());
             I18nService.initLocale();
             DateTimeFormatterService.init();
-            jasmine.clock().install();
+            jest.useFakeTimers();
         });
 
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('should return 2024-01-01T00:00 and 2025-01-01T00:00 if the user clicks on the year button', async () => {
-            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            jest.setSystemTime(new Date(2024, 3, 29, 15, 32));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('year');
             expect(dates).toEqual({activeFrom: '2024-01-01T00:00', activeTo: '2025-01-01T00:00'});
         });
 
         it('should return 2024-04-01T00:00 and 2024-05-01T00:00 if the user clicks on the month button', async () => {
-            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            jest.setSystemTime(new Date(2024, 3, 29, 15, 32));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('month');
             expect(dates).toEqual({activeFrom: '2024-04-01T00:00', activeTo: '2024-05-01T00:00'});
         });
 
         it('should return 2024-04-28T00:00 and 2024-05-05T00:00 if the user clicks on the week button', async () => {
-            jasmine.clock().mockDate(new Date(2024, 3, 29, 15, 32));
+            jest.setSystemTime(new Date(2024, 3, 29, 15, 32));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
             expect(dates).toEqual({activeFrom: '2024-04-27T00:00', activeTo: '2024-05-04T00:00'});
@@ -476,28 +476,28 @@ describe('Process Monitoring view ', () => {
             I18nService.setTranslationService(new TranslationServiceMock());
             I18nService.initLocale();
             DateTimeFormatterService.init();
-            jasmine.clock().install();
+            jest.useFakeTimers();
         });
 
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('should return 2023-01-01T00:00 and 2024-01-01T00:00 if the user clicks on the year button', async () => {
-            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            jest.setSystemTime(new Date(2023, 11, 31, 9, 18));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('year');
             expect(dates).toEqual({activeFrom: '2023-01-01T00:00', activeTo: '2024-01-01T00:00'});
         });
 
         it('should return 2023-12-01T00:00 and 2024-01-01T00:00 if the user clicks on the month button', async () => {
-            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            jest.setSystemTime(new Date(2023, 11, 31, 9, 18));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('month');
             expect(dates).toEqual({activeFrom: '2023-12-01T00:00', activeTo: '2024-01-01T00:00'});
         });
 
         it('should return 2023-12-31T00:00 and 2024-01-07T00:00 if the user clicks on the week button', async () => {
-            jasmine.clock().mockDate(new Date(2023, 11, 31, 9, 18));
+            jest.setSystemTime(new Date(2023, 11, 31, 9, 18));
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesAfterPeriodClick('week');
             expect(dates).toEqual({activeFrom: '2023-12-30T00:00', activeTo: '2024-01-06T00:00'});

@@ -80,11 +80,11 @@ describe('Notification configuration view ', () => {
         });
 
         it('should return no process group ', () => {
-            expect(notificationConfigurationPage.processGroups).toHaveSize(0);
+            expect(notificationConfigurationPage.processGroups).toHaveLength(0);
         });
 
         it('should return processes user has access', () => {
-            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveSize(3);
+            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveLength(3);
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].id).toEqual('process1');
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].label).toEqual('process name 1');
             expect(notificationConfigurationPage.processesWithNoProcessGroup[1].id).toEqual('process2');
@@ -97,7 +97,7 @@ describe('Notification configuration view ', () => {
         });
 
         it('should return states user has access', () => {
-            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states).toHaveSize(1);
+            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states).toHaveLength(1);
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[0].id).toEqual('state1_1');
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[0].label).toEqual('State 1_1');
             expect(notificationConfigurationPage.processesWithNoProcessGroup[1].states[0].id).toEqual('state2_1');
@@ -111,7 +111,7 @@ describe('Notification configuration view ', () => {
         });
 
         it('should exclude state if state is only child state (isOnlyChildState = true)', () => {
-            expect(notificationConfigurationPage.processesWithNoProcessGroup[1].states).toHaveSize(2);
+            expect(notificationConfigurationPage.processesWithNoProcessGroup[1].states).toHaveLength(2);
         });
     });
 
@@ -149,7 +149,7 @@ describe('Notification configuration view ', () => {
             expect(notificationConfigurationPage.processGroups[1].label).toEqual('Service 2');
         });
         it('should return processes in process groups', async () => {
-            expect(notificationConfigurationPage.processGroups[0].processes).toHaveSize(2);
+            expect(notificationConfigurationPage.processGroups[0].processes).toHaveLength(2);
             expect(notificationConfigurationPage.processGroups[0].processes[0].id).toEqual('process1');
             expect(notificationConfigurationPage.processGroups[0].processes[0].label).toEqual('process name 1');
             expect(notificationConfigurationPage.processGroups[0].processes[1].id).toEqual('process2');
@@ -166,12 +166,12 @@ describe('Notification configuration view ', () => {
         });
 
         it('should return no processes with no process group', async () => {
-            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveSize(0);
+            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveLength(0);
         });
 
         it('should not return process group with no process visible for user', async () => {
             expect(notificationConfigurationPage.processGroups).not.toContain(
-                jasmine.objectContaining({id: 'serviceNotVisibleForUser'})
+                expect.objectContaining({id: 'serviceNotVisibleForUser'})
             );
         });
     });
@@ -206,7 +206,7 @@ describe('Notification configuration view ', () => {
         });
 
         it('should return processes in process groups', async () => {
-            expect(notificationConfigurationPage.processGroups[0].processes).toHaveSize(1);
+            expect(notificationConfigurationPage.processGroups[0].processes).toHaveLength(1);
             expect(notificationConfigurationPage.processGroups[0].processes[0].id).toEqual('process1');
             expect(notificationConfigurationPage.processGroups[0].processes[0].label).toEqual('process name 1');
             expect(notificationConfigurationPage.processGroups[1].processes[0].id).toEqual('processWithNoName');
@@ -219,7 +219,7 @@ describe('Notification configuration view ', () => {
         });
 
         it('should return processes with no process group', async () => {
-            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveSize(1);
+            expect(notificationConfigurationPage.processesWithNoProcessGroup).toHaveLength(1);
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].id).toEqual('process2');
             expect(notificationConfigurationPage.processesWithNoProcessGroup[0].label).toEqual('process name 2');
         });
@@ -300,29 +300,29 @@ describe('Notification configuration view ', () => {
         });
 
         it('state should be checked if state is not in list of users states not notified', () => {
-            expect(notificationConfigurationPage.processGroups[0].processes[0].states[0].checked).toBeTrue();
-            expect(notificationConfigurationPage.processGroups[0].processes[0].states[1].checked).toBeTrue();
-            expect(notificationConfigurationPage.processGroups[0].processes[1].states[1].checked).toBeTrue();
+            expect(notificationConfigurationPage.processGroups[0].processes[0].states[0].checked).toBeTruthy();
+            expect(notificationConfigurationPage.processGroups[0].processes[0].states[1].checked).toBeTruthy();
+            expect(notificationConfigurationPage.processGroups[0].processes[1].states[1].checked).toBeTruthy();
         });
 
         it('state should not be checked if state is in list of users states not notified', () => {
-            expect(notificationConfigurationPage.processGroups[0].processes[1].states[0].checked).toBeFalse();
+            expect(notificationConfigurationPage.processGroups[0].processes[1].states[0].checked).toBeFalsy();
         });
 
         it('process should be checked if all states are checked', () => {
-            expect(notificationConfigurationPage.processGroups[0].processes[0].checked).toBeTrue();
+            expect(notificationConfigurationPage.processGroups[0].processes[0].checked).toBeTruthy();
         });
 
         it('process should not be checked if all states are not checked', () => {
-            expect(notificationConfigurationPage.processGroups[0].processes[1].checked).toBeFalse();
+            expect(notificationConfigurationPage.processGroups[0].processes[1].checked).toBeFalsy();
         });
 
         it('process group should be checked if all process are checked', () => {
-            expect(notificationConfigurationPage.processGroups[1].checked).toBeTrue();
+            expect(notificationConfigurationPage.processGroups[1].checked).toBeTruthy();
         });
 
         it('process group should not be checked if all process are not checked', () => {
-            expect(notificationConfigurationPage.processGroups[0].checked).toBeFalse();
+            expect(notificationConfigurationPage.processGroups[0].checked).toBeFalsy();
         });
     });
 
@@ -368,14 +368,14 @@ describe('Notification configuration view ', () => {
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
             ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeTruthy();
         });
 
         it('email configuration should be enabled if sendDailyEmail and email set', () => {
             ConfigService.setConfigValue('settings.sendDailyEmail', true);
             ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeTruthy();
         });
 
         it('email configuration should not be enabled if email is not set', () => {
@@ -383,7 +383,7 @@ describe('Notification configuration view ', () => {
             ConfigService.setConfigValue('settings.sendDailyEmail', true);
             ConfigService.setConfigValue('settings.email', '');
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeFalsy();
         });
 
         it('mail configuration should not be enabled if sendCardsByEmail and sendDailyEmail are false', () => {
@@ -391,27 +391,27 @@ describe('Notification configuration view ', () => {
             ConfigService.setConfigValue('settings.sendDailyEmail', false);
             ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeFalsy();
         });
 
         it('state should be notified by email if state is in list of states notified by email', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].states[0].notificationByEmail
-            ).toBeTrue();
+            ).toBeTruthy();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[1].states[0].notificationByEmail
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it('state should not be notified by email if state is not in list of states notified by email', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].states[1].notificationByEmail
-            ).toBeFalse();
+            ).toBeFalsy();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[1].states[1].notificationByEmail
-            ).toBeFalse();
+            ).toBeFalsy();
         });
     });
 
@@ -443,20 +443,20 @@ describe('Notification configuration view ', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].states[0].filteringNotificationAllowed
-            ).toBeTrue();
+            ).toBeTruthy();
         });
         it('should be false for state if perimeter filteringNotificationAllowed is false', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].states[1].filteringNotificationAllowed
-            ).toBeFalse();
+            ).toBeFalsy();
         });
 
         it('should be true for process if at least a state has filteringNotificationAllowed set to true', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].filteringNotificationAllowed
-            ).toBeTrue();
+            ).toBeTruthy();
         });
 
         it('should be false for process if all process states filteringNotificationAllowed is false', async () => {
@@ -471,7 +471,7 @@ describe('Notification configuration view ', () => {
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[0].filteringNotificationAllowed
-            ).toBeFalse();
+            ).toBeFalsy();
         });
     });
 
@@ -480,7 +480,7 @@ describe('Notification configuration view ', () => {
             await setProcessConfiguration(defaultProcesses);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isThereProcessStatesToDisplay).toBeTrue();
+            expect(notificationConfigurationPage.isThereProcessStatesToDisplay).toBeTruthy();
         });
 
         it('should return false if there is no state available for user ', async () => {
@@ -490,7 +490,7 @@ describe('Notification configuration view ', () => {
                 userData: null
             });
             notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isThereProcessStatesToDisplay).toBeFalse();
+            expect(notificationConfigurationPage.isThereProcessStatesToDisplay).toBeFalsy();
         });
     });
 });

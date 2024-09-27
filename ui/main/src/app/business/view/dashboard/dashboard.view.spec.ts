@@ -65,7 +65,7 @@ describe('Dashboard', () => {
         await setUserPerimeter(userWithPerimeters);
         dashboard = new Dashboard();
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes).toHaveSize(0);
+        expect(result.processes).toHaveLength(0);
     });
 
     it('GIVEN a process list and user has no perimeters WHEN get dashboard THEN dashboard is empty', async () => {

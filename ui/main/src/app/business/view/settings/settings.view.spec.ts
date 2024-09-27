@@ -254,7 +254,7 @@ describe('Settings view ', () => {
             settingsView.setSetting('email', null);
 
             const emailSettingsAreCoherent = settingsView.isEmailAndEmailCheckboxesCoherent();
-            expect(emailSettingsAreCoherent).toBeFalse();
+            expect(emailSettingsAreCoherent).toBeFalsy();
         });
     });
 });

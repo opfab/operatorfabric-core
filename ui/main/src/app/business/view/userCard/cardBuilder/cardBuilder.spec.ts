@@ -65,11 +65,11 @@ describe('UserCard CardBuilder', () => {
 
         beforeEach(() => {
             alertMessageReceiver = new AlertMessageReceiver();
-            jasmine.clock().install();
-            jasmine.clock().mockDate(new Date(50));
+            jest.useFakeTimers();
+            jest.setSystemTime(new Date(50));
         });
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('should display error if template does not return specific card information', async () => {
             opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => null);
@@ -391,11 +391,11 @@ describe('UserCard CardBuilder', () => {
     });
     describe('Dates', () => {
         beforeEach(() => {
-            jasmine.clock().install();
-            jasmine.clock().mockDate(new Date(50));
+            jest.useFakeTimers();
+            jest.setSystemTime(new Date(50));
         });
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         describe('StartDate', () => {
             it('Should be provided by user if field visible', async () => {

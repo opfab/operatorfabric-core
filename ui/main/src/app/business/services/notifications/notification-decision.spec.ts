@@ -13,13 +13,13 @@ import {getOneLightCard} from '@tests/helpers';
 
 describe('Sound decisions', () => {
     beforeEach(() => {
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(100));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(100));
         NotificationDecision.init();
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
     });
 
     describe('Check sound and system notification', () => {
@@ -27,8 +27,8 @@ describe('Sound decisions', () => {
             const publishDate = new Date().getTime();
             const card = getOneLightCard({publishDate: publishDate});
             NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTrue();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTrue();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTruthy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTruthy();
             done();
         });
 
@@ -39,10 +39,10 @@ describe('Sound decisions', () => {
             NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
             NotificationDecision.addSentCard(card1.id);
             NotificationDecision.addSentCard(card2.id);
-            expect(NotificationDecision.isSoundToBePlayedForCard(card1)).toBeFalse();
-            expect(NotificationDecision.isSoundToBePlayedForCard(card2)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card1)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card2)).toBeFalse();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card1)).toBeFalsy();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card2)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card1)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card2)).toBeFalsy();
             done();
         });
 
@@ -54,8 +54,8 @@ describe('Sound decisions', () => {
             });
             NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
 
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalsy();
 
             done();
         });
@@ -66,9 +66,9 @@ describe('Sound decisions', () => {
                 hasBeenRead: false,
                 publishDate: publishDate
             });
-            jasmine.clock().tick(NotificationDecision.RECENT_THRESHOLD + NotificationDecision.ERROR_MARGIN);
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
+            jest.advanceTimersByTime(NotificationDecision.RECENT_THRESHOLD + NotificationDecision.ERROR_MARGIN);
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalsy();
             done();
         });
 
@@ -76,8 +76,8 @@ describe('Sound decisions', () => {
             const publishDate = new Date().getTime() - NotificationDecision.ERROR_MARGIN;
             const card = getOneLightCard({publishDate: publishDate});
             NotificationDecision.setLastUserAction(new Date().getTime());
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTrue();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTruthy();
             done();
         });
 
@@ -88,79 +88,79 @@ describe('Sound decisions', () => {
             const publishDate = new Date().getTime();
             let card = getOneLightCard({publishDate: publishDate});
             NotificationDecision.addSentCard(card.id);
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalsy();
 
-            jasmine.clock().tick(1000);
+            jest.advanceTimersByTime(1000);
             card = {...card, publishDate: new Date().getTime()};
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalsy();
 
-            jasmine.clock().tick(NotificationDecision.ERROR_MARGIN);
+            jest.advanceTimersByTime(NotificationDecision.ERROR_MARGIN);
             card = {...card, publishDate: new Date().getTime()};
-            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTrue();
-            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTrue();
+            expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTruthy();
+            expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTruthy();
             done();
         });
 
         it('Initial setting of sound for severity', (done) => {
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ALARM)).toBeFalse();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeFalse();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.COMPLIANT)).toBeFalse();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.INFORMATION)).toBeFalse();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ALARM)).toBeFalsy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeFalsy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.COMPLIANT)).toBeFalsy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.INFORMATION)).toBeFalsy();
             done();
         });
 
         it('Enable/disable sound for severity', (done) => {
             NotificationDecision.setSoundEnabledForSeverity(Severity.ALARM, true);
             NotificationDecision.setSoundEnabledForSeverity(Severity.ACTION, true);
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ALARM)).toBeTrue();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeTrue();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.COMPLIANT)).toBeFalse();
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.INFORMATION)).toBeFalse();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ALARM)).toBeTruthy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeTruthy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.COMPLIANT)).toBeFalsy();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.INFORMATION)).toBeFalsy();
             NotificationDecision.setSoundEnabledForSeverity(Severity.ACTION, false);
-            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeFalse();
+            expect(NotificationDecision.isPlaySoundForSeverityEnabled(Severity.ACTION)).toBeFalsy();
             done();
         });
 
         it('Initial setting of system notification for severity', (done) => {
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ALARM)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.COMPLIANT)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.INFORMATION)).toBeFalse();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ALARM)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.COMPLIANT)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.INFORMATION)).toBeFalsy();
             done();
         });
 
         it('Enable/disable system notification for severity', (done) => {
             NotificationDecision.setSystemNotificationEnabledForSeverity(Severity.ALARM, true);
             NotificationDecision.setSystemNotificationEnabledForSeverity(Severity.ACTION, true);
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ALARM)).toBeTrue();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeTrue();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.COMPLIANT)).toBeFalse();
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.INFORMATION)).toBeFalse();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ALARM)).toBeTruthy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeTruthy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.COMPLIANT)).toBeFalsy();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.INFORMATION)).toBeFalsy();
             NotificationDecision.setSystemNotificationEnabledForSeverity(Severity.ACTION, false);
-            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeFalse();
+            expect(NotificationDecision.isSystemNotificationEnabledForSeverity(Severity.ACTION)).toBeFalsy();
             done();
         });
 
         it('Check is at least one sound activated', (done) => {
-            expect(NotificationDecision.isAtLeastOneSoundActivated()).toBeFalse();
+            expect(NotificationDecision.isAtLeastOneSoundActivated()).toBeFalsy();
             NotificationDecision.setSoundEnabledForSeverity(Severity.INFORMATION, true);
-            expect(NotificationDecision.isAtLeastOneSoundActivated()).toBeTrue();
+            expect(NotificationDecision.isAtLeastOneSoundActivated()).toBeTruthy();
             done();
         });
 
         it('Check is at least one system notification activated', (done) => {
-            expect(NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()).toBeFalse();
+            expect(NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()).toBeFalsy();
             NotificationDecision.setSystemNotificationEnabledForSeverity(Severity.INFORMATION, true);
-            expect(NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()).toBeTrue();
+            expect(NotificationDecision.isAtLeastOneSystemNotificationSeverityEnabled()).toBeTruthy();
             done();
         });
 
         it('Play sound for session end if at least one severity is activated', (done) => {
-            expect(NotificationDecision.isPlaySoundWhenSessionEndEnabled()).toBeFalse();
+            expect(NotificationDecision.isPlaySoundWhenSessionEndEnabled()).toBeFalsy();
             NotificationDecision.setSoundEnabledForSeverity(Severity.INFORMATION, true);
-            expect(NotificationDecision.isPlaySoundWhenSessionEndEnabled()).toBeTrue();
+            expect(NotificationDecision.isPlaySoundWhenSessionEndEnabled()).toBeTruthy();
             done();
         });
 
@@ -168,9 +168,9 @@ describe('Sound decisions', () => {
             const publishDate = new Date().getTime();
             const card1 = getOneLightCard({publishDate: publishDate});
             NotificationDecision.addSentCard(card1.id);
-            expect(NotificationDecision.hasSentCard(card1.id)).toBeTrue();
-            jasmine.clock().tick(NotificationDecision.RECENT_THRESHOLD + NotificationDecision.CLEAN_CARDS_PERIOD);
-            expect(NotificationDecision.hasSentCard(card1.id)).toBeFalse();
+            expect(NotificationDecision.hasSentCard(card1.id)).toBeTruthy();
+            jest.advanceTimersByTime(NotificationDecision.RECENT_THRESHOLD + NotificationDecision.CLEAN_CARDS_PERIOD);
+            expect(NotificationDecision.hasSentCard(card1.id)).toBeFalsy();
             done();
         });
     });
@@ -182,7 +182,7 @@ describe('Sound decisions', () => {
             parentCardId: '123456',
             actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
         });
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTrue();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTruthy();
         done();
     });
 
@@ -193,7 +193,7 @@ describe('Sound decisions', () => {
             parentCardId: '123456',
             actions: []
         });
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalsy();
         done();
     });
 
@@ -205,7 +205,7 @@ describe('Sound decisions', () => {
             actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
         });
         NotificationDecision.addSentCard(card.id);
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalsy();
         done();
     });
 
@@ -220,15 +220,15 @@ describe('Sound decisions', () => {
             actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
         });
         NotificationDecision.addSentCard(card.id);
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalsy();
 
-        jasmine.clock().tick(1000);
+        jest.advanceTimersByTime(1000);
         card = {...card, publishDate: new Date().getTime()};
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalsy();
 
-        jasmine.clock().tick(NotificationDecision.ERROR_MARGIN);
+        jest.advanceTimersByTime(NotificationDecision.ERROR_MARGIN);
         card = {...card, publishDate: new Date().getTime()};
-        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTrue();
+        expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTruthy();
         done();
     });
 });

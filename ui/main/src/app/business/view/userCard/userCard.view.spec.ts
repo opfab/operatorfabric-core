@@ -571,11 +571,11 @@ describe('UserCard view ', () => {
     });
     describe('Get card for preview', () => {
         beforeEach(async () => {
-            jasmine.clock().install();
-            jasmine.clock().mockDate(new Date(100));
+            jest.useFakeTimers();
+            jest.setSystemTime(new Date(100));
         });
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('Should return card containing current process, process version and state', async () => {
             await initUserCardView();
@@ -865,11 +865,11 @@ describe('UserCard view ', () => {
     describe('Send card', () => {
         let childCard;
         beforeEach(async () => {
-            jasmine.clock().install();
-            jasmine.clock().mockDate(new Date(100));
+            jest.useFakeTimers();
+            jest.setSystemTime(new Date(100));
         });
         afterEach(() => {
-            jasmine.clock().uninstall();
+            jest.useRealTimers();
         });
         it('Should post card', async () => {
             await initUserCardView();
@@ -909,7 +909,7 @@ describe('UserCard view ', () => {
             childCard.publisher = undefined;
             setSpecificCardInformation({valid: true, card: {data: 'test'}, childCard: childCard});
             await userCardView.prepareCardToSend();
-            jasmine.clock().mockDate(new Date(50000));
+            jest.setSystemTime(new Date(50000));
             await userCardView.sendCardAncChildCard();
             expect(cardServerMock.cardsPosted[0].startDate).toEqual(50000);
             expect(cardServerMock.cardsPosted[1].startDate).toEqual(50000);

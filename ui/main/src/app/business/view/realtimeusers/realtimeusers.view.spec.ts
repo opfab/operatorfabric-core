@@ -21,7 +21,6 @@ import {RolesEnum} from '@ofModel/roles.model';
 describe('Realtimeusers', () => {
     let view: RealtimeUsersView;
     let page: RealtimePage;
-    let clock: jasmine.Clock;
 
     let configServerMock: ConfigServerMock;
     let userServerMock: UserServerMock;
@@ -68,8 +67,7 @@ describe('Realtimeusers', () => {
         ];
         entitiesServerMock.setEntities(entities);
 
-        clock = jasmine.clock();
-        clock.install();
+        jest.useFakeTimers();
 
         view = new RealtimeUsersView(configServerMock);
         view.getPage().subscribe((realtimePage) => {
@@ -79,7 +77,7 @@ describe('Realtimeusers', () => {
     });
 
     afterEach(() => {
-        clock.uninstall();
+        jest.useRealTimers();
         view.stopUpdate();
     });
 
@@ -150,7 +148,7 @@ describe('Realtimeusers', () => {
         ];
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
-        clock.tick(2500);
+        jest.advanceTimersByTime(2500);
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, user2');
     });

@@ -35,7 +35,7 @@ describe('ActivityAreaView', () => {
     let activityAreaView: ActivityAreaView;
 
     beforeEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
         mockUserService();
         mockEntitiesService();
         mockSettingsService();
@@ -115,7 +115,7 @@ describe('ActivityAreaView', () => {
     }
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
         activityAreaView.stopUpdateRegularyConnectedUser();
     });
 
@@ -138,7 +138,7 @@ describe('ActivityAreaView', () => {
         mockUserConfig(['ENTITY1'], []);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters).toHaveSize(1);
+        expect(activityAreaPage.activityAreaClusters).toHaveLength(1);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY1_NAME');
     });
@@ -148,7 +148,7 @@ describe('ActivityAreaView', () => {
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY1_NAME');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -160,7 +160,7 @@ describe('ActivityAreaView', () => {
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].name).toEqual(' ');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY_WITH_NO_CLUSTERING_PARENT');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY4_NAME');
@@ -173,7 +173,7 @@ describe('ActivityAreaView', () => {
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY1_NAME');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -184,7 +184,7 @@ describe('ActivityAreaView', () => {
         mockUserConfig(['ENTITY1', 'ENTITY2', 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE'], []);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY1_NAME');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -195,7 +195,7 @@ describe('ActivityAreaView', () => {
         mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].isUserConnected).toEqual(true);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -210,7 +210,7 @@ describe('ActivityAreaView', () => {
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['anotherUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsersText).toEqual('anotherUser');
@@ -229,7 +229,7 @@ describe('ActivityAreaView', () => {
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
             'anotherUser',
@@ -251,7 +251,7 @@ describe('ActivityAreaView', () => {
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
             'anotherUser',
@@ -387,11 +387,11 @@ describe('ActivityAreaView', () => {
         ];
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
             'anotherUser',
@@ -404,9 +404,9 @@ describe('ActivityAreaView', () => {
         userServerMock.setResponseForConnectedUsers(
             new ServerResponse(newConnectedUsers, ServerResponseStatus.OK, null)
         );
-        jasmine.clock().tick(2500);
+        jest.advanceTimersByTime(2500);
 
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -422,8 +422,8 @@ describe('ActivityAreaView', () => {
         ];
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
 
@@ -431,9 +431,9 @@ describe('ActivityAreaView', () => {
         userServerMock.setResponseForConnectedUsers(
             new ServerResponse(newConnectedUsers, ServerResponseStatus.OK, null)
         );
-        jasmine.clock().tick(2500);
+        jest.advanceTimersByTime(2500);
 
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
@@ -441,9 +441,9 @@ describe('ActivityAreaView', () => {
 
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
         activityAreaView.stopUpdateRegularyConnectedUser();
-        jasmine.clock().tick(2500);
+        jest.advanceTimersByTime(2500);
         // should be set again set to new connected users
-        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveLength(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
         expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');

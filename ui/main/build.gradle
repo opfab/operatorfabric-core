@@ -50,6 +50,7 @@ task runHeadlessTests(type: NpmTask) {
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
+    inputs.file('jest.config.ts')
 
     outputs.dir('reports')
 

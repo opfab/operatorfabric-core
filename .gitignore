@@ -121,6 +121,8 @@ ui/main/node_modules
 ui/main/reports
 ui/main/report.html
 ui/main/.angular
+ui/main/src/coverage
+ui/main/coverage
 
 # Bundles for docker and dev mode
 config/docker/businessconfig-storage/**

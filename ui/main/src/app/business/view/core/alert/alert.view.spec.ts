@@ -19,12 +19,12 @@ describe('Alert view ', () => {
     let translationService: TranslationService;
 
     beforeEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
         translationService = new TranslationServiceMock();
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
     });
 
     it('GIVEN an alertView WHEN no message is sent THEN no message is display ', async () => {
@@ -136,59 +136,59 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN message is displayed THEN message disappears after 5 seconds', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
-        jasmine.clock().tick(1);
+        jest.advanceTimersByTime(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(4000);
+        jest.advanceTimersByTime(4000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(1100);
+        jest.advanceTimersByTime(1100);
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 
     it('GIVEN a message is displayed WHEN a new message arrives THEN the new message disappears after 5 seconds', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
-        jasmine.clock().tick(1);
+        jest.advanceTimersByTime(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(4000);
+        jest.advanceTimersByTime(4000);
         AlertMessageService.sendAlertMessage(new Message('message2', MessageLevel.DEBUG));
-        jasmine.clock().tick(1);
+        jest.advanceTimersByTime(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message2');
-        jasmine.clock().tick(4000);
+        jest.advanceTimersByTime(4000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message2');
-        jasmine.clock().tick(1100);
+        jest.advanceTimersByTime(1100);
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 
     it('GIVEN a message of level ALARM WHEN alarmLevelAutoClose is false or not set THEN message never disappear automatically', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
-        jasmine.clock().tick(1);
+        jest.advanceTimersByTime(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(4000);
+        jest.advanceTimersByTime(4000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(10000);
+        jest.advanceTimersByTime(10000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(100000);
+        jest.advanceTimersByTime(100000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
     });
@@ -196,17 +196,17 @@ describe('Alert view ', () => {
     it('GIVEN a message of level ALARM WHEN alarmLevelAutoClose is true THEN message disappear after 5 seconds', async () => {
         await loadWebUIConf({alerts: {alarmLevelAutoClose: true}});
 
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         const alertView = new AlertView(translationService);
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
-        jasmine.clock().tick(1);
+        jest.advanceTimersByTime(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(4000);
+        jest.advanceTimersByTime(4000);
         expect(alertView.getAlertPage().display).toBeTruthy();
         expect(alertView.getAlertPage().message).toEqual('message');
-        jasmine.clock().tick(1100);
+        jest.advanceTimersByTime(1100);
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 });

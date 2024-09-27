@@ -45,7 +45,7 @@ describe('MessageOrQuestionList Card template', () => {
         OpfabAPIService.currentCard.card = {data: {question: true}};
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
-        expect(inputFieldVisibility).toBeFalse();
+        expect(inputFieldVisibility).toBeFalsy();
     });
     it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCardData.comment is "my_response", responseCardData.agreement is "Yes" and response is valid', () => {
         // Simulate input "my response"
@@ -54,7 +54,7 @@ describe('MessageOrQuestionList Card template', () => {
         });
 
         const userResponse = OpfabAPIService.templateInterface.getUserResponse();
-        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.valid).toBeTruthy();
         expect(userResponse.responseCardData.comment).toEqual('my response');
         expect(userResponse.responseCardData.agreement).toEqual(true);
     });
@@ -68,7 +68,7 @@ describe('MessageOrQuestionList Card template', () => {
 
         OpfabAPIService.templateInterface.lockAnswer();
 
-        expect(inputFieldVisibility).toBeFalse();
+        expect(inputFieldVisibility).toBeFalsy();
     });
 
     it('Given a question card WHEN user card is unlocked THEN response input is visible', () => {
@@ -80,7 +80,7 @@ describe('MessageOrQuestionList Card template', () => {
 
         OpfabAPIService.templateInterface.unlockAnswer();
 
-        expect(inputFieldVisibility).toBeTrue();
+        expect(inputFieldVisibility).toBeTruthy();
     });
 
     it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {

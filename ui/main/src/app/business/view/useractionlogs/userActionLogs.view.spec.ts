@@ -52,7 +52,7 @@ describe('User action logs view ', () => {
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
     });
 
     async function initEntityService() {
@@ -99,13 +99,13 @@ describe('User action logs view ', () => {
     it('GIVEN user is  admin  WHEN get view THEN user is authorized to access the view ', async () => {
         setUserWithPermissions([PermissionEnum.ADMIN]);
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
-        expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
+        expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTruthy();
     });
 
     it('GIVEN user has permission VIEW_USER_ACTION_LOGS  WHEN get view THEN user is authorized to access the view ', async () => {
         setUserWithPermissions([PermissionEnum.VIEW_USER_ACTION_LOGS]);
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
-        expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
+        expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTruthy();
     });
 
     it('GIVEN a list of user WHEN get all user login THEN user login list is provided ', async () => {
@@ -118,7 +118,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN date is 20/11/2022 WHEN get initial from date THEN initial day is 10 days before 10/11/2022', async () => {
-        jasmine.clock().mockDate(new Date(2022, 11, 20));
+        jest.setSystemTime(new Date(2022, 11, 20));
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         const pubDate = userActionLogsView.getUserActionLogPage().initialFromDate;
         expect(pubDate).toEqual(new Date(2022, 11, 10));
@@ -128,7 +128,7 @@ describe('User action logs view ', () => {
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeFalse();
+        expect(result.hasError).toBeFalsy();
         expect(result.data.totalElements).toEqual(2);
         expect(result.data.totalPages).toEqual(1);
         expect(result.data.content[0].action).toEqual('ACK_CARD');
@@ -144,7 +144,7 @@ describe('User action logs view ', () => {
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeTrue();
+        expect(result.hasError).toBeTruthy();
         expect(result.errorMessage).toEqual('Translation (en) of shared.error.technicalError');
     });
 
@@ -156,7 +156,7 @@ describe('User action logs view ', () => {
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeTrue();
+        expect(result.hasError).toBeTruthy();
         expect(result.errorMessage).toEqual('Translation (en) of shared.noResult');
     });
 
@@ -166,7 +166,7 @@ describe('User action logs view ', () => {
         userActionLogsView.setDateTo(1);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeTrue();
+        expect(result.hasError).toBeTruthy();
         expect(result.errorMessage).toEqual('Translation (en) of shared.filters.toDateBeforeFromDate');
     });
 
@@ -174,7 +174,7 @@ describe('User action logs view ', () => {
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeFalse();
+        expect(result.hasError).toBeFalsy();
         expect(result.data.totalElements).toEqual(2);
         expect(result.data.totalPages).toEqual(1);
         expect(result.data.content[0].entities).toEqual('ENTITY1 NAME,ENTITY3 NAME');
@@ -184,7 +184,7 @@ describe('User action logs view ', () => {
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
-        expect(result.hasError).toBeFalse();
+        expect(result.hasError).toBeFalsy();
         expect(result.data.totalElements).toEqual(2);
         expect(result.data.totalPages).toEqual(1);
         expect(result.data.content[0].date).toEqual('01:00:00 01/01/1970'); // Time-zone paris

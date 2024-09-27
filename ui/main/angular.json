@@ -125,24 +125,6 @@
             "browserTarget": "ui-home:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "scripts": [
-              "src/assets/js/opfab.js",
-              "src/shared/js/opfab-application.js"
-            ],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest"
-            ]
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {

@@ -140,8 +140,8 @@ describe('Notification configuration view - User interaction ', () => {
             initFunctionsToSet();
             notificationConfigurationView.manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
             notificationConfigurationPage = notificationConfigurationView.getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[1].checked).toBeTrue();
-            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[2].checked).toBeTrue();
+            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[1].checked).toBeTruthy();
+            expect(notificationConfigurationPage.processesWithNoProcessGroup[0].states[2].checked).toBeTruthy();
             // all state are activated so process checkbox shall be activated
             expect(processesCheckboxActivated).toEqual('p:process1,v:true;p:process1,v:true;');
             expect(statesCheckboxActivated).toEqual('p:process1,s:state1_2,v:true;p:process1,s:state1_3,v:true;');
@@ -251,11 +251,11 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(
                     notificationConfigurationView.getNotificationConfigurationPage().processGroups[0].processes[0]
                         .states[0].notificationByEmail
-                ).toBeFalse();
+                ).toBeFalsy();
                 expect(
                     notificationConfigurationView.getNotificationConfigurationPage().processGroups[0].processes[0]
                         .states[1].notificationByEmail
-                ).toBeFalse();
+                ).toBeFalsy();
             });
         });
         describe('State checkbox click', () => {
@@ -287,7 +287,7 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(
                     notificationConfigurationView.getNotificationConfigurationPage().processGroups[0].processes[0]
                         .states[0].notificationByEmail
-                ).toBeFalse();
+                ).toBeFalsy();
             });
         });
         describe('Process group checkbox click', () => {
@@ -320,11 +320,11 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(
                     notificationConfigurationView.getNotificationConfigurationPage().processGroups[0].processes[0]
                         .states[0].notificationByEmail
-                ).toBeFalse();
+                ).toBeFalsy();
                 expect(
                     notificationConfigurationView.getNotificationConfigurationPage().processGroups[0].processes[0]
                         .states[1].notificationByEmail
-                ).toBeFalse();
+                ).toBeFalsy();
             });
         });
         describe('Email icon click', () => {
@@ -406,7 +406,7 @@ describe('Notification configuration view - User interaction ', () => {
             it('should open information modal when saved has been done successfully', async () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
+                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTruthy();
                 expect(modalServerMock.modalConfigReceived.message).toEqual(new I18n('settings.settingsSaved'));
                 await waitForAllPromises();
                 modalServerMock.clickOnButton('ok');
@@ -418,7 +418,7 @@ describe('Notification configuration view - User interaction ', () => {
                 );
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
+                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTruthy();
                 expect(modalServerMock.modalConfigReceived.message).toEqual(
                     new I18n('shared.error.impossibleToSaveSettings')
                 );
@@ -516,21 +516,21 @@ describe('Notification configuration view - User interaction ', () => {
                 canUserExit = value;
             });
             await waitForAllPromises();
-            expect(canUserExit).toBeTrue();
+            expect(canUserExit).toBeTruthy();
             expect(modalServerMock.modalConfigReceived).toBeUndefined();
         });
 
         it('should open confirmation modal if configuration for notification has changed', async () => {
             notificationConfigurationView.clickOnProcess('process1');
             notificationConfigurationView.canUserExit();
-            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
+            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTruthy();
             modalServerMock.clickOnButton('cancel');
         });
 
         it('should open confirmation modal if configuration for notification by email has changed', async () => {
             notificationConfigurationView.clickOnStateNotificationByEmail('process1', 'state1_1');
             notificationConfigurationView.canUserExit();
-            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
+            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTruthy();
             modalServerMock.clickOnButton('cancel');
         });
 
@@ -542,7 +542,7 @@ describe('Notification configuration view - User interaction ', () => {
             });
             modalServerMock.clickOnButton('cancel');
             await waitForAllPromises();
-            expect(canUserExit).toBeFalse();
+            expect(canUserExit).toBeFalsy();
         });
 
         it('should exit and not save if user click doNotSaved on confirmation modal', async () => {
@@ -555,7 +555,7 @@ describe('Notification configuration view - User interaction ', () => {
             modalServerMock.clickOnButton('doNotSave');
             await waitForAllPromises();
             expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(0);
-            expect(canUserExit).toBeTrue();
+            expect(canUserExit).toBeTruthy();
         });
 
         it('should save configuration and exit if user click save on confirmation modal', async () => {
@@ -570,7 +570,7 @@ describe('Notification configuration view - User interaction ', () => {
             modalServerMock.clickOnButton('ok'); // close information modal
             await waitForAllPromises();
             expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
-            expect(canUserExit).toBeTrue();
+            expect(canUserExit).toBeTruthy();
         });
 
         it('should exit without confirmation if nothing to saved as configuration has not changed', async () => {

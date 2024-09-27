@@ -50,12 +50,12 @@ describe('UserCard CardSender', () => {
         });
         it('Should set the card id as last card sent for soundNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
-            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();
+            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTruthy();
         });
 
         it('Should set the card id as last card sent for systemNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
-            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();
+            expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTruthy();
         });
     });
     describe('send a card with a child card', () => {

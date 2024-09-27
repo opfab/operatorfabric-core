@@ -12,10 +12,7 @@ import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, ReplaySubject, firstValueFrom, of} from 'rxjs';
-import {Type} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
 import {Guid} from 'guid-typescript';
-import SpyObj = jasmine.SpyObj;
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {UserServerMock} from './mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -173,9 +170,9 @@ export function BusinessconfigI18nLoaderFactory(): TranslateLoader {
  * It generates errors such as "Type 'Store<any>' is not assignable to type 'SpyObj<Store<AppState>>'".
  * See https://github.com/angular/angular/issues/35944
  * */
-export function injectedSpy<S>(service: Type<S>): SpyObj<S> {
-    return TestBed.inject(service) as SpyObj<S>;
-}
+//export function injectedSpy<S>(service: Type<S>): SpyObj<S> {
+//    return TestBed.inject(service) as SpyObj<S>;
+//}
 
 export async function setUserPerimeter(userWithPerimeters: UserWithPerimeters) {
     const userServerMock = new UserServerMock();

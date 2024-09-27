@@ -17,9 +17,9 @@ import {Entity} from '@ofModel/entity.model';
 describe('Question Card template', () => {
     let view: QuestionCardTemplateView;
     beforeEach(async () => {
-        jasmine.clock().uninstall();
-        jasmine.clock().install();
-        jasmine.clock().mockDate(new Date(0));
+        jest.useRealTimers();
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(0));
         const translationService = new TranslationServiceMock();
         OpfabAPIService.setTranslationService(translationService);
         OpfabAPIService.init();
@@ -33,7 +33,7 @@ describe('Question Card template', () => {
     });
 
     afterEach(() => {
-        jasmine.clock().uninstall();
+        jest.useRealTimers();
     });
 
     it('GIVEN a card WHEN get question THEN question is provided', () => {
@@ -55,7 +55,7 @@ describe('Question Card template', () => {
         OpfabAPIService.currentCard.isUserAllowedToRespond = false;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
-        expect(inputFieldVisibility).toBeFalse();
+        expect(inputFieldVisibility).toBeFalsy();
     });
 
     it('Given a card WHEN user card is locked THEN response input is hidden', () => {
@@ -65,7 +65,7 @@ describe('Question Card template', () => {
 
         OpfabAPIService.templateInterface.lockAnswer();
 
-        expect(inputFieldVisibility).toBeFalse();
+        expect(inputFieldVisibility).toBeFalsy();
     });
 
     it('Given a card WHEN user card is unlocked THEN response input is visible', () => {
@@ -75,7 +75,7 @@ describe('Question Card template', () => {
 
         OpfabAPIService.templateInterface.unlockAnswer();
 
-        expect(inputFieldVisibility).toBeTrue();
+        expect(inputFieldVisibility).toBeTruthy();
     });
 
     it('GIVEN input is "my response" WHEN get user response THEN responseCardData.responses[0].response is] "my_response" and response is valid', () => {
@@ -83,7 +83,7 @@ describe('Question Card template', () => {
         view.setFunctionToGetResponseInput(() => 'my response', false);
 
         const userResponse = OpfabAPIService.templateInterface.getUserResponse();
-        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.valid).toBeTruthy();
         expect(userResponse.responseCardData.responses[0].response).toEqual('my response');
     });
 
@@ -131,10 +131,10 @@ describe('Question Card template', () => {
         OpfabAPIService.templateInterface.setChildCards(childcards);
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', true);
-        jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
+        jest.setSystemTime(new Date('2024-06-01T09:24:00'));
         const userResponse = OpfabAPIService.templateInterface.getUserResponse('entity1');
 
-        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.valid).toBeTruthy();
         expect(userResponse.responseCardData.responses[0].response).toEqual('response_entity1');
         expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
             new Date('2024-06-01T09:15:00').getTime()
@@ -160,10 +160,10 @@ describe('Question Card template', () => {
         OpfabAPIService.templateInterface.setChildCards(childcards);
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', false);
-        jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
+        jest.setSystemTime(new Date('2024-06-01T09:24:00'));
         const userResponse = OpfabAPIService.templateInterface.getUserResponse('entity1');
 
-        expect(userResponse.valid).toBeTrue();
+        expect(userResponse.valid).toBeTruthy();
         expect(userResponse.responseCardData.responses.length).toEqual(1);
         expect(userResponse.responseCardData.responses[0].response).toEqual('my 2nd response');
         expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
