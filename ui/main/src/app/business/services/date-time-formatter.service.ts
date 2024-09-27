@@ -10,20 +10,23 @@
 import {fr, enUS, nl} from 'date-fns/locale';
 import {ConfigService} from './config.service';
 import {format} from 'date-fns';
+import {Subject, takeUntil} from 'rxjs';
 
 export class DateTimeFormatterService {
     private static timeFormat;
     private static defaultDateFormat;
     private static dateTimeFormat;
     private static dateFnsLocaleOption: {locale: any};
+    private static readonly destroy$ = new Subject<void>();
 
     public static init() {
         DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'p');
         DateTimeFormatterService.defaultDateFormat = ConfigService.getConfigValue('settings.dateFormat', 'P');
         DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat');
-        ConfigService.getConfigValueAsObservable('settings.locale', 'en').subscribe((locale) =>
-            DateTimeFormatterService.setDateFnsLocaleOption(locale)
-        );
+        DateTimeFormatterService.destroy$.next(); // unsubscribe from previous subscription , only useful for unit tests as they call init more than one time
+        ConfigService.getConfigValueAsObservable('settings.locale', 'en')
+            .pipe(takeUntil(DateTimeFormatterService.destroy$))
+            .subscribe((locale) => DateTimeFormatterService.setDateFnsLocaleOption(locale));
     }
 
     private static setDateFnsLocaleOption(locale) {
