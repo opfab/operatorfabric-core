@@ -21,6 +21,7 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 describe('Process Monitoring view ', () => {
     let processServerMock: ProcessServerMock;
@@ -443,6 +444,7 @@ describe('Process Monitoring view ', () => {
             I18nService.setTranslationService(new TranslationServiceMock());
             I18nService.initLocale();
             DateTimeFormatterService.init();
+            ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();
         });
 
@@ -476,6 +478,7 @@ describe('Process Monitoring view ', () => {
             I18nService.setTranslationService(new TranslationServiceMock());
             I18nService.initLocale();
             DateTimeFormatterService.init();
+            ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();
         });
 

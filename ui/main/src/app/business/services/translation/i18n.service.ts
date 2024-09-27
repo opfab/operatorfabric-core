@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/business/services/config.service';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigServer} from '../../server/config.server';
@@ -24,6 +24,7 @@ export class I18nService {
     private static _locale: string;
     private static configServer: ConfigServer;
     private static translationService: TranslationService;
+    private static readonly destroy$ = new Subject<void>();
 
     public static setConfigServer(configServer: ConfigServer) {
         this.configServer = configServer;
@@ -34,9 +35,10 @@ export class I18nService {
     }
 
     public static initLocale() {
-        ConfigService.getConfigValueAsObservable('settings.locale', 'en').subscribe((locale) =>
-            this.changeLocale(locale)
-        );
+        this.destroy$.next(); // unsubscribe from previous subscription , only useful for unit tests as we init more than one time
+        ConfigService.getConfigValueAsObservable('settings.locale', 'en')
+            .pipe(takeUntil(I18nService.destroy$))
+            .subscribe((locale) => I18nService.changeLocale(locale));
     }
 
     public static changeLocale(locale: string) {
