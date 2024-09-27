@@ -78,7 +78,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         publishDateFrom: new FormControl<string | null>(null),
         publishDateTo: new FormControl(''),
         activeFrom: new FormControl(''),
-        activeTo: new FormControl('')
+        activeTo: new FormControl(''),
+        dateRange: new FormControl('')
     });
 
     results: LightCard[];

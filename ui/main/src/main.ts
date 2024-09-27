@@ -67,6 +67,7 @@ import {NgbModule, NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import {AppRoutingModule} from './app/router/app-routing.module';
 import {AppComponent} from './app/app.component';
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 
 if (environment.production) {
     enableProdMode();
@@ -85,7 +86,8 @@ bootstrapApplication(AppComponent, {
             TranslateModule.forRoot(),
             NgbModalModule,
             AppRoutingModule,
-            ServiceWorkerModule.register('ngsw-worker.js')
+            ServiceWorkerModule.register('ngsw-worker.js'),
+            NgxDaterangepickerMd.forRoot()
         ),
         {
             provide: SwRegistrationOptions,

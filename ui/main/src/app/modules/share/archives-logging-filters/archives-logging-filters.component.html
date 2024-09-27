@@ -172,7 +172,7 @@
             </div>
 
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left: 40px; width: 210px; min-width: 210px" [formGroup]="this.parentForm">
+            <!-- <div style="margin-left: 40px; width: 210px; min-width: 210px" [formGroup]="this.parentForm">
                 <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px">
                     <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
                     <input
@@ -191,6 +191,20 @@
                         formControlName="activeTo"
                         [min]="activeMinDate" />
                 </div>
+            </div> -->
+            <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px;min-width: 600px;" [formGroup]="this.parentForm">
+                <label for="opfab-date-range" translate>shared.filters.dateRange</label>
+                <input
+                    type="text"
+                    id="opfab-date-range"
+                    ngxDaterangepickerMd
+                    [(ngModel)]="selected"
+                    [timePicker]="true"
+                    [timePicker24Hour]="true"
+                    [timePickerIncrement]="1"
+                    [locale]="{ format: 'YYYY-MM-DD HH:mm' }"
+                    (datesUpdated)="onDateRangeChange($event)"
+                    formControlName="dateRange" />
             </div>
             <div class="opfab-buttons">
                 <label

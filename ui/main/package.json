@@ -50,6 +50,7 @@
     "lodash-es": "4.17.21",
     "ng-event-source": "1.0.14",
     "ngx-chips": "3.0.0",
+    "ngx-daterangepicker-material": "^6.0.4",
     "ol": "10.2.0",
     "quill": "2.0.2",
     "rrule": "2.8.1",

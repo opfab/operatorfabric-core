@@ -36,10 +36,11 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {sub} from 'date-fns';
+import {addYears, sub, subYears} from 'date-fns';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../multi-select/multi-select.component';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -66,7 +67,15 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
     styleUrls: ['./archives-logging-filters.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [TranslateModule, NgIf, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgClass]
+    imports: [
+        TranslateModule,
+        NgIf,
+        MultiSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NgClass,
+        NgxDaterangepickerMd
+    ]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
@@ -139,7 +148,13 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
 
     defaultMinPublishDateStringFormat: string;
 
+    selected: {startDate: Date; endDate: Date};
+    minDate: Date;
+    maxDate: Date;
+
     constructor(private changeDetector: ChangeDetectorRef) {
+        this.minDate = subYears(new Date(), 1);
+        this.maxDate = addYears(new Date(), 1);
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UserService.isCurrentUserAdmin() ||
             UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
@@ -155,6 +170,11 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             (this.hasCurrentUserRightsToViewAllArchivedCards ||
                 this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
             seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
+    }
+
+    onDateRangeChange(event: any) {
+        console.log('Selected date range:', event);
+        // Handle the date range change
     }
 
     ngOnChanges(changes: SimpleChanges): void {
