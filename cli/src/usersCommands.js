@@ -9,6 +9,7 @@
 
 const config = require('./configCommands.js');
 const prompts = require('prompts');
+const utils = require('./utils.js');
 
 const usersCommands = {
     async processUsersCommand(args) {
@@ -20,6 +21,8 @@ const usersCommands = {
                     name: 'value',
                     message: 'Users action',
                     choices: [
+                        {title: 'Add to entity', value: 'addtoentity'},
+                        {title: 'Remove from entity', value: 'removefromentity'},
                         {title: 'Set notified', value: 'set-notified'},
                         {title: 'Set not notified', value: 'set-not-notified'},
                         {title: 'Set notified by mail', value: 'set-notified-mail'},
@@ -34,6 +37,12 @@ const usersCommands = {
         }
 
         switch (action) {
+            case 'addtoentity':
+                await this.addUserTo('Entity', 'entities', args[1], args[2]);
+                break;
+            case 'removefromentity':
+                await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
+                break;
             case 'set-notified':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotified');
                 break;
@@ -52,6 +61,79 @@ const usersCommands = {
                 await this.printHelp();
                 break;
         }
+    },
+
+    async addUserTo(object, objectUrl, objectId, user) {
+        if (!objectId) {
+            objectId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: `${object} `
+                })
+            ).value;
+            if (!objectId) {
+                console.log(`${object} is required`);
+                return;
+            }
+        }
+        if (!user) {
+            user = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: `user `
+                })
+            ).value;
+            if (!user) {
+                console.log(`user is required`);
+                return;
+            }
+        }
+        await utils.sendRequest(
+            `users/${objectUrl}/${objectId}/users`,
+            'PATCH',
+            `["${user}"]`,
+            `User ${user} has been added to ${objectId}`,
+            ``,
+            `${object} or user not found`
+        );
+    },
+
+    async removeUserFrom(object, objectUrl, objectId, user) {
+        if (!objectId) {
+            objectId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: `${object} `
+                })
+            ).value;
+            if (!objectId) {
+                console.log(`${object} is required`);
+                return;
+            }
+        }
+        if (!user) {
+            user = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: `user `
+                })
+            ).value;
+            if (!user) {
+                console.log(`user is required`);
+                return;
+            }
+        }
+        await utils.sendRequest(
+            `users/${objectUrl}/${objectId}/users/${user}`,
+            'DELETE',
+            undefined,
+            `User ${user} has been removed from ${objectId}`,
+            `${object} or user not found`
+        );
     },
 
     async configureNotification(process, state, method, path) {
@@ -82,13 +164,20 @@ const usersCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/` + 'users/notificationconfiguration/' + path + '/' + process + '/' + state;
+        const url =
+            `${config.getConfig('url')}:${config.getConfig('port')}/` +
+            'users/notificationconfiguration/' +
+            path +
+            '/' +
+            process +
+            '/' +
+            state;
         const token = config.getConfig('access_token');
         const options = {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 
@@ -96,7 +185,7 @@ const usersCommands = {
         try {
             response = await fetch(url, options);
         } catch (error) {
-            console.error('Failed to configure process/state notification for ' + process + ' / ' +state);
+            console.error('Failed to configure process/state notification for ' + process + ' / ' + state);
             console.error('Error:', error);
             return;
         }
@@ -104,16 +193,18 @@ const usersCommands = {
         if (response.ok) {
             console.error('Success');
         } else {
-            console.error('Failed to configure process/state notification for ' + process + '/' +state);
+            console.error('Failed to configure process/state notification for ' + process + '/' + state);
             console.error('Response:', response);
         }
     },
 
     async printHelp() {
-        console.log(`Usage: opfab users set-notif <process> <state>
+        console.log(`Usage: opfab users <command>
         
 Commands list : 
 
+            addtoentity             Add a <user> to an <entity> : opfab users <entityId> <user>
+            removefromentity        Remove a <user> from an <entity> : opfab users <entityId> <user>
             set-notified            Configure <process>/<state> as to be notified for all users 
             set-not-notified        Configure <process>/<state> as not to be notified for all users
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
