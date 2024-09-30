@@ -30,7 +30,6 @@ if [[ -z $1 ]]
 then
     echo "Usage : sendCard cardFile opfab_url opfab_port"
 else
-    opfab login $url $port publisher_test test
     echo "send card $1 (url: $url)"
     
     opfab card send $1 "$cardCustomization"
