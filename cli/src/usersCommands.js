@@ -21,6 +21,8 @@ const usersCommands = {
                     name: 'value',
                     message: 'Users action',
                     choices: [
+                        {title: 'Add to group', value: 'addtogroup'},
+                        {title: 'Remove from group', value: 'removefromgroup'},
                         {title: 'Add to entity', value: 'addtoentity'},
                         {title: 'Remove from entity', value: 'removefromentity'},
                         {title: 'Set notified', value: 'set-notified'},
@@ -42,6 +44,12 @@ const usersCommands = {
                 break;
             case 'removefromentity':
                 await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
+                break;
+            case 'addtogroup':
+                await this.addUserTo('Group', 'groups', args[1], args[2]);
+                break;
+            case 'removefromgroup':
+                await this.removeUserFrom('Group', 'groups', args[1], args[2]);
                 break;
             case 'set-notified':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotified');
@@ -182,7 +190,8 @@ const usersCommands = {
         console.log(`Usage: opfab users <command>
         
 Commands list : 
-
+            addtogroup              Add a <user> to a <group> : opfab users <groupId> <user>
+            removefromgroup         Remove a <user> from a <group> : opfab users <groupId> <user>
             addtoentity             Add a <user> to an <entity> : opfab users <entityId> <user>
             removefromentity        Remove a <user> from an <entity> : opfab users <entityId> <user>
             set-notified            Configure <process>/<state> as to be notified for all users 

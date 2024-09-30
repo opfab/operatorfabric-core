@@ -83,6 +83,8 @@ omelette('opfab')
         users: [
             'addtoentity',
             'removefromentity',
+            'addtogroup',
+            'removefromgroup',
             'set-notified',
             'set-not-notified',
             'set-notified-mail',
