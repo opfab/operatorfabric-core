@@ -9,8 +9,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-const omelette = require('omelette'); // For completion
-const fs = require('fs');
+const omelette = require('omelette');
 
 const commands = require('./commands.js');
 const config = require('./configCommands.js');
@@ -18,74 +17,79 @@ const args = process.argv.slice(2);
 
 const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 
-omelette('opfab').tree({
-    bundle: ['load', 'delete'],
-    businessdata: ['load','delete'],
-    card: ['send', 'delete','resetratelimiter'],
-    commands : [],
-    config: ['set', 'get', 'list'],
-    connectedusers: {
-        sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
-    },
-    entities: ['load'],
-    groups: ['load'],
-    help: [
-        'bundle',
-        'businessdata',
-        'card',
-        'config',
-        'commands',
-        'connectedusers',
-        'entities',
-        'groups',
-        'login',
-        'logout',
-        'monitoringconfig',
-        'perimeters',
-        'processgroups',
-        'processmonitoring',
-        'realtimescreen',
-        'service',
-        'status',
-        'users'
-    ],
-    login: [],
-    logout: [],
-    monitoringconfig: ['load', 'delete'],
-    perimeters: ['create', 'addtogroup', 'delete'],
-    processgroups: ['load','clear'],
-    processmonitoring: ['load'],
-    realtimescreen: ['load'],
-    service: {
-        'get-log-level': [
-            'users',
-            'businessconfig',
-            'cards-consultation',
-            'cards-publication',
-            'external-devices',
-            'supervisor',
-            'cards-external-diffusion',
-            'cards-reminder'
+// Configuration of autocompletion in the CLI
+omelette('opfab')
+    .tree({
+        bundle: ['load', 'delete'],
+        businessdata: ['load', 'delete'],
+        card: ['send', 'delete', 'resetratelimiter'],
+        commands: [],
+        config: ['set', 'get', 'list'],
+        connectedusers: {
+            sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
+        },
+        entities: ['load'],
+        groups: ['load'],
+        help: [
+            'bundle',
+            'businessdata',
+            'card',
+            'config',
+            'commands',
+            'connectedusers',
+            'entities',
+            'groups',
+            'login',
+            'logout',
+            'monitoringconfig',
+            'perimeters',
+            'processgroups',
+            'processmonitoring',
+            'realtimescreen',
+            'service',
+            'status',
+            'users'
         ],
-        'set-log-level': {
-            users: levels,
-            businessconfig: levels,
-            'cards-consultation': levels,
-            'cards-publication': levels,
-            'external-devices': levels,
-            supervisor: levels,
-            'cards-external-diffusion': levels,
-            'cards-reminder': levels
-        }
-    },
-    status: [],
-    users: [
-        'set-notified',
-        'set-not-notified',
-        'set-notified-mail',
-        'set-not-notified-mail'
-    ]
-}).init();
+        login: [],
+        logout: [],
+        monitoringconfig: ['load', 'delete'],
+        perimeters: ['create', 'addtogroup', 'delete'],
+        processgroups: ['load', 'clear'],
+        processmonitoring: ['load'],
+        realtimescreen: ['load'],
+        service: {
+            'get-log-level': [
+                'users',
+                'businessconfig',
+                'cards-consultation',
+                'cards-publication',
+                'external-devices',
+                'supervisor',
+                'cards-external-diffusion',
+                'cards-reminder'
+            ],
+            'set-log-level': {
+                users: levels,
+                businessconfig: levels,
+                'cards-consultation': levels,
+                'cards-publication': levels,
+                'external-devices': levels,
+                supervisor: levels,
+                'cards-external-diffusion': levels,
+                'cards-reminder': levels
+            }
+        },
+        status: [],
+        users: [
+            'addtoentity',
+            'removefromentity',
+            'set-notified',
+            'set-not-notified',
+            'set-notified-mail',
+            'set-not-notified-mail'
+        ]
+    })
+    .init();
 
 (async () => {
     if (args[0] === undefined) {
@@ -95,4 +99,3 @@ omelette('opfab').tree({
         commands.processCommand(args);
     }
 })();
-
