@@ -64,7 +64,7 @@ const realtimescreenCommands = {
 
 Command list :
 
-    load      load realtimescreen from a file  : opfab realtimescreen load <realtimescreenFileName>    
+    load      load realtimescreen from a file : opfab realtimescreen load <realtimescreenFileName>    
         
         `);
     }
