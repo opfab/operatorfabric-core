@@ -28,7 +28,8 @@ const usersCommands = {
                         {title: 'Set notified', value: 'set-notified'},
                         {title: 'Set not notified', value: 'set-not-notified'},
                         {title: 'Set notified by mail', value: 'set-notified-mail'},
-                        {title: 'Set not notified by mail', value: 'set-not-notified-mail'}
+                        {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
+                        {title: 'Delete a user', value: 'delete'}
                     ]
                 })
             ).value;
@@ -63,6 +64,9 @@ const usersCommands = {
             case 'set-not-notified-mail':
                 await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotifiedbymail');
                 break;
+            case 'delete':
+                await this.deleteUser(args[1]);
+                break;
             default:
                 console.log(`Unknown users action : ${action}
                 `);
@@ -71,7 +75,7 @@ const usersCommands = {
         }
     },
 
-    async missingPrompt(object, objectId, user) {
+    async missingPrompt(object, objectId) {
         if (!objectId) {
             objectId = (
                 await prompts({
@@ -85,42 +89,43 @@ const usersCommands = {
                 return;
             }
         }
-        if (!user) {
-            user = (
-                await prompts({
-                    type: 'text',
-                    name: 'value',
-                    message: `user `
-                })
-            ).value;
-            if (!user) {
-                console.log(`user is required`);
-                return;
-            }
-        }
-        return {objectId, user};
+        return objectId;
     },
 
     async addUserTo(object, objectUrl, objectId, user) {
-        const {objectId: resolvedObjectId, user: resolvedUser} = await this.missingPrompt(object, objectId, user);
+        objectId = await this.missingPrompt(object, objectId);
+        user = await this.missingPrompt('User', user);
         await utils.sendRequest(
-            `users/${objectUrl}/${resolvedObjectId}/users`,
+            `users/${objectUrl}/${objectId}/users`,
             'PATCH',
-            `["${resolvedUser}"]`,
-            `User ${resolvedUser} has been added to ${resolvedObjectId}`,
+            `["${user}"]`,
+            `User ${user} has been added to ${objectId}`,
             ``,
             `${object} or user not found`
         );
     },
 
     async removeUserFrom(object, objectUrl, objectId, user) {
-        const {objectId: resolvedObjectId, user: resolvedUser} = await this.missingPrompt(object, objectId, user);
+        objectId = await this.missingPrompt(object, objectId);
+        user = await this.missingPrompt('User', user);
         await utils.sendRequest(
-            `users/${objectUrl}/${resolvedObjectId}/users/${resolvedUser}`,
+            `users/${objectUrl}/${objectId}/users/${user}`,
             'DELETE',
             undefined,
-            `User ${resolvedUser} has been removed from ${resolvedObjectId}`,
+            `User ${user} has been removed from ${objectId}`,
             `${object} or user not found`
+        );
+    },
+
+    async deleteUser(user) {
+        user = await this.missingPrompt('User', user);
+        await utils.sendRequest(
+            `users/users/${user}`,
+            'DELETE',
+            undefined,
+            `User ${user} has been deleted`,
+            ``,
+            `User ${user} not found`
         );
     },
 
@@ -198,6 +203,7 @@ Commands list :
             set-not-notified        Configure <process>/<state> as not to be notified for all users
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
             set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
+            delete                  Delete a <user>
         `);
     }
 };

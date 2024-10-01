@@ -78,7 +78,7 @@ const utils = {
             return;
         }
     },
-    async sendRequest(path, method, body,successMessage,errorMessage,notFoundMessage) {
+    async sendRequest(path, method, body, successMessage, errorMessage, notFoundMessage) {
         const url = `${config.getConfig('url')}:${config.getConfig('port')}/${path}`;
         const token = config.getConfig('access_token');
 
@@ -86,7 +86,7 @@ const utils = {
             method: method,
             headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
         };
 
@@ -97,16 +97,14 @@ const utils = {
         let response;
         try {
             response = await fetch(url, options);
-        }
-        catch (error) {
+        } catch (error) {
             console.error(errorMessage);
-            console.error(`Error`,error);
+            console.error(`Error`, error);
             return;
         }
         if (response.ok) {
             console.log(successMessage);
-        }
-        else {
+        } else {
             switch (response.status) {
                 case 404:
                     console.error(notFoundMessage);

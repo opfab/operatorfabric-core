@@ -88,7 +88,8 @@ omelette('opfab')
             'set-notified',
             'set-not-notified',
             'set-notified-mail',
-            'set-not-notified-mail'
+            'set-not-notified-mail',
+            'delete'
         ]
     })
     .init();
