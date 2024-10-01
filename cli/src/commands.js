@@ -28,7 +28,6 @@ const entities = require('./entitiesCommands');
 const groups = require('./groupsCommands');
 
 const commands = {
-
     async processCommand(args) {
         switch (args[0]) {
             case 'bundle':
@@ -139,11 +138,11 @@ const commands = {
             input: fileStream,
             crlfDelay: Infinity
         });
-        
-        rl.on('line', line => {
+
+        rl.on('line', (line) => {
             commandList.push(line);
         });
-        
+
         rl.on('close', async () => {
             for (let commandLine of commandList) {
                 await this.processCommand(commandLine.split(' '));
@@ -190,7 +189,7 @@ const commands = {
         realtimescreen          Load real time screen definition file
         service                 Get or set log level for services
         status                  Show login status
-        users                   Set or unset process/state notifications
+        users                   Manage users
     
     `);
         } else {

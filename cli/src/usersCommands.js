@@ -10,6 +10,7 @@
 const config = require('./configCommands.js');
 const prompts = require('prompts');
 const utils = require('./utils.js');
+const fs = require('fs').promises;
 
 const usersCommands = {
     async processUsersCommand(args) {
@@ -21,15 +22,16 @@ const usersCommands = {
                     name: 'value',
                     message: 'Users action',
                     choices: [
-                        {title: 'Add to group', value: 'addtogroup'},
-                        {title: 'Remove from group', value: 'removefromgroup'},
                         {title: 'Add to entity', value: 'addtoentity'},
+                        {title: 'Add to group', value: 'addtogroup'},
+                        {title: 'Load a list of users', value: 'load'},
+                        {title: 'Delete a user', value: 'delete'},
                         {title: 'Remove from entity', value: 'removefromentity'},
-                        {title: 'Set notified', value: 'set-notified'},
+                        {title: 'Remove from group', value: 'removefromgroup'},
                         {title: 'Set not notified', value: 'set-not-notified'},
-                        {title: 'Set notified by mail', value: 'set-notified-mail'},
                         {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
-                        {title: 'Delete a user', value: 'delete'}
+                        {title: 'Set notified', value: 'set-notified'},
+                        {title: 'Set notified by mail', value: 'set-notified-mail'}
                     ]
                 })
             ).value;
@@ -43,30 +45,34 @@ const usersCommands = {
             case 'addtoentity':
                 await this.addUserTo('Entity', 'entities', args[1], args[2]);
                 break;
-            case 'removefromentity':
-                await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
-                break;
             case 'addtogroup':
                 await this.addUserTo('Group', 'groups', args[1], args[2]);
-                break;
-            case 'removefromgroup':
-                await this.removeUserFrom('Group', 'groups', args[1], args[2]);
-                break;
-            case 'set-notified':
-                await this.configureNotification(args[1], args[2], 'POST', 'processstatenotified');
-                break;
-            case 'set-not-notified':
-                await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotified');
-                break;
-            case 'set-notified-mail':
-                await this.configureNotification(args[1], args[2], 'POST', 'processstatenotifiedbymail');
-                break;
-            case 'set-not-notified-mail':
-                await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotifiedbymail');
                 break;
             case 'delete':
                 await this.deleteUser(args[1]);
                 break;
+            case 'load':
+                await this.loadUserList(args[1]);
+                break;
+            case 'removefromentity':
+                await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
+                break;
+            case 'removefromgroup':
+                await this.removeUserFrom('Group', 'groups', args[1], args[2]);
+                break;
+            case 'set-not-notified':
+                await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotified');
+                break;
+            case 'set-not-notified-mail':
+                await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotifiedbymail');
+                break;
+            case 'set-notified':
+                await this.configureNotification(args[1], args[2], 'POST', 'processstatenotified');
+                break;
+            case 'set-notified-mail':
+                await this.configureNotification(args[1], args[2], 'POST', 'processstatenotifiedbymail');
+                break;
+
             default:
                 console.log(`Unknown users action : ${action}
                 `);
@@ -127,6 +133,27 @@ const usersCommands = {
             ``,
             `User ${user} not found`
         );
+    },
+
+    async loadUserList(filePath) {
+        filePath = await this.missingPrompt('File path', filePath);
+        let userList;
+        try {
+            userList = JSON.parse(await fs.readFile(filePath, 'utf8'));
+        } catch (error) {
+            console.error(`Failed to parse the JSON file: ${error.message}`);
+            return;
+        }
+        for (const user of userList) {
+            await utils.sendRequest(
+                'users/users',
+                'POST',
+                JSON.stringify(user),
+                `User ${user.login} created successfully`,
+                `Failed to create user ${user.login}`,
+                `Failed to create user ${user.login} , not found error`
+            );
+        }
     },
 
     async configureNotification(process, state, method, path) {
@@ -195,15 +222,16 @@ const usersCommands = {
         console.log(`Usage: opfab users <command>
         
 Commands list : 
-            addtogroup              Add a <user> to a <group> : opfab users <groupId> <user>
-            removefromgroup         Remove a <user> from a <group> : opfab users <groupId> <user>
-            addtoentity             Add a <user> to an <entity> : opfab users <entityId> <user>
-            removefromentity        Remove a <user> from an <entity> : opfab users <entityId> <user>
-            set-notified            Configure <process>/<state> as to be notified for all users 
-            set-not-notified        Configure <process>/<state> as not to be notified for all users
-            set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
-            set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
+            addtoentity             Add a <user> to an <entity> : opfab users addtoentity <entityId> <user>
+            addtogroup              Add a <user> to a <group> : opfab users addtogroup <groupId> <user>
             delete                  Delete a <user>
+            load                    Add or update a list of users : opfab users load <usersFilePath>
+            removefromentity        Remove a <user> from an <entity> : opfab users removefromentity <entityId> <user>
+            removefromgroup         Remove a <user> from a <group> : opfab users removefromgroup <groupId> <user>
+            set-not-notified        Configure <process>/<state> as not to be notified for all users
+            set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
+            set-notified            Configure <process>/<state> as to be notified for all users 
+            set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
         `);
     }
 };
