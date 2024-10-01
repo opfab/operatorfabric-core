@@ -28,8 +28,8 @@ omelette('opfab')
         connectedusers: {
             sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
         },
-        entities: ['load'],
-        groups: ['load'],
+        entities: ['load', 'delete'],
+        groups: ['load', 'delete'],
         help: [
             'bundle',
             'businessdata',
@@ -82,14 +82,15 @@ omelette('opfab')
         status: [],
         users: [
             'addtoentity',
-            'removefromentity',
             'addtogroup',
+            'delete',
+            'load',
+            'removefromentity',
             'removefromgroup',
-            'set-notified',
             'set-not-notified',
-            'set-notified-mail',
             'set-not-notified-mail',
-            'delete'
+            'set-notified',
+            'set-notified-mail'
         ]
     })
     .init();
