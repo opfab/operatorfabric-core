@@ -9,12 +9,12 @@
 
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
+import {TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
@@ -24,7 +24,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 import {NgIf} from '@angular/common';
@@ -37,11 +36,8 @@ import {CardComponent} from '../card/card.component';
     standalone: true,
     imports: [NgIf, FullCalendarModule, CardComponent]
 })
-export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
-    private filteredLightCardStore: FilteredLightCardsStore;
-
+export class CalendarComponent implements OnInit, OnDestroy {
     constructor(private modalService: NgbModal) {
-        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
@@ -76,36 +72,15 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         dayHeaderFormat: {weekday: 'long'},
         events: this.calendarEvents,
         locales: this.locales,
+        locale: ConfigService.getConfigValue('settings.locale'),
         themeSystem: 'standard',
         datesSet: this.datesRangeChange.bind(this),
         eventClick: this.selectCard.bind(this)
     };
     mapOfProcesses = new Map<string, number>();
 
-    private static formatTwoDigits(time: number) {
-        return time < 10 ? '0' + time : time;
-    }
-
-    private static getEndTime(hourAndMinutes: HourAndMinutes, duration: number) {
-        return (
-            CalendarComponent.formatTwoDigits(hourAndMinutes.hours + Math.floor(duration / 60)) +
-            ':' +
-            CalendarComponent.formatTwoDigits(hourAndMinutes.minutes + (duration % 60))
-        );
-    }
-
     ngOnInit() {
         this.initDataPipe();
-    }
-
-    ngAfterViewInit() {
-        this.setLocale();
-    }
-
-    private setLocale() {
-        ConfigService.getConfigValueAsObservable('settings.locale')
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((locale) => this.calendarComponent.getApi().setOption('locale', locale));
     }
 
     private initDataPipe(): void {
