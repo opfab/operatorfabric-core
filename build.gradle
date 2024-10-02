@@ -54,7 +54,7 @@ ext {
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
             assertJ         : "org.assertj:assertj-core:$assertj",
             reactor         : "io.projectreactor:reactor-test:$reactor",
-            karate          : "com.intuit.karate:karate-junit5:$karate"
+            karate          : "io.karatelabs:karate-junit5:$karate"
     ]
 
 
