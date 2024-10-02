@@ -15,18 +15,19 @@ import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 export class OpfabEventStreamService {
     private static opfabEventStreamServer: OpfabEventStreamServer;
 
-    public static initSubscription = new Subject<void>();
+    public static readonly initSubscription = new Subject<void>();
 
     private static startOfAlreadyLoadedPeriod: number;
     private static endOfAlreadyLoadedPeriod: number;
 
     private static currentPeriod: {start: number; end: number};
 
-    private static receivedDisconnectedSubject = new Subject<boolean>();
-    private static reloadRequest = new Subject<void>();
-    private static businessConfigChange = new Subject<void>();
-    private static userConfigChange = new Subject<void>();
-    private static businessDataChange = new Subject<void>();
+    private static readonly receivedDisconnectedSubject = new Subject<boolean>();
+    private static readonly reloadRequest = new Subject<void>();
+    private static readonly businessConfigChange = new Subject<void>();
+    private static readonly userConfigChange = new Subject<void>();
+    private static readonly businessDataChange = new Subject<void>();
+    private static readonly monitoringConfigChange = new Subject<void>();
 
     private static eventStreamClosed = false;
 
@@ -57,6 +58,10 @@ export class OpfabEventStreamService {
                     case 'BUSINESS_CONFIG_CHANGE':
                         OpfabEventStreamService.businessConfigChange.next();
                         logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
+                        break;
+                    case 'MONITORING_CONFIG_CHANGE':
+                        OpfabEventStreamService.monitoringConfigChange.next();
+                        logger.info(`EventStreamService - MONITORING_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
                         OpfabEventStreamService.userConfigChange.next();
@@ -167,5 +172,9 @@ export class OpfabEventStreamService {
 
     static getUserConfigChangeRequests(): Observable<void> {
         return OpfabEventStreamService.userConfigChange.asObservable();
+    }
+
+    static getMonitoringConfigChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.monitoringConfigChange.asObservable();
     }
 }

@@ -11,6 +11,7 @@
 package org.opfab.businessconfig.services;
 
 import org.opfab.businessconfig.model.*;
+import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
@@ -38,10 +39,12 @@ public class MonitoringService implements ResourceLoaderAware {
     private ResourceLoader resourceLoader;
     private ObjectMapper objectMapper;
     private Monitoring monitoring;
+    private EventBus eventBus;
 
 
-    public MonitoringService(ObjectMapper objectMapper) {
+    public MonitoringService(ObjectMapper objectMapper, EventBus eventBus) {
         this.objectMapper = objectMapper;
+        this.eventBus = eventBus;
     }
 
     @PostConstruct
@@ -76,6 +79,7 @@ public class MonitoringService implements ResourceLoaderAware {
     public void setMonitoring(Monitoring monitoring) throws IOException {
         this.monitoring =  monitoring;
         saveMonitoringFile();
+        this.eventBus.sendEvent("process", "MONITORING_CONFIG_CHANGE");
     }
 
     private synchronized void saveMonitoringFile() throws IOException {
