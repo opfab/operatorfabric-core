@@ -36,13 +36,9 @@ export class RealtimeDomainService {
         return this.currentDomainId;
     }
 
-    public static setDomainId(domainId: string, reset: boolean) {
+    public static setDomainId(domainId: string) {
         this.currentDomainId = domainId;
-        if (!this.currentDomain || reset) {
-            this.setDefaultStartAndEndDomain();
-        } else {
-            this.updateCardFilter();
-        }
+        this.setDefaultStartAndEndDomain();
 
         UserPreferencesService.setPreference('opfab.timeLine.domain', this.currentDomainId);
     }

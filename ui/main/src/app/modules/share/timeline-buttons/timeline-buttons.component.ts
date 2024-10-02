@@ -102,7 +102,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         }
 
         if (initialGraphConf) {
-            this.changeGraphConf(initialGraphConf, false);
+            this.changeGraphConf(initialGraphConf);
         }
     }
 
@@ -110,8 +110,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * Call when click on a zoom button
      * @param conf button clicked
      */
-    changeGraphConf(conf: any, reset: boolean): void {
-        if (reset) RealtimeDomainService.unlockTimeline();
+    changeGraphConf(conf: any): void {
+        RealtimeDomainService.unlockTimeline();
 
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
@@ -120,7 +120,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
-        RealtimeDomainService.setDomainId(this.currentDomainId, reset);
+        RealtimeDomainService.setDomainId(this.currentDomainId);
         this.currentDomain = RealtimeDomainService.getCurrentDomain();
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
@@ -168,11 +168,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
                     if (i !== 0) {
-                        this.changeGraphConf(this.buttonList[i - 1], true);
+                        this.changeGraphConf(this.buttonList[i - 1]);
                     }
                 } else {
                     if (i !== this.buttonList.length - 1) {
-                        this.changeGraphConf(this.buttonList[i + 1], true);
+                        this.changeGraphConf(this.buttonList[i + 1]);
                     }
                 }
                 return;
