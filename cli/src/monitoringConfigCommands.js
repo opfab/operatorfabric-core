@@ -8,7 +8,6 @@
  */
 
 const prompts = require('prompts');
-const config = require('./configCommands');
 const utils = require('./utils');
 const fs = require('fs').promises;
 

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-const config = require('./configCommands.js');
 const prompts = require('prompts');
 const utils = require('./utils.js');
 

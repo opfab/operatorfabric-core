@@ -9,9 +9,8 @@
 
 const prompts = require('prompts');
 const utils = require('./utils.js');
-const { validKeys } = require('./configCommands.js');
 
-const NODE_SERVICES = ['supervisor', 'cards-external-diffusion', 'cards-reminder']
+const NODE_SERVICES = ['supervisor', 'cards-external-diffusion', 'cards-reminder'];
 
 const serviceCommands = {
     async processServiceCommand(args) {
@@ -63,10 +62,8 @@ const serviceCommands = {
         );
 
         if (result.ok) {
-            if (this.isNodeService(serviceName))
-                console.log(this.fromNodeToStandardLevel(await result.json()))
-            else
-                console.info(await result.json());
+            if (this.isNodeService(serviceName)) console.log(this.fromNodeToStandardLevel(await result.json()));
+            else console.info(await result.json());
         }
     },
 
@@ -97,8 +94,7 @@ const serviceCommands = {
                 return;
             }
         }
-        if (this.isNodeService(serviceName))
-            logLevel = this.fromStandardToNodeLevel(logLevel);
+        if (this.isNodeService(serviceName)) logLevel = this.fromStandardToNodeLevel(logLevel);
 
         await utils.sendRequest(
             this.getServicePath(serviceName),
@@ -108,7 +104,6 @@ const serviceCommands = {
             'Failed to set log level',
             'Failed to set log level not found error'
         );
-
     },
 
     getServicePath(serviceName) {
@@ -158,8 +153,8 @@ const serviceCommands = {
             default:
                 break;
         }
-        logLevel.effectiveLevel = standardLevel
-        logLevel.configuredLevel = standardLevel
+        logLevel.effectiveLevel = standardLevel;
+        logLevel.configuredLevel = standardLevel;
         return logLevel;
     },
 
@@ -180,7 +175,7 @@ const serviceCommands = {
                         {title: 'External-devices', value: 'external-devices'},
                         {title: 'Supervisor', value: 'supervisor'},
                         {title: 'Cards-external-diffusion', value: 'cards-external-diffusion'},
-                        {title: 'Cards-reminder', value: 'cards-reminder'},
+                        {title: 'Cards-reminder', value: 'cards-reminder'}
                     ]
                 })
             ).value;
