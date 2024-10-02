@@ -30,8 +30,10 @@ const usersCommands = {
                         {title: 'Remove from group', value: 'removefromgroup'},
                         {title: 'Set not notified', value: 'set-not-notified'},
                         {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
+                        {title: 'Set activity area', value: 'setactivityarea'},
                         {title: 'Set notified', value: 'set-notified'},
-                        {title: 'Set notified by mail', value: 'set-notified-mail'}
+                        {title: 'Set notified by mail', value: 'set-notified-mail'},
+                        {title: 'Unset activity area', value: 'unsetactivityarea'}
                     ]
                 })
             ).value;
@@ -66,11 +68,17 @@ const usersCommands = {
             case 'set-not-notified-mail':
                 await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotifiedbymail');
                 break;
+            case 'setactivityarea':
+                await this.activityAreaSetter(args[1], args[2], true);
+                break;
             case 'set-notified':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotified');
                 break;
             case 'set-notified-mail':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotifiedbymail');
+                break;
+            case 'unsetactivityarea':
+                await this.activityAreaSetter(args[1], args[2], false);
                 break;
 
             default:
@@ -156,6 +164,43 @@ const usersCommands = {
         }
     },
 
+    async activityAreaSetter(entity, user, setting) {
+        entity = await this.missingPrompt('Activity area', entity);
+        user = await this.missingPrompt('User', user);
+
+        const entitiesDisconnectedResponse = await utils.sendRequest(
+            `users/users/${user}/settings`,
+            'GET',
+            undefined,
+            '',
+            `Failed to fetch settings for user ${user}`,
+            `Failed to find user ${user}`
+        );
+        if (!entitiesDisconnectedResponse.ok) {
+            return;
+        }
+        let {entitiesDisconnected} = await entitiesDisconnectedResponse.json();
+        if (!entitiesDisconnected) {
+            entitiesDisconnected = [];
+        }
+        const index = entitiesDisconnected?.indexOf(entity);
+        if (setting) {
+            if (index !== -1) {
+                entitiesDisconnected.splice(index, 1);
+            }
+        } else if (index == -1) {
+            entitiesDisconnected.push(entity);
+        }
+        await utils.sendRequest(
+            `users/users/${user}/settings`,
+            'PATCH',
+            JSON.stringify({login: user, entitiesDisconnected: entitiesDisconnected}),
+            `Activity area ${entity} has been ${setting ? 'set' : 'unset'} for user ${user}`,
+            `Failed to change activity area ${entity} for user ${user}`,
+            `Activity area ${entity} or user ${user} could not be found`
+        );
+    },
+
     async configureNotification(process, state, method, path) {
         if (!process) {
             process = (
@@ -230,8 +275,10 @@ Commands list :
             removefromgroup         Remove a <user> from a <group> : opfab users removefromgroup <groupId> <user>
             set-not-notified        Configure <process>/<state> as not to be notified for all users
             set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
+            setactivityarea         Set an <activity area> for a <user> : opfab users setactivityarea <activityAreaId> <user> 
             set-notified            Configure <process>/<state> as to be notified for all users 
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
+            unsetactivityarea       Unset an <activity area> for a <user> : opfab users unsetactivityarea <activityAreaId> <user> 
         `);
     }
 };

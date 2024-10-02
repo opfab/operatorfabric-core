@@ -8,9 +8,7 @@
  */
 
 const prompts = require('prompts');
-const config = require('./configCommands');
 const utils = require('./utils');
-const fs = require('fs').promises;
 
 const processMonitoringCommands = {
     async processProcessMonitoringCommand(args) {
@@ -21,9 +19,7 @@ const processMonitoringCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'Process Monitoring Config command',
-                    choices: [
-                        {title: 'load', value: 'load'}
-                    ]
+                    choices: [{title: 'load', value: 'load'}]
                 })
             ).value;
             if (!command) {

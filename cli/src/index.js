@@ -89,8 +89,10 @@ omelette('opfab')
             'removefromgroup',
             'set-not-notified',
             'set-not-notified-mail',
+            'setactivityarea',
             'set-notified',
-            'set-notified-mail'
+            'set-notified-mail',
+            'unsetactivityarea'
         ]
     })
     .init();
