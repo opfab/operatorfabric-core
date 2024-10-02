@@ -19,12 +19,14 @@ import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
 import {ProcessesService} from '../businessconfig/processes.service';
 import {BusinessDataService} from '../businessconfig/businessdata.service';
+import {ConfigService} from '../config.service';
 
 export class ApplicationUpdateService {
     public static init() {
         ApplicationUpdateService.listenForBusinessConfigUpdate();
         ApplicationUpdateService.listenForUserConfigUpdate();
         ApplicationUpdateService.listenForBusinessDataUpdate();
+        ApplicationUpdateService.listenForMonitoringConfigUpdate();
     }
 
     private static listenForBusinessConfigUpdate() {
@@ -73,6 +75,14 @@ export class ApplicationUpdateService {
         OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
             logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             BusinessDataService.emptyCache();
+        });
+    }
+
+    private static listenForMonitoringConfigUpdate() {
+        OpfabEventStreamService.getMonitoringConfigChangeRequests().subscribe(() => {
+            logger.info(`Update monitoring configuration`, LogOption.LOCAL_AND_REMOTE);
+            ConfigService.loadMonitoringConfig().subscribe();
+            ConfigService.loadProcessMonitoringConfig().subscribe();
         });
     }
 }

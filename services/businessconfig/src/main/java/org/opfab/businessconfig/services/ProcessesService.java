@@ -55,6 +55,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private static final String BUNDLE_FOLDER = "/bundles";
     private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
+    private static final String PROCESS_EVENT_KEY = "process";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
@@ -154,10 +155,10 @@ public class ProcessesService implements ResourceLoaderAware {
         }
     }
 
-        /**
-     * Loads realTimeScreens data to realTimeScreensCache
+    /**
+     * Loads processmonitoring data to processMonitoringCache
      */
-    public void loadProcessMonitoringCache() {
+    private void loadProcessMonitoringCache() {
 
         this.processMonitoringCache = new ProcessMonitoring(null, null, null);
         try {
@@ -611,7 +612,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     private void pushProcessChangeInEventBus() {
-        eventBus.sendEvent("process", "BUSINESS_CONFIG_CHANGE");
+        eventBus.sendEvent(PROCESS_EVENT_KEY, "BUSINESS_CONFIG_CHANGE");
     }
 
     /**
@@ -688,7 +689,7 @@ public class ProcessesService implements ResourceLoaderAware {
         PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),
                 businessDataPath.toString() + "/" + resourceName);
 
-        eventBus.sendEvent("process", "BUSINESS_DATA_CHANGE");
+        eventBus.sendEvent(PROCESS_EVENT_KEY, "BUSINESS_DATA_CHANGE");
 
     }
 
@@ -709,6 +710,7 @@ public class ProcessesService implements ResourceLoaderAware {
         rootPath.toString() + "/processmonitoring.json");
 
         processMonitoringCache = processMonitoring;
+        this.eventBus.sendEvent(PROCESS_EVENT_KEY, "MONITORING_CONFIG_CHANGE");
     }
 
     public ProcessMonitoring getProcessMonitoring() {
