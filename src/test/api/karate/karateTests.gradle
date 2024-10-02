@@ -16,5 +16,5 @@ test {
 
 task karateDebug(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.intuit.karate.cli.Main'
+    mainClass = 'com.intuit.karate.Main'
 }
