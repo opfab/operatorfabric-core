@@ -24,8 +24,7 @@ Feature: Update existing user
   "login" : "loginkarate5",
   "firstName" : "name update Karate5",
   "lastName" : "last name update Karate5",
-  "comment" : "comment Karate5",
-  "authorizedIPAddresses" : ['127.0.0.1','192.168.0.1']
+  "comment" : "comment Karate5"
 }
 """
 
@@ -86,7 +85,5 @@ Feature: Update existing user
     And match response.firstName == userUpdate.firstName
     And match response.lastName == userUpdate.lastName
     And match response.comment == userUpdate.comment
-    And match response.authorizedIPAddresses contains '127.0.0.1'
-    And match response.authorizedIPAddresses contains '192.168.0.1'
 
     

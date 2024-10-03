@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,18 +20,16 @@ public class OpfabAuthorizationManager {
     private OpfabAuthorizationManager() {
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> authenticatedAndIpAllowed() {
-        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(),
-                            new OpfabIpAuthorizationManager());
+    public static AuthorizationManager<RequestAuthorizationContext> authenticated() {
+        return AuthenticatedAuthorizationManager.authenticated();
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> hasAnyRoleAndIpAllowed(String... roles) {
-        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(roles),
-                            new OpfabIpAuthorizationManager());
+    public static AuthorizationManager<RequestAuthorizationContext> hasAnyRole(String... roles) {
+        return AuthorityAuthorizationManager.hasAnyRole(roles);
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> hasAnyUsernameAndIpAllowed(String... usernames) {       
+    public static AuthorizationManager<RequestAuthorizationContext> hasAnyUsername(String... usernames) {
         return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(), 
-                            new OpfabLoginAuthorizationManager(usernames), new OpfabIpAuthorizationManager());
+                            new OpfabLoginAuthorizationManager(usernames));
     }
 }

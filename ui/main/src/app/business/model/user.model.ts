@@ -14,7 +14,6 @@ export class User {
         readonly lastName: string,
         readonly comment?: string,
         readonly groups?: Array<string>,
-        readonly entities?: Array<string>,
-        readonly authorizedIPAddresses?: Array<string>
+        readonly entities?: Array<string>
     ) {}
 }

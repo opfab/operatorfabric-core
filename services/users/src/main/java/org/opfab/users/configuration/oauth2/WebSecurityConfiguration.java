@@ -87,63 +87,48 @@ public class WebSecurityConfiguration {
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                     .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                    .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
-                    .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
-                    .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
-                    .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticatedAndIpAllowed()) 
-                    .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
-                    .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticated())
+                    .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqual(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS) .access(authenticated())
+                    .requestMatchers(USERS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, GROUPS).access(authenticated())
+                    .requestMatchers(GROUPS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticated())
+                    .requestMatchers(ENTITIES_PATH).access(hasAnyRole(ADMIN_ROLE))
+                    .requestMatchers(PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                    .requestMatchers(USER_ACTION_LOGS).access(hasAnyRole(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
+                    .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
                     .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                     .requestMatchers(NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
                     .requestMatchers(EMAIL_NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
-                    .anyRequest().access(authenticatedAndIpAllowed())
+                    .anyRequest().access(authenticated())
                 );
     }
 
 
-    public static AuthorizationManager<RequestAuthorizationContext> authenticatedAndIpAllowed() {
-        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(),
-                            new OpfabIpAuthorizationManager());
+    public static AuthorizationManager<RequestAuthorizationContext> authenticated() {
+        return AuthenticatedAuthorizationManager.authenticated();
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> authenticatedAndLoginAllowed() {
-        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(),
-                            new OpfabLoginAuthorizationManager());
+    public static AuthorizationManager<RequestAuthorizationContext> hasAnyRole(String... roles) {
+        return AuthorityAuthorizationManager.hasAnyRole(roles);
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> hasAnyRoleAndIpAllowed(String... roles) {
-        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(roles),
-                            new OpfabIpAuthorizationManager());
-    }
-
-    public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginAndIpAllowed(String role) {
-        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(role),
-                            new OpfabLoginAuthorizationManager(),
-                            new OpfabIpAuthorizationManager());
-    }
-
-    public static AuthorizationManager<RequestAuthorizationContext> hasRoleOrLoginAndIpAllowed(String role) {
+    public static AuthorizationManager<RequestAuthorizationContext> hasRoleOrLogin(String role) {
         return AuthorizationManagers.allOf(
                             AuthorizationManagers.anyOf(AuthorityAuthorizationManager.hasAnyRole(role), 
-                            new OpfabLoginAuthorizationManager()),
-                            new OpfabIpAuthorizationManager());
+                            new OpfabLoginAuthorizationManager()));
     }
 
-    public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginNotEqualAndIpAllowed(String role) {
+    public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginNotEqual(String role) {
         return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(role),
-                            new OpfabLoginNotEqualAuthorizationManager(),
-                            new OpfabIpAuthorizationManager());
+                            new OpfabLoginNotEqualAuthorizationManager());
     }
 }

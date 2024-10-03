@@ -78,7 +78,7 @@ public class WebSecurityConfiguration {
                     .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
                     .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                     .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
-                    .anyExchange().access(new IpAddressAuthorizationManager())
+                    .anyExchange().authenticated()
                 );
     }
 }
