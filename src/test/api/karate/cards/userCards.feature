@@ -332,7 +332,7 @@ Scenario: Create perimeter for initial process
     Then status 201
 
 
-  Scenario: We update the parent card (which id is : api_test.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
+  Scenario: We update the parent card (which id is : api_test.initialCardProcess, with action KEEP_CHILD_CARDS), then we check that child card was not deleted
     #get card with user operator1_fr
     Given url opfabUrl + 'cards-consultation/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -357,8 +357,8 @@ Scenario: Create perimeter for initial process
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"parent card updated with keepChildCards=true"},
-	"keepChildCards" : true
+	"data" : {"message":"parent card updated with action KEEP_CHILD_CARDS"},
+  "actions": ['KEEP_CHILD_CARDS']
 }
 
 """
@@ -386,7 +386,7 @@ Scenario: Create perimeter for initial process
     And assert response.childCards.length == 1
     And match response.childCards[0].id == "process_2.process_o"
 
-  Scenario: We update the parent card (which id is : api_test.initialCardProcess, without parameter keepChildCards), then we check that child card was deleted
+  Scenario: We update the parent card (which id is : api_test.initialCardProcess, without action KEEP_CHILD_CARDS), then we check that child card was deleted
     * def card =
 """
 {
@@ -401,7 +401,7 @@ Scenario: Create perimeter for initial process
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"parent card updated without parameter keepChildCards"}
+	"data" : {"message":"parent card updated without action KEEP_CHILD_CARDS"}
 }
 
 """

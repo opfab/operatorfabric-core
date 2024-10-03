@@ -6,7 +6,6 @@ protocol CardProtocol {
 	import idl "publisherTypeEnum.avdl";
 
 	record Card {
-		union {null, boolean} keepChildCards = null;
 		string publisher;
 		string processVersion;
 		string process;

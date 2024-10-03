@@ -497,19 +497,18 @@ Scenario: Push card and its two child cards, then get the parent card
   Then status 200
   And assert response.childCards.length == 2
 
-Scenario: Push card with null keepChilCards and publisherType
+Scenario: Push card with null publisherType
   * def parentCard2 =
     """
     {
       "publisher": "operator1_fr",
       "processVersion": "1",
       "process": "api_test",
-      "processInstanceId": "processKeepChildCardsNull",
+      "processInstanceId": "processPublisherTypeNull",
       "state": "messageState",
       "groupRecipients": ["Dispatcher"],
       "severity": "INFORMATION",
       "startDate": 1553186770681,
-      "keepChildCards": null,
       "publisherType": null,
       "summary": {"key": "defaultProcess.summary"},
       "title": {"key": "defaultProcess.title2"},
@@ -525,11 +524,10 @@ Scenario: Push card with null keepChilCards and publisherType
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards-consultation/cards/api_test.processKeepChildCardsNull'
+  Given url opfabUrl + 'cards-consultation/cards/api_test.processPublisherTypeNull'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
-  And match response.card.keepChildCards == false
   And match response.card.publisherType == "EXTERNAL"
 
 #delete perimeter created previously

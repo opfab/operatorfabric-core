@@ -28,7 +28,6 @@ public record ArchivedCard(
         @Id String id,
         String parentCardId,
         String initialParentCardUid,
-        Boolean keepChildCards,
         String publisher,
         String processVersion,
         String process,
@@ -70,9 +69,4 @@ public record ArchivedCard(
 
         List<CardActionEnum> actions) {
 
-    public ArchivedCard {
-        if (keepChildCards == null) {
-            keepChildCards = false;
-        }
-    }
 }

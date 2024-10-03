@@ -327,7 +327,7 @@ export class LightCardsStore {
     private lightCardHasChildFromCurrentUserEntity(oldCardVersion, newCard): boolean {
         if (oldCardVersion)
             return (
-                (newCard.keepChildCards || newCard.actions?.includes(CardAction.KEEP_CHILD_CARDS)) &&
+                newCard.actions?.includes(CardAction.KEEP_CHILD_CARDS) &&
                 oldCardVersion.hasChildCardFromCurrentUserEntity
             );
         else {

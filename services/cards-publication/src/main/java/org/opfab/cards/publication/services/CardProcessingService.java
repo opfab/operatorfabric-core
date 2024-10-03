@@ -238,13 +238,11 @@ public class CardProcessingService {
     }
 
     private boolean shouldKeepChildCards(Card card) {
-        if (Boolean.TRUE.equals(card.getKeepChildCards()))
-            log.warn("Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead");
-        return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0);
+        return card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_CHILD_CARDS) >= 0;
     }
 
     private boolean shouldKeepPublishDate(Card card) {
-        return Boolean.TRUE.equals(card.getKeepChildCards()) || (card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_EXISTING_PUBLISH_DATE) >= 0);
+        return card.getActions() != null && card.getActions().indexOf(CardActionEnum.KEEP_EXISTING_PUBLISH_DATE) >= 0;
     }
 
     private boolean shouldKeepAcksAndReads(Card card) {

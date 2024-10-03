@@ -116,7 +116,6 @@ registerFunctionToGetSpecificCardInformation:
 * endDate (epoch date in ms)
 * expirationDate (epoch date in ms)
 * lttd (epoch date in ms)
-* keepChildCards (deprecated, use 'actions' field including "KEEP_CHILD_CARDS" action instead)
 * secondsBeforeTimeSpanForReminder
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
 * data

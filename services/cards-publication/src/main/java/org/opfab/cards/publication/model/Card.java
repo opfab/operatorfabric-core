@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,9 +43,6 @@ public class Card  {
     private String parentCardId;
 
     private String initialParentCardUid;
-
-    @Builder.Default
-    private Boolean keepChildCards = false;
 
     private String publisher;
     
@@ -178,7 +173,6 @@ public class Card  {
         result.id = this.id;
         result.parentCardId = this.parentCardId;
         result.initialParentCardUid = this.initialParentCardUid;
-        result.keepChildCards = this.keepChildCards;
 
         result.publisher = ObjectUtils.getNotNullOrDefault(other.getPublisher(), this.getPublisher());
 
@@ -260,15 +254,6 @@ public class Card  {
         result.actions = ObjectUtils.getNotNullOrDefault(other.getActions(), this.getActions());
 
         return result;
-    }
-
-
-    public Boolean getKeepChildCards() {
-        return keepChildCards;
-    }
-
-    public void setKeepChildCards(Boolean keepChildCards) {
-        this.keepChildCards = (keepChildCards != null) && keepChildCards;
     }
 
     public void setLastUpdate(Instant lastUpdate){
