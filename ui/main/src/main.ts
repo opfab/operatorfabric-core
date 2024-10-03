@@ -12,8 +12,6 @@ import {enableProdMode, importProvidersFrom} from '@angular/core';
 import {environment} from './environments/environment';
 
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {SwRegistrationOptions, ServiceWorkerModule} from '@angular/service-worker';
-import {Utilities} from './app/business/common/utilities';
 import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {TokenInjector} from 'app/server/interceptors.service';
@@ -84,13 +82,8 @@ bootstrapApplication(AppComponent, {
             NgbModule,
             TranslateModule.forRoot(),
             NgbModalModule,
-            AppRoutingModule,
-            ServiceWorkerModule.register('ngsw-worker.js')
+            AppRoutingModule
         ),
-        {
-            provide: SwRegistrationOptions,
-            useFactory: () => ({enabled: shallPWAFeatureBeActivated()})
-        },
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {
             provide: HTTP_INTERCEPTORS,
@@ -122,10 +115,3 @@ bootstrapApplication(AppComponent, {
         provideAnimations()
     ]
 }).catch((err) => logger.error(JSON.stringify(err)));
-
-function shallPWAFeatureBeActivated(): boolean {
-    const activateSW = Utilities.isNavigatorChromiumBased() && location.href.includes('PWAFeature=true');
-    /* eslint-disable-next-line no-console */
-    console.log(new Date().toISOString(), 'PWA feature enable : ', activateSW);
-    return activateSW;
-}
