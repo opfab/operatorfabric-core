@@ -46,7 +46,6 @@ export class OpfabAPIService {
             isUserAllowedToRespond: false,
             isUserMemberOfAnEntityRequiredToRespond: false,
             entitiesAllowedToRespond: [],
-            entityUsedForUserResponse: null,
             entitiesUsableForUserResponse: [],
             displayContext: '',
             isResponseLocked: false,
@@ -245,12 +244,6 @@ export class OpfabAPIService {
 
         opfab.currentCard.getEntitiesAllowedToRespond = function () {
             return self.currentCard.entitiesAllowedToRespond;
-        };
-        opfab.currentCard.getEntityUsedForUserResponse = function () {
-            logger.warn(
-                ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
-            );
-            return self.currentCard.entityUsedForUserResponse;
         };
         opfab.currentCard.getEntitiesUsableForUserResponse = function () {
             return self.currentCard.entitiesUsableForUserResponse;

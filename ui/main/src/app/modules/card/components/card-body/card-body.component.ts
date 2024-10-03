@@ -96,7 +96,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
     public userEntityIdsPossibleForResponse = [];
-    private userEntityIdToUseForResponse = '';
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -246,8 +245,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             (entityId) => this.user.entities.includes(entityId)
         );
         logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
-        if (this.userEntityIdsPossibleForResponse.length === 1)
-            this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
     private computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) {
@@ -337,7 +334,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
         OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        OpfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
         OpfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
     }
 

@@ -117,3 +117,9 @@ In order to simplify the code and the administration of opfab, we have deleted t
 `VIEW_ALL_ARCHIVED_CARDS` and `VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS`. So, administrators of opfab have to
 update manually the permissions of the users via the UI, replacing VIEW_ALL_ARCHIVED_CARDS by
 VIEW_ALL_CARDS and VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS by VIEW_ALL_CARDS_FOR_USER_PERIMETERS.
+
+== Deletion of the deprecated API method `opfab.currentCard.getEntityUsedForUserResponse()`
+
+As mentioned in the migration guide to opfab 4.1, the API method `opfab.currentCard.getEntityUsedForUserResponse()`
+has been replaced by `opfab.currentCard.getEntitiesUsableForUserResponse()`. Now, this deprecated API method has been
+deleted, so you need to upgrade your code and use the method `opfab.currentCard.getEntitiesUsableForUserResponse()`.
