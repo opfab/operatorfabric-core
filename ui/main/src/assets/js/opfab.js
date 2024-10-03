@@ -102,7 +102,6 @@ opfab.currentCard = {
     isUserAllowedToRespond: function () {},
     isUserMemberOfAnEntityRequiredToRespond: function () {},
     getEntitiesAllowedToRespond: function () {},
-    getEntityUsedForUserResponse: function () {},
     getDisplayContext: function () {},
     isResponseLocked: function () {},
     getChildCards: function () {},
