@@ -23,8 +23,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
 
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticated;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -68,13 +68,13 @@ public class WebSecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(HttpMethod.GET, PROCESS_PATH).permitAll()  
                         .requestMatchers(HttpMethod.POST, GLOBAL_PATH)
-                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .access(hasAnyRole(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
                         .requestMatchers(HttpMethod.PUT, GLOBAL_PATH)
-                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .access(hasAnyRole(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
                         .requestMatchers(HttpMethod.DELETE, GLOBAL_PATH)
-                        .access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                        .access(hasAnyRole(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
                         .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
-                        .anyRequest().access(authenticatedAndIpAllowed()));
+                        .anyRequest().access(authenticated()));
 
     }
 

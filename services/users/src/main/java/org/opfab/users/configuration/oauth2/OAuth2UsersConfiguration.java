@@ -124,7 +124,7 @@ public class OAuth2UsersConfiguration {
                 if (givenName == null && familyName == null)
                     familyName = name;
 
-                return new User(principalId, givenName, familyName, null, null, null, null);
+                return new User(principalId, givenName, familyName, null, null, null);
             }
 
             /**

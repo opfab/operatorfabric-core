@@ -284,7 +284,3 @@ As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleB
 
 
 include::certificates.adoc[leveloffset=+1]
-
-== IP address control
-
-For each user it is possible to configure a list of authorized source ip addresses by setting the `authorizedIPAddresses` field in User object.

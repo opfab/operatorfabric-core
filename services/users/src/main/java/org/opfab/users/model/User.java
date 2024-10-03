@@ -30,7 +30,6 @@ public class User {
 
     @JsonIgnore
     private Set<String> groupSet;
-    private Set<String> authorizedIPAddresses;
 
     public User() {
     }
@@ -38,14 +37,13 @@ public class User {
     
 
     public User(@NotNull String login, String firstName, String lastName, String comment, Set<String> entities,
-            Set<String> groupSet, Set<String> authorizedIPAddresses) {
+            Set<String> groupSet) {
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
         this.comment = comment;
         this.entities = entities;
         this.groupSet = groupSet;
-        this.authorizedIPAddresses = authorizedIPAddresses;
     }
 
 
@@ -129,29 +127,6 @@ public class User {
         entities.remove(name);
     }
 
-    public void addAuthorizedIPAddress(String address) {
-        if (null == authorizedIPAddresses) {
-            this.authorizedIPAddresses = new HashSet<>();
-        }
-        authorizedIPAddresses.add(address);
-    }
-
-    public List<String> getAuthorizedIPAddresses() {
-        if (authorizedIPAddresses == null)
-            return Collections.emptyList();
-        return new ArrayList<>(authorizedIPAddresses);
-    }
-
-    public void setAuthorizedIPAddresses(List<String> authorizedIPAddresses) {
-        this.authorizedIPAddresses = new HashSet<>(authorizedIPAddresses);
-    }
-
-    public void deleteAuthorizedIPAddress(String address) {
-        authorizedIPAddresses.remove(address);
-
-    }
-
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -162,7 +137,6 @@ public class User {
         result = prime * result + ((comment == null) ? 0 : comment.hashCode());
         result = prime * result + ((entities == null) ? 0 : entities.hashCode());
         result = prime * result + ((groupSet == null) ? 0 : groupSet.hashCode());
-        result = prime * result + ((authorizedIPAddresses == null) ? 0 : authorizedIPAddresses.hashCode());
         return result;
     }
 
@@ -205,11 +179,6 @@ public class User {
             if (other.groupSet != null)
                 return false;
         } else if (!groupSet.equals(other.groupSet))
-            return false;
-        if (authorizedIPAddresses == null) {
-            if (other.authorizedIPAddresses != null)
-                return false;
-        } else if (!authorizedIPAddresses.equals(other.authorizedIPAddresses))
             return false;
         return true;
     }

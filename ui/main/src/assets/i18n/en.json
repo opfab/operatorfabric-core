@@ -520,7 +520,6 @@
                 "comment": "COMMENT",
                 "groups": "GROUPS",
                 "entities": "ENTITIES",
-                "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES FOR USER CONNECTION (separated by ',')",
                 "confirmDelete": "Do you really want to delete user",
                 "add": "ADD NEW USER"
             },
@@ -557,9 +556,6 @@
                 "minLength": "Login should be minimum 2 characters.",
                 "pattern": "Login should not contain any whitespace character.",
                 "alreadyExisting": "Login already existing."
-            },
-            "authorizedIPAddresses": {
-                "pattern": "IP addresses need to follow the format XXX.XXX.XXX.XXX,XXX.XXX..."
             },
             "firstName": {
                 "required": "First name is required."

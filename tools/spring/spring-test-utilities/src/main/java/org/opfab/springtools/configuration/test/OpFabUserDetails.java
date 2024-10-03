@@ -32,14 +32,13 @@ import static org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtili
  */
 public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserDetails {
 
-    public OpFabUserDetails(String login, String firstName, String lastName, List<String> groups, List<String> entities, List<String> authorizedIPAddresses){
+    public OpFabUserDetails(String login, String firstName, String lastName, List<String> groups, List<String> entities){
         User user = new User();
         user.setLogin(login);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setGroups(groups);
         user.setEntities(entities);
-        user.setAuthorizedIPAddresses(authorizedIPAddresses);
         this.setUserData(user);
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");

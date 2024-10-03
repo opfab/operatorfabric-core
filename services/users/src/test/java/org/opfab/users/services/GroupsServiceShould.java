@@ -60,13 +60,13 @@ class GroupsServiceShould {
         groupRepositoryStub.save(groupAdmin);
         Set<String> groupForUser1 = new HashSet<>();
         groupForUser1.add("group1");
-        userRepositoryStub.insert(new User("user1", "test", null, null,null, groupForUser1, null));
+        userRepositoryStub.insert(new User("user1", "test", null, null,null, groupForUser1));
         Set<String> groupForUser2 = new HashSet<>();
         groupForUser2.add("group1");
-        userRepositoryStub.insert(new User("user2", "test", null, null,null, groupForUser2, null));
+        userRepositoryStub.insert(new User("user2", "test", null, null,null, groupForUser2));
         Set<String> groupForAdmin = new HashSet<>();
         groupForAdmin.add("ADMIN");
-        userRepositoryStub.insert(new User("admin", "admin", null, null,null, groupForAdmin, null));
+        userRepositoryStub.insert(new User("admin", "admin", null, null,null, groupForAdmin));
 
         groupsService = new GroupsService(groupRepositoryStub, userRepositoryStub,
                 perimeterRepositoryStub, notificationService);

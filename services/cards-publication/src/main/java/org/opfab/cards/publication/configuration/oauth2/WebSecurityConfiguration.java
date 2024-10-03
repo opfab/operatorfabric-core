@@ -22,10 +22,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticated;
 
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsernameAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsername;
 
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
@@ -69,12 +69,12 @@ public class WebSecurityConfiguration {
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
-                        .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                        .requestMatchers("/cards/rateLimiter").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                        .requestMatchers("/**").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/userCard/**").access(authenticated())
+                        .requestMatchers("/cards/translateCardField").access(authenticated())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsername("opfab"))
+                        .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers("/cards/rateLimiter").access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers("/**").access(authenticated())
                     );
         } else {
             http
@@ -83,10 +83,10 @@ public class WebSecurityConfiguration {
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                     .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
-                        .requestMatchers("/cards/rateLimiter").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                        .requestMatchers("/cards/userCard/**").access(authenticated())
+                        .requestMatchers("/cards/translateCardField").access(authenticated())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsername("opfab"))
+                        .requestMatchers("/cards/rateLimiter").access(hasAnyRole(ADMIN_ROLE))
                         .requestMatchers("/**").permitAll()
                     );
         }

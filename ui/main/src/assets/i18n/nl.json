@@ -520,7 +520,6 @@
                 "comment": "OPMERKING",
                 "groups": "GROEPEN",
                 "entities": "ENTITEITEN",
-                "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
                 "confirmDelete": "Wilt u de gebruiker echt verwijderen",
                 "add": "NIEUWE GEBRUIKER TOEVOEGEN"
             },
@@ -557,9 +556,6 @@
                 "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
                 "pattern": "Gebruikersnaam mag geen spaties bevatten.",
                 "alreadyExisting": "Gebruikersnaam bestaat al."
-            },
-            "authorizedIPAddresses": {
-                "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX,XXX.XXX... volgen"
             },
             "firstName": {
                 "required": "Voornaam is vereist."

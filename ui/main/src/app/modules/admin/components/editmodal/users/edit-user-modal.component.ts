@@ -38,7 +38,6 @@ export class EditUserModalComponent implements OnInit {
         comment: FormControl<string | null>;
         groups: FormControl<[] | null>;
         entities: FormControl<[] | null>;
-        authorizedIPAddresses: FormControl<any>;
     }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -80,10 +79,7 @@ export class EditUserModalComponent implements OnInit {
             lastName: new FormControl('', []),
             comment: new FormControl('', []),
             groups: new FormControl([]),
-            entities: new FormControl([]),
-            authorizedIPAddresses: new FormControl('', [
-                Validators.pattern(/^(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3},?)+$/)
-            ])
+            entities: new FormControl([])
         });
 
         if (this.row) {
@@ -92,10 +88,6 @@ export class EditUserModalComponent implements OnInit {
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
             const {login, firstName, lastName, comment} = this.row;
             this.userForm.patchValue({login, firstName, lastName, comment}, {onlySelf: false});
-
-            if (this.row.authorizedIPAddresses) {
-                this.userForm.patchValue({authorizedIPAddresses: this.row.authorizedIPAddresses.join(',')});
-            }
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
             UserService.getUser(login).subscribe((user) => {
@@ -121,12 +113,6 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        const isAuthorizedIPAdressesAString = this.userForm.value['authorizedIPAddresses'];
-        const ipList =
-            isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0
-                ? this.authorizedIPAddresses.value.split(',')
-                : [];
-        this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
         UserService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
@@ -194,10 +180,6 @@ export class EditUserModalComponent implements OnInit {
 
     get entities() {
         return this.userForm.get('entities');
-    }
-
-    get authorizedIPAddresses() {
-        return this.userForm.get('authorizedIPAddresses');
     }
 
     dismissModal(reason: string): void {

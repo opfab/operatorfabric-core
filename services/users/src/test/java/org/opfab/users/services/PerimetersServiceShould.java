@@ -103,10 +103,10 @@ public class PerimetersServiceShould {
         userRepositoryStub.deleteAll();
         Set<String> groupForUser1 = new HashSet<>();
         groupForUser1.add("group1");
-        userRepositoryStub.insert(new User("user1", "test", null, null, null, groupForUser1, null));
+        userRepositoryStub.insert(new User("user1", "test", null, null, null, groupForUser1));
         Set<String> groupForUser2 = new HashSet<>();
         groupForUser2.add("group1");
-        userRepositoryStub.insert(new User("user2", "test", null, null, null, groupForUser2, null));
+        userRepositoryStub.insert(new User("user2", "test", null, null, null, groupForUser2));
 
     }
  
