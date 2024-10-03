@@ -34,7 +34,6 @@ export class Card {
     readonly entitiesAllowedToEdit?: string[];
     readonly parentCardId?: string;
     readonly initialParentCardUid?: string;
-    readonly keepChildCards?: boolean;
     readonly publisherType?: string;
     readonly representative?: string;
     readonly representativeType?: string;

@@ -123,3 +123,7 @@ VIEW_ALL_CARDS and VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS by VIEW_ALL_CARDS
 As mentioned in the migration guide to opfab 4.1, the API method `opfab.currentCard.getEntityUsedForUserResponse()`
 has been replaced by `opfab.currentCard.getEntitiesUsableForUserResponse()`. Now, this deprecated API method has been
 deleted, so you need to upgrade your code and use the method `opfab.currentCard.getEntitiesUsableForUserResponse()`.
+
+== Removed deprecated keepChildCards field
+
+The deprecated card field `keepChildCards` has been removed. Use the `actions` field (string array) including "KEEP_CHILD_CARDS" action instead.

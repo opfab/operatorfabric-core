@@ -33,10 +33,7 @@ export class KeepChildCardsForm {
                 InputFieldName.KeepChildCards,
                 this.keepChildCardsVisible && editionMode === EditionMode.EDITION
             );
-            const cardKeepChildCards = this.processDeprecatedBoolean(
-                card?.keepChildCards,
-                card?.actions?.includes(CardAction.KEEP_CHILD_CARDS)
-            );
+            const cardKeepChildCards = card?.actions?.includes(CardAction.KEEP_CHILD_CARDS);
             this.keepChildCards = cardKeepChildCards ?? OpfabAPIService.currentUserCard.initialKeepChildCards ?? true;
             this.userCardUIControl.setKeepChildCards(this.keepChildCards);
         } else {
@@ -54,16 +51,5 @@ export class KeepChildCardsForm {
 
     public userSelectsKeepChildCards(keepChildCards: boolean) {
         this.keepChildCards = keepChildCards;
-    }
-
-    // This method is necessary because card.keepChildCards is deprecated.
-    // Once this attribute is removed, just checking the card.actions will be enough.
-    private processDeprecatedBoolean(a: boolean, b: boolean): boolean {
-        if (a === undefined) {
-            return b;
-        } else if (b === undefined) {
-            return a;
-        }
-        return a || b;
     }
 }

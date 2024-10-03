@@ -545,18 +545,6 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_with_KeepChidCards_null_WHEN_sending_card_THEN_card_is_saved_with_KeepChildCard_set_to_false() {
-                Card card = TestHelpers.generateOneCard();
-                card.setParentCardId(null);
-                card.setInitialParentCardUid(null);
-                card.setKeepChildCards(null);
-                cardProcessingService.processCard(card);
-                Card cardSaved = cardRepositoryMock.findCardById(card.getId(), false);
-                Assertions.assertThat(cardSaved.getKeepChildCards()).isNotNull();
-                Assertions.assertThat(cardSaved.getKeepChildCards()).isFalse();
-        }
-
-        @Test
         void GIVEN_a_card_WHEN_card_is_send_with_a_login_different_than_publisher_THEN_card_is_rejected() {
 
                 User anotherUser = new User();

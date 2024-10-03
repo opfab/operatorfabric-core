@@ -13,7 +13,6 @@ protocol ResponseCardProtocol {
 		union {null, array<string>} externalRecipients = null;
 
 		//Below is a copy of the card.avdl file.
-		union {null, boolean} keepChildCards = null;
 		string publisher;
 		string processVersion;
 		string process;

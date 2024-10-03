@@ -675,34 +675,7 @@ describe('UserCard view ', () => {
             const childCards = userCardView.getCardWithChildCardsForPreview().childCards;
             expect(childCards.length).toEqual(0);
         });
-        it('Should contain child cards of existing card to edit if keepChildCard = true (deprecated feature)', async () => {
-            await initUserCardView(
-                {
-                    card: getOneCard({process: 'process2', state: 'state2_2', keepChildCards: true}),
-                    childCards: [getOneCard({process: 'process1', state: 'state1_1'})]
-                },
-                EditionMode.EDITION
-            );
-            setSpecificCardInformation({valid: true, card: {data: 'test'}});
-            await userCardView.prepareCardToSend();
-            const childCards = userCardView.getCardWithChildCardsForPreview().childCards;
-            expect(childCards.length).toEqual(1);
-            expect(childCards[0].process).toEqual('process1');
-            expect(childCards[0].state).toEqual('state1_1');
-        });
-        it('Should not contain child cards of existing card to edit if keepChildCard = false (deprecated feature)', async () => {
-            await initUserCardView(
-                {
-                    card: getOneCard({process: 'process2', state: 'state2_2', keepChildCards: false}),
-                    childCards: [getOneCard({process: 'process1', state: 'state1_1'})]
-                },
-                EditionMode.EDITION
-            );
-            setSpecificCardInformation({valid: true, card: {data: 'test'}});
-            await userCardView.prepareCardToSend();
-            const childCards = userCardView.getCardWithChildCardsForPreview().childCards;
-            expect(childCards.length).toEqual(0);
-        });
+
         it('Should contain child cards of existing card to edit if card action contains KEEP_CHILD_CARD', async () => {
             await initUserCardView(
                 {

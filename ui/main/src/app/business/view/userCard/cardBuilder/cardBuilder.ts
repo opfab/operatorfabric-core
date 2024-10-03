@@ -101,14 +101,16 @@ export class CardBuilder {
                 Severity.INFORMATION;
         }
         let actions = this.specificCardInformation.card.actions ?? undefined;
-        let keepChildCardsChoice = this.specificCardInformation.card.keepChildCards ?? this.keepChildCards ?? undefined;
-        if (this.inputFieldVisibility.get(InputFieldName.KeepChildCards)) {
-            actions = actions ?? [];
-            actions = this.keepChildCards
-                ? [...new Set([...actions, CardAction.KEEP_CHILD_CARDS])]
-                : actions.filter((item) => item !== CardAction.KEEP_CHILD_CARDS);
-            keepChildCardsChoice = this.keepChildCards;
-        }
+        let keepChildCardsChoice = actions?.includes(CardAction.KEEP_CHILD_CARDS) ?? this.keepChildCards ?? undefined;
+
+        if (this.inputFieldVisibility.get(InputFieldName.KeepChildCards)) keepChildCardsChoice = this.keepChildCards;
+
+        actions = actions ?? [];
+
+        actions = keepChildCardsChoice
+            ? [...new Set([...actions, CardAction.KEEP_CHILD_CARDS])]
+            : actions.filter((item) => item !== CardAction.KEEP_CHILD_CARDS);
+
         const titleTranslated = await this.getTitleTranslated(this.specificCardInformation.card.title);
         const {entityRecipients, entityRecipientsForInformation} = this.getRecipients();
         const card: Card = {
@@ -126,7 +128,6 @@ export class CardBuilder {
             hasBeenRead: false,
             hasChildCardFromCurrentUserEntity: false,
             id: 'dummyId', // will be set by the backend
-            keepChildCards: keepChildCardsChoice,
             lttd: this.lttd,
             process: this.processId,
             processInstanceId: this.getProcessInstanceId(),
@@ -148,10 +149,6 @@ export class CardBuilder {
             wktGeometry: this.getWktGeometry(),
             wktProjection: this.getWktProjection()
         };
-        if (this.specificCardInformation.card.keepChildCards !== undefined)
-            logger.warn(
-                "Using deprecated field 'keepChildCards'. Use 'actions' field including 'KEEP_CHILD_CARDS' action instead"
-            );
         if (this.specificCardInformation.recurrence)
             logger.warn(
                 "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans"

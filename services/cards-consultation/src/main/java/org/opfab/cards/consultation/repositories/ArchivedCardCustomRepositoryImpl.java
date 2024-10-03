@@ -151,7 +151,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                             where(PARENT_CARD_ID_FIELD).is(parentCard.process() + "." + parentCard.processInstanceId()),
                             where(PUBLISH_DATE_FIELD).lt(parentCard.deletionDate()),
                             new Criteria().orOperator(
-                                    where(DELETION_DATE_FIELD).isNull(), // when parent has keepChildCard=true
+                                    where(DELETION_DATE_FIELD).isNull(), // when parent has KEEP_CHILD_CARD action
                                     where(DELETION_DATE_FIELD).gte(parentCard.deletionDate()))));
         }
         return template.find(query, ArchivedCard.class);

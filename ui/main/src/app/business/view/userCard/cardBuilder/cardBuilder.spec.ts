@@ -129,22 +129,19 @@ describe('UserCard CardBuilder', () => {
         it('should be selected by user if keepChildCards visible', async () => {
             setSpecificCardInformation({
                 valid: true,
-                card: {keepChildCards: true, actions: [CardAction.KEEP_CHILD_CARDS]}
+                card: {actions: [CardAction.KEEP_CHILD_CARDS]}
             });
             cardBuilder.setFieldVisible(InputFieldName.KeepChildCards, true);
-            cardBuilder.setKeepChildCards(false);
             const card = await cardBuilder.getCard();
-            expect(card.keepChildCards).toBe(false);
             expect(card.actions).toEqual([]);
         });
-        it('should be keepChildCards provided by template if keepChildCards not visible', async () => {
+        it('should be provided by template if keepChildCards not visible', async () => {
             setSpecificCardInformation({
                 valid: true,
-                card: {keepChildCards: true, actions: [CardAction.KEEP_CHILD_CARDS]}
+                card: {actions: [CardAction.KEEP_CHILD_CARDS]}
             });
             cardBuilder.setFieldVisible(InputFieldName.KeepChildCards, false);
             const card = await cardBuilder.getCard();
-            expect(card.keepChildCards).toBe(true);
             expect(card.actions).toEqual([CardAction.KEEP_CHILD_CARDS]);
         });
     });
@@ -244,12 +241,10 @@ describe('UserCard CardBuilder', () => {
         })
     );
     [
-        'actions',
         'data',
         'entitiesAllowedToEdit',
         'externalRecipients',
         'entitiesRequiredToRespond',
-        'keepChildCards',
         'rRule',
         'secondsBeforeTimeSpanForReminder',
         'summary'
@@ -267,6 +262,18 @@ describe('UserCard CardBuilder', () => {
             });
         })
     );
+    describe('actions', () => {
+        it(`Should be set from specific card information`, async () => {
+            setSpecificCardInformation({valid: true, card: {['actions']: [CardAction.KEEP_EXISTING_ACKS_AND_READS]}});
+            const card = await cardBuilder.getCard();
+            expect(card['actions']).toEqual([CardAction.KEEP_EXISTING_ACKS_AND_READS]);
+        });
+        it(`Should be empty if not provided by template`, async () => {
+            setSpecificCardInformation({valid: true, card: {}});
+            const card = await cardBuilder.getCard();
+            expect(card['actions']).toEqual([]);
+        });
+    });
     describe('Recipients', () => {
         it('Should be set from user if field visible', async () => {
             setSpecificCardInformation({valid: true, card: {}});

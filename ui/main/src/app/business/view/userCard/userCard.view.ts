@@ -261,8 +261,7 @@ export class UserCardView {
 
     private getChildCardsForPreview(): Card[] {
         const existingChildCards =
-            this.editionMode === EditionMode.EDITION &&
-            (this.cardToSend?.keepChildCards || this.cardToSend?.actions?.includes(CardAction.KEEP_CHILD_CARDS))
+            this.editionMode === EditionMode.EDITION && this.cardToSend?.actions?.includes(CardAction.KEEP_CHILD_CARDS)
                 ? (this.existingChildCards ?? [])
                 : [];
         return this.addCurrentUserChildCardToSend(existingChildCards);
