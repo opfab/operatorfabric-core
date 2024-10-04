@@ -110,10 +110,10 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         criteria.add(Criteria.where("_id").is(id));
 
         boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
-                PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+                PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_CARDS);
 
         boolean isAdminModeForUserPerimeters = (!hasCurrentUserAdminPermission &&
-                hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS));
+                hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS));
 
         if (!hasCurrentUserAdminPermission)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters, isAdminModeForUserPerimeters));
@@ -435,7 +435,6 @@ public interface UserUtilitiesCommonToCardRepository<T> {
             boolean adminMode = Boolean.TRUE.equals(filter.adminMode());
 
             boolean hasCurrentUserThePermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
                     PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS);
 
             return (hasCurrentUserThePermission && adminMode);

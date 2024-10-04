@@ -163,7 +163,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             boolean adminMode = Boolean.TRUE.equals(filter.adminMode());
 
             boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
-                    PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+                    PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_CARDS);
 
             if (adminMode && !hasCurrentUserAdminPermission)
                 log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group",

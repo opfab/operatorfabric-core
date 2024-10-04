@@ -371,10 +371,7 @@ describe('Process Monitoring view ', () => {
             'should return false if the user has permissions but none of VIEW_ALL_CARDS_FOR_USER_PERIMETERS, ' +
                 'VIEW_ALL_CARDS and ADMIN',
             async () => {
-                await setUserPerimeter(
-                    [],
-                    [PermissionEnum.ADMIN_BUSINESS_PROCESS, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS]
-                );
+                await setUserPerimeter([], [PermissionEnum.ADMIN_BUSINESS_PROCESS]);
                 const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
                 const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
                 expect(mustViewAllCardsFeatureBeDisplayed).toBeFalse();
@@ -386,7 +383,7 @@ describe('Process Monitoring view ', () => {
                 [],
                 [
                     PermissionEnum.ADMIN_BUSINESS_PROCESS,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS,
                     PermissionEnum.ADMIN
                 ]
             );
@@ -400,7 +397,7 @@ describe('Process Monitoring view ', () => {
                 [],
                 [
                     PermissionEnum.ADMIN_BUSINESS_PROCESS,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
+                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS,
                     PermissionEnum.VIEW_ALL_CARDS
                 ]
             );
@@ -412,11 +409,7 @@ describe('Process Monitoring view ', () => {
         it('should return true if the user has permission VIEW_ALL_CARDS_FOR_USER_PERIMETERS', async () => {
             await setUserPerimeter(
                 [],
-                [
-                    PermissionEnum.ADMIN_BUSINESS_PROCESS,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
-                    PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS
-                ]
+                [PermissionEnum.ADMIN_BUSINESS_PROCESS, PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS]
             );
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const mustViewAllCardsFeatureBeDisplayed = processMonitoringView.mustViewAllCardsFeatureBeDisplayed();
@@ -428,7 +421,6 @@ describe('Process Monitoring view ', () => {
                 [],
                 [
                     PermissionEnum.ADMIN_BUSINESS_PROCESS,
-                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS,
                     PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS,
                     PermissionEnum.ADMIN
                 ]

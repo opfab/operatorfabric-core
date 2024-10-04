@@ -73,10 +73,8 @@ The available permissions are:
 
  - `ADMIN`: Administrator permission
  - `ADMIN_BUSINESS_PROCESS`: Permission to administer process bundles (add, update, delete bundles)
- - `VIEW_ALL_ARCHIVED_CARDS`: Permission to access all archived cards
- - `VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS`: Permission to access all archived cards which are in the perimeter of the user
- - `VIEW_ALL_CARDS`: Permission to access all cards
- - `VIEW_ALL_CARDS_FOR_USER_PERIMETERS`: Permission to access all cards which are in the perimeter of the user
+ - `VIEW_ALL_CARDS`: Permission to access all cards and archived cards
+ - `VIEW_ALL_CARDS_FOR_USER_PERIMETERS`: Permission to access all cards and archived cards which are in the perimeter of the user
  - `READONLY`: Readonly permission. User cannot send user cards, cannot respond to a card, when acknowledges a card he does not acknowledge it for his entities.
 
 

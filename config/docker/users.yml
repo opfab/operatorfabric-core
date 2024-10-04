@@ -83,7 +83,7 @@ operatorfabric.users.default:
       name: Manager
       description: Manager Group
       realtime: false
-      permissions: ["VIEW_ALL_ARCHIVED_CARDS","VIEW_ALL_CARDS"]
+      permissions: ["VIEW_ALL_CARDS"]
     - id: Maintainer
       name: Maintainer
       description: Maintainer Group

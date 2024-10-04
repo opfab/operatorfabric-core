@@ -110,3 +110,10 @@ to
         "pageSize": 10
       }
 ----
+
+== Deletion of `VIEW_ALL_ARCHIVED_CARDS` and `VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS` permissions
+
+In order to simplify the code and the administration of opfab, we have deleted the permissions
+`VIEW_ALL_ARCHIVED_CARDS` and `VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS`. So, administrators of opfab have to
+update manually the permissions of the users via the UI, replacing VIEW_ALL_ARCHIVED_CARDS by
+VIEW_ALL_CARDS and VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS by VIEW_ALL_CARDS_FOR_USER_PERIMETERS.

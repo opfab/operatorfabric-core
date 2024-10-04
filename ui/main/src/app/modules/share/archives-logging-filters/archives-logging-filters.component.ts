@@ -142,11 +142,11 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     constructor(private changeDetector: ChangeDetectorRef) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UserService.isCurrentUserAdmin() ||
-            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);
 
         this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters =
             !this.hasCurrentUserRightsToViewAllArchivedCards &&
-            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS]);
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS]);
 
         const seeOnlyCardsForWhichUserIsRecipientInStorage =
             UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') ?? true;

@@ -100,7 +100,7 @@ class CurrentUserWithPerimetersServiceShould {
                 groupRepositoryStub.save(group1);
 
                 Group group2 = new Group(GROUP_2);
-                group2.setPermissions(Lists.list(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS));
+                group2.setPermissions(Lists.list(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_CARDS));
                 groupRepositoryStub.save(group2);
 
                 Group group3 = new Group(GROUP_3);
@@ -108,7 +108,7 @@ class CurrentUserWithPerimetersServiceShould {
 
                 Group group4 = new Group(GROUP_4);
                 group4.setPermissions(Lists.list(PermissionEnum.READONLY,
-                                PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS));
+                                PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS));
                 groupRepositoryStub.save(group4);
 
                 Group groupAdmin = new Group(GROUP_ADMIN);
@@ -265,8 +265,8 @@ class CurrentUserWithPerimetersServiceShould {
                 CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                                 .fetchCurrentUserWithPerimeters(user);
                 assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY,
-                                PermissionEnum.VIEW_ALL_ARCHIVED_CARDS,
-                                PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS);
+                                PermissionEnum.VIEW_ALL_CARDS,
+                                PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS);
         }
 
         @Test
