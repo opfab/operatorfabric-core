@@ -190,7 +190,7 @@ describe('Archives screen tests', function () {
 
 
 
-    it('Check admin mode for operator2_it with VIEW_ALL_ARCHIVED_CARDS role ', function () {
+    it('Check admin mode for operator2_it with VIEW_ALL_CARDS role ', function () {
         opfab.loginWithUser('operator2_fr');
         opfab.navigateToArchives();
 

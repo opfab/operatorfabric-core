@@ -380,7 +380,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name updated');
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
-        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
+        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_CARDS');
 
         // Delete previously created group
         agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');

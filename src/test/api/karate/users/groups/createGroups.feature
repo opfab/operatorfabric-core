@@ -22,7 +22,7 @@ Feature: CreateGroups
   "id" : "groupKarate1",
   "name" : "groupKarate1 name",
   "description" : "I Love Karate",
-  "permissions" : ["READONLY", "VIEW_ALL_ARCHIVED_CARDS"]
+  "permissions" : ["READONLY", "VIEW_ALL_CARDS"]
 }
 """
     * def wrongGroup =
@@ -135,7 +135,7 @@ Feature: CreateGroups
     And match response.name == groupUpdated.name
     And match response.id == groupUpdated.id
     And assert response.permissions.length == 2
-    And match response.permissions contains only [ "READONLY","VIEW_ALL_ARCHIVED_CARDS"]
+    And match response.permissions contains only [ "READONLY","VIEW_ALL_CARDS"]
 
   Scenario: create without admin role
 #Forbidden without admin role, expected response 403
