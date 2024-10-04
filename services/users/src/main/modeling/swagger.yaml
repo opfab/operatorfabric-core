@@ -245,6 +245,10 @@ definitions:
         type: integer
         description: |-
           Interval (in seconds) between sound replays.
+      hallwayMode:
+        type: boolean
+        description: |-
+          If this is set to true, hallway mode for feed screen will be enabled 
       remoteLoggingEnabled:
         type: boolean
         description: |-

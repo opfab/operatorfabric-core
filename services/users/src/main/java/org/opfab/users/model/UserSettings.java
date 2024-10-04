@@ -35,6 +35,7 @@ public class UserSettings {
     private Boolean systemNotificationInformation;
     private Boolean replayEnabled;
     private Integer replayInterval;
+    private Boolean hallwayMode;
     private Boolean remoteLoggingEnabled;
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
@@ -62,6 +63,7 @@ public class UserSettings {
         this.systemNotificationInformation = settings.getSystemNotificationInformation();
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
+        this.hallwayMode = settings.getHallwayMode();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
@@ -189,6 +191,14 @@ public class UserSettings {
         this.replayInterval = replayInterval;
     }
 
+    public Boolean getHallwayMode() {
+        return hallwayMode;
+    }
+
+    public void setHallwayMode(Boolean hallwayMode) {
+        this.hallwayMode = hallwayMode;
+    }
+
     public Boolean getRemoteLoggingEnabled() {
         return remoteLoggingEnabled;
     }
@@ -309,6 +319,8 @@ public class UserSettings {
         result.replayEnabled = ObjectUtils.getNotNullOrDefault(other.getReplayEnabled(), this.getReplayEnabled());
 
         result.replayInterval = ObjectUtils.getNotNullOrDefault(other.getReplayInterval(), this.getReplayInterval());
+        result.hallwayMode = ObjectUtils.getNotNullOrDefault(other.getHallwayMode(),
+                this.getHallwayMode());
         result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault(other.getRemoteLoggingEnabled(),
                 this.getRemoteLoggingEnabled());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault(other.getProcessesStatesNotNotified(),
