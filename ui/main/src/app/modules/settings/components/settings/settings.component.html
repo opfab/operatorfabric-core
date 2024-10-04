@@ -110,6 +110,7 @@
       </of-multi-select>
     </div>
 
+
     <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
       <span id="opfab-setting-input-sendCardsByEmail" class="opfab-settings-sub-item">
         <label class="opfab-checkbox ">
@@ -133,7 +134,6 @@
         </label>
       </div>
     </div>
-
     <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
       <div class="opfab-input">
         <label for="opfab-setting-email" translate>settings.email</label>
@@ -144,6 +144,22 @@
       </div>
     </div>
 
+    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('timezoneForEmails')">
+        <of-multi-select id="opfab-setting-timezoneForEmails" multiSelectId="timezoneForEmails" [parentForm]="settingsForm"
+                         [config]="timezoneForEmailsMultiSelectConfig" [options]=" timezoneForEmailsOptionList"
+                         [selectedOptions]="timezoneForEmailsSelectedOption">
+        </of-multi-select>
+    </div>
+
+    <div class="opfab-settings-item" id="opfab-setting-input-hallway-mode"
+      *ngIf="settingsView.isSettingVisible('hallwayMode')">
+      <label class="opfab-checkbox ">
+        <span class="label-hallway-mode" id="opfab-setting-input-hallway-mode-checkbox" translate> settings.hallwayMode </span>
+        <input type="checkbox" formControlName="hallwayMode">
+        <span class="opfab-checkbox-checkmark"></span>
+      </label>
+    </div>
+
     <div class="opfab-settings-item" id="opfab-setting-input-remoteLoggingEnabled"
       *ngIf="settingsView.isSettingVisible('remoteLoggingEnabled')">
       <label class="opfab-checkbox ">
@@ -151,13 +167,6 @@
         <input type="checkbox" formControlName="remoteLoggingEnabled">
         <span class="opfab-checkbox-checkmark"></span>
       </label>
-    </div>
-
-    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('timezoneForEmails')">
-        <of-multi-select id="opfab-setting-timezoneForEmails" multiSelectId="timezoneForEmails" [parentForm]="settingsForm"
-                         [config]="timezoneForEmailsMultiSelectConfig" [options]=" timezoneForEmailsOptionList"
-                         [selectedOptions]="timezoneForEmailsSelectedOption">
-        </of-multi-select>
     </div>
   </div>
 </form>

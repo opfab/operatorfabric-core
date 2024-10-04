@@ -11,6 +11,7 @@ import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 import {FeedCommands} from '../support/feedCommands'
 import {CardCommands} from '../support/cardCommands'
 import {ScriptCommands} from "../support/scriptCommands";
+import {SettingsCommands} from "../support/settingsCommands";
 
 describe('FeedScreen tests', function () {
 
@@ -18,6 +19,7 @@ describe('FeedScreen tests', function () {
     const feed = new FeedCommands();
     const card = new CardCommands();
     const script = new ScriptCommands();
+    const settings = new SettingsCommands();
 
     function tryToLoadNonExistingCard() {
         cy.visit('#/feed/cards/thisCardDoesNotExist');
@@ -32,7 +34,7 @@ describe('FeedScreen tests', function () {
     beforeEach('Delete all cards', function () {
         script.deleteAllCards();
     });
-
+    
     it('Check card reception and read behaviour', function () {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
@@ -457,6 +459,34 @@ describe('FeedScreen tests', function () {
         // Check acknowledged icon is still present
         cy.get('#opfab-feed-light-card-defaultProcess-process1 .fa-check');
 
+
+    });
+
+    it('Check Hallway mode', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/contingencies.json');
+        feed.checkNumberOfDisplayedCardsIs(2);
+
+        // No card detail is displayed
+        cy.get('of-card').should('not.exist');
+
+        opfab.navigateToSettings();
+        settings.clickHallwayModeAndSave();
+        opfab.navigateToFeed();
+
+        // First card detail is displayed
+        cy.get('of-card').should('exist');
+        cy.get('#opfab-card-title').should('contain','NETWORK CONTINGENCIES');
+
+        script.sendCard('defaultProcess/chart.json');
+        cy.get('#opfab-card-title').should('contain','DATA QUALITY');
+
+        opfab.navigateToSettings();
+        settings.clickHallwayModeAndSave();
+        opfab.navigateToFeed();
+
+        cy.get('of-card').should('not.exist');
 
     });
 

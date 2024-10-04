@@ -14,10 +14,8 @@ import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/business/services/config.service';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
-import {UserService} from 'app/business/services/users/user.service';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {LoggerService} from 'app/business/services/logs/logger.service';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
@@ -39,7 +37,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     totalNumberOfLightsCards = 0;
     maxNbOfCardsToDisplay = 100;
     private ngUnsubscribe$ = new Subject<void>();
-    private hallwayMode = false;
+    private readonly hallwayMode: boolean;
     filtersVisible = false;
     private filteredLightCardStore: FilteredLightCardsStore;
 
@@ -53,15 +51,7 @@ export class FeedComponent implements OnInit, OnDestroy {
         });
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
-        this.configureExperimentalHallwayMode();
-    }
-
-    configureExperimentalHallwayMode() {
-        const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode', null);
-        if (usersInHallwayMode?.includes(UserService.getCurrentUserWithPerimeters().userData.login)) {
-            this.hallwayMode = true;
-            LoggerService.info('User in hallwayMode');
-        }
+        this.hallwayMode = ConfigService.getConfigValue('settings.hallwayMode');
     }
 
     ngOnInit() {
@@ -71,7 +61,7 @@ export class FeedComponent implements OnInit, OnDestroy {
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
-                // Experimental hallway feature
+                // hallway feature
                 if (cards.length && this.hallwayMode) this.router.navigate(['/feed', 'cards', cards[0].id]);
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })

@@ -31,6 +31,11 @@ Some fields of the `web-ui.json` file have changed and renamed:
 * `alerts.messageBusinessAutoClose` has been renamed as `alerts.alarmLevelAutoClose`
 * `alerts.hideBusinessMessages` has been renamed as `alerts.doNotAlertForHiddenCardReceived`
 
+
+== Hallway mode setting
+The `settings.usersInHallwayMode` configuration field has been removed from `web-ui.json`.
+The option to automatically open the most recent card (hallway mode) is now available as a user setting in UI settings view.
+
 == Process monitoring configuration
 The configuration for process monitoring screen has been removed from `web-ui.json` and externalized in a dedicated JSON file. The process monitoring configuration file has to be loaded by sending an HTTP POST request to the `/processmonitoring` API of businessconfig service or using the CLI command `opfab processmonitoring load <file>`.
 The structure of the process monitoring configuration fields has to be modified as follows:

@@ -318,6 +318,7 @@
         "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
         "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
         "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
+        "hallwayMode": "Automatisch de meest recente kaart openen",
         "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Actie",

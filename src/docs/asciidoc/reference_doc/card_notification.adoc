@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -200,3 +200,9 @@ When a card with a reminder set is sent, the log of the "cards-reminder" service
 
 `2020-11-22T21:00:36.011Z Reminder Will remind card conferenceAndITIncidentExample.0cf5537b-f0df-4314-f17f-2797ccd8e4e9 at
                          Sun Nov 22 2020 22:55:00 GMT+0100 (heure normale d’Europe centrale)`
+
+
+== Hallway mode 
+
+Hallway mode allows to automatically displays the details of the most recent card received on Feed page.
+Users can enable hallway mode in their user settings by selecting the `Automatically open the most recent card` checkbox.

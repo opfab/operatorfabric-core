@@ -28,7 +28,8 @@ Feature: patch user settings
   "locale" : "en",
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]},
   "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"],
-  "remoteLoggingEnabled" : false
+  "remoteLoggingEnabled" : false,
+  "hallwayMode": true
 }
 """
 
@@ -96,7 +97,6 @@ Feature: patch user settings
 }
 """
 
-
   Scenario: Patch user settings without authentication
 
     Given url opfabUrl + 'users/users/' + userSettings.login + '/settings'
@@ -126,6 +126,7 @@ Feature: patch user settings
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettings.entitiesDisconnected
     And match response.remoteLoggingEnabled == userSettings.remoteLoggingEnabled
+    And match response.hallwayMode == '#notpresent'
 
 
   Scenario: Patch operator1_fr user settings with operator1_fr authentication
@@ -140,6 +141,7 @@ Feature: patch user settings
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettingsDispatcher.entitiesDisconnected
     And match response.remoteLoggingEnabled == userSettingsDispatcher.remoteLoggingEnabled
+    And match response.hallwayMode == userSettingsDispatcher.hallwayMode
 
 
   Scenario: Create perimeter to test filteringNotificationAllowed

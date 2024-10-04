@@ -318,6 +318,7 @@
         "playSoundOnExternalDevice": "Play sound on external device",
         "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
         "remoteLoggingEnabled": "Remote logging enabled",
+        "hallwayMode": "Automatically open the most recent card",
         "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Action",

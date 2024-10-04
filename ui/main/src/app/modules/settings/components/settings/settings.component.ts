@@ -84,8 +84,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'emailToPlainText',
             'sendDailyEmail',
             'email',
-            'remoteLoggingEnabled',
-            'timezoneForEmails'
+            'timezoneForEmails',
+            'hallwayMode',
+            'remoteLoggingEnabled'
         ];
 
         const formGroupConfig = {};
