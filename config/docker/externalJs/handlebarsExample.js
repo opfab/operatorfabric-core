@@ -8,35 +8,33 @@
  */
 
 {
+    console.log(new Date().toISOString(), 'Custom handlebar helpers function loaded');
 
-   console.log(new Date().toISOString(), 'Custom hndlebar helpers function loaded');  
+    function example_severityColor(severity) {
+        let color;
+        switch (severity) {
+            case 'ALARM':
+                color = '#a71a1a';
+                break;
+            case 'ACTION':
+                color = '#fd9312';
+                break;
+            case 'COMPLIANT':
+                color = '#00bb03';
+                break;
+            case 'INFORMATION':
+                color = '#1074ad';
+                break;
+            default:
+                color = 'white';
+                break;
+        }
+        return color;
+    }
 
-   function example_severityColor(severity) {
-      let color;
-      switch (severity) {
-         case 'ALARM':
-            color ='#a71a1a'
-            break;
-         case 'ACTION':
-               color ='#fd9312'
-               break;
-         case 'COMPLIANT':
-               color ='#00bb03'
-               break;
-         case 'INFORMATION':
-            color ='#1074ad'
-            break;
-         default:
-            color = 'white'
-            break;
-      }
-      return color;
-   };
+    async function getHandlebarsHelpers() {
+        return [example_severityColor];
+    }
 
-   async function getHandlebarsHelpers() {
-      return [example_severityColor];
-   };
-
-   opfab.handlebars.registerCustomHelpers(getHandlebarsHelpers);
-   
+    opfab.handlebars.registerCustomHelpers(getHandlebarsHelpers);
 }

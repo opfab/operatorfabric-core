@@ -208,10 +208,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
 
     datesRangeChange(dateInfo) {
-        RealtimeDomainService.setStartAndEndDomain(
+        RealtimeDomainService.setStartAndEndPeriod(
             dateInfo.view.activeStart.getTime(),
-            dateInfo.view.activeEnd.getTime(),
-            false
+            dateInfo.view.activeEnd.getTime()
         );
     }
 

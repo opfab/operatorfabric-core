@@ -16,7 +16,7 @@ import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek
 import {DateTimeFormatterService} from './date-time-formatter.service';
 
 export class RealtimeDomainService {
-    private static OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
+    private static readonly OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     private static currentDomainId: string;
     private static currentDomain: {startDate: number; endDate: number; overlap: number};
@@ -25,38 +25,38 @@ export class RealtimeDomainService {
     private static followClockTick: boolean = true;
 
     public static init() {
-        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-        this.currentDomainId = UserPreferencesService.getPreference('opfab.timeLine.domain');
-        if (this.currentDomainId) {
-            this.setDefaultStartAndEndDomain();
+        RealtimeDomainService.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+        RealtimeDomainService.currentDomainId = UserPreferencesService.getPreference('opfab.timeLine.domain');
+        if (RealtimeDomainService.currentDomainId) {
+            RealtimeDomainService.setDefaultStartAndEndDomain();
         }
     }
 
     public static getDomainId() {
-        return this.currentDomainId;
+        return RealtimeDomainService.currentDomainId;
     }
 
     public static setDomainId(domainId: string, reset: boolean) {
-        this.currentDomainId = domainId;
-        if (!this.currentDomain || reset) {
-            this.setDefaultStartAndEndDomain();
+        RealtimeDomainService.currentDomainId = domainId;
+        if (!RealtimeDomainService.currentDomain || reset) {
+            RealtimeDomainService.setDefaultStartAndEndDomain();
         } else {
-            this.updateCardFilter();
+            RealtimeDomainService.updateCardFilter();
         }
 
-        UserPreferencesService.setPreference('opfab.timeLine.domain', this.currentDomainId);
+        UserPreferencesService.setPreference('opfab.timeLine.domain', RealtimeDomainService.currentDomainId);
     }
 
     public static getCurrentDomain() {
-        return this.currentDomain;
+        return RealtimeDomainService.currentDomain;
     }
 
     public static setDefaultStartAndEndDomain() {
         let startDomain;
         let endDomain;
-        switch (this.currentDomainId) {
+        switch (RealtimeDomainService.currentDomainId) {
             case 'TR': {
-                startDomain = this.getRealTimeStartDate();
+                startDomain = RealtimeDomainService.getRealTimeStartDate();
                 endDomain = startOfHour(add(new Date(), {hours: 10}));
                 break;
             }
@@ -93,7 +93,7 @@ export class RealtimeDomainService {
                 break;
             }
         }
-        return this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
+        return RealtimeDomainService.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
     }
 
     private static getRealTimeStartDate() {
@@ -109,11 +109,16 @@ export class RealtimeDomainService {
     /**
      * apply new timeline domain
      * feed state dispatch a change on filter, provide the new filter start and end
-     * @param startDomain new start of domain
-     * @param endDomain new end of domain
+     * @param startPeriod new start of domain
+     * @param endPeriod new end of domain
      */
-    public static setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false) {
-        if (this.currentDomainId === 'W') {
+    public static setStartAndEndPeriod(startPeriod: number, endPeriod: number) {
+        RealtimeDomainService.currentDomainId = undefined;
+        RealtimeDomainService.setStartAndEndDomain(startPeriod, endPeriod);
+    }
+
+    private static setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false) {
+        if (RealtimeDomainService.currentDomainId === 'W') {
             /*
              * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
@@ -129,20 +134,24 @@ export class RealtimeDomainService {
         }
 
         if (useOverlap) {
-            this.overlap = this.OVERLAP_DURATION_IN_MS;
-            startDomain = startDomain - this.overlap;
-        } else this.overlap = 0;
+            RealtimeDomainService.overlap = RealtimeDomainService.OVERLAP_DURATION_IN_MS;
+            startDomain = startDomain - RealtimeDomainService.overlap;
+        } else RealtimeDomainService.overlap = 0;
 
-        this.currentDomain = {startDate: startDomain, endDate: endDomain, overlap: this.overlap};
-        this.updateCardFilter();
-        return this.currentDomain;
+        RealtimeDomainService.currentDomain = {
+            startDate: startDomain,
+            endDate: endDomain,
+            overlap: RealtimeDomainService.overlap
+        };
+        RealtimeDomainService.updateCardFilter();
+        return RealtimeDomainService.currentDomain;
     }
 
     public static updateCardFilter() {
-        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-            start: this.currentDomain.startDate,
-            end: this.currentDomain.endDate,
-            domainId: this.currentDomainId
+        RealtimeDomainService.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            start: RealtimeDomainService.currentDomain.startDate,
+            end: RealtimeDomainService.currentDomain.endDate,
+            domainId: RealtimeDomainService.currentDomainId
         });
     }
 
@@ -153,25 +162,25 @@ export class RealtimeDomainService {
      * @param moveForward direction: add or subtract conf object
      */
     public static moveDomain(moveForward: boolean) {
-        this.followClockTick = false;
-        let startDomain = new Date(this.currentDomain.startDate);
-        let endDomain = new Date(this.currentDomain.endDate);
+        RealtimeDomainService.followClockTick = false;
+        let startDomain = new Date(RealtimeDomainService.currentDomain.startDate);
+        let endDomain = new Date(RealtimeDomainService.currentDomain.endDate);
 
         if (moveForward) {
             logger.info('Move domain forward', LogOption.REMOTE);
-            startDomain = this.goForward(addMilliseconds(startDomain, this.overlap));
-            endDomain = this.goForward(endDomain);
+            startDomain = RealtimeDomainService.goForward(addMilliseconds(startDomain, RealtimeDomainService.overlap));
+            endDomain = RealtimeDomainService.goForward(endDomain);
         } else {
             logger.info('Move domain backward', LogOption.REMOTE);
-            startDomain = this.goBackward(addMilliseconds(startDomain, this.overlap));
-            endDomain = this.goBackward(endDomain);
+            startDomain = RealtimeDomainService.goBackward(addMilliseconds(startDomain, RealtimeDomainService.overlap));
+            endDomain = RealtimeDomainService.goBackward(endDomain);
         }
 
-        return this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
+        return RealtimeDomainService.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
     }
 
     private static goForward(dateToMove: Date) {
-        switch (this.currentDomainId) {
+        switch (RealtimeDomainService.currentDomainId) {
             case 'TR':
                 return add(dateToMove, {hours: 2});
             case 'J':
@@ -188,7 +197,7 @@ export class RealtimeDomainService {
     }
 
     private static goBackward(dateToMove: Date) {
-        switch (this.currentDomainId) {
+        switch (RealtimeDomainService.currentDomainId) {
             case 'TR':
                 return sub(dateToMove, {hours: 2});
             case 'J':
@@ -204,17 +213,61 @@ export class RealtimeDomainService {
         }
     }
 
+    public static shiftIfNecessaryDomainUsingOverlap(): void {
+        const currentDate = new Date().valueOf();
+        // shift domain one minute before change of cycle
+        let domainDuration = {};
+        if (currentDate > RealtimeDomainService.currentDomain.endDate - 60 * 1000) {
+            switch (RealtimeDomainService.currentDomainId) {
+                case 'J':
+                    domainDuration = {days: 1};
+                    break;
+                case 'W':
+                    domainDuration = {weeks: 1};
+                    break;
+                case 'M':
+                    domainDuration = {months: 1};
+                    break;
+                case 'Y':
+                    domainDuration = {years: 1};
+                    break;
+            }
+            const startDomain = startOfDay(new Date(currentDate + 60 * 1000));
+
+            let endDomain = startOfDay(new Date(currentDate + 60 * 1000));
+
+            endDomain = add(endDomain, domainDuration);
+            RealtimeDomainService.currentDomain = RealtimeDomainService.setStartAndEndDomain(
+                startDomain.valueOf(),
+                endDomain.valueOf(),
+                true
+            );
+        }
+        switch (RealtimeDomainService.currentDomainId) {
+            case 'TR':
+                if (currentDate > RealtimeDomainService.currentDomain.startDate + 150 * 60 * 1000) {
+                    RealtimeDomainService.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
+                }
+                break;
+            case '7D':
+                if (currentDate > RealtimeDomainService.currentDomain.startDate + 16 * 60 * 60 * 1000) {
+                    RealtimeDomainService.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
+                }
+                break;
+        }
+    }
+
     public static isTimelineLocked(): boolean {
-        return !this.followClockTick;
+        return !RealtimeDomainService.followClockTick;
     }
 
     public static lockTimeline(): void {
         logger.info('Lock timeline', LogOption.REMOTE);
-        this.followClockTick = false;
+        RealtimeDomainService.followClockTick = false;
     }
 
     public static unlockTimeline(): void {
         logger.info('Unlock timeline', LogOption.REMOTE);
-        this.followClockTick = true;
+        RealtimeDomainService.followClockTick = true;
     }
 }
