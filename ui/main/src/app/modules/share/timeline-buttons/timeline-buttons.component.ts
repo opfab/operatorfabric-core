@@ -16,7 +16,6 @@ import {RealtimeDomainService} from 'app/business/services/realtime-domain.servi
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {add, Duration} from 'date-fns';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -43,6 +42,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public domainChange: EventEmitter<any> = new EventEmitter();
 
     private isDestroyed = false;
+    private timeoutId: any;
 
     ngOnInit() {
         this.loadDomainConfiguration();
@@ -99,6 +99,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             if (savedConf) {
                 initialGraphConf = savedConf;
             }
+        } else {
+            this.changeGraphConf(initialGraphConf, true);
         }
 
         if (initialGraphConf) {
@@ -203,66 +205,21 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private shiftTimeLineIfNecessary() {
         if (!RealtimeDomainService.isTimelineLocked()) {
-            const currentDate = new Date().valueOf();
+            RealtimeDomainService.shiftIfNecessaryDomainUsingOverlap();
 
-            switch (this.currentDomainId) {
-                case 'TR':
-                    if (currentDate > 150 * 60 * 1000 + this.currentDomain.startDate) {
-                        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
-                    }
-                    break;
-                case 'J':
-                    this.shiftIfNecessaryDomainUsingOverlap({days: 1});
-                    break;
-                case '7D':
-                    if (currentDate > 16 * 60 * 60 * 1000 + this.currentDomain.startDate) {
-                        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
-                    }
-                    break;
-                case 'W':
-                    this.shiftIfNecessaryDomainUsingOverlap({weeks: 1});
-                    break;
-                case 'M':
-                    this.shiftIfNecessaryDomainUsingOverlap({months: 1});
-                    break;
-                case 'Y':
-                    this.shiftIfNecessaryDomainUsingOverlap({years: 1});
-                    break;
-            }
-        }
-        if (!this.isDestroyed) setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
-    }
-
-    private shiftIfNecessaryDomainUsingOverlap(domainDuration: Duration): void {
-        const currentDate = new Date().valueOf();
-
-        // shift domain one minute before change of cycle
-        if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-            const startDomain = new Date(currentDate + 60 * 1000);
-            startDomain.setHours(0);
-            startDomain.setMinutes(0);
-            startDomain.setSeconds(0);
-            startDomain.setMilliseconds(0);
-
-            let endDomain = new Date(currentDate + 60 * 1000);
-            endDomain.setHours(0);
-            endDomain.setMinutes(0);
-            endDomain.setSeconds(0);
-            endDomain.setMilliseconds(0);
-
-            endDomain = add(endDomain, domainDuration);
-
-            this.currentDomain = RealtimeDomainService.setStartAndEndDomain(
-                startDomain.valueOf(),
-                endDomain.valueOf(),
-                true
-            );
+            this.currentDomain = RealtimeDomainService.getCurrentDomain();
             this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
             this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
+        }
+        if (!this.isDestroyed) {
+            this.timeoutId = setTimeout(() => this.shiftTimeLineIfNecessary(), 10000);
         }
     }
 
     ngOnDestroy() {
         this.isDestroyed = true;
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
     }
 }

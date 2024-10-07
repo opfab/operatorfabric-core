@@ -10,7 +10,6 @@
 import {OpfabCommands} from './opfabCommands';
 
 export class OpfabGeneralCommands extends OpfabCommands {
-   
     constructor() {
         super();
         super.init('OPFAB');
@@ -18,15 +17,15 @@ export class OpfabGeneralCommands extends OpfabCommands {
 
     checkLoadingSpinnerIsDisplayed = function () {
         cy.get('#opfab-loading-spinner').should('exist');
-    }
+    };
 
     checkLoadingSpinnerIsNotDisplayed = function () {
         cy.get('#opfab-loading-spinner').should('not.exist');
-    }
+    };
 
-    hackUrlCurrentlyUsedMechanism = function() {
+    hackUrlCurrentlyUsedMechanism = function () {
         cy.hackUrlCurrentlyUsedMechanism();
-    }
+    };
 
     loginWithoutHackWithUser = function (user) {
         //type login
@@ -42,7 +41,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
 
         //Wait for the app to finish initializing
         cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
-    }
+    };
 
     loginWithUser = function (user) {
         this.hackUrlCurrentlyUsedMechanism();
@@ -50,7 +49,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.visit('');
         //type login
         this.loginWithoutHackWithUser(user);
-    }
+    };
 
     loginWithClock = function (dateToUse) {
         // Do not use the generic login feature as we
@@ -64,69 +63,69 @@ export class OpfabGeneralCommands extends OpfabCommands {
 
         //Wait for the app to finish initializing
         cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
-    }
+    };
 
     logout = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-logout').click();
-    }
+    };
 
     navigateToAdministration = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-admin').click();
-    }
+    };
 
     navigateToFeed = function () {
         cy.get('#opfab-navbar-menu-feed').click();
         cy.get('of-card-list').should('exist');
-    }
+    };
 
     navigateToActivityArea = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
         cy.get('of-activityarea').should('exist');
-    }
+    };
 
     navigateToArchives = function () {
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('of-archives').should('exist');
-    }
+    };
 
     navigateToDashboard = function () {
         cy.get('#opfab-navbar-menu-dashboard').click();
         cy.get('of-dashboard').should('exist');
-    }
+    };
 
     navigateToMonitoringProcessus = function () {
         cy.get('#opfab-navbar-menu-processmonitoring').click();
         cy.get('of-processmonitoring').should('exist');
-    }
+    };
 
     navigateToRealTimeUsers = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
-    }
+    };
 
     navigateToSettings = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-settings').click();
         cy.get('of-settings').should('exist');
-    }
+    };
 
     navigateToUserCard = function () {
         cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
         cy.get('of-usercard').should('exist');
-    }
+    };
 
     navigateToNotificationConfiguration = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click();
-    }
+    };
 
-    openExternalDevices = function ()  {
+    openExternalDevices = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
-    }
+    };
 
     simulateTimeForOpfabCodeToExecute = function () {
         cy.tick(100);
@@ -135,31 +134,31 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.wait(10);
         cy.tick(100);
         cy.wait(10);
-    }
-    
+    };
+
     navigateToUserActionLogs = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-useractionlogs').click();
-    }
+    };
 
     switchToDayMode = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-nightdaymode').click();
-    }
+    };
 
     checkUrlDisplayedIs = function (url) {
         cy.get('iframe').invoke('attr', 'src').should('eq', url);
-    }
+    };
 
-    selectOptionsFromMultiselect= function (multiselectId, option, hasTags = false, searchResultNumber = 0) {
+    selectOptionsFromMultiselect = function (multiselectId, option, hasTags = false, searchResultNumber = 0) {
         cy.get(multiselectId).click();
         cy.get(multiselectId).find('.vscomp-search-input').clear();
         cy.get(multiselectId).find('.vscomp-search-input').type(option);
         cy.get(multiselectId).find('.vscomp-option-text').eq(searchResultNumber).should('contain.text', option);
         cy.get(multiselectId).find('.vscomp-option-text').eq(searchResultNumber).click();
-        if(hasTags) {
+        if (hasTags) {
             cy.get(multiselectId).find('.vscomp-toggle-button').click();
         }
         cy.wait(200);
-    }
+    };
 }

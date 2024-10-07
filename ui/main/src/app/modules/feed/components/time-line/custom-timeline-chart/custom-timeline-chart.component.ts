@@ -102,7 +102,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     /**
-     * loop function for set xRealTimeLine at the actual time
+     * loop function to set xRealTimeLine at the actual time
      * xRealTimeLine is a vertical bar which represent the current time
      * update the domain if check follow clock tick is true
      *  Stop it when destroying component to avoid memory leak
@@ -144,7 +144,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     //
-    // FOLLOWING METHODS ARE  CALLED FROM THE HTML
+    // FOLLOWING METHODS ARE CALLED FROM THE HTML
     //
 
     emptyLabel(): string {
