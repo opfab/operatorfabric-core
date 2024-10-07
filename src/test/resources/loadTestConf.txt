@@ -1,4 +1,14 @@
-perimeters create conferenceAndITIncidentExample.json cypress.json defaultProcess.json externalRecipient.json gridCooperation.json messageOrQuestionExample.json question.json questionReceiveOnly.json supervisor.json taskAdvancedExample.json taskExample.json
+perimeters create perimeters/conferenceAndITIncidentExample.json
+perimeters create perimeters/cypress.json
+perimeters create perimeters/defaultProcess.json
+perimeters create perimeters/externalRecipient.json
+perimeters create perimeters/gridCooperation.json
+perimeters create perimeters/messageOrQuestionExample.json
+perimeters create perimeters/question.json
+perimeters create perimeters/questionReceiveOnly.json
+perimeters create perimeters/supervisor.json
+perimeters create perimeters/taskAdvancedExample.json
+perimeters create perimeters/taskExample.json
 perimeters addtogroup question Dispatcher
 perimeters addtogroup question Planner
 perimeters addtogroup defaultProcess Dispatcher
@@ -24,3 +34,8 @@ perimeters addtogroup cypress Supervisor
 perimeters addtogroup questionReceiveOnly Supervisor
 perimeters addtogroup externalRecipient Dispatcher
 perimeters addtogroup supervisor Dispatcher
+processgroups load processGroups/processGroups.json
+processmonitoring load processMonitoring/processMonitoring.json
+realtimescreen load realTimeScreens/realTimeScreens.json
+businessdata load businessData/message-and-question-list
+businessdata load businessData/services
