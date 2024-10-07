@@ -18,18 +18,8 @@ then
 	url="http://localhost"
 fi
 (
-	source ./getToken.sh $url
-	cd bundles
+	opfab login $url 2002 admin test
 	./deleteAllBundles.sh $url
-	./loadAllBundles.sh
-	cd ../processGroups
-	opfab processgroups load processGroups.json
-	cd ../perimeters
-	./createAllPerimeter.sh
-	cd ../processMonitoring
-	opfab processmonitoring load processMonitoring.json
-	cd ../realTimeScreens
-	opfab realtimescreen load realTimeScreens.json
-	cd ../businessData
-	./loadAllBusinessData.sh
+	opfab bundle load bundles/*
+	opfab commands loadTestConf.txt
 )
