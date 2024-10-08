@@ -21,7 +21,8 @@ const bundleCommand = {
                     message: 'Bundle action',
                     choices: [
                         {title: 'Load', value: 'load'},
-                        {title: 'Delete', value: 'delete'}
+                        {title: 'Delete', value: 'delete'},
+                        {title: 'Delete all', value: 'delete-all'}
                     ]
                 })
             ).value;
@@ -36,6 +37,9 @@ const bundleCommand = {
                 break;
             case 'delete':
                 await this.deleteBundle(args.slice(1));
+                break;
+            case 'delete-all':
+                await this.deleteAllBundles();
                 break;
             default:
                 console.log(`Unknown bundle action : ${action}
@@ -125,13 +129,24 @@ const bundleCommand = {
         );
     },
 
+    async deleteAllBundles() {
+        await utils.sendRequest(
+            `businessconfig/processes`,
+            'DELETE',
+            undefined,
+            `Bundles deleted successfully`,
+            `Failed to delete bundles`,
+            `Failed to delete bundles, not found error`
+        );
+    },
     printHelp() {
         console.log(`usage : opfab bundle <command> <bundleDirectory | processId>
 
  Commands list : 
 
-            load     Load bundle from directory: opfab bundle load <bundleDirectory>... 
-            delete   Delete bundle by process : opfab bundle delete <processId>
+            load        Load bundle from directory: opfab bundle load <bundleDirectory>... 
+            delete      Delete bundle by process : opfab bundle delete <processId>,
+            delete-all  Delete all bundles : opfab bundle delete-all
         `);
     }
 };

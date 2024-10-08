@@ -19,7 +19,7 @@ then
 fi
 (
 	opfab login $url 2002 admin test
-	./deleteAllBundles.sh $url
+	opfab bundle delete-all
 	opfab bundle load bundles/*
 	opfab commands loadTestConf.txt
 )
