@@ -93,7 +93,8 @@ omelette('opfab')
             'set-notified',
             'set-notified-mail',
             'unsetactivityarea'
-        ]
+        ],
+        version: []
     })
     .init();
 

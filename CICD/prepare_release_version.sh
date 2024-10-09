@@ -70,6 +70,8 @@ sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./
 
 echo "Using $newVersion for lfeoperatorfabric/of-opfab-cli"
 sed -i "s/lfeoperatorfabric\/of-opfab-cli:.*/lfeoperatorfabric\/of-opfab-cli:$newVersion/" ./cli/opfabDockerCli.sh;
+sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$newVersion\"/" ./cli/src/package.json
+
 
 echo "Using $newVersion for About menu in web-ui.json files"
 jq --arg a "${newVersion}" '.opfabVersion = $a' ./ui/main/package.json > "tmp" && mv "tmp" ./ui/main/package.json

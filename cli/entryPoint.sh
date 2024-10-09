@@ -19,6 +19,7 @@ echo -e "                                                                       
 echo -e ""
 
 export HOME=/opfab
+opfab version
 if [ -z "$ENV_NAME" ]; then
     # Add opfab-cli to the prompt in red
     export PS1="\033[32mOPFAB-CLI\033[0m \w \$ "
