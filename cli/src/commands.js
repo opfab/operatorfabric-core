@@ -99,6 +99,9 @@ const commands = {
             case 'help':
                 this.printHelp(args.slice(1));
                 break;
+            case 'version':
+                console.log('OperatorFabric CLI version', require('./package.json').version);
+                break;
             default:
                 console.log(`\n Unknown command : ${args[0]}
                 `);
@@ -190,6 +193,7 @@ const commands = {
         service                 Get or set log level for services
         status                  Show login status
         users                   Manage users
+        version                 Show CLI version
     
     `);
         } else {
