@@ -26,6 +26,7 @@ const connectedUsers = require('./connectedUsersCommands.js');
 const users = require('./usersCommands.js');
 const entities = require('./entitiesCommands');
 const groups = require('./groupsCommands');
+const externalDevices = require('./externalDevicesCommands');
 
 const commands = {
     async processCommand(args) {
@@ -95,6 +96,10 @@ const commands = {
             case 'service':
                 this.exitIfNotLoggedIn();
                 await service.processServiceCommand(args.slice(1));
+                break;
+            case 'external-device':
+                this.exitIfNotLoggedIn();
+                await externalDevices.processExternalDevicesCommand(args.slice(1));
                 break;
             case 'help':
                 this.printHelp(args.slice(1));
@@ -181,6 +186,7 @@ const commands = {
         config                  Set, get or list opfab cli configuration values
         connectedusers          Send a message to subscriptions
         entities                Load a list of entities
+        external-device         Manage users external devices
         groups                  Load a list of groups
         help                    Show help on a command using help <command> or all commands using help  
         login                   Log in to opfab
@@ -194,6 +200,7 @@ const commands = {
         status                  Show login status
         users                   Manage users
         version                 Show CLI version
+
     
     `);
         } else {
@@ -242,6 +249,9 @@ const commands = {
                     break;
                 case 'users':
                     users.printHelp();
+                    break;
+                case 'external-device':
+                    externalDevices.printHelp();
                     break;
                 default:
                     console.log(`No help for command ${args[0]}`);
