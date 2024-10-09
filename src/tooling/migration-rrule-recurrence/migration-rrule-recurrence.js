@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,12 +17,18 @@ const oldProcess = process.argv[6];
 const newProcess = process.argv[7];
 const oldState = process.argv[8];
 const newState = process.argv[9];
+const newProcessVersion = process.argv[10];
 
 let cards = [];
+let archivedCards = [];
 const byweekdayValues = ["", "MO", "TU", "WE", "TH", "FR", "SA", "SU"];
 
 fetch('cards').then(() => {
     update('cards', cards)
+});
+
+fetch('archivedCards').then(() => {
+    update('archivedCards', archivedCards)
 });
 
 
@@ -40,7 +46,13 @@ async function fetch(collectionName) {
         case 'cards':
             cards = await db.collection(collectionName).find(
                 {
-                    "timeSpans.recurrence": {$exists: true},
+                    process: oldProcess,
+                    state: oldState,
+                }).toArray();
+            break;
+        case 'archivedCards':
+            archivedCards = await db.collection(collectionName).find(
+                {
                     process: oldProcess,
                     state: oldState,
                 }).toArray();
@@ -52,7 +64,11 @@ async function fetch(collectionName) {
 }
 
 async function update(collectionName, documents) {
-    console.log('documents before update : ', JSON.stringify(documents));
+    if (collectionName == 'cards') {
+        console.log('\n\nnumber of cards to update : ', documents.length);
+    } else {
+        console.log('\n\nnumber of archivedCards to update : ', documents.length);
+    }
 
     // connect to the DB
     const client = await mongoClient.connect(url, {
@@ -63,47 +79,70 @@ async function update(collectionName, documents) {
     const db = client.db('operator-fabric');
 
     for (const card of documents) {
-        const rRule = {
-            freq: "DAILY",
-            interval: 1,
-            wkst: "MO",
-            byhour: [card.timeSpans[0].recurrence.hoursAndMinutes.hours],
-            byminute: [card.timeSpans[0].recurrence.hoursAndMinutes.minutes],
-            byweekday: card.timeSpans[0].recurrence.daysOfWeek?.map(day => {return byweekdayValues[day]}),
-            bymonth: card.timeSpans[0].recurrence.months?.map(month => {return month + 1}),
-            durationInMinutes: card.timeSpans[0].recurrence.durationInMinutes,
-            tzid: card.timeSpans[0].recurrence.timeZone,
-            bysetpos: [],
-            bymonthday: []
-        };
-        delete card.timeSpans;
+        if (collectionName == 'cards') {
+            console.log('card before update :', JSON.stringify(card));
+        } else {
+            console.log('archivedCard before update :', JSON.stringify(card));
+        }
 
-        delete card.data.hours;
-        delete card.data.minutes;
-        delete card.data.daysOfWeek;
-        delete card.data.months;
-        card.data.freq = rRule.freq;
-        card.data.byhour = rRule.byhour;
-        card.data.byminute = rRule.byminute;
-        card.data.byweekday = rRule.byweekday;
-        card.data.bymonth = rRule.bymonth;
-        card.data.bysetpos = rRule.bysetpos;
-        card.data.bymonthday = rRule.bymonthday;
+        let rRule = {};
 
-        const queryForUpdate = {_id: card._id};
-        const newValuesForUpdate = {
-            $set: {
-                process: newProcess,
-                state: newState,
-                data: card.data,
-                rRule: rRule
-            },
-            $unset: {
-                timeSpans: ""
+        if (typeof card.timeSpans !== 'undefined' && card.timeSpans.length > 0) {
+
+             rRule = {
+                freq: "DAILY",
+                interval: 1,
+                wkst: "MO",
+                byhour: [card.timeSpans[0].recurrence?.hoursAndMinutes?.hours],
+                byminute: [card.timeSpans[0].recurrence?.hoursAndMinutes?.minutes],
+                byweekday: card.timeSpans[0].recurrence?.daysOfWeek?.map(day => {
+                    return byweekdayValues[day]
+                }),
+                durationInMinutes: card.timeSpans[0].recurrence?.durationInMinutes,
+                tzid: card.timeSpans[0].recurrence?.timeZone,
+                bysetpos: [],
+                bymonthday: []
+            };
+
+            if (card.timeSpans[0].recurrence?.months) {
+                rRule.bymonth = card.timeSpans[0].recurrence?.months?.map(month => {
+                    return month + 1
+                });
+            } else {
+                rRule.bymonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
             }
-        };
-        // execute update query
-        await db.collection(collectionName).updateOne(queryForUpdate, newValuesForUpdate);
+        }
+
+        const queryForDelete = {_id: card._id};
+        let replacementCard = card;
+
+        if (Object.keys(rRule).length) {
+            delete replacementCard.timeSpans;
+            delete replacementCard.data.hours;
+            delete replacementCard.data.minutes;
+            delete replacementCard.data.daysOfWeek;
+            delete replacementCard.data.months;
+            replacementCard.data.freq = rRule.freq;
+            replacementCard.data.byhour = rRule.byhour;
+            replacementCard.data.byminute = rRule.byminute;
+            replacementCard.data.byweekday = rRule.byweekday;
+            replacementCard.data.bymonth = rRule.bymonth;
+            replacementCard.data.bysetpos = rRule.bysetpos;
+            replacementCard.data.bymonthday = rRule.bymonthday;
+        }
+
+        if (collectionName == 'cards') {
+            replacementCard._id = newProcess + '.' + card.processInstanceId;
+        }
+
+        replacementCard.processStateKey = newProcess + '.' + newState;
+        replacementCard.process = newProcess;
+        replacementCard.state = newState;
+        replacementCard.processVersion = newProcessVersion;
+        replacementCard.rRule = rRule;
+
+        await db.collection(collectionName).deleteOne(queryForDelete);
+        await db.collection(collectionName).insertOne(replacementCard);
     }
     // close connection
     client.close();
