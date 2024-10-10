@@ -285,7 +285,7 @@ describe('Acknowledgment tests', function () {
         .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         cy.get('ngb-popover-window').should('not.exist');
-        cy.get('#opfab-card-acknowledged-footer').trigger('mouseenter');
+        cy.get('#opfab-card-acknowledged-footer').click();
         cy.get('ngb-popover-window').should('exist');
 
         cy.get('#opfab-acknowledged-list').find('span').should("have.length", 0);
@@ -404,7 +404,7 @@ describe('Acknowledgment tests', function () {
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         cy.get('ngb-popover-window').should('not.exist');
-        cy.get('#opfab-card-acknowledged-footer').trigger('mouseenter');
+        cy.get('#opfab-card-acknowledged-footer').click();
         cy.get('ngb-popover-window').should('exist');
         cy.get('#opfab-acknowledged-list').find('span').should("have.length", 4);
         cy.get('#opfab-not-acknowledged-list').find('span').should("have.length", 8);
@@ -461,7 +461,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we reconnect
         activityArea.save();
     });
-/*
+
     it('Check operator1_fr see the entities acknowledgments done by operator4_fr for the previous card', function () {
 
         opfab.loginWithUser('operator1_fr');
@@ -916,5 +916,4 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
-*/
 })
