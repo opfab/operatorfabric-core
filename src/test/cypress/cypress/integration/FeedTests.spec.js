@@ -34,7 +34,7 @@ describe('FeedScreen tests', function () {
     beforeEach('Delete all cards', function () {
         script.deleteAllCards();
     });
-    
+
     it('Check card reception and read behaviour', function () {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
@@ -467,7 +467,8 @@ describe('FeedScreen tests', function () {
         script.sendCard('defaultProcess/message.json');
         script.sendCard('defaultProcess/contingencies.json');
         feed.checkNumberOfDisplayedCardsIs(2);
-
+        feed.sortByReceptionDate();
+        
         // No card detail is displayed
         cy.get('of-card').should('not.exist');
 
@@ -480,7 +481,13 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-card-title').should('contain','NETWORK CONTINGENCIES');
 
         script.sendCard('defaultProcess/chart.json');
+        feed.checkNumberOfDisplayedCardsIs(3);
         cy.get('#opfab-card-title').should('contain','DATA QUALITY');
+
+        //Delete last card
+        script.deleteCard('defaultProcess.process2');
+        feed.checkNumberOfDisplayedCardsIs(2);
+        cy.get('#opfab-card-title').should('contain','NETWORK CONTINGENCIES');
 
         opfab.navigateToSettings();
         settings.clickHallwayModeAndSave();

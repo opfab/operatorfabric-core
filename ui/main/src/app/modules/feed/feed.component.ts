@@ -61,8 +61,12 @@ export class FeedComponent implements OnInit, OnDestroy {
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
+
                 // hallway feature
-                if (cards.length && this.hallwayMode) this.router.navigate(['/feed', 'cards', cards[0].id]);
+                if (this.hallwayMode) {
+                    if (cards.length > 0) this.router.navigate(['/feed', 'cards', cards[0].id]);
+                    else this.router.navigate(['/feed']);
+                }
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
