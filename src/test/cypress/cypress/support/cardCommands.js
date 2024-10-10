@@ -67,7 +67,7 @@ export class CardCommands extends OpfabCommands {
     }
 
     openEntityDropdownInCardHeader() {
-        cy.get('#opfab-card-response-header-right').trigger('mouseenter');
+        cy.get('#opfab-card-response-header-right').click();
     }
 
     clickOnSendResponse = function() {

@@ -461,7 +461,7 @@
         },
         "acknowledged": "Acquittements",
         "acknowledgedHeader": "Acquitté",
-        "notAcknowledgedHeader": "Non-acquitté"
+        "notAcknowledgedHeader": "Non acquitté"
     },
     "admin": {
         "input": {
