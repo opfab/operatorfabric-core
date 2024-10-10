@@ -10,7 +10,7 @@ reviews:
   auto_title_placeholder: '@coderabbitai'
   review_status: true
   poem: false
-  collapse_walkthrough: false
+  collapse_walkthrough: true
   sequence_diagrams: false
   changed_files_summary: false
   labeling_instructions: []
