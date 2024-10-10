@@ -52,7 +52,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     dateTimeFilterChange = new Subject();
 
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
     typeFilterForm: FormGroup<{
         alarm: FormControl<boolean | null>;
         action: FormControl<boolean | null>;
@@ -88,7 +88,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     stateMultiSelect: MultiSelect;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
     constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -166,7 +166,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 placeholderKey: 'shared.filters.selectProcessText',
                 sortOptions: true,
                 nbOfDisplayValues: 4,
-                multiple: false
+                multiple: false,
+                search: true
             },
             selectedOptions: []
         };
@@ -181,7 +182,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 placeholderKey: 'shared.filters.selectStateText',
                 sortOptions: true,
                 nbOfDisplayValues: 4,
-                multiple: false
+                multiple: false,
+                search: true
             },
             selectedOptions: []
         };
@@ -360,7 +362,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initAckFilter() {
         const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
-        this.initAckFilterValues(ackValue ? ackValue : this.defaultAcknowledgmentFilter);
+        this.initAckFilterValues(ackValue ?? this.defaultAcknowledgmentFilter);
 
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             const active = !form.ackControl || !form.notAckControl;
