@@ -23,6 +23,7 @@ import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/card-body.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-card',
@@ -43,11 +44,14 @@ export class CardComponent implements OnInit, OnDestroy {
     cardNotFound = false;
     currentSelectedCardId: string;
     detailClosed: boolean;
+    hallwayMode: boolean;
 
     constructor(
         protected modalService: NgbModal,
         protected router: Router
-    ) {}
+    ) {
+        this.hallwayMode = ConfigService.getConfigValue('settings.hallwayMode');
+    }
 
     ngOnInit() {
         SelectedCardStore.getSelectedCard()
@@ -114,13 +118,16 @@ export class CardComponent implements OnInit, OnDestroy {
         SelectedCardStore.getSelectedCardsDeleted()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
-                setTimeout(() => {
-                    if (!this.detailClosed) {
-                        ModalService.openInformationModal(new I18n('feed.selectedCardDeleted')).then(() => {
-                            this.closeDeletedCard();
-                        });
-                    }
-                }, 500);
+                if (this.hallwayMode) this.closeDeletedCard();
+                else {
+                    setTimeout(() => {
+                        if (!this.detailClosed) {
+                            ModalService.openInformationModal(new I18n('feed.selectedCardDeleted')).then(() => {
+                                this.closeDeletedCard();
+                            });
+                        }
+                    }, 500);
+                }
             });
     }
 
@@ -131,7 +138,7 @@ export class CardComponent implements OnInit, OnDestroy {
             SelectedCardStore.clearSelectedCardId();
         } else {
             SelectedCardStore.clearSelectedCardId();
-            this.router.navigate(['/feed']);
+            if (!this.hallwayMode) this.router.navigate(['/feed']);
         }
     }
 
