@@ -14,6 +14,7 @@ import {LogOption, LoggerService as logger} from 'app/business/services/logs/log
 import {FilterType} from '@ofModel/feed-filter.model';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
 import {DateTimeFormatterService} from './date-time-formatter.service';
+import {ConfigService} from './config.service';
 
 export class RealtimeDomainService {
     private static readonly OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
@@ -26,10 +27,15 @@ export class RealtimeDomainService {
 
     public static init() {
         RealtimeDomainService.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-        RealtimeDomainService.currentDomainId = UserPreferencesService.getPreference('opfab.timeLine.domain');
-        if (RealtimeDomainService.currentDomainId) {
-            RealtimeDomainService.setDefaultStartAndEndDomain();
-        }
+        RealtimeDomainService.currentDomainId =
+            UserPreferencesService.getPreference('opfab.timeLine.domain') ?? RealtimeDomainService.getDefaultDomainId();
+        RealtimeDomainService.setDefaultStartAndEndDomain();
+        RealtimeDomainService.followClockTick = true;
+    }
+
+    public static getDefaultDomainId() {
+        const domains = ConfigService.getConfigValue('feed.timeline.domains', ['TR', 'J', '7D', 'W', 'M', 'Y']);
+        return domains[0];
     }
 
     public static getDomainId() {
