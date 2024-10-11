@@ -89,23 +89,17 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     setInitialDomain(): void {
-        // Set the zoom activated
-        let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
+        let currentDomain: string = RealtimeDomainService.getDomainId();
 
-        const savedDomain = RealtimeDomainService.getDomainId();
-
-        if (savedDomain) {
-            const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
-            if (savedConf) {
-                initialGraphConf = savedConf;
-            }
-        } else {
-            this.changeGraphConf(initialGraphConf, true);
+        if (!currentDomain) {
+            // the domain can be undefined when coming back from calendar
+            // as calendar is not using timeline domains
+            RealtimeDomainService.init();
+            currentDomain = RealtimeDomainService.getDomainId();
         }
 
-        if (initialGraphConf) {
-            this.changeGraphConf(initialGraphConf, false);
-        }
+        const buttonToActivate = this.buttonList.find((b) => b.domainId === currentDomain);
+        this.changeGraphConf(buttonToActivate, false);
     }
 
     /**
