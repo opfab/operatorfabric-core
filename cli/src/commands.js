@@ -27,6 +27,7 @@ const users = require('./usersCommands.js');
 const entities = require('./entitiesCommands');
 const groups = require('./groupsCommands');
 const externalDevices = require('./externalDevicesCommands');
+const reminder = require('./reminderCommands');
 
 const commands = {
     async processCommand(args) {
@@ -92,6 +93,9 @@ const commands = {
                 break;
             case 'perimeters':
                 await perimeters.processPerimetersCommand(args.slice(1));
+                break;
+            case 'reminder':
+                await reminder.processReminderCommand(args.slice(1));
                 break;
             case 'service':
                 this.exitIfNotLoggedIn();
@@ -196,6 +200,7 @@ const commands = {
         processgroups           Load or clear processgroups
         processmonitoring       Load configuration for monitoring processus screen
         realtimescreen          Load real time screen definition file
+        reminder                Manage card reminder service
         service                 Get or set log level for services
         status                  Show login status
         users                   Manage users
@@ -246,6 +251,9 @@ const commands = {
                     break;
                 case 'processmonitoring':
                     processmonitoring.printHelp();
+                    break;
+                case 'reminder':
+                    reminder.printHelp();
                     break;
                 case 'users':
                     users.printHelp();

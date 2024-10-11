@@ -57,6 +57,7 @@ omelette('opfab')
         processgroups: ['load', 'clear'],
         processmonitoring: ['load'],
         realtimescreen: ['load'],
+        reminder: ['status', 'start', 'stop', 'reset'],
         service: {
             'get-log-level': [
                 'users',
