@@ -660,7 +660,7 @@ describe('UserCard view ', () => {
             expect(cardForPreview).toBeUndefined();
         });
     });
-    describe('Get ChildCard for preview ', async () => {
+    describe('Get ChildCard for preview ', () => {
         let childCard;
         it('Should be empty if no child cards in existing card to edit', async () => {
             await initUserCardView(

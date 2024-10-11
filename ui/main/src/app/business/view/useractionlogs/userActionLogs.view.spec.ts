@@ -118,6 +118,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN date is 20/11/2022 WHEN get initial from date THEN initial day is 10 days before 10/11/2022', async () => {
+        jest.useFakeTimers();
         jest.setSystemTime(new Date(2022, 11, 20));
         userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         const pubDate = userActionLogsView.getUserActionLogPage().initialFromDate;

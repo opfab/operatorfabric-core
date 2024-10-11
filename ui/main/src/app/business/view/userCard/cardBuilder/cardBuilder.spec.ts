@@ -104,7 +104,7 @@ describe('UserCard CardBuilder', () => {
             await checkAlertMessage('userCard.error.expirationDateBeforeStartDate');
         });
     });
-    describe('Severity', async () => {
+    describe('Severity', () => {
         it('should be selected by user if severity visible', async () => {
             setSpecificCardInformation({valid: true, card: {severity: 'ACTION'}});
             cardBuilder.setFieldVisible(InputFieldName.Severity, true);
@@ -125,7 +125,7 @@ describe('UserCard CardBuilder', () => {
             expect(card.severity).toBe(Severity.INFORMATION);
         });
     });
-    describe('KeepChildCards', async () => {
+    describe('KeepChildCards', () => {
         it('should be selected by user if keepChildCards visible', async () => {
             setSpecificCardInformation({
                 valid: true,

@@ -71,8 +71,12 @@ describe('Handlebars Services', () => {
             processServerMock.setResponseTemplateForGetTemplate(template);
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
-                    expect(result).withContext(contextMessage).toEqual(expectedResult);
-                    done();
+                    try {
+                        expect(result).toEqual(expectedResult);
+                        done();
+                    } catch (error) {
+                        done.fail(new Error(`${contextMessage}: ${error.message}`));
+                    }
                 }
             );
         }
@@ -340,8 +344,8 @@ describe('Handlebars Services', () => {
                     // taking into account asynchronous mechanism for test tool
                     // it can take more than 10s to have the execution done,
                     // so we set the range starting form now to now plus one minute
-                    expect(result).toBeGreaterThan(now.valueOf());
-                    expect(result).toBeLessThan(now.valueOf() + 60000);
+                    expect(parseInt(result)).toBeGreaterThan(now.valueOf());
+                    expect(parseInt(result)).toBeLessThan(now.valueOf() + 60000);
                     done();
                 }
             );

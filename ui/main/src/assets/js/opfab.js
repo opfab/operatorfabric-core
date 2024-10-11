@@ -8,6 +8,7 @@
  */
 
 const opfab = {};
+global.opfab = opfab; // needed for jest testing
 
 opfab.multiSelect = {
     // these values are to be provided at launch by opfab angular application

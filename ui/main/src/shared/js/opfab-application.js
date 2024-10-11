@@ -21,5 +21,4 @@ const opfabStyle = {
 
 }
 
-
-
+global.opfabStyle = opfabStyle;// needed for jest testing
