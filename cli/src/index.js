@@ -21,11 +21,11 @@ const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 omelette('opfab')
     .tree({
         bundle: {
-            load:[] , 
+            load: [],
             delete: ['#EMPTY_COMPLETION']
         },
         'business-data': {
-            load:[] , 
+            load: [],
             delete: ['#EMPTY_COMPLETION']
         },
         card: {
@@ -37,18 +37,18 @@ omelette('opfab')
         config: {
             set: ['#EMPTY_COMPLETION'],
             get: ['#EMPTY_COMPLETION'],
-            list:['#EMPTY_COMPLETION']
+            list: ['#EMPTY_COMPLETION']
         },
         'connected-user': {
             'send-message': ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
         },
         entity: {
-            load : [], 
+            load: [],
             delete: ['#EMPTY_COMPLETION']
         },
         group: {
-            load : [],
-            delete : ['#EMPTY_COMPLETION'] 
+            load: [],
+            delete: ['#EMPTY_COMPLETION']
         },
         help: {
             bundle: ['#EMPTY_COMPLETION'],
@@ -68,21 +68,21 @@ omelette('opfab')
             'realtime-screen': ['#EMPTY_COMPLETION'],
             service: ['#EMPTY_COMPLETION'],
             status: ['#EMPTY_COMPLETION'],
-            user : ['#EMPTY_COMPLETION']
+            user: ['#EMPTY_COMPLETION']
         },
         login: ['#EMPTY_COMPLETION'],
         logout: ['#EMPTY_COMPLETION'],
         'monitoring-config': {
-            load :[],
-            delete : ['#EMPTY_COMPLETION']
+            load: [],
+            delete: ['#EMPTY_COMPLETION']
         },
         perimeter: {
-            create : [],
+            create: [],
             'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION']
         },
         'process-group': {
-            load : [],
+            load: [],
             clear: ['#EMPTY_COMPLETION']
         },
         'process-monitoring': ['load'],
@@ -116,11 +116,12 @@ omelette('opfab')
             }
         },
         status: ['#EMPTY_COMPLETION'],
+        supervisor: {'add-entity': ['#EMPTY_COMPLETION'], 'delete-entity': ['#EMPTY_COMPLETION']},
         user: {
             'add-to-entity': ['#EMPTY_COMPLETION'],
             'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION'],
-            load : [],
+            load: [],
             'remove-from-entity': ['#EMPTY_COMPLETION'],
             'remove-from-group': ['#EMPTY_COMPLETION'],
             'set-not-notified': ['#EMPTY_COMPLETION'],
@@ -128,7 +129,7 @@ omelette('opfab')
             'set-activity-area': ['#EMPTY_COMPLETION'],
             'set-notified': ['#EMPTY_COMPLETION'],
             'set-notified-mail': ['#EMPTY_COMPLETION'],
-            'unset-activity-area' : ['#EMPTY_COMPLETION']
+            'unset-activity-area': ['#EMPTY_COMPLETION']
         },
         version: ['#EMPTY_COMPLETION']
     })

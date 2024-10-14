@@ -9,6 +9,7 @@
 
 const config = require('./configCommands.js');
 const fs = require('fs').promises;
+const prompts = require('prompts');
 
 const utils = {
     async sendFile(path, fileName, logSuccess = true) {
@@ -119,6 +120,23 @@ const utils = {
             }
         }
         return response;
+    },
+
+    async missingTextPrompt(object, objectId) {
+        if (!objectId) {
+            objectId = (
+                await prompts({
+                    type: 'text',
+                    name: 'value',
+                    message: `${object} `
+                })
+            ).value;
+            if (!objectId) {
+                console.log(`${object} is required`);
+                return;
+            }
+        }
+        return objectId;
     }
 };
 module.exports = utils;
