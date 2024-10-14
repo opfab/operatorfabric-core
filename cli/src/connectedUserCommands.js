@@ -19,7 +19,7 @@ const connectedUserCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'Connected user action',
-                    choices: [{title: 'Send message', value: 'sendmessage'}]
+                    choices: [{title: 'Send message', value: 'send-message'}]
                 })
             ).value;
             if (!action) {
@@ -28,7 +28,7 @@ const connectedUserCommands = {
             }
         }
 
-        if (action === 'sendmessage') {
+        if (action === 'send-message') {
             await this.sendMessage(args[1]);
         } else {
             console.log(`Unknown connected user action : ${action}
@@ -68,7 +68,7 @@ const connectedUserCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab connected-user sendmessage <message>
+        console.log(`Usage: opfab connected-user send-message <message>
 
 Message list :
 

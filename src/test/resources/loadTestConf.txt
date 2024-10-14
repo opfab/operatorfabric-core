@@ -9,33 +9,33 @@ perimeter create perimeters/questionReceiveOnly.json
 perimeter create perimeters/supervisor.json
 perimeter create perimeters/taskAdvancedExample.json
 perimeter create perimeters/taskExample.json
-perimeter addtogroup question Dispatcher
-perimeter addtogroup question Planner
-perimeter addtogroup defaultProcess Dispatcher
-perimeter addtogroup defaultProcess Planner
-perimeter addtogroup conferenceAndITIncidentExample Dispatcher
-perimeter addtogroup conferenceAndITIncidentExample Planner
-perimeter addtogroup conferenceAndITIncidentExample Supervisor
-perimeter addtogroup messageOrQuestionExample Dispatcher
-perimeter addtogroup messageOrQuestionExample Planner
-perimeter addtogroup messageOrQuestionExample Supervisor
-perimeter addtogroup taskExample Dispatcher
-perimeter addtogroup taskExample Planner
-perimeter addtogroup taskExample Supervisor
-perimeter addtogroup taskAdvancedExample Dispatcher
-perimeter addtogroup taskAdvancedExample Planner
-perimeter addtogroup taskAdvancedExample Supervisor
-perimeter addtogroup gridCooperation Dispatcher
-perimeter addtogroup gridCooperation Planner
-perimeter addtogroup gridCooperation Supervisor
-perimeter addtogroup cypress Dispatcher
-perimeter addtogroup cypress Planner
-perimeter addtogroup cypress Supervisor
-perimeter addtogroup questionReceiveOnly Supervisor
-perimeter addtogroup externalRecipient Dispatcher
-perimeter addtogroup supervisor Dispatcher
-processgroup load processGroups/processGroups.json
-processmonitoring load processMonitoring/processMonitoring.json
-realtimescreen load realTimeScreens/realTimeScreens.json
-businessdata load businessData/message-and-question-list
-businessdata load businessData/services
+perimeter add-to-group question Dispatcher
+perimeter add-to-group question Planner
+perimeter add-to-group defaultProcess Dispatcher
+perimeter add-to-group defaultProcess Planner
+perimeter add-to-group conferenceAndITIncidentExample Dispatcher
+perimeter add-to-group conferenceAndITIncidentExample Planner
+perimeter add-to-group conferenceAndITIncidentExample Supervisor
+perimeter add-to-group messageOrQuestionExample Dispatcher
+perimeter add-to-group messageOrQuestionExample Planner
+perimeter add-to-group messageOrQuestionExample Supervisor
+perimeter add-to-group taskExample Dispatcher
+perimeter add-to-group taskExample Planner
+perimeter add-to-group taskExample Supervisor
+perimeter add-to-group taskAdvancedExample Dispatcher
+perimeter add-to-group taskAdvancedExample Planner
+perimeter add-to-group taskAdvancedExample Supervisor
+perimeter add-to-group gridCooperation Dispatcher
+perimeter add-to-group gridCooperation Planner
+perimeter add-to-group gridCooperation Supervisor
+perimeter add-to-group cypress Dispatcher
+perimeter add-to-group cypress Planner
+perimeter add-to-group cypress Supervisor
+perimeter add-to-group questionReceiveOnly Supervisor
+perimeter add-to-group externalRecipient Dispatcher
+perimeter add-to-group supervisor Dispatcher
+process-group load processGroups/processGroups.json
+process-monitoring load processMonitoring/processMonitoring.json
+realtime-screen load realTimeScreens/realTimeScreens.json
+business-data load businessData/message-and-question-list
+business-data load businessData/services

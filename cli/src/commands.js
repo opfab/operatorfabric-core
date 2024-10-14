@@ -36,7 +36,7 @@ const commands = {
                 this.exitIfNotLoggedIn();
                 await bundleCommand.processBundleCommand(args.slice(1));
                 break;
-            case 'businessdata':
+            case 'business-data':
                 this.exitIfNotLoggedIn();
                 await businessData.processBusinessDataCommand(args.slice(1));
                 break;
@@ -68,19 +68,19 @@ const commands = {
             case 'logout':
                 login.logout();
                 break;
-            case 'monitoringconfig':
+            case 'monitoring-config':
                 this.exitIfNotLoggedIn();
                 await monitoringConfig.processMonitoringConfigCommand(args.slice(1));
                 break;
-            case 'processmonitoring':
+            case 'process-monitoring':
                 this.exitIfNotLoggedIn();
                 await processMonitoring.processProcessMonitoringCommand(args.slice(1));
                 break;
-            case 'processgroup':
+            case 'process-group':
                 this.exitIfNotLoggedIn();
                 await processGroups.processProcessGroupCommand(args.slice(1));
                 break;
-            case 'realtimescreen':
+            case 'realtime-screen':
                 this.exitIfNotLoggedIn();
                 await realtimescreen.processRealtimescreenCommand(args.slice(1));
                 break;
@@ -184,7 +184,7 @@ const commands = {
     Command list :
     
         bundle                  Load or delete a bundle
-        businessdata            Load or delete business data
+        business-data           Load or delete business data
         card                    Send a card, delete a card or reset the card limiter for sending cards 
         commands                Executes commands list read from input file
         config                  Set, get or list opfab cli configuration values
@@ -195,11 +195,11 @@ const commands = {
         help                    Show help on a command using help <command> or all commands using help  
         login                   Log in to opfab
         logout                  Log out to opfab
-        monitoringconfig        Load or delete a configuration for monitoring screen
+        monitoring-config       Load or delete a configuration for monitoring screen
         perimeter               Create or delete perimeters
-        processgroup            Load or clear processgroups
-        processmonitoring       Load configuration for monitoring processus screen
-        realtimescreen          Load real time screen definition file
+        process-group           Load or clear processgroups
+        process-monitoring      Load configuration for monitoring processus screen
+        realtime-screen         Load real time screen definition file
         reminder                Manage card reminder service
         service                 Get or set log level for services
         status                  Show login status
@@ -210,7 +210,7 @@ const commands = {
     `);
         } else {
             switch (args[0]) {
-                case 'businessdata':
+                case 'business-data':
                     businessData.printHelp();
                     break;
                 case 'bundle':
@@ -237,19 +237,19 @@ const commands = {
                 case 'login':
                     login.printHelp();
                     break;
-                case 'processgroup':
+                case 'process-group':
                     processGroups.printHelp();
                     break;
-                case 'realtimescreen':
+                case 'realtime-screen':
                     realtimescreen.printHelp();
                     break;
                 case 'service':
                     service.printHelp();
                     break;
-                case 'monitoringconfig':
+                case 'monitoring-config':
                     monitoringConfig.printHelp();
                     break;
-                case 'processmonitoring':
+                case 'process-monitoring':
                     processmonitoring.printHelp();
                     break;
                 case 'reminder':

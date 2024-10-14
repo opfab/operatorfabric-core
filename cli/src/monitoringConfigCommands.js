@@ -92,12 +92,12 @@ const monitoringConfigCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab monitoringconfig <command> [args]
+        console.log(`Usage: opfab monitoring-config <command> [args]
 
 Command list :
 
-    load      load configuration for monitoring screen : opfab monitoringconfig load <fileName>
-    delete    delete configuration for monitoring screen : opfab monitoringconfig delete
+    load      load configuration for monitoring screen : opfab monitoring-config load <fileName>
+    delete    delete configuration for monitoring screen : opfab monitoring-config delete
         
         `);
     }

@@ -24,14 +24,14 @@ omelette('opfab')
             load:[] , 
             delete: ['#EMPTY_COMPLETION']
         },
-        businessdata: {
+        'business-data': {
             load:[] , 
             delete: ['#EMPTY_COMPLETION']
         },
         card: {
             send: [],
             delete: ['#EMPTY_COMPLETION'],
-            resetratelimiter: ['#EMPTY_COMPLETION']
+            'reset-ratelimiter': ['#EMPTY_COMPLETION']
         },
         commands: [],
         config: {
@@ -40,7 +40,7 @@ omelette('opfab')
             list:['#EMPTY_COMPLETION']
         },
         'connected-user': {
-            sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
+            'send-message': ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
         },
         entity: {
             load : [], 
@@ -52,7 +52,7 @@ omelette('opfab')
         },
         help: {
             bundle: ['#EMPTY_COMPLETION'],
-            businessdata: ['#EMPTY_COMPLETION'],
+            'business-data': ['#EMPTY_COMPLETION'],
             card: ['#EMPTY_COMPLETION'],
             config: ['#EMPTY_COMPLETION'],
             commands: ['#EMPTY_COMPLETION'],
@@ -61,32 +61,32 @@ omelette('opfab')
             group: ['#EMPTY_COMPLETION'],
             login: ['#EMPTY_COMPLETION'],
             logout: ['#EMPTY_COMPLETION'],
-            monitoringconfig: ['#EMPTY_COMPLETION'],
+            'monitoring-config': ['#EMPTY_COMPLETION'],
             perimeter: ['#EMPTY_COMPLETION'],
-            processgroup: ['#EMPTY_COMPLETION'],
-            processmonitoring: ['#EMPTY_COMPLETION'],
-            realtimescreen: ['#EMPTY_COMPLETION'],
+            'process-group': ['#EMPTY_COMPLETION'],
+            'process-monitoring': ['#EMPTY_COMPLETION'],
+            'realtime-screen': ['#EMPTY_COMPLETION'],
             service: ['#EMPTY_COMPLETION'],
             status: ['#EMPTY_COMPLETION'],
             user : ['#EMPTY_COMPLETION']
         },
         login: ['#EMPTY_COMPLETION'],
         logout: ['#EMPTY_COMPLETION'],
-        monitoringconfig: {
+        'monitoring-config': {
             load :[],
             delete : ['#EMPTY_COMPLETION']
         },
         perimeter: {
             create : [],
-            addtogroup: ['#EMPTY_COMPLETION'],
+            'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION']
         },
-        processgroup: {
+        'process-group': {
             load : [],
             clear: ['#EMPTY_COMPLETION']
         },
-        processmonitoring: ['load'],
-        realtimescreen: ['load'],
+        'process-monitoring': ['load'],
+        'realtime-screen': ['load'],
         reminder: {
             status: ['#EMPTY_COMPLETION'],
             start: ['#EMPTY_COMPLETION'],
@@ -117,18 +117,18 @@ omelette('opfab')
         },
         status: ['#EMPTY_COMPLETION'],
         user: {
-            addtoentity: ['#EMPTY_COMPLETION'],
-            addtogroup: ['#EMPTY_COMPLETION'],
+            'add-to-entity': ['#EMPTY_COMPLETION'],
+            'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION'],
             load : [],
-            removefromentity: ['#EMPTY_COMPLETION'],
-            removefromgroup: ['#EMPTY_COMPLETION'],
+            'remove-from-entity': ['#EMPTY_COMPLETION'],
+            'remove-from-group': ['#EMPTY_COMPLETION'],
             'set-not-notified': ['#EMPTY_COMPLETION'],
             'set-not-notified-mail': ['#EMPTY_COMPLETION'],
-            setactivityarea: ['#EMPTY_COMPLETION'],
+            'set-activity-area': ['#EMPTY_COMPLETION'],
             'set-notified': ['#EMPTY_COMPLETION'],
             'set-notified-mail': ['#EMPTY_COMPLETION'],
-            unsetactivityarea : ['#EMPTY_COMPLETION']
+            'unset-activity-area' : ['#EMPTY_COMPLETION']
         },
         version: ['#EMPTY_COMPLETION']
     })

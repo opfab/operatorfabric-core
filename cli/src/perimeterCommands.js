@@ -22,7 +22,7 @@ const perimeterCommands = {
                     message: 'Perimeter action',
                     choices: [
                         {title: 'Create', value: 'create'},
-                        {title: 'Add to group', value: 'addtogroup'},
+                        {title: 'Add to group', value: 'add-to-group'},
                         {title: 'Delete', value: 'delete'}
                     ]
                 })
@@ -36,7 +36,7 @@ const perimeterCommands = {
             case 'create':
                 await this.createPerimeters(args.slice(1));
                 break;
-            case 'addtogroup':
+            case 'add-to-group':
                 await this.addPerimeterToGroup(args.slice(1));
                 break;
             case 'delete':
@@ -175,9 +175,9 @@ const perimeterCommands = {
 
 Command list :
 
-    create      create a perimeter : opfab perimeter create <perimeterFileName>...
-    addtogroup  add a perimeter to a group : opfab perimeter addtogroup <perimeterId> <groupId>
-    delete      delete a perimeter by id : opfab perimeter delete <perimeterId>
+    create        create a perimeter : opfab perimeter create <perimeterFileName>...
+    add-to-group  add a perimeter to a group : opfab perimeter add-to-group <perimeterId> <groupId>
+    delete        delete a perimeter by id : opfab perimeter delete <perimeterId>
         
         `);
     }

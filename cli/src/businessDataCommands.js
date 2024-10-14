@@ -18,7 +18,7 @@ const businessDataCommands = {
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'BusinessData command',
+                    message: 'Business Data command',
                     choices: [
                         {title: 'load', value: 'load'},
                         {title: 'delete', value: 'delete'}
@@ -26,7 +26,7 @@ const businessDataCommands = {
                 })
             ).value;
             if (!command) {
-                console.log('BusinessData command is required');
+                console.log('Business Data command is required');
                 return;
             }
         }
@@ -39,7 +39,7 @@ const businessDataCommands = {
                 await this.deleteBusinessData(args[1]);
                 break;
             default:
-                console.log(`Unknown businessdata command : ${command}
+                console.log(`Unknown business data command : ${command}
                 `);
                 await this.printHelp();
                 break;
@@ -52,11 +52,11 @@ const businessDataCommands = {
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'businessData file name '
+                    message: 'business data file name '
                 })
             ).value;
             if (!businessDataFile) {
-                console.log('BusinessData file name is required');
+                console.log('Business Data file name is required');
                 return;
             }
             }
@@ -89,12 +89,12 @@ const businessDataCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab businessdata <command> [args]
+        console.log(`Usage: opfab business-data <command> [args]
 
 Command list :
 
-    delete    delete business data : opfab businessdata delete <businessDataName>
-    load      load business data from a file : opfab businessdata load <businessDataFileName>    
+    delete    delete business data : opfab business-data delete <businessDataName>
+    load      load business data from a file : opfab business-data load <businessDataFileName>    
         
         `);
     }
