@@ -29,11 +29,31 @@
 .opfab-standard-card-detail {
     padding-left: 0;
     padding-right: 0;
-    width:calc(100% - 440px)
+    width:calc(100% - 840px)
 }
 
 .opfab-slim-card-detail {
     padding-left: 0;
     padding-right: 0;
-    width:calc(100% - 780px)
+    width:calc(100% - 1180px)
+}
+
+.opfab-assistant {
+    margin-top:51px;
+    max-width: 400px;
+}
+.opfab-assistant-content {
+    padding: 10px;
+    margin-top:5px;
+    margin-bottom: 60px;
+    font-size: 14pt;
+    background-color: var(--opfab-bgcolor-darker);
+    height: 62vh; // Take full viewport height
+}
+
+
+.opfab-line {
+    border-color: var(--opfab-card-tab-border-color);
+    border-bottom-width: 0.5px;
+    border-bottom-style: solid; // Ensure the border is visible
 }
