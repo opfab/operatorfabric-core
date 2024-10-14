@@ -20,55 +20,90 @@ const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
 // Configuration of autocompletion in the CLI
 omelette('opfab')
     .tree({
-        bundle: ['load', 'delete'],
-        businessdata: ['load', 'delete'],
-        card: ['send', 'delete', 'resetratelimiter'],
+        bundle: {
+            load:[] , 
+            delete: ['#EMPTY_COMPLETION']
+        },
+        businessdata: {
+            load:[] , 
+            delete: ['#EMPTY_COMPLETION']
+        },
+        card: {
+            send: [],
+            delete: ['#EMPTY_COMPLETION'],
+            resetratelimiter: ['#EMPTY_COMPLETION']
+        },
         commands: [],
-        config: ['set', 'get', 'list'],
+        config: {
+            set: ['#EMPTY_COMPLETION'],
+            get: ['#EMPTY_COMPLETION'],
+            list:['#EMPTY_COMPLETION']
+        },
         connectedusers: {
             sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
         },
-        entities: ['load', 'delete'],
-        groups: ['load', 'delete'],
-        help: [
-            'bundle',
-            'businessdata',
-            'card',
-            'config',
-            'commands',
-            'connectedusers',
-            'entities',
-            'groups',
-            'login',
-            'logout',
-            'monitoringconfig',
-            'perimeters',
-            'processgroups',
-            'processmonitoring',
-            'realtimescreen',
-            'service',
-            'status',
-            'users'
-        ],
-        login: [],
-        logout: [],
-        monitoringconfig: ['load', 'delete'],
-        perimeters: ['create', 'addtogroup', 'delete'],
-        processgroups: ['load', 'clear'],
+        entities: {
+            load : [], 
+            delete: ['#EMPTY_COMPLETION']
+        },
+        groups: {
+            load : [],
+            delete : ['#EMPTY_COMPLETION'] 
+        },
+        help: {
+            bundle: ['#EMPTY_COMPLETION'],
+            businessdata: ['#EMPTY_COMPLETION'],
+            card: ['#EMPTY_COMPLETION'],
+            config: ['#EMPTY_COMPLETION'],
+            commands: ['#EMPTY_COMPLETION'],
+            connectedusers: ['#EMPTY_COMPLETION'],
+            entities: ['#EMPTY_COMPLETION'],
+            groups: ['#EMPTY_COMPLETION'],
+            login: ['#EMPTY_COMPLETION'],
+            logout: ['#EMPTY_COMPLETION'],
+            monitoringconfig: ['#EMPTY_COMPLETION'],
+            perimeters: ['#EMPTY_COMPLETION'],
+            processgroups: ['#EMPTY_COMPLETION'],
+            processmonitoring: ['#EMPTY_COMPLETION'],
+            realtimescreen: ['#EMPTY_COMPLETION'],
+            service: ['#EMPTY_COMPLETION'],
+            status: ['#EMPTY_COMPLETION'],
+            users : ['#EMPTY_COMPLETION']
+        },
+        login: ['#EMPTY_COMPLETION'],
+        logout: ['#EMPTY_COMPLETION'],
+        monitoringconfig: {
+            load :[],
+            delete : ['#EMPTY_COMPLETION']
+        },
+        perimeters: {
+            create : [],
+            addtogroup: ['#EMPTY_COMPLETION'],
+            delete: ['#EMPTY_COMPLETION']
+        },
+        processgroups: {
+            load : [],
+            clear: ['#EMPTY_COMPLETION']
+        },
         processmonitoring: ['load'],
         realtimescreen: ['load'],
-        reminder: ['status', 'start', 'stop', 'reset'],
+        reminder: {
+            status: ['#EMPTY_COMPLETION'],
+            start: ['#EMPTY_COMPLETION'],
+            stop: ['#EMPTY_COMPLETION'],
+            reset: ['#EMPTY_COMPLETION']
+        },
         service: {
-            'get-log-level': [
-                'users',
-                'businessconfig',
-                'cards-consultation',
-                'cards-publication',
-                'external-devices',
-                'supervisor',
-                'cards-external-diffusion',
-                'cards-reminder'
-            ],
+            'get-log-level': {
+                users: ['#EMPTY_COMPLETION'],
+                businessconfig: ['#EMPTY_COMPLETION'],
+                'cards-consultation': ['#EMPTY_COMPLETION'],
+                'cards-publication': ['#EMPTY_COMPLETION'],
+                'external-devices': ['#EMPTY_COMPLETION'],
+                supervisor: ['#EMPTY_COMPLETION'],
+                'cards-external-diffusion': ['#EMPTY_COMPLETION'],
+                'cards-reminder': ['#EMPTY_COMPLETION']
+            },
             'set-log-level': {
                 users: levels,
                 businessconfig: levels,
@@ -80,22 +115,22 @@ omelette('opfab')
                 'cards-reminder': levels
             }
         },
-        status: [],
-        users: [
-            'addtoentity',
-            'addtogroup',
-            'delete',
-            'load',
-            'removefromentity',
-            'removefromgroup',
-            'set-not-notified',
-            'set-not-notified-mail',
-            'setactivityarea',
-            'set-notified',
-            'set-notified-mail',
-            'unsetactivityarea'
-        ],
-        version: []
+        status: ['#EMPTY_COMPLETION'],
+        users: {
+            addtoentity: ['#EMPTY_COMPLETION'],
+            addtogroup: ['#EMPTY_COMPLETION'],
+            delete: ['#EMPTY_COMPLETION'],
+            load : [],
+            removefromentity: ['#EMPTY_COMPLETION'],
+            removefromgroup: ['#EMPTY_COMPLETION'],
+            'set-not-notified': ['#EMPTY_COMPLETION'],
+            'set-not-notified-mail': ['#EMPTY_COMPLETION'],
+            setactivityarea: ['#EMPTY_COMPLETION'],
+            'set-notified': ['#EMPTY_COMPLETION'],
+            'set-notified-mail': ['#EMPTY_COMPLETION'],
+            unsetactivityarea : ['#EMPTY_COMPLETION']
+        },
+        version: ['#EMPTY_COMPLETION']
     })
     .init();
 

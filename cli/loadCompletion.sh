@@ -19,6 +19,10 @@ elif type complete &>/dev/null; then
     COMPREPLY=( $(compgen -W '$(opfab --compbash --compgen "$((COMP_CWORD - (nb_colon * 2)))" "$prev" "${COMP_LINE}")' -- "$cur") )
     __ltrim_colon_completions "$cur"
     # Added 
+    if [[ "${COMPREPLY[*]}" == "#EMPTY_COMPLETION" ]]; then
+      COMPREPLY=()
+      return
+    fi
     [[ ${#COMPREPLY[@]} -gt 0 ]] && return  
     _filedir
     # End added
