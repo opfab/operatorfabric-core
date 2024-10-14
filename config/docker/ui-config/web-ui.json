@@ -7,6 +7,7 @@
   "selectActivityAreaOnLogin": false,
   "heartbeatSendingInterval": 30,
   "defaultEntryPage": "feed",
+  "rightPanelComponent": "opfab-assistant",
   "alerts": {
     "alarmLevelAutoClose": false,
     "messageOnBottomOfTheScreen": false,
@@ -152,5 +153,5 @@
   "usercard": {
     "useDescriptionFieldForEntityList": false
   },
-  "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"]
+  "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js","http://localhost:2002/externalJs/assistant.js"]
 }

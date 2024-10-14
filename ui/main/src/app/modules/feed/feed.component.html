@@ -20,12 +20,19 @@
          </div> 
     </div>
 
-    <div id="opfab-parentFeedContent" style="margin-left: 38px;margin-right:20px;display:flex">
-        <div style="padding-left: 0px;padding-right:0px" [class.opfab-standard-filters-screen]="enoughSpaceForCardDetail() && filtersVisible" [class.opfab-standard-screen]="enoughSpaceForCardDetail() && !filtersVisible" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
+    <div id="opfab-parentFeedContent" style="margin-left: 38px;margin-right:20px;display:flex;">
+        <div style="padding-left: 0px;padding-right:0px;" [class.opfab-standard-filters-screen]="enoughSpaceForCardDetail() && filtersVisible" [class.opfab-standard-screen]="enoughSpaceForCardDetail() && !filtersVisible" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
             <of-card-list (showFilters)="showFilters($event)" [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards" [processFilter]="processFilter" [stateFilter]="stateFilter"></of-card-list>
         </div>
         <div [class.opfab-standard-card-detail]="!filtersVisible" [class.opfab-slim-card-detail]="filtersVisible">
             <router-outlet></router-outlet>
+        </div>
+        <div *ngIf="isAssistantVisible"  class="opfab-assistant">
+            <div class="opfab-line"> 
+               
+            </div>
+            <div id="opfab-right-panel-content" class="opfab-assistant-content">
+            </div>
         </div>
     </div>
 </div>

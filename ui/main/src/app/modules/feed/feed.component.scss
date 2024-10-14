@@ -19,21 +19,52 @@
 }
 
 .opfab-standard-screen {
-    width: 440px;
+    min-width: 440px;
 }
 
 .opfab-standard-filters-screen {
-    width: 780px;
+    min-width: 780px;
 }
 
 .opfab-standard-card-detail {
     padding-left: 0;
     padding-right: 0;
-    width:calc(100% - 440px)
+    width:100%
 }
 
 .opfab-slim-card-detail {
     padding-left: 0;
     padding-right: 0;
-    width:calc(100% - 780px)
+    width:100%
+}
+
+.opfab-assistant {
+    margin-right : 2px;
+    margin-left: 15px;
+    margin-top:51px;
+    min-width: 400px;
+    max-width: 500px;
+}
+
+
+@media (width <= 1000px) {
+    .opfab-assistant {
+        display: none;
+    }
+}
+
+
+.opfab-assistant-content {
+    padding: 10px;
+    margin-top:5px;
+    margin-bottom: 10px;
+    font-size: 14pt;
+    background-color: var(--opfab-bgcolor-darker);
+    height: 63vh; // Take full viewport height
+}
+
+.opfab-line {
+    border-color: var(--opfab-card-tab-border-color);
+    border-bottom-width: 0.5px;
+    border-bottom-style: solid; // Ensure the border is visible
 }

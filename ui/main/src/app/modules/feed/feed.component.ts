@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {delay, map, takeUntil} from 'rxjs/operators';
@@ -28,7 +28,7 @@ import {CardListComponent} from './components/card-list/card-list.component';
     standalone: true,
     imports: [TimeLineComponent, NgIf, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
-export class FeedComponent implements OnInit, OnDestroy {
+export class FeedComponent implements OnInit, OnDestroy, AfterViewInit {
     processFilter: string;
     stateFilter: string;
 
@@ -41,10 +41,14 @@ export class FeedComponent implements OnInit, OnDestroy {
     private readonly hallwayMode: boolean;
     filtersVisible = false;
     private filteredLightCardStore: FilteredLightCardsStore;
+    isAssistantVisible = false;
+    rightPanelComponent;
 
     constructor(
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private renderer: Renderer2,
+        private el: ElementRef
     ) {
         this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.processFilter = params.processFilter;
@@ -53,6 +57,18 @@ export class FeedComponent implements OnInit, OnDestroy {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.hallwayMode = ConfigService.getConfigValue('settings.hallwayMode');
+        this.rightPanelComponent = ConfigService.getConfigValue('rightPanelComponent');
+        if (this.rightPanelComponent) {
+            this.isAssistantVisible = true;
+        }
+    }
+
+    private setRightPanelContent() {
+        const rightPanelContent = this.el.nativeElement.querySelector('#opfab-right-panel-content');
+        if (rightPanelContent) {
+            const componentElement = this.renderer.createElement(this.rightPanelComponent);
+            this.renderer.appendChild(rightPanelContent, componentElement);
+        }
     }
 
     ngOnInit() {
@@ -74,6 +90,12 @@ export class FeedComponent implements OnInit, OnDestroy {
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
+    }
+
+    ngAfterViewInit() {
+        if (this.rightPanelComponent) {
+            this.setRightPanelContent();
+        }
     }
 
     public enoughSpaceForTimeLine() {
