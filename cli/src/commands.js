@@ -19,6 +19,7 @@ const processGroups = require('./processGroupCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const log = require('./logCommands.js');
+const supervisor = require('./supervisorCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const processMonitoring = require('./processMonitoringCommands.js');
@@ -100,6 +101,10 @@ const commands = {
             case 'log':
                 this.exitIfNotLoggedIn();
                 await log.processLogCommand(args.slice(1));
+                break;
+            case 'supervisor':
+                this.exitIfNotLoggedIn();
+                await supervisor.processSupervisorCommand(args.slice(1));
                 break;
             case 'external-device':
                 this.exitIfNotLoggedIn();
@@ -203,6 +208,7 @@ const commands = {
         realtime-screen         Load real time screen definition file
         reminder                Manage card reminder service
         status                  Show login status
+        supervisor              Manage supervising entities
         user                    Manage users
         version                 Show CLI version
 
@@ -245,6 +251,9 @@ const commands = {
                     break;
                 case 'log':
                     log.printHelp();
+                    break;
+                case 'supervisor':
+                    supervisor.printHelp();
                     break;
                 case 'monitoring-config':
                     monitoringConfig.printHelp();

@@ -89,26 +89,9 @@ const userCommands = {
         }
     },
 
-    async missingPrompt(object, objectId) {
-        if (!objectId) {
-            objectId = (
-                await prompts({
-                    type: 'text',
-                    name: 'value',
-                    message: `${object} `
-                })
-            ).value;
-            if (!objectId) {
-                console.log(`${object} is required`);
-                return;
-            }
-        }
-        return objectId;
-    },
-
     async addUserTo(object, objectUrl, objectId, user) {
-        objectId = await this.missingPrompt(object, objectId);
-        user = await this.missingPrompt('User', user);
+        objectId = await utils.missingTextPrompt(object, objectId);
+        user = await utils.missingTextPrompt('User', user);
         await utils.sendRequest(
             `users/${objectUrl}/${objectId}/users`,
             'PATCH',
@@ -120,8 +103,8 @@ const userCommands = {
     },
 
     async removeUserFrom(object, objectUrl, objectId, user) {
-        objectId = await this.missingPrompt(object, objectId);
-        user = await this.missingPrompt('User', user);
+        objectId = await utils.missingTextPrompt(object, objectId);
+        user = await utils.missingTextPrompt('User', user);
         await utils.sendRequest(
             `users/${objectUrl}/${objectId}/users/${user}`,
             'DELETE',
@@ -132,7 +115,7 @@ const userCommands = {
     },
 
     async deleteUser(user) {
-        user = await this.missingPrompt('User', user);
+        user = await utils.missingTextPrompt('User', user);
         await utils.sendRequest(
             `users/users/${user}`,
             'DELETE',
@@ -144,7 +127,7 @@ const userCommands = {
     },
 
     async loadUserList(filePath) {
-        filePath = await this.missingPrompt('File path', filePath);
+        filePath = await utils.missingTextPrompt('File path', filePath);
         let userList;
         try {
             userList = JSON.parse(await fs.readFile(filePath, 'utf8'));
@@ -165,8 +148,8 @@ const userCommands = {
     },
 
     async activityAreaSetter(entity, user, setting) {
-        entity = await this.missingPrompt('Activity area', entity);
-        user = await this.missingPrompt('User', user);
+        entity = await utils.missingTextPrompt('Activity area', entity);
+        user = await utils.missingTextPrompt('User', user);
 
         const entitiesDisconnectedResponse = await utils.sendRequest(
             `users/users/${user}/settings`,
