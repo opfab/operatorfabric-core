@@ -130,9 +130,9 @@ The response will be a json object like the following:
 }
 ----
 
-To get the log level for ROOT logger of a java service it is possible to use opfab CLI "service" command:
+To get the log level for ROOT logger of a java service it is possible to use opfab CLI "log" command:
 ----
-opfab service get-log-level <serviceName>
+opfab log get-level <serviceName>
 ----
 
 To configure a given logger, POST a json entity to the '/actuator/logger' URI, as follows:
@@ -143,9 +143,9 @@ curl -i -X POST http://<server>:<port>/actuator/loggers/${logger} -H "Authorizat
 
 To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
 
-To set the log level for ROOT logger of a java service it is possible to use opfab CLI "service" command:
+To set the log level for ROOT logger of a java service it is possible to use opfab CLI "log" command:
 ----
-opfab service set-log-level <serviceName> <level>
+opfab log set-level <serviceName> <level>
 ----
 
 
@@ -176,9 +176,9 @@ The response will be a json object like the following:
 }
 ----
 
-To get the log level for a node service it is possible to use opfab CLI "service" command:
+To get the log level for a node service it is possible to use opfab CLI "log" command:
 ----
-opfab service get-log-level <serviceName>
+opfab log get-level <serviceName>
 ----
 
 
@@ -190,9 +190,9 @@ curl -i -X POST http://<server>:<port>/logLevel -H "Authorization: Bearer ${toke
 
 To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
 
-To set the log level for a node service it is possible to use opfab CLI "service" command:
+To set the log level for a node service it is possible to use opfab CLI "log" command:
 ----
-opfab service set-log-level <serviceName> <level>
+opfab log set-level <serviceName> <level>
 ----
 
 Using the opfab CLI command to get or set log levels for node service, the custom node log levels will be converted to standard levels as follows:

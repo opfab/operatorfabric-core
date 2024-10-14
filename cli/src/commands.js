@@ -18,7 +18,7 @@ const perimeters = require('./perimeterCommands.js');
 const processGroups = require('./processGroupCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
-const service = require('./serviceCommands.js');
+const log = require('./logCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const processMonitoring = require('./processMonitoringCommands.js');
@@ -97,9 +97,9 @@ const commands = {
             case 'reminder':
                 await reminder.processReminderCommand(args.slice(1));
                 break;
-            case 'service':
+            case 'log':
                 this.exitIfNotLoggedIn();
-                await service.processServiceCommand(args.slice(1));
+                await log.processLogCommand(args.slice(1));
                 break;
             case 'external-device':
                 this.exitIfNotLoggedIn();
@@ -192,7 +192,8 @@ const commands = {
         entity                  Load a list of entities
         external-device         Manage users external devices
         group                   Load a list of groups
-        help                    Show help on a command using help <command> or all commands using help  
+        help                    Show help on a command using help <command> or all commands using help
+        log                     Get or set log level for services  
         login                   Log in to opfab
         logout                  Log out to opfab
         monitoringconfig        Load or delete a configuration for monitoring screen
@@ -201,7 +202,6 @@ const commands = {
         processmonitoring       Load configuration for monitoring processus screen
         realtimescreen          Load real time screen definition file
         reminder                Manage card reminder service
-        service                 Get or set log level for services
         status                  Show login status
         user                    Manage users
         version                 Show CLI version
@@ -243,8 +243,8 @@ const commands = {
                 case 'realtimescreen':
                     realtimescreen.printHelp();
                     break;
-                case 'service':
-                    service.printHelp();
+                case 'log':
+                    log.printHelp();
                     break;
                 case 'monitoringconfig':
                     monitoringConfig.printHelp();

@@ -93,8 +93,8 @@ omelette('opfab')
             stop: ['#EMPTY_COMPLETION'],
             reset: ['#EMPTY_COMPLETION']
         },
-        service: {
-            'get-log-level': {
+        log: {
+            'get-level': {
                 users: ['#EMPTY_COMPLETION'],
                 businessconfig: ['#EMPTY_COMPLETION'],
                 'cards-consultation': ['#EMPTY_COMPLETION'],
@@ -104,7 +104,7 @@ omelette('opfab')
                 'cards-external-diffusion': ['#EMPTY_COMPLETION'],
                 'cards-reminder': ['#EMPTY_COMPLETION']
             },
-            'set-log-level': {
+            'set-level': {
                 users: levels,
                 businessconfig: levels,
                 'cards-consultation': levels,

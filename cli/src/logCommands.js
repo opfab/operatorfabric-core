@@ -12,36 +12,36 @@ const utils = require('./utils.js');
 
 const NODE_SERVICES = ['supervisor', 'cards-external-diffusion', 'cards-reminder'];
 
-const serviceCommands = {
-    async processServiceCommand(args) {
+const logCommands = {
+    async processLogCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Service action',
+                    message: 'Log action',
                     choices: [
-                        {title: 'Get-log-level', value: 'get-log-level'},
-                        {title: 'Set-log-level', value: 'set-log-level'}
+                        {title: 'Get-level', value: 'get-level'},
+                        {title: 'Set-level', value: 'set-level'}
                     ]
                 })
             ).value;
             if (!action) {
-                console.log('Service action is required');
+                console.log('Log action is required');
                 return;
             }
         }
 
         switch (action) {
-            case 'get-log-level':
+            case 'get-level':
                 await this.getLogLevel(args.slice(1));
                 break;
-            case 'set-log-level':
+            case 'set-level':
                 await this.setLogLevel(args.slice(1));
                 break;
             default:
-                console.log(`Unknown service action : ${action}
+                console.log(`Unknown log action : ${action}
                 `);
                 await this.printHelp();
                 break;
@@ -188,12 +188,12 @@ const serviceCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab service <command> [args]
+        console.log(`Usage: opfab log <command> [args]
 
 Command list :
 
-    get-log-level      Get log level for a java service : opfab service get-log-level <serviceName>
-    set-log-level      Set log level for a java service : opfab service set-log-level <serviceName> <level>
+    get-level      Get log level for a java service : opfab log get-level <serviceName>
+    set-level      Set log level for a java service : opfab log set-level <serviceName> <level>
     
 Service list :
 
@@ -218,4 +218,4 @@ Level list :
         `);
     }
 };
-module.exports = serviceCommands;
+module.exports = logCommands;

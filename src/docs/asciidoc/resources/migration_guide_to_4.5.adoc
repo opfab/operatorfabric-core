@@ -129,6 +129,13 @@ As mentioned in the migration guide to opfab 4.1, the API method `opfab.currentC
 has been replaced by `opfab.currentCard.getEntitiesUsableForUserResponse()`. Now, this deprecated API method has been
 deleted, so you need to upgrade your code and use the method `opfab.currentCard.getEntitiesUsableForUserResponse()`.
 
-== Removed deprecated keepChildCards field
+== Removed deprecated `keepChildCards` field
 
 The deprecated card field `keepChildCards` has been removed. Use the `actions` field (string array) including "KEEP_CHILD_CARDS" action instead.
+
+== Opfab CLI : renaming log commands
+
+The log commands for opfab CLI have been renamed.
+
+Now, instead of doing `opfab service get-log-level <serviceName>`, you have to do `opfab log get-level  <serviceName>`.
+And instead of doing `opfab service set-log-level <serviceName> <level>`, you have to do `opfab log set-level  <serviceName> <level>`.
