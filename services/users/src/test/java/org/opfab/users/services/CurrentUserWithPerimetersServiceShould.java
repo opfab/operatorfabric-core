@@ -148,7 +148,9 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setSystemNotificationInformation(null);
                 userSettings.setReplayEnabled(true);
                 userSettings.setReplayInterval(10);
+                userSettings.setHallwayMode(false);
                 userSettings.setRemoteLoggingEnabled(false);
+                userSettings.setShowAcknowledgmentFooter(false);
                 userSettings.setSendCardsByEmail(false);
                 userSettings.setEmailToPlainText(false);
                 userSettings.setSendDailyEmail(false);
