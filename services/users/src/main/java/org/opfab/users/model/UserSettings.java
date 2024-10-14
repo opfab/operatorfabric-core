@@ -37,6 +37,7 @@ public class UserSettings {
     private Integer replayInterval;
     private Boolean hallwayMode;
     private Boolean remoteLoggingEnabled;
+    private Boolean showAcknowledgmentFooter;
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
@@ -65,6 +66,7 @@ public class UserSettings {
         this.replayInterval = settings.getReplayInterval();
         this.hallwayMode = settings.getHallwayMode();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
+        this.showAcknowledgmentFooter = settings.getShowAcknowledgmentFooter();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
         this.sendDailyEmail = settings.getSendDailyEmail();
@@ -207,6 +209,14 @@ public class UserSettings {
         this.remoteLoggingEnabled = remoteLoggingEnabled;
     }
 
+    public Boolean getShowAcknowledgmentFooter() {
+        return showAcknowledgmentFooter;
+    }
+
+    public void setShowAcknowledgmentFooter(Boolean showAcknowledgmentFooter) {
+        this.showAcknowledgmentFooter = showAcknowledgmentFooter;
+    }
+
     public Boolean getSendCardsByEmail() {
         return sendCardsByEmail;
     }
@@ -323,6 +333,8 @@ public class UserSettings {
                 this.getHallwayMode());
         result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault(other.getRemoteLoggingEnabled(),
                 this.getRemoteLoggingEnabled());
+        result.showAcknowledgmentFooter = ObjectUtils.getNotNullOrDefault(other.getShowAcknowledgmentFooter(),
+                this.getShowAcknowledgmentFooter());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault(other.getProcessesStatesNotNotified(),
                 this.getProcessesStatesNotNotified(), HashMap::new);
         result.processesStatesNotifiedByEmail = ObjectUtils.getNotNullOrDefault(

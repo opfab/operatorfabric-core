@@ -319,6 +319,7 @@
         "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
         "remoteLoggingEnabled": "Remote logging enabled",
         "hallwayMode": "Automatically open the most recent card",
+        "showAcknowledgmentFooter": "Always show acknowledgements in card details",
         "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Action",
