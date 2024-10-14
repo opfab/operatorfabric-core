@@ -186,7 +186,7 @@ Using the
 ifdef::single-page-doc[<<CLI, Opfab CLI>>]
 ifndef::single-page-doc[<</documentation/current/dev_env/opfab-cli.adoc#CLI, Opfab CLI>>] 
 it is possible to configure process/state notification for all users at once.
-Execute `opfab users help` command for usage details.
+Execute `opfab user help` command for usage details.
 
 == Groups/Entities
 

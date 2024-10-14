@@ -1,40 +1,40 @@
-perimeters create perimeters/conferenceAndITIncidentExample.json
-perimeters create perimeters/cypress.json
-perimeters create perimeters/defaultProcess.json
-perimeters create perimeters/externalRecipient.json
-perimeters create perimeters/gridCooperation.json
-perimeters create perimeters/messageOrQuestionExample.json
-perimeters create perimeters/question.json
-perimeters create perimeters/questionReceiveOnly.json
-perimeters create perimeters/supervisor.json
-perimeters create perimeters/taskAdvancedExample.json
-perimeters create perimeters/taskExample.json
-perimeters addtogroup question Dispatcher
-perimeters addtogroup question Planner
-perimeters addtogroup defaultProcess Dispatcher
-perimeters addtogroup defaultProcess Planner
-perimeters addtogroup conferenceAndITIncidentExample Dispatcher
-perimeters addtogroup conferenceAndITIncidentExample Planner
-perimeters addtogroup conferenceAndITIncidentExample Supervisor
-perimeters addtogroup messageOrQuestionExample Dispatcher
-perimeters addtogroup messageOrQuestionExample Planner
-perimeters addtogroup messageOrQuestionExample Supervisor
-perimeters addtogroup taskExample Dispatcher
-perimeters addtogroup taskExample Planner
-perimeters addtogroup taskExample Supervisor
-perimeters addtogroup taskAdvancedExample Dispatcher
-perimeters addtogroup taskAdvancedExample Planner
-perimeters addtogroup taskAdvancedExample Supervisor
-perimeters addtogroup gridCooperation Dispatcher
-perimeters addtogroup gridCooperation Planner
-perimeters addtogroup gridCooperation Supervisor
-perimeters addtogroup cypress Dispatcher
-perimeters addtogroup cypress Planner
-perimeters addtogroup cypress Supervisor
-perimeters addtogroup questionReceiveOnly Supervisor
-perimeters addtogroup externalRecipient Dispatcher
-perimeters addtogroup supervisor Dispatcher
-processgroups load processGroups/processGroups.json
+perimeter create perimeters/conferenceAndITIncidentExample.json
+perimeter create perimeters/cypress.json
+perimeter create perimeters/defaultProcess.json
+perimeter create perimeters/externalRecipient.json
+perimeter create perimeters/gridCooperation.json
+perimeter create perimeters/messageOrQuestionExample.json
+perimeter create perimeters/question.json
+perimeter create perimeters/questionReceiveOnly.json
+perimeter create perimeters/supervisor.json
+perimeter create perimeters/taskAdvancedExample.json
+perimeter create perimeters/taskExample.json
+perimeter addtogroup question Dispatcher
+perimeter addtogroup question Planner
+perimeter addtogroup defaultProcess Dispatcher
+perimeter addtogroup defaultProcess Planner
+perimeter addtogroup conferenceAndITIncidentExample Dispatcher
+perimeter addtogroup conferenceAndITIncidentExample Planner
+perimeter addtogroup conferenceAndITIncidentExample Supervisor
+perimeter addtogroup messageOrQuestionExample Dispatcher
+perimeter addtogroup messageOrQuestionExample Planner
+perimeter addtogroup messageOrQuestionExample Supervisor
+perimeter addtogroup taskExample Dispatcher
+perimeter addtogroup taskExample Planner
+perimeter addtogroup taskExample Supervisor
+perimeter addtogroup taskAdvancedExample Dispatcher
+perimeter addtogroup taskAdvancedExample Planner
+perimeter addtogroup taskAdvancedExample Supervisor
+perimeter addtogroup gridCooperation Dispatcher
+perimeter addtogroup gridCooperation Planner
+perimeter addtogroup gridCooperation Supervisor
+perimeter addtogroup cypress Dispatcher
+perimeter addtogroup cypress Planner
+perimeter addtogroup cypress Supervisor
+perimeter addtogroup questionReceiveOnly Supervisor
+perimeter addtogroup externalRecipient Dispatcher
+perimeter addtogroup supervisor Dispatcher
+processgroup load processGroups/processGroups.json
 processmonitoring load processMonitoring/processMonitoring.json
 realtimescreen load realTimeScreens/realTimeScreens.json
 businessdata load businessData/message-and-question-list

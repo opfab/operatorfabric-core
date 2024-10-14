@@ -14,18 +14,18 @@ const prompts = require('prompts');
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
-const perimeters = require('./perimetersCommands.js');
-const processGroups = require('./processGroupsCommands.js');
+const perimeters = require('./perimeterCommands.js');
+const processGroups = require('./processGroupCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const service = require('./serviceCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const processMonitoring = require('./processMonitoringCommands.js');
-const connectedUsers = require('./connectedUsersCommands.js');
-const users = require('./usersCommands.js');
-const entities = require('./entitiesCommands');
-const groups = require('./groupsCommands');
+const connectedUsers = require('./connectedUserCommands.js');
+const users = require('./userCommands.js');
+const entities = require('./entityCommands');
+const groups = require('./groupCommands');
 const externalDevices = require('./externalDevicesCommands');
 const reminder = require('./reminderCommands');
 
@@ -46,21 +46,21 @@ const commands = {
             case 'config':
                 config.processConfigCommand(args.slice(1));
                 break;
-            case 'connectedusers':
+            case 'connected-user':
                 this.exitIfNotLoggedIn();
-                await connectedUsers.processConnectedUsersCommand(args.slice(1));
+                await connectedUsers.processConnectedUserCommand(args.slice(1));
                 break;
-            case 'entities':
+            case 'entity':
                 this.exitIfNotLoggedIn();
-                await entities.processEntitiesCommand(args.slice(1));
+                await entities.processEntityCommand(args.slice(1));
                 break;
-            case 'groups':
+            case 'group':
                 this.exitIfNotLoggedIn();
-                await groups.processGroupsCommand(args.slice(1));
+                await groups.processGroupCommand(args.slice(1));
                 break;
-            case 'users':
+            case 'user':
                 this.exitIfNotLoggedIn();
-                await users.processUsersCommand(args.slice(1));
+                await users.processUserCommand(args.slice(1));
                 break;
             case 'login':
                 await login.processLoginCommand(args.slice(1));
@@ -76,9 +76,9 @@ const commands = {
                 this.exitIfNotLoggedIn();
                 await processMonitoring.processProcessMonitoringCommand(args.slice(1));
                 break;
-            case 'processgroups':
+            case 'processgroup':
                 this.exitIfNotLoggedIn();
-                await processGroups.processProcessGroupsCommand(args.slice(1));
+                await processGroups.processProcessGroupCommand(args.slice(1));
                 break;
             case 'realtimescreen':
                 this.exitIfNotLoggedIn();
@@ -91,8 +91,8 @@ const commands = {
                 this.exitIfNotLoggedIn();
                 await card.processCardCommand(args.slice(1));
                 break;
-            case 'perimeters':
-                await perimeters.processPerimetersCommand(args.slice(1));
+            case 'perimeter':
+                await perimeters.processPerimeterCommand(args.slice(1));
                 break;
             case 'reminder':
                 await reminder.processReminderCommand(args.slice(1));
@@ -188,22 +188,22 @@ const commands = {
         card                    Send a card, delete a card or reset the card limiter for sending cards 
         commands                Executes commands list read from input file
         config                  Set, get or list opfab cli configuration values
-        connectedusers          Send a message to subscriptions
-        entities                Load a list of entities
+        connected-user          Send a message to subscriptions
+        entity                  Load a list of entities
         external-device         Manage users external devices
-        groups                  Load a list of groups
+        group                   Load a list of groups
         help                    Show help on a command using help <command> or all commands using help  
         login                   Log in to opfab
         logout                  Log out to opfab
         monitoringconfig        Load or delete a configuration for monitoring screen
-        perimeters              Create or delete perimeters
-        processgroups           Load or clear processgroups
+        perimeter               Create or delete perimeters
+        processgroup            Load or clear processgroups
         processmonitoring       Load configuration for monitoring processus screen
         realtimescreen          Load real time screen definition file
         reminder                Manage card reminder service
         service                 Get or set log level for services
         status                  Show login status
-        users                   Manage users
+        user                    Manage users
         version                 Show CLI version
 
     
@@ -219,16 +219,16 @@ const commands = {
                 case 'card':
                     card.printHelp();
                     break;
-                case 'connectedusers':
+                case 'connected-user':
                     connectedUsers.printHelp();
                     break;
-                case 'entities':
+                case 'entity':
                     entities.printHelp();
                     break;
-                case 'groups':
+                case 'group':
                     groups.printHelp();
                     break;
-                case 'perimeters':
+                case 'perimeter':
                     perimeters.printHelp();
                     break;
                 case 'config':
@@ -237,7 +237,7 @@ const commands = {
                 case 'login':
                     login.printHelp();
                     break;
-                case 'processgroups':
+                case 'processgroup':
                     processGroups.printHelp();
                     break;
                 case 'realtimescreen':
@@ -255,7 +255,7 @@ const commands = {
                 case 'reminder':
                     reminder.printHelp();
                     break;
-                case 'users':
+                case 'user':
                     users.printHelp();
                     break;
                 case 'external-device':

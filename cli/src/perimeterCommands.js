@@ -11,15 +11,15 @@ const prompts = require('prompts');
 const utils = require('./utils.js');
 const fs = require('fs').promises;
 
-const perimetersCommands = {
-    async processPerimetersCommand(args) {
+const perimeterCommands = {
+    async processPerimeterCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Perimeters action',
+                    message: 'Perimeter action',
                     choices: [
                         {title: 'Create', value: 'create'},
                         {title: 'Add to group', value: 'addtogroup'},
@@ -28,7 +28,7 @@ const perimetersCommands = {
                 })
             ).value;
             if (!action) {
-                console.log('Perimeters action is required');
+                console.log('Perimeter action is required');
                 return;
             }
         }
@@ -43,7 +43,7 @@ const perimetersCommands = {
                 await this.deletePerimeter(args.slice(1));
                 break;
             default:
-                console.log(`Unknown perimeters action : ${action}
+                console.log(`Unknown perimeter action : ${action}
                 `);
                 await this.printHelp();
                 break;
@@ -182,4 +182,4 @@ Command list :
         `);
     }
 };
-module.exports = perimetersCommands;
+module.exports = perimeterCommands;

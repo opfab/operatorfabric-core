@@ -11,15 +11,15 @@ const prompts = require('prompts');
 const utils = require("./utils");
 const fs = require('fs').promises;
 
-const groupsCommands = {
-    async processGroupsCommand(args) {
+const groupCommands = {
+    async processGroupCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'groups action',
+                    message: 'group action',
                     choices: [
                         {title: 'Load a list of groups', value: 'load'},
                         {title: 'Delete a list of groups', value: 'delete'}
@@ -27,7 +27,7 @@ const groupsCommands = {
                 })
             ).value;
             if (!action) {
-                console.log('groups action is required');
+                console.log('group action is required');
                 return;
             }
         }
@@ -39,7 +39,7 @@ const groupsCommands = {
                 await this.deleteGroups(args.slice(1));
                 break;
             default:
-                console.log(`Unknown groups action : ${action}
+                console.log(`Unknown group action : ${action}
                 `);
                 await this.printHelp();
                 break;
@@ -110,14 +110,14 @@ const groupsCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab groups <command> <groupId|groupsFileName>
+        console.log(`Usage: opfab group <command> <groupId|groupsFileName>
 
             Command list :
             
-                load      load a list of groups from json file: opfab groups load <groupsFileName>
-                delete    delete group by id : opfab groups delete <groupId>...
+                load      load a list of groups from json file: opfab group load <groupsFileName>
+                delete    delete group by id : opfab group delete <groupId>...
                     
                     `);
     }
 };
-module.exports = groupsCommands;
+module.exports = groupCommands;

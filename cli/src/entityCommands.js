@@ -11,15 +11,15 @@ const prompts = require('prompts');
 const utils = require("./utils");
 const fs = require('fs').promises;
 
-const entitiesCommands = {
-    async processEntitiesCommand(args) {
+const entityCommands = {
+    async processEntityCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Entities action',
+                    message: 'Entity action',
                     choices: [
                         {title: 'Load a list of entities', value: 'load'},
                         {title: 'Delete a list of entities', value: 'delete'}
@@ -27,7 +27,7 @@ const entitiesCommands = {
                 })
             ).value;
             if (!action) {
-                console.log('Entities action is required');
+                console.log('Entity action is required');
                 return;
             }
         }
@@ -40,7 +40,7 @@ const entitiesCommands = {
                 await this.deleteEntities(args.slice(1));
                 break;
             default:
-                console.log(`Unknown entities action : ${action}
+                console.log(`Unknown entity action : ${action}
                 `);
                 await this.printHelp();
                 break;
@@ -106,14 +106,14 @@ const entitiesCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab entities <command> <entityId...|entitiesFileName>
+        console.log(`Usage: opfab entity <command> <entityId...|entitiesFileName>
 
 Command list :
 
-    load      create entities : opfab entities load <entitiesFileName>
-    delete    delete entities : opfab entities delete <entityId>...
+    load      create entities : opfab entity load <entitiesFileName>
+    delete    delete entities : opfab entity delete <entityId>...
         
         `);
     }
 };
-module.exports = entitiesCommands;
+module.exports = entityCommands;
