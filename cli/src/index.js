@@ -39,14 +39,14 @@ omelette('opfab')
             get: ['#EMPTY_COMPLETION'],
             list:['#EMPTY_COMPLETION']
         },
-        connectedusers: {
+        'connected-user': {
             sendmessage: ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
         },
-        entities: {
+        entity: {
             load : [], 
             delete: ['#EMPTY_COMPLETION']
         },
-        groups: {
+        group: {
             load : [],
             delete : ['#EMPTY_COMPLETION'] 
         },
@@ -56,19 +56,19 @@ omelette('opfab')
             card: ['#EMPTY_COMPLETION'],
             config: ['#EMPTY_COMPLETION'],
             commands: ['#EMPTY_COMPLETION'],
-            connectedusers: ['#EMPTY_COMPLETION'],
-            entities: ['#EMPTY_COMPLETION'],
-            groups: ['#EMPTY_COMPLETION'],
+            'connected-user': ['#EMPTY_COMPLETION'],
+            entity: ['#EMPTY_COMPLETION'],
+            group: ['#EMPTY_COMPLETION'],
             login: ['#EMPTY_COMPLETION'],
             logout: ['#EMPTY_COMPLETION'],
             monitoringconfig: ['#EMPTY_COMPLETION'],
-            perimeters: ['#EMPTY_COMPLETION'],
-            processgroups: ['#EMPTY_COMPLETION'],
+            perimeter: ['#EMPTY_COMPLETION'],
+            processgroup: ['#EMPTY_COMPLETION'],
             processmonitoring: ['#EMPTY_COMPLETION'],
             realtimescreen: ['#EMPTY_COMPLETION'],
             service: ['#EMPTY_COMPLETION'],
             status: ['#EMPTY_COMPLETION'],
-            users : ['#EMPTY_COMPLETION']
+            user : ['#EMPTY_COMPLETION']
         },
         login: ['#EMPTY_COMPLETION'],
         logout: ['#EMPTY_COMPLETION'],
@@ -76,12 +76,12 @@ omelette('opfab')
             load :[],
             delete : ['#EMPTY_COMPLETION']
         },
-        perimeters: {
+        perimeter: {
             create : [],
             addtogroup: ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION']
         },
-        processgroups: {
+        processgroup: {
             load : [],
             clear: ['#EMPTY_COMPLETION']
         },
@@ -116,7 +116,7 @@ omelette('opfab')
             }
         },
         status: ['#EMPTY_COMPLETION'],
-        users: {
+        user: {
             addtoentity: ['#EMPTY_COMPLETION'],
             addtogroup: ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION'],

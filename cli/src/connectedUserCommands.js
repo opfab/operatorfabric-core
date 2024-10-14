@@ -10,20 +10,20 @@
 const prompts = require('prompts');
 const utils = require('./utils.js');
 
-const connectedUsersCommands = {
-    async processConnectedUsersCommand(args) {
+const connectedUserCommands = {
+    async processConnectedUserCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Connected users action',
+                    message: 'Connected user action',
                     choices: [{title: 'Send message', value: 'sendmessage'}]
                 })
             ).value;
             if (!action) {
-                console.log('Connected users action is required');
+                console.log('Connected user action is required');
                 return;
             }
         }
@@ -31,7 +31,7 @@ const connectedUsersCommands = {
         if (action === 'sendmessage') {
             await this.sendMessage(args[1]);
         } else {
-            console.log(`Unknown connected users action : ${action}
+            console.log(`Unknown connected user action : ${action}
             `);
             await this.printHelp();
         }
@@ -68,7 +68,7 @@ const connectedUsersCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab connectedusers sendmessage <message>
+        console.log(`Usage: opfab connected-user sendmessage <message>
 
 Message list :
 
@@ -79,4 +79,4 @@ Message list :
         `);
     }
 };
-module.exports = connectedUsersCommands;
+module.exports = connectedUserCommands;

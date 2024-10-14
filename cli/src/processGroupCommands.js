@@ -10,16 +10,16 @@
 const prompts = require('prompts');
 const utils = require('./utils.js');
 
-const processGroupsCommands = {
+const processGroupCommands = {
 
-    async processProcessGroupsCommand(args) {
+    async processProcessGroupCommand(args) {
         let command = args[0];
         if (!command) {
             command = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'ProcessGroups command',
+                    message: 'ProcessGroup command',
                     choices: [
                         {title: 'load', value: 'load'},
                         {title: 'clear', value: 'clear'}
@@ -27,7 +27,7 @@ const processGroupsCommands = {
                 })
             ).value;
             if (!command) {
-                console.log('ProcessGroups command is required');
+                console.log('ProcessGroup command is required');
                 return;
             }
         }
@@ -39,7 +39,7 @@ const processGroupsCommands = {
                 await this.clearProcessGroups();
                 break;
             default:
-                console.log(`Unknown processgroups command : ${command}
+                console.log(`Unknown processgroup command : ${command}
                 `);
                 await this.printHelp();
                 break;
@@ -52,11 +52,11 @@ const processGroupsCommands = {
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'processGroups file name '
+                    message: 'processGroup file name '
                 })
             ).value;
             if (!processGroupsFile) {
-                console.log('ProcessGroups file name is required');
+                console.log('ProcessGroup file name is required');
                 return;
             }
         }
@@ -68,14 +68,14 @@ const processGroupsCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab processgroups <command> [args]
+        console.log(`Usage: opfab processgroup <command> [args]
 
 Command list :
 
     clear     clear processGroups (load an empty list of processGroups)
-    load      load processGroups from a file  : opfab processgroups load <processGroupsFileName>    
+    load      load processGroups from a file  : opfab processgroup load <processGroupsFileName>    
         
         `);
     }
 };
-module.exports = processGroupsCommands;
+module.exports = processGroupCommands;

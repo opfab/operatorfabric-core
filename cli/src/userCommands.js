@@ -12,15 +12,15 @@ const prompts = require('prompts');
 const utils = require('./utils.js');
 const fs = require('fs').promises;
 
-const usersCommands = {
-    async processUsersCommand(args) {
+const userCommands = {
+    async processUserCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Users action',
+                    message: 'User action',
                     choices: [
                         {title: 'Add to entity', value: 'addtoentity'},
                         {title: 'Add to group', value: 'addtogroup'},
@@ -38,7 +38,7 @@ const usersCommands = {
                 })
             ).value;
             if (!action) {
-                console.log('Users action is required');
+                console.log('User action is required');
                 return;
             }
         }
@@ -82,7 +82,7 @@ const usersCommands = {
                 break;
 
             default:
-                console.log(`Unknown users action : ${action}
+                console.log(`Unknown user action : ${action}
                 `);
                 await this.printHelp();
                 break;
@@ -264,22 +264,22 @@ const usersCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab users <command>
+        console.log(`Usage: opfab user <command>
         
 Commands list : 
-            addtoentity             Add a <user> to an <entity> : opfab users addtoentity <entityId> <user>
-            addtogroup              Add a <user> to a <group> : opfab users addtogroup <groupId> <user>
+            addtoentity             Add a <user> to an <entity> : opfab user addtoentity <entityId> <user>
+            addtogroup              Add a <user> to a <group> : opfab user addtogroup <groupId> <user>
             delete                  Delete a <user>
-            load                    Add or update a list of users : opfab users load <usersFilePath>
-            removefromentity        Remove a <user> from an <entity> : opfab users removefromentity <entityId> <user>
-            removefromgroup         Remove a <user> from a <group> : opfab users removefromgroup <groupId> <user>
+            load                    Add or update a list of users : opfab user load <usersFilePath>
+            removefromentity        Remove a <user> from an <entity> : opfab user removefromentity <entityId> <user>
+            removefromgroup         Remove a <user> from a <group> : opfab user removefromgroup <groupId> <user>
             set-not-notified        Configure <process>/<state> as not to be notified for all users
             set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
-            setactivityarea         Set an <activity area> for a <user> : opfab users setactivityarea <activityAreaId> <user> 
+            setactivityarea         Set an <activity area> for a <user> : opfab user setactivityarea <activityAreaId> <user> 
             set-notified            Configure <process>/<state> as to be notified for all users 
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
-            unsetactivityarea       Unset an <activity area> for a <user> : opfab users unsetactivityarea <activityAreaId> <user> 
+            unsetactivityarea       Unset an <activity area> for a <user> : opfab user unsetactivityarea <activityAreaId> <user> 
         `);
     }
 };
-module.exports = usersCommands;
+module.exports = userCommands;
