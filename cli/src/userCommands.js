@@ -22,18 +22,18 @@ const userCommands = {
                     name: 'value',
                     message: 'User action',
                     choices: [
-                        {title: 'Add to entity', value: 'addtoentity'},
-                        {title: 'Add to group', value: 'addtogroup'},
+                        {title: 'Add to entity', value: 'add-to-entity'},
+                        {title: 'Add to group', value: 'add-to-group'},
                         {title: 'Load a list of users', value: 'load'},
                         {title: 'Delete a user', value: 'delete'},
-                        {title: 'Remove from entity', value: 'removefromentity'},
-                        {title: 'Remove from group', value: 'removefromgroup'},
+                        {title: 'Remove from entity', value: 'remove-from-entity'},
+                        {title: 'Remove from group', value: 'remove-from-group'},
                         {title: 'Set not notified', value: 'set-not-notified'},
                         {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
-                        {title: 'Set activity area', value: 'setactivityarea'},
+                        {title: 'Set activity area', value: 'set-activity-area'},
                         {title: 'Set notified', value: 'set-notified'},
                         {title: 'Set notified by mail', value: 'set-notified-mail'},
-                        {title: 'Unset activity area', value: 'unsetactivityarea'}
+                        {title: 'Unset activity area', value: 'unset-activity-area'}
                     ]
                 })
             ).value;
@@ -44,10 +44,10 @@ const userCommands = {
         }
 
         switch (action) {
-            case 'addtoentity':
+            case 'add-to-entity':
                 await this.addUserTo('Entity', 'entities', args[1], args[2]);
                 break;
-            case 'addtogroup':
+            case 'add-to-group':
                 await this.addUserTo('Group', 'groups', args[1], args[2]);
                 break;
             case 'delete':
@@ -56,10 +56,10 @@ const userCommands = {
             case 'load':
                 await this.loadUserList(args[1]);
                 break;
-            case 'removefromentity':
+            case 'remove-from-entity':
                 await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
                 break;
-            case 'removefromgroup':
+            case 'remove-from-group':
                 await this.removeUserFrom('Group', 'groups', args[1], args[2]);
                 break;
             case 'set-not-notified':
@@ -68,7 +68,7 @@ const userCommands = {
             case 'set-not-notified-mail':
                 await this.configureNotification(args[1], args[2], 'DELETE', 'processstatenotifiedbymail');
                 break;
-            case 'setactivityarea':
+            case 'set-activity-area':
                 await this.activityAreaSetter(args[1], args[2], true);
                 break;
             case 'set-notified':
@@ -77,7 +77,7 @@ const userCommands = {
             case 'set-notified-mail':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotifiedbymail');
                 break;
-            case 'unsetactivityarea':
+            case 'unset-activity-area':
                 await this.activityAreaSetter(args[1], args[2], false);
                 break;
 
@@ -267,18 +267,18 @@ const userCommands = {
         console.log(`Usage: opfab user <command>
         
 Commands list : 
-            addtoentity             Add a <user> to an <entity> : opfab user addtoentity <entityId> <user>
-            addtogroup              Add a <user> to a <group> : opfab user addtogroup <groupId> <user>
+            add-to-entity           Add a <user> to an <entity> : opfab user add-to-entity <entityId> <user>
+            add-to-group            Add a <user> to a <group> : opfab user add-to-group <groupId> <user>
             delete                  Delete a <user>
             load                    Add or update a list of users : opfab user load <usersFilePath>
-            removefromentity        Remove a <user> from an <entity> : opfab user removefromentity <entityId> <user>
-            removefromgroup         Remove a <user> from a <group> : opfab user removefromgroup <groupId> <user>
+            remove-from-entity      Remove a <user> from an <entity> : opfab user remove-from-entity <entityId> <user>
+            remove-from-group       Remove a <user> from a <group> : opfab user remove-from-group <groupId> <user>
             set-not-notified        Configure <process>/<state> as not to be notified for all users
             set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
-            setactivityarea         Set an <activity area> for a <user> : opfab user setactivityarea <activityAreaId> <user> 
+            set-activity-area       Set an <activity area> for a <user> : opfab user set-activity-area <activityAreaId> <user> 
             set-notified            Configure <process>/<state> as to be notified for all users 
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
-            unsetactivityarea       Unset an <activity area> for a <user> : opfab user unsetactivityarea <activityAreaId> <user> 
+            unset-activity-area     Unset an <activity area> for a <user> : opfab user unset-activity-area <activityAreaId> <user> 
         `);
     }
 };

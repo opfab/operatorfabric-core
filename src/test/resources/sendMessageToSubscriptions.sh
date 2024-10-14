@@ -9,4 +9,4 @@
 # This file is part of the OperatorFabric project.
 
 opfab login http://localhost 2002 admin test
-opfab connected-user sendmessage $1
+opfab connected-user send-message $1

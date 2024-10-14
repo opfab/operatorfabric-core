@@ -54,11 +54,11 @@ const processMonitoringCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab processmonitoring <command> [args]
+        console.log(`Usage: opfab process-monitoring <command> [args]
 
 Command list :
 
-    load      load configuration for monitoring processus screen : opfab processmonitoring load <fileName>        
+    load      load configuration for monitoring processus screen : opfab process-monitoring load <fileName>        
         `);
     }
 };

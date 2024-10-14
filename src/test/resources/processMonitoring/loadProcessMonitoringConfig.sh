@@ -9,4 +9,4 @@
 # This file is part of the OperatorFabric project.
 
 opfab login http://localhost 2002 admin test
-opfab processmonitoring load $1
+opfab process-monitoring load $1

@@ -19,14 +19,14 @@ const realtimescreenCommands = {
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'Realtimescreen command',
+                    message: 'Realtime screen command',
                     choices: [
                         {title: 'load', value: 'load'}
                     ]
                 })
             ).value;
             if (!command) {
-                console.log('Realtimescreen command is required');
+                console.log('Realtime screen command is required');
                 return;
             }
         }
@@ -35,7 +35,7 @@ const realtimescreenCommands = {
                 await this.loadRealtimescreenFile(args[1]);
                 break;
             default:
-                console.log(`Unknown realtimescreen command : ${command}
+                console.log(`Unknown realtime screen command : ${command}
                 `);
                 await this.printHelp();
                 break;
@@ -48,11 +48,11 @@ const realtimescreenCommands = {
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'realtimescreen file name '
+                    message: 'realtime screen file name '
                 })
             ).value;
             if (!realtimescreenFile) {
-                console.log('Realtimescreen file name is required');
+                console.log('Realtime screen file name is required');
                 return;
             }
         }
@@ -60,11 +60,11 @@ const realtimescreenCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab realtimescreen <command> [args]
+        console.log(`Usage: opfab realtime-screen <command> [args]
 
 Command list :
 
-    load      load realtimescreen from a file : opfab realtimescreen load <realtimescreenFileName>    
+    load      load realtime screen from a file : opfab realtime-screen load <realtimescreenFileName>    
         
         `);
     }

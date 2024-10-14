@@ -24,7 +24,7 @@ const cardCommands = {
                     choices: [
                         { title: 'Send', value: 'send' },
                         { title: 'Delete', value: 'delete' },
-                        { title: 'Reset Rate Limiter', value: 'resetratelimiter' }
+                        { title: 'Reset Rate Limiter', value: 'reset-ratelimiter' }
                     ],
                 })
             ).value;
@@ -40,7 +40,7 @@ const cardCommands = {
             case 'delete': 
                 await this.deleteCard(args.slice(1));
                 break;
-            case 'resetratelimiter':
+            case 'reset-ratelimiter':
                 await this.resetRateLimiter();
                 break;
             default:
@@ -237,7 +237,7 @@ Command list :
                        (date values in card must be set as relative to current time.
                        <cardCustomization> is a JSON-serialized string containing card fields to be overridden)
     delete             delete a card by id : opfab card delete <cardId>
-    resetratelimiter   reset the rate limiter for sending cards : opfab card resetratelimiter
+    reset-ratelimiter  reset the rate limiter for sending cards : opfab card reset-ratelimiter
         
         `);
     }

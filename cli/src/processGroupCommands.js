@@ -19,7 +19,7 @@ const processGroupCommands = {
                 await prompts({
                     type: 'select',
                     name: 'value',
-                    message: 'ProcessGroup command',
+                    message: 'Process Group command',
                     choices: [
                         {title: 'load', value: 'load'},
                         {title: 'clear', value: 'clear'}
@@ -27,7 +27,7 @@ const processGroupCommands = {
                 })
             ).value;
             if (!command) {
-                console.log('ProcessGroup command is required');
+                console.log('Process Group command is required');
                 return;
             }
         }
@@ -39,7 +39,7 @@ const processGroupCommands = {
                 await this.clearProcessGroups();
                 break;
             default:
-                console.log(`Unknown processgroup command : ${command}
+                console.log(`Unknown process group command : ${command}
                 `);
                 await this.printHelp();
                 break;
@@ -52,11 +52,11 @@ const processGroupCommands = {
                 await prompts({
                     type: 'text',
                     name: 'value',
-                    message: 'processGroup file name '
+                    message: 'process group file name '
                 })
             ).value;
             if (!processGroupsFile) {
-                console.log('ProcessGroup file name is required');
+                console.log('Process Group file name is required');
                 return;
             }
         }
@@ -68,12 +68,12 @@ const processGroupCommands = {
     },
 
     async printHelp() {
-        console.log(`Usage: opfab processgroup <command> [args]
+        console.log(`Usage: opfab process-group <command> [args]
 
 Command list :
 
-    clear     clear processGroups (load an empty list of processGroups)
-    load      load processGroups from a file  : opfab processgroup load <processGroupsFileName>    
+    clear     clear process groups (load an empty list of process groups)
+    load      load process groups from a file  : opfab process-group load <processGroupsFileName>    
         
         `);
     }

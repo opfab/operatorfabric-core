@@ -43,7 +43,7 @@ this screen, the parameter `uiVisibility.processmonitoring` must be set to `true
 process.
 
 
-The columns displayed on this screen can be configured. To do that, you have to define a JSON file and load the file by sending an HTTP POST request to the `/processmonitoring` API of businessconfig service or using CLI command `opfab processmonitoring load <file>`.
+The columns displayed on this screen can be configured. To do that, you have to define a JSON file and load the file by sending an HTTP POST request to the `/processmonitoring` API of businessconfig service or using CLI command `opfab process-monitoring load <file>`.
 
 Here is an example of processMonitoring configuration file:
 ```
