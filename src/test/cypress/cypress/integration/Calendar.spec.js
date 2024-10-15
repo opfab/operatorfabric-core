@@ -43,8 +43,8 @@ describe('Calendar screen tests', function () {
         cy.tick(1 * SECONDS);
         cy.get('of-light-card').should('have.length', 1);
 
-        cy.get('#opfab-navbarContent').find('#opfab-calendar-menu').click();
-        cy.tick(1 * SECONDS);
+        opfab.navigateToCalendar();
+        cy.tick(2 * SECONDS); // wait 1 seconds does not work locally
 
         // test month view (view by default)
         cy.get('.opfab-calendar-event').should('have.length', 1); // only one card should be present

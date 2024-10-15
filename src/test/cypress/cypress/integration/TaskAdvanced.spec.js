@@ -52,7 +52,7 @@ describe('Task Advanced', function () {
       // Check first week has 7 cards
       checkHaveCircle(7);
 
-      cy.get('#opfab-navbarContent').find('#opfab-calendar-menu').click();
+      opfab.navigateToCalendar();
 
       // Check 7 cards are on the calendar screen with the default month view
       cy.get('.opfab-calendar-event').should('have.length', 7);

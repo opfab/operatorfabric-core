@@ -91,10 +91,20 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('of-archives').should('exist');
     };
 
+    navigateToCalendar = function () {
+        cy.get('#opfab-calendar-menu').click();
+        cy.get('of-calendar').should('exist');
+    }
+
     navigateToDashboard = function () {
         cy.get('#opfab-navbar-menu-dashboard').click();
         cy.get('of-dashboard').should('exist');
     };
+
+    navigateToMonitoring = function () {
+        cy.get('#opfab-navbar-menu-monitoring').click();
+        cy.get('of-monitoring').should('exist');
+    }
 
     navigateToMonitoringProcessus = function () {
         cy.get('#opfab-navbar-menu-processmonitoring').click();
@@ -113,7 +123,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
     };
 
     navigateToUserCard = function () {
-        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get('#opfab-newcard-menu').click();
         cy.get('of-usercard').should('exist');
     };
 

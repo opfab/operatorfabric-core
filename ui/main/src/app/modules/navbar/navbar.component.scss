@@ -6,13 +6,64 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
- .opfab-logo {
-	background-color: #f8f9fa;
-	padding: 5px;
-	border-radius: 5px;
+
+
+.opfab-navbar-container {
+    padding-top: 20px;
+    min-height: 80px;
+    max-height: 80px;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    white-space: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 10px;
+    background-color: var(--opfab-bgcolor);
 }
 
-.opfab-icon-link {
+.opfab-logo {
+    background-color: var(--opfab-bgcolor);
+    margin-left: 20px;
+    margin-top: -5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+}
+
+.opfab-navigation {
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+  
+.opfab-navigation-link {
+    cursor: pointer;
+    position: relative;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    color: var(--opfab-navbar-color);
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-navigation-link.active {
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+.opfab-icon-external-link {
     color: var(--opfab-navbar-color);
     text-decoration: none;
     padding-left: 0.5rem;
@@ -23,64 +74,68 @@
     }
 }
 
-.opfab-navbar {
-    padding-left: 20px;
-    background-color: var(--opfab-bgcolor);
-    font-size: 16px;
-    padding-top: 13px;
-
-    .navbar-nav {
-        .nav-link {
-            color: var(--opfab-navbar-color);
-            margin-left: 10px;
-            margin-right: 10px;
-            line-height: 18px;
-            white-space: nowrap;
-
-            &:hover,
-            &:focus {
-                color: var(--opfab-navbar-color-hover);
-            }
-        }
-
-        .show > .nav-link,
-        .active > .nav-link,
-        .nav-link.show,
-        .nav-link.active {
-            color: var(--opfab-navbar-color-active);
-            font-weight: bold;
-            padding-bottom: 3px;
-            padding-left: 3px;
-            padding-right: 3px;
-            border-bottom-width: 2px;
-            border-bottom-style: solid;
-        }
-    }
-
-    .navbar-toggler {
-        color: var(--opfab-navbar-color);
-        border-color: var(--opfab-navbar-toggler-border-color);
-        padding-top: 4px;
-    }
-
-    .navbar-toggler-icon {
-        background-image: var(--opfab-navbar-toggler-icon);
-    }
+.opfab-navigation ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.opfab-dropdown-menu {
-    color: var(--opfab-navbar-color);
-    margin: -16px -12px -10px;
-    padding-top: 10px;
-    letter-spacing: normal;
-}
+/* NAVIGATION LINKS AS ICONS */
 
-.opfab-dropdown-menu-item {
-    margin-left: 10px;
-    margin-right: 10px;
-    font-size: 16px;
-    line-height: 30px;
+.opfab-icons-menu-collapsed {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    background: var(--opfab-bgcolor);
+    padding-top: 5px;
     cursor: pointer;
+}
+
+.opfab-icons-menu {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding-top: 5px;
+    background: var(--opfab-bgcolor);
+}
+
+.opfab-icons-menu li {
+    padding-left:15px;
+}
+
+/* DROPDOWN MENUS */
+
+.opfab-navigation ul ul {
+    border : 1px solid var(--opfab-navbar-dropdown-menu-border-color);
+    position: absolute;
+    border-radius: 10px;
+    left: 0;
+    z-index: 1;
+    overflow:visible;
+    background-color: var(--opfab-navbar-right-menu-bgcolor);
+    display: none;
+    margin-top: 0;
+    padding-top: 10px;
+    padding-bottom: 15px; 
+    padding-right: 15px;
+  }
+
+.opfab-navigation li:hover  ul, 
+.opfab-navigation li:focus-within ul {
+    display: block;
+  }
+
+.opfab-navigation-dropdown-menu-link {
+    position: relative;
+    margin-left: 1rem;
+    margin-top: 5px;
+    color: var(--opfab-navbar-color);
 
     &:hover,
     &:focus {
@@ -88,14 +143,48 @@
     }
 }
 
+.opfab-navbar-info {
+    padding-left: 15px;
+    margin-top: -10px;
+    margin-right: 50px; /* space for environment name */
+}
+
+/* ENVIRONMENT NAME */ 
+
+.opfab-environment-name-container {
+    position: absolute;
+    right: 0;
+    width: 80px;
+    height: 87px;
+    overflow: hidden;
+    margin-top: -30px;
+    margin-bottom: -20px;
+}
+
+.opfab-environment-name {
+    font-size: 10px;
+    transform: rotate(45deg);
+    color: white;
+    margin-top: 33px;
+    margin-left: -57px;
+    width: 210px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* DROPDOWN RIGHT MENU */
+
+.opfab-dropdown-right-menu-link {
+    color: var(--opfab-navbar-color);
+}
+
 .opfab-right-menu {
-    background-color: var(--opfab-navbar-right-menu-bgcolor);
     color: var(--opfab-navbar-color);
     border-top: 2px solid var(--opfab-navbar-color);
     margin: -16px -12px -10px;
     padding-top: 10px;
     letter-spacing: normal;
-    padding-bottom: 20px
+    padding-bottom: 20px;
 }
 
 .opfab-right-menu-item {
@@ -124,6 +213,9 @@
     }
 }
 
+
+/* ICONS */ 
+
 .opfab-menu-icon {
     display: inline-block;
     height: 18px;
@@ -134,48 +226,47 @@
 }
 
 .opfab-menu-icon-settings {
-    mask: url("../../../assets/images/icons/parameters.svg");
+    mask: url('../../../assets/images/icons/parameters.svg');
 }
 
 .opfab-menu-icon-realtimeusers {
-    mask: url("../../../assets/images/icons/clock.svg");
+    mask: url('../../../assets/images/icons/clock.svg');
 }
 
 .opfab-menu-icon-activityarea {
-    mask: url("../../../assets/images/icons/user-gear.svg");
+    mask: url('../../../assets/images/icons/user-gear.svg');
 }
 
 .opfab-menu-icon-externaldevicesconfiguration {
-    mask: url("../../../assets/images/icons/volume-high.svg");
+    mask: url('../../../assets/images/icons/volume-high.svg');
 }
 
 .opfab-menu-icon-feedconfiguration {
-    mask: url("../../../assets/images/icons/notification.svg");
+    mask: url('../../../assets/images/icons/notification.svg');
 }
 
 .opfab-menu-icon-useractionlogs {
-    mask: url("../../../assets/images/icons/logs.svg");
+    mask: url('../../../assets/images/icons/logs.svg');
 }
 
 .opfab-menu-icon-about {
-    mask: url("../../../assets/images/icons/about.svg");
+    mask: url('../../../assets/images/icons/about.svg');
 }
 
 .opfab-menu-icon-changepassword {
-    mask: url("../../../assets/images/icons/change-password.svg");
+    mask: url('../../../assets/images/icons/change-password.svg');
 }
 
-// a space is added to the logout icon
 .opfab-menu-icon-logout {
-    mask: url("../../../assets/images/icons/logout.svg");
+    mask: url('../../../assets/images/icons/logout.svg');
 }
 
 .opfab-menu-icon-admin {
-    mask: url("../../../assets/images/icons/administration.svg");
+    mask: url('../../../assets/images/icons/administration.svg');
 }
 
 .opfab-menu-icon-nightdaymode {
-    mask: url("../../../assets/images/icons/dark-light.svg");
+    mask: url('../../../assets/images/icons/dark-light.svg');
 }
 
 .opfab-right-menu-item:hover .opfab-menu-icon-admin,
@@ -192,7 +283,6 @@
     background: var(--opfab-navbar-color-hover);
 }
 
-
 .opfab-menu-icon-newcard {
     display: inline-block;
     height: 28px;
@@ -200,7 +290,7 @@
     margin-right: 10px;
     margin-top: -5px;
     background: var(--opfab-text-color);
-    mask: url("../../../assets/images/icons/newcard.svg");
+    mask: url('../../../assets/images/icons/newcard.svg');
 }
 
 .opfab-menu-icon-calendar {
@@ -210,7 +300,7 @@
     margin-right: 10px;
     margin-top: -5px;
     background: var(--opfab-text-color);
-    mask: url("../../../assets/images/icons/calendar.svg");
+    mask: url('../../../assets/images/icons/calendar.svg');
 }
 
 .opfab-menu-icon-calendar.active {
@@ -222,11 +312,8 @@
     background: var(--opfab-navbar-color-hover);
 }
 
-.popover {
-    max-width: 100%; /* Max Width of the popover (depending on the container!) */
-}
 
-.opfab-about-brand {
+.opfab-about-logo {
     display: inline-block;
     padding-top: 0.3125rem;
     padding-bottom: 0.3125rem;
@@ -239,30 +326,14 @@
     color: var(--opfab-text-color-stronger);
 }
 
-@media all and (width <= 400px) {
-    .navbar-brand {
-        margin-right: 5px;
-    }
-
-    .navbar-toggler {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .opfab-navbar {
-        .navbar-nav {
-            .nav-link {
-                margin-left: 4px;
-                margin-right: 4px;
-            }
-        }
+@media (width >= 1000px) {
+    .opfab-collapsed-navbar {
+        display: none;
     }
 }
 
-.opfab-sticky-menu {
-    position: absolute;
-    right: 0;
-    padding-right: 30px;
-    padding-left: 15px;
-    background: var(--opfab-bgcolor);
+@media (width <= 1000px) {
+    .opfab-full-navbar {
+        display: none;
+    }
 }

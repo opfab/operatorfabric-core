@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
-import {Router, RouterLinkActive, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
 import {NavbarView} from 'app/business/view/navbar/navbar.view';
@@ -22,6 +22,7 @@ import {InfoComponent} from './info/info.component';
 import {UserCardComponent} from '../usercard/usercard.component';
 import {AboutComponent} from '../core/about/about.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {RouterService} from 'app/business/services/router.service';
 
 @Component({
     selector: 'of-navbar',
@@ -36,8 +37,6 @@ import {SpinnerComponent} from '../share/spinner/spinner.component';
         NgIf,
         NgbPopover,
         TranslateModule,
-        RouterLinkActive,
-        RouterLink,
         InfoComponent,
         UserCardComponent,
         AboutComponent,
@@ -113,6 +112,10 @@ export class NavbarComponent {
             backdrop: 'static'
         };
         this.modalService.open(this.userCardTemplate, options);
+    }
+
+    public goToCoreMenu(menuId: string) {
+        RouterService.navigateTo(menuId);
     }
 
     public clickOnMenu(menu: NavbarMenuElement, openInNewTab: boolean = false): void {
