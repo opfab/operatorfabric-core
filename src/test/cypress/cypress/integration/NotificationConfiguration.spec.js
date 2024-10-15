@@ -139,7 +139,7 @@ describe ('Feed notification configuration tests',function () {
         })
 
         // Cards should exist on the monitoring page
-        cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
+        opfab.navigateToMonitoring();
         cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
@@ -169,7 +169,7 @@ describe ('Feed notification configuration tests',function () {
         })
 
         // Cards should not exist on the monitoring page
-        cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();  // Monitoring results table
+        opfab.navigateToMonitoring();
         cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist'); // wait for dialog to go away
         })
@@ -195,8 +195,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
 
         // Cards should not exist on the monitoring page
-        cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
-
+        opfab.navigateToMonitoring();
         // Monitoring results table
         cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist');

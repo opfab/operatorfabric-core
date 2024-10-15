@@ -6,180 +6,207 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
-<nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
-
-  <div class="navbar-brand">
-    <div [ngClass]="{'opfab-logo':navbarPage.logo.isDefaultOpfabLogo}">
-      <img [src]="getImage()" [attr.width]="navbarPage.logo.width" [attr.height]="navbarPage.logo.height" alt="logo" />
+<div class="opfab-navbar-container">
+    <div class="opfab-logo">
+        <img
+            [src]="getImage()"
+            [attr.width]="navbarPage.logo.width"
+            [attr.height]="navbarPage.logo.height"
+            alt="logo" />
     </div>
-  </div>
 
-  <div class="navbar-toggler" style="flex-grow: 1;border: 0; flex-basis: 0" id="opfab-navbarCollapsed">
-    <ng-container *ngTemplateOutlet="menuCollapsedContent"></ng-container>
-  </div>
+    <!-- COLLAPSED NAVIGATION -->
+    <nav class="opfab-navigation opfab-collapsed-navbar" aria-label="Collapsed Navigation">
+        <ul>
+            <li class="opfab-navigation-link" [class.active]="'feed' === currentMenuId">
+                <a
+                    id="opfab-navbar-menu-feed-collapsed"
+                    (click)="goToCoreMenu('feed')"
+                    (keydown.enter)="goToCoreMenu('feed')"
+                    translate
+                    >{{ 'menu.feed' }}</a
+                >
+            </li>
+        </ul>
+    </nav>
+    <nav class="opfab-icons-menu-collapsed opfab-collapsed-navbar" aria-label="Collapsed Navigation Icons">
+        <ul class="opfab-icons-menu-collapsed">
+            <li *ngFor="let menuElement of rightMenuCollapsedElements">
+                <a
+                    id="opfab-navbar-right-menu-{{ menuElement.id }}-collapsed"
+                    class="opfab-right-menu-link"
+                    (click)="clickOnMenu(menuElement)">
+                    <div class="opfab-menu-icon opfab-menu-icon-{{ menuElement.id }}"></div>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
-  <div class="collapse navbar-collapse " id="opfab-navbarContent">
-    <ul class="navbar-nav mr-auto ">
-      <span *ngFor="let menuElement of upperMenuElements, let i = index">
-        <li class="nav-item">
-          <div [class.active]="menuElement.id === currentMenuId" class='nav-link'
-            *ngIf="!menuElement.dropdownMenu || menuElement.dropdownMenu.length===0">
-            <a id="opfab-navbar-menu-{{menuElement.id}}" style="cursor: pointer;"
-              (click)="clickOnMenu(menuElement)" (keydown.enter)="clickOnMenu(menuElement)" tabindex="0">{{menuElement.label}}</a>
-            <a id="opfab-navbar-menu-icon-{{menuElement.id}}" *ngIf="menuElement.linkType==='BOTH'"
-              class="opfab-icon-link " (click)="clickOnMenu(menuElement,true)">
-              <em class="fas fa-external-link-alt"></em>
-            </a>
-          </div>
-
-          <!-- Dropdown menu  -->
-          <a class="nav-link" id="opfab-navbar-menu-dropdown-{{menuElement.id}}"
-            *ngIf="menuElement.dropdownMenu?.length>0" 
-            (keydown.enter)="p1.open()" (blur)="p1.close()" (keydown.esc)="p1.close()"  triggers="mouseenter:mouseleave"
-            closeDelay="3000" #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow"
-            placement="bottom-left" container="body" href="javascript:void(0)" tabindex="0">{{menuElement.label}}
-            <em class="fa fa-caret-down"></em>
-          </a>
-          <ng-template #navbarDropdown>
-            <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
-              <div class="opfab-dropdown-menu-item" *ngFor="let subMenuElement of menuElement.dropdownMenu">
-                <div>
-                  <a id="opfab-navbar-menu-{{subMenuElement.id}}"
-                    (click)="clickOnMenu(subMenuElement)">{{subMenuElement.label}}</a>
-                  <a id="opfab-navbar-menu-icon-{{subMenuElement.id}}" *ngIf="subMenuElement.linkType === 'BOTH'"
-                    class="opfab-icon-link" (click)="clickOnMenu(subMenuElement,true)">
+    <!-- FULL SCREEN NAVIGATION -->
+    <nav class="opfab-navigation opfab-full-navbar" aria-label="Full screen navigation">
+        <ul *ngFor="let menuElement of upperMenuElements; let i = index">
+            <li
+                [class.active]="menuElement.id === currentMenuId"
+                class="opfab-navigation-link"
+                *ngIf="!menuElement.dropdownMenu || menuElement.dropdownMenu.length === 0">
+                <a
+                    id="opfab-navbar-menu-{{ menuElement.id }}"
+                    (click)="clickOnMenu(menuElement)"
+                    (keydown.enter)="clickOnMenu(menuElement)"
+                    tabindex="0"
+                    >{{ menuElement.label }}</a
+                >
+                <a
+                    id="opfab-navbar-menu-icon-{{ menuElement.id }}"
+                    *ngIf="menuElement.linkType === 'BOTH'"
+                    class="opfab-icon-external-link"
+                    (click)="clickOnMenu(menuElement, true)">
                     <em class="fas fa-external-link-alt"></em>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </ng-template>
-        </li>
-      </span>
-    </ul>
-
-    <ul class="navbar-nav navbar-right opfab-sticky-menu">
-      <ng-template #createNewCard>
-        <span translate>menu.newcardTooltip</span>
-      </ng-template>
-      <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px"
-        (click)="openCardCreation()" *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
-        <span class="opfab-menu-icon-newcard" [ngbPopover]="createNewCard" popoverClass="opfab-popover-unclickable"
-          container="body" triggers="mouseenter:mouseleave">></span>
-      </li>
-      <ng-template #calendartooltip>
-        <span translate>menu.calendarTooltip</span>
-      </ng-template>
-      <li id="opfab-calendar-menu" style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'"
-        routerLinkActive #rla="routerLinkActive" *ngIf="navbarMenuView.getNavbarMenu().isCalendarIconVisible">
-        <a href="javascript:void(0)" [class.active]="(currentMenuId.includes('calendar'))"
-          class="opfab-menu-icon-calendar" [ngbPopover]="calendartooltip" popoverClass="opfab-popover-unclickable"
-          container="body" triggers="mouseenter:mouseleave"></a>
-      </li>
-
-      <li>
-        <a class="nav-link" id="opfab-navbar-drop-user-menu" [ngbPopover]="menuContent" container="body"
-          popoverClass="opfab-popover-left-menu" href="javascript:void(0)">
-          <of-info></of-info>
-        </a>
-      </li>
-    </ul>
-
-    <div *ngIf="navbarPage.showEnvironmentName"
-      style=" position: absolute;right:0;width:80px;height:87px;overflow: hidden;margin-top: -30px;margin-bottom:-20px;">
-      <div [style.background-color]="navbarPage.environmentColor" style="font-size:10px;transform:rotate(45deg);color:white;
-          margin-top:33px; margin-left: -57px; width:210px;
-          text-align: center; font-weight: bold;">
-        {{navbarPage.environmentName}}
-      </div>
+                </a>
+            </li>
+            <li
+                *ngIf="menuElement.dropdownMenu?.length > 0"
+                class="opfab-navigation-link"
+                id="opfab-navbar-menu-{{ menuElement.id }}">
+                <a id="opfab-navbar-menu-label-{{ menuElement.id }}" tabindex="0">{{ menuElement.label }}</a>
+                <!-- padding-bottom to add space between menu and sub menu-->
+                <em class="fa fa-caret-down" style="padding-left: 5px; padding-bottom: 10px"></em>
+                <ul>
+                    <li
+                        *ngFor="let subMenuElement of menuElement.dropdownMenu"
+                        class="opfab-navigation-dropdown-menu-link">
+                        <a
+                            id="opfab-navbar-menu-dropdown-{{ subMenuElement.id }}"
+                            (click)="clickOnMenu(subMenuElement)"
+                            (keydown.enter)="clickOnMenu(subMenuElement)"
+                            tabindex="0"
+                            >{{ subMenuElement.label }}</a
+                        >
+                        <a
+                            id="opfab-navbar-menu-dropdown-icon-{{ subMenuElement.id }}"
+                            *ngIf="subMenuElement.linkType === 'BOTH'"
+                            class="opfab-icon-external-link"
+                            (click)="clickOnMenu(subMenuElement, true)"
+                            (keydown.enter)="clickOnMenu(subMenuElement, true)"
+                            tabindex="0">
+                            <em class="fas fa-external-link-alt"></em>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <nav class="opfab-full-navbar" aria-label="Full Navigation Icons">
+        <ul class="opfab-icons-menu">
+            <ng-template #createNewCard>
+                <span translate>menu.newcardTooltip</span>
+            </ng-template>
+            <li id="opfab-newcard-menu" *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
+                <a tabindex="0" (click)="openCardCreation()" (keydown.enter)="openCardCreation()">
+                    <div class="opfab-menu-icon-newcard"></div>
+                </a>
+            </li>
+            <ng-template #calendartooltip>
+                <span translate>menu.calendarTooltip</span>
+            </ng-template>
+            <li id="opfab-calendar-menu" *ngIf="navbarMenuView.getNavbarMenu().isCalendarIconVisible">
+                <a tabindex="0" (click)="goToCoreMenu('calendar')" (keydown.enter)="goToCoreMenu('calendar')">
+                    <div class="opfab-menu-icon-calendar"></div>
+                </a>
+            </li>
+            <li class="opfab-navbar-info">
+                <a
+                    id="opfab-navbar-drop-user-menu"
+                    [ngbPopover]="menuContent"
+                    container="body"
+                    popoverClass="opfab-popover-left-menu"
+                    href="javascript:void(0)"
+                    class="opfab-dropdown-right-menu-link">
+                    <of-info></of-info>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div *ngIf="navbarPage.showEnvironmentName" class="opfab-full-navbar opfab-environment-name-container">
+        <div [style.background-color]="navbarPage.environmentColor" class="opfab-environment-name">
+            {{ navbarPage.environmentName }}
+        </div>
     </div>
-  </div>
-
-</nav>
-
-<ng-template #menuCollapsedContent>
-  <div>
-    <ul class="navbar-nav mr-auto " style="flex-direction: row; float:left;">
-      <li class="nav-item" [class.active]="'feed' === currentMenuId">
-        <a id="opfab-navbar-menu-feed-collapsed" class="nav-link" routerLink="/feed" routerLinkActive
-          #rla="routerLinkActive" translate>{{'menu.feed'}}</a>
-      </li>
-    </ul>
-    <ul class="navbar-nav mr-auto "
-      style="flex-direction: row; float:right;margin-top: 10px; margin-right: 0px !important;">
-
-      <li class="nav-item" *ngFor="let menuElement of rightMenuCollapsedElements">
-        <a id="opfab-navbar-right-menu-{{menuElement.id}}-collapsed" class="opfab-right-menu-link"
-          (click)="clickOnMenu(menuElement)">
-          <div class="opfab-menu-icon opfab-menu-icon-{{menuElement.id}}"></div>
-        </a>
-      </li>
-    </ul>
-  </div>
-</ng-template>
-
+</div>
 
 <ng-template #menuContent>
-
-  <div class="opfab-right-menu">
-    <div *ngFor="let menuElement of rightMenuElements">
-      <div class="opfab-right-menu-item">
-        <div *ngIf="menuElement.id === 'logout'" style="padding-top: 20px"></div>
-        <a id="opfab-navbar-right-menu-{{menuElement.id}}" class="opfab-right-menu-link"
-          (click)="clickOnMenu(menuElement)" href="javascript:void(0)">
-          <div class="opfab-menu-icon opfab-menu-icon-{{menuElement.id}}"></div>
-          <div>{{menuElement.label}}</div>
-        </a>
-      </div>
+    <div class="opfab-right-menu">
+        <div *ngFor="let menuElement of rightMenuElements">
+            <div class="opfab-right-menu-item">
+                <div *ngIf="menuElement.id === 'logout'" style="padding-top: 20px"></div>
+                <a
+                    id="opfab-navbar-right-menu-{{ menuElement.id }}"
+                    class="opfab-right-menu-link"
+                    (click)="clickOnMenu(menuElement)"
+                    href="javascript:void(0)">
+                    <div class="opfab-menu-icon opfab-menu-icon-{{ menuElement.id }}"></div>
+                    <div>{{ menuElement.label }}</div>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
-
 </ng-template>
 
 <ng-template #userCard let-modal>
-  <div class="modal-header">
-    <div translate> userCard.title </div>
-    <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
+    <div class="modal-header">
+        <div translate>userCard.title</div>
+        <div
+            id="opfab-usercard-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
     </div>
-  </div>
-  <div class="modal-body">
-    <div>
-      <of-usercard [userCardModal]="modal"> </of-usercard>
+    <div class="modal-body">
+        <div>
+            <of-usercard [userCardModal]="modal"> </of-usercard>
+        </div>
     </div>
-  </div>
 </ng-template>
 
 <ng-template #about let-modal>
-  <div id="opfab-about-dialog">
-    <div class="modal-header" id="opfab-about-dialog-header">
-      <div class="opfab-about-title" translate> about.title </div>
-      <div id="opfab-about-close" class="opfab-close-modal-icon" aria-label="Close"
-        (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </div>
-    </div>
-    <div class="modal-body text-center" id="opfab-about-dialog-body">
-      <a class="opfab-about-brand" style="margin-right: 0">
-        <div [ngClass]="{'opfab-logo':navbarPage.logo.isDefaultOpfabLogo}">
-          <img [src]="getImage()" [attr.width]="navbarPage.logo.width" [attr.height]="navbarPage.logo.height" alt="logo" />
+    <div id="opfab-about-dialog">
+        <div class="modal-header" id="opfab-about-dialog-header">
+            <div class="opfab-about-title" translate>about.title</div>
+            <div
+                id="opfab-about-close"
+                class="opfab-close-modal-icon"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </div>
         </div>
-      </a>
-      <div>
-        <of-about> </of-about>
-      </div>
-      <div>
-        <button id="opfab-about-btn-close" type="button" class="opfab-btn" aria-label="Close"
-          (click)="modal.dismiss('Ok')">
-          <span translate>button.ok</span>
-        </button>
-      </div>
+        <div class="modal-body text-center" id="opfab-about-dialog-body">
+            <a class="opfab-about-logo" style="margin-right: 0">
+                <div>
+                    <img
+                        [src]="getImage()"
+                        [attr.width]="navbarPage.logo.width"
+                        [attr.height]="navbarPage.logo.height"
+                        alt="logo" />
+                </div>
+            </a>
+            <div>
+                <of-about> </of-about>
+            </div>
+            <div>
+                <button
+                    id="opfab-about-btn-close"
+                    type="button"
+                    class="opfab-btn"
+                    aria-label="Close"
+                    (click)="modal.dismiss('Ok')">
+                    <span translate>button.ok</span>
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </ng-template>
 
-<of-spinner *ngIf="logoutInProgress" [seeInModal]="true" loadingText="shared.logoutInProgress">
-</of-spinner>
+<of-spinner *ngIf="logoutInProgress" [seeInModal]="true" loadingText="shared.logoutInProgress"> </of-spinner>

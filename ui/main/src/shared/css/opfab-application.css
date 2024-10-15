@@ -64,8 +64,7 @@
     --opfab-navbar-color: #bababa;
     --opfab-navbar-color-hover: white;
     --opfab-navbar-color-active: white;
-    --opfab-navbar-toggler-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    --opfab-navbar-toggler-border-color: rgb(255 255 255 / 10%);
+    --opfab-navbar-dropdown-menu-border-color: #343a40;
     --opfab-navbar-info-block-color: white;
     --opfab-navbar-right-menu-bgcolor: #182638;
     --opfab-timeline-cardlink: white;
@@ -125,8 +124,7 @@
     --opfab-navbar-color: black;
     --opfab-navbar-color-hover: #aaa;
     --opfab-navbar-color-active: black;
-    --opfab-navbar-toggler-icon: url("data:image/svg+xml, %3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0,0,0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    --opfab-navbar-toggler-border-color: rgb(0 0 0 / 10%) ;
+    --opfab-navbar-dropdown-menu-border-color: #ccc;
     --opfab-navbar-info-block-color: rgb(0 0 0 / 90%);
     --opfab-navbar-right-menu-bgcolor: #F3F2F1;
     --opfab-timeline-cardlink: #212529;

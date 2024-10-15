@@ -71,13 +71,12 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-menu-monitoring').should('have.text', monitoringTitle);
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-uid_test_0').should('have.text', singleMenuTitle);
-        cy.get('#opfab-navbar-menu-dropdown-menu2').should('have.text', secondMenuTitle);
-        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
-
+        cy.get('#opfab-navbar-menu-label-menu2').should('have.text', secondMenuTitle);
+    
         // Test dropdown menus titles
-        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
-        cy.get('.opfab-dropdown-menu').find('.opfab-dropdown-menu-item').eq(0).should('have.text', firstEntryTitle);
-        cy.get('.opfab-dropdown-menu').find('.opfab-dropdown-menu-item').eq(1).should('have.text', secondEntryTitle);
+        cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
+        cy.get('#opfab-navbar-menu-dropdown-uid_test_1').should('have.text', firstEntryTitle);
+        cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', secondEntryTitle)
     }
 
     function checkRightMenuStaticEntries(
@@ -257,7 +256,7 @@ describe('Test translations', function () {
             'Monitoring',
             'Logging',
             'Single menu entry',
-            'Second menu ',
+            'Second menu',
             'First menu entry',
             'Second menu entry'
         );
@@ -269,7 +268,7 @@ describe('Test translations', function () {
             'Monitoring',
             'Logging',
             'Unique élément',
-            'Deuxième menu ',
+            'Deuxième menu',
             'Premier élément',
             'Deuxième élément'
         );
@@ -281,7 +280,7 @@ describe('Test translations', function () {
             'Bewaking',
             'Logboek',
             'Enkel menu-item',
-            'Tweede menu ',
+            'Tweede menu',
             'Eerste menu-item',
             'Tweede menu-item'
         );

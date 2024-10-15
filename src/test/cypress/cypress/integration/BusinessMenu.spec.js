@@ -36,10 +36,10 @@ describe('Business menu', () => {
         opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
 
         openBusinessDropdownMenu();
-        clickOnDropdownMenuEntryNumber(0);
+        clickOnDropdownMenu('uid_test_1');
         opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
         openBusinessDropdownMenu();
-        clickOnDropdownMenuEntryNumber(1);
+        clickOnDropdownMenu('uid_test_2');
         opfab.checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=NIGHT');
 
         openBusinessSingleMenu();
@@ -63,10 +63,10 @@ describe('Business menu', () => {
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
             openBusinessDropdownMenu();
-            clickOnDropdownMenuEntryNumber(0);
+            clickOnDropdownMenu('uid_test_1');
             opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
             openBusinessDropdownMenu();
-            clickOnDropdownMenuEntryNumber(1);
+            clickOnDropdownMenu('uid_test_2');
             opfab.checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
 
             openBusinessSingleMenu();
@@ -79,11 +79,11 @@ describe('Business menu', () => {
     }
 
     function openBusinessDropdownMenu() {
-        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
+        cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
     }
 
-    function clickOnDropdownMenuEntryNumber(menuNumber) {
-        cy.get('.opfab-dropdown-menu-item').eq(menuNumber).click();
+    function clickOnDropdownMenu(menuId) {
+        cy.get('#opfab-navbar-menu-dropdown-'+ menuId).click({force:true});
     }
 
 
