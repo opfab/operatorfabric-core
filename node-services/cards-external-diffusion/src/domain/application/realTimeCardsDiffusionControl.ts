@@ -65,6 +65,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         this.bodyPostfix = updated.bodyPostfix;
         this.windowInSecondsForCardSearch = updated.windowInSecondsForCardSearch;
         this.activateCardsDiffusionRateLimiter = updated.activateCardsDiffusionRateLimiter;
+        this.defaultTimeZone = updated.defaultTimeZone;
         if (this.activateCardsDiffusionRateLimiter) {
             this.cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
                 .setLimitPeriodInSec(updated.sendRateLimitPeriodInSec)
@@ -98,7 +99,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         if (resp.isValid()) {
             const userWithPerimeters: UserWithPerimeters = resp.getData();
             const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
-            const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? 'Europe/Paris';
+            const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 this.logger.debug(

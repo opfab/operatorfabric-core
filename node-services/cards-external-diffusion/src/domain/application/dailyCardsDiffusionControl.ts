@@ -44,7 +44,7 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
                 );
                 if (resp.isValid()) {
                     const userWithPerimeters = resp.getData() as UserWithPerimeters;
-                    const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? 'Europe/Paris';
+                    const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
                     if (userWithPerimeters.sendDailyEmail) {
                         const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);

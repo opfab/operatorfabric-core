@@ -57,7 +57,8 @@ describe('Cards external diffusion', function () {
             .setBodyPostfix('Postfix')
             .setPublisherEntityPrefix('Sent by ')
             .setOpfabUrlInMailContent('http://localhost')
-            .setWindowInSecondsForCardSearch(120);
+            .setWindowInSecondsForCardSearch(120)
+            .setDefaultTimeZone('Europe/Paris');
     }
 
     it('Should send card when publishDate is after configured period', async function () {
