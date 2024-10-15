@@ -35,3 +35,4 @@ operatorfabric:
       activateCardsDiffusionRateLimiter: true
       sendRateLimit: 100
       sendRateLimitPeriodInSec : 3600
+      defaultTimeZone: 'Europe/Paris'

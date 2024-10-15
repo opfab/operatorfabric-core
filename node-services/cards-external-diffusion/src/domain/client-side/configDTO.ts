@@ -22,4 +22,5 @@ export default class ConfigDTO {
     public activateCardsDiffusionRateLimiter: boolean;
     public sendRateLimit: number = 100;
     public sendRateLimitPeriodInSec: number = 3600;
+    public defaultTimeZone: string;
 }
