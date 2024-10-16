@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "headless": "ng test --browsers ChromeHeadless --watch=false --code-coverage",
-    "lint": "ng lint",
+    "lint": "npm run lint:ts && npm run lint:css",
+    "lint:ts": "ng lint",
+    "lint:css": "stylelint 'src/**/*.*css'",
     "e2e": "ng e2e",
     "audit": "npm audit --json | $(npm bin)/npm-audit-html --output reports/report.html"
   },
