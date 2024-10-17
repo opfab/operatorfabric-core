@@ -86,6 +86,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'email',
             'timezoneForEmails',
             'hallwayMode',
+            'showAcknowledgmentFooter',
             'remoteLoggingEnabled'
         ];
 

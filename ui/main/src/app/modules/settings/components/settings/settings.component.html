@@ -160,6 +160,15 @@
       </label>
     </div>
 
+    <div class="opfab-settings-item" id="opfab-setting-input-ack-footer"
+    *ngIf="settingsView.isSettingVisible('showAcknowledgmentFooter')">
+    <label class="opfab-checkbox ">
+      <span class="label-hallway-mode" id="opfab-setting-input-ack-footer-checkbox" translate> settings.showAcknowledgmentFooter </span>
+      <input type="checkbox" formControlName="showAcknowledgmentFooter">
+      <span class="opfab-checkbox-checkmark"></span>
+    </label>
+  </div>
+
     <div class="opfab-settings-item" id="opfab-setting-input-remoteLoggingEnabled"
       *ngIf="settingsView.isSettingVisible('remoteLoggingEnabled')">
       <label class="opfab-checkbox ">

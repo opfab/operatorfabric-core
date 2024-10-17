@@ -21,7 +21,7 @@ import {
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
+import {State} from '@ofModel/processes.model';
 import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
@@ -37,7 +37,6 @@ import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
-import {Utilities} from '../../../../business/common/utilities';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
@@ -50,6 +49,7 @@ import {CardFooterTextComponent} from '../card-footer-text/card-footer-text.comp
 import {CardResponseComponent} from '../card-reponse/card-response.component';
 import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
+import {CardBodyView} from 'app/business/view/card/card-body.view';
 
 @Component({
     selector: 'of-card-body',
@@ -101,6 +101,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public user: User;
     private userWithPerimeters: UserWithPerimeters;
+    private cardBodyView: CardBodyView;
+    public isCardAcknowledgedFooterVisible: boolean;
 
     constructor(private router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -110,6 +112,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.cardBodyView = new CardBodyView(this.card, this.userWithPerimeters);
         this.integrateChildCardsInRealTime();
         const pageType = RouterStore.getCurrentPageType();
         if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD)
@@ -205,8 +208,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     ProcessesService.getProcess(this.card.process)
                 );
             }
+            this.cardBodyView = new CardBodyView(this.card, this.userWithPerimeters);
             this.truncatedTitle = this.card.titleTranslated;
             this.computeShowDetailCardHeader();
+            this.computeCardAcknowledgedFooterVisible();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
             this.markAsReadIfNecessary();
         }
@@ -271,6 +276,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.cardState.response !== undefined;
     }
 
+    private computeCardAcknowledgedFooterVisible() {
+        this.isCardAcknowledgedFooterVisible = this.cardBodyView.isCardAcknowledgedFooterVisible();
+    }
+
     private markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
             // we do not set now the card as read in the store, as we want to keep
@@ -306,19 +315,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public displayCardAcknowledgedFooter(): boolean {
-        let entityRecipientsToAck = [];
-        if (this.card.entityRecipients) {
-            entityRecipientsToAck = Utilities.removeElementsFromArray(
-                this.card.entityRecipients,
-                this.card.entityRecipientsForInformation
-            );
-        }
-
-        return (
-            this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
-            entityRecipientsToAck.length > 0 &&
-            UserPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.userWithPerimeters, this.card)
-        );
+        return this.isCardAcknowledgedFooterVisible;
     }
 
     public beforeTemplateRendering() {

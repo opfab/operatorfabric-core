@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,10 +9,9 @@
 
 import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
-import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
+import {Process} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {User} from '@ofModel/user.model';
 import {LoggerService} from './logs/logger.service';
 
@@ -67,24 +66,6 @@ export class UserPermissionsService {
 
         const userEntitiesAllowed = user.entities.filter((entity) => card.entitiesAllowedToEdit.includes(entity));
         return userEntitiesAllowed.length > 0;
-    }
-
-    public static isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
-        const showAcknowledgmentFooter = ProcessesService.getShowAcknowledgmentFooterForACard(card);
-        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
-            return true;
-        }
-        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.NEVER) {
-            return false;
-        }
-        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT) {
-            return UserPermissionsService.doesTheUserHavePermissionToEditCard(userWithPerimeters, card);
-        }
-        return UserPermissionsService.isCardPublishedByUserEntity(userWithPerimeters.userData, card);
-    }
-
-    private static isCardPublishedByUserEntity(user: User, card: Card): boolean {
-        return card.publisherType === 'ENTITY' && user.entities.includes(card.publisher);
     }
 
     private static isLttdExpired(card: Card): boolean {
