@@ -34,6 +34,7 @@ export class FeedComponent implements OnInit, OnDestroy {
 
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
+    hallwayModeSelectedCardUid: string;
     totalNumberOfLightsCards = 0;
     maxNbOfCardsToDisplay = 100;
     private ngUnsubscribe$ = new Subject<void>();
@@ -61,11 +62,14 @@ export class FeedComponent implements OnInit, OnDestroy {
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
-
                 // hallway feature
                 if (this.hallwayMode) {
-                    if (cards.length > 0) this.router.navigate(['/feed', 'cards', cards[0].id]);
-                    else this.router.navigate(['/feed']);
+                    if (cards.length > 0) {
+                        if (this.hallwayModeSelectedCardUid !== cards[0].uid) {
+                            this.router.navigate(['/feed', 'cards', cards[0].id]);
+                            this.hallwayModeSelectedCardUid = cards[0].uid;
+                        }
+                    } else this.router.navigate(['/feed']);
                 }
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
