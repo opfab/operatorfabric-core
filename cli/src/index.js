@@ -46,6 +46,12 @@ omelette('opfab')
             load: [],
             delete: ['#EMPTY_COMPLETION']
         },
+        'external-device': {
+            'set-user-devices': ['#EMPTY_COMPLETION'],
+            'remove-user-devices': ['#EMPTY_COMPLETION'],
+            enable: ['#EMPTY_COMPLETION'],
+            disable: ['#EMPTY_COMPLETION']
+        },
         group: {
             load: [],
             delete: ['#EMPTY_COMPLETION']
@@ -70,6 +76,28 @@ omelette('opfab')
             status: ['#EMPTY_COMPLETION'],
             user: ['#EMPTY_COMPLETION']
         },
+        log: {
+            'get-level': {
+                users: ['#EMPTY_COMPLETION'],
+                businessconfig: ['#EMPTY_COMPLETION'],
+                'cards-consultation': ['#EMPTY_COMPLETION'],
+                'cards-publication': ['#EMPTY_COMPLETION'],
+                'external-devices': ['#EMPTY_COMPLETION'],
+                supervisor: ['#EMPTY_COMPLETION'],
+                'cards-external-diffusion': ['#EMPTY_COMPLETION'],
+                'cards-reminder': ['#EMPTY_COMPLETION']
+            },
+            'set-level': {
+                users: levels,
+                businessconfig: levels,
+                'cards-consultation': levels,
+                'cards-publication': levels,
+                'external-devices': levels,
+                supervisor: levels,
+                'cards-external-diffusion': levels,
+                'cards-reminder': levels
+            }
+        },
         login: ['#EMPTY_COMPLETION'],
         logout: ['#EMPTY_COMPLETION'],
         'monitoring-config': {
@@ -92,28 +120,6 @@ omelette('opfab')
             start: ['#EMPTY_COMPLETION'],
             stop: ['#EMPTY_COMPLETION'],
             reset: ['#EMPTY_COMPLETION']
-        },
-        log: {
-            'get-level': {
-                users: ['#EMPTY_COMPLETION'],
-                businessconfig: ['#EMPTY_COMPLETION'],
-                'cards-consultation': ['#EMPTY_COMPLETION'],
-                'cards-publication': ['#EMPTY_COMPLETION'],
-                'external-devices': ['#EMPTY_COMPLETION'],
-                supervisor: ['#EMPTY_COMPLETION'],
-                'cards-external-diffusion': ['#EMPTY_COMPLETION'],
-                'cards-reminder': ['#EMPTY_COMPLETION']
-            },
-            'set-level': {
-                users: levels,
-                businessconfig: levels,
-                'cards-consultation': levels,
-                'cards-publication': levels,
-                'external-devices': levels,
-                supervisor: levels,
-                'cards-external-diffusion': levels,
-                'cards-reminder': levels
-            }
         },
         status: ['#EMPTY_COMPLETION'],
         supervisor: {'add-entity': ['#EMPTY_COMPLETION'], 'delete-entity': ['#EMPTY_COMPLETION']},
