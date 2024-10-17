@@ -88,28 +88,40 @@ async function update(collectionName, documents) {
         let rRule = {};
 
         if (typeof card.timeSpans !== 'undefined' && card.timeSpans.length > 0) {
+            let byhour, byminute;
+            if (card.timeSpans[0].recurrence) {
+                byhour = card.timeSpans[0].recurrence?.hoursAndMinutes?.hours;
+                byminute = card.timeSpans[0].recurrence?.hoursAndMinutes?.minutes;
+            } else {
+                byhour = new Date(card.startDate).getHours();
+                byminute = new Date(card.startDate).getMinutes();
+            }
 
-             rRule = {
+            rRule = {
                 freq: "DAILY",
                 interval: 1,
                 wkst: "MO",
-                byhour: [card.timeSpans[0].recurrence?.hoursAndMinutes?.hours],
-                byminute: [card.timeSpans[0].recurrence?.hoursAndMinutes?.minutes],
+                byhour: [byhour],
+                byminute: [byminute],
                 byweekday: card.timeSpans[0].recurrence?.daysOfWeek?.map(day => {
                     return byweekdayValues[day]
                 }),
-                durationInMinutes: card.timeSpans[0].recurrence?.durationInMinutes,
+                durationInMinutes: card.timeSpans[0].recurrence?.durationInMinutes ?? card.data.durationInMinutes,
                 tzid: card.timeSpans[0].recurrence?.timeZone,
                 bysetpos: [],
                 bymonthday: []
             };
 
-            if (card.timeSpans[0].recurrence?.months) {
-                rRule.bymonth = card.timeSpans[0].recurrence?.months?.map(month => {
-                    return month + 1
-                });
+            if (card.timeSpans[0].recurrence) {
+                if (card.timeSpans[0].recurrence.months) {
+                    rRule.bymonth = card.timeSpans[0].recurrence.months.map(month => {
+                        return month + 1
+                    });
+                } else {
+                    rRule.bymonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                }
             } else {
-                rRule.bymonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                rRule.bymonth = [];
             }
         }
 
