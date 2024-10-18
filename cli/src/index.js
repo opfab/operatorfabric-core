@@ -64,7 +64,9 @@ omelette('opfab')
             commands: ['#EMPTY_COMPLETION'],
             'connected-user': ['#EMPTY_COMPLETION'],
             entity: ['#EMPTY_COMPLETION'],
+            'external-device': ['#EMPTY_COMPLETION'],
             group: ['#EMPTY_COMPLETION'],
+            log: ['#EMPTY_COMPLETION'],
             login: ['#EMPTY_COMPLETION'],
             logout: ['#EMPTY_COMPLETION'],
             'monitoring-config': ['#EMPTY_COMPLETION'],
@@ -72,9 +74,11 @@ omelette('opfab')
             'process-group': ['#EMPTY_COMPLETION'],
             'process-monitoring': ['#EMPTY_COMPLETION'],
             'realtime-screen': ['#EMPTY_COMPLETION'],
-            service: ['#EMPTY_COMPLETION'],
+            reminder: ['#EMPTY_COMPLETION'],
             status: ['#EMPTY_COMPLETION'],
-            user: ['#EMPTY_COMPLETION']
+            supervisor: ['#EMPTY_COMPLETION'],
+            user: ['#EMPTY_COMPLETION'],
+            version: ['#EMPTY_COMPLETION']
         },
         log: {
             'get-level': {
