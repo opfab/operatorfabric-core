@@ -760,6 +760,7 @@
             "taskDescriptionLabel": "DESCRIPTION DE LA TÂCHE",
             "dailyFreq": "Répétition quotidienne",
             "monthlyFreq": "Répétition mensuelle",
+            "withoutRecurrence": "Sans récurrence",
             "Repeat": "RÉPÉTER CHAQUE",
             "selectAll": "Sélectionner tout",
             "ordinalDay": "Numéro de jour",
