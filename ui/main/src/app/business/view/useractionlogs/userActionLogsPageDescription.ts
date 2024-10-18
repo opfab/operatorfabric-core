@@ -20,7 +20,8 @@ export class UserActionLogsPageDescription {
         'SEND_CARD',
         'SEND_RESPONSE',
         'OPEN_SUBSCRIPTION',
-        'CLOSE_SUBSCRIPTION'
+        'CLOSE_SUBSCRIPTION',
+        'NOTIFICATION_CONFIG'
     ];
     columnTitle: {
         date: string;

@@ -15,12 +15,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserSettings;
+import org.opfab.users.model.OperationResult.ErrorType;
 import org.opfab.users.repositories.UserSettingsRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +41,17 @@ public class UserSettingsService {
 
     private NotificationService notificationService;
 
+    private UserActionLogService userActionLogService;
+
+    private boolean userActionLogActivated;
+
     public UserSettingsService(UserSettingsRepository userSettingsRepository, UsersService usersService,
-            NotificationService notificationService) {
+            NotificationService notificationService, UserActionLogService userActionLogService, boolean userActionLogActivated) {
         this.userSettingsRepository = userSettingsRepository;
         this.userService = usersService;
         this.notificationService = notificationService;
+        this.userActionLogService = userActionLogService;
+        this.userActionLogActivated = userActionLogActivated;
     }
 
     public OperationResult<UserSettings> fetchUserSettings(String login) {
@@ -63,6 +72,11 @@ public class UserSettingsService {
     @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
     public OperationResult<UserSettings> patchUserSettings(String login, UserSettings userSettingsPatch) {
 
+        Optional<User> foundUser = userService.fetchUserByLogin(login);
+        if (foundUser.isEmpty())
+            return new OperationResult<>(null, false, ErrorType.NOT_FOUND, "User not found: " + login);
+        User user = foundUser.get();
+
         UserSettings oldSettings = userSettingsRepository.findById(login)
                 .orElse(this.getNewUserSettings(login));
         if (!checkFilteringNotificationIsAllowedForAllProcessesStates(login, userSettingsPatch))
@@ -82,7 +96,19 @@ public class UserSettingsService {
                 || (userSettingsPatch.getTimezoneForEmails() != null))
             notificationService.publishUpdatedUserMessage(login);
 
+        if (userActionLogActivated && userSettingsPatch.getProcessesStatesNotNotified() != null) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.NOTIFICATION_CONFIG, user.getEntities(), null,
+                    getProcessesStatesNotNotifiedText(newSettings.getProcessesStatesNotNotified()));
+        }
         return new OperationResult<>(newSettings, true, null, null);
+    }
+
+    private String getProcessesStatesNotNotifiedText(Map<String, List<String>> processesStatesNotNotified) {
+        StringBuilder sb = new StringBuilder();
+        processesStatesNotNotified.forEach((process, states) ->
+            sb.append(process).append(": [").append(String.join(",", states)).append("]\n")
+        );
+        return sb.toString();
     }
 
     private UserSettings getNewUserSettings(String login) {
