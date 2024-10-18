@@ -36,7 +36,7 @@ export class TaskCardTemplate extends HTMLElement {
         <br/>
         ${opfab.utils.getTranslation('builtInTemplate.taskCard.duration')}: ${this.taskCardTemplateView.getDurationInMinutes()} ${opfab.utils.getTranslation('builtInTemplate.taskCard.minutes')} <br/>
         <br/> 
-
+        ${this.taskCardTemplateView.getDateForCardWithoutRecurrence()}
         ${opfab.utils.getTranslation('builtInTemplate.taskCard.at')} ${this.taskCardTemplateView.getHourAndMinutes()}
         <span id="bysetpos"></span><span id="byweekday"></span><br/>
         <br/>

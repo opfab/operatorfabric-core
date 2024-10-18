@@ -60,7 +60,7 @@ export class RRuleReminderService implements EventListener {
             const reminderItem = await this.databaseService.getReminder(card.id);
             if (reminderItem != null) {
                 if (reminderItem.cardUid === card.uid) {
-                    // reminder exists , a remind has just occur , we need to set the reminder for next occurrence
+                    // reminder exists, a reminder has just occur, we need to set the reminder for next occurrence
                     this.logger.debug(
                         `RRuleReminder - Card ${card.id} (uid=${card.uid}) reminder exist for this uid , it means a remind just occurs , set next remind date`
                     );

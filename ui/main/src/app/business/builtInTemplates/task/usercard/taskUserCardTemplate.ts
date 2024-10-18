@@ -67,7 +67,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         <br/>
         
         <div>
-            <table style="width: 30%;margin-bottom: -5px;">
+            <table style="width: 60%;margin-bottom: -5px;">
                 <tr>
                     <td>
                         <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.dailyFreq')} </span>
@@ -78,6 +78,12 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     <td>
                         <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.monthlyFreq')} </span>
                             <input type="radio" id="radioButtonMonthlyFreq">
+                            <span class="opfab-radio-button-checkmark"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="opfab-radio-button"> <span> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.withoutRecurrence')} </span>
+                            <input type="radio" id="radioButtonWithoutRecurrence">
                             <span class="opfab-radio-button-checkmark"></span>
                         </label>
                     </td>
@@ -110,7 +116,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <br/>
         </div>
         
-        <div class="opfab-border-box">
+        <div class="opfab-border-box" id="monthsCheckboxes">
             <table width="100%" style="margin-bottom: -5px;">
                 <tr>
                     <td><label class="opfab-checkbox" style="padding-left:25px">${opfab.utils.getTranslation('builtInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllMonths">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
@@ -211,18 +217,18 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         
             <table style="width:65%">
                 <tr>
-                    <td style="width:6%">
+                    <td style="width:6%" id="atCell">
                     ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.at')} :
                     </td> 
-                    <td style="width:15%">
+                    <td style="width:15%" id="timeCell">
                         <div class="opfab-input">
                             <label> ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.time')} </label>
                             <input type="time" id="time" style="text-align:center" value=${this.view.getByHourAndMinutes()} >
                         </div>
                     </td>
-        
-                    <td style="width:6%">
             
+                    <td style="width:6%" id="separatorCell">
+                
                     </td>
                     <td style="width:22%">
                         <div class="opfab-input">
@@ -253,29 +259,37 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.initEventListeners();
         this.initInitialDates();
         this.initTimeForRecurrence();
-        this.doWeHaveToDisplayMonthlyFreqInEditMode();
+        this.displayWithoutRecurrenceUIInEditModeIfNeeded();
+        this.displayMonthlyFreqUIInEditModeIfNeeded();
         this.checkIsAllDaysSelected();
         this.checkIsAllMonthsSelected();
         this.selectAllDaysIfInCreateMode();
         this.selectAllMonthsIfInCreateMode();
     }
 
-    displayDailyFrequency() {
+    displayDailyFrequencyUI() {
+        (<HTMLInputElement>document.getElementById('radioButtonDailyFreq')).checked = true;
         (<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked = false;
+        (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked = false;
         document.getElementById('daysOfWeek').hidden = false;
         document.getElementById('dayPositionInTheMonth').hidden = true;
+        document.getElementById('monthsCheckboxes').hidden = false;
         document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = true;
         document.getElementById('monthsCheckboxesForDailyFreq').hidden = false;
+        this.displayTimeInput();
         this.checkIsAllMonthsSelected();
     }
 
-    displayMonthlyFrequency() {
+    displayMonthlyFrequencyUI() {
         (<HTMLInputElement>document.getElementById('radioButtonDailyFreq')).checked = false;
         (<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked = true;
+        (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked = false;
         document.getElementById('daysOfWeek').hidden = true;
+        document.getElementById('monthsCheckboxes').hidden = false;
         document.getElementById('monthsCheckboxesForDailyFreq').hidden = true;
         document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = false;
         document.getElementById('dayPositionInTheMonth').hidden = false;
+        this.displayTimeInput();
         this.checkIsAllMonthsSelected();
 
         if (
@@ -285,6 +299,39 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = true;
             this.selectAllMonthsIfInCreateMode();
         }
+    }
+
+    displayWithoutRecurrenceUI() {
+        (<HTMLInputElement>document.getElementById('radioButtonDailyFreq')).checked = false;
+        (<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked = false;
+        (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked = true;
+        document.getElementById('daysOfWeek').hidden = true;
+        document.getElementById('monthsCheckboxesForDailyFreq').hidden = true;
+        document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = true;
+        document.getElementById('dayPositionInTheMonth').hidden = true;
+        document.getElementById('monthsCheckboxes').hidden = true;
+        this.hideTimeInput();
+        this.checkIsAllMonthsSelected();
+
+        if (
+            opfab.currentUserCard.getEditionMode() === 'CREATE' &&
+            this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode === false
+        ) {
+            this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = true;
+            this.selectAllMonthsIfInCreateMode();
+        }
+    }
+
+    displayTimeInput() {
+        document.getElementById('atCell').hidden = false;
+        document.getElementById('timeCell').hidden = false;
+        document.getElementById('separatorCell').hidden = false;
+    }
+
+    hideTimeInput() {
+        document.getElementById('atCell').hidden = true;
+        document.getElementById('timeCell').hidden = true;
+        document.getElementById('separatorCell').hidden = true;
     }
 
     displayNthDayTable() {
@@ -332,16 +379,22 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         });
     }
 
-    doWeHaveToDisplayMonthlyFreqInEditMode() {
+    displayMonthlyFreqUIInEditModeIfNeeded() {
         const freq = this.view.getFrequency();
 
         if (freq === 'MONTHLY') {
-            this.displayMonthlyFrequency();
+            this.displayMonthlyFrequencyUI();
             if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
                 this.selectValuesInEditModeForMonthlyFreq();
             }
         } else if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
             this.selectValuesInEditModeForDailyFreq();
+        }
+    }
+
+    displayWithoutRecurrenceUIInEditModeIfNeeded() {
+        if (opfab.currentUserCard.getEditionMode() !== 'CREATE' && this.view.getFrequency() === undefined) {
+            (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).click();
         }
     }
 
@@ -446,10 +499,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     initEventListeners() {
         const that = this;
         document.querySelector('#radioButtonDailyFreq').addEventListener('click', function () {
-            that.displayDailyFrequency();
+            that.displayDailyFrequencyUI();
         });
         document.querySelector('#radioButtonMonthlyFreq').addEventListener('click', function () {
-            that.displayMonthlyFrequency();
+            that.displayMonthlyFrequencyUI();
+        });
+        document.querySelector('#radioButtonWithoutRecurrence').addEventListener('click', function () {
+            that.displayWithoutRecurrenceUI();
         });
 
         document.querySelector('#selectAllDays').addEventListener('click', function () {
@@ -557,7 +613,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
                 };
             }
-        } else {
+        } else if ((<HTMLInputElement>document.getElementById('radioButtonDailyFreq')).checked === true) {
             freq = 'DAILY';
             byweekday = this.fetchWeekDay();
             bymonth = this.fetchMonthDaily();
@@ -575,6 +631,19 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')
                 };
             }
+        } else if ((<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked === true) {
+            return this.view.getSpecificCardInformation(
+                taskTitle,
+                quillTaskDescriptionEditor,
+                null,
+                durationInMinutes,
+                minutesForReminder,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
         }
 
         return this.view.getSpecificCardInformation(

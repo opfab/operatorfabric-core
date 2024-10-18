@@ -761,6 +761,7 @@
             "taskDescriptionLabel": "TASK DESCRIPTION",
             "dailyFreq": "Daily frequency",
             "monthlyFreq": "Monthly frequency",
+            "withoutRecurrence": "Without recurrence",
             "Repeat": "REPEAT EVERY",
             "selectAll": "Select all",
             "ordinalDay": "Nth day",
