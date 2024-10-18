@@ -9,11 +9,14 @@
 
 package org.opfab.users.controllers;
 
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UserSettingsService;
 import org.opfab.utilities.eventbus.EventBus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +34,13 @@ public class NotificationConfigurationController {
     private final UserSettingsService userSettingsService;
     private final NotificationService notificationService;
 
-    public NotificationConfigurationController(UserRepository userRepository, UserSettingsRepository userSettingsRepository, EventBus eventBus) {
+    public NotificationConfigurationController(UserRepository userRepository,
+            UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
+            EventBus eventBus, @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
         this.notificationService = new NotificationService(userRepository, eventBus);
-        this.userSettingsService = new UserSettingsService(userSettingsRepository, null, notificationService);
+        UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository);
+        this.userSettingsService = new UserSettingsService(userSettingsRepository, null, notificationService,
+                userActionLogService, userActionLogActivated);
     }
 
     @PostMapping(value = "/processstatenotified/{process}/{state}", produces = { "application/json" })

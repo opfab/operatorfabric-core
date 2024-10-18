@@ -69,7 +69,7 @@ public class UserSettingsServiceShould {
                 usersServiceStub = new UsersServiceStub(userRepositoryStub, null, null, null, null);
                 eventBusSpy = new EventBusSpy();
                 userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub,
-                                new NotificationService(userRepositoryStub, eventBusSpy));
+                                new NotificationService(userRepositoryStub, eventBusSpy), null, false);
                 initPerimetersPerUsers();
         }
 
@@ -132,7 +132,7 @@ public class UserSettingsServiceShould {
                 }
 
                 @Test
-                void GIVEN_Not_Existing_User_WHEN_Fetch_Settings_THEN_Success_And_Return_NOT_FOUND() {
+                void GIVEN_Not_Existing_User_WHEN_Fetch_Settings_THEN_Return_NOT_FOUND() {
                         OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("dummy");
                         assertThat(settings.isSuccess()).isFalse();
                         assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -164,15 +164,29 @@ public class UserSettingsServiceShould {
                 void GIVEN_None_Existing_Settings_WHEN_Patch_Settings_THEN_Settings_Are_Created() {
 
                         UserSettings newSettings = new UserSettings();
-                        newSettings.setLogin("user3");
+                        newSettings.setLogin("userWithNoSettings");
                         newSettings.setLocale("nl");
 
-                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user3",
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("userWithNoSettings",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLocale()).isEqualTo("nl");
-                        assertThat(userSettingsRepositoryStub.findById("user3").get().getLocale()).isEqualTo("nl");
+                        assertThat(userSettingsRepositoryStub.findById("userWithNoSettings").get().getLocale()).isEqualTo("nl");
 
+                }
+
+                @Test
+                void GIVEN_Not_Existing_User_WHEN_Patch_Settings_THEN_Return_NOT_FOUND() {
+
+                        UserSettings newSettings = new UserSettings();
+                        newSettings.setLogin("notExistingUser");
+                        newSettings.setLocale("nl");
+
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("notExistingUser",
+                                        newSettings);
+                        assertThat(settings.isSuccess()).isFalse();
+                        assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                        assertThat(settings.getErrorMessage()).isEqualTo("User not found: notExistingUser");
                 }
 
                 @Test

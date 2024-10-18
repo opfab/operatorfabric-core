@@ -42,23 +42,25 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(12);
+        checkNumberOfResultsIs(13);
         checkNumberOfLinesInTableIs(10);
         checkTableLineContains(0, 'OPEN_SUBSCRIPTION', 'admin');
         checkTableLineContains(1, 'CLOSE_SUBSCRIPTION', 'operator2_fr');
-        checkTableLineContains(2, 'UNACK_CARD', 'operator2_fr');
-        checkTableLineContains(3, 'SEND_RESPONSE', 'operator2_fr');
-        checkTableLineContains(4, 'READ_CARD', 'operator2_fr');
-        checkTableLineContains(5, 'ACK_CARD', 'operator2_fr');
-        checkTableLineContains(6, 'READ_CARD', 'operator2_fr');
-        checkTableLineContains(7, 'OPEN_SUBSCRIPTION', 'operator2_fr');
-        checkTableLineContains(8, 'CLOSE_SUBSCRIPTION', 'operator1_fr');
-        checkTableLineContains(9, 'SEND_CARD', 'operator1_fr');
+        checkTableLineContains(2, 'NOTIFICATION_CONFIG', 'operator2_fr');
+        checkTableLineContains(3, 'UNACK_CARD', 'operator2_fr');
+        checkTableLineContains(4, 'SEND_RESPONSE', 'operator2_fr');
+        checkTableLineContains(5, 'READ_CARD', 'operator2_fr');
+        checkTableLineContains(6, 'ACK_CARD', 'operator2_fr');
+        checkTableLineContains(7, 'READ_CARD', 'operator2_fr');
+        checkTableLineContains(8, 'OPEN_SUBSCRIPTION', 'operator2_fr');
+        checkTableLineContains(9, 'CLOSE_SUBSCRIPTION', 'operator1_fr');
+
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
-        checkNumberOfLinesInTableIs(2);
+        checkNumberOfLinesInTableIs(3);
         checkTableLineContains(0, 'SEND_CARD', 'operator1_fr');
-        checkTableLineContains(1, 'OPEN_SUBSCRIPTION', 'operator1_fr');
+        checkTableLineContains(1, 'SEND_CARD', 'operator1_fr');
+        checkTableLineContains(2, 'OPEN_SUBSCRIPTION', 'operator1_fr');
 
         selectUsername(['operator1_fr', 'operator2_fr']);
         selectAction(['SEND_CARD', 'READ_CARD']);
@@ -78,7 +80,7 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(14);
+        checkNumberOfResultsIs(15);
         checkNumberOfLinesInTableIs(10);
 
         clickOnExportButton();
@@ -92,22 +94,23 @@ describe('User action logs page', () => {
             expect(files[0]).to.match(/^UserActionLogs_export_\d*\.xlsx/);
             // check file content
             cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
-                expect(rows.length).to.equal(14);
+                expect(rows.length).to.equal(15);
 
                 checkExportLineContains(rows[0], 'OPEN_SUBSCRIPTION', 'admin');
                 checkExportLineContains(rows[1], 'CLOSE_SUBSCRIPTION', 'admin');
                 checkExportLineContains(rows[2], 'OPEN_SUBSCRIPTION', 'admin');
                 checkExportLineContains(rows[3], 'CLOSE_SUBSCRIPTION', 'operator2_fr');
-                checkExportLineContains(rows[4], 'UNACK_CARD', 'operator2_fr');
-                checkExportLineContains(rows[5], 'SEND_RESPONSE', 'operator2_fr');
-                checkExportLineContains(rows[6], 'READ_CARD', 'operator2_fr');
-                checkExportLineContains(rows[7], 'ACK_CARD', 'operator2_fr');
-                checkExportLineContains(rows[8], 'READ_CARD', 'operator2_fr');
-                checkExportLineContains(rows[9], 'OPEN_SUBSCRIPTION', 'operator2_fr');
-                checkExportLineContains(rows[10], 'CLOSE_SUBSCRIPTION', 'operator1_fr');
-                checkExportLineContains(rows[11], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[4], 'NOTIFICATION_CONFIG', 'operator2_fr');
+                checkExportLineContains(rows[5], 'UNACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[6], 'SEND_RESPONSE', 'operator2_fr');
+                checkExportLineContains(rows[7], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[8], 'ACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[9], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[10], 'OPEN_SUBSCRIPTION', 'operator2_fr');
+                checkExportLineContains(rows[11], 'CLOSE_SUBSCRIPTION', 'operator1_fr');
                 checkExportLineContains(rows[12], 'SEND_CARD', 'operator1_fr');
-                checkExportLineContains(rows[13], 'OPEN_SUBSCRIPTION', 'operator1_fr');
+                checkExportLineContains(rows[13], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[14], 'OPEN_SUBSCRIPTION', 'operator1_fr');
             });
         });
     });
@@ -116,13 +119,13 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(16);
+        checkNumberOfResultsIs(17);
         clickOnLineNumber(0);
         cy.get('of-simplified-card-view').should('not.exist');
-        clickOnLineNumber(6);
+        clickOnLineNumber(7);
         cy.get('of-simplified-card-view').should('exist');
         closeCardDetail();
-        clickOnLineNumber(7);
+        clickOnLineNumber(8);
         cy.get('of-simplified-card-view').should('exist');
 
         // Check the response has been integrated in the template
@@ -153,6 +156,7 @@ describe('User action logs page', () => {
         feed.checkNumberOfDisplayedCardsIs(1);
         feed.openFirstCard();
         card.unacknowledge();
+        changeNotificationConfiguration();
     }
 
     function sendQuestionCard() {
@@ -174,6 +178,14 @@ describe('User action logs page', () => {
         usercard.selectRecipient('Control Center FR South');
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
+    }
+
+    function changeNotificationConfiguration() {
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-notificationconfiguration-processlist').eq(0).find('p').eq(1).find('input').uncheck({force: true});
+        cy.get('#opfab-notificationconfiguration-btn-confirm').click(); // Save settings
+        cy.get('#opfab-btn-ok').click(); // and confirm
+        cy.get('#opfab-btn-ok').should('not.exist'); // wait for dialog to go away
     }
 
     function clickOnSearchButton() {
