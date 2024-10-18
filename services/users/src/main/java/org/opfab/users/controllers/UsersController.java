@@ -14,6 +14,8 @@ import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
@@ -26,6 +28,7 @@ import org.opfab.users.services.UserSettingsService;
 import org.opfab.users.services.UsersService;
 import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,17 +58,21 @@ public class UsersController implements UserExtractor {
     private final UsersService usersService;
     private final UserSettingsService userSettingsService;
     private final NotificationService notificationService;
+    private final UserActionLogService userActionLogService;
 
     @Autowired
     public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository,
             GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
-            EventBus eventBus, JwtProperties jwtProperties, GroupsProperties groupsProperties) {
+            UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
+            GroupsProperties groupsProperties, @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
         this.jwtProperties = jwtProperties;
         this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
         this.usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,
                 notificationService);
-        this.userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService);
+        this.userActionLogService = new UserActionLogService(userActionLogRepository);
+        this.userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService,
+                this.userActionLogService, userActionLogActivated);
     }
 
     @GetMapping(produces = { "application/json" })
@@ -164,7 +171,8 @@ public class UsersController implements UserExtractor {
     public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("login") String login,
             @Valid @RequestBody UserSettings userSettings) throws ApiErrorException {
-        OperationResult<UserSettings> result = userSettingsService.patchUserSettings(login, userSettings);
+        User user = this.extractUserFromJwtToken(request);
+        OperationResult<UserSettings> result = userSettingsService.patchUserSettings(user, login, userSettings);
         if (result.isSuccess())
             return result.getResult();
         else

@@ -149,6 +149,10 @@ export class UserActionLogsComponent implements OnInit {
         });
     }
 
+    splitOnLineBreaks(text: string): string[] {
+        return text ? text.split('\n') : [];
+    }
+
     private setViewParametersFromForm(page) {
         const logins = this.userActionLogsForm.get('login').value;
         const actions = this.userActionLogsForm.get('action').value;

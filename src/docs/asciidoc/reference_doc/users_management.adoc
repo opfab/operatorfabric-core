@@ -199,6 +199,7 @@ OperatorFabric allows you to view most relevant user actions:
 - UNREAD_CARD
 - SEND_CARD
 - SEND_RESPONSE
+- NOTIFICATION_CONFIG
 
 For each action the following information are available: 
 

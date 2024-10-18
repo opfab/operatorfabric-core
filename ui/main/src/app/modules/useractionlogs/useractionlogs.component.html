@@ -81,7 +81,7 @@ font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
                             <td>{{ row.login }}</td>
                             <td>{{ row.entities }}</td>
                             <td>{{ row.cardUid }}</td>
-                            <td>{{ row.comment }}</td>
+                            <td><div *ngFor="let comment of splitOnLineBreaks(row.comment)">{{ comment }}</div></td>
                         </tr>
                     </tbody>
                 </table>

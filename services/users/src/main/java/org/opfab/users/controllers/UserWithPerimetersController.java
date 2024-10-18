@@ -9,6 +9,8 @@
 
 package org.opfab.users.controllers;
 
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
@@ -20,6 +22,7 @@ import org.opfab.users.services.CurrentUserWithPerimetersService;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UserSettingsService;
 import org.opfab.users.services.UsersService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,16 +39,20 @@ public class UserWithPerimetersController {
     private CurrentUserWithPerimetersService currentUserWithPerimetersService;
 
     public UserWithPerimetersController(UserRepository userRepository, GroupRepository groupRepository,
-            PerimeterRepository perimeterRepository, EntityRepository entityRepository,
-            UserSettingsRepository userSettingsRepository, EventBus eventBus) {
+                    PerimeterRepository perimeterRepository, EntityRepository entityRepository,
+                    UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
+                    EventBus eventBus,
+                    @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
 
-        NotificationService notificationService = new NotificationService(userRepository, eventBus);
-        UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
-                perimeterRepository, notificationService);
-        UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService,
-                notificationService);
-        this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService, userSettingsService,
-                entityRepository);
+            NotificationService notificationService = new NotificationService(userRepository, eventBus);
+            UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
+                            perimeterRepository, notificationService);
+            UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository);
+            UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService,
+                            notificationService, userActionLogService, userActionLogActivated);
+            this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService,
+                            userSettingsService,
+                            entityRepository);
     }
 
     @GetMapping(value = "/{login}", produces = { "application/json" })
