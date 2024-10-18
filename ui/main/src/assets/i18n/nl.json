@@ -761,6 +761,7 @@
             "taskDescriptionLabel": "TAAK BESCHRIJVING",
             "dailyFreq": "Dagelijkse frequentie",
             "monthlyFreq": "Maandelijkse frequentie",
+            "withoutRecurrence": "Zonder herhaling",
             "Repeat": "HERHAAL ELKE",
             "selectAll": "Alles selecteren",
             "ordinalDay": "N-de dag",

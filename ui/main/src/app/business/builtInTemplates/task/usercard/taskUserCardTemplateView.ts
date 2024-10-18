@@ -22,19 +22,25 @@ export class TaskUserCardTemplateView {
         bymonthday: number[],
         time: string
     ) {
-        const byhour = [parseInt(time.slice(0, 2))]; // the hours are the 2 first characters
-        const byminute = [parseInt(time.slice(-2))]; // the minutes are the 2 last characters
+        let byhour, byminute;
+        if (time) {
+            byhour = [parseInt(time.slice(0, 2))]; // the hours are the 2 first characters
+            byminute = [parseInt(time.slice(-2))]; // the minutes are the 2 last characters
+        }
 
-        const rRule = {
-            freq: freq,
-            byweekday: byweekday,
-            byhour: byhour,
-            byminute: byminute,
-            durationInMinutes: durationInMinutes,
-            bymonth: bymonth,
-            bysetpos: bysetpos,
-            bymonthday: bymonthday
-        };
+        let rRule;
+        if (freq) {
+            rRule = {
+                freq: freq,
+                byweekday: byweekday,
+                byhour: byhour,
+                byminute: byminute,
+                durationInMinutes: durationInMinutes,
+                bymonth: bymonth,
+                bysetpos: bysetpos,
+                bymonthday: bymonthday
+            };
+        }
 
         const card = {
             summary: {key: 'taskAdvanced.summary'},
@@ -43,14 +49,16 @@ export class TaskUserCardTemplateView {
             data: {
                 taskTitle: taskTitle,
                 richTaskDescription: quillTaskDescriptionEditor.getContents(),
-                minutesForReminder: minutesForReminder
+                minutesForReminder: minutesForReminder,
+                durationInMinutes: durationInMinutes
             },
             rRule: rRule
         };
 
         return {
             valid: true,
-            card: card
+            card: card,
+            viewCardInCalendar: freq ? undefined : true
         };
     }
 

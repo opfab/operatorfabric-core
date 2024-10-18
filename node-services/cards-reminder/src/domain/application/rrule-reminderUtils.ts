@@ -14,6 +14,7 @@ const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     let nextTime = -1;
+
     if (startingDate == null) {
         startingDate = new Date().valueOf();
     }

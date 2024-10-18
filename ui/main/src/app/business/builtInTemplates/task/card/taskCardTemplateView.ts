@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {DateTimeFormatterService} from '../../../services/date-time-formatter.service';
+
 declare const opfab;
 
 export class TaskCardTemplateView {
@@ -36,12 +38,26 @@ export class TaskCardTemplateView {
     }
 
     public getDurationInMinutes(): number {
-        return opfab.currentCard.getCard()?.rRule?.durationInMinutes;
+        return (
+            opfab.currentCard.getCard()?.rRule?.durationInMinutes ?? opfab.currentCard.getCard()?.data.durationInMinutes
+        );
+    }
+
+    public getDateForCardWithoutRecurrence(): string {
+        if (opfab.currentCard.getCard()?.rRule?.freq) return '';
+        return 'On ' + DateTimeFormatterService.getFormattedDate(opfab.currentCard.getCard()?.startDate, 'dd/MM/yyyy');
     }
 
     public getHourAndMinutes(): string {
-        const hour = opfab.currentCard.getCard()?.rRule?.byhour[0]?.toString().padStart(2, '0');
-        const minute = opfab.currentCard.getCard()?.rRule?.byminute[0]?.toString().padStart(2, '0');
+        let hour, minute;
+
+        if (opfab.currentCard.getCard()?.rRule) {
+            hour = opfab.currentCard.getCard().rRule.byhour[0]?.toString().padStart(2, '0');
+            minute = opfab.currentCard.getCard().rRule.byminute[0]?.toString().padStart(2, '0');
+        } else {
+            hour = new Date(opfab.currentCard.getCard()?.startDate).getHours().toString().padStart(2, '0');
+            minute = new Date(opfab.currentCard.getCard()?.startDate).getMinutes().toString().padStart(2, '0');
+        }
         return hour + ':' + minute;
     }
 
