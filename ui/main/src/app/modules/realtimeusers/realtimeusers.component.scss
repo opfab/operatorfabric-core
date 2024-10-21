@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,40 @@
     text-transform: uppercase;
 }
 
+#opfab-realtimeusers-no-screen-configuration { 
+    text-align: center; 
+    font-size: 20px; 
+    padding-top: 100px
+}
+
+.opfab-realtimeusers-header {
+    background-color: var(--opfab-bgcolor-darker);
+    margin-top:20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+}
+
+.opfab-realtimeusers-select {
+    max-width: max-content;
+    min-width: 15%;
+}
+
+.opfab-realtimeusers-body {
+    display:flex;
+    flex-wrap: wrap;
+    margin-left: 10px ;
+    margin-right: 0;
+}
+
+
+// columns only if screen is sufficiently large
+@media (width >= 1000px) {
+.opfab-realtimeusers-column {
+    flex: 1;
+}
+}
+
 .opfab-realtimeusers-entitiesgroups {
     background-color: var(--opfab-bgcolor-darker);
     border-radius: 8px;
@@ -27,13 +61,15 @@
     padding: 10px;
 }
 
+
 .opfab-realtimeusers-entitiesgroups-title {
     font-size: 15px;
     font-weight: bold;
 }
 
-.badge-pill {
-    color: var(--opfab-text-color-stronger);
+.opfab-realtimeusers-entitiesgroups-table {
+    width: 100%;
+    table-layout: fixed
 }
 
 .opfab-group-label {
@@ -43,4 +79,6 @@
     max-width: 180px;
     display: inline-block;
     vertical-align: middle;
+    margin-left: 5px;
 }
+
