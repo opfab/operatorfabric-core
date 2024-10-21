@@ -119,7 +119,7 @@ app.get('/stop', (req, res) => {
             }
         })
         .catch((err) => {
-            logger.error('Error getting authorization in GET /start' + err);
+            logger.error('Error getting authorization in GET /stop' + err);
         });
 });
 

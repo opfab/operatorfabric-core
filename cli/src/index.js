@@ -126,7 +126,12 @@ omelette('opfab')
             reset: ['#EMPTY_COMPLETION']
         },
         status: ['#EMPTY_COMPLETION'],
-        supervisor: {'add-entity': ['#EMPTY_COMPLETION'], 'delete-entity': ['#EMPTY_COMPLETION']},
+        supervisor: {
+            'add-entity': ['#EMPTY_COMPLETION'],
+            'delete-entity': ['#EMPTY_COMPLETION'],
+            'start': ['#EMPTY_COMPLETION'],
+            'stop': ['#EMPTY_COMPLETION']
+        },
         user: {
             'add-to-entity': ['#EMPTY_COMPLETION'],
             'add-to-group': ['#EMPTY_COMPLETION'],

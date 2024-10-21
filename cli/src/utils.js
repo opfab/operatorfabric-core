@@ -94,7 +94,6 @@ const utils = {
         if (body) {
             options.body = body;
         }
-
         let response;
         try {
             response = await fetch(url, options);
