@@ -79,4 +79,22 @@ describe('Task Card Template View', () => {
             'Translation (en) of builtInTemplate.taskCard.in Translation (en) of shared.calendar.january'
         );
     });
+
+    it('GIVEN a card without recurrence WHEN get data THEN data is provided', () => {
+        OpfabAPIService.currentCard.card = {
+            startDate: new Date('2025-02-28T09:15:00').getTime(),
+            data: {
+                taskTitle: 'My task Title for my non-recurrent card',
+                richTaskDescription: 'My task Description for my non-recurrent card',
+                durationInMinutes: 15
+            }
+        };
+        expect(view.getTaskTitle()).toEqual('My task Title for my non-recurrent card');
+        expect(view.getTaskDescription()).toEqual('My task Description for my non-recurrent card');
+        expect(view.getDateForCardWithoutRecurrence()).toEqual(
+            '<br/><br/>Translation (en) of builtInTemplate.taskUserCard.the 28/02/2025'
+        );
+        expect(view.getHourAndMinutes()).toEqual('09:15');
+        expect(view.getDurationInMinutes()).toEqual(15);
+    });
 });

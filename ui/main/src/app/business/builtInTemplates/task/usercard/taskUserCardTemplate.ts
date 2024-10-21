@@ -116,7 +116,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             <br/>
         </div>
         
-        <div class="opfab-border-box" id="monthsCheckboxes">
+        <div class="opfab-border-box" id="monthsCheckboxesDiv">
             <table width="100%" style="margin-bottom: -5px;">
                 <tr>
                     <td><label class="opfab-checkbox" style="padding-left:25px">${opfab.utils.getTranslation('builtInTemplate.taskUserCard.selectAll')} <input type="checkbox" id="selectAllMonths">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
@@ -212,10 +212,9 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         </div>
         
         <br/>
-        <br/>
         <div>
         
-            <table style="width:65%">
+            <table style="width:65%" id="atTable">
                 <tr>
                     <td style="width:6%" id="atCell">
                     ${opfab.utils.getTranslation('builtInTemplate.taskUserCard.at')} :
@@ -273,7 +272,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked = false;
         document.getElementById('daysOfWeek').hidden = false;
         document.getElementById('dayPositionInTheMonth').hidden = true;
-        document.getElementById('monthsCheckboxes').hidden = false;
+        document.getElementById('monthsCheckboxesDiv').hidden = false;
         document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = true;
         document.getElementById('monthsCheckboxesForDailyFreq').hidden = false;
         this.displayTimeInput();
@@ -285,7 +284,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         (<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked = true;
         (<HTMLInputElement>document.getElementById('radioButtonWithoutRecurrence')).checked = false;
         document.getElementById('daysOfWeek').hidden = true;
-        document.getElementById('monthsCheckboxes').hidden = false;
+        document.getElementById('monthsCheckboxesDiv').hidden = false;
         document.getElementById('monthsCheckboxesForDailyFreq').hidden = true;
         document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = false;
         document.getElementById('dayPositionInTheMonth').hidden = false;
@@ -309,7 +308,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         document.getElementById('monthsCheckboxesForDailyFreq').hidden = true;
         document.getElementById('monthsCheckboxesForMonthlyFreq').hidden = true;
         document.getElementById('dayPositionInTheMonth').hidden = true;
-        document.getElementById('monthsCheckboxes').hidden = true;
+        document.getElementById('monthsCheckboxesDiv').hidden = true;
         this.hideTimeInput();
         this.checkIsAllMonthsSelected();
 
@@ -323,6 +322,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     }
 
     displayTimeInput() {
+        document.getElementById('atTable').setAttribute('style', 'width:65%');
         document.getElementById('atCell').hidden = false;
         document.getElementById('timeCell').hidden = false;
         document.getElementById('separatorCell').hidden = false;
@@ -332,6 +332,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         document.getElementById('atCell').hidden = true;
         document.getElementById('timeCell').hidden = true;
         document.getElementById('separatorCell').hidden = true;
+        document.getElementById('atTable').setAttribute('style', 'width:45%');
     }
 
     displayNthDayTable() {
