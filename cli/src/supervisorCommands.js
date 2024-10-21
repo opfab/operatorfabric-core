@@ -20,8 +20,10 @@ const supervisorCommands = {
                     name: 'value',
                     message: 'Supervisor command',
                     choices: [
-                        {title: 'add supervising entity', value: 'add-entity'},
-                        {title: 'delete supervising entities', value: 'delete-entity'}
+                        {title: 'add supervised entity', value: 'add-entity'},
+                        {title: 'delete supervised entity', value: 'delete-entity'},
+                        {title: 'start supervisor service', value: 'start'},
+                        {title: 'stop supervisor service', value: 'stop'}
                     ]
                 })
             ).value;
@@ -38,6 +40,12 @@ const supervisorCommands = {
             case 'delete-entity':
                 await this.deleteSupervisedEntity(args[1]);
                 break;
+            case 'start':
+                await this.startSupervisorService();
+                break;
+            case 'stop':
+                await this.stopSupervisorService();
+                break;
             default:
                 console.log(`Unknown supervisor command : ${command}
                 `);
@@ -47,22 +55,22 @@ const supervisorCommands = {
     },
 
     async addSupervisorEntity(supervisedEntity, supervisingEntity) {
-        supervisedEntity = await utils.missingTextPrompt('Supervised entity name', supervisedEntity);
+        supervisedEntity = await utils.missingTextPrompt('Supervised entity id', supervisedEntity);
         if (!supervisedEntity) {
             return;
         }
-        supervisingEntity = await utils.missingTextPrompt('Supervising entity name', supervisingEntity);
+        supervisingEntity = await utils.missingTextPrompt('Supervising entity id', supervisingEntity);
         if (!supervisingEntity) {
             return;
         }
 
         const entityToSuperviseResponse = await utils.sendRequest(
-            `supervisor/supervisedEntities`,
+            'supervisor/supervisedEntities',
             'GET',
             undefined,
             '',
-            `Failed to fetch entities to supervise`,
-            ``
+            'Failed to fetch entities to supervise',
+            ''
         );
         if (!entityToSuperviseResponse.ok) {
             return;
@@ -83,17 +91,17 @@ const supervisorCommands = {
         }
 
         await utils.sendRequest(
-            `supervisor/supervisedEntities`,
+            'supervisor/supervisedEntities',
             'POST',
             JSON.stringify(entityToSupervise),
             `Entity ${supervisedEntity} is supervised by entity ${supervisingEntity}`,
-            `Failed to set supervising entity`,
+            'Failed to set supervising entity',
             `Supervised entity ${supervisedEntity} or supervising entity ${supervisingEntity} not found`
         );
     },
 
     async deleteSupervisedEntity(supervisedEntity) {
-        supervisedEntity = await utils.missingTextPrompt('Supervised entity name', supervisedEntity);
+        supervisedEntity = await utils.missingTextPrompt('Supervised entity id', supervisedEntity);
         if (!supervisedEntity) {
             return;
         }
@@ -107,13 +115,37 @@ const supervisorCommands = {
         );
     },
 
+    async startSupervisorService() {
+        await utils.sendRequest(
+            'supervisor/start',
+            'GET',
+            undefined,
+            'Supervisor service started',
+            'Failed to start supervisor service',
+            'Supervisor service not found'
+        );
+    },
+
+    async stopSupervisorService() {
+        await utils.sendRequest(
+            'supervisor/stop',
+            'GET',
+            undefined,
+            'Supervisor service stopped',
+            'Failed to stop supervisor service',
+            'Supervisor service not found'
+        );
+    },
+
     async printHelp() {
         console.log(`Usage: opfab supervisor <command> [args]
 
 Command list :
 
-    add-entity       add supervisor : opfab add-entity <supervisedEntity> <supervisorEntity>
-    delete-entity    delete supervisor : opfab delete-entity <supervisedEntity>
+    add-entity       add supervised entity : opfab supervisor add-entity <supervisedEntityId> <supervisorEntityId>
+    delete-entity    delete supervised entity : opfab supervisor delete-entity <supervisedEntityId>
+    start            start supervisor service : opfab supervisor start
+    stop             stop supervisor service : opfab supervisor stop
 
         `);
     }
