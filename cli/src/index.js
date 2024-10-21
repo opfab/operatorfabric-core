@@ -47,6 +47,8 @@ omelette('opfab')
             delete: ['#EMPTY_COMPLETION']
         },
         'external-device': {
+            add: ['#EMPTY_COMPLETION'],
+            remove: ['#EMPTY_COMPLETION'],
             'set-user-devices': ['#EMPTY_COMPLETION'],
             'remove-user-devices': ['#EMPTY_COMPLETION'],
             enable: ['#EMPTY_COMPLETION'],
