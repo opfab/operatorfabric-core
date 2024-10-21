@@ -110,7 +110,7 @@ describe('Task Advanced', function () {
       feed.checkSelectedCardHasSummary("There is something to do");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Test task for daily frequency");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Duration: 20 minutes");
-      cy.get('#opfab-div-card-template-processed').should('contain.text', "At 20:00\n        on Monday Wednesday Friday");
+      cy.get('#opfab-div-card-template-processed').should('contain.text', "At 20:00\n        \n        on Monday Wednesday Friday");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "in February May August November December");
 
       // We check all fields are correctly filled
@@ -245,7 +245,7 @@ describe('Task Advanced', function () {
       feed.checkSelectedCardHasSummary("There is something to do");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Test task for monthly frequency (Nth weekday)");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "Duration: 7 minutes");
-      cy.get('#opfab-div-card-template-processed').should('contain.text', "19:00\n        The first  Wednesday");
+      cy.get('#opfab-div-card-template-processed').should('contain.text', "19:00\n        \n        The first  Wednesday");
       cy.get('#opfab-div-card-template-processed').should('contain.text', "in September December");
 
       // We check all fields are correctly filled

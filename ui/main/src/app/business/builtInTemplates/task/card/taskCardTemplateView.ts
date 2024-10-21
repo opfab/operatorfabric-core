@@ -44,8 +44,15 @@ export class TaskCardTemplateView {
     }
 
     public getDateForCardWithoutRecurrence(): string {
-        if (opfab.currentCard.getCard()?.rRule?.freq) return '';
-        return 'On ' + DateTimeFormatterService.getFormattedDate(opfab.currentCard.getCard()?.startDate, 'dd/MM/yyyy');
+        if (opfab.currentCard.getCard()?.rRule?.freq) {
+            return '';
+        }
+        return (
+            '<br/><br/>' +
+            opfab.utils.getTranslation('builtInTemplate.taskUserCard.the') +
+            ' ' +
+            DateTimeFormatterService.getFormattedDate(opfab.currentCard.getCard()?.startDate, 'dd/MM/yyyy')
+        );
     }
 
     public getHourAndMinutes(): string {
