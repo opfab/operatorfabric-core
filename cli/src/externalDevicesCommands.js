@@ -21,6 +21,8 @@ const externalDevicesCommands = {
                     name: 'value',
                     message: 'external device action',
                     choices: [
+                        {title: 'Add new device', value: 'add'},
+                        {title: 'Remove device', value: 'remove'},
                         {title: 'Set user devices', value: 'set-user-devices'},
                         {title: 'Remove user devices', value: 'remove-user-devices'},
                         {title: 'Enable device', value: 'enable'},
@@ -34,6 +36,12 @@ const externalDevicesCommands = {
             }
         }
         switch (action) {
+            case 'add':
+                await this.addDevice(args.slice(1));
+                break;
+            case 'remove': 
+                await this.removeDevice(args.slice(1));
+                break;
             case 'set-user-devices':
                 await this.setUserDevices(args.slice(1));
                 break;
@@ -52,6 +60,53 @@ const externalDevicesCommands = {
                 await this.printHelp();
                 break;
         }
+    },
+    async addDevice(args) {
+        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        if (!deviceId) {
+            return;
+        }
+        args.slice(1);
+        let host =  await utils.missingTextPrompt('Host', args[1]);
+        if (!host) {
+            return;
+        }
+        let port =  await utils.missingTextPrompt('Port', args[2]);
+        if (!port) {
+            return;
+        }
+        if (isNaN(port)) {
+            console.log('Port must be a number');
+            return;
+        }
+        let signalMappingId =  await utils.missingTextPrompt('Signal mapping ID', args[3]);
+        if (!signalMappingId) {
+            return;
+        }
+
+        await utils.sendRequest(
+            `externaldevices/configurations/devices`,
+            'POST',
+            this.buildJsonDeviceRequest(deviceId, host, port, signalMappingId),
+            `External device ${deviceId} added successfully`,
+            `Failed to add external device ${deviceId}`,
+            `Failed to add external device ${deviceId}, not found error`
+        );
+    },
+
+    async removeDevice(args) {
+        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        if (!deviceId) {
+            return;
+        }
+        await utils.sendRequest(
+            `externaldevices/configurations/devices/${deviceId}`,
+            'DELETE',
+            undefined,
+            `External device ${deviceId} removed successfully`,
+            `Failed to remove external device ${deviceId}`,
+            `Failed to remove external device ${deviceId}, not found error`
+        );
     },
 
     async setUserDevices(args) {
@@ -134,12 +189,17 @@ const externalDevicesCommands = {
         const request = {userLogin: user, externalDeviceIds: devices};
         return JSON.stringify(request);
     },
+    buildJsonDeviceRequest(id, host, port, mappingId) {
+        const request = {id: id, host: host, port: Number(port), signalMappingId: mappingId, isEnabled: true};
+        return JSON.stringify(request);
+    },
 
     async printHelp() {
         console.log(`Usage: opfab external-device <command> [user] <deviceId>...
 
             Command list :
-            
+                add                   configure a new external device: opfab external-device add <deviceId> <host> <port> <signalMappingId>
+                remove                remove an external device: opfab external-device remove <deviceId>
                 set-user-devices      set the list of devices for a user: opfab external-device set-user-devices <user> <deviceId>...
                 remove-user-devices   remove all devices for a user: opfab external-device remove-user-devices <user>
                 enable                enable an external device: opfab external-device enable <deviceId>
