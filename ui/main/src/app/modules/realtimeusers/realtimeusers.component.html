@@ -14,34 +14,31 @@
 
  <of-spinner *ngIf="!isPageLoaded"></of-spinner>
 
-    <div *ngIf="isPageLoaded && !realtimePage; then noScreenConfiguration"></div>
+    <div *ngIf="isPageLoaded && !realtimePage">
+        <div id="opfab-realtimeusers-no-screen-configuration" translate>shared.featureNotConfigured</div>
+    </div>
     <div *ngIf="isPageLoaded && realtimePage">
-
-        <br>
-        <div style="background-color: var(--opfab-bgcolor-darker)">
-            <br>
-            <div class="row" style="margin-left: 0px;margin-right: 0px;">
-                <div class="col-sm text-center" style="max-width: max-content;min-width: 15%;position:relative">
+        <div class="opfab-realtimeusers-header">
+                <div class="opfab-realtimeusers-select">
                     <of-multi-select id="of-realtimeusers-screen-selector" multiSelectId="realTimeScreen" [parentForm]="realTimeScreensForm"
                                      [config]="multiSelectConfig" [options]="realtimePage.screenOptions" [selectedOptions]="initialScreenOption">
                     </of-multi-select>
                 </div>
-            </div>
-            <br>
         </div>
 
-        <div class="row" style="margin-left: 0px; margin-right: 0px;">
-            <div class="col-sm" *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index;">
+        <div class="opfab-realtimeusers-body">
+            <div class="opfab-realtimeusers-column" *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index;">
                 <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entityPages;">
                     <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
-                    <table aria-describedby="real time users table" style="width: 100%;table-layout: fixed">
+                    <table class="opfab-realtimeusers-entitiesgroups-table" aria-describedby="real time users table">
                         <tr *ngFor="let line of entitiesGroupsElement.lines;">
                             <th scope="row">{{line.entityName}}</th>
 
                             <td>
                                 <ng-template #connected>
-                                    <span class="badge rounded-pill bg-primary">{{line.connectedUsersCount}}
-                                    </span>&nbsp;<span [id]="'grouped-label-' + line.entityId" class="opfab-group-label"
+                                    <span class="opfab-rounded-badge opfab-blue-background">{{line.connectedUsersCount}}
+                                    </span>
+                                    <span [id]="'grouped-label-' + line.entityId" class="opfab-group-label"
                                         [disablePopover]="!isEllipsisActive('grouped-label-' + line.entityId)"
                                         placement="top-left"
                                         [ngbPopover]="usersDropdown" container="body"
@@ -52,10 +49,13 @@
                                 </ng-template>
                                 <ng-template #usersDropdown>
                                     <div *ngFor="let user of line.connectedUsers.split(', ')">
-                                      &nbsp; {{user}} &nbsp;
+                                      {{user}}
                                     </div>
                                   </ng-template>
-                                <ng-template #disconnected><span class="badge rounded-pill bg-secondary">0</span></ng-template>
+                                
+                                  <ng-template #disconnected>
+                                    <span class="opfab-rounded-badge opfab-grey-background">0</span>
+                                </ng-template>
                                 <span *ngIf="line.connectedUsersCount;then connected else disconnected"></span>
                             </td>
                         </tr>
@@ -65,9 +65,3 @@
         </div>
     </div>
 </form>
-
-
-
-<ng-template #noScreenConfiguration>
-    <div id="opfab-realtimeusers-no-screen-configuration" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.featureNotConfigured</div>
-</ng-template>

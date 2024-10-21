@@ -20,6 +20,7 @@
     --opfab-color-severity-action: #fd9312;
     --opfab-color-severity-compliant: #00bb03;
     --opfab-color-severity-information: #1074ad;
+    --opfab-color-grey: #6c757d;
 }
 
 [opfab-theme='NIGHT'] {
@@ -184,6 +185,15 @@
 .opfab-color-success {
     color: var(--opfab-color-green);
 }
+
+.opfab-grey-background {
+    background-color: var(--opfab-color-grey);
+}
+
+.opfab-blue-background {
+    background-color: var(--opfab-color-darker-blue);
+}
+
 
 body {
     height: 100vh;
@@ -977,3 +987,19 @@ input:-webkit-autofill {
     display: block;
     opacity: 1;
 }
+
+
+.opfab-rounded-badge {
+    color: white;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    border-radius: 50rem;
+    padding : 0.35em 0.65em;
+    vertical-align: baseline;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+
