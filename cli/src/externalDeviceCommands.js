@@ -8,11 +8,11 @@
  */
 
 const prompts = require('prompts');
-const utils = require("./utils");
+const utils = require('./utils');
 const fs = require('fs').promises;
 
-const externalDevicesCommands = {
-    async processExternalDevicesCommand(args) {
+const externalDeviceCommands = {
+    async processExternalDeviceCommand(args) {
         let action = args[0];
         if (!action) {
             action = (
@@ -39,19 +39,19 @@ const externalDevicesCommands = {
             case 'add':
                 await this.addDevice(args.slice(1));
                 break;
-            case 'remove': 
+            case 'remove':
                 await this.removeDevice(args.slice(1));
                 break;
             case 'set-user-devices':
                 await this.setUserDevices(args.slice(1));
                 break;
-            case 'remove-user-devices': 
+            case 'remove-user-devices':
                 await this.removeUserDevices(args.slice(1));
                 break;
-            case 'enable': 
+            case 'enable':
                 await this.enableDevice(args.slice(1));
                 break;
-            case 'disable': 
+            case 'disable':
                 await this.disableDevice(args.slice(1));
                 break;
             default:
@@ -62,16 +62,16 @@ const externalDevicesCommands = {
         }
     },
     async addDevice(args) {
-        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        let deviceId = await utils.missingTextPrompt('Device ID', args[0]);
         if (!deviceId) {
             return;
         }
         args.slice(1);
-        let host =  await utils.missingTextPrompt('Host', args[1]);
+        let host = await utils.missingTextPrompt('Host', args[1]);
         if (!host) {
             return;
         }
-        let port =  await utils.missingTextPrompt('Port', args[2]);
+        let port = await utils.missingTextPrompt('Port', args[2]);
         if (!port) {
             return;
         }
@@ -79,7 +79,7 @@ const externalDevicesCommands = {
             console.log('Port must be a number');
             return;
         }
-        let signalMappingId =  await utils.missingTextPrompt('Signal mapping ID', args[3]);
+        let signalMappingId = await utils.missingTextPrompt('Signal mapping ID', args[3]);
         if (!signalMappingId) {
             return;
         }
@@ -95,7 +95,7 @@ const externalDevicesCommands = {
     },
 
     async removeDevice(args) {
-        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        let deviceId = await utils.missingTextPrompt('Device ID', args[0]);
         if (!deviceId) {
             return;
         }
@@ -110,7 +110,7 @@ const externalDevicesCommands = {
     },
 
     async setUserDevices(args) {
-        let user =  await utils.missingTextPrompt('User', args[0]);
+        let user = await utils.missingTextPrompt('User', args[0]);
         if (!user) {
             return;
         }
@@ -128,7 +128,7 @@ const externalDevicesCommands = {
                 return;
             }
             devices = deviceIds.trim().split(' ');
-        } 
+        }
 
         await utils.sendRequest(
             'externaldevices/configurations/users',
@@ -141,7 +141,7 @@ const externalDevicesCommands = {
     },
 
     async removeUserDevices(args) {
-        let user =  await utils.missingTextPrompt('User', args[0]);
+        let user = await utils.missingTextPrompt('User', args[0]);
         if (!user) {
             return;
         }
@@ -156,7 +156,7 @@ const externalDevicesCommands = {
     },
 
     async enableDevice(args) {
-        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        let deviceId = await utils.missingTextPrompt('Device ID', args[0]);
         if (!deviceId) {
             return;
         }
@@ -171,7 +171,7 @@ const externalDevicesCommands = {
     },
 
     async disableDevice(args) {
-        let deviceId =  await utils.missingTextPrompt('Device ID', args[0]);
+        let deviceId = await utils.missingTextPrompt('Device ID', args[0]);
         if (!deviceId) {
             return;
         }
@@ -207,4 +207,4 @@ const externalDevicesCommands = {
                     `);
     }
 };
-module.exports = externalDevicesCommands;
+module.exports = externalDeviceCommands;

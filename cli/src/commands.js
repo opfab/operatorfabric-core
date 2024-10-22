@@ -14,8 +14,8 @@ const prompts = require('prompts');
 const login = require('./loginCommands.js');
 const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
-const perimeters = require('./perimeterCommands.js');
-const processGroups = require('./processGroupCommands.js');
+const perimeter = require('./perimeterCommands.js');
+const processGroup = require('./processGroupCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const log = require('./logCommands.js');
@@ -23,11 +23,11 @@ const supervisor = require('./supervisorCommands.js');
 const bundleCommand = require('./bundleCommands.js');
 const monitoringConfig = require('./monitoringConfigCommands.js');
 const processMonitoring = require('./processMonitoringCommands.js');
-const connectedUsers = require('./connectedUserCommands.js');
-const users = require('./userCommands.js');
-const entities = require('./entityCommands');
-const groups = require('./groupCommands');
-const externalDevices = require('./externalDevicesCommands');
+const connectedUser = require('./connectedUserCommands.js');
+const user = require('./userCommands.js');
+const entity = require('./entityCommands');
+const group = require('./groupCommands');
+const externalDevice = require('./externalDeviceCommands.js');
 const reminder = require('./reminderCommands');
 
 const commands = {
@@ -49,19 +49,19 @@ const commands = {
                 break;
             case 'connected-user':
                 this.exitIfNotLoggedIn();
-                await connectedUsers.processConnectedUserCommand(args.slice(1));
+                await connectedUser.processConnectedUserCommand(args.slice(1));
                 break;
             case 'entity':
                 this.exitIfNotLoggedIn();
-                await entities.processEntityCommand(args.slice(1));
+                await entity.processEntityCommand(args.slice(1));
                 break;
             case 'group':
                 this.exitIfNotLoggedIn();
-                await groups.processGroupCommand(args.slice(1));
+                await group.processGroupCommand(args.slice(1));
                 break;
             case 'user':
                 this.exitIfNotLoggedIn();
-                await users.processUserCommand(args.slice(1));
+                await user.processUserCommand(args.slice(1));
                 break;
             case 'login':
                 await login.processLoginCommand(args.slice(1));
@@ -79,7 +79,7 @@ const commands = {
                 break;
             case 'process-group':
                 this.exitIfNotLoggedIn();
-                await processGroups.processProcessGroupCommand(args.slice(1));
+                await processGroup.processProcessGroupCommand(args.slice(1));
                 break;
             case 'realtime-screen':
                 this.exitIfNotLoggedIn();
@@ -93,7 +93,7 @@ const commands = {
                 await card.processCardCommand(args.slice(1));
                 break;
             case 'perimeter':
-                await perimeters.processPerimeterCommand(args.slice(1));
+                await perimeter.processPerimeterCommand(args.slice(1));
                 break;
             case 'reminder':
                 await reminder.processReminderCommand(args.slice(1));
@@ -108,7 +108,7 @@ const commands = {
                 break;
             case 'external-device':
                 this.exitIfNotLoggedIn();
-                await externalDevices.processExternalDevicesCommand(args.slice(1));
+                await externalDevice.processExternalDeviceCommand(args.slice(1));
                 break;
             case 'help':
                 this.printHelp(args.slice(1));
@@ -226,16 +226,16 @@ const commands = {
                     card.printHelp();
                     break;
                 case 'connected-user':
-                    connectedUsers.printHelp();
+                    connectedUser.printHelp();
                     break;
                 case 'entity':
-                    entities.printHelp();
+                    entity.printHelp();
                     break;
                 case 'group':
-                    groups.printHelp();
+                    group.printHelp();
                     break;
                 case 'perimeter':
-                    perimeters.printHelp();
+                    perimeter.printHelp();
                     break;
                 case 'config':
                     config.printHelp();
@@ -244,7 +244,7 @@ const commands = {
                     login.printHelp();
                     break;
                 case 'process-group':
-                    processGroups.printHelp();
+                    processGroup.printHelp();
                     break;
                 case 'realtime-screen':
                     realtimescreen.printHelp();
@@ -265,10 +265,10 @@ const commands = {
                     reminder.printHelp();
                     break;
                 case 'user':
-                    users.printHelp();
+                    user.printHelp();
                     break;
                 case 'external-device':
-                    externalDevices.printHelp();
+                    externalDevice.printHelp();
                     break;
                 default:
                     console.log(`No help for command ${args[0]}`);
