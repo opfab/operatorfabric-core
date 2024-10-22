@@ -311,14 +311,6 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         document.getElementById('monthsCheckboxesDiv').hidden = true;
         this.hideTimeInput();
         this.checkIsAllMonthsSelected();
-
-        if (
-            opfab.currentUserCard.getEditionMode() === 'CREATE' &&
-            this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode === false
-        ) {
-            this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = true;
-            this.selectAllMonthsIfInCreateMode();
-        }
     }
 
     displayTimeInput() {
