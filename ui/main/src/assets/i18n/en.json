@@ -460,7 +460,7 @@
             "ackAndClose": "ACKNOWLEDGE AND CLOSE",
             "unack": "CANCEL ACKNOWLEDGMENT"
         },
-        "acknowledged": "Acknowledged",
+        "acknowledgements": "Acknowledgements",
         "acknowledgedHeader": "Acknowledged",
         "notAcknowledgedHeader": "Not acknowledged"
     },

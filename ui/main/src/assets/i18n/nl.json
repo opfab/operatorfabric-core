@@ -460,7 +460,7 @@
             "ackAndClose": "BEVESTIG EN SLUIT",
             "unack": "ANNULEER BEVESTIGING"
         },
-        "acknowledged": "Bevestigd",
+        "acknowledgements": "Bevestigingen",
         "acknowledgedHeader": "Bevestigd",
         "notAcknowledgedHeader": "Niet bevestigd"
     },
