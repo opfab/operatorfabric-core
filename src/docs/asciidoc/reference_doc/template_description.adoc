@@ -784,5 +784,5 @@ The version of chartjs integrated in OperatorFabric is v3.7.1.
 
 == Custom javascript files
 
-It is possibile to configure Opfab to load custom javascript files at startup. This allows to share common functions and business logic between templates.
+It is possible to configure Opfab to load custom javascript files at startup. This allows to share common functions and business logic between templates.
 The list of URLs of javascript files to be loaded can be configured using `customJsToLoad` parameter in `web-ui.json` file.
