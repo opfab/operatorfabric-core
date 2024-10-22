@@ -98,6 +98,7 @@ export class EditEntityModalComponent implements OnInit {
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
         }
         uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
+        uniqueEntityNameValidator.push(this.emptyNameValidatorFn());
         // modal used for creating a new entity
 
         this.entityForm = new FormGroup({
@@ -182,6 +183,13 @@ export class EditEntityModalComponent implements OnInit {
         return (control: AbstractControl): Observable<ValidationErrors> => {
             const err: ValidationErrors = {uniqueEntityIdViolation: true};
             return this.isUniqueEntityId(this.entityForm.controls['id'].value) ? of(null) : of(err);
+        };
+    }
+
+    emptyNameValidatorFn(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors> | null => {
+            const trimmedName = control.value ? control.value.trim() : '';
+            return trimmedName === '' ? of({required: true}) : of(null);
         };
     }
 
