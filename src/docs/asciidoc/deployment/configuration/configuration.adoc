@@ -78,10 +78,10 @@ The services require knowledge of the URL to retrieve the account's token, and t
 
 |operatorfabric.servicesUrls.users|http://users:2103|Indicates where the Users service can be reached from the other services.
 |operatorfabric.servicesUrls.businessconfig|http://businessconfig:2100|Indicates where the Business service can be reached from the other services.
-|operatorfabric.servicesUrls.cardsPublication|http://cards-publication:2102|yes|Cards publication service URL
-|operatorfabric.servicesUrls.cardsConsultation|http://cards-consultation:2104|yes|Cards consultation service URL
+|operatorfabric.servicesUrls.cardsPublication|http://cards-publication:2102|Cards publication service URL
+|operatorfabric.servicesUrls.cardsConsultation|http://cards-consultation:2104|Cards consultation service URL
 |operatorfabric.servicesUrls.authToken|http://web-ui/auth/token|Authentication service URL
-|operatorfabric.userActionLogActivated|yes|Indicates whether the user action log feature is enabled or not.
+|operatorfabric.userActionLogActivated|true|Indicates whether the user action log feature is enabled or not.
 |===
 
 
