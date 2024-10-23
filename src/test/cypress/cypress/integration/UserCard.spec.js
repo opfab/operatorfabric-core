@@ -1334,7 +1334,6 @@ describe('User Card ', function () {
     })
   })
 
-
   describe('Check "create a copy" feature', function () {
     
     it('Check "create a copy" button is present only when it should', () => {
@@ -1361,6 +1360,18 @@ describe('User Card ', function () {
 
       feed.openNthCard(5);
       card.checkCopyButtonDoesExist();
+
+      // chack "create a copy" button is not visible if user not in publisherList entities
+      opfab.navigateToUserCard();
+      usercard.selectService('Base Examples');
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
+      usercard.selectRecipient('Control Center FR South');
+      usercard.previewThenSendCard();
+      opfab.logout();
+      opfab.loginWithUser('operator2_fr');
+      feed.openFirstCard();
+      card.checkCopyButtonDoesNotExist();
     })
 
     
