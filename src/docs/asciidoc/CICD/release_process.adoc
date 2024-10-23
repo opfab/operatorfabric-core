@@ -84,23 +84,43 @@ git commit -s -m "[RELEASE] X.X.X-RC.RELEASE"
 . Push the commit
 +
 ----
-git push --set-upstream origin FE-X.X.X-RC.release.draft
+git push --set-upstream origin X.X.X-RC.release.draft
 ----
 +
-. Create a pull request from the `FE-X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
+. Create a pull request from the `X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
 . Once the pull request is approved and merge, create the tag for the release candidate:
 +
 ----
 git checkout X.X.release
-git pull  
+git pull
 git tag X.X.X-RC.RELEASE
 git push origin X.X.X-RC.RELEASE
 ----
 
 === Publish the release candidate on docker hub and documentation
 
-If the build and tests are successful, launch manually GitHubActions with jobs : `Build` , `Docker Push` and `Build and publish documentation` 
+Once the release branch build is passing, you should trigger the CICD tasks associated with a release candidate (Docker images for DockerHub and
+documentation).
+
+To do so, go to 
+link:https://github.com/opfab/operatorfabric-core/actions[Github Actions].
+and launch the workflow on X.X.release branch with the following options :
+
+- Build : true 
+- Karate tests : false
+- Cypress tests : false 
+- Build and publish documentation : true
+- Build and publish documentation - Latest : false
+- Docker Push : true
+- Docker Push - Latest : false
+
+Wait for the build to complete and check that all jobs have been successful.
+
+. Check that the `X.X.X-RC.RELEASE` images have been generated and pushed to DockerHub.
+
+. Check that the documentation has been generated and pushed to the GitHub pages website : check the version and revision date at the top of the documents in the current documentation
+(for example link:https://opfab.github.io/documentation/current/architecture/[the architecture documentation])
 
 [[publishing_client_lib_release]]
 === Publishing the jars for the client library to Maven Central
@@ -234,7 +254,7 @@ in case there is an issue.
 
 Before releasing a version, you need to prepare the release.
 
-=== Move Release Candidate to Release
+=== Prepare the release branch
 
 . Create a branch to prepare the release from the release candidate branch:
 +
@@ -243,6 +263,17 @@ git checkout X.X.release
 git checkout -b X.X.X.release.draft
 ----
 +
+
+If there was no release candidate, you need to create the branch first:
++
+----
+git checkout -b X.X.release
+git push --set-upstream origin X.X.release
+git checkout -b X.X.X.release.draft
+----
++
+
+
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ----
