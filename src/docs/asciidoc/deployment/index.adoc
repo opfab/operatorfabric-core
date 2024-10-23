@@ -54,6 +54,7 @@ prod PROD PROD_URL 80
 ----
 
 Each line consists of:
+
 - The first value is the configuration name.
 - The second value is the name to be added to the shell prompt.
 - The third value is the URL of the OperatorFabric instance.
