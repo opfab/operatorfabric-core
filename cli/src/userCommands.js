@@ -110,6 +110,7 @@ const userCommands = {
             'DELETE',
             undefined,
             `User ${user} has been removed from ${objectId}`,
+            `Error removing user ${user} from ${objectId}`,
             `${object} or user not found`
         );
     },
