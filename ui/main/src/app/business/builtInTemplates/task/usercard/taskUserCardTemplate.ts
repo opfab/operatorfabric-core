@@ -544,9 +544,12 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const durationInMinutes: number = parseInt(
             (<HTMLInputElement>document.getElementById('durationInMinutes')).value
         );
-        const minutesForReminder: number = parseInt(
+        let minutesForReminder: number = parseInt(
             (<HTMLInputElement>document.getElementById('minutesForReminder')).value
         );
+        if (minutesForReminder == null || isNaN(minutesForReminder)) {
+            minutesForReminder = 0;
+        }
         const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;
         const quillTaskDescriptionEditor = <HTMLInputElement>document.getElementById('taskDescription');
 
