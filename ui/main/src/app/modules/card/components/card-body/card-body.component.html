@@ -74,7 +74,7 @@
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
                   (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
                 <of-card-ack [card]="this.card" [cardState]="this.cardState"
-                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetailsAfterAcknowledgment()"> </of-card-ack>
               </div>
             </div>
           </div>
