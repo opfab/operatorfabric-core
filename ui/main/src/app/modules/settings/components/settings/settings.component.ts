@@ -140,6 +140,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
         });
     }
 
+    private validateNumericInput(inputElement: HTMLInputElement) {
+        inputElement.value = inputElement.value.replace(/\D/, '');
+    }
+
     ngOnDestroy(): void {
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
