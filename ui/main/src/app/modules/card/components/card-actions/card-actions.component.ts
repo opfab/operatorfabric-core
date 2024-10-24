@@ -28,6 +28,7 @@ import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {UserCardComponent} from '../../../usercard/usercard.component';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 @Component({
     selector: 'of-card-actions',
@@ -81,7 +82,16 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             !this.isReadOnlyUser &&
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
+            this.isUserMemberOfAnEntityAllowedToPublishForThisState() &&
             UserService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
+    }
+
+    private isUserMemberOfAnEntityAllowedToPublishForThisState(): boolean {
+        if (!this.cardState.userCard.publisherList) return true;
+        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const allowedPublishers = EntitiesService.resolveEntities(this.cardState.userCard.publisherList);
+        const userAllowedEntities = allowedPublishers.filter((publisher) => userEntities.includes(publisher.id));
+        return userAllowedEntities.length > 0;
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
