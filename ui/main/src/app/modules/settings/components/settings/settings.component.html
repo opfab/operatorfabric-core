@@ -66,8 +66,8 @@
       </div>
       <div class="opfab-input">
         <label for="opfab-setting-replayInterval" translate>settings.replayInterval</label>
-        <input id="opfab-setting-input-replayInterval" type="number" min="0" formControlName="replayInterval"
-               oninput="if (this.value < 0) this.value = '';">
+        <input id="opfab-setting-input-replayInterval" #replayIntervalValue min="0" formControlName="replayInterval" inputmode="numeric"
+               (input)="validateNumericInput(replayIntervalValue)">
       </div>
     </div>
 
