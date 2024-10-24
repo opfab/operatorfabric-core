@@ -7,21 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {ActionTypeEnum} from '@ofModel/user-action-log.model';
+
 export class UserActionLogsPageDescription {
     pageTitle: string;
     pageNotAllowedMessage: string;
     isUserAuthorized: boolean;
     initialFromDate: Date;
-    actionList = [
-        'ACK_CARD',
-        'UNACK_CARD',
-        'READ_CARD',
-        'UNREAD_CARD',
-        'SEND_CARD',
-        'SEND_RESPONSE',
-        'OPEN_SUBSCRIPTION',
-        'CLOSE_SUBSCRIPTION'
-    ];
+    actionList = Object.values(ActionTypeEnum);
     columnTitle: {
         date: string;
         action: string;
