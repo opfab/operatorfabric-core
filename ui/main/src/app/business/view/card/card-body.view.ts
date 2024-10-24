@@ -17,6 +17,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 export class CardBodyView {
     private readonly alwaysShowAcknowledgmentFooter: boolean;
     private readonly card: Card;
+    private cards: Card[];
     private readonly userWithPerimeters: UserWithPerimeters;
 
     constructor(card: Card, userWithPerimeters: UserWithPerimeters) {
@@ -60,5 +61,17 @@ export class CardBodyView {
             this.card.publisherType === 'ENTITY' &&
             this.userWithPerimeters.userData.entities.includes(this.card.publisher)
         );
+    }
+
+    public setCards(cards: Card[]) {
+        this.cards = cards;
+    }
+
+    public getNextCardIdToOpenAfterAck(): string | undefined {
+        if (!this.cards) return undefined;
+        const currentCardIndex = this.cards.findIndex((card) => card.id === this.card.id);
+        const isLastCard = currentCardIndex === this.cards.length - 1;
+        const nextCardIndex = isLastCard ? currentCardIndex - 1 : currentCardIndex + 1;
+        return nextCardIndex >= 0 ? this.cards[nextCardIndex].id : undefined;
     }
 }

@@ -151,6 +151,7 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setHallwayMode(false);
                 userSettings.setRemoteLoggingEnabled(false);
                 userSettings.setShowAcknowledgmentFooter(false);
+                userSettings.setOpenNextCardOnAcknowledgment(false);
                 userSettings.setSendCardsByEmail(false);
                 userSettings.setEmailToPlainText(false);
                 userSettings.setSendDailyEmail(false);

@@ -50,6 +50,7 @@ import {CardResponseComponent} from '../card-reponse/card-response.component';
 import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-card-body',
@@ -103,6 +104,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private userWithPerimeters: UserWithPerimeters;
     private cardBodyView: CardBodyView;
     public isCardAcknowledgedFooterVisible: boolean;
+    private openNextCardOnAcknowledgment: boolean;
+    private cardsLoaded: boolean;
 
     constructor(private router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -119,6 +122,19 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.templateOffset = 35;
         if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD)
             this.showMaxAndReduceButton = true;
+        this.openNextCardOnAcknowledgment =
+            pageType === PageType.FEED && ConfigService.getConfigValue('settings.openNextCardOnAcknowledgment', false);
+        if (this.openNextCardOnAcknowledgment)
+            OpfabStore.getFilteredLightCardStore()
+                .getFilteredAndSortedLightCards()
+                .pipe(
+                    takeUntil(this.unsubscribe$),
+                    map((cards) => {
+                        this.cardBodyView.setCards(cards);
+                        this.cardsLoaded = true;
+                    })
+                )
+                .subscribe();
     }
 
     private integrateChildCardsInRealTime() {
@@ -377,7 +393,11 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 
-    public closeDetails() {
+    public areAcknowledgmentDataReady() {
+        return !this.openNextCardOnAcknowledgment || this.cardsLoaded;
+    }
+
+    public closeDetails(nextCardId: string) {
         this.closeCardDetail.next(true);
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
@@ -385,8 +405,17 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             SelectedCardStore.clearSelectedCardId();
         } else {
             SelectedCardStore.clearSelectedCardId();
-            this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
+            if (nextCardId)
+                this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1] + '/cards/' + nextCardId]);
+            else this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
         }
+    }
+
+    public closeDetailsAfterAcknowledgment() {
+        const nextCardId = this.openNextCardOnAcknowledgment
+            ? this.cardBodyView.getNextCardIdToOpenAfterAck()
+            : undefined;
+        this.closeDetails(nextCardId);
     }
 
     ngOnDestroy() {

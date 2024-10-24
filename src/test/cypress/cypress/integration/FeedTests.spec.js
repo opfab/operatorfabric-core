@@ -497,6 +497,50 @@ describe('FeedScreen tests', function () {
 
     });
 
+    it('Open next card after acknowledgment', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/chart.json');
+        script.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/contingencies.json');
+
+        feed.sortByReceptionDate();
+        feed.checkNumberOfDisplayedCardsIs(3);
+        
+        // No card detail is displayed
+        cy.get('of-card').should('not.exist');
+
+        opfab.navigateToSettings();
+        settings.clickOpenNextCardOnAcknowledgment();
+        opfab.navigateToFeed();
+
+        feed.openFirstCard();
+        // First card detail is displayed
+        cy.get('of-card').should('exist');
+        cy.get('#opfab-card-title').should('contain','NETWORK CONTINGENCIES');
+        cy.waitDefaultTime();
+        card.acknowledge();
+
+        feed.checkNumberOfDisplayedCardsIs(2);
+        // Next card detail is shown
+        cy.get('#opfab-card-title').should('contain','MESSAGE');
+
+        // Open last card
+        feed.openNthCard(1);
+        cy.get('#opfab-card-title').should('contain','DATA QUALITY');
+        cy.waitDefaultTime();
+        card.acknowledge();
+
+        // Previous card is displayed
+        feed.checkNumberOfDisplayedCardsIs(1);
+        cy.get('#opfab-card-title').should('contain','MESSAGE');
+        cy.waitDefaultTime();
+        // Acknowledge last visible card 
+        card.acknowledge();
+        feed.checkNumberOfDisplayedCardsIs(0);
+        cy.get('of-card').should('not.exist');
+
+    });
+
     function respondToCard(cardId) {
         // Click on the card
         cy.get(cardId).click();

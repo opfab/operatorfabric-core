@@ -321,6 +321,7 @@
         "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
         "hallwayMode": "Automatisch de meest recente kaart openen",
         "showAcknowledgmentFooter": "Toon altijd bevestiging in kaartdetails",
+        "openNextCardOnAcknowledgment": "Automatisch de volgende kaart openen na bevestiging",
         "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Actie",

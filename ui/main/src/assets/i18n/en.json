@@ -321,6 +321,7 @@
         "remoteLoggingEnabled": "Remote logging enabled",
         "hallwayMode": "Automatically open the most recent card",
         "showAcknowledgmentFooter": "Always show acknowledgments in card details",
+        "openNextCardOnAcknowledgment": "Automatically open next card after acknowledgment",
         "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Action",

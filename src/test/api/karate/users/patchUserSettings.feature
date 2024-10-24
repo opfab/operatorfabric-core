@@ -29,7 +29,8 @@ Feature: patch user settings
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]},
   "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"],
   "remoteLoggingEnabled" : false,
-  "hallwayMode": true
+  "hallwayMode": true,
+  "openNextCardOnAcknowledgment": true
 }
 """
 
@@ -127,6 +128,7 @@ Feature: patch user settings
     And match response.entitiesDisconnected == userSettings.entitiesDisconnected
     And match response.remoteLoggingEnabled == userSettings.remoteLoggingEnabled
     And match response.hallwayMode == '#notpresent'
+    And match response.openNextCardOnAcknowledgment == '#notpresent'
 
 
   Scenario: Patch operator1_fr user settings with operator1_fr authentication
@@ -142,6 +144,7 @@ Feature: patch user settings
     And match response.entitiesDisconnected == userSettingsDispatcher.entitiesDisconnected
     And match response.remoteLoggingEnabled == userSettingsDispatcher.remoteLoggingEnabled
     And match response.hallwayMode == userSettingsDispatcher.hallwayMode
+    And match response.openNextCardOnAcknowledgment == userSettingsDispatcher.openNextCardOnAcknowledgment
 
 
   Scenario: Create perimeter to test filteringNotificationAllowed

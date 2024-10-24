@@ -169,6 +169,9 @@ a|authentication mode, available options:
 |settings.systemNotificationInformation|false|no|If set to true, a system notification is sent when Information cards are added or updated in the feed
 |settings.styleWhenNightDayModeDesactivated||no|Style to apply if not using day night mode, possible value are DAY or NIGHT
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
+|settings.hallwayMode|false|no|If set to true, hallway mode for feed screen will be enabled
+|settings.openNextCardOnAcknowledgment|false|no|If set to true, automatically opens the next card in the feed after acknowledging the current card
+|settings.showAcknowledgmentFooter|false|no|If set to true, always shows the acknowledgments footer in cards
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
 "language" : if present, language field will not be displayed +
 "remoteLoggingEnabled" : if present, the checkbox to activate remote logging will not be displayed +
@@ -178,7 +181,9 @@ a|authentication mode, available options:
 "emailToPlainText" : if present, the email option to have the emails sent as plain text will not be displayed +
 "sendDailyEmail" : if present, the email option to have the daily email recap will not be displayed +
 "timezoneForEmails" : if present, the field to choose the timezone for emails will not be displayed +
-"hallwayMode": if present, the checkbox to activate hallway mode won't be displayed
+"hallwayMode": if present, the checkbox to activate hallway mode won't be displayed +
+"openNextCardOnAcknowledgment": if present, the checkbox to automaticaly open next card after acknowledgment won't be displayed +
+"showAcknowledgmentFooter" : if present, the checkbox to always show acknowledgments footer won't be displayed
 |showUserEntitiesOnTopRightOfTheScreen|false|no|If set to true, the user's entities with the "ACTIVITY_AREA" role will be displayed under the login on the top right of the screen
 
 |title|OperatorFabric|no|Title of the application, displayed on the browser

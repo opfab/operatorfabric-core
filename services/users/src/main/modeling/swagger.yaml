@@ -257,6 +257,10 @@ definitions:
         type: boolean
         description: |-
           If this is set to true, always show entities acknowledgments footer in card details
+      openNextCardOnAcknowledgment:
+        type: boolean
+        description: |-
+          If this is set to true, in feed page, after card acknowledgment open next card in the feed
       processesStatesNotNotified:
         type: object
         description: Filters on processes and states for user feed (exclusion filter)

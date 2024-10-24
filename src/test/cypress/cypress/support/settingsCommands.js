@@ -55,4 +55,9 @@ export class SettingsCommands extends OpfabCommands {
         cy.get('#opfab-setting-input-hallway-mode-checkbox').click();
         this.save();
     }
+
+    clickOpenNextCardOnAcknowledgment = function () {
+        cy.get('#opfab-setting-input-open-next-card-checkbox').click();
+        this.save();
+    }
 }

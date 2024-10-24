@@ -38,6 +38,7 @@ public class UserSettings {
     private Boolean hallwayMode;
     private Boolean remoteLoggingEnabled;
     private Boolean showAcknowledgmentFooter;
+    private Boolean openNextCardOnAcknowledgment;
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
@@ -67,6 +68,7 @@ public class UserSettings {
         this.hallwayMode = settings.getHallwayMode();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
         this.showAcknowledgmentFooter = settings.getShowAcknowledgmentFooter();
+        this.openNextCardOnAcknowledgment = settings.getOpenNextCardOnAcknowledgment();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
         this.sendDailyEmail = settings.getSendDailyEmail();
@@ -217,6 +219,14 @@ public class UserSettings {
         this.showAcknowledgmentFooter = showAcknowledgmentFooter;
     }
 
+    public Boolean getOpenNextCardOnAcknowledgment() {
+        return openNextCardOnAcknowledgment;
+    }
+
+    public void setOpenNextCardOnAcknowledgment(Boolean openNextCardOnAcknowledgment) {
+        this.openNextCardOnAcknowledgment = openNextCardOnAcknowledgment;
+    }
+
     public Boolean getSendCardsByEmail() {
         return sendCardsByEmail;
     }
@@ -335,6 +345,8 @@ public class UserSettings {
                 this.getRemoteLoggingEnabled());
         result.showAcknowledgmentFooter = ObjectUtils.getNotNullOrDefault(other.getShowAcknowledgmentFooter(),
                 this.getShowAcknowledgmentFooter());
+        result.openNextCardOnAcknowledgment = ObjectUtils.getNotNullOrDefault(other.getOpenNextCardOnAcknowledgment(),
+                this.getOpenNextCardOnAcknowledgment());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault(other.getProcessesStatesNotNotified(),
                 this.getProcessesStatesNotNotified(), HashMap::new);
         result.processesStatesNotifiedByEmail = ObjectUtils.getNotNullOrDefault(

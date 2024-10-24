@@ -151,24 +151,36 @@
         </of-multi-select>
     </div>
 
-    <div class="opfab-settings-item" id="opfab-setting-input-hallway-mode"
-      *ngIf="settingsView.isSettingVisible('hallwayMode')">
-      <label class="opfab-checkbox ">
-        <span class="label-hallway-mode" id="opfab-setting-input-hallway-mode-checkbox" translate> settings.hallwayMode </span>
-        <input type="checkbox" formControlName="hallwayMode">
-        <span class="opfab-checkbox-checkmark"></span>
-      </label>
+    <div class="opfab-settings-item"
+      *ngIf="settingsView.isSettingVisible('hallwayMode') || settingsView.isSettingVisible('openNextCardOnAcknowledgment')">
+      <div id="opfab-setting-input-hallway-mode" *ngIf="settingsView.isSettingVisible('hallwayMode')">
+        <label class="opfab-checkbox ">
+          <span class="label-hallway-mode" id="opfab-setting-input-hallway-mode-checkbox" translate> settings.hallwayMode
+          </span>
+          <input type="checkbox" formControlName="hallwayMode">
+          <span class="opfab-checkbox-checkmark"></span>
+        </label>
+      </div>
+    
+      <div id="opfab-setting-input-open-next-card" *ngIf="settingsView.isSettingVisible('openNextCardOnAcknowledgment')">
+        <label class="opfab-checkbox ">
+          <span class="label-open-next-card" id="opfab-setting-input-open-next-card-checkbox" translate>
+            settings.openNextCardOnAcknowledgment </span>
+          <input type="checkbox" formControlName="openNextCardOnAcknowledgment">
+          <span class="opfab-checkbox-checkmark"></span>
+        </label>
+      </div>
     </div>
 
     <div class="opfab-settings-item" id="opfab-setting-input-ack-footer"
-    *ngIf="settingsView.isSettingVisible('showAcknowledgmentFooter')">
-    <label class="opfab-checkbox ">
-      <span class="label-hallway-mode" id="opfab-setting-input-ack-footer-checkbox" translate> settings.showAcknowledgmentFooter </span>
-      <input type="checkbox" formControlName="showAcknowledgmentFooter">
-      <span class="opfab-checkbox-checkmark"></span>
-    </label>
-  </div>
-
+      *ngIf="settingsView.isSettingVisible('showAcknowledgmentFooter')">
+      <label class="opfab-checkbox ">
+        <span class="label-hallway-mode" id="opfab-setting-input-ack-footer-checkbox" translate>
+          settings.showAcknowledgmentFooter </span>
+        <input type="checkbox" formControlName="showAcknowledgmentFooter">
+        <span class="opfab-checkbox-checkmark"></span>
+      </label>
+    </div>
     <div class="opfab-settings-item" id="opfab-setting-input-remoteLoggingEnabled"
       *ngIf="settingsView.isSettingVisible('remoteLoggingEnabled')">
       <label class="opfab-checkbox ">

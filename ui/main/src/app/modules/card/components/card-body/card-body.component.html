@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -73,8 +73,8 @@
                 <of-card-response [card]="this.card" [cardState]="this.cardState"
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
                   (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
-                <of-card-ack [card]="this.card" [cardState]="this.cardState"
-                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
+                <of-card-ack *ngIf="areAcknowledgmentDataReady()" [card]="this.card" [cardState]="this.cardState"
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetailsAfterAcknowledgment()"> </of-card-ack>
               </div>
             </div>
           </div>

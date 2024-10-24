@@ -21,7 +21,7 @@ import {OpfabEventStreamService} from '../../services/events/opfabEventStream.se
 import {LightCardsStore} from './lightcards-store';
 
 export class FilteredLightCardsStore {
-    private readonly filteredAndSortedLightCards = new Subject();
+    private readonly filteredAndSortedLightCards = new ReplaySubject();
     private readonly filteredLightCards = new Subject();
     private readonly filteredAndSearchedLightCards = new ReplaySubject(1);
     private readonly filteredLightCardsForTimeLine = new Subject();

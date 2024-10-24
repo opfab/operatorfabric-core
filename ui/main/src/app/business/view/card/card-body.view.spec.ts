@@ -312,4 +312,120 @@ describe('CardBodyView', () => {
 
         expect(cardBodyView.isCardAcknowledgedFooterVisible()).toBeTrue();
     });
+
+    it('GIVEN a card THEN next card to open after aknowledgment is the following card in the feed', async () => {
+        const userWithPerimeters = getUserWithPerimeters(['ENTITY2']);
+
+        const card1 = getOneCard({
+            id: 'card1',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        const card2 = getOneCard({
+            id: 'card2',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        const card3 = getOneCard({
+            id: 'card3',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        cardBodyView = new CardBodyView(card2, userWithPerimeters);
+        cardBodyView.setCards([card1, card2, card3]);
+
+        expect(cardBodyView.getNextCardIdToOpenAfterAck()).toEqual('card3');
+    });
+
+    it('GIVEN a card WHEN it is the last card in the feed THEN next card to open after aknowledgment is the previous card in the feed', async () => {
+        const userWithPerimeters = getUserWithPerimeters(['ENTITY2']);
+
+        const card1 = getOneCard({
+            id: 'card1',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        const card2 = getOneCard({
+            id: 'card2',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        const card3 = getOneCard({
+            id: 'card3',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        cardBodyView = new CardBodyView(card3, userWithPerimeters);
+        cardBodyView.setCards([card1, card2, card3]);
+
+        expect(cardBodyView.getNextCardIdToOpenAfterAck()).toEqual('card2');
+    });
+
+    it('GIVEN a card WHEN it is the only card in the feed THEN getNextCardIdToOpenAfterAck() returns undefined', async () => {
+        const userWithPerimeters = getUserWithPerimeters(['ENTITY2']);
+
+        const card1 = getOneCard({
+            id: 'card1',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        cardBodyView = new CardBodyView(card1, userWithPerimeters);
+        cardBodyView.setCards([card1]);
+
+        expect(cardBodyView.getNextCardIdToOpenAfterAck()).toBeUndefined();
+    });
+
+    it('GIVEN a card WHEN there are no cards in the feed THEN getNextCardIdToOpenAfterAck() returns undefined', async () => {
+        const userWithPerimeters = getUserWithPerimeters(['ENTITY2']);
+
+        const card1 = getOneCard({
+            id: 'card1',
+            publisher: 'ENTITY1',
+            publisherType: 'ENTITY',
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state4',
+            entityRecipients: ['ENTITY1', 'ENTITY2', 'ENTITY_FR']
+        });
+
+        cardBodyView = new CardBodyView(card1, userWithPerimeters);
+        cardBodyView.setCards([]);
+
+        expect(cardBodyView.getNextCardIdToOpenAfterAck()).toBeUndefined();
+    });
 });
