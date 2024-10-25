@@ -59,9 +59,7 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true,
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -138,8 +136,7 @@
             ],
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest"
+              "src/assets"
             ]
           }
         },
