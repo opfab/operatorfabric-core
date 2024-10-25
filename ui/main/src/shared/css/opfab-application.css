@@ -194,12 +194,13 @@
     background-color: var(--opfab-color-darker-blue);
 }
 
-
 body {
     height: 100vh;
     font-family: var(--opfab-font-family);
     font-size: 13px;
 }
+
+
 
 /* SELECT FIELD STYLE */
 
@@ -288,20 +289,6 @@ body {
     height: 46px;
     outline: none;
     background-color: var(--opfab-bgcolor-darker);
-}
-
-/* Chrome  : to avoid browser styling when auto-filling input field (example password)
-* see https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
-*/
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-    box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
-}
-
-input:-webkit-autofill {
-    -webkit-text-fill-color: var(--opfab-input-text-color) !important;
 }
 
 .opfab-input > label {
@@ -440,6 +427,22 @@ input:-webkit-autofill {
 
 /* END RADIO BUTTON */
 
+/* Chrome  : to avoid browser styling when auto-filling input field (example password)
+* see https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+*/
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--opfab-input-text-color) !important;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
+}
+
+
 /* TEXTAREA FIELD STYLE */
 
 .opfab-textarea {
@@ -544,6 +547,8 @@ input:-webkit-autofill {
     color: var(--opfab-form-label-text-color);
     background-color: var(--opfab-bgcolor-darker);
 }
+
+
 
 /* VIRTUAL MULTI SELECT */
 
@@ -1001,5 +1006,6 @@ input:-webkit-autofill {
     white-space: nowrap;
     display: inline-block;
 }
+
 
 
