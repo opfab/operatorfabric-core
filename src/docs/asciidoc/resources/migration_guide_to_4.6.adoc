@@ -10,3 +10,9 @@
 == Deprecated `toNotify` field
 
 The card field `toNotify` is deprecated. You should use the `actions` field including "STORE_ONLY_IN_ARCHIVES" action instead.
+
+== New line added between opfab fields and template in usercard form
+
+A new line (<br/>) has been added in the usercard form, between the opfab fields (service/process/state or severity or
+dates fields (depending on which fields are visible or not)) and the display of the template. So you have to check that
+the display of your usercard form still suits you.
