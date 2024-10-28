@@ -47,7 +47,12 @@ export class LightCardsFilter {
             }
         }
         logger.debug(
-            'Filter change : type= ' + filterType + ' ,active=' + active + ' ,value= ' + JSON.stringify(status),
+            'Filter change : type=' +
+                FilterType[filterType] +
+                ', active=' +
+                active +
+                ', value=' +
+                JSON.stringify(status),
             LogOption.REMOTE
         );
         this.filterChanges.next(true);
