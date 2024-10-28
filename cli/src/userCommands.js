@@ -253,15 +253,15 @@ const userCommands = {
 Commands list : 
             add-to-entity           Add a <user> to an <entity> : opfab user add-to-entity <entityId> <user>
             add-to-group            Add a <user> to a <group> : opfab user add-to-group <groupId> <user>
-            delete                  Delete a <user>
+            delete                  Delete a <user> : opfab user delete <user>
             load                    Add or update a list of users : opfab user load <usersFilePath>
             remove-from-entity      Remove a <user> from an <entity> : opfab user remove-from-entity <entityId> <user>
             remove-from-group       Remove a <user> from a <group> : opfab user remove-from-group <groupId> <user>
-            set-not-notified        Configure <process>/<state> as not to be notified for all users
-            set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users 
+            set-not-notified        Configure <process>/<state> as not to be notified for all users : opfab user set-not-notified <process> <state>
+            set-not-notified-mail   Configure <process>/<state> as not to be notified by email for all users : opfab user set-not-notified-mail <process> <state>
             set-activity-area       Set an <activity area> for a <user> : opfab user set-activity-area <activityAreaId> <user> 
-            set-notified            Configure <process>/<state> as to be notified for all users 
-            set-notified-mail       Configure <process>/<state> as to be notified by email for all users 
+            set-notified            Configure <process>/<state> as to be notified for all users : opfab user set-notified <process> <state>
+            set-notified-mail       Configure <process>/<state> as to be notified by email for all users : opfab user set-notified-mail <process> <state>
             unset-activity-area     Unset an <activity area> for a <user> : opfab user unset-activity-area <activityAreaId> <user> 
         `);
     }
