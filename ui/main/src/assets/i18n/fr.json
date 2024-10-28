@@ -636,10 +636,10 @@
             "loadingExternalDevices": "Chargement des périphériques externes...",
             "confirmDeleteDevice": "Voulez-vous vraiment supprimer le périphérique",
             "host": {
-                "required": "Serveur est obligatoire."
+                "required": "Le serveur est obligatoire."
             },
             "port": {
-                "required": "Port est obligatoire."
+                "required": "Le port est obligatoire."
             },
             "signalMapping": {
                 "required": "Mapping de signaux est obligatoire."
