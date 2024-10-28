@@ -217,7 +217,7 @@ describe('Cards external diffusion', function () {
             'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt; - ' +
                 startDateString +
                 ' - ' +
-                '</a> <br> Title1 &amp; &lt;br&gt; <br/>Sent by ENTITY2 name <br/>Postfix'
+                '</a> <br> Title1 &amp; &lt;br&gt; <br/>Sent by ENTITY2 name. <br/>Postfix'
         );
     });
 

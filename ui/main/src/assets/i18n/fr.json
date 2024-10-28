@@ -319,7 +319,7 @@
         "replayInterval": "DÉLAI ENTRE LES RÉPÉTITIONS (EN SECONDES)",
         "remoteLoggingEnabled": "Journalisation à distance activée",
         "hallwayMode": "Ouverture automatique de la carte la plus récente",
-        "showAcknowledgmentFooter": "Toujours afficher les acquittements dans le detail des cartes",
+        "showAcknowledgmentFooter": "Toujours afficher les acquittements dans le détail des cartes",
         "notificationOnOperatingSystem": "NOTIFICATIONS SYSTÈME POUR LES CARTES DE TYPE",
         "systemNotificationAlarm": "Alarme",
         "systemNotificationAction": "Action",

@@ -237,7 +237,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             }
             if (this.publisherEntityPrefix != null && card.publisher != null && card.publisherType === 'ENTITY') {
                 const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(card.publisher);
-                cardBodyHtml = cardBodyHtml + ' <br/>' + this.publisherEntityPrefix + entity.name;
+                cardBodyHtml = cardBodyHtml + ' <br/>' + this.publisherEntityPrefix + entity.name + '.';
             }
             if (this.bodyPostfix != null) {
                 cardBodyHtml = cardBodyHtml + ' <br/>' + this.bodyPostfix;
