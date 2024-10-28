@@ -86,7 +86,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
         entityRecipientsToAck.forEach((entityRecipient) => {
             const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) {
+            if (entity?.roles?.includes(RolesEnum.CARD_SENDER)) {
                 resolved.add(entityRecipient);
             }
 
