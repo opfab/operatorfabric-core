@@ -7,7 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
@@ -43,7 +51,7 @@ import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
         OpfabTitleCasePipe
     ]
 })
-export class UserActionLogsComponent implements OnInit {
+export class UserActionLogsComponent implements OnInit, OnDestroy {
     userActionLogsView: UserActionLogsView;
     userActionLogsPage: UserActionLogsPageDescription;
     userActionLogsResult: UserActionLogsResult;
@@ -213,5 +221,11 @@ export class UserActionLogsComponent implements OnInit {
         this.userActionLogsResult = null;
         this.errorMessage = null;
         this.setInitialDateFrom();
+    }
+
+    ngOnDestroy(): void {
+        if (this.modalRef) {
+            this.modalRef.close();
+        }
     }
 }
