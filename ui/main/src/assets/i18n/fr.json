@@ -277,6 +277,7 @@
         "entityRecipientsForInformation": "Entités destinataires en copie :",
         "searchPlaceholderText": "Rechercher...",
         "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)",
+        "externalDeviceSoundNotificationError": "Impossible d'envoyer le signal d'alarme sur le système externe",
         "businessPeriod": "Période métier :"
     },
     "login": {

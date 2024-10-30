@@ -277,6 +277,7 @@
         "entityRecipientsForInformation": "Entity recipients in copy :",
         "searchPlaceholderText": "Search...",
         "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)",
+        "externalDeviceSoundNotificationError": "Impossible to send alarm signal to external devices",
         "businessPeriod": "Business period :"
     },
     "login": {

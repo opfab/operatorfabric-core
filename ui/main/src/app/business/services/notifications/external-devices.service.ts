@@ -30,7 +30,10 @@ export class ExternalDevicesService {
         return ExternalDevicesService.externalDevicesServer.sendNotification(notification).pipe(
             map((serverResponse) => {
                 if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data;
-                else return ErrorService.handleServerResponseError(serverResponse);
+                else
+                    return ErrorService.handleServerResponseError(serverResponse, {
+                        key: 'feed.externalDeviceSoundNotificationError'
+                    });
             })
         );
     }

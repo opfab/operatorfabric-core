@@ -13,29 +13,30 @@ import {LoggerService as logger} from 'app/business/services/logs/logger.service
 import {throwError} from 'rxjs';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from './alert-message.service';
+import {I18n} from '@ofModel/i18n.model';
 
 export class ErrorService {
-    public static handleServerResponseError(error: ServerResponse<any>) {
+    public static handleServerResponseError(error: ServerResponse<any>, errorMessage?: I18n) {
         if (error.status === ServerResponseStatus.NOT_FOUND) {
             AlertMessageService.sendAlertMessage({
                 message: '',
-                i18n: {key: 'errors.notFound'},
+                i18n: errorMessage ?? {key: 'errors.notFound'},
                 level: MessageLevel.ERROR
             });
         }
         if (error.status === ServerResponseStatus.FORBIDDEN) {
             AlertMessageService.sendAlertMessage({
                 message: '',
-                i18n: {key: 'errors.notAllowed'},
+                i18n: errorMessage ?? {key: 'errors.notAllowed'},
                 level: MessageLevel.ERROR
             });
         }
         if (error.status === ServerResponseStatus.BAD_REQUEST) {
-            const errorMessage = error.statusMessage ?? '';
+            const statusMessage = error.statusMessage ?? '';
 
             AlertMessageService.sendAlertMessage({
                 message: '',
-                i18n: {key: 'errors.badRequest', parameters: {badRequestMessage: errorMessage}},
+                i18n: errorMessage ?? {key: 'errors.badRequest', parameters: {badRequestMessage: statusMessage}},
                 level: MessageLevel.ERROR
             });
         }
