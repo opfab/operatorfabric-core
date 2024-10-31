@@ -222,7 +222,7 @@
                 "label": "Cards with response from my entity"
             },
             "ack": {
-                "title": "Acknowledgement",
+                "title": "Acknowledgment",
                 "acknowledged": {
                     "label": "Acknowledged"
                 },
@@ -319,7 +319,7 @@
         "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
         "remoteLoggingEnabled": "Remote logging enabled",
         "hallwayMode": "Automatically open the most recent card",
-        "showAcknowledgmentFooter": "Always show acknowledgements in card details",
+        "showAcknowledgmentFooter": "Always show acknowledgments in card details",
         "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
         "systemNotificationAlarm": "Alarm",
         "systemNotificationAction": "Action",
@@ -444,7 +444,7 @@
         "error": {
             "submit": "The answer could not be sent.",
             "form": "The form is not correctly filled.",
-            "ack": "Unable to change acknowledgement of this card for an error of remote system"
+            "ack": "Unable to change acknowledgment of this card for an error of remote system"
         },
         "submitSuccess": "Your answer is confirmed. Thank you!",
         "answers": "Answers",
@@ -460,7 +460,7 @@
             "ackAndClose": "ACKNOWLEDGE AND CLOSE",
             "unack": "CANCEL ACKNOWLEDGMENT"
         },
-        "acknowledgements": "Acknowledgements",
+        "acknowledgments": "Acknowledgments",
         "acknowledgedHeader": "Acknowledged",
         "notAcknowledgedHeader": "Not acknowledged"
     },

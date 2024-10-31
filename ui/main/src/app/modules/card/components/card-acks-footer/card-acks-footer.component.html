@@ -8,7 +8,7 @@
 
 <div class="flex-container" id="opfab-card-acknowledged-footer"
     style="width:100%;padding-left: 15px;flex-direction: row">
-    <span translate>cardAcknowledgment.acknowledgements</span>&nbsp;:
+    <span translate>cardAcknowledgment.acknowledgments</span>&nbsp;:
     <div class="opfab-two-lines-ellipsis" container="body" #p1="ngbPopover" [ngbPopover]="acksTemplate"
         triggers="click"  [autoClose]="'outside'" popoverClass="opfab-popover-wide">
         <span *ngFor="let entity of listEntitiesToAck" style="display:inline-block;" [ngStyle]="{'color': entity.color}"

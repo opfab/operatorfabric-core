@@ -478,7 +478,7 @@ describe('Test translations', function () {
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         checkNotificationSeverityTexts('Alarm', 'Action', 'Compliant', 'Information');
-        checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
+        checkAknowledgementTexts('Acknowledgment', 'All', 'Acknowledged', 'Not acknowledged');
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline ');
 
         // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
