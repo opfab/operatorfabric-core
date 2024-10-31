@@ -79,6 +79,7 @@ async function update(collectionName, documents) {
     const db = client.db('operator-fabric');
 
     for (const card of documents) {
+
         if (collectionName == 'cards') {
             console.log('card before update :', JSON.stringify(card));
         } else {
@@ -86,6 +87,8 @@ async function update(collectionName, documents) {
         }
 
         let rRule = {};
+        let isCardWithoutRecurrence = false;
+        let timeSpansBackupForCardWithoutRecurrence;
 
         if (typeof card.timeSpans !== 'undefined' && card.timeSpans.length > 0) {
             let byhour, byminute;
@@ -93,6 +96,8 @@ async function update(collectionName, documents) {
                 byhour = card.timeSpans[0].recurrence?.hoursAndMinutes?.hours;
                 byminute = card.timeSpans[0].recurrence?.hoursAndMinutes?.minutes;
             } else {
+                isCardWithoutRecurrence = true;
+                timeSpansBackupForCardWithoutRecurrence = card.timeSpans;
                 byhour = new Date(card.startDate).getHours();
                 byminute = new Date(card.startDate).getMinutes();
             }
@@ -152,6 +157,18 @@ async function update(collectionName, documents) {
         replacementCard.state = newState;
         replacementCard.processVersion = newProcessVersion;
         replacementCard.rRule = rRule;
+
+        if (isCardWithoutRecurrence) {
+            delete replacementCard.rRule;
+            delete replacementCard.data.freq;
+            delete replacementCard.data.byhour;
+            delete replacementCard.data.byminute;
+            delete replacementCard.data.byweekday;
+            delete replacementCard.data.bymonth;
+            delete replacementCard.data.bysetpos;
+            delete replacementCard.data.bymonthday;
+            replacementCard.timeSpans = timeSpansBackupForCardWithoutRecurrence;
+        }
 
         await db.collection(collectionName).deleteOne(queryForDelete);
         await db.collection(collectionName).insertOne(replacementCard);
