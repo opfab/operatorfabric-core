@@ -67,7 +67,10 @@
 
             li:hover {
                 color: var(--opfab-navbar-color-active);
-                font-weight: bold;
+
+                a {
+                    color: inherit;
+                }
             }
         }
     }
