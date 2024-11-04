@@ -160,8 +160,10 @@ public class CardProcessingService {
             log.info("Send user card to external app with jwt present " + jwt.isPresent());
             externalAppService.sendCardToExternalApplication(card, jwt);
         }
+        if (card.getToNotify() != null) log.warn("Using deprecated field 'toNotify'. Use STORE_ONLY_IN_ARCHIVES card action instead");
+        boolean storeOnlyInArchives = isCardToBeStoredOnlyInArchives(card);        
 
-        if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
+        if (!storeOnlyInArchives) {
             if (oldCard != null) {
                 processCardUpdate(card, oldCard);
                 processChildCardsWhenCardUpdate(card, jwt);
@@ -174,6 +176,12 @@ public class CardProcessingService {
             else
                 cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.UPDATE);
         }
+        if (storeOnlyInArchives && oldCard != null) {
+            cardRepository.deleteCard(oldCard);
+            if (shouldKeepPublishDate(card)) {
+                card.setPublishDate(oldCard.getPublishDate());
+            }
+        }
 
         // IMPORTANT: The deletionDate of the old card must be set to the publishDate of the new card.
         // This is a crucial step when consulting archived cards via the card consultation service.
@@ -184,6 +192,10 @@ public class CardProcessingService {
 
         log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),
                 card.getProcessInstanceId(), card.getState());
+    }
+
+    private boolean isCardToBeStoredOnlyInArchives(Card card) {
+        return (card.getActions() != null && card.getActions().indexOf(CardActionEnum.STORE_ONLY_IN_ARCHIVES) >= 0) || (card.getToNotify() != null && Boolean.FALSE.equals(card.getToNotify()));
     }
 
     private Card getExistingCard(String cardId, boolean dataFieldIncluded) {

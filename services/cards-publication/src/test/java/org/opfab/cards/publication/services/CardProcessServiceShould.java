@@ -927,4 +927,23 @@ class CardProcessServiceShould {
                 Assertions.assertThat(updated.getPublishDate()).isEqualTo(original.getPublishDate());
         }
 
+        @Test
+        void GIVEN_an_existing_card_WHEN_update_card_CONTAINS_STORE_ONLY_IN_ARCHIVES_AND_KEEP_EXISTING_PUBLISH_DATE_archived_card_publishDate_is_kept() {
+                Card card = TestHelpers.generateOneCard("entity2");
+                cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
+
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 1)).isTrue();
+                Card original = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false);
+
+                Card newCard = TestHelpers.generateOneCard("entity2");
+                newCard.setActions(List.of(CardActionEnum.STORE_ONLY_IN_ARCHIVES, CardActionEnum.KEEP_EXISTING_PUBLISH_DATE));
+                cardProcessingService.processUserCard(newCard, currentUserWithPerimeters, token);
+
+                Card updatedCard = cardRepositoryMock.findCardById("PROCESS_CARD_USER.PROCESS_1", false);
+                Assertions.assertThat(updatedCard).isNull();
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
+
+                Optional<ArchivedCard> updatedArchivedCard = cardRepositoryMock.findArchivedCardByUid(newCard.getUid());
+                Assertions.assertThat(updatedArchivedCard.get().publishDate()).isEqualTo(original.getPublishDate());
+        }
 }

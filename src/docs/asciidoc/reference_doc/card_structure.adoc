@@ -128,6 +128,8 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_r
 Boolean attribute. If the card must not be displayed in the feed and in monitoring screen, this field must be set to false.
 In that case, it means the card is stored only in archivedCards collection and not in cards collection.
 
+The `toNotify` field is deprecated, use the `STORE_ONLY_IN_ARCHIVES` card action instead.
+
 ==== Publisher type (`publisherType`)
 
 * EXTERNAL - The sender is an external service
@@ -166,9 +168,11 @@ NOTE: Only the POINT and POLYGON are supported.
 
 ==== Actions (`actions`)
 A list of predetermined actions that will be executed upon receiving the card. The available actions include:
+
 - KEEP_CHILD_CARDS : used to keep child cards when the parent card is modified.
 - PROPAGATE_READ_ACK_TO_PARENT_CARD : used only for response cards. When receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 - KEEP_EXISTING_ACKS_AND_READS : used to keep existing reads and acks when updating a card
+- STORE_ONLY_IN_ARCHIVES : used to store the card only in archivedCards collection and not in cards collection. No notification will be sent to UI, so the card will not be displayed in the feed and in monitoring screen.
 
 === Business period 
 
