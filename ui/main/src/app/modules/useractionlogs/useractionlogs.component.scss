@@ -7,12 +7,37 @@
  * This file is part of the OperatorFabric project.
  */
 
-.opfab-useractionlogs-table-line:hover {
-    border: 2px solid var(--opfab-color-blue);
+td,th {
+  padding: 10px; 
 }
 
-td,th {
-   padding: 10px; 
+.opfab-useractionlogs-table-line {
+  border: 2px solid var(--opfab-bgcolor);
+  border-bottom: 0;
+}
+
+.opfab-useractionlogs-table-line:hover {
+  border: 2px solid var(--opfab-color-blue);
+
+  td {
+    border-top: 2px solid var(--opfab-color-blue);
+  }
+}
+
+.opfab-table tr:first-child{
+  border-top: 0;
+}
+
+.opfab-table tbody > tr:first-child:hover{
+  border-top: 0;
+
+  td {
+    border-top: 2px solid var(--opfab-color-blue);
+  }
+}
+
+.opfab-table tbody > tr:last-child:hover {
+  border-bottom: 1px solid var(--opfab-color-blue);
 }
 
 .opfab-useractionlogs-export-div {
