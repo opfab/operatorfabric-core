@@ -324,6 +324,10 @@ body {
     border-radius: 6px;
 }
 
+.modal-body-squared {
+    border-radius: 0;
+}
+
 .modal-header {
     background-color: var(--opfab-bgcolor);
     height: 60px;
