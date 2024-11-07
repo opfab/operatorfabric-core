@@ -26,8 +26,8 @@ class EntityCycleDetectorShould {
          * Double '_' to separate "Given statements".
          * 
          * Begins with expected result:
-         * - OK -> no cycle detected (hasCycle() return false);
-         * - CYCLE -> a cycle detected within the entities (hasCycle() return true).
+         * - OK : no cycle detected (hasCycle method return false);
+         * - CYCLE : a cycle detected within the entities (hasCycle method return true).
          * 
          * THe 3rd part describes the Added Entity (which is tested) and it's parent
          * content.
@@ -35,8 +35,8 @@ class EntityCycleDetectorShould {
          * The 5th part describes the entity collection itself.
          * 
          * Shorthands used:
-         * - 4 -> for;
-         * - 2 -> to.
+         * - 4 = for
+         * - 2 = to
          * 
          * All constants and helping methods are declared right after the first method
          * using them and are declared in CamelCase.
@@ -90,12 +90,12 @@ class EntityCycleDetectorShould {
                 List<Entity> noEntities = Collections.emptyList();
                 String entityId = testedEntity;
 
-                Entity withoutAnyParent_And_RefersItself = new Entity();
-                withoutAnyParent_And_RefersItself.setId(entityId);
-                withoutAnyParent_And_RefersItself
+                Entity withoutAnyParentAndRefersItself = new Entity();
+                withoutAnyParentAndRefersItself.setId(entityId);
+                withoutAnyParentAndRefersItself
                                 .setDescription("this entity has unknown parents AND references itself");
-                withoutAnyParent_And_RefersItself.setParents(this.mixeParentRef(UNKNOWNPARENTS, entityId));
-                EntityCycleDetector underTest = new EntityCycleDetector(withoutAnyParent_And_RefersItself, noEntities);
+                withoutAnyParentAndRefersItself.setParents(this.mixeParentRef(UNKNOWNPARENTS, entityId));
+                EntityCycleDetector underTest = new EntityCycleDetector(withoutAnyParentAndRefersItself, noEntities);
                 assertThat(underTest.hasCycle()).isTrue();
         }
 
@@ -114,21 +114,21 @@ class EntityCycleDetectorShould {
         @Test
         void OK__4__AddedEntityWithNoParent__In__AnEntityCollectionOfOneWithNoParent() {
                 List<Entity> entities = Arrays.asList(entityWithNoParent);
-                Entity has_no_parents = new Entity();
-                has_no_parents.setId(testedEntity);
-                has_no_parents.setDescription("has no parents");
-                EntityCycleDetector underTest = new EntityCycleDetector(has_no_parents, entities);
+                Entity hasNoParents = new Entity();
+                hasNoParents.setId(testedEntity);
+                hasNoParents.setDescription("has no parents");
+                EntityCycleDetector underTest = new EntityCycleDetector(hasNoParents, entities);
                 assertThat(underTest.hasCycle()).isFalse();
         }
 
         @Test
         void CYCLE__4__AddedEntityReferencingItSelf__In__AnEntityCollectionOfOneWithNoParent() {
                 List<Entity> entities = Arrays.asList(entityWithNoParent);
-                Entity has_no_parents = new Entity();
-                has_no_parents.setId(testedEntity);
-                has_no_parents.setDescription("has no parents");
-                has_no_parents.setParents(this.buildList(testedEntity));
-                EntityCycleDetector underTest = new EntityCycleDetector(has_no_parents, entities);
+                Entity hasNoParents = new Entity();
+                hasNoParents.setId(testedEntity);
+                hasNoParents.setDescription("has no parents");
+                hasNoParents.setParents(this.buildList(testedEntity));
+                EntityCycleDetector underTest = new EntityCycleDetector(hasNoParents, entities);
                 assertThat(underTest.hasCycle()).isTrue();
         }
 
@@ -158,10 +158,10 @@ class EntityCycleDetectorShould {
                 List<Entity> entities = Arrays.asList(
                                 entityWithNoParent, entityReferencingUnknownParents,
                                 entityReferencingEntityWithNoParents);
-                Entity has_no_parents = new Entity();
-                has_no_parents.setId(testedEntity);
-                has_no_parents.setDescription("has no parents");
-                EntityCycleDetector underTest = new EntityCycleDetector(has_no_parents, entities);
+                Entity hasNoParents = new Entity();
+                hasNoParents.setId(testedEntity);
+                hasNoParents.setDescription("has no parents");
+                EntityCycleDetector underTest = new EntityCycleDetector(hasNoParents, entities);
                 assertThat(underTest.hasCycle()).isFalse();
         }
 
@@ -170,11 +170,11 @@ class EntityCycleDetectorShould {
                 List<Entity> entities = Arrays.asList(
                                 entityWithNoParent, entityReferencingUnknownParents,
                                 entityReferencingEntityWithNoParents);
-                Entity has_no_parents = new Entity();
-                has_no_parents.setId(testedEntity);
-                has_no_parents.setDescription("with unknown parents");
-                has_no_parents.setParents(UNKNOWNPARENTS);
-                EntityCycleDetector underTest = new EntityCycleDetector(has_no_parents, entities);
+                Entity hasNoParents = new Entity();
+                hasNoParents.setId(testedEntity);
+                hasNoParents.setDescription("with unknown parents");
+                hasNoParents.setParents(UNKNOWNPARENTS);
+                EntityCycleDetector underTest = new EntityCycleDetector(hasNoParents, entities);
                 assertThat(underTest.hasCycle()).isFalse();
         }
 
@@ -182,12 +182,12 @@ class EntityCycleDetectorShould {
         void OK__4__AddedEntity_ReferringAllOthers__In__Collection() {
                 List<Entity> entities = Arrays.asList(entityWithNoParent, entityReferencingUnknownParents,
                                 entityReferencingEntityWithNoParents);
-                Entity has_no_parents = new Entity();
-                has_no_parents.setId(testedEntity);
-                has_no_parents.setDescription("with unknown parents");
-                has_no_parents.setParents(this.buildList(entityWithNoParent, entityReferencingUnknownParents,
+                Entity hasNoParents = new Entity();
+                hasNoParents.setId(testedEntity);
+                hasNoParents.setDescription("with unknown parents");
+                hasNoParents.setParents(this.buildList(entityWithNoParent, entityReferencingUnknownParents,
                                 entityReferencingEntityWithNoParents));
-                EntityCycleDetector underTest = new EntityCycleDetector(has_no_parents, entities);
+                EntityCycleDetector underTest = new EntityCycleDetector(hasNoParents, entities);
                 assertThat(underTest.hasCycle()).isFalse();
         }
 

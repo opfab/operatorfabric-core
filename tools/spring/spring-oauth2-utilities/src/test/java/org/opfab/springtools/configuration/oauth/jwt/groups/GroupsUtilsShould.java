@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,19 +62,16 @@ class GroupsUtilsShould {
 	    
 	    List<RoleClaim> listRoleClaim = new ArrayList<RoleClaim>();
 
-	    // set singleValue = true
 	    RoleClaim rolesClaim1 = new RoleClaimStandard("roleClaim");
 	    RoleClaim rolesClaim2 = new RoleClaimStandard("pathA1/pathA2/roleClaim");
 	    
-	 	// set singleValue = false;
 	    RoleClaim rolesClaim3 = new RoleClaimStandardArray("pathF1/pathF2/listRoleClaim");
-	    // set singleValue = false; with separator ";" and ","
+
 	    RoleClaim rolesClaim4 = new RoleClaimStandardList("pathB1/pathB2/pathB3/listRoleClaim", ";");
 	    RoleClaim rolesClaim5 = new RoleClaimStandardList("pathC1/listRoleClaim", ",");
 	    
-	    // set checkExistPath = true, default value which is implicit value
 	    RoleClaim rolesClaim6 = new RoleClaimCheckExistPath("pathD1/RoleClaimOptionalD1", "RoleClaimOptionalD1");
-	    // set checkExistPath = true, roleValue = "RoleClaimOptionalE1"
+
 	    RoleClaim rolesClaim7 = new RoleClaimCheckExistPath("pathE1/pathE2/RoleClaimOptionalE1", "RoleClaimOptionalE1");
 	    
 	    listRoleClaim.add(rolesClaim1);

@@ -196,13 +196,13 @@ class ProcessesServiceShould {
         ProcessGroup gp3 = new ProcessGroup("gp3","gp3",Arrays.asList("process5", "process4"));
         ProcessGroup gp4 = new ProcessGroup("gp4","gp4",Arrays.asList("process7", "process8", "process7"));
 
-        ProcessGroups groups_without_duplicate = new ProcessGroups(Arrays.asList(gp1, gp2));
-        ProcessGroups groups_with_duplicate = new ProcessGroups(Arrays.asList(gp2, gp3));
-        ProcessGroups groups_with_duplicate_in_the_same_group = new ProcessGroups(Arrays.asList(gp1, gp4));
+        ProcessGroups groupsWithoutDuplicate = new ProcessGroups(Arrays.asList(gp1, gp2));
+        ProcessGroups groupsWithDuplicate = new ProcessGroups(Arrays.asList(gp2, gp3));
+        ProcessGroups groupsWithDuplicateInTheSameGroup = new ProcessGroups(Arrays.asList(gp1, gp4));
 
-        assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_without_duplicate)).isTrue();
-        assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_with_duplicate)).isFalse();
-        assertThat(service.checkNoDuplicateProcessInUploadedFile(groups_with_duplicate_in_the_same_group)).isFalse();
+        assertThat(service.checkNoDuplicateProcessInUploadedFile(groupsWithoutDuplicate)).isTrue();
+        assertThat(service.checkNoDuplicateProcessInUploadedFile(groupsWithDuplicate)).isFalse();
+        assertThat(service.checkNoDuplicateProcessInUploadedFile(groupsWithDuplicateInTheSameGroup)).isFalse();
     }
 
     @Nested
@@ -293,9 +293,9 @@ class ProcessesServiceShould {
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
                 service.deleteVersion(bundleName, "v1");
                 Assertions.assertNull(service.fetch(bundleName, "v1"));
-                Process _process = service.fetch(bundleName);
-                Assertions.assertNotNull(_process);
-                assertThat(_process.version()).isEqualTo("0.5");
+                Process process05 = service.fetch(bundleName);
+                Assertions.assertNotNull(process05);
+                assertThat(process05.version()).isEqualTo("0.5");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
                 Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));

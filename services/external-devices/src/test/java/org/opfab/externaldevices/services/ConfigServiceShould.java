@@ -304,11 +304,11 @@ class ConfigServiceShould {
     @Test
     void updateUserConfiguration() {
 
-        UserConfiguration userConfiguration_1_update = new UserConfiguration();
-        userConfiguration_1_update.userLogin = "user1";
-        userConfiguration_1_update.externalDeviceIds = Collections.singletonList("someOtherDevice");
+        UserConfiguration userConfiguration1Update = new UserConfiguration();
+        userConfiguration1Update.userLogin = "user1";
+        userConfiguration1Update.externalDeviceIds = Collections.singletonList("someOtherDevice");
 
-        configService.saveUserConfiguration(userConfiguration_1_update);
+        configService.saveUserConfiguration(userConfiguration1Update);
 
         // Check that the existing item was updated.
         Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS);
@@ -316,7 +316,7 @@ class ConfigServiceShould {
 
         Assertions.assertThat(retrievedConfiguration).isPresent();
         Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison()
-                .isEqualTo(userConfiguration_1_update);
+                .isEqualTo(userConfiguration1Update);
     }
 
     @Test
