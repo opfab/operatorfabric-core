@@ -24,7 +24,7 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public List<Group> saveAll(List<Group> groupsToSave) {
-        groupsToSave.forEach((group) -> groups.put(group.getId(),cloneGroup(group)));
+        groupsToSave.forEach(group -> groups.put(group.getId(),cloneGroup(group)));
         return null;
     }
 
@@ -68,7 +68,7 @@ public class GroupRepositoryStub implements GroupRepository {
     @Override
     public List<Group> findByPerimetersContaining(String perimeterContains) {
         List<Group> groupsHavingPerimeter = new ArrayList<>();
-        groups.values().forEach((group) -> {
+        groups.values().forEach(group -> {
             if (group.getPerimeters().contains(perimeterContains)) {
                 groupsHavingPerimeter.add(cloneGroup(group));
             }

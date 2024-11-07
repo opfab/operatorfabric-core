@@ -23,7 +23,7 @@ public class PerimeterRepositoryStub implements PerimeterRepository {
 
     @Override
     public List<Perimeter> saveAll(List<Perimeter> perimetersToSave) {
-        perimetersToSave.forEach((perimeter) -> perimeters.put(perimeter.getId(), clonePerimeter(perimeter)));
+        perimetersToSave.forEach(perimeter -> perimeters.put(perimeter.getId(), clonePerimeter(perimeter)));
         return null;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ public class UserRepositoryStub implements UserRepository {
 
     @Override
     public List<User> saveAll(List<User> usersToSave) {
-        usersToSave.forEach((user) -> users.put(user.getLogin(), user));
+        usersToSave.forEach(user -> users.put(user.getLogin(), user));
         return usersToSave;
     }
 
@@ -67,7 +67,7 @@ public class UserRepositoryStub implements UserRepository {
     @Override
     public List<User> findByGroupSetContaining(String groupContains) {
         List<User> usersInGroups = new ArrayList<>();
-        users.values().forEach((user) -> {
+        users.values().forEach(user -> {
             if (user.getGroups().contains(groupContains)) {
                 usersInGroups.add(user);
             }
@@ -78,7 +78,7 @@ public class UserRepositoryStub implements UserRepository {
     @Override
     public List<User> findByEntitiesContaining(String entityContains) {
         List<User> usersInEntities = new ArrayList<>();
-        users.values().forEach((user) -> {
+        users.values().forEach(user -> {
             if (user.getEntities().contains(entityContains)) {
                 usersInEntities.add(user);
             }

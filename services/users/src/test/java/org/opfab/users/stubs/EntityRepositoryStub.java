@@ -61,7 +61,7 @@ public class EntityRepositoryStub implements EntityRepository {
     @Override
     public List<Entity> findByParentsContaining(String entityId) {
         List<Entity> childEntities = new ArrayList<>();
-        entities.values().forEach((entity) -> {
+        entities.values().forEach(entity -> {
             if (entity.getParents().contains(entityId)) {
                 childEntities.add(cloneEntity(entity));
             }
