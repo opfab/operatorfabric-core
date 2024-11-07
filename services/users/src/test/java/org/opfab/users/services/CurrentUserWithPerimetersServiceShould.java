@@ -162,7 +162,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void shouldContainsProcessNotNotified() throws Exception {
+        void shouldContainsProcessNotNotified() {
 
                 User user = new User();
                 user.setLogin("test");
@@ -177,7 +177,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void shouldContainsUserEntities() throws Exception {
+        void shouldContainsUserEntities() {
 
                 User user = new User();
                 user.setLogin("test");
@@ -192,7 +192,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void shouldNotContainsUserEntitiesNotConnected() throws Exception {
+        void shouldNotContainsUserEntitiesNotConnected() {
 
                 User user = new User();
                 user.setLogin("test");
@@ -208,7 +208,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void shouldContainsUserEntitiesParents() throws Exception {
+        void shouldContainsUserEntitiesParents() {
                 User user = new User();
                 user.setLogin("test");
                 user.addEntity(GRAND_CHILD_ENTITY);
@@ -225,7 +225,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void shouldNotContainsUserEntitiesChilds() throws Exception {
+        void shouldNotContainsUserEntitiesChilds() {
                 User user = new User();
                 user.setLogin("test");
                 user.addEntity(ROOT_ENTITY);
@@ -272,8 +272,7 @@ class CurrentUserWithPerimetersServiceShould {
         }
 
         @Test
-        void GIVEN_User_Login_WHEN_FetchingUserWithPerimeters_CurrentUserWithPerimetersShouldContainsUserEntitiesParents()
-                        throws Exception {
+        void GIVEN_User_Login_WHEN_FetchingUserWithPerimeters_CurrentUserWithPerimetersShouldContainsUserEntitiesParents() {
                 String login = "testLogin";
                 CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
                                 usersServiceStub, userSettingsService, entityRepositoryStub);

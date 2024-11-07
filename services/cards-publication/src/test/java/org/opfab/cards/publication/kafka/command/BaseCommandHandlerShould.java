@@ -61,7 +61,7 @@ class BaseCommandHandlerShould {
     }
 
     @Test
-    void testBuildCardPublicationData_withoutDataProperty() throws JsonProcessingException {
+    void testBuildCardPublicationData_withoutDataProperty() {
         when(card.getData()).thenReturn(null);
         org.opfab.cards.publication.model.Card result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();

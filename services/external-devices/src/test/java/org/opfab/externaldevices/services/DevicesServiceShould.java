@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ class DevicesServiceShould {
     @Test
     void shouldGetOneDeviceFromPool()
             throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
@@ -100,7 +100,7 @@ class DevicesServiceShould {
     @Test
     void shouldGetAllDevicesFromPool()
             throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
@@ -162,7 +162,7 @@ class DevicesServiceShould {
     @Test
     void shouldSendOneSignalsWhenUserHasOneDevicesConfigured()
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+            UnknownHostException, UnknownExternalDeviceException {
 
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
@@ -187,7 +187,7 @@ class DevicesServiceShould {
     @Test
     void shouldSendTwoSignalsWhenUserHasTwoDevicesConfigured()
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
         ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
@@ -211,7 +211,7 @@ class DevicesServiceShould {
     @Test
     void shouldConnectDriverBeforeSendingSignalIfNotConnected()
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
         ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
@@ -238,7 +238,7 @@ class DevicesServiceShould {
     @Test
     void shouldSendOneSignalWhenUserHasTwoDevicesConfiguredButOneDisable()
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
         ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
@@ -267,7 +267,7 @@ class DevicesServiceShould {
     @Test
     void shouldTryToSendTwoSignalsAndThrowExceptionWhenUserHasTwoDevicesConfiguredButOneIsNotResponding()
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+            UnknownExternalDeviceException {
 
         ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
         ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
@@ -298,7 +298,7 @@ class DevicesServiceShould {
     @Test
     void shouldSendWatchdogToDeviceWhenDeviceIsConnected()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            UnknownExternalDeviceException, UnknownHostException {
 
         final int CUSTOM_SIGNAL_ID = 4;
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
@@ -320,8 +320,8 @@ class DevicesServiceShould {
 
     @Test
     void shouldNotSendWatchdogToDeviceWhenDeviceIsNotConnected()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException,
+            UnknownHostException {
 
         final int CUSTOM_SIGNAL_ID = 4;
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
@@ -340,8 +340,7 @@ class DevicesServiceShould {
 
     @Test
     void shouldSendWatchdogToTwoDevicesWhenTwoDevicesWithDifferentIPPortAreConnected()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
@@ -366,8 +365,7 @@ class DevicesServiceShould {
 
     @Test
     void shouldSendWatchdogToOneDevicesWhenTwoDevicesWithSameIPPortAreConnected()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
@@ -390,8 +388,7 @@ class DevicesServiceShould {
 
     @Test
     void shouldSendWatchdogToOnlyOneDevicesWhenTwoDevicesAreConfiguredButOnlyOneConnected()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
@@ -416,8 +413,7 @@ class DevicesServiceShould {
 
     @Test
     void shouldReconnectDisconnectedDevices()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
@@ -433,8 +429,7 @@ class DevicesServiceShould {
 
     @Test
     void shouldNotReconnectConnectedDevices()
-            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
-            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
 
                 when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);

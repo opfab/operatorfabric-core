@@ -231,8 +231,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_user_card_with_wrong_publisher_WHEN_sending_card_THEN_card_is_rejected()
-                        throws URISyntaxException {
+        void GIVEN_a_user_card_with_wrong_publisher_WHEN_sending_card_THEN_card_is_rejected() {
 
                 Card card = TestHelpers.generateOneCard("PUBLISHER_X");
                 Assertions.assertThatThrownBy(
@@ -352,8 +351,7 @@ class CardProcessServiceShould {
                 }
 
                 @Test
-                void GIVEN_a_child_card_WHEN_updating_parent_card_with_KEEP_CHILD_CARDS_action_and_startDate_before_publishDate_THEN_child_card_has_startDate_and_endDate_correctly_updated()
-                                throws URISyntaxException {
+                void GIVEN_a_child_card_WHEN_updating_parent_card_with_KEEP_CHILD_CARDS_action_and_startDate_before_publishDate_THEN_child_card_has_startDate_and_endDate_correctly_updated() {
                         Assertions.assertThatCode(
                                         () -> cardProcessingService.processUserCard(childCard,
                                                         currentUserWithPerimeters,

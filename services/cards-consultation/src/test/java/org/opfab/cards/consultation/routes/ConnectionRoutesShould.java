@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 package org.opfab.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -138,7 +137,7 @@ class ConnectionRoutesShould {
                 }
 
                 @Test
-                void respondWithThreeUserConnected() throws JSONException {
+                void respondWithThreeUserConnected() {
                         service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
                         service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
                         service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
