@@ -76,7 +76,7 @@
             <td></td>
             <td style="padding-left: 30px"> {{ displayTime(historyCard.publishDate) }} </td>
             <td style="padding-left: 30px">{{ getEntityName(historyCard.publisher) }}</td>
-            <td style="padding-left: 30px"
+            <td style="padding-left: 30px; min-width: 200px"
             [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: historyCard.entityRecipients}"
             triggers="manual" (mouseenter)="historyCard.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
               <ng-container *ngFor="let recipient of getEntityRecipientsNames(historyCard.entityRecipients, 2)">{{ recipient }}<br/></ng-container>
