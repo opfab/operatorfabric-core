@@ -67,7 +67,7 @@ export class ActivityAreaView {
             if (entity.parents?.length > 0) {
                 entity.parents.forEach((parentId) => {
                     const parentEntity = EntitiesService.getEntity(parentId);
-                    if (parentEntity?.roles && parentEntity.roles.includes(RolesEnum.ACTIVITY_AREA_GROUP)) {
+                    if (parentEntity?.roles?.includes(RolesEnum.ACTIVITY_AREA_GROUP)) {
                         this.isEntityAlreadyACluster(parentEntity.name)
                             ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.name), activityAreaLine)
                             : this.activityAreaClusters.set(

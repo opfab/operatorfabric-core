@@ -81,8 +81,7 @@ export class AcknowledgeService {
         return (
             consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
             UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
-            !lightCard.entityRecipients ||
-            !lightCard.entityRecipients.length ||
+            !lightCard.entityRecipients?.length ||
             !AcknowledgeService.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)
         );
     }
