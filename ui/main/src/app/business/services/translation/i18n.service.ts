@@ -20,7 +20,7 @@ import {environment} from '@env/environment';
 declare const opfab: any;
 
 export class I18nService {
-    private static localUrl = `${environment.url}assets/i18n/`;
+    private static readonly localUrl = `${environment.url}assets/i18n/`;
     private static _locale: string;
     private static configServer: ConfigServer;
     private static translationService: TranslationService;

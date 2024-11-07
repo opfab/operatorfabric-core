@@ -11,8 +11,8 @@ export class CountDown {
     private counting = false;
     private ended = false;
     private stop = false;
-    private endTime: number;
-    private milliSecondsBeforeEndTimeForStartingCount: number;
+    private readonly endTime: number;
+    private readonly milliSecondsBeforeEndTimeForStartingCount: number;
     private countDown = '';
 
     constructor(endTime: number, secondsBeforeEndTimeForStartingCount: number) {

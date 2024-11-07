@@ -8,7 +8,6 @@
  */
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
@@ -41,11 +40,8 @@ import {ReloadRequiredComponent} from './modules/core/reload-required/reload-req
     ]
 })
 export class AppComponent {
-    reloadCanceled: boolean;
-
     public applicationLoaded = false;
 
-    private modalRef: NgbModalRef;
     @ViewChild('reloadRequested') reloadRequestedPopupRef: TemplateRef<any>;
 
     @HostListener('document:visibilitychange')
@@ -89,7 +85,7 @@ export class AppComponent {
     }
 
     constructor(
-        private routerNavigationService: RouterNavigationService // put it here to have it injected and started a startup
+        private readonly routerNavigationService: RouterNavigationService // put it here to have it injected and started a startup
     ) {}
 
     onApplicationLoaded() {

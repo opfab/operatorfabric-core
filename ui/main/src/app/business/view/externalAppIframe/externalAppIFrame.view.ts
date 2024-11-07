@@ -16,7 +16,7 @@ import {MenuService} from 'app/business/services/menu.service';
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
     unsubscribe$: Subject<void> = new Subject<void>();
-    private businessConfigUrl = `${environment.url}#businessconfigparty`;
+    private readonly businessConfigUrl = `${environment.url}#businessconfigparty`;
 
     constructor() {
         this.listenForExternalAppRoute();

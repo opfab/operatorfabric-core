@@ -25,10 +25,10 @@ export class FieldDescription {
 
 export class JsonToArray {
     private jsonAsArray: string[][] = [[]];
-    private fieldDescriptions: FieldDescription[] = [];
-    private columnIndexes = new Map();
-    private nestedJsonToArrays = new Map();
-    private fieldsProcessOnlyIfPreviousArraysAreEmpty = new Set();
+    private readonly fieldDescriptions: FieldDescription[] = [];
+    private readonly columnIndexes = new Map();
+    private readonly nestedJsonToArrays = new Map();
+    private readonly fieldsProcessOnlyIfPreviousArraysAreEmpty = new Set();
 
     constructor(rules: any) {
         rules.forEach((rule) => this.processRule(rule, false));

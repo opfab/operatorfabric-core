@@ -17,7 +17,7 @@ import {LoggerService as logger} from '../logs/logger.service';
 
 export class SupervisedEntitiesService {
     protected static _entities: SupervisedEntity[];
-    private static ngUnsubscribe$ = new Subject<void>();
+    private static readonly ngUnsubscribe$ = new Subject<void>();
     private static supervisedEntitiesServer: SupervisedEntitiesServer;
 
     public static setSupervisedEntitiesServer(supervisedEntitiesServer: SupervisedEntitiesServer) {

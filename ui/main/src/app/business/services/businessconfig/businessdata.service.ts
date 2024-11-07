@@ -19,7 +19,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofModel/message.model';
 
 export class BusinessDataService {
-    private static _cachedResources = new Map<string, string>();
+    private static readonly _cachedResources = new Map<string, string>();
     private static businessDataServer: BusinessDataServer;
 
     public static setBusinessDataServer(businessDataServer: BusinessDataServer) {

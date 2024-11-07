@@ -15,7 +15,7 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 
 export class AdminProcessesService {
-    private static processes: Process[];
+    private static readonly processes: Process[];
     private static adminprocessServer: AdminProcessServer;
 
     public static setAdminProcessServer(adminprocessServer: AdminProcessServer) {

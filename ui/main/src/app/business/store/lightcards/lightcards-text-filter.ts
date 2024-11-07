@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 
 export class LightCardsTextFilter {
-    private searchChanges = new Subject();
+    private readonly searchChanges = new Subject();
     private searchTerm = '';
 
     public getSearchChanges(): Observable<any> {

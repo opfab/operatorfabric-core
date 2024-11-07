@@ -22,7 +22,7 @@ import {NotificationDecision} from './notification-decision';
 export class SystemNotificationService {
     private static systemNotificationConfigBySeverity: Map<Severity, string>;
 
-    private static incomingCard = new Subject();
+    private static readonly incomingCard = new Subject();
 
     public static initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();

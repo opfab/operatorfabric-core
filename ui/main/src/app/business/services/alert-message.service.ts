@@ -11,7 +11,7 @@ import {Message} from '@ofModel/message.model';
 import {Observable, Subject} from 'rxjs';
 
 export class AlertMessageService {
-    private static alertEvent = new Subject<Message>();
+    private static readonly alertEvent = new Subject<Message>();
 
     public static sendAlertMessage(message: Message) {
         AlertMessageService.alertEvent.next(message);

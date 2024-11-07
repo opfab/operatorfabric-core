@@ -18,7 +18,7 @@ import {ConfigService} from 'app/business/services/config.service';
 export class ImplicitAuthenticationHandler extends AuthHandler {
     constructor(
         httpClient: HttpClient,
-        private oauthService: OAuthService
+        private readonly oauthService: OAuthService
     ) {
         super(httpClient);
     }

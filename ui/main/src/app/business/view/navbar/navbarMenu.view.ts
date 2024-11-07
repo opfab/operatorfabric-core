@@ -17,13 +17,18 @@ import {RouterStore} from 'app/business/store/router.store';
 import {Subject, skip, takeUntil} from 'rxjs';
 
 export class NavbarMenuView {
-    private static ADMIN_MENUS = ['admin', 'externaldevicesconfiguration'];
-    private static VISIBLE_RIGHT_MENUS_IN_COLLAPSED_MODE = ['settings', 'feedconfiguration', 'nightdaymode', 'logout'];
-    private navbarMenu: NavbarMenu;
-    private destroy$ = new Subject<void>();
+    private static readonly ADMIN_MENUS = ['admin', 'externaldevicesconfiguration'];
+    private static readonly VISIBLE_RIGHT_MENUS_IN_COLLAPSED_MODE = [
+        'settings',
+        'feedconfiguration',
+        'nightdaymode',
+        'logout'
+    ];
+    private readonly navbarMenu: NavbarMenu;
+    private readonly destroy$ = new Subject<void>();
     private menuChangeListener: Function;
 
-    constructor(private translationService: TranslationService) {
+    constructor(private readonly translationService: TranslationService) {
         this.navbarMenu = new NavbarMenu();
         this.computeUpperMenuElements();
         this.computeRightIconsVisibility();

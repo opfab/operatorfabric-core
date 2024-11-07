@@ -25,8 +25,8 @@ export class ConfigService {
 
     private static menuConfig: UIMenuFile;
 
-    private static configChangeEvent = new Subject<any>();
-    private static settingsOverrideEvent = new Subject<any>();
+    private static readonly configChangeEvent = new Subject<any>();
+    private static readonly settingsOverrideEvent = new Subject<any>();
 
     public static reset() {
         ConfigService.config = null;

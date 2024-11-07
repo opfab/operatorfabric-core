@@ -19,7 +19,7 @@ import {RolesEnum} from '@ofModel/roles.model';
 
 export class EntitiesService {
     protected static _entities: Entity[];
-    private static ngUnsubscribe$ = new Subject<void>();
+    private static readonly ngUnsubscribe$ = new Subject<void>();
     private static entitiesServer: EntitiesServer;
 
     public static setEntitiesServer(entitiesServer: EntitiesServer) {

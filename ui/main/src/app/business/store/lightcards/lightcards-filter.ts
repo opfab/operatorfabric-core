@@ -13,13 +13,13 @@ import {LogOption, LoggerService as logger} from 'app/business/services/logs/log
 import {Observable, Subject, ReplaySubject} from 'rxjs';
 
 export class LightCardsFilter {
-    private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
-    private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
+    private static readonly TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
+    private static readonly TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
 
     private readonly filters = new Array();
     private businessDateFilter: Filter;
-    private newBusinessDateFilter = new Subject();
-    private filterChanges = new ReplaySubject(1);
+    private readonly newBusinessDateFilter = new Subject();
+    private readonly filterChanges = new ReplaySubject(1);
 
     constructor() {
         this.initFilter();

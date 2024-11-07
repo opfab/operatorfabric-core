@@ -34,18 +34,18 @@ export class SoundNotificationService {
      * once (and only new cards), sounds will only be played for a given card if the elapsed time since its publishDate
      * is below this threshold. */
 
-    private static DEFAULT_REPLAY_INTERVAL = 5; // in seconds
-    private static SECONDS_TO_MILLISECONDS = 1000;
+    private static readonly DEFAULT_REPLAY_INTERVAL = 5; // in seconds
+    private static readonly SECONDS_TO_MILLISECONDS = 1000;
     private static replayInterval: number;
 
     private static soundConfigBySeverity: Map<Severity, SoundConfig>;
     private static playSoundOnExternalDevice: boolean;
     private static replayEnabled: boolean;
 
-    private static incomingCard = new Subject();
-    private static sessionEnd = new Subject();
-    private static clearSignal = new Subject();
-    private static ngUnsubscribe$ = new Subject<void>();
+    private static readonly incomingCard = new Subject();
+    private static readonly sessionEnd = new Subject();
+    private static readonly clearSignal = new Subject();
+    private static readonly ngUnsubscribe$ = new Subject<void>();
     private static isServiceActive = true;
 
     private static soundServer: SoundServer;

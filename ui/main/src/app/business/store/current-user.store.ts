@@ -10,9 +10,9 @@
 import {ReplaySubject, Observable, Subject} from 'rxjs';
 
 export class CurrentUserStore {
-    private static connectionEvent = new ReplaySubject<string>(1);
-    private static sessionWillSoonExpireEvent = new Subject<boolean>();
-    private static sessionExpiredEvent = new Subject<boolean>();
+    private static readonly connectionEvent = new ReplaySubject<string>(1);
+    private static readonly sessionWillSoonExpireEvent = new Subject<boolean>();
+    private static readonly sessionExpiredEvent = new Subject<boolean>();
     private static token: string;
     private static authenticationUsesToken = false;
 

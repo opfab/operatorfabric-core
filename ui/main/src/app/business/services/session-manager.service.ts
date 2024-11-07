@@ -15,7 +15,7 @@ import {LogOption, LoggerService as logger} from './logs/logger.service';
 import {SoundNotificationService} from './notifications/sound-notification.service';
 
 export class SessionManagerService {
-    private static endSessionEvent = new Subject<string>();
+    private static readonly endSessionEvent = new Subject<string>();
     private static authService: AuthService;
 
     public static init(authService: AuthService) {

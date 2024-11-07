@@ -12,7 +12,7 @@ import {QuestionCardTemplateView} from './questionCardTemplateView';
 declare const opfab;
 
 export class QuestionCardTemplate extends HTMLElement {
-    private questionCardTemplateView: QuestionCardTemplateView;
+    private readonly questionCardTemplateView: QuestionCardTemplateView;
 
     constructor() {
         super();

@@ -28,15 +28,15 @@ import {PasswordAuthenticationHandler} from './password-authentication-handler';
 })
 export class AuthService {
     private mode: AuthenticationMode = AuthenticationMode.NONE;
-    private rejectLoginMessage = new Subject<Message>();
+    private readonly rejectLoginMessage = new Subject<Message>();
     private login: string;
 
     private authHandler: AuthHandler;
 
     constructor(
-        private router: Router,
-        private oauthServiceForImplicitMode: OAuthService,
-        private httpClient: HttpClient
+        private readonly router: Router,
+        private readonly oauthServiceForImplicitMode: OAuthService,
+        private readonly httpClient: HttpClient
     ) {}
 
     public initializeAuthentication() {

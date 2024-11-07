@@ -20,12 +20,12 @@ import {ErrorService} from '../error-service';
 
 export class UserService {
     private static _userWithPerimeters: UserWithPerimeters;
-    private static ngUnsubscribe = new Subject<void>();
+    private static readonly ngUnsubscribe = new Subject<void>();
     private static _userRightsPerProcessAndState: Map<
         string,
         {rights: RightsEnum; filteringNotificationAllowed: boolean}
     > = new Map();
-    private static _receiveRightPerProcess: Map<string, number> = new Map();
+    private static readonly _receiveRightPerProcess: Map<string, number> = new Map();
     private static userServer;
 
     public static setUserServer(userServer: UserServer) {

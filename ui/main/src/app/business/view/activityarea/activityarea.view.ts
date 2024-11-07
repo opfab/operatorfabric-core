@@ -20,11 +20,14 @@ import {Entity} from '@ofModel/entity.model';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 
 export class ActivityAreaView {
-    private activityAreaSubject = new ReplaySubject<ActivityAreaPage>(1);
-    private activityAreaPage: ActivityAreaPage;
-    private activityAreaOrphanEntitiesCluster: ActivityAreaEntityCluster;
-    private activityAreaClusters: Map<string, ActivityAreaEntityCluster> = new Map<string, ActivityAreaEntityCluster>();
-    private currentUserLogin;
+    private readonly activityAreaSubject = new ReplaySubject<ActivityAreaPage>(1);
+    private readonly activityAreaPage: ActivityAreaPage;
+    private readonly activityAreaOrphanEntitiesCluster: ActivityAreaEntityCluster;
+    private readonly activityAreaClusters: Map<string, ActivityAreaEntityCluster> = new Map<
+        string,
+        ActivityAreaEntityCluster
+    >();
+    private readonly currentUserLogin;
     private intervalForConnectedUsersUpdate;
     private newActivityAreas: any = new Map<string, boolean>();
 

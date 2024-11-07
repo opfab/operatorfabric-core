@@ -23,10 +23,10 @@ import {LoggerService as logger} from '../logs/logger.service';
 
 export class ProcessesService {
     private static processServer: ProcessServer;
-    private static processesWithAllVersionsCache = new Map();
+    private static readonly processesWithAllVersionsCache = new Map();
     private static processesWithLatestVersionOnly: Process[];
     private static processesWithAllVersions: Process[];
-    private static processGroups = new Map<string, {name: string; processes: string[]}>();
+    private static readonly processGroups = new Map<string, {name: string; processes: string[]}>();
 
     private static typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 

@@ -12,12 +12,12 @@ import {Observable, ReplaySubject, Subject} from 'rxjs';
 
 export class SelectedCardStore {
     private static selectedCardId: string;
-    private static selectedCardIdChange = new ReplaySubject<string>(1);
+    private static readonly selectedCardIdChange = new ReplaySubject<string>(1);
     private static selectedCardNotFound = false;
 
-    private static selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
+    private static readonly selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
 
-    private static selectedCardDeleted = new Subject<any>();
+    private static readonly selectedCardDeleted = new Subject<any>();
 
     public static setSelectedCardId(cardId: string): void {
         SelectedCardStore.selectedCardId = cardId;

@@ -19,7 +19,7 @@ export class GroupsService {
     private static _groups: Group[];
     private static groupsServer: GroupsServer;
 
-    private static ngUnsubscribe$ = new Subject<void>();
+    private static readonly ngUnsubscribe$ = new Subject<void>();
 
     public static setGroupsServer(groupsServer: GroupsServer) {
         GroupsService.groupsServer = groupsServer;

@@ -21,16 +21,16 @@ import {OpfabEventStreamService} from '../../services/events/opfabEventStream.se
 import {LightCardsStore} from './lightcards-store';
 
 export class FilteredLightCardsStore {
-    private filteredAndSortedLightCards = new Subject();
-    private filteredLightCards = new Subject();
-    private filteredAndSearchedLightCards = new ReplaySubject(1);
-    private filteredLightCardsForTimeLine = new Subject();
-    private onlyBusinessFilterForTimeLine = new Subject();
-    private lightCardFilter: LightCardsFilter;
-    private lightCardsSorter: LightCardsSorter;
-    private lightCardTextFilter: LightCardsTextFilter;
+    private readonly filteredAndSortedLightCards = new Subject();
+    private readonly filteredLightCards = new Subject();
+    private readonly filteredAndSearchedLightCards = new ReplaySubject(1);
+    private readonly filteredLightCardsForTimeLine = new Subject();
+    private readonly onlyBusinessFilterForTimeLine = new Subject();
+    private readonly lightCardFilter: LightCardsFilter;
+    private readonly lightCardsSorter: LightCardsSorter;
+    private readonly lightCardTextFilter: LightCardsTextFilter;
 
-    constructor(private lightCardStore: LightCardsStore) {
+    constructor(private readonly lightCardStore: LightCardsStore) {
         this.lightCardFilter = new LightCardsFilter();
         this.lightCardsSorter = new LightCardsSorter();
         this.lightCardTextFilter = new LightCardsTextFilter();

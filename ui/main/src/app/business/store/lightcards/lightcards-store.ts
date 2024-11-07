@@ -46,31 +46,31 @@ import {AcknowledgeService} from '../../services/acknowledge.service';
  */
 
 export class LightCardsStore {
-    private lightCards = new Map();
-    private childCards = new Map();
-    private lightCardsEvents = new Subject<Map<any, any>>();
-    private lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>();
-    private newLightCards = new Subject<LightCard>();
-    private newLightChildCards = new Subject<LightCard>();
-    private deletedLightChildCards = new Subject<any>();
+    private readonly lightCards = new Map();
+    private readonly childCards = new Map();
+    private readonly lightCardsEvents = new Subject<Map<any, any>>();
+    private readonly lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>();
+    private readonly newLightCards = new Subject<LightCard>();
+    private readonly newLightChildCards = new Subject<LightCard>();
+    private readonly deletedLightChildCards = new Subject<any>();
 
-    private orphanedLightChildCardsFromCurrentEntity: Set<string> = new Set();
+    private readonly orphanedLightChildCardsFromCurrentEntity: Set<string> = new Set();
 
     private timeOfLastDebounce = 0;
     private numberOfCardProcessedByPreviousDebounce = 0;
 
     private nbCardLoadedInHalfSecondInterval = 0;
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
-    private loadingInProgress = new Subject();
-    private receivedAcksSubject = new Subject<{
+    private readonly loadingInProgress = new Subject();
+    private readonly receivedAcksSubject = new Subject<{
         cardUid: string;
         entitiesAcks: string[];
         operation: CardOperationType;
     }>();
 
-    private unsubscribe$ = new Subject<void>();
+    private readonly unsubscribe$ = new Subject<void>();
 
-    private static DEBOUNCE_TIME_IN_MS = 200;
+    private static readonly DEBOUNCE_TIME_IN_MS = 200;
 
     // --------------------
     // When a flow of card is coming, for performance reasons, we do not want to update the card list

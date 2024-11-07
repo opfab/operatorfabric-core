@@ -19,7 +19,7 @@ export class PerimetersService {
     private static perimeterServer: PerimetersServer;
     private static _perimeters: Perimeter[];
 
-    private static ngUnsubscribe$ = new Subject<void>();
+    private static readonly ngUnsubscribe$ = new Subject<void>();
 
     public static setPerimeterServer(perimeterServer: PerimetersServer) {
         PerimetersService.perimeterServer = perimeterServer;

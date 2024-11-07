@@ -12,7 +12,7 @@ import {TaskCardTemplateView} from './taskCardTemplateView';
 declare const opfab;
 
 export class TaskCardTemplate extends HTMLElement {
-    private taskCardTemplateView: TaskCardTemplateView;
+    private readonly taskCardTemplateView: TaskCardTemplateView;
 
     constructor() {
         super();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ export enum PageType {
     DASHBOARD
 }
 export class RouterStore {
-    private static pageConf = new Map([
+    private static readonly pageConf = new Map([
         ['feed', PageType.FEED],
         ['archives', PageType.ARCHIVE],
         ['businessconfigparty', PageType.THIRPARTY],
@@ -34,7 +34,7 @@ export class RouterStore {
         ['dashboard', PageType.DASHBOARD]
     ]);
 
-    private static currentRouteEvent = new ReplaySubject<string>(1);
+    private static readonly currentRouteEvent = new ReplaySubject<string>(1);
     private static currentRoute = 'feed';
 
     public static getCurrentRoute() {

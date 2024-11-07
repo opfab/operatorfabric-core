@@ -18,11 +18,11 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {format} from 'date-fns';
 
 export class Dashboard {
-    private dashboardSubject = new ReplaySubject<DashboardPage>(1);
+    private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
     private dashboardPage;
     public noSeverityColor = '#717274';
-    private ngUnsubscribe$ = new Subject<void>();
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly ngUnsubscribe$ = new Subject<void>();
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
     constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();

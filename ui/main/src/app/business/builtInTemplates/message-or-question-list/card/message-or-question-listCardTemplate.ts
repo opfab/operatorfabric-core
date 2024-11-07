@@ -12,7 +12,7 @@ import {MessageOrQuestionListCardTemplateView} from './message-or-question-listC
 declare const opfab;
 
 export class MessageOrQuestionListCardTemplate extends HTMLElement {
-    private messageOrQuestionListCardTemplateView: MessageOrQuestionListCardTemplateView;
+    private readonly messageOrQuestionListCardTemplateView: MessageOrQuestionListCardTemplateView;
 
     constructor() {
         super();

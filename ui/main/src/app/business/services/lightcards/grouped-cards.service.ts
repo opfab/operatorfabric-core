@@ -13,7 +13,7 @@ import {BehaviorSubject} from 'rxjs';
 export class GroupedCardsService {
     private static groupedChildCards: LightCard[] = [];
     private static parentsOfGroupedCards: LightCard[] = [];
-    private static tagsMap: Map<string, LightCard[]> = new Map();
+    private static readonly tagsMap: Map<string, LightCard[]> = new Map();
 
     static computeEvent = new BehaviorSubject(null);
 

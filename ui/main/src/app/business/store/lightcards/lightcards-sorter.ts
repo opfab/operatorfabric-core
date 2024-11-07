@@ -11,7 +11,7 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Subject, Observable} from 'rxjs';
 
 export class LightCardsSorter {
-    private sortChanges = new Subject();
+    private readonly sortChanges = new Subject();
     private sortBy = 'unread';
 
     public setSortBy(sortBy: string) {

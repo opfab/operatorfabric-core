@@ -15,11 +15,11 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 export class AlertView {
-    private alarmMessageAutoClose: boolean;
-    private alertPage: AlertPage;
+    private readonly alarmMessageAutoClose: boolean;
+    private readonly alertPage: AlertPage;
     private lastMessageDate: number;
 
-    constructor(private translationService: TranslationService) {
+    constructor(private readonly translationService: TranslationService) {
         this.alarmMessageAutoClose = ConfigService.getConfigValue('alerts.alarmLevelAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';
