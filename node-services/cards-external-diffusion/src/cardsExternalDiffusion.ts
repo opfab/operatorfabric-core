@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import express from 'express';
+import express, {NextFunction} from 'express';
 import {expressjwt, GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 app.use(
     /\/((?!healthcheck).)*/, // Token verification activated except for healthcheck request
-    expressjwt({
+    async (req: any, res: any, next: NextFunction) => expressjwt({
         secret: jwksRsa.expressJwtSecret({
             cache: true,
             rateLimit: true,
@@ -41,7 +41,7 @@ app.use(
             jwksUri: jwksUri
         }) as GetVerificationKey,
         algorithms: ['RS256']
-    })
+    })(req, res, next) as Promise<void>
 );
 /* eslint-enable */
 

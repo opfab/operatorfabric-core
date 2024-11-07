@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import express from 'express';
+import express, {NextFunction} from 'express';
 import {expressjwt, type GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
@@ -30,15 +30,15 @@ const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserve
 // https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
 app.use(
     /\/((?!healthcheck).)*/, // Token verification activated except for healthcheck request
-    expressjwt({
+    async (req: any, res: any, next: NextFunction) => expressjwt({
         secret: jwksRsa.expressJwtSecret({
             cache: true,
             rateLimit: true,
             jwksRequestsPerMinute: 5,
-            jwksUri
+            jwksUri: jwksUri
         }) as GetVerificationKey,
         algorithms: ['RS256']
-    })
+    })(req, res, next) as Promise<void>
 );
 /* eslint-enable */
 
