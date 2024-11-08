@@ -30,7 +30,7 @@
                         </th>
                         <td>
                             <ng-template #connected >
-                                <span class="badge rounded-pill bg-primary opfab-activityarea-badge">{{line.connectedUsers.length}}
+                                <span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{line.connectedUsers.length}}
                                 </span>&nbsp;&nbsp;<span [id]="'table-line-' + line.entityId"
                                                          class="opfab-activityarea-table-line"
                                                          placement="top-left"
@@ -39,7 +39,7 @@
                                                          triggers="mouseenter:mouseleave"
                                                          popoverClass="opfab-popover-no-arrow">{{line.connectedUsersText}}</span>
                             </ng-template>
-                            <ng-template #disconnected><span class="badge rounded-pill bg-secondary opfab-activityarea-badge">0</span></ng-template>
+                            <ng-template #disconnected> <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">0</span></ng-template>
                             <ng-template #usersDropdown>
                                 <div *ngFor="let user of line.connectedUsers">
                                     &nbsp; {{user}} &nbsp;

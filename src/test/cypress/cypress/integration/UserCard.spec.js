@@ -143,9 +143,9 @@ describe('User Card ', function () {
       usercard.checkEntityRecipientsInPreviewContains("French Control Centers");
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
       // Check circles for connected entities
-      cy.get('#opfab-entity-recipients').get('.badge').should('have.length', 2);
-      cy.get('#opfab-entity-recipients').get('.bg-primary').should('have.length', 1);
-      cy.get('#opfab-entity-recipients').get('.bg-secondary').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.opfab-activityarea-badge').should('have.length', 2);
+      cy.get('#opfab-entity-recipients').get('.opfab-blue-background').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.opfab-grey-background').should('have.length', 1);
       script.resetUIConfigurationFiles();
     })
 
@@ -1199,10 +1199,10 @@ describe('User Card ', function () {
       usercard.selectRecipientForInformation('Control Center FR East');
       usercard.preview();
 
-      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 1);
+      cy.get("#opfab-entity-recipients").find('.opfab-activityarea-badge').should('have.length', 1);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
 
-      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 2);
+      cy.get("#opfab-entity-recipients-for-information").find('.opfab-activityarea-badge').should('have.length', 2);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR East");
 
@@ -1241,11 +1241,11 @@ describe('User Card ', function () {
       usercard.preview();
 
       // We check Control Center FR East is displayed in 'Recipients' section and not in 'Recipients for information'
-      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 2);
+      cy.get("#opfab-entity-recipients").find('.opfab-activityarea-badge').should('have.length', 2);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
 
-      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 1);
+      cy.get("#opfab-entity-recipients-for-information").find('.opfab-activityarea-badge').should('have.length', 1);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
 
       usercard.sendCard();
@@ -1300,12 +1300,12 @@ describe('User Card ', function () {
       cy.get('#usercard_message_input').find('div').eq(0).type('Hello');
       usercard.preview();
 
-      cy.get("#opfab-entity-recipients").find('.badge').should('have.length', 3);
+      cy.get("#opfab-entity-recipients").find('.opfab-activityarea-badge').should('have.length', 3);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR South");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
 
-      cy.get("#opfab-entity-recipients-for-information").find('.badge').should('have.length', 2);
+      cy.get("#opfab-entity-recipients-for-information").find('.opfab-activityarea-badge').should('have.length', 2);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
       usercard.checkEntityRecipientsForInformationInPreviewContains("IT SUPERVISION CENTER");
 

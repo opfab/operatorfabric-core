@@ -177,10 +177,10 @@
         <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">
             <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
             <ng-template #connected>&nbsp;<span
-                    class="badge rounded-pill bg-primary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+                    class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
             </ng-template>
             <ng-template #disconnected>&nbsp;<span
-                    class="badge rounded-pill bg-secondary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+                    class="opfab-rounded-badge opfab-grey-background  opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
             </ng-template>
         </span>
     </div>
@@ -192,10 +192,10 @@
         <span *ngFor="let entityId of cardPreview.entityRecipientsForInformation" style="padding-right: 10px">
             <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
             <ng-template #connected>&nbsp;<span
-                    class="badge rounded-pill bg-primary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+                    class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
             </ng-template>
             <ng-template #disconnected>&nbsp;<span
-                    class="badge rounded-pill bg-secondary opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
+                    class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">{{getEntityName(entityId)}}</span>
             </ng-template>
         </span>
     </div>

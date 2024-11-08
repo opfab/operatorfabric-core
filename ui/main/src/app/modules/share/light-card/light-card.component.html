@@ -18,7 +18,7 @@
      (mouseleave)='highlightOnMap(false)'
 >
     <div class="d-flex  p-0 border-0">
-        <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
+        <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
         <div  style="width: 100%">
             <div style="display: grid;grid-template-columns: auto auto;margin-top:2px">
@@ -78,7 +78,7 @@
 
     </div>
     <div class="d-flex p-0 border-0">
-        <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
+        <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
         <div class="p-1" style="width: 100%;margin-top:3px">
             <span *ngIf="open">
                 <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
+    <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
 
 
 </div>

@@ -994,6 +994,20 @@ input:-webkit-autofill:active {
 }
 
 
+.opfab-badge {
+    color: white;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    border-radius: 0.375rem;
+    padding : 0.35em 0.65em;
+    vertical-align: baseline;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+
 .opfab-rounded-badge {
     color: white;
     font-size: 0.75em;
