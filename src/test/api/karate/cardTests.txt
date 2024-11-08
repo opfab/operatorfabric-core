@@ -15,6 +15,7 @@
       cards/postCardWithProcessAndOrStateUnexisting.feature   \
       cards/postCardWithI18nUnexisting.feature    \
       cards/postCardWithToNotify.feature          \
+      cards/postCardWithStoreOnlyInArchives.feature \
       cards/postCardFor3Users.feature             \
       cards/postCardsEntitiesToRespond.feature \
       cards/postCardsEntitiesToEdit.feature       \
@@ -30,5 +31,5 @@
       cards/postCardWithRRuleRecurrence.feature   \
       cards/cardsReminder.feature                 \
       cards/cardIdWithSpecialCharacters.feature   \
-      cards/resetRateLimiter.feature      \
-      cards/postCardWithStoreOnlyInArchives.feature
+      cards/resetRateLimiter.feature
+

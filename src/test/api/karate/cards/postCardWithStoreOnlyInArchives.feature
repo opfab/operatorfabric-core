@@ -80,4 +80,4 @@ Feature: postCardWithStoreOnlyInArchives
     And match response.card.data.message == 'a message with STORE_ONLY_IN_ARCHIVES action'
 
 #delete perimeter created previously
-    * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
+  * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}
