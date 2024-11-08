@@ -26,7 +26,7 @@
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
 
-          <div *ngIf="id.invalid" class="alert alert-danger">
+          <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
