@@ -16,8 +16,15 @@ You can find more information in the docker documentation : https://docs.docker.
 == Use of `date-fns` instead of `Moment.js` library
 
 OperatorFabric is now using `date-fns` library instead of `Moment.js`. The format used for defining a formatted date string
-is now different. So, if needed, in the file `web-ui.json`, you have to modify your fields : `settings.dateTimeformat`
-and `settings.dateFormat`. You can find the available formats here : https://date-fns.org/v3.6.0/docs/format
+is now different. So, if needed:
+
+* in the file `web-ui.json`, you have to modify your fields : `settings.dateTimeformat`
+and `settings.dateFormat`. 
+* in your templates when using handlebars helper `dateFormat`, you have to modify the formatting string
+
+You can find the available formats here : https://date-fns.org/v3.6.0/docs/format
+
+Especially you have to replace `YYYY` by `yyyy` and `DD` by `dd`.
 
 == Deletion of the parameter `secondsAfterPublicationToConsiderCardAsNotRead`
 
@@ -139,3 +146,7 @@ The log commands for opfab CLI have been renamed.
 
 Now, instead of doing `opfab service get-log-level <serviceName>`, you have to do `opfab log get-level  <serviceName>`.
 And instead of doing `opfab service set-log-level <serviceName> <level>`, you have to do `opfab log set-level  <serviceName> <level>`.
+
+== RabbitMQ
+
+The version of RabbitMQ is now 4.0.2. Before deploying it in production, if you are using a persistent queue, you need to clean the persistent file directory; otherwise, you will not be able to start the RabbitMQ docker container. (Inside the docker, the persistent folder is `/var/lib/rabbitmq/mnesia/`)

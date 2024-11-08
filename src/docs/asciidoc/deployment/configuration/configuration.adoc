@@ -41,7 +41,7 @@ This configuration is mandatory (no default configuration is provided).
 
 Operator Fabric is supporting mongo version 5.0.0 and above.
 
-=== RabbitMQ
+==== RabbitMQ
 
 A rabbitMQ component (docker image) is provided in opfab, it has a default configuration.
 
