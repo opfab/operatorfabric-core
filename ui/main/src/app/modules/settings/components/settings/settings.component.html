@@ -139,7 +139,7 @@
         <label for="opfab-setting-email" translate>settings.email</label>
         <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off">
       </div>
-      <div *ngIf="email.invalid" class="row alert alert-danger">
+      <div *ngIf="email.invalid" class="alert alert-danger">
         <div *ngIf="email.errors.email" translate>settings.input.errors.invalidEmail</div>
       </div>
     </div>

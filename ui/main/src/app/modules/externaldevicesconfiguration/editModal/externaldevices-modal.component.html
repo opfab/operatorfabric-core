@@ -32,7 +32,7 @@
                 <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
                 <input formControlName="id" name="id" id="opfab-deviceId" type="text"/>
               </div>
-              <div *ngIf="id.invalid" class="row alert alert-danger">
+              <div *ngIf="id.invalid" class="alert alert-danger">
                 <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
                 <div *ngIf="id.errors.uniqueDeviceIdViolation" translate>admin.input.id.alreadyExisting</div>
               </div>
@@ -41,14 +41,14 @@
                 <label for="opfab-host" translate>externalDevicesConfiguration.host</label>
                 <input formControlName="host" name="host" id="opfab-host" type="text"/>
               </div>
-              <div *ngIf="host.invalid" class="row alert alert-danger">
+              <div *ngIf="host.invalid" class="alert alert-danger">
                 <div *ngIf="host.errors.required" translate>externalDevicesConfiguration.input.host.required</div>
               </div>
               <div class="opfab-input opfab-edit-row">
                 <label for="opfab-port" translate>externalDevicesConfiguration.port</label>
                 <input formControlName="port" name="port" id="opfab-port" type="number"/>
               </div>
-              <div *ngIf="port.invalid" class="row alert alert-danger">
+              <div *ngIf="port.invalid" class="alert alert-danger">
                 <div *ngIf="port.errors.required" translate>externalDevicesConfiguration.input.port.required</div>
               </div>
               <div class="opfab-edit-row" *ngIf="signalMappingMultiSelectOptions.length > 0">

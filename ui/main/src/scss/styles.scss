@@ -32,6 +32,29 @@ body {
 	box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 }
 
+.opfab-col {
+    position:relative;
+    flex: 1 0 0;
+    margin-right: 0.75rem;
+    margin-left: 0.75rem;
+}
+
+.opfab-col-6 {
+    position: relative;
+    flex: 0 0 auto;
+    margin-right: 0.75rem;
+    margin-left: 0.75rem;
+    width: 50%;
+}
+
+.opfab-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+
  /* stylelint-disable selector-class-pattern */
 // Colors for state types
 .opfab-type-of-state-INPROGRESS {

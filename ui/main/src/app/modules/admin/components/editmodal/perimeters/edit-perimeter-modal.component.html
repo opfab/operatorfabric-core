@@ -26,7 +26,7 @@
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
 
-          <div *ngIf="id.invalid" class="row alert alert-danger">
+          <div *ngIf="id.invalid" class="alert alert-danger">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
@@ -45,8 +45,8 @@
         </div>
 
         <form [formGroup]="perimeterForm">
-          <div class="opfab-edit-row row" *ngFor="let i of stateRightControlsIndexes;">
-            <div class="col-6" style="position: relative;">
+          <div class="opfab-edit-row opfab-row" *ngFor="let i of stateRightControlsIndexes;">
+            <div class="opfab-col-6">
               <of-multi-select id="opfab-admin-perimeter-state-filter"
                                [multiSelectId]="'state'+i"
                                [parentForm]="perimeterForm"
@@ -55,7 +55,7 @@
                                [selectedOptions]="perimeterForm.get('state'+i).value">
               </of-multi-select>
             </div>
-            <div class="col" style="position: relative;min-width: 18%">
+            <div class="opfab-col" style="min-width: 18%">
               <of-multi-select id="opfab-admin-perimeter-right-filter"
                                [multiSelectId]="'right'+i"
                                [parentForm]="perimeterForm"
@@ -64,16 +64,16 @@
                                [selectedOptions]="perimeterForm.get('right'+i).value">
               </of-multi-select>
             </div>
-            <div class="col" style="position: relative;margin: auto">
+            <div class="opfab-col">
               <label [for]="'opfab-admin-perimeter-filtering-notification-allowed'+i" class="opfab-checkbox" style="white-space: pre-line; margin: auto" translate>admin.input.perimeter.filteringNotificationAllowed
                 <input [formControlName]="'filteringNotificationAllowed'+i" [name]="'filteringNotificationAllowed'+i" [id]="'opfab-admin-perimeter-filtering-notification-allowed'+i" type="checkbox">
                 <span class="opfab-checkbox-checkmark" style="top: 10px"></span>
               </label>
             </div>
-            <div class="col icons" [hidden]="stateRightControlsIndexes.length === 1">
+            <div class="opfab-col icons" [hidden]="stateRightControlsIndexes.length === 1">
               <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
             </div>
-            <div class="col icons">
+            <div class="opfab-col icons">
               <em class="fas fa-plus-circle" (click)="addStateRightControl()"></em>
             </div>
           </div>

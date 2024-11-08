@@ -24,7 +24,7 @@
             <label for="opfab-login" translate>admin.input.user.login</label>
             <input formControlName="login" name="login" id="opfab-login" type="text">
           </div>
-          <div *ngIf="login.invalid" class="row alert alert-danger">
+          <div *ngIf="login.invalid" class="alert alert-danger">
             <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
             <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
             <div *ngIf="login.errors.pattern" translate>admin.input.login.pattern</div>
@@ -35,14 +35,14 @@
             <label for="opfab-firstName" translate>admin.input.user.firstName</label>
             <input formControlName="firstName" name="firstName" id="opfab-firstName" type="text">
           </div>
-          <div *ngIf="firstName.invalid" class="row alert alert-danger">
+          <div *ngIf="firstName.invalid" class="alert alert-danger">
             <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
           </div>
           <div class="opfab-input opfab-edit-row">
             <label for="opfab-lastName" translate>admin.input.user.lastName</label>
             <input formControlName="lastName" name="lastName" id="opfab-lastName" type="text">
           </div>
-          <div *ngIf="lastName.invalid" class="row alert alert-danger">
+          <div *ngIf="lastName.invalid" class="alert alert-danger">
             <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
           </div>
           <div class="opfab-edit-row">

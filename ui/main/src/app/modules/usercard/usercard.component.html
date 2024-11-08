@@ -18,8 +18,8 @@
     style="padding-top:20px">
     <div [hidden]="cardLoadingInProgress || prepareCardForPreviewInProgress" id="opfab-usercard-creation">
         <form [formGroup]="userCardForm" class="opfab-form-lighter">
-            <div class="row">
-                <div style="position:relative" class="col" id="opfab-usercard-input-processGroup" hidden>
+            <div class="opfab-row">
+                <div class="opfab-col" id="opfab-usercard-input-processGroup" hidden>
                     <of-multi-select id="of-usercard-service-selector" multiSelectId="userCardProcessGroup"
                         [parentForm]="userCardForm" [config]="processGroupMultiSelectConfig"
                         [options]="processGroupOptions" [selectedOptions]="selectedProcessGroup"
@@ -27,7 +27,7 @@
                     </of-multi-select>
                 </div>
 
-                <div style="position:relative" class="col" id="opfab-usercard-input-process" hidden>
+                <div class="opfab-col" id="opfab-usercard-input-process" hidden>
                     <of-multi-select id="of-usercard-process-filter" multiSelectId="userCardProcess"
                         [parentForm]="userCardForm" [config]="processMultiSelectConfig" [options]="processOptions"
                         [selectedOptions]="selectedProcess" (selectionChange)="onProcessChoiceChanged($event)"
@@ -35,7 +35,7 @@
                     </of-multi-select>
                 </div>
 
-                <div style="position:relative" class="col" id="opfab-usercard-input-state" hidden>
+                <div class="opfab-col"  id="opfab-usercard-input-state" hidden>
                     <of-multi-select id="of-state-filter" multiSelectId="userCardState" [parentForm]="userCardForm"
                         [config]="stateMultiSelectConfig" [options]="stateOptions" [selectedOptions]="selectedState"
                         (selectionChange)="onStateChoiceChanged($event)" #stateSelect>
@@ -116,7 +116,7 @@
 
                 <div id="opfab-usercard-input-publisher" hidden>
 
-                    <div class="row">
+                    <div>
                         <of-multi-select id="of-usercard-card-emitter-selector" multiSelectId="cardPublisher"
                             [config]="publisherMultiSelectConfig" [parentForm]="userCardForm"
                             [options]="publisherOptions" [selectedOptions]="selectedPublisher"

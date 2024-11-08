@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2022, Alliander (http://www.alliander.com)             -->
-<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2023-2024, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,7 +8,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="row opfab-grouped-row" *ngFor="let currentLightCard of visibleCards">
+<div class="opfab-grouped-row" *ngFor="let currentLightCard of visibleCards">
     <div class="opfab-grouped-light-card-detail" style="width: 100%">
         <of-light-card [lightCard]="currentLightCard"
                        [groupedCardOpen]="(currentLightCard.id === (selection | async))">
