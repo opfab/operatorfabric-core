@@ -2,8 +2,8 @@ FROM node:20.18.0-alpine@sha256:c13b26e7e602ef2f1074aef304ce6e9b7dd284c419b35d89
 RUN apk add --no-cache tzdata
 ENV TZ=Europe/Paris
 WORKDIR /usr/app
-RUN chown node:node /usr/app
-RUN mkdir -m777 /var/log/opfab
+RUN chown node:node /usr/app \
+    && mkdir -m777 /var/log/opfab
 USER node
 COPY build ./build
 RUN mkdir -m777 config
