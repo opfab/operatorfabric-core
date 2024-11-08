@@ -24,7 +24,7 @@
             <label for="opfab-id" translate>admin.input.id.label</label>
             <input formControlName="id" name="id" id="opfab-id" type="text">
           </div>
-          <div *ngIf="id.invalid" class="alert alert-danger">
+          <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
             <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
             <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
             <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
@@ -35,7 +35,7 @@
             <label for="opfab-name" translate>admin.input.name.label</label>
             <input formControlName="name" name="name" id="opfab-name" type="text">
           </div>
-          <div *ngIf="name.invalid" class="alert alert-danger">
+          <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
             <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
             <div *ngIf="name.errors.uniqueEntityNameViolation" translate>admin.input.name.alreadyExisting</div>
           </div>

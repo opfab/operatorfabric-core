@@ -32,7 +32,7 @@
                 <label for="opfab-deviceId" translate>externalDevicesConfiguration.signalMappings.id</label>
                 <input formControlName="id" name="signalMappingId" id="opfab-signalMappingId" type="text"/>
               </div>
-              <div *ngIf="id.invalid" class="alert alert-danger">
+              <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
                 <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
                 <div *ngIf="id.errors.uniqueDeviceIdViolation" translate>admin.input.id.alreadyExisting</div>
               </div>
@@ -40,28 +40,28 @@
                 <label for="opfab-signal-mapping-alarm" translate>shared.severity.alarm</label>
                 <input formControlName="alarm" name="alarm" id="opfab-signal-mapping-alarm" type="number"/>
               </div>
-              <div *ngIf="alarm.invalid" class="alert alert-danger">
+              <div *ngIf="alarm.invalid" class="opfab-admin-input-invalid">
                 <div *ngIf="alarm.errors.required" translate>externalDevicesConfiguration.input.signalMapping.required</div>
               </div>
               <div class="opfab-input opfab-edit-row">
                 <label for="opfab-signal-mapping-action" translate>shared.severity.action</label>
                 <input formControlName="action" name="alarm" id="opfab-signal-mapping-action" type="number"/>
               </div>
-              <div *ngIf="action.invalid" class="alert alert-danger">
+              <div *ngIf="action.invalid" class="opfab-admin-input-invalid">
                 <div *ngIf="action.errors.required" translate>externalDevicesConfiguration.input.signalMapping.required</div>
               </div>
               <div class="opfab-input opfab-edit-row">
                 <label for="opfab-signal-mapping-compliant" translate>shared.severity.compliant</label>
                 <input formControlName="compliant" name="compliant" id="opfab-signal-mapping-compliant" type="number"/>
               </div>
-              <div *ngIf="compliant.invalid" class="alert alert-danger">
+              <div *ngIf="compliant.invalid" class="opfab-admin-input-invalid">
                 <div *ngIf="compliant.errors.required" translate>externalDevicesConfiguration.input.signalMapping.required</div>
               </div>
               <div class="opfab-input opfab-edit-row">
                 <label for="opfab-signal-mapping-information" translate>shared.severity.information</label>
                 <input formControlName="information" name="information" id="opfab-signal-mapping-information" type="number"/>
               </div>
-              <div *ngIf="information.invalid" class="alert alert-danger">
+              <div *ngIf="information.invalid" class="opfab-admin-input-invalid">
                 <div *ngIf="information.errors.required" translate>externalDevicesConfiguration.input.signalMapping.required</div>
               </div>
             </div>
