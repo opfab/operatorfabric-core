@@ -7,7 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="archives-page">
+<div class="opfab-archives-header">
     <form [formGroup]="archiveForm" #currentForm>
           <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" (resetFormEvent)='resetForm()'
                                        (search)='sendQuery(0)'

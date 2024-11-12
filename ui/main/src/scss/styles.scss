@@ -131,8 +131,7 @@ body {
 
 // INPUT FIELD STYLE
 
-.opfab-input,
-.form-control {
+.opfab-input {
     box-sizing: border-box;
     position: relative;
     color: var(--opfab-input-text-color);
@@ -149,47 +148,6 @@ body {
     filter: invert(50%); // sets the time picker in gray on google chrome
 }
 
-// TIME INPUT IN DATE TIME PICKER
-.ngb-tp-input-container .form-control {
-    padding: 0;
-    background-color: var(--opfab-bgcolor-darker);
-    color: var(--opfab-text-color-stronger);
-}
-
-.ngb-tp {
-    width: 80px;
-}
-
-// use in date time filter when time is disabled
-.form-control:disabled {
-    background-color: var(--opfab-bgcolor-darker);
-    color: #606267;
-}
-
-// For time picker
-.btn-link {
-    font-size: 13px;
-    color: var(--opfab-input-text-color);
-}
-
-// Class to use when background form is lighter
-
-.opfab-form-lighter {
-    .form-control,
-    .form-control:disabled,
-    .opfab-input-type-ahead,
-    .opfab-input-type-ahead > input,
-    .opfab-input-type-ahead label
-
-    /* stylelint-disable-next-line no-descending-specificity */
-    type-ahead > input {
-        background-color: var(--opfab-bgcolor);
-    }
-
-    type-ahead > .badge-primary {
-        background-color: var(--opfab-bgcolor-darker);
-    }
-}
 
 // Pagination component config
 ngb-pagination {
@@ -219,42 +177,12 @@ ngb-pagination {
     }
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
-.archives-page .form-control {
-    border-radius: 5px;
-    padding: 5px;
-}
-
-select.form-control[multiple] {
-    height: calc(1.5em + 0.75rem + 2px);
-}
-
-.ngb-tp-spacer {
-    width: 0.3em !important;
-}
-
-.ngb-tp-input-container button {
-    padding-top: 3px;
-    padding-bottom: 3px;
-}
-
-.pagination {
-    margin-top: 5px;
-}
-
 // Override color for today in calendar
 .alert-info {
     background-color: var(--opfab-bgcolor);
 }
 
-html,
-body {
-    height: 100%;
-}
 
-.mat-select-panel {
-    background-color: var(--opfab-bgcolor);
-}
 
 // ngbModal configuration
 .modal-fullscreen {

@@ -281,9 +281,7 @@ body {
     filter: none;
 }
 
-
-.opfab-input,
-.form-control {
+.opfab-input{
     box-sizing: border-box;
     position: relative;
     color: var(--opfab-input-text-color);
