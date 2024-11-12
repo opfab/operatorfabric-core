@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,6 +6,26 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+
+ .opfab-nav {
+    display: flex;
+	flex-wrap: wrap;
+	padding-left: 0;
+	margin-bottom: 0;
+	list-style: none;
+}
+
+.opfab-nav-link {
+	display: block;
+	padding: 0.5rem 1rem;
+	text-decoration: none;
+    border-radius: 0.375rem;
+}
+
+.opfab-nav-link.active {
+    background-color: var(--opfab-color-blue);
+    color: white;
+}
 
 .opfab-externaldevices-title {
     padding-top: 30px;

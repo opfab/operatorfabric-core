@@ -8,6 +8,13 @@
  */
 
 
+.opfab-lightcard {
+    padding: 0;
+    border: 0;
+    display: flex;
+
+}
+
 .light-card-detail {
     color: var(--opfab-lightcard-detail-textcolor);
     margin-right: 20px;

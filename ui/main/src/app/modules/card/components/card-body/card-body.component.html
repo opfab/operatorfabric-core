@@ -8,8 +8,8 @@
 
 <div [class.opfab-card-detail-fullscreen]="fullscreen || !isThereEnoughSpaceToShowCard()">
   <div style="display: block;  margin-top:10px;">
-    <ul class="nav nav-tabs opfab-line-undertab">
-      <li class="nav-item opfab-menu-item-right">
+    <ul class="opfab-card-header opfab-line-undertab">
+      <li class="opfab-menu-item-right">
         <span>
           <div *ngIf="isThereEnoughSpaceToShowCard()" style="display:flex">
             <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState"
@@ -36,7 +36,7 @@
         </span>
 
       </li>
-      <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
+      <li class="opfab-tab opfab-menu-item-left" data-toggle="tab">
         <span class="opfab-tab" id="opfab-card-title">{{card.titleTranslated | opfabTitleCase}}</span>
       </li>
     </ul>

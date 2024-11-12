@@ -17,7 +17,7 @@
      (mouseenter)='highlightOnMap(true)'
      (mouseleave)='highlightOnMap(false)'
 >
-    <div class="d-flex  p-0 border-0">
+    <div class="opfab-lightcard">
         <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
         <div  style="width: 100%">
@@ -30,7 +30,7 @@
                         <ng-template #tipHasAResponseFromYourEntity>
                             <span translate>feed.tips.hasAResponseFromYourEntity</span>
                         </ng-template>
-                        <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-1"
+                        <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" style="padding:.25rem"
                             [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover-unclickable" container="body"
                             triggers="mouseenter:mouseleave">
                             <em style="color: var(--opfab-color-blue);" class="fa fa-reply"></em>
@@ -38,7 +38,7 @@
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
-                        <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-1"
+                        <span *ngIf="this.lightCard.hasBeenAcknowledged" style="padding:.25rem"
                               [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: var(--opfab-color-blue);" class="fa fa-check"></em>
@@ -46,12 +46,12 @@
                         <ng-template #tipTags>
                             <span translate>feed.tips.seeGroupedCards</span>
                         </ng-template>
-                        <span *ngIf="showGroupedCardsIcon" class="p-1"
+                        <span *ngIf="showGroupedCardsIcon" style="padding:.25rem"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em id="opfab-feed-light-card-group-icon" style="color: var(--opfab-color-blue);" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
-                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1"
+                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' style="padding:.25rem"
                               placement="right" [ngbPopover]="tipSeeGeolocation" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: var(--opfab-color-blue);" class="fa fa-location-crosshairs"></em>
@@ -77,9 +77,9 @@
 
 
     </div>
-    <div class="d-flex p-0 border-0">
+    <div class="opfab-lightcard">
         <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
-        <div class="p-1" style="width: 100%;margin-top:3px">
+        <div style="width: 100%;margin-top:3px;padding:.25rem">
             <span *ngIf="open">
                 <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
 

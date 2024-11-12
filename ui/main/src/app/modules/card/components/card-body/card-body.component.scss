@@ -7,6 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+.opfab-card-header {
+    border-bottom: 1px solid;
+    padding-left: 0;
+    list-style: none;
+}
+
 .opfab-line-undertab {
     border-color: var(--opfab-card-tab-border-color);
     border-bottom-width: 0.5px;
