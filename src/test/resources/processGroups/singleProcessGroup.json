@@ -10,7 +10,9 @@
         "messageOrQuestionExample",
         "taskExample",
         "taskAdvancedExample",
-        "cypress"
+        "cypress",
+        "api_test",
+        "supervisor"
       ]
     }
   ]

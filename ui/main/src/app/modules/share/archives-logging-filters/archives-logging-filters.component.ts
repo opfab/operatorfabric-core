@@ -234,6 +234,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processMultiSelectOptions = this.visibleProcesses.filter((visibleProcess) =>
             processesIds.includes(visibleProcess.value)
         );
+        this.processMultiSelectOptionsWhenSelectedProcessGroup = this.processMultiSelectOptions;
         this.setDefaultPublishDateFilter();
     }
 

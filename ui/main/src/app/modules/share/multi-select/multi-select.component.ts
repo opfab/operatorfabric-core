@@ -31,7 +31,10 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     @Output() selectionChange: EventEmitter<string[]> = new EventEmitter<string[]>();
 
     private oldOptions: Array<MultiSelectOption>;
-    private oldSelectedOptions: any;
+    // It is important to initialize it with an empty array an not undefined to avoid
+    // to trigger the change event when no option is selected on the first load
+    // See Issue #7526
+    private oldSelectedOptions = new Array<string>();
 
     private ngAfterViewInitHasBeenDone = false;
     private virtualSelectComponent: any;
