@@ -148,6 +148,38 @@ message option is available only for the specified entities. If not specified or
 The `summary` field is optional. If specified, considering 'xxx' is the value of the field, so the summary you will see
 in the feed will be 'Message received : xxx'. If left empty the summary input field in user card will be displayed with no initial value and the summary in the feed will be 'Message received'. If not specified, the summary input field will not be displayed in user card form and the summary will be 'Message received'.
 
+== Task
+
+=== Card template
+
+If you want to set a reminder for a single or recurring future event, you can use the task built-in template, to do that just put in your handlebar file:
+
+```
+<opfab-task-card></opfab-task-card>
+
+```
+
+=== User card template 
+
+If you want to create a user card for a task, just add in your handlebar file : 
+
+```
+<opfab-task-usercard></opfab-task-usercard>
+
+```
+The description of the task will be stored in the fields : 
+
+- `data.taskTitle` 
+- `data.richTaskDescription` 
+- `data.minutesForReminder` 
+- `data.durationInMinutes` 
+
+of the card. 
+
+By using attributes you can set some parameters regarding recipients, see 
+ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
+
 [[built-in_templates_common_usercard_attributes]]
 == Common attributes for user cards built-in templates 
 
