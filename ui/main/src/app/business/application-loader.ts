@@ -320,7 +320,7 @@ export class ApplicationLoader {
         const customScripts = ConfigService.getConfigValue('customJsToLoad');
         if (customScripts) {
             for (const script of customScripts) {
-                await import(/* webpackIgnore: true */ script).catch((err) =>
+                await import(/* @vite-ignore */ script).catch((err) =>
                     logger.error('Error loading custom script ' + script + ' : ' + err)
                 );
             }
