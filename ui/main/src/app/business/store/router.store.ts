@@ -58,6 +58,6 @@ export class RouterStore {
     public static getCurrentPageType(): PageType {
         const pageName = RouterStore.getCurrentRoute().split('/')[1];
         const currentPageType = RouterStore.pageConf.get(pageName);
-        return currentPageType ? currentPageType : PageType.UNKNOWN;
+        return currentPageType || PageType.UNKNOWN;
     }
 }

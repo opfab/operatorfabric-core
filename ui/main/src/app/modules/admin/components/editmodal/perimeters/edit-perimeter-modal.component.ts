@@ -103,14 +103,8 @@ export class EditPerimeterModalComponent implements OnInit {
         const rightKey = 'right' + this.indexForNewStateRightControl;
         const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + this.indexForNewStateRightControl;
 
-        this.perimeterForm.addControl(
-            stateKey,
-            new UntypedFormControl(initialState ? initialState : '', [Validators.required])
-        );
-        this.perimeterForm.addControl(
-            rightKey,
-            new UntypedFormControl(initialRight ? initialRight : '', [Validators.required])
-        );
+        this.perimeterForm.addControl(stateKey, new UntypedFormControl(initialState || '', [Validators.required]));
+        this.perimeterForm.addControl(rightKey, new UntypedFormControl(initialRight || '', [Validators.required]));
 
         let filteringNotificationAllowed = true;
         if (initialFilteringNotificationAllowed !== null && initialFilteringNotificationAllowed !== undefined) {
