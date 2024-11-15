@@ -29,7 +29,7 @@
     "@types/config": "3.3.5",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "eslint": "8.57.1",
-    "eslint-config-love": "43.1.0",
+    "eslint-config-love": "98.0.2",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-n": "16.6.2",
