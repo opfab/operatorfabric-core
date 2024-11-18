@@ -40,7 +40,8 @@ omelette('opfab')
             list: ['#EMPTY_COMPLETION']
         },
         'connected-user': {
-            'send-message': ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE']
+            'send-message': ['RELOAD', 'BUSINESS_CONFIG_CHANGE', 'USER_CONFIG_CHANGE'],
+            list: ['#EMPTY_COMPLETION']
         },
         entity: {
             load: [],

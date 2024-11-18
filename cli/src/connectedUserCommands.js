@@ -19,7 +19,10 @@ const connectedUserCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'Connected user action',
-                    choices: [{title: 'Send message', value: 'send-message'}]
+                    choices: [
+                        {title: 'Send message', value: 'send-message'},
+                        {title: 'List all connected users', value: 'list'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -28,12 +31,17 @@ const connectedUserCommands = {
             }
         }
 
-        if (action === 'send-message') {
-            await this.sendMessage(args[1]);
-        } else {
-            console.log(`Unknown connected user action : ${action}
-            `);
-            await this.printHelp();
+        switch (action) {
+            case 'send-message':
+                await this.sendMessage(args[1]);
+                break;
+            case 'list':
+                await this.listConnectedUsers();
+                break;
+            default:
+                console.log(`Unknown connected user action : ${action}`);
+                await this.printHelp();
+                break;
         }
     },
 
@@ -67,8 +75,39 @@ const connectedUserCommands = {
         );
     },
 
+    async listConnectedUsers() {
+        const result = await utils.sendRequest(
+            'cards-consultation/connections',
+            'GET',
+            undefined,
+            'All connected users got successfully',
+            'Failed to get all connected users',
+            'Failed to get all connected users, not found error'
+        );
+
+        if (result.ok) {
+            const connectedUsers = await result.json();
+
+            console.info('Number of connected users : ' + connectedUsers.length);
+
+            if (connectedUsers.length > 0) {
+                console.info('login | entitiesConnected | groups');
+            }
+            connectedUsers.forEach(connectedUser => {
+                console.info(connectedUser.login +
+                    ' | ' + connectedUser.entitiesConnected +
+                    ' | ' + connectedUser.groups);
+            });
+        }
+    },
+
     async printHelp() {
-        console.log(`Usage: opfab connected-user send-message <message>
+        console.log(`Usage: opfab connected-user <command> [message]
+
+Command list :
+
+    list               list all connected users : opfab connected-user list
+    send-message       send a message to subscriptions : opfab connected-user send-message <message>
 
 Message list :
 

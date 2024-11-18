@@ -193,7 +193,7 @@ const commands = {
         card                    Send a card, delete a card or reset the card limiter for sending cards 
         commands                Executes commands list read from input file
         config                  Set, get or list opfab cli configuration values
-        connected-user          Send a message to subscriptions
+        connected-user          Send a message to subscriptions or list all connected users
         entity                  Load a list of entities
         external-device         Manage users external devices
         group                   Load a list of groups
