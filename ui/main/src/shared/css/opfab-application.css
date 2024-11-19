@@ -1042,5 +1042,13 @@ input:-webkit-autofill:active {
     display: inline-block;
 }
 
+.opfab-dialog {
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-text-color);
+    border-radius: 3px;
+    border-width: 0;
+}
 
-
+.opfab-dialog::backdrop {
+    background: rgb(0 0 0 / 50%);
+}

@@ -595,6 +595,18 @@ Styles for buttons, for example:
   <button type="button" class="opfab-btn-cancel">CANCEL</button>
 ....
 
+=== opfab-dialog
+Styles for dialog box, for example:
+
+....
+  <dialog class="opfab-dialog">
+    <p>This is a dialog box, you can set the text you want.</p>
+    <form method="dialog" style="text-align: center">
+        <button class="opfab-btn">OK</button>
+    </form>
+  </dialog>
+....
+
 == Tooltip
 OperatorFabric provides a css tooltip component. To use it, you must use the `opfab-tooltip` class style. You can define
 where the tooltip will be displayed using `left`, `top` or `bottom` (by default, it is displayed on the right). For

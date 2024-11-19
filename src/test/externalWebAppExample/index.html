@@ -115,6 +115,17 @@
             <div class="opfab-tooltip">Some tooltip text
                 <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
             </div>
+
+            <br />
+            <p>DIALOG BOX</p>
+            <button id="showDialogLighterMode" type="button" class="opfab-btn">Show dialog box</button>
+
+            <dialog class="opfab-dialog">
+                <p>This is a dialog box, you can set the text you want.</p>
+                <form method="dialog" style="text-align: center">
+                    <button class="opfab-btn">OK</button>
+                </form>
+            </dialog>
         </div>
         <div style="background-color:  var(--opfab-bgcolor-darker); margin-top: 50px; padding: 20px">
             <h3>Darker background</h3>
@@ -196,8 +207,22 @@
                     <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
                 </div>
             </div>
+
+            <br />
+            <p>DIALOG BOX</p>
+            <button id="showDialogDarkerMode" type="button" class="opfab-btn">Show dialog box</button>
         </div>
     </div>
+
+    <script language="javascript">
+        [document.getElementById('showDialogLighterMode'), document.getElementById('showDialogDarkerMode')].forEach(button => {
+            button.addEventListener("click", () => {
+                const dialog = document.querySelector("dialog");
+                dialog.close();
+                dialog.showModal();
+            });
+        });
+    </script>
 </body>
 
 </html>

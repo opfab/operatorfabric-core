@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,7 +16,15 @@
 
 <input id="test" value="{{card.data.state}}" hidden></input>
 <input id="error" value="{{card.data.error}}" hidden></input>
-</center> 
+</center>
+
+<dialog class="opfab-dialog">
+    <p>This is a dialog box, you can set the text you want.</p>
+    <form method="dialog" style="text-align: center">
+        <button class="opfab-btn">OK</button>
+    </form>
+</dialog>
+
 
 <script>
 
@@ -38,6 +46,12 @@
                     chart.setAttribute("width", "111px");
                     chart.setAttribute("height", "311px");
                     }
+
+                    chart.addEventListener("click", () => {
+                        const dialog = document.querySelector("dialog");
+                        dialog.close();
+                        dialog.showModal();
+                    });
                 }
             });
         }
