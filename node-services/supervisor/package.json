@@ -32,7 +32,7 @@
     "@types/config": "3.3.5",
     "@types/express": "5.0.0",
     "@types/jest": "29.5.14",
-    "@types/node": "20.17.6",
+    "@types/node": "22.9.1",
     "@types/sinon": "17.0.3",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "eslint": "8.57.1",
