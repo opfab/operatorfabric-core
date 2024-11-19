@@ -2,23 +2,17 @@
     "root": true,
     "ignorePatterns": ["projects/**/*"],
     "env": {
-        "es6": true
+        "es6": true,
+        "jest/globals": true
     },
 
     "parserOptions": {
         "ecmaVersion": 2020
     },
-    "plugins": ["ban"],
+    "plugins": ["jest"],
     "rules": {
-        "ban/ban": [
-            2,
-            {"name": ["describe", "only"], "message": "don't focus tests"},
-            {"name": "fdescribe", "message": "don't focus tests"},
-            {"name": ["it", "only"], "message": "don't focus tests"},
-            {"name": "fit", "message": "don't focus tests"},
-            {"name": ["test", "only"], "message": "don't focus tests"},
-            {"name": "ftest", "message": "don't focus tests"}
-        ]
+      "jest/no-focused-tests": "error",
+      "jest/no-identical-title": "error"
     },
     "overrides": [
         {

@@ -586,7 +586,7 @@ describe('Process Monitoring view ', () => {
             expect(dates).toEqual({activeFrom: '2024-04-11T00:00', activeTo: '2024-05-01T00:00'});
         });
 
-        it('should return 2024-05-06T00:00 and 2024-05-10T00:00 if the user navigates forward', async () => {
+        it('should return 2024-05-21T00:00 and 2024-06-10T00:00 if the user navigates forward', async () => {
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const dates = processMonitoringView.getDatesWhenMoving('2024-05-01T00:00', '2024-05-21T00:00', true, '');
             expect(dates).toEqual({activeFrom: '2024-05-21T00:00', activeTo: '2024-06-10T00:00'});
