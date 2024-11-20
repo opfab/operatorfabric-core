@@ -20,7 +20,7 @@ export default class ConfigDTO {
     public windowInSecondsForCardSearch = 0;
     public checkPeriodInSeconds = 0;
     public activateCardsDiffusionRateLimiter: boolean;
-    public sendRateLimit: number = 100;
-    public sendRateLimitPeriodInSec: number = 3600;
+    public sendRateLimit = 100;
+    public sendRateLimitPeriodInSec = 3600;
     public defaultTimeZone: string;
 }

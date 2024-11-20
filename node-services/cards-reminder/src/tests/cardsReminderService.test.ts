@@ -43,7 +43,7 @@ function checkNoReminderIsSent(): void {
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([]);
 }
 
-function checkOneReminderIsSent(cardUid: string = 'uid1'): void {
+function checkOneReminderIsSent(cardUid = 'uid1'): void {
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(1);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([cardUid]);
     opfabServicesInterfaceStub.clean();

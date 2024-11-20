@@ -13,15 +13,15 @@ import GetResponse from './getResponse';
 import JwtTokenUtils from './jwtTokenUtils';
 
 export default class OpfabServicesInterface {
-    token: string = '';
-    tokenExpirationMargin: number = 60000;
-    login: string = '';
-    password: string = '';
-    opfabUsersUrl: string = '';
-    opfabCardsConsultationUrl: string = '';
-    opfabCardsPublicationUrl: string = '';
-    opfabBusinessconfigUrl: string = '';
-    opfabGetTokenUrl: string = '';
+    token = '';
+    tokenExpirationMargin = 60000;
+    login = '';
+    password = '';
+    opfabUsersUrl = '';
+    opfabCardsConsultationUrl = '';
+    opfabCardsPublicationUrl = '';
+    opfabBusinessconfigUrl = '';
+    opfabGetTokenUrl = '';
 
     logger: any;
     jwtToken: JwtTokenUtils = new JwtTokenUtils();

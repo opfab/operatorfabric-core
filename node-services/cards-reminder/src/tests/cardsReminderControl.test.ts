@@ -49,7 +49,7 @@ async function checkNoReminderIsSent(): Promise<void> {
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([]);
 }
 
-async function checkOneReminderIsSent(cardUid: string = 'uid1'): Promise<void> {
+async function checkOneReminderIsSent(cardUid = 'uid1'): Promise<void> {
     await cardsReminderControl.checkCardsReminder();
     expect(opfabServicesInterfaceStub.sentReminders.length).toEqual(1);
     expect(opfabServicesInterfaceStub.sentReminders).toEqual([cardUid]);

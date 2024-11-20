@@ -13,7 +13,7 @@ import RemindDatabaseService from '../domain/server-side/remindDatabaseService';
 export class RemindDatabaseServiceStub extends RemindDatabaseService {
     private reminders = new Array<any>();
     private static cards = new Map<string, any>(); // card is static as database is common between reminder and rRuleReminder
-    private static simulateError: boolean = false;
+    private static simulateError = false;
 
     public async getItemsToRemindNow(): Promise<any[]> {
         if (RemindDatabaseServiceStub.simulateError) throw new Error('error test');

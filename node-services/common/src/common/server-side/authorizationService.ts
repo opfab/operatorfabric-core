@@ -15,7 +15,7 @@ export default class AuthorizationService {
     opfabServicesInterface: OpfabServicesInterface;
     jwtToken: JwtTokenUtils = new JwtTokenUtils();
     logger: any;
-    loginClaim: string = 'sub';
+    loginClaim = 'sub';
 
     public setLogger(logger: any): this {
         this.logger = logger;

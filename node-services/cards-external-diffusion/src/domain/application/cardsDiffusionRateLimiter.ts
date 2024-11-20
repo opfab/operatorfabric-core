@@ -8,8 +8,8 @@
  */
 
 export default class CardsDiffusionRateLimiter {
-    private sendRateLimit: number = 100;
-    private limitPeriodInSec: number = 3600;
+    private sendRateLimit = 100;
+    private limitPeriodInSec = 3600;
 
     private readonly sentMailPerDestination = new Map();
 
