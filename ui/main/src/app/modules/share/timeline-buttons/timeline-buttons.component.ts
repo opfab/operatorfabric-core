@@ -58,9 +58,9 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 buttonTitle: 'timeline.buttonTitle.J',
                 domainId: 'J'
             },
-            TR: {
-                buttonTitle: 'timeline.buttonTitle.TR',
-                domainId: 'TR'
+            RT: {
+                buttonTitle: 'timeline.buttonTitle.RT',
+                domainId: 'RT'
             },
             '7D': {
                 buttonTitle: 'timeline.buttonTitle.7D',
@@ -79,7 +79,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['TR', 'J', '7D', 'W', 'M', 'Y']);
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['RT', 'J', '7D', 'W', 'M', 'Y']);
         this.buttonList = [];
         domainsConf.map((domain) => {
             if (Object.keys(domains).includes(domain)) {
@@ -131,7 +131,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     getDateFormatting(value): string {
         switch (this.currentDomainId) {
-            case 'TR':
+            case 'RT':
                 return DateTimeFormatterService.getFormattedDateAndTime(value);
             case 'J':
                 return DateTimeFormatterService.getFormattedDate(value);

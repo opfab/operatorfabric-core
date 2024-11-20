@@ -29,13 +29,13 @@ describe('TimeLine view title', () => {
         timeLineView.destroy();
     });
 
-    it('in TR mode title is the day of the period', () => {
+    it('in RT mode title is the day of the period', () => {
         const xDomain = {
             startDate: new Date(2023, 1, 1, 8, 0).valueOf(),
             endDate: new Date(2023, 1, 1, 20, 0).valueOf(),
             overlap: 0
         };
-        timeLineView.setDomain('TR', xDomain);
+        timeLineView.setDomain('RT', xDomain);
         expect(timeLineView.getTitle()).toEqual('01 February 2023');
     });
 

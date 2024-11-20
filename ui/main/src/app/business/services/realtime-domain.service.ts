@@ -27,6 +27,12 @@ export class RealtimeDomainService {
 
     public static init() {
         RealtimeDomainService.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+
+        // Needed for compatibility with versions prior to 4.6.0
+        if (UserPreferencesService.getPreference('opfab.timeLine.domain') === 'TR') {
+            UserPreferencesService.setPreference('opfab.timeLine.domain', 'RT');
+        }
+
         RealtimeDomainService.currentDomainId =
             UserPreferencesService.getPreference('opfab.timeLine.domain') ?? RealtimeDomainService.getDefaultDomainId();
         RealtimeDomainService.setDefaultStartAndEndDomain();
@@ -34,7 +40,7 @@ export class RealtimeDomainService {
     }
 
     public static getDefaultDomainId() {
-        const domains = ConfigService.getConfigValue('feed.timeline.domains', ['TR', 'J', '7D', 'W', 'M', 'Y']);
+        const domains = ConfigService.getConfigValue('feed.timeline.domains', ['RT', 'J', '7D', 'W', 'M', 'Y']);
         return domains[0];
     }
 
@@ -61,7 +67,7 @@ export class RealtimeDomainService {
         let startDomain;
         let endDomain;
         switch (RealtimeDomainService.currentDomainId) {
-            case 'TR': {
+            case 'RT': {
                 startDomain = RealtimeDomainService.getRealTimeStartDate();
                 endDomain = startOfHour(add(new Date(), {hours: 10}));
                 break;
@@ -187,7 +193,7 @@ export class RealtimeDomainService {
 
     private static goForward(dateToMove: Date) {
         switch (RealtimeDomainService.currentDomainId) {
-            case 'TR':
+            case 'RT':
                 return add(dateToMove, {hours: 2});
             case 'J':
                 return add(dateToMove, {days: 1});
@@ -204,7 +210,7 @@ export class RealtimeDomainService {
 
     private static goBackward(dateToMove: Date) {
         switch (RealtimeDomainService.currentDomainId) {
-            case 'TR':
+            case 'RT':
                 return sub(dateToMove, {hours: 2});
             case 'J':
                 return sub(dateToMove, {days: 1});
@@ -250,7 +256,7 @@ export class RealtimeDomainService {
             );
         }
         switch (RealtimeDomainService.currentDomainId) {
-            case 'TR':
+            case 'RT':
                 if (currentDate > RealtimeDomainService.currentDomain.startDate + 150 * 60 * 1000) {
                     RealtimeDomainService.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
                 }

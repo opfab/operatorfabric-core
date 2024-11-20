@@ -24,7 +24,7 @@ export class XAxis {
     private ticksLabel: Map<number, string> = new Map<number, string>();
 
     private tickSizeMap = {
-        TR: {minutes: 15},
+        RT: {minutes: 15},
         J: {minutes: 30},
         '7D': {hours: 4},
         W: {hours: 4},
@@ -87,8 +87,8 @@ export class XAxis {
         this.ticksLabel = new Map<number, string>();
 
         switch (this.domainId) {
-            case 'TR':
-                this.computeTickLabelsForTR();
+            case 'RT':
+                this.computeTickLabelsForRT();
                 break;
             case 'J':
             case 'M':
@@ -103,17 +103,17 @@ export class XAxis {
         }
     }
 
-    private computeTickLabelsForTR(): void {
+    private computeTickLabelsForRT(): void {
         this.ticks.forEach((tick) => {
             if (tick.getMinutes() === 0 || tick.getMinutes() === 30)
-                this.ticksLabel.set(tick.valueOf(), this.computeTickLabel(tick, 'TR'));
+                this.ticksLabel.set(tick.valueOf(), this.computeTickLabel(tick, 'RT'));
             else this.ticksLabel.set(tick.valueOf(), '');
         });
     }
 
     private computeTickLabel = (value: Date, domainId: string): string => {
         switch (domainId) {
-            case 'TR':
+            case 'RT':
                 if (value.getMinutes() === 0) return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
                 return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h30';
             case 'J':

@@ -33,12 +33,12 @@ describe('Time line moves', function () {
         script.deleteAllCards();
     });
 
-    it('Check timelime manual moves in TR mode', function () {
+    it('Check timelime manual moves in RT mode', function () {
         // NB : month  starts at 0
 
         opfab.loginWithClock(new Date(2030, 2, 31, 11, 59));
 
-        setTimeLineDomain('TR');
+        setTimeLineDomain('RT');
         checkFirstTickLabel(' 09h30 ');
         moveRight();
         checkFirstTickLabel(' 11h30 ');
@@ -178,7 +178,7 @@ describe('Time line moves', function () {
 
         opfab.loginWithClock(currentDate);
 
-        setTimeLineDomain('TR');
+        setTimeLineDomain('RT');
         checkFirstTickLabel(' 21h30 ');
         checkTitle(' 31 March 2030 ');
 
@@ -229,7 +229,7 @@ describe('Time line moves', function () {
         const currentDate = new Date(2030, 2, 31, 23, 55);
         opfab.loginWithClock(currentDate);
 
-        setTimeLineDomain('TR');
+        setTimeLineDomain('RT');
         lockTimeLine();
         checkFirstTickLabel(' 21h30 ');
         checkTitle(' 31 March 2030 ');

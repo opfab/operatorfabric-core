@@ -25,10 +25,10 @@ describe('XAxis', () => {
         ConfigService.setConfigValue('settings.locale', 'en');
     });
 
-    it('should set xTicks correctly for Realtime Mode (TR) , one tick per 15 minutes ', () => {
+    it('should set xTicks correctly for Realtime Mode (RT) , one tick per 15 minutes ', () => {
         const start = new Date(2020, 1, 1, 6, 0);
         const end = new Date(2020, 1, 1, 18, 0);
-        xAxis.setupAxis('TR', [start.valueOf(), end.valueOf()]);
+        xAxis.setupAxis('RT', [start.valueOf(), end.valueOf()]);
         const xTicks = xAxis.getTicks();
         expect(xTicks[0].valueOf()).toEqual(start.valueOf());
         expect(xTicks[1].valueOf()).toEqual(new Date(2020, 1, 1, 6, 15).valueOf());

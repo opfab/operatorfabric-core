@@ -180,7 +180,7 @@
         "showTimeline": "Show Timeline",
         "businessPeriod": "Business period",
         "buttonTitle": {
-            "TR": "Real Time",
+            "RT": "Real Time",
             "J": "Day",
             "7D": "7 Days",
             "W": "Week",
