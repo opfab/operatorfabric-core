@@ -9,7 +9,7 @@
 
 import {
     getOneCard,
-    initOpfabAPIService,
+    initOpfabAPI,
     loadWebUIConf,
     setEntities,
     setProcessConfiguration,
@@ -75,7 +75,7 @@ describe('UserCard view ', () => {
             permissions?: Array<PermissionEnum>
         ) => Promise<void>
     ) {
-        initOpfabAPIService();
+        initOpfabAPI();
         HandlebarsService.clearCache();
         cardServerMock = new CardServerMock();
         CardService.setCardServer(cardServerMock);

@@ -11,7 +11,7 @@ import {Card} from '@ofModel/card.model';
 import {InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Severity} from '@ofModel/light-card.model';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class SeverityForm {
     private selectedSeverity: Severity;
@@ -25,7 +25,7 @@ export class SeverityForm {
             this.severityVisible = state.userCard?.severityVisible ?? true;
             this.userCardUIControl.setInputVisibility(InputFieldName.Severity, this.severityVisible);
         }
-        this.selectedSeverity = card?.severity ?? OpfabAPIService.currentUserCard.initialSeverity ?? Severity.ALARM;
+        this.selectedSeverity = card?.severity ?? CurrentUserCardAPI.currentUserCard.initialSeverity ?? Severity.ALARM;
         this.userCardUIControl.setSeverity(this.selectedSeverity);
     }
 

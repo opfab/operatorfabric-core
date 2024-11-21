@@ -7,43 +7,40 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {initOpfabAPI} from '@tests/helpers';
 
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;
 
     beforeEach(() => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
-        OpfabAPIService.initUserCardTemplateInterface();
+        initOpfabAPI();
         view = new MessageUserCardTemplateView();
     });
 
     function mockGetCard(message: string, title: string) {
-        OpfabAPIService.currentCard.card = {data: {richMessage: message, messageTitle: title}};
+        CurrentCardAPI.currentCard.card = {data: {richMessage: message, messageTitle: title}};
     }
 
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getMessageTitle()).toEqual('My title');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message is actual message', () => {
-        OpfabAPIService.currentUserCard.editionMode = 'COPY';
+        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getMessageTitle()).toEqual('My title');
     });
 
     it('GIVEN a user WHEN create card THEN message is empty', () => {
-        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('');
         expect(view.getMessageTitle()).toEqual('');

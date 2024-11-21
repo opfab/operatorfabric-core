@@ -13,7 +13,7 @@ import {LoggerService as logger, LogOption} from 'app/business/services/logs/log
 import {RemoteLoggerService} from './services/logs/remote-logger.service';
 import {I18nService} from './services/translation/i18n.service';
 import {UserService} from './services/users/user.service';
-import {OpfabAPIService} from './services/opfabAPI.service';
+import {OpfabAPI} from '../api/opfab.api';
 import {loadBuiltInTemplates} from './builtInTemplates/templatesLoader';
 import {GlobalStyleService} from './services/global-style.service';
 import {EntitiesService} from './services/users/entities.service';
@@ -47,8 +47,6 @@ import {ProcessStatesMultiSelectOptionsService} from './services/process-states-
 import {RealtimeDomainService} from './services/realtime-domain.service';
 import {NotificationDecision} from './services/notifications/notification-decision';
 
-declare const opfab: any;
-
 export class ApplicationLoader {
     public displayEnvironmentName = false;
     public environmentName: string;
@@ -62,6 +60,7 @@ export class ApplicationLoader {
     private activityAreaChoiceAfterLoginComponent: ApplicationLoadingComponent;
     private methodToAuthenticate: Function;
     private opfabEventStreamServer;
+    private translationService;
 
     public setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
@@ -84,10 +83,10 @@ export class ApplicationLoader {
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         SettingsService.setSettingsServer(servers.settingsServer);
         ModalService.setModalServer(servers.modalServer);
-        OpfabAPIService.setTranslationService(servers.translationService);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);
         ProcessStatesMultiSelectOptionsService.init(servers.translationService);
+        this.translationService = servers.translationService;
 
         this.opfabEventStreamServer = servers.opfabEventStreamServer;
     }
@@ -301,12 +300,8 @@ export class ApplicationLoader {
     }
 
     private initOpfabAPI(): void {
-        OpfabAPIService.init();
-        opfab.navigate.showCardInFeed = function (cardId: string) {
-            RouterService.navigateTo('feed/cards/' + cardId);
-        };
-
-        OpfabAPIService.initAPI();
+        OpfabAPI.init();
+        OpfabAPI.initAPI(this.translationService);
     }
 
     private goToEntryPage() {

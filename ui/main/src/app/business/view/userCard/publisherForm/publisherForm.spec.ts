@@ -11,7 +11,7 @@ import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {PublisherForm} from './publisherForm';
 import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';
-import {getOneCard, initOpfabAPIService, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {EntitiesTree, State} from '@ofModel/processes.model';
 
@@ -26,7 +26,7 @@ describe('UserCard PublisherForm', () => {
     });
 
     beforeEach(async () => {
-        initOpfabAPIService();
+        initOpfabAPI();
         userCardUIControl = new UserCardUIControlMock();
         publisherForm = new PublisherForm(userCardUIControl);
     });

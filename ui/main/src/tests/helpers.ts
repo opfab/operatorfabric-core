@@ -30,9 +30,12 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesServerMock} from './mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {OpfabAPI} from 'app/api/opfab.api';
 import {Message} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {TranslationServiceMock} from './mocks/translation.service.mock';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -225,11 +228,11 @@ export async function setEntities(entities: Entity[]) {
     await firstValueFrom(EntitiesService.loadAllEntitiesData());
 }
 
-export function initOpfabAPIService() {
-    OpfabAPIService.init();
-    OpfabAPIService.initAPI();
-    OpfabAPIService.initUserCardTemplateInterface();
-    OpfabAPIService.initTemplateInterface();
+export function initOpfabAPI() {
+    OpfabAPI.init();
+    OpfabAPI.initAPI(new TranslationServiceMock());
+    CurrentUserCardAPI.initUserCardTemplateInterface();
+    CurrentCardAPI.initTemplateInterface();
 }
 
 export class AlertMessageReceiver {

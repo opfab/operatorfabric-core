@@ -10,8 +10,8 @@
 import {Card} from '@ofModel/card.model';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {CardAction} from '@ofModel/light-card.model';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class KeepChildCardsForm {
     private keepChildCards: boolean;
@@ -34,7 +34,8 @@ export class KeepChildCardsForm {
                 this.keepChildCardsVisible && editionMode === EditionMode.EDITION
             );
             const cardKeepChildCards = card?.actions?.includes(CardAction.KEEP_CHILD_CARDS);
-            this.keepChildCards = cardKeepChildCards ?? OpfabAPIService.currentUserCard.initialKeepChildCards ?? true;
+            this.keepChildCards =
+                cardKeepChildCards ?? CurrentUserCardAPI.currentUserCard.initialKeepChildCards ?? true;
             this.userCardUIControl.setKeepChildCards(this.keepChildCards);
         } else {
             this.userCardUIControl.setInputVisibility(InputFieldName.KeepChildCards, false);

@@ -25,12 +25,12 @@ import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
 
 class FormResult {
     valid: boolean;
@@ -145,7 +145,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = CurrentCardAPI.templateInterface.getUserResponse();
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
@@ -158,7 +158,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse(
+        const responseData: FormResult = CurrentCardAPI.templateInterface.getUserResponse(
             this.userEntityIdToUseForResponse
         );
 
@@ -206,7 +206,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                     logger.error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage);
                 } else {
                     this.isResponseLocked = true;
-                    OpfabAPIService.templateInterface.lockAnswer();
+                    CurrentCardAPI.templateInterface.lockAnswer();
                     this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 }
             });

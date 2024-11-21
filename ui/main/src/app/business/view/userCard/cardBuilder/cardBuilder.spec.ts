@@ -12,7 +12,7 @@ import {CardBuilder} from './cardBuilder';
 import {
     AlertMessageReceiver,
     getOneCard,
-    initOpfabAPIService,
+    initOpfabAPI,
     setEntities,
     setProcessConfiguration,
     setUserPerimeter
@@ -39,7 +39,7 @@ function getStringWithFirstLetterUpperCase(string: string): string {
 describe('UserCard CardBuilder', () => {
     let cardBuilder: CardBuilder;
     beforeEach(async () => {
-        initOpfabAPIService();
+        initOpfabAPI();
         cardBuilder = new CardBuilder();
         CardService.setCardServer(new CardServerMock());
         await setProcessConfiguration([

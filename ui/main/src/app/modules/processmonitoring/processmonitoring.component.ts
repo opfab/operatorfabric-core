@@ -36,7 +36,6 @@ import {ProcessMonitoringView} from 'app/business/view/processmonitoring/process
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
@@ -48,6 +47,7 @@ import {
     ProcessMonitoringField,
     ProcessMonitoringFieldEnum
 } from '@ofModel/process-monitoring-config.model';
+import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -276,7 +276,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.changeStatesWhenSelectProcess();
 
         this.size = this.processMonitoringDefaultConfig?.filters?.pageSize ?? 10;
-        OpfabAPIService.businessconfig.getTags('processMonitoring').then((customTags) => {
+        BusinessConfigAPI.getTags('processMonitoring').then((customTags) => {
             this.tags = customTags ?? this.processMonitoringDefaultConfig?.filters?.tags;
             this.tagsMultiSelectOptions = this.tags.map((tag) => {
                 return new MultiSelectOption(tag.value, tag.label);

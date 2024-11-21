@@ -36,13 +36,13 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ArchivedCardDetailComponent} from './components/archived-card-detail/archived-card-detail.component';
 import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
+import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 
 @Component({
     selector: 'of-archives',
@@ -139,7 +139,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.size = ConfigService.getConfigValue('archive.filters.page.size', 10);
         this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
-        OpfabAPIService.businessconfig.getTags('archive').then((customTags) => {
+        BusinessConfigAPI.getTags('archive').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('archive.filters.tags.list');
             this.changeDetector.markForCheck();
         });

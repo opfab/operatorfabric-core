@@ -7,31 +7,28 @@
 //  * This file is part of the OperatorFabric project.
 //  */
 
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {initOpfabAPI} from '@tests/helpers';
 
 describe('Task UserCard Template View', () => {
     beforeEach(() => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
-        OpfabAPIService.initUserCardTemplateInterface();
+        initOpfabAPI();
     });
 
     it('GIVEN a user WHEN create card THEN task title is empty', () => {
         const view = new TaskUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {taskTitle: 'My task Title'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        CurrentCardAPI.currentCard.card = {data: {taskTitle: 'My task Title'}};
         expect(view.getTaskTitle()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {richTaskDescription: 'My task Description'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        CurrentCardAPI.currentCard.card = {data: {richTaskDescription: 'My task Description'}};
         expect(view.getTaskDescription()).toEqual('');
     });
 
@@ -77,8 +74,8 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card WHEN user edit card THEN card data is current card data', () => {
         const view = new TaskUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
@@ -110,8 +107,8 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card WHEN user copy card THEN data is current card data', () => {
         const view = new TaskUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {
+        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        CurrentCardAPI.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
@@ -142,8 +139,8 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card with taskDescription and not richTaskDescription WHEN user edit card THEN task description has rich text format', () => {
         const view = new TaskUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 taskDescription: 'My task Description',

@@ -37,7 +37,6 @@ import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
 import {NgIf} from '@angular/common';
@@ -51,6 +50,7 @@ import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/business/services/config.service';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
 
 @Component({
     selector: 'of-card-body',
@@ -176,10 +176,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
-            OpfabAPIService.currentCard.childCards = this.childCards;
-            OpfabAPIService.currentCard.applyChildCards();
+            CurrentCardAPI.currentCard.childCards = this.childCards;
+            CurrentCardAPI.currentCard.applyChildCards();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
-            if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
+            if (this.isResponseLocked) CurrentCardAPI.templateInterface.lockAnswer();
         });
     }
 
@@ -197,22 +197,22 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.lockResponseIfOneUserEntityHasAlreadyRespond();
-        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) OpfabAPIService.templateInterface.unlockAnswer();
-        OpfabAPIService.currentCard.childCards = this.childCards;
-        OpfabAPIService.currentCard.applyChildCards();
+        CurrentCardAPI.currentCard.isResponseLocked = this.isResponseLocked;
+        if (!this.isResponseLocked) CurrentCardAPI.templateInterface.unlockAnswer();
+        CurrentCardAPI.currentCard.childCards = this.childCards;
+        CurrentCardAPI.currentCard.applyChildCards();
     }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
-        OpfabAPIService.templateInterface.unlockAnswer();
+        CurrentCardAPI.templateInterface.unlockAnswer();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
             if (changes.card) {
                 this.computeCardHasBeenRead();
-                OpfabAPIService.currentCard.card = this.card;
+                CurrentCardAPI.currentCard.card = this.card;
             }
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
@@ -340,14 +340,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private setOpfabApiVariables() {
-        OpfabAPIService.currentCard.childCards = this.childCards;
-        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        OpfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
-        OpfabAPIService.currentCard.entitiesAllowedToRespond =
+        CurrentCardAPI.currentCard.childCards = this.childCards;
+        CurrentCardAPI.currentCard.isResponseLocked = this.isResponseLocked;
+        CurrentCardAPI.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
+        CurrentCardAPI.currentCard.entitiesAllowedToRespond =
             this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        CurrentCardAPI.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        OpfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
+        CurrentCardAPI.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
     }
 
     private stopRegularlyCheckLttd() {
@@ -356,7 +356,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public afterTemplateRendering() {
-        if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
+        if (this.isResponseLocked) CurrentCardAPI.templateInterface.lockAnswer();
         this.startRegularlyCheckLttd();
     }
 
@@ -369,7 +369,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
             if (this.isLttdExpired()) {
                 this.lttdExpiredIsTrue = true;
-                OpfabAPIService.templateInterface.setLttdExpired(true);
+                CurrentCardAPI.templateInterface.setLttdExpired(true);
             } else setTimeout(() => this.regularlyCheckLttd(), 500);
         }
     }

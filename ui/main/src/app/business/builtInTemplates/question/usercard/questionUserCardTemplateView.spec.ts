@@ -7,9 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {initOpfabAPI} from '@tests/helpers';
 
 class QuillEditorMock {
     contents: string;
@@ -29,40 +30,36 @@ class QuillEditorMock {
 
 describe('Question UserCard template', () => {
     beforeEach(() => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
-        OpfabAPIService.initUserCardTemplateInterface();
+        initOpfabAPI();
     });
 
     it('GIVEN an existing card WHEN user edit card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('My question');
         expect(view.getTitle()).toEqual('My title');
     });
 
     it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
         const view = new QuestionUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question <script>'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question <script>'}};
         expect(view.getRichQuestion()).toEqual('My question &lt;script&gt;');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('My question');
         expect(view.getTitle()).toEqual('My title');
     });
 
     it('GIVEN a user WHEN create card THEN title and question are empty', () => {
         const view = new QuestionUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
-        OpfabAPIService.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
         expect(view.getRichQuestion()).toEqual('');
         expect(view.getTitle()).toEqual('');
     });

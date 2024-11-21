@@ -9,7 +9,7 @@
 
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {KeepChildCardsForm} from './keepChildCardsForm';
-import {getOneCard, initOpfabAPIService, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
 import {Response, State} from '@ofModel/processes.model';
 import {EditionMode} from '../userCard.model';
 
@@ -36,7 +36,7 @@ describe('UserCard KeepChildCardsForm', () => {
     beforeEach(() => {
         userCardUIControl = new UserCardUIControlMock();
         userCardKeepChildCards = new KeepChildCardsForm(userCardUIControl);
-        initOpfabAPIService();
+        initOpfabAPI();
     });
 
     it(`KeepChildCards visibility should be set to true if keepChildCards visibility set visible in state configuration and usercard is in edition mode`, async () => {

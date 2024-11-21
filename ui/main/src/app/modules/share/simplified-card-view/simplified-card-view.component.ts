@@ -17,11 +17,11 @@ import {User} from '@ofModel/user.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {TemplateRenderingComponent} from '../template-rendering/template-rendering.component';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -50,7 +50,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        OpfabAPIService.currentCard.card = this.card;
+        CurrentCardAPI.currentCard.card = this.card;
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }
@@ -89,14 +89,14 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        CurrentCardAPI.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        OpfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
+        CurrentCardAPI.currentCard.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            OpfabAPIService.templateInterface.lockAnswer();
+            CurrentCardAPI.templateInterface.lockAnswer();
         }
     }
 

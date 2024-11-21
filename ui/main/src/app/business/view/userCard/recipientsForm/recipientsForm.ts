@@ -14,9 +14,9 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {RolesEnum} from '@ofModel/roles.model';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigService} from 'app/business/services/config.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class RecipientsForm {
     private isInCreationMode = true;
@@ -38,7 +38,7 @@ export class RecipientsForm {
     }
 
     private listenForRecipientListSetByTemplate() {
-        OpfabAPIService.currentUserCard.setDropdownEntityRecipientList = (recipients) =>
+        CurrentUserCardAPI.currentUserCard.setDropdownEntityRecipientList = (recipients) =>
             this.loadRestrictedRecipientList(recipients);
     }
     private loadRestrictedRecipientList(recipients: EntitiesTree[]) {
@@ -68,7 +68,7 @@ export class RecipientsForm {
     }
 
     private listenForRecipientForInformationListSetByTemplate() {
-        OpfabAPIService.currentUserCard.setDropdownEntityRecipientForInformationList = (recipients) =>
+        CurrentUserCardAPI.currentUserCard.setDropdownEntityRecipientForInformationList = (recipients) =>
             this.loadRestrictedRecipientForInformationList(recipients);
     }
     private loadRestrictedRecipientForInformationList(recipients: EntitiesTree[]) {
@@ -83,11 +83,11 @@ export class RecipientsForm {
     }
 
     private listenForSelectRecipients() {
-        OpfabAPIService.currentUserCard.setSelectedRecipients = (recipients) => {
+        CurrentUserCardAPI.currentUserCard.setSelectedRecipients = (recipients) => {
             this.setSelectedRecipients(recipients);
             this.userCardUIControl.setSelectedRecipients(recipients);
         };
-        OpfabAPIService.currentUserCard.setInitialSelectedRecipients = (recipients) => {
+        CurrentUserCardAPI.currentUserCard.setInitialSelectedRecipients = (recipients) => {
             if (this.isInCreationMode) {
                 this.setSelectedRecipients(recipients);
                 this.userCardUIControl.setSelectedRecipients(recipients);
@@ -96,11 +96,11 @@ export class RecipientsForm {
     }
 
     private listenForSelectRecipientsForInformation() {
-        OpfabAPIService.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
+        CurrentUserCardAPI.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
             this.setSelectedRecipientsForInformation(recipients);
             this.userCardUIControl.setSelectedRecipientsForInformation(recipients);
         };
-        OpfabAPIService.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
+        CurrentUserCardAPI.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
             if (this.isInCreationMode) {
                 this.userCardUIControl.setSelectedRecipientsForInformation(recipients);
                 this.setSelectedRecipientsForInformation(recipients);
@@ -147,7 +147,7 @@ export class RecipientsForm {
 
     public setSelectedRecipients(selectedRecipients: string[]) {
         this.selectedRecipients = selectedRecipients;
-        OpfabAPIService.currentUserCard.selectedEntityRecipients = selectedRecipients;
+        CurrentUserCardAPI.currentUserCard.selectedEntityRecipients = selectedRecipients;
     }
 
     public getSelectedRecipientsForInformation(): string[] {
@@ -156,7 +156,7 @@ export class RecipientsForm {
 
     public setSelectedRecipientsForInformation(selectedRecipientsForInformation: string[]) {
         this.selectedRecipientsForInformation = selectedRecipientsForInformation;
-        OpfabAPIService.currentUserCard.selectedEntityForInformationRecipients = selectedRecipientsForInformation;
+        CurrentUserCardAPI.currentUserCard.selectedEntityForInformationRecipients = selectedRecipientsForInformation;
     }
 
     public isRecipientVisible(): boolean {

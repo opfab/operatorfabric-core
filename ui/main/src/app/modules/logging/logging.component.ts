@@ -34,11 +34,11 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 
 @Component({
     selector: 'of-logging',
@@ -136,7 +136,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     ngOnInit() {
         this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
-        OpfabAPIService.businessconfig.getTags('logging').then((customTags) => {
+        BusinessConfigAPI.getTags('logging').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('logging.filters.tags.list');
             this.changeDetector.markForCheck();
         });

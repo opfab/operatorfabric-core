@@ -37,9 +37,9 @@ import {TemplateCssService} from 'app/business/services/card/template-css.servic
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
 
 @Component({
     selector: 'of-template-rendering',
@@ -87,28 +87,28 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private informTemplateWhenGlobalStyleChange() {
         GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
-            .subscribe(() => OpfabAPIService.templateInterface.setStyleChange());
+            .subscribe(() => CurrentCardAPI.templateInterface.setStyleChange());
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.screenSize && this.templateLoaded) OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) CurrentCardAPI.templateInterface.setScreenSize(this.screenSize);
         else this.render();
     }
 
     private render() {
         this.isLoadingSpinnerToDisplay = false;
-        OpfabAPIService.initTemplateInterface();
+        CurrentCardAPI.initTemplateInterface();
         this.enableSpinnerForTemplate();
         this.getUserContextAndRenderTemplate();
     }
 
     private enableSpinnerForTemplate() {
         const that = this;
-        OpfabAPIService.currentCard.displayLoadingSpinner = function () {
+        CurrentCardAPI.currentCard.displayLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = true;
             that.changeDetector.markForCheck();
         };
-        OpfabAPIService.currentCard.hideLoadingSpinner = function () {
+        CurrentCardAPI.currentCard.hideLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = false;
             that.changeDetector.markForCheck();
         };
@@ -134,7 +134,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         if (this.cardState.templateName) {
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
-            OpfabAPIService.currentCard.displayContext = this.displayContext;
+            CurrentCardAPI.currentCard.displayContext = this.displayContext;
 
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
@@ -202,9 +202,9 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private callTemplateJsPostRenderingFunctions() {
         if (this.functionToCallAfterRendering) this.functionToCallAfterRendering.call(this.parentComponent);
-        OpfabAPIService.templateInterface.setScreenSize(this.screenSize);
-        OpfabAPIService.currentCard.applyChildCards();
-        setTimeout(() => OpfabAPIService.templateInterface.setTemplateRenderingComplete(), 10);
+        CurrentCardAPI.templateInterface.setScreenSize(this.screenSize);
+        CurrentCardAPI.currentCard.applyChildCards();
+        setTimeout(() => CurrentCardAPI.templateInterface.setTemplateRenderingComplete(), 10);
     }
 
     public ngAfterViewChecked() {
@@ -229,7 +229,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     ngOnDestroy() {
         removeEventListener('resize', this.computeRenderingHeight);
-        OpfabAPIService.initTemplateInterface();
+        CurrentCardAPI.initTemplateInterface();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();
     }

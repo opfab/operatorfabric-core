@@ -10,9 +10,9 @@
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {DatesForm} from './datesForm';
 import {EditionMode, InputFieldName} from '../userCard.model';
-import {getOneCard, initOpfabAPIService, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
 import {State} from '@ofModel/processes.model';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 declare const opfab: any;
 
@@ -33,7 +33,7 @@ describe('UserCard DatesForm', () => {
     beforeEach(async () => {
         userCardUIControlMock = new UserCardUIControlMock();
         datesForm = new DatesForm(userCardUIControlMock);
-        initOpfabAPIService();
+        initOpfabAPI();
     });
     describe('Visibility should be set', () => {
         // Dates visible by default
@@ -200,7 +200,7 @@ describe('UserCard DatesForm', () => {
     });
     describe('Dates initialization after template script execution', () => {
         beforeEach(() => {
-            OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+            CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
         });
         it('Should set start date from template via method opfab.currentUserCard.setInitialStartDate ', async () => {
             await setProcessConfigWithUserCardConfig({startDateVisible: true});

@@ -7,22 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {TaskCardTemplateView} from './taskCardTemplateView';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {initOpfabAPI} from '@tests/helpers';
 
 describe('Task Card Template View', () => {
     let view: TaskCardTemplateView;
     beforeEach(() => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
+        initOpfabAPI();
         view = new TaskCardTemplateView();
     });
 
     it('GIVEN a card WHEN get data THEN data is provided', () => {
-        OpfabAPIService.currentCard.card = {
+        CurrentCardAPI.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description'
@@ -40,7 +37,7 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card taskDescription and not richTaskDescription WHEN get data THEN task description has rich text format', () => {
-        OpfabAPIService.currentCard.card = {
+        CurrentCardAPI.currentCard.card = {
             data: {
                 taskTitle: 'My task Title',
                 taskDescription: 'My task Description'
@@ -57,7 +54,7 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card WHEN filling content THEN text is correct', () => {
-        OpfabAPIService.currentCard.card = {
+        CurrentCardAPI.currentCard.card = {
             data: {},
             rRule: {
                 freq: 'MONTHLY',
@@ -81,7 +78,7 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card without recurrence WHEN get data THEN data is provided', () => {
-        OpfabAPIService.currentCard.card = {
+        CurrentCardAPI.currentCard.card = {
             startDate: new Date('2025-02-28T09:15:00').getTime(),
             data: {
                 taskTitle: 'My task Title for my non-recurrent card',

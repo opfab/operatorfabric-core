@@ -8,7 +8,7 @@
  */
 
 import {EntitiesTree, State} from '@ofModel/processes.model';
-import {getOneCard, initOpfabAPIService, loadWebUIConf, setEntities, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, loadWebUIConf, setEntities, setProcessConfiguration} from '@tests/helpers';
 import {RecipientsForm} from './recipientsForm';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {Entity} from '@ofModel/entity.model';
@@ -48,7 +48,7 @@ describe('UserCard RecipientsForm', () => {
     let recipientsForm: RecipientsForm;
     let userCardUIControl: UserCardUIControlMock;
     beforeEach(async () => {
-        initOpfabAPIService();
+        initOpfabAPI();
         await loadWebUIConf({});
         userCardUIControl = new UserCardUIControlMock();
         recipientsForm = new RecipientsForm(userCardUIControl);

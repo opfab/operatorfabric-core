@@ -7,21 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';
-import {setEntities} from '@tests/helpers';
+import {initOpfabAPI, setEntities} from '@tests/helpers';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
 
 describe('MessageOrQuestionList Card template', () => {
     let view: MessageOrQuestionListCardTemplateView;
     beforeEach(async () => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
-        OpfabAPIService.initTemplateInterface();
+        initOpfabAPI();
         await setEntities([
             new Entity('entity1', 'entity1 name', '', [RolesEnum.CARD_RECEIVER], [], null),
             new Entity('entity2', 'entity2 name', '', [RolesEnum.CARD_RECEIVER], [], null)
@@ -30,19 +25,19 @@ describe('MessageOrQuestionList Card template', () => {
     });
 
     it('GIVEN a card WHEN get title and message THEN title and message are provided', () => {
-        OpfabAPIService.currentCard.card = {data: {title: 'My title', richMessage: 'My message'}};
+        CurrentCardAPI.currentCard.card = {data: {title: 'My title', richMessage: 'My message'}};
         expect(view.getTitle()).toEqual('My title');
         expect(view.getRichMessage()).toEqual('My message');
     });
 
     it('GIVEN a card WHEN get title with a HTML tag THEN title is provided with HTML tag escaped', () => {
-        OpfabAPIService.currentCard.card = {data: {title: 'My title <script>'}};
+        CurrentCardAPI.currentCard.card = {data: {title: 'My title <script>'}};
         expect(view.getTitle()).toEqual('My title &lt;script&gt;');
     });
 
     it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
-        OpfabAPIService.currentCard.isUserAllowedToRespond = false;
-        OpfabAPIService.currentCard.card = {data: {question: true}};
+        CurrentCardAPI.currentCard.isUserAllowedToRespond = false;
+        CurrentCardAPI.currentCard.card = {data: {question: true}};
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
@@ -53,32 +48,32 @@ describe('MessageOrQuestionList Card template', () => {
             return [true, 'my response'];
         });
 
-        const userResponse = OpfabAPIService.templateInterface.getUserResponse();
+        const userResponse = CurrentCardAPI.templateInterface.getUserResponse();
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCardData.comment).toEqual('my response');
         expect(userResponse.responseCardData.agreement).toEqual(true);
     });
 
     it('Given a question card WHEN user card is locked THEN response input is hidden', () => {
-        OpfabAPIService.currentCard.isUserAllowedToRespond = true;
-        OpfabAPIService.currentCard.card = {data: {question: true}};
+        CurrentCardAPI.currentCard.isUserAllowedToRespond = true;
+        CurrentCardAPI.currentCard.card = {data: {question: true}};
 
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
 
-        OpfabAPIService.templateInterface.lockAnswer();
+        CurrentCardAPI.templateInterface.lockAnswer();
 
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a question card WHEN user card is unlocked THEN response input is visible', () => {
-        OpfabAPIService.currentCard.isUserAllowedToRespond = true;
-        OpfabAPIService.currentCard.card = {data: {question: true}};
+        CurrentCardAPI.currentCard.isUserAllowedToRespond = true;
+        CurrentCardAPI.currentCard.card = {data: {question: true}};
 
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
 
-        OpfabAPIService.templateInterface.unlockAnswer();
+        CurrentCardAPI.templateInterface.unlockAnswer();
 
         expect(inputFieldVisibility).toBeTrue();
     });
@@ -101,7 +96,7 @@ describe('MessageOrQuestionList Card template', () => {
             responsesResult = responses;
         });
 
-        OpfabAPIService.templateInterface.setChildCards(childcards);
+        CurrentCardAPI.templateInterface.setChildCards(childcards);
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].comment).toEqual('my response 1');
         expect(responsesResult[0].agreement).toEqual(true);
@@ -124,7 +119,7 @@ describe('MessageOrQuestionList Card template', () => {
             responsesResult = responses;
         });
 
-        OpfabAPIService.templateInterface.setChildCards(childcards);
+        CurrentCardAPI.templateInterface.setChildCards(childcards);
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].comment).toEqual('my response &lt;script&gt;');
         expect(responsesResult[0].agreement).toEqual(true);

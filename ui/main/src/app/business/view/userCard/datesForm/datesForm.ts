@@ -11,7 +11,7 @@ import {State} from '@ofModel/processes.model';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Card} from '@ofModel/card.model';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class DatesForm {
     private static ONE_MINUTE = 60000;
@@ -48,7 +48,7 @@ export class DatesForm {
                 if (editionMode === EditionMode.EDITION)
                     this[field] = card?.[field] ?? this.getDefaultValueForDate(field);
                 else this[field] = this.getDefaultValueForDate(field);
-                OpfabAPIService.currentUserCard[field] = this[field];
+                CurrentUserCardAPI.currentUserCard[field] = this[field];
             }
         });
     }
@@ -77,7 +77,7 @@ export class DatesForm {
 
     public initDatesAfterTemplateScriptsExecution() {
         this.dateFields.forEach((field) => {
-            this[field] = OpfabAPIService.currentUserCard[field];
+            this[field] = CurrentUserCardAPI.currentUserCard[field];
             this.userCardUIControl.setDate(field as InputFieldName, this[field]);
         });
     }
@@ -92,6 +92,6 @@ export class DatesForm {
 
     public userSetsDate(inputName: InputFieldName, dateSetByUser: number) {
         this[inputName] = dateSetByUser;
-        OpfabAPIService.currentUserCard[inputName] = dateSetByUser;
+        CurrentUserCardAPI.currentUserCard[inputName] = dateSetByUser;
     }
 }

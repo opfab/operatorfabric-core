@@ -7,9 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {MessageOrQuestionListUserCardTemplateView} from './message-or-question-listUserCardTemplateView';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {initOpfabAPI} from '@tests/helpers';
 
 class QuillEditorMock {
     contents: string;
@@ -29,11 +30,7 @@ class QuillEditorMock {
 
 describe('MessageOrQuestionList UserCard template', () => {
     beforeEach(() => {
-        const translationService = new TranslationServiceMock();
-        OpfabAPIService.setTranslationService(translationService);
-        OpfabAPIService.init();
-        OpfabAPIService.initAPI();
-        OpfabAPIService.initUserCardTemplateInterface();
+        initOpfabAPI();
     });
 
     it('GIVEN a new card THEN initial selected message option is the first option', () => {
@@ -48,23 +45,23 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        OpfabAPIService.currentUserCard.editionMode = 'CREATE';
+        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id1');
     });
 
     it('GIVEN an existing card WHEN user edit card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });
 
     it('GIVEN an existing card with an HTML tag in  message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message <script>'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message <script>'}};
         expect(view.getRichMessage()).toEqual('My message &lt;script&gt;');
     });
 
@@ -80,8 +77,8 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        OpfabAPIService.currentUserCard.editionMode = 'EDITION';
-        OpfabAPIService.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        CurrentCardAPI.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
@@ -98,16 +95,16 @@ describe('MessageOrQuestionList UserCard template', () => {
 
         view.messageOrQuestionList = messageOrQuestionList;
 
-        OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        CurrentCardAPI.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
-        OpfabAPIService.currentUserCard.editionMode = 'COPY';
-        OpfabAPIService.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
+        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });

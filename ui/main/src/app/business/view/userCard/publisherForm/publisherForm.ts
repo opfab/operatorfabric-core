@@ -13,7 +13,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {RolesEnum} from '@ofModel/roles.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class PublisherForm {
     private selectedPublisher: string;
@@ -85,7 +85,7 @@ export class PublisherForm {
 
     private selectPublisher(publisher: string) {
         this.selectedPublisher = publisher;
-        OpfabAPIService.userCardTemplateInterface.setEntityUsedForSendingCard(publisher);
+        CurrentUserCardAPI.userCardTemplateInterface.setEntityUsedForSendingCard(publisher);
     }
 
     public getSelectedPublisher(): string {

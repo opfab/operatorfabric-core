@@ -9,7 +9,7 @@
 
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {SeverityForm} from './severityForm';
-import {getOneCard, initOpfabAPIService, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
 import {State} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 
@@ -32,7 +32,7 @@ describe('UserCard SeverityForm', () => {
     beforeEach(() => {
         userCardUIControl = new UserCardUIControlMock();
         userCardSeverity = new SeverityForm(userCardUIControl);
-        initOpfabAPIService();
+        initOpfabAPI();
     });
 
     it(`Severity visibility should be set to true if severity visibility set visible in state configuration`, async () => {

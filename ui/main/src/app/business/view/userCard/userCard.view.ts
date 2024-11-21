@@ -16,7 +16,6 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {firstValueFrom, map} from 'rxjs';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {DatesForm} from './datesForm/datesForm';
-import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {SeverityForm} from './severityForm/severityForm';
 import {KeepChildCardsForm} from './keepChildCardsForm/keepChildCardsForm';
 import {PublisherForm} from './publisherForm/publisherForm';
@@ -26,6 +25,7 @@ import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder/cardBuilder';
 import {CardSender} from './cardSender/cardSender';
 import {CardService} from 'app/business/services/card/card.service';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 /**
 
@@ -111,12 +111,12 @@ export class UserCardView {
         const {processId, stateId} = this.processStatesForm.getSelectedProcessState();
         this.currentProcessId = processId;
         this.currentStateId = stateId;
-        OpfabAPIService.initUserCardTemplateInterface();
-        OpfabAPIService.initCurrentUserCard();
-        OpfabAPIService.currentUserCard.editionMode = this.editionMode;
-        OpfabAPIService.currentUserCard.state = stateId;
-        OpfabAPIService.currentUserCard.processId = processId;
-        OpfabAPIService.currentUserCard.userEntityChildCard = this.existingChildCards?.find(
+        CurrentUserCardAPI.initUserCardTemplateInterface();
+        CurrentUserCardAPI.initCurrentUserCard();
+        CurrentUserCardAPI.currentUserCard.editionMode = this.editionMode;
+        CurrentUserCardAPI.currentUserCard.state = stateId;
+        CurrentUserCardAPI.currentUserCard.processId = processId;
+        CurrentUserCardAPI.currentUserCard.userEntityChildCard = this.existingChildCards?.find(
             (child) => child.publisher === this.existingCard.publisher
         );
         this.initFieldsThatNeedToBeSetBeforeExecutingTemplateScripts();
