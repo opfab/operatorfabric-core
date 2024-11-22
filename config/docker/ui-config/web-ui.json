@@ -152,5 +152,15 @@
   "usercard": {
     "useDescriptionFieldForEntityList": false
   },
-  "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"]
+  "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"],
+  "dashboard": {
+    "processStateRedirects": [
+      {
+        "processId": "defaultProcess",
+        "stateId": "chartLineState",
+        "menuId": "uid_test_0",
+        "urlExtension": "?search=chart&fulltext=1"
+      }
+    ]
+  }
 }

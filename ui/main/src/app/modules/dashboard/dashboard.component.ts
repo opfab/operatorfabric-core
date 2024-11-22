@@ -18,6 +18,9 @@ import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-butto
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {CardComponent} from '../card/card.component';
+
+declare const opfab: any;
+
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
@@ -36,6 +39,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public popoverTimeOut;
     private hideProcessFilter: boolean;
     private hideStateFilter: boolean;
+    private processStateRedirects: any;
 
     constructor(
         private modalService: NgbModal,
@@ -48,6 +52,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
         this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
+        this.processStateRedirects = ConfigService.getConfigValue('dashboard.processStateRedirects', []);
     }
 
     ngOnDestroy() {
@@ -104,7 +109,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     onStateClick(processId: string, stateId: string) {
-        if (!this.hideProcessFilter && !this.hideStateFilter)
+        const redirect = this.processStateRedirects.filter(
+            (redirect) => redirect.processId === processId && redirect.stateId === stateId
+        );
+
+        if (redirect?.length > 0) {
+            opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
+        } else if (!this.hideProcessFilter && !this.hideStateFilter) {
             this.router.navigate(['/feed'], {queryParams: {processFilter: processId, stateFilter: stateId}});
+        }
     }
 }
