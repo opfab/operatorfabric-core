@@ -80,7 +80,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
     });
 
-    it('Check redirection to filtered Feed page ', function () {
+    it('Check redirection to filtered Feed page or business menu', function () {
 
         opfab.loginWithUser('operator1_fr');
     
@@ -116,13 +116,18 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.url().should('include', 'feed?processFilter=defaultProcess&stateFilter=dataQualityState');
         feed.checkFilterIsActive();
         feed.checkNumberOfDisplayedCardsIs(0);
-
         opfab.navigateToDashboard();
 
         // Click on process with no cards
         cy.get('.opfab-dashboard-process').eq(8).contains('Test process for cypress').click();
         cy.url().should('include', 'feed?processFilter=cypress');
         feed.checkFilterIsActive();
+        feed.checkNumberOfDisplayedCardsIs(0);
+        opfab.navigateToDashboard();
+
+        // Click on state which should redirect to a business menu
+        cy.get('.opfab-dashboard-process').eq(4).find('.opfab-feed-link').eq(4).contains('Electricity consumption forecast').click();
+        cy.url().should('include', '#businessconfigparty/uid_test_0/');
         feed.checkNumberOfDisplayedCardsIs(0);
     });
 });
