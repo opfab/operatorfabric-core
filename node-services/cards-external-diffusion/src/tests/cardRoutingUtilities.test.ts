@@ -381,7 +381,7 @@ describe('Card routing', function () {
                 currentUserWithReceiveAndWriteRightWithFilteringNotification,
                 card
             )
-        ).toBeFalsy();
+        ).toBeTruthy();
         expect(
             CardsRoutingUtilities.shouldUserReceiveTheCard(
                 currentUserWithReceiveAndWriteRightWithFilteringNotificationNotForProcessState,
@@ -392,7 +392,7 @@ describe('Card routing', function () {
         expect(CardsRoutingUtilities.shouldUserReceiveTheCard(currentUserWithReceiveRight, card)).toBeTruthy();
         expect(
             CardsRoutingUtilities.shouldUserReceiveTheCard(currentUserWithReceiveRightWithFilteringNotification, card)
-        ).toBeFalsy();
+        ).toBeTruthy();
         expect(
             CardsRoutingUtilities.shouldUserReceiveTheCard(
                 currentUserWithReceiveRightWithFilteringNotificationNotForProcessState,

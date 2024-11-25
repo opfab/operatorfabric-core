@@ -266,11 +266,14 @@ export class NotificationConfigurationView {
 
     public clickOnStateNotificationByEmail(processId: string, stateId: string): void {
         const process = this.processList.find(({id}) => id === processId);
-        if (!process) return;
+        if (!process) {
+            return;
+        }
 
         const state = process.states.find(({id}) => id === stateId);
-        if (!state) return;
-        if (!state.checked) return;
+        if (!state) {
+            return;
+        }
         state.notificationByEmail = !state.notificationByEmail;
         this.setEmailEnabled(processId, stateId, state.notificationByEmail);
     }

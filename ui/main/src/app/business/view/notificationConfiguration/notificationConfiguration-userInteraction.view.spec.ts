@@ -338,10 +338,10 @@ describe('Notification configuration view - User interaction ', () => {
                 notificationConfigurationView.clickOnStateNotificationByEmail('process1', 'state1_1');
                 expect(emailEnabledActivated).toEqual('p:process1,s:state1_1,v:false;');
             });
-            it('should not set state notification by email if notification is not set for state', async () => {
+            it('should set state notification by email even if notification is not set for state', async () => {
                 notificationConfigurationView.clickOnState('process1', 'state1_2');
                 notificationConfigurationView.clickOnStateNotificationByEmail('process1', 'state1_2');
-                expect(emailEnabledActivated).toEqual('');
+                expect(emailEnabledActivated).toEqual('p:process1,s:state1_2,v:true;');
             });
         });
         describe('User click on save button', () => {
