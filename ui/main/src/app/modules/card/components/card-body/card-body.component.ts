@@ -419,6 +419,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.stopRegularlyCheckLttd();
         this.updateLastReadCardStatusOnFeedIfNeeded();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
