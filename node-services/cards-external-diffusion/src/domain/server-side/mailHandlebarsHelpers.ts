@@ -11,7 +11,6 @@ import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'fs';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class MailHandlebarsHelper {
     private static quill: any;
 

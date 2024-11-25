@@ -13,7 +13,6 @@ import * as fs from 'fs';
 import {format, FormatOptions} from 'date-fns';
 import {enUS, fr, nl} from 'date-fns/locale';
 
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 export class HandlebarsHelper {
     public static init(): void {
         HandlebarsHelper.registerPreserveSpace();
@@ -189,8 +188,6 @@ export class HandlebarsHelper {
         });
     }
 
-    /* eslint-disable */
-    // Need so work to solve the eslint issues
     private static registerKeyValue(): void {
         Handlebars.registerHelper('keyValue', function (obj, options) {
             if (Object.keys(obj).length === 0) {
@@ -214,7 +211,6 @@ export class HandlebarsHelper {
             return buffer;
         });
     }
-    /* eslint-enable */
 
     private static registerKeepSpacesAndEndOfLine(): void {
         Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value: string) {
@@ -248,18 +244,14 @@ export class HandlebarsHelper {
 
     private static registerConditionalAttribute(): void {
         Handlebars.registerHelper('conditionalAttribute', function (condition, attribute) {
-            /* eslint-disable */
             return condition ? attribute : '';
-            /* eslint-enable */
         });
     }
 
     private static registerFindObjectByProperty(): void {
-        /* eslint-disable */
         Handlebars.registerHelper('findObjectByProperty', function (list, propertyName, propertyValue) {
             return list.find((obj: {[x: string]: any}) => obj[propertyName] === propertyValue);
         });
-        /* eslint-enable */
     }
 
     public static changeLocale(locale: string): void {
@@ -382,7 +374,6 @@ export class HandlebarsHelper {
 }
 
 function sortOnKey(key: string) {
-    /* eslint-disable */
     return function (a: {[x: string]: number}, b: {[x: string]: number}) {
         if (typeof a[key] === 'string' && typeof b[key] === 'string') {
             if (a[key] < b[key]) return -1;
@@ -393,5 +384,4 @@ function sortOnKey(key: string) {
         }
         return 0;
     };
-    /* eslint-enable */
 }

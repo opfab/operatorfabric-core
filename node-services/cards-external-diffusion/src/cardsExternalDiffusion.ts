@@ -27,23 +27,20 @@ app.disable('x-powered-by');
 
 app.use(bodyParser.json());
 
-/* eslint-disable */
-// disable eslint as false positive , promise are authorized see
-// https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 app.use(
     /\/((?!healthcheck).)*/, // Token verification activated except for healthcheck request
-    async (req: any, res: any, next: NextFunction) => expressjwt({
-        secret: jwksRsa.expressJwtSecret({
-            cache: true,
-            rateLimit: true,
-            jwksRequestsPerMinute: 5,
-            jwksUri: jwksUri
-        }) as GetVerificationKey,
-        algorithms: ['RS256']
-    })(req, res, next) as Promise<void>
+    async (req: any, res: any, next: NextFunction) =>
+        expressjwt({
+            secret: jwksRsa.expressJwtSecret({
+                cache: true,
+                rateLimit: true,
+                jwksRequestsPerMinute: 5,
+                jwksUri: jwksUri
+            }) as GetVerificationKey,
+            algorithms: ['RS256']
+        })(req, res, next) as Promise<void>
 );
-/* eslint-enable */
 
 app.use(express.static('public'));
 const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');

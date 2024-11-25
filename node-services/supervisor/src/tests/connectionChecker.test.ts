@@ -102,6 +102,7 @@ describe('connection checker', function () {
     });
 
     it('Should use entityId as Name if not able to get entity name', async function () {
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
         opfabInterfaceStub.setGetEntityFunction((id: string) => new GetResponse(null, false));
         await checkConnectionXTimes(3);
         expect(opfabInterfaceStub.cardSend.data.disconnected).toEqual('ENTITY1');

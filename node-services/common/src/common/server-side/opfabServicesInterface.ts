@@ -294,6 +294,6 @@ export default class OpfabServicesInterface {
 
     sendRequest(request: any): any {
         // Cast to <Promise<any>> required for testing, to be able to stub the call
-        return <Promise<any>>axios(request); //eslint-disable-line
+        return <Promise<any>>axios(request);
     }
 }

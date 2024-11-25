@@ -14,6 +14,7 @@ export class SupervisorDatabaseServerStub implements SupervisorDatabaseServer {
         // Do nothing, just needed to stub
     }
 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async getSupervisedEntity(id: string): Promise<any> {
         throw new Error('Method not implemented.');
     }

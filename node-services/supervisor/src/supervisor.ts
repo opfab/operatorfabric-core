@@ -8,7 +8,7 @@
  */
 
 import express, {NextFunction} from 'express';
-import {expressjwt, type GetVerificationKey} from 'express-jwt';
+import {expressjwt, GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
@@ -25,22 +25,21 @@ app.use(bodyParser.json());
 
 const jwksUri: string = config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
 
-/* eslint-disable */
-// disable eslint as false positive , promise are authorized see
-// https://community.sonarsource.com/t/express-router-promise-returned-in-function-argument-where-a-void-return-was-expected/95772
+const secret = jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: jwksUri
+}) as unknown;
+
 app.use(
     /\/((?!healthcheck).)*/, // Token verification activated except for healthcheck request
-    async (req: any, res: any, next: NextFunction) => expressjwt({
-        secret: jwksRsa.expressJwtSecret({
-            cache: true,
-            rateLimit: true,
-            jwksRequestsPerMinute: 5,
-            jwksUri: jwksUri
-        }) as GetVerificationKey,
-        algorithms: ['RS256']
-    })(req, res, next) as Promise<void>
+    async (req: any, res: any, next: NextFunction) =>
+        expressjwt({
+            secret: secret as GetVerificationKey,
+            algorithms: ['RS256']
+        })(req, res, next) as Promise<void>
 );
-/* eslint-enable */
 
 app.use(express.static('public'));
 const adminPort: string = config.get('operatorfabric.supervisor.adminPort');

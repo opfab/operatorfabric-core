@@ -44,7 +44,7 @@ export function getLogger(): winston.Logger {
                 maxFiles: '14d',
                 level: logConfiguration.logLevel
             });
-
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             transport.on('rotate', function (oldFilename, newFilename) {
                 // call function like upload to s3 or on cloud
             });

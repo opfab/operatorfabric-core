@@ -1,44 +1,29 @@
-import love from 'eslint-config-love';
-import prettier from 'eslint-config-prettier';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import pluginJest from 'eslint-plugin-jest'
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-    love,
-    prettier,
     {
-        files: ['**/*.js', '**/*.ts'],
-        languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
-            globals: {
-                es2021: true,
-                node: true
-            }
-        },
-        rules: {
-            // This rule is not necessary as we are using a transpiler with type checking
-            // For more information
-            // see https://typescript-eslint.io/blog/consistent-type-imports-and-exports-why-and-how
-            '@typescript-eslint/consistent-type-imports': 'off',
-            '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/class-methods-use-this': 'off',
-            '@typescript-eslint/init-declarations': 'off',
-            '@typescript-eslint/no-loop-func': 'off'
-        }
+        files: ['**/*.{js,mjs,cjs,ts}']
     },
+    pluginJs.configs.recommended,
+    {plugins:{jest: pluginJest}},
+    ...tseslint.configs.recommended,
     {
-        files: ['*.ts'],
-        languageOptions: {
-            parserOptions: {
-                project: ['tsconfig.json'],
-                createDefaultProgram: true
-            }
-        },
         rules: {
-            eqeqeq: ['error', 'smart'],
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unsafe-function-type': 'off',
+            'prefer-rest-params': 'off',
+            'no-console': 'error',
+            'jest/no-focused-tests': 'error',
+            'jest/no-identical-title': 'error',
+            'jest/valid-expect': 'error',
+            'jest/no-disabled-tests': 'warn',
+            'jest/no-conditional-expect': 'error',
             'prefer-const': 'error',
-            'no-trailing-spaces': 'error',
-            'keyword-spacing': 'error',
-            'no-console': 'error'
+            'eqeqeq': ['error','smart']
         }
     }
 ];
+

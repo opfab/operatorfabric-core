@@ -10,7 +10,6 @@
 import {Card} from './card';
 import {UserData, UserWithPerimeters} from './userWithPerimeter';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class CardsRoutingUtilities {
     public static shouldUserReceiveTheCard(userWithPerimeters: UserWithPerimeters, card: Card): boolean {
         if (!this.checkUserReadPerimeter(userWithPerimeters, card)) {

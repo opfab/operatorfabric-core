@@ -144,6 +144,7 @@ function isValidTimeZone(tz): boolean {
     try {
         Intl.DateTimeFormat(undefined, {timeZone: tz});
         return true;
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (ex) {
         return false;
     }

@@ -51,7 +51,6 @@ export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfa
         return this.config;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
     async fetchTemplate(): Promise<Function> {
         return Handlebars.compile(this.template);
     }
@@ -93,6 +92,7 @@ export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
         this.sent.push({cardUid, email, date: Date.now()});
     }
 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async deleteMailsSentBefore(dateLimit: number): Promise<void> {}
 }
 

@@ -17,7 +17,6 @@ import {MailHandlebarsHelper} from './mailHandlebarsHelpers';
 
 export default class BusinessConfigOpfabServicesInterface extends OpfabServicesInterface implements EventListener {
     private static configCache = new Map<string, any>();
-    // eslint-disable-next-line @typescript-eslint/ban-types
     private static templateCompilerCache = new Map<string, Map<string, Function> | undefined>();
 
     private readonly listener: EventBusListener;
@@ -77,7 +76,6 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         return BusinessConfigOpfabServicesInterface.configCache.get(key);
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
     public async fetchTemplate(processId: string, emailBodyTemplate: string, version: string): Promise<Function> {
         const key = processId + '.' + version;
         const cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
@@ -105,11 +103,9 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         version: string,
         key: string
     ): Promise<void> {
-        // eslint-disable-next-line @typescript-eslint/ban-types
         const cachedMap: Map<string, Function> | undefined = new Map();
         const templateResponse = await this.getTemplate(processId, emailBodyTemplate, version);
         if (templateResponse.isValid()) {
-            // eslint-disable-next-line @typescript-eslint/ban-types
             const cachedCompiler: Function = Handlebars.compile(templateResponse.getData());
             cachedMap.set(emailBodyTemplate, cachedCompiler);
             BusinessConfigOpfabServicesInterface.templateCompilerCache.set(key, cachedMap);

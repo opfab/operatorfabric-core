@@ -40,6 +40,7 @@ describe('Opfab interface', function () {
 
     it('Should return invalid response when impossible to authenticate to opfab ', async function () {
         const opfabServicesInterface = getOpfabServicesInterface();
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake(async (request: any) => {
             throw new Error('test');
         });

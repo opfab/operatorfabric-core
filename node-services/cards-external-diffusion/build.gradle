@@ -24,6 +24,16 @@ task runLint(type:NpmTask) {
 
     dependsOn npmInstall
 }
+task runPrettier(type:NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    outputs.dir('build')
+    args = ['run','prettier']
+
+    dependsOn npmInstall
+}
 
 task runBuild(type: NpmTask) {
     inputs.files(fileTree('src'))
@@ -33,7 +43,7 @@ task runBuild(type: NpmTask) {
 
     outputs.dir('build')
 
-    dependsOn npmInstall, runLint
+    dependsOn npmInstall, runLint, runPrettier
     args = ['run', 'build']
 }
 
