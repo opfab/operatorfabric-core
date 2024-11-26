@@ -53,6 +53,29 @@ export class LightCard {
     ) {}
 }
 
+export class ArchivedLightCard {
+    constructor(
+        readonly uid: string,
+        readonly id: string,
+        readonly publisher: string,
+        readonly processVersion: string,
+        readonly publishDate: number,
+        readonly startDate: number,
+        readonly endDate: number,
+        readonly severity: Severity,
+        readonly processInstanceId?: string,
+        readonly titleTranslated?: string,
+        readonly summaryTranslated?: string,
+        readonly process?: string,
+        readonly state?: string,
+        readonly representative?: string,
+        readonly representativeType?: PublisherType | string,
+        readonly entityRecipients?: string[],
+        readonly publisherType?: PublisherType | string,
+        readonly numberOfVersions?: number
+    ) {}
+}
+
 export enum Severity {
     ALARM = 'ALARM',
     ACTION = 'ACTION',

@@ -44,17 +44,17 @@
       </thead>
 
       <tbody>
-      <ng-container *ngFor="let updates of updatesByCardId">
+      <ng-container *ngFor="let updates of updatesByCardId; index as i">
         <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
           <td style ="min-width: 15px" class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
           <td class="opfab-archive-sev"></td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates)">
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.mostRecent.numberOfVersions > 1 && !updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates, i)">
             <div class="opfab-archives-icon-plus"></div>
           </td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)">
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.mostRecent.numberOfVersions > 1 && updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)">
             <div class="opfab-archives-icon-minus"></div>
           </td>
-          <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.mostRecent.numberOfVersions < 2"></td>
           <td style="padding-left: 5px;min-width: 150px"> {{ displayTime(updates.mostRecent.publishDate) }} </td>
           <td style ="min-width: 180px">{{ getEntityName(updates.mostRecent.publisher) }}</td>
           <td style ="min-width: 180px"

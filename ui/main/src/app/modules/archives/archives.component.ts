@@ -22,7 +22,7 @@ import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {LightCard} from '@ofModel/light-card.model';
+import {ArchivedLightCard, LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
@@ -81,9 +81,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         activeTo: new FormControl('')
     });
 
-    results: LightCard[];
+    results: ArchivedLightCard[];
     updatesByCardId: {
-        mostRecent: LightCard;
+        mostRecent: ArchivedLightCard;
         cardHistories: LightCard[];
         displayHistory: boolean;
         tooManyRows: boolean;
@@ -167,7 +167,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
-
         this.getResults(page_number);
     }
 
@@ -175,8 +174,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.technicalError = false;
         this.loadingInProgress = true;
         this.changeDetector.markForCheck();
-
-        const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
         const filter = this.getFilter(
             page_number,
@@ -188,7 +185,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         CardService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-                next: (page: Page<LightCard>) => {
+                next: (page: Page<ArchivedLightCard>) => {
                     if (page) {
                         this.resultsNumber = page.totalElements;
                         this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
@@ -196,23 +193,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.hasResult = page.content.length > 0;
                         this.results = page.content;
 
-                        if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                            const requestID = new Date().valueOf();
-                            this.lastRequestID = requestID;
-                            this.loadUpdatesByCardId(requestID, isAdminModeChecked);
-                        } else {
-                            this.loadingInProgress = false;
-                            this.changeDetector.markForCheck();
-                            this.updatesByCardId = [];
-                            this.results.forEach((lightCard) => {
-                                this.updatesByCardId.push({
-                                    mostRecent: lightCard,
-                                    cardHistories: [],
-                                    displayHistory: false,
-                                    tooManyRows: false
-                                });
+                        this.loadingInProgress = false;
+                        this.changeDetector.markForCheck();
+                        this.updatesByCardId = [];
+                        this.results.forEach((lightCard) => {
+                            this.updatesByCardId.push({
+                                mostRecent: lightCard,
+                                cardHistories: [],
+                                displayHistory: false,
+                                tooManyRows: false
                             });
-                        }
+                        });
                     } else {
                         this.firstQueryHasBeenDone = false;
                         this.loadingInProgress = false;
@@ -245,30 +236,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return new CardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
     }
 
-    loadUpdatesByCardId(requestID: number, isAdminModeChecked: boolean) {
-        this.updatesByCardId = [];
-        this.results.forEach((lightCard, index) => {
-            this.updatesByCardId.splice(index, 0, {
-                mostRecent: lightCard,
-                cardHistories: [],
-                displayHistory: false,
-                tooManyRows: false
-            });
-        });
-
-        const updatesRequests$ = [];
-        this.results.forEach((lightCard, index) => {
-            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID, isAdminModeChecked));
-        });
-
-        Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
-            this.loadingInProgress = false;
-            this.changeDetector.markForCheck();
-        });
-    }
-
     private fetchUpdatesByCardId(
-        lightCard: LightCard,
+        lightCard: ArchivedLightCard,
         index: number,
         requestID: number,
         isAdminModeChecked: boolean
@@ -294,7 +263,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.updatesByCardId.splice(index, 1, {
                             mostRecent: lightCard,
                             cardHistories: page.content,
-                            displayHistory: false,
+                            displayHistory: true,
                             tooManyRows: page.totalPages > 1
                         });
                 }
@@ -308,8 +277,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         });
     }
 
-    displayHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {
-        card.displayHistory = true;
+    displayHistoryOfACard(
+        card: {mostRecent: ArchivedLightCard; cardHistories: LightCard[]; displayHistory: boolean},
+        index: number
+    ) {
+        if (!card.cardHistories.length) {
+            const requestID = new Date().valueOf();
+            this.lastRequestID = requestID;
+            const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
+            this.fetchUpdatesByCardId(card.mostRecent, index, requestID, isAdminModeChecked).subscribe((res) => {
+                card.displayHistory = true;
+                this.changeDetector.markForCheck();
+            });
+        } else card.displayHistory = true;
     }
 
     hideHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {

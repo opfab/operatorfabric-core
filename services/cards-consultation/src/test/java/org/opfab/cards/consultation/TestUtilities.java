@@ -13,6 +13,8 @@ package org.opfab.cards.consultation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import org.bson.Document;
 import org.opfab.cards.consultation.model.*;
 import org.springframework.data.domain.Page;
 
@@ -266,10 +268,10 @@ public class TestUtilities {
     }
 
 
-    public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
+    public static boolean checkIfCardActiveInRange(Document card, Instant rangeStart, Instant rangeEnd) {
 
-        Instant cardStart = card.getStartDate();
-        Instant cardEnd = card.getEndDate();
+        Instant cardStart = card.getDate("startDate") != null ? card.getDate("startDate").toInstant() : null;
+        Instant cardEnd = card.getDate("endDate") != null ? card.getDate("endDate").toInstant() : null;
 
         boolean result = true;
 
@@ -289,7 +291,7 @@ public class TestUtilities {
         return result;
     }
 
-    public static boolean checkIfPageIsSorted(Page<LightCard> page) {
+    public static boolean checkIfPageIsSorted(Page<Document> page) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -297,7 +299,7 @@ public class TestUtilities {
             return true;
         } else {
             for (int i = 1; i < page.getContent().size(); i++) {
-                if (page.getContent().get(i - 1).getPublishDate().isBefore(page.getContent().get(i).getPublishDate())) {
+                if (page.getContent().get(i - 1).getDate("publishDate").before(page.getContent().get(i).getDate("publishDate"))) {
                     return false;
                 }
             }
@@ -305,7 +307,7 @@ public class TestUtilities {
         }
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCard> page, Predicate<LightCard> criteria) {
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<Document> page, Predicate<Document> criteria) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;

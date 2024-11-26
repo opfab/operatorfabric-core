@@ -186,7 +186,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		"userRecipients",
 		"groupRecipients",
 	};
-        Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
+        Aggregation agg = newAggregation( this.getFilterOperations(filter, pageableRequest, fields));
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
 
         if (pageableRequest.isPaged()) {

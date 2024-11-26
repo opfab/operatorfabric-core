@@ -193,7 +193,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     private Predicate<ArchivedCard> computeCardPredicate() {
-        Predicate<ArchivedCard> predicate = c -> !(c.id()==null);
+        Predicate<ArchivedCard> predicate = c -> c.id() != null;
         predicate = predicate.and(c -> firstPublisher.equals(c.publisher()));
         predicate = predicate.and(c -> c.userRecipients().contains(login1));
         predicate = predicate.and(c -> c.groupRecipients().contains("rte"));
@@ -263,10 +263,10 @@ public class ArchivedCardRepositoryShould {
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(2);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent().get(0).getPublisher()).isEqualTo(businessconfigPublisher);
-                    assertThat(page.getContent().get(0).getProcessInstanceId()).isEqualTo("PROCESS1");
-                    assertThat(page.getContent().get(1).getPublisher()).isEqualTo(secondPublisher);
-                    assertThat(page.getContent().get(1).getProcessInstanceId()).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(0).getString("publisher")).isEqualTo(businessconfigPublisher);
+                    assertThat(page.getContent().get(0).getString("processInstanceId")).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(1).getString("publisher")).isEqualTo(secondPublisher);
+                    assertThat(page.getContent().get(1).getString("processInstanceId")).isEqualTo("PROCESS1");
                 })
                 .expectComplete()
                 .verify();
@@ -326,7 +326,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(start)>=0)&&(card.getPublishDate().compareTo(end)<=0))
+                            card -> (card.getDate("publishDate").toInstant().compareTo(start)>=0)&&(card.getDate("publishDate").toInstant().compareTo(end)<=0))
                     );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -358,7 +358,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(start) >= 0))
+                            card -> (card.getDate("publishDate").toInstant().compareTo(start) >= 0))
                     );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -390,7 +390,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(end) <= 0))
+                            card -> (card.getDate("publishDate").toInstant().compareTo(end) <= 0))
                     );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -618,7 +618,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getPublishDate().isAfter(now))
+                            card -> card.getDate("publishDate").toInstant().isAfter(now))
                     );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -648,7 +648,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getPublishDate().isBefore(now))
+                            card -> card.getDate("publishDate").toInstant().isBefore(now))
                     );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -677,7 +677,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getProcessInstanceId().compareTo("PROCESS3") < 0));
+                            card -> card.getString("processInstanceId").compareTo("PROCESS3") < 0));
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -705,7 +705,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getProcessInstanceId().compareTo("PROCESS2") > 0));
+                            card -> card.getString("processInstanceId").compareTo("PROCESS2") > 0));
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -753,9 +753,9 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublisher().equals(firstPublisher)
+                            card -> (card.getString("publisher").equals(firstPublisher)
                                     &&checkIfCardActiveInRange(card, start, end)
-                                    &&card.getPublishDate().compareTo(publishTo)<=0)
+                                    &&card.getDate("publishDate").toInstant().compareTo(publishTo)<=0)
                             )
                     );
                     //Check sort order

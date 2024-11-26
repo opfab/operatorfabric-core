@@ -197,8 +197,6 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         List<Criteria> criteria = getCriteria(filter, currentUserWithPerimeters, isAdminMode, isAdminModeForUserPerimeters);
 
-        boolean latestUpdateOnly = filter.latestUpdateOnly();
-
         List<AggregationOperation> operations = new ArrayList<>(Arrays.asList(
                 match(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()]))),
 
@@ -209,13 +207,6 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                 project(fields),
                 sort(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)))));
 
-        if (latestUpdateOnly) {
-            operations.add(
-                    group(PROCESS_FIELD, PROCESS_INSTANCE_ID_FIELD).first(Aggregation.ROOT).as(LATEST_UPDATE_ONLY));
-            operations.add(project(LATEST_UPDATE_ONLY).andExclude("_id"));
-            operations.add(sort(Sort.by(Sort.Order.desc(LATEST_UPDATE_ONLY + "." + PUBLISH_DATE_FIELD))));
-
-        }
         if ((pageableRequest != null) && (pageableRequest.isPaged())) {
             operations.add(skip(((long) pageableRequest.getPageNumber()) * pageableRequest.getPageSize()));
             operations.add(limit(pageableRequest.getPageSize()));
