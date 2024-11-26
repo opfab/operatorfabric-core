@@ -17,22 +17,8 @@ export function initNavigateAPI() {
             RouterService.navigateTo('feed/cards/' + cardId);
         },
 
-        redirectToBusinessMenu: function (menuId, urlExtension) {
-            const urlSplit = document.location.href.split('#');
-            // WARNING : HACK
-            //
-            // When user makes a reload (for example via F5) or use a bookmark link, the browser encodes what is after #
-            // if user makes a second reload, the browser encodes again the encoded link
-            // and after if user reload again, this time it is not encoded anymore by the browser
-            // So it ends up with 3 possible links: a none encoded link, an encoded link or a twice encoding link
-            // and we have no way to know which one it is when processing the url
-            //
-            // To solve the problem we encode two times the url before giving it to the browser
-            // so we always have a unique case : a double encoded url
-            let newUrl = urlSplit[0] + '#/businessconfigparty/' + encodeURIComponent(encodeURIComponent(menuId)) + '/';
-
-            if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
-            document.location.href = newUrl;
+        redirectToBusinessMenu: function (menuId: string, urlExtension: string) {
+            RouterService.redirectToBusinessMenu(menuId, urlExtension);
         }
     };
 
