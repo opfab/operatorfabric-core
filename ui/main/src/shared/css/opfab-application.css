@@ -130,7 +130,7 @@
     --opfab-navbar-color-active: black;
     --opfab-navbar-dropdown-menu-border-color: #ccc;
     --opfab-navbar-info-block-color: rgb(0 0 0 / 90%);
-    --opfab-navbar-right-menu-bgcolor: #F3F2F1;
+    --opfab-navbar-right-menu-bgcolor: #f3f2f1;
     --opfab-timeline-cardlink: #212529;
     --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
     --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
@@ -202,8 +202,6 @@ body {
     font-family: var(--opfab-font-family);
     font-size: 13px;
 }
-
-
 
 /* SELECT FIELD STYLE */
 
@@ -281,7 +279,7 @@ body {
     filter: none;
 }
 
-.opfab-input{
+.opfab-input {
     box-sizing: border-box;
     position: relative;
     color: var(--opfab-input-text-color);
@@ -325,7 +323,6 @@ body {
 }
 
 /* CHECKBOX */
-
 
 /* The opfab-checkbox */
 .opfab-checkbox {
@@ -455,14 +452,12 @@ input:-webkit-autofill {
     -webkit-text-fill-color: var(--opfab-input-text-color) !important;
 }
 
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
 }
-
 
 /* TEXTAREA FIELD STYLE */
 
@@ -569,8 +564,6 @@ input:-webkit-autofill:active {
     background-color: var(--opfab-bgcolor-darker);
 }
 
-
-
 /* VIRTUAL MULTI SELECT */
 
 .opfab-multiselect {
@@ -619,6 +612,15 @@ input:-webkit-autofill:active {
     z-index: 1;
     font-family: var(--opfab-font-family);
     font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+/* show all tags text when mouse go over the tag */
+.vscomp-wrapper.show-value-as-tags :hover {
+    max-width: none;
 }
 
 /* Cross to remove tag */
@@ -812,7 +814,7 @@ input:-webkit-autofill:active {
 }
 
 .opfab-tooltip-content::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -821,12 +823,10 @@ input:-webkit-autofill:active {
     /* vertically center */
     top: 50%;
     transform: translateY(-50%);
-  
 
     /* the arrow */
     border: 10px solid var(--opfab-tooltip-template-bgcolor);
     border-color: transparent var(--opfab-tooltip-template-bgcolor) transparent transparent;
-
 }
 
 .opfab-tooltip-content.left {
@@ -854,11 +854,11 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.left::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -872,7 +872,6 @@ input:-webkit-autofill:active {
     /* the arrow */
     border: 10px solid var(--opfab-tooltip-template-bgcolor);
     border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor);
-
 }
 
 .opfab-tooltip-content.top {
@@ -900,11 +899,11 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.top::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -946,7 +945,7 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.bottom::after {
@@ -967,7 +966,7 @@ input:-webkit-autofill:active {
 
     /* the arrow */
     border: 10px solid var(--opfab-tooltip-template-bgcolor);
-    border-color:  transparent transparent var(--opfab-tooltip-template-bgcolor) transparent;
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor) transparent;
 }
 
 .opfab-form-lighter .opfab-tooltip-content {
@@ -1014,7 +1013,6 @@ input:-webkit-autofill:active {
     opacity: 1;
 }
 
-
 .opfab-badge {
     color: white;
     font-size: 0.75em;
@@ -1022,12 +1020,11 @@ input:-webkit-autofill:active {
     line-height: 1;
     text-align: center;
     border-radius: 0.375rem;
-    padding : 0.35em 0.65em;
+    padding: 0.35em 0.65em;
     vertical-align: baseline;
     white-space: nowrap;
     display: inline-block;
 }
-
 
 .opfab-rounded-badge {
     color: white;
@@ -1036,7 +1033,7 @@ input:-webkit-autofill:active {
     line-height: 1;
     text-align: center;
     border-radius: 50rem;
-    padding : 0.35em 0.65em;
+    padding: 0.35em 0.65em;
     vertical-align: baseline;
     white-space: nowrap;
     display: inline-block;
