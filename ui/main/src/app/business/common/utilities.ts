@@ -12,6 +12,20 @@ import {Observable, catchError, forkJoin, of, take} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 
 export class Utilities {
+    public static convertSpacesAndNewLinesInHTML(txt: string): string {
+        return txt.replace(/\n/g, '<br/>').replace(/\s\s/g, '&nbsp;&nbsp;');
+    }
+
+    public static escapeHtml(html: string): string {
+        if (!html) return html;
+        return html
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     public static getI18nPrefixFromProcess(process: Process): string {
         return process.id + '.' + process.version + '.';
     }

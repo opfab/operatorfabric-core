@@ -7,24 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {Utilities} from 'app/business/common/utilities';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 
 declare const opfab: any;
 
 export function initUtilsAPI(translationService: TranslationService) {
     opfab.utils = {
-        escapeHtml: function (htmlStr) {
-            if (!htmlStr) return htmlStr;
-            return htmlStr
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+        escapeHtml: function (html: string) {
+            return Utilities.escapeHtml(html);
         },
 
-        convertSpacesAndNewLinesInHTML: function (txt) {
-            return txt.replace(/\n/g, '<br/>').replace(/\s\s/g, '&nbsp;&nbsp;');
+        convertSpacesAndNewLinesInHTML: function (txt: string) {
+            return Utilities.convertSpacesAndNewLinesInHTML(txt);
         },
 
         getTranslation: function (key, params) {
