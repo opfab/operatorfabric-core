@@ -32,6 +32,8 @@ task runPrettier(type:NpmTask) {
     inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
+    inputs.file('.prettierrc.json')
+    inputs.file('.prettierignore')
     outputs.dir('build')
     args = ['run','prettier']
 
