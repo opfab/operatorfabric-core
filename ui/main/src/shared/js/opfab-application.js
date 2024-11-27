@@ -7,19 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 const opfabStyle = {
-
-    setOpfabTheme:  function(theme) {
-        const body = document.getElementsByTagName("body");
+    setOpfabTheme: function (theme) {
+        const body = document.getElementsByTagName('body');
         body[0].setAttribute('opfab-theme', theme);
     },
 
-    DAY_THEME : "DAY",
-    NIGHT_THEME : "NIGHT"
-
-}
-
-
-
+    DAY_THEME: 'DAY',
+    NIGHT_THEME: 'NIGHT'
+};
