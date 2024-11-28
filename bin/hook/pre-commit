@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Copyright (c) 2024, RTE (http://www.rte-france.com)
+# See AUTHORS.txt
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# SPDX-License-Identifier: MPL-2.0
+# This file is part of the OperatorFabric project.
+ 
+
+# This file needs to be placed in operatorfabric-core/git/hooks/pre-commit
+# This file has no extension and should stay as plain text
+
+# Script to handle the years in the copyrights.
+
+current_year=$(date +"%Y")
+
+year_regex="([0-9]{4})(-[0-9]{4})?"
+
+modified_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.java$|\.ts$|\.html$|\.scss$|\.css$|\.adoc$')
+
+for file in $modified_files; do
+  # Check if the file contains the copyright header
+  if grep -q "Copyright (c)" "$file"; then
+    # Check if the header has a single year equal to the current year (e.g., 2024)
+    if grep -qE "Copyright \(c\) $current_year, RTE \(" "$file"; then
+      continue
+    fi
+
+    # Check if the header already has a year range (e.g., 2018-2023)
+    if grep -qE "Copyright \(c\) $year_regex, RTE \(" "$file"; then
+      # Replace the second year in the range with the current year (e.g., 2018-2023 becomes 2018-2024)
+      sed -i -E "s/Copyright \(c\) ([0-9]{4})(-[0-9]{4})?, RTE \(/Copyright \(c\) \1-$current_year, RTE \(/" "$file"
+    else
+      # If there's no year range, convert the single year to a range (e.g., 2023 becomes 2023-2024)
+      sed -i -E "s/Copyright \(c\) ([0-9]{4}), RTE \(/Copyright \(c\) \1-$current_year, RTE \(/" "$file"
+    fi
+  fi
+
+  # Add the file to the staging area after the modification
+  git add "$file"
+done

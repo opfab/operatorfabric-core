@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -48,4 +48,11 @@ instance).
 |===
 
 +++ </div></details> +++
+
+== Hooks
+
+For copyright and licensing compliance, the CI checks in a PR if the modified files include the correct year in the copyright. 
+To automate this task, a git hook is available in *bin/hook/pre-commit*. This file is to be placed in *operatorfabric-core/.git/hooks/*
+Don't forget to change the permission of the file with *chmod +x .git/hooks/pre-commit* 
+Set the monitored file extensions and company name approprietly.
 
