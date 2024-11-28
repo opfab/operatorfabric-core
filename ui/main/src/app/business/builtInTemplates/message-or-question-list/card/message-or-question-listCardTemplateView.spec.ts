@@ -7,11 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {Card} from '@ofModel/card.model';
 import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
 import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 describe('MessageOrQuestionList Card template', () => {
     let view: MessageOrQuestionListCardTemplateView;
@@ -25,19 +26,19 @@ describe('MessageOrQuestionList Card template', () => {
     });
 
     it('GIVEN a card WHEN get title and message THEN title and message are provided', () => {
-        CurrentCardAPI.currentCard.card = {data: {title: 'My title', richMessage: 'My message'}};
+        CardTemplateGateway.setCard({data: {title: 'My title', richMessage: 'My message'}} as Card);
         expect(view.getTitle()).toEqual('My title');
         expect(view.getRichMessage()).toEqual('My message');
     });
 
     it('GIVEN a card WHEN get title with a HTML tag THEN title is provided with HTML tag escaped', () => {
-        CurrentCardAPI.currentCard.card = {data: {title: 'My title <script>'}};
+        CardTemplateGateway.setCard({data: {title: 'My title <script>'}} as Card);
         expect(view.getTitle()).toEqual('My title &lt;script&gt;');
     });
 
     it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = false;
-        CurrentCardAPI.currentCard.card = {data: {question: true}};
+        CardTemplateGateway.setUserAllowedToRespond(false);
+        CardTemplateGateway.setCard({data: {question: true}} as Card);
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
@@ -48,32 +49,31 @@ describe('MessageOrQuestionList Card template', () => {
             return [true, 'my response'];
         });
 
-        const userResponse = CurrentCardAPI.templateInterface.getUserResponse();
+        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCardData.comment).toEqual('my response');
         expect(userResponse.responseCardData.agreement).toEqual(true);
     });
 
     it('Given a question card WHEN user card is locked THEN response input is hidden', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = true;
-        CurrentCardAPI.currentCard.card = {data: {question: true}};
+        CardTemplateGateway.setUserAllowedToRespond(true);
+        CardTemplateGateway.setCard({data: {question: true}} as Card);
 
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
 
-        CurrentCardAPI.templateInterface.lockAnswer();
+        CardTemplateGateway.sendResponseLockToTemplate();
 
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a question card WHEN user card is unlocked THEN response input is visible', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = true;
-        CurrentCardAPI.currentCard.card = {data: {question: true}};
+        CardTemplateGateway.setUserAllowedToRespond(true);
+        CardTemplateGateway.setCard({data: {question: true}} as Card);
 
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
-
-        CurrentCardAPI.templateInterface.unlockAnswer();
+        CardTemplateGateway.sendResponseUnlockToTemplate();
 
         expect(inputFieldVisibility).toBeTrue();
     });
@@ -96,7 +96,8 @@ describe('MessageOrQuestionList Card template', () => {
             responsesResult = responses;
         });
 
-        CurrentCardAPI.templateInterface.setChildCards(childcards);
+        CardTemplateGateway.setChildCards(childcards as Card[]);
+        CardTemplateGateway.sendChildCardsToTemplate();
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].comment).toEqual('my response 1');
         expect(responsesResult[0].agreement).toEqual(true);
@@ -118,8 +119,8 @@ describe('MessageOrQuestionList Card template', () => {
         view.listenToResponses((responses) => {
             responsesResult = responses;
         });
-
-        CurrentCardAPI.templateInterface.setChildCards(childcards);
+        CardTemplateGateway.setChildCards(childcards as Card[]);
+        CardTemplateGateway.sendChildCardsToTemplate();
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].comment).toEqual('my response &lt;script&gt;');
         expect(responsesResult[0].agreement).toEqual(true);

@@ -8,9 +8,10 @@
  */
 
 import {MessageOrQuestionListUserCardTemplateView} from './message-or-question-listUserCardTemplateView';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
 import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
+import {Card} from '@ofModel/card.model';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 class QuillEditorMock {
     contents: string;
@@ -53,7 +54,7 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user edit card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
+        CardTemplateGateway.setCard({data: {richMessage: 'My message', summary: 'My summary'}} as Card);
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });
@@ -61,7 +62,7 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card with an HTML tag in  message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message <script>'}};
+        CardTemplateGateway.setCard({data: {richMessage: 'My message <script>'}} as Card);
         expect(view.getRichMessage()).toEqual('My message &lt;script&gt;');
     });
 
@@ -78,7 +79,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         view.messageOrQuestionList = messageOrQuestionList;
 
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
+        CardTemplateGateway.setCard({data: {id: 'id2', richMessage: 'message2'}} as Card);
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
@@ -96,7 +97,7 @@ describe('MessageOrQuestionList UserCard template', () => {
         view.messageOrQuestionList = messageOrQuestionList;
 
         CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
-        CurrentCardAPI.currentCard.card = {data: {id: 'id2', richMessage: 'message2'}};
+        CardTemplateGateway.setCard({data: {id: 'id2', richMessage: 'message2'}} as Card);
         view.setSelectedEmitter('ENTITY1_FR');
         expect(view.getInitialSelectedOption()).toEqual('id2');
     });
@@ -104,7 +105,7 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN an existing card WHEN user copy card THEN message/summary are actual message/summary', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
-        CurrentCardAPI.currentCard.card = {data: {richMessage: 'My message', summary: 'My summary'}};
+        CardTemplateGateway.setCard({data: {richMessage: 'My message', summary: 'My summary'}} as Card);
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getSummary()).toEqual('My summary');
     });

@@ -24,7 +24,6 @@ export class OpfabAPI {
     private static initAPIDone = false;
 
     public static init() {
-        CurrentCardAPI.initCurrentCard();
         CurrentUserCardAPI.initCurrentUserCard();
     }
 

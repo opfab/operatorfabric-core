@@ -9,9 +9,10 @@
 
 import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
 import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
+import {Card} from '@ofModel/card.model';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;
@@ -22,7 +23,7 @@ describe('Message UserCard template', () => {
     });
 
     function mockGetCard(message: string, title: string) {
-        CurrentCardAPI.currentCard.card = {data: {richMessage: message, messageTitle: title}};
+        CardTemplateGateway.setCard({data: {richMessage: message, messageTitle: title}} as Card);
     }
 
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {

@@ -9,9 +9,10 @@
 
 import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
 import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {Card} from '@ofModel/card.model';
 
 describe('Task UserCard Template View', () => {
     beforeEach(() => {
@@ -21,14 +22,14 @@ describe('Task UserCard Template View', () => {
     it('GIVEN a user WHEN create card THEN task title is empty', () => {
         const view = new TaskUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
-        CurrentCardAPI.currentCard.card = {data: {taskTitle: 'My task Title'}};
+        CardTemplateGateway.setCard({data: {taskTitle: 'My task Title'}} as Card);
         expect(view.getTaskTitle()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
-        CurrentCardAPI.currentCard.card = {data: {richTaskDescription: 'My task Description'}};
+        CardTemplateGateway.setCard({data: {richTaskDescription: 'My task Description'}} as Card);
         expect(view.getTaskDescription()).toEqual('');
     });
 
@@ -75,7 +76,7 @@ describe('Task UserCard Template View', () => {
     it('GIVEN an existing card WHEN user edit card THEN card data is current card data', () => {
         const view = new TaskUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
@@ -92,7 +93,7 @@ describe('Task UserCard Template View', () => {
                 bysetpos: [],
                 bymonthday: []
             }
-        };
+        } as unknown as Card);
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
@@ -108,7 +109,7 @@ describe('Task UserCard Template View', () => {
     it('GIVEN an existing card WHEN user copy card THEN data is current card data', () => {
         const view = new TaskUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description',
@@ -124,7 +125,7 @@ describe('Task UserCard Template View', () => {
                 bysetpos: [],
                 bymonthday: []
             }
-        };
+        } as Card);
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getFrequency()).toEqual('DAILY');
@@ -140,7 +141,7 @@ describe('Task UserCard Template View', () => {
     it('GIVEN an existing card with taskDescription and not richTaskDescription WHEN user edit card THEN task description has rich text format', () => {
         const view = new TaskUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
                 taskDescription: 'My task Description',
@@ -156,7 +157,7 @@ describe('Task UserCard Template View', () => {
                 bysetpos: [],
                 bymonthday: []
             }
-        };
+        } as Card);
         expect(view.getTaskDescription()).toEqual(
             '{&quot;ops&quot;:[{&quot;insert&quot;:&quot;My task Description&quot;}]}'
         );

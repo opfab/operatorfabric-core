@@ -8,8 +8,9 @@
  */
 
 import {TaskCardTemplateView} from './taskCardTemplateView';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
 import {initOpfabAPI} from '@tests/helpers';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {Card} from '@ofModel/card.model';
 
 describe('Task Card Template View', () => {
     let view: TaskCardTemplateView;
@@ -19,7 +20,7 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card WHEN get data THEN data is provided', () => {
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
                 richTaskDescription: 'My task Description'
@@ -29,7 +30,7 @@ describe('Task Card Template View', () => {
                 byminute: [15],
                 durationInMinutes: 15
             }
-        };
+        } as Card);
         expect(view.getTaskTitle()).toEqual('My task Title');
         expect(view.getTaskDescription()).toEqual('My task Description');
         expect(view.getHourAndMinutes()).toEqual('05:15');
@@ -37,7 +38,7 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card taskDescription and not richTaskDescription WHEN get data THEN task description has rich text format', () => {
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
                 taskDescription: 'My task Description'
@@ -47,14 +48,14 @@ describe('Task Card Template View', () => {
                 byminute: [15],
                 durationInMinutes: 15
             }
-        };
+        } as Card);
         expect(view.getTaskDescription()).toEqual(
             '{&quot;ops&quot;:[{&quot;insert&quot;:&quot;My task Description&quot;}]}'
         );
     });
 
     it('GIVEN a card WHEN filling content THEN text is correct', () => {
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             data: {},
             rRule: {
                 freq: 'MONTHLY',
@@ -63,7 +64,7 @@ describe('Task Card Template View', () => {
                 bymonthday: [1],
                 bymonth: [1]
             }
-        };
+        } as Card);
         const text = view.getTexts();
         expect(text.textForBySetPos).toEqual(
             'Translation (en) of builtInTemplate.taskCard.the Translation (en) of builtInTemplate.taskCard.first '
@@ -78,14 +79,14 @@ describe('Task Card Template View', () => {
     });
 
     it('GIVEN a card without recurrence WHEN get data THEN data is provided', () => {
-        CurrentCardAPI.currentCard.card = {
+        CardTemplateGateway.setCard({
             startDate: new Date('2025-02-28T09:15:00').getTime(),
             data: {
                 taskTitle: 'My task Title for my non-recurrent card',
                 richTaskDescription: 'My task Description for my non-recurrent card',
                 durationInMinutes: 15
             }
-        };
+        } as Card);
         expect(view.getTaskTitle()).toEqual('My task Title for my non-recurrent card');
         expect(view.getTaskDescription()).toEqual('My task Description for my non-recurrent card');
         expect(view.getDateForCardWithoutRecurrence()).toEqual(

@@ -50,7 +50,7 @@ import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/business/services/config.service';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({
     selector: 'of-card-body',
@@ -176,10 +176,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
-            CurrentCardAPI.currentCard.childCards = this.childCards;
-            CurrentCardAPI.currentCard.applyChildCards();
+            CardTemplateGateway.setChildCards(this.childCards);
+            CardTemplateGateway.sendChildCardsToTemplate();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
-            if (this.isResponseLocked) CurrentCardAPI.templateInterface.lockAnswer();
+            if (this.isResponseLocked) CardTemplateGateway.sendResponseLockToTemplate();
         });
     }
 
@@ -197,22 +197,22 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.lockResponseIfOneUserEntityHasAlreadyRespond();
-        CurrentCardAPI.currentCard.isResponseLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) CurrentCardAPI.templateInterface.unlockAnswer();
-        CurrentCardAPI.currentCard.childCards = this.childCards;
-        CurrentCardAPI.currentCard.applyChildCards();
+        CardTemplateGateway.setResponseLocked(this.isResponseLocked);
+        if (!this.isResponseLocked) CardTemplateGateway.sendResponseUnlockToTemplate();
+        CardTemplateGateway.setChildCards(this.childCards);
+        CardTemplateGateway.sendChildCardsToTemplate();
     }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
-        CurrentCardAPI.templateInterface.unlockAnswer();
+        CardTemplateGateway.sendResponseUnlockToTemplate();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
             if (changes.card) {
                 this.computeCardHasBeenRead();
-                CurrentCardAPI.currentCard.card = this.card;
+                CardTemplateGateway.setCard(this.card);
             }
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
@@ -335,19 +335,19 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        this.setOpfabApiVariables();
+        this.setCardTemplateGatewayCardInformation();
         this.stopRegularlyCheckLttd();
     }
 
-    private setOpfabApiVariables() {
-        CurrentCardAPI.currentCard.childCards = this.childCards;
-        CurrentCardAPI.currentCard.isResponseLocked = this.isResponseLocked;
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
-        CurrentCardAPI.currentCard.entitiesAllowedToRespond =
-            this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        CurrentCardAPI.currentCard.isUserMemberOfAnEntityRequiredToRespond =
-            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        CurrentCardAPI.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
+    private setCardTemplateGatewayCardInformation() {
+        CardTemplateGateway.setChildCards(this.childCards);
+        CardTemplateGateway.setResponseLocked(this.isResponseLocked);
+        CardTemplateGateway.setUserAllowedToRespond(this.isUserEnabledToRespond);
+        CardTemplateGateway.setEntitiesAllowedToRespond(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+        CardTemplateGateway.setUserMemberOfAnEntityRequiredToRespond(
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards
+        );
+        CardTemplateGateway.setEntitiesUsableForUserResponse(this.userEntityIdsPossibleForResponse);
     }
 
     private stopRegularlyCheckLttd() {
@@ -356,7 +356,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public afterTemplateRendering() {
-        if (this.isResponseLocked) CurrentCardAPI.templateInterface.lockAnswer();
+        if (this.isResponseLocked) CardTemplateGateway.sendResponseLockToTemplate();
         this.startRegularlyCheckLttd();
     }
 
@@ -369,7 +369,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
             if (this.isLttdExpired()) {
                 this.lttdExpiredIsTrue = true;
-                CurrentCardAPI.templateInterface.setLttdExpired(true);
+                CardTemplateGateway.sendLttdExpiredToTemplate(true);
             } else setTimeout(() => this.regularlyCheckLttd(), 500);
         }
     }

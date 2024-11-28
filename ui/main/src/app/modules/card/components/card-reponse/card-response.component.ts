@@ -30,7 +30,7 @@ import {NotificationDecision} from 'app/business/services/notifications/notifica
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 class FormResult {
     valid: boolean;
@@ -145,7 +145,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        const responseData: FormResult = CurrentCardAPI.templateInterface.getUserResponse();
+        const responseData: FormResult = CardTemplateGateway.getUserResponseFromTemplate(undefined);
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
@@ -158,7 +158,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = CurrentCardAPI.templateInterface.getUserResponse(
+        const responseData: FormResult = CardTemplateGateway.getUserResponseFromTemplate(
             this.userEntityIdToUseForResponse
         );
 
@@ -206,7 +206,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                     logger.error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage);
                 } else {
                     this.isResponseLocked = true;
-                    CurrentCardAPI.templateInterface.lockAnswer();
+                    CardTemplateGateway.sendResponseLockToTemplate();
                     this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 }
             });

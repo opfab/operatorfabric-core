@@ -12,6 +12,10 @@ import {Observable, catchError, forkJoin, of, take} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 
 export class Utilities {
+    public static cloneObj(obj: object) {
+        return obj ? JSON.parse(JSON.stringify(obj)) : undefined;
+    }
+
     public static convertSpacesAndNewLinesInHTML(txt: string): string {
         return txt.replace(/\n/g, '<br/>').replace(/\s\s/g, '&nbsp;&nbsp;');
     }

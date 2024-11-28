@@ -21,7 +21,7 @@ import {LoggerService} from 'app/business/services/logs/logger.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {TemplateRenderingComponent} from '../template-rendering/template-rendering.component';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -50,7 +50,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        CurrentCardAPI.currentCard.card = this.card;
+        CardTemplateGateway.setCard(this.card);
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }
@@ -89,14 +89,15 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        CurrentCardAPI.currentCard.isUserMemberOfAnEntityRequiredToRespond =
-            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        CurrentCardAPI.currentCard.childCards = this.childCards ? this.childCards : [];
+        CardTemplateGateway.setUserMemberOfAnEntityRequiredToRespond(
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards
+        );
+        CardTemplateGateway.setChildCards(this.childCards ? this.childCards : []);
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            CurrentCardAPI.templateInterface.lockAnswer();
+            CardTemplateGateway.sendResponseLockToTemplate();
         }
     }
 

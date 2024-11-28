@@ -11,7 +11,8 @@ import {QuestionCardTemplateView} from './questionCardTemplateView';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
 import {RolesEnum} from '@ofModel/roles.model';
 import {Entity} from '@ofModel/entity.model';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {Card} from '@ofModel/card.model';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 describe('Question Card template', () => {
     let view: QuestionCardTemplateView;
@@ -32,43 +33,41 @@ describe('Question Card template', () => {
     });
 
     it('GIVEN a card WHEN get question THEN question is provided', () => {
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question');
     });
 
     it('GIVEN a card WHEN get question with new line THEN question is provided with <br> tag', () => {
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question \n question'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question \n question'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question <br/> question');
     });
 
     it('GIVEN a card WHEN get question with an HTML tag THEN question is provided with the HTML tag escape', () => {
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question <script> question'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question <script> question'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question &lt;script&gt; question');
     });
 
     it('Given a card WHEN user is not allowed to answer THEN response input is hidden', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = false;
+        CardTemplateGateway.setUserAllowedToRespond(false);
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a card WHEN user card is locked THEN response input is hidden', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = false;
+        CardTemplateGateway.setUserAllowedToRespond(false);
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
-
-        CurrentCardAPI.templateInterface.lockAnswer();
+        CardTemplateGateway.sendResponseLockToTemplate();
 
         expect(inputFieldVisibility).toBeFalse();
     });
 
     it('Given a card WHEN user card is unlocked THEN response input is visible', () => {
-        CurrentCardAPI.currentCard.isUserAllowedToRespond = true;
+        CardTemplateGateway.setUserAllowedToRespond(true);
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
-
-        CurrentCardAPI.templateInterface.unlockAnswer();
+        CardTemplateGateway.sendResponseUnlockToTemplate();
 
         expect(inputFieldVisibility).toBeTrue();
     });
@@ -77,7 +76,7 @@ describe('Question Card template', () => {
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => 'my response', false);
 
-        const userResponse = CurrentCardAPI.templateInterface.getUserResponse();
+        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCardData.responses[0].response).toEqual('my response');
     });
@@ -100,7 +99,8 @@ describe('Question Card template', () => {
             responsesResult = responses;
         });
 
-        CurrentCardAPI.templateInterface.setChildCards(childcards);
+        CardTemplateGateway.setChildCards(childcards as Card[]);
+        CardTemplateGateway.sendChildCardsToTemplate();
         expect(responsesResult[0].entityName).toEqual('entity1 name');
         expect(responsesResult[0].responses).toEqual([
             {responseDate: '01:00 01/01/1970', response: 'response_entity1'}
@@ -123,11 +123,12 @@ describe('Question Card template', () => {
 
         view.listenToResponses((responses) => {});
 
-        CurrentCardAPI.templateInterface.setChildCards(childcards);
+        CardTemplateGateway.setChildCards(childcards as Card[]);
+        CardTemplateGateway.sendChildCardsToTemplate();
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', true);
         jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
-        const userResponse = CurrentCardAPI.templateInterface.getUserResponse('entity1');
+        const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCardData.responses[0].response).toEqual('response_entity1');
@@ -151,12 +152,12 @@ describe('Question Card template', () => {
         ];
 
         view.listenToResponses((responses) => {});
-
-        CurrentCardAPI.templateInterface.setChildCards(childcards);
+        CardTemplateGateway.setChildCards(childcards as Card[]);
+        CardTemplateGateway.sendChildCardsToTemplate();
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', false);
         jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
-        const userResponse = CurrentCardAPI.templateInterface.getUserResponse('entity1');
+        const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCardData.responses.length).toEqual(1);

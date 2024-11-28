@@ -8,9 +8,10 @@
  */
 
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
 import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
+import {Card} from '@ofModel/card.model';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 class QuillEditorMock {
     contents: string;
@@ -36,7 +37,7 @@ describe('Question UserCard template', () => {
     it('GIVEN an existing card WHEN user edit card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question', questionTitle: 'My title'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question');
         expect(view.getTitle()).toEqual('My title');
     });
@@ -44,14 +45,14 @@ describe('Question UserCard template', () => {
     it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
         const view = new QuestionUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question <script>'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question <script>'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question &lt;script&gt;');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN question and title are actual question and title', () => {
         const view = new QuestionUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question', questionTitle: 'My title'}} as Card);
         expect(view.getRichQuestion()).toEqual('My question');
         expect(view.getTitle()).toEqual('My title');
     });
@@ -59,7 +60,7 @@ describe('Question UserCard template', () => {
     it('GIVEN a user WHEN create card THEN title and question are empty', () => {
         const view = new QuestionUserCardTemplateView();
         CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
-        CurrentCardAPI.currentCard.card = {data: {richQuestion: 'My question', questionTitle: 'My title'}};
+        CardTemplateGateway.setCard({data: {richQuestion: 'My question', questionTitle: 'My title'}} as Card);
         expect(view.getRichQuestion()).toEqual('');
         expect(view.getTitle()).toEqual('');
     });

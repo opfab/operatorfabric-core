@@ -39,7 +39,7 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
-import {CurrentCardAPI} from 'app/api/currentcard.api';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({
     selector: 'of-template-rendering',
@@ -87,31 +87,30 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private informTemplateWhenGlobalStyleChange() {
         GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
-            .subscribe(() => CurrentCardAPI.templateInterface.setStyleChange());
+            .subscribe(() => CardTemplateGateway.sendStyleChangeToTemplate());
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.screenSize && this.templateLoaded) CurrentCardAPI.templateInterface.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) CardTemplateGateway.sendScreenSizeToTemplate(this.screenSize);
         else this.render();
     }
 
     private render() {
         this.isLoadingSpinnerToDisplay = false;
-        CurrentCardAPI.initTemplateInterface();
+        CardTemplateGateway.initTemplateFunctions();
         this.enableSpinnerForTemplate();
         this.getUserContextAndRenderTemplate();
     }
 
     private enableSpinnerForTemplate() {
-        const that = this;
-        CurrentCardAPI.currentCard.displayLoadingSpinner = function () {
-            that.isLoadingSpinnerToDisplay = true;
-            that.changeDetector.markForCheck();
-        };
-        CurrentCardAPI.currentCard.hideLoadingSpinner = function () {
-            that.isLoadingSpinnerToDisplay = false;
-            that.changeDetector.markForCheck();
-        };
+        CardTemplateGateway.setFunctionToDisplayLoadingSpinner(() => {
+            this.isLoadingSpinnerToDisplay = true;
+            this.changeDetector.markForCheck();
+        });
+        CardTemplateGateway.setFunctionToHideLoadingSpinner(() => {
+            this.isLoadingSpinnerToDisplay = false;
+            this.changeDetector.markForCheck();
+        });
     }
 
     private getUserContextAndRenderTemplate() {
@@ -134,7 +133,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         if (this.cardState.templateName) {
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
-            CurrentCardAPI.currentCard.displayContext = this.displayContext;
+            CardTemplateGateway.setDisplayContext(this.displayContext);
 
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
@@ -202,9 +201,9 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private callTemplateJsPostRenderingFunctions() {
         if (this.functionToCallAfterRendering) this.functionToCallAfterRendering.call(this.parentComponent);
-        CurrentCardAPI.templateInterface.setScreenSize(this.screenSize);
-        CurrentCardAPI.currentCard.applyChildCards();
-        setTimeout(() => CurrentCardAPI.templateInterface.setTemplateRenderingComplete(), 10);
+        CardTemplateGateway.sendScreenSizeToTemplate(this.screenSize);
+        CardTemplateGateway.sendChildCardsToTemplate();
+        setTimeout(() => CardTemplateGateway.sendTemplateRenderingCompleteToTemplate(), 10);
     }
 
     public ngAfterViewChecked() {
@@ -229,7 +228,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     ngOnDestroy() {
         removeEventListener('resize', this.computeRenderingHeight);
-        CurrentCardAPI.initTemplateInterface();
+        CardTemplateGateway.initTemplateFunctions();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();
     }

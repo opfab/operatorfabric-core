@@ -46,6 +46,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {ProcessStatesMultiSelectOptionsService} from './services/process-states-multi-select-options.service';
 import {RealtimeDomainService} from './services/realtime-domain.service';
 import {NotificationDecision} from './services/notifications/notification-decision';
+import {CardTemplateGateway} from './templateGateway/cardTemplateGateway';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;
@@ -300,6 +301,7 @@ export class ApplicationLoader {
     }
 
     private initOpfabAPI(): void {
+        CardTemplateGateway.init();
         OpfabAPI.init();
         OpfabAPI.initAPI(this.translationService);
     }
