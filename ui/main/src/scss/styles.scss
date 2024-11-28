@@ -13,7 +13,6 @@
 /* stylelint-disable-next-line scss/load-no-partial-leading-underscore */
 @import '../../node_modules/ngx-chips/core/styles/core/_core';
 
-
 body {
     color: #bababa;
     padding: 80px 0 30px;
@@ -28,12 +27,12 @@ body {
 }
 
 * :focus-visible {
-	outline: 0;
-	box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 }
 
 .opfab-col {
-    position:relative;
+    position: relative;
     flex: 1 0 0;
     margin-right: 0.75rem;
     margin-left: 0.75rem;
@@ -54,21 +53,20 @@ body {
     margin-left: -0.75rem;
 }
 
-
- /* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern */
 // Colors for state types
 .opfab-type-of-state-INPROGRESS {
     color: var(--opfab-color-darker-orange);
 }
 
 .opfab-type-of-state-FINISHED {
-    color: var(--opfab-color-green)
+    color: var(--opfab-color-green);
 }
 
 .opfab-type-of-state-CANCELED {
     color: var(--opfab-color-red);
 }
- /* stylelint-enable selector-class-pattern */
+/* stylelint-enable selector-class-pattern */
 
 // CUSTOM SCROLLBAR STYLE
 // for chromium based browser
@@ -126,7 +124,7 @@ body {
     margin-right: 10px;
     margin-top: 10px;
     background: var(--opfab-text-color);
-    mask: url("../assets/images/icons/export-data.svg");
+    mask: url('../assets/images/icons/export-data.svg');
 }
 
 // INPUT FIELD STYLE
@@ -147,7 +145,6 @@ body {
 ::-webkit-calendar-picker-indicator {
     filter: invert(50%); // sets the time picker in gray on google chrome
 }
-
 
 // Pagination component config
 ngb-pagination {
@@ -181,8 +178,6 @@ ngb-pagination {
 .alert-info {
     background-color: var(--opfab-bgcolor);
 }
-
-
 
 // ngbModal configuration
 .modal-fullscreen {
@@ -270,8 +265,8 @@ ngb-pagination {
     }
 }
 
-.opfab-popover{
-    @extend %opfab-popover
+.opfab-popover {
+    @extend %opfab-popover;
 }
 
 .opfab-popover-unclickable {
@@ -282,7 +277,7 @@ ngb-pagination {
 
 .opfab-popover-wide {
     @extend %opfab-popover;
-    
+
     max-width: 100%;
 }
 
@@ -290,8 +285,9 @@ ngb-pagination {
     @extend %opfab-popover;
 
     max-width: 100%;
-    
-    .popover-arrow::after, .popover-arrow::before {
+
+    .popover-arrow::after,
+    .popover-arrow::before {
         left: 150px;
     }
 }
@@ -396,7 +392,7 @@ ngb-pagination {
         }
     }
 
-    // This is a workaround to avoid duplicated bottom border after page change 
+    // This is a workaround to avoid duplicated bottom border after page change
     .ag-sticky-bottom {
         display: none;
     }
@@ -603,7 +599,7 @@ tag-input {
     margin-right: 10px;
     border-width: 0;
     background: var(--opfab-text-color-stronger);
-    mask: url("../assets/images/icons/help.svg");
+    mask: url('../assets/images/icons/help.svg');
 }
 
 // QUILLJS STYLE
@@ -687,3 +683,20 @@ tag-input {
 }
 
 // END QUILLJS TRANSLATION
+
+// CUSTOM STYLE FOR DATE RANGE PICKER
+// The component always has with a white background, some colors need to be overridden
+
+.md-drppicker {
+    min-width: 500px !important;
+}
+
+.md-drppicker .available {
+    color: black;
+}
+
+.md-drppicker td.available:hover {
+    color: black !important;
+}
+
+// END CUSTOM STYLE FOR DATE RANGE PICKER

@@ -22,19 +22,9 @@
             "selectProcessText": "Selecteer een Proces",
             "selectStateText": "Selecteer een Status",
             "selectTagText": "Selecteer een Label",
-            "publishDateFrom": "PUBLICEREN VAN",
-            "publishDateTo": "PUBLICEREN TOT",
-            "activeFrom": "ACTIEF VAN",
-            "activeTo": "ACTIEF TOT",
-            "invalidPublishStartDate": "Datum 'Publiceren van'  is ongeldig.",
-            "invalidPublishEndDate": "Datum 'Publiceren tot' is ongeldig.",
-            "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
-            "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
-            "publishEndDateBeforeStartDate": "'Publiceren tot' moet na 'Publiceren van' liggen.",
-            "activeEndDateBeforeStartDate": "'Actief tot' moet na 'Actief van' liggen.",
-            "invalidFromDate": "Datum 'Van' is ongeldig.",
-            "invalidToDate": "Datum 'Tot' is ongeldig.",
-            "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen."
+            "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen.",
+            "publishDateRange": "PUBLICATIEDATUMBEREIK",
+            "activeDateRange": "ACTIEVE DATUMBEREIK"
         },
         "result": {
             "severity": "ERNST",
@@ -687,27 +677,9 @@
         }
     },
     "datePicker": {
-        "monday": "Ma",
-        "tuesday": "Di",
-        "wednesday": "Wo",
-        "thursday": "Do",
-        "friday": "Vr",
-        "saturday": "Za",
-        "sunday": "Zo",
-        "january": "Jan",
-        "february": "Feb",
-        "march": "Mar",
-        "april": "Apr",
-        "may": "Mei",
-        "june": "Jun",
-        "july": "Jul",
-        "august": "Aug",
-        "september": "Sep",
-        "october": "Okt",
-        "november": "Nov",
-        "december": "Dec",
-        "week": "Week",
-        "placeholder": "JJJJ-MM-DD"
+        "applyLabel": "Toepassen",
+        "daysOfWeek": ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"],
+        "monthNames": ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
     },
     "reloadRequired": {
         "message": "Applicatie herladen vereist. Om te herladen klik ",

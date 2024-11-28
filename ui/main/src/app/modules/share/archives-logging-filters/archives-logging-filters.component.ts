@@ -8,7 +8,6 @@
  */
 
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -23,42 +22,22 @@ import {
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {AbstractControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
-import {MessageLevel} from '@ofModel/message.model';
 
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {sub} from 'date-fns';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../multi-select/multi-select.component';
-
-export enum FilterDateTypes {
-    PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
-    PUBLISH_DATE_TO_PARAM = 'publishDateTo',
-    ACTIVE_FROM_PARAM = 'activeFrom',
-    ACTIVE_TO_PARAM = 'activeTo'
-}
-
-export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
-    let result = false;
-    if (
-        Object.values(enumeration)
-            .map((enumValue) => enumValue.toString())
-            .includes(value)
-    ) {
-        result = true;
-    }
-    return result;
-};
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 @Component({
     selector: 'of-archives-logging-filters',
@@ -66,15 +45,22 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
     styleUrls: ['./archives-logging-filters.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [TranslateModule, NgIf, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgClass]
+    imports: [
+        TranslateModule,
+        NgIf,
+        MultiSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NgClass,
+        NgxDaterangepickerMd
+    ]
 })
-export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
-    @Input() displayPublishDateFilter = true;
     @Output() search = new EventEmitter<string>();
     @Output() resetFormEvent = new EventEmitter<string>();
 
@@ -130,16 +116,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     statesMultiSelectOptionsPerProcesses: Array<MultiSelectOption> = [];
     processesGroups: Map<string, {name: string; processes: string[]}>;
 
-    dateTimeFilterChange = new Subject();
+    defaultPublishMaxDate: Date;
+    defaultPublishMinDate: Date;
 
-    publishMinDate: {year: number; month: number; day: number} = null;
-    publishMaxDate: {year: number; month: number; day: number} = null;
-    activeMinDate: {year: number; month: number; day: number} = null;
-    activeMaxDate: {year: number; month: number; day: number} = null;
+    locale: any = {};
 
-    defaultMinPublishDateStringFormat: string;
-
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private readonly changeDetector: ChangeDetectorRef,
+        private readonly translationService: TranslationService
+    ) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UserService.isCurrentUserAdmin() ||
             UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);
@@ -155,6 +140,13 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             (this.hasCurrentUserRightsToViewAllArchivedCards ||
                 this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
             seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
+
+        this.locale = {
+            format: 'YYYY-MM-DD HH:mm',
+            applyLabel: this.translationService.getTranslation('datePicker.applyLabel'),
+            daysOfWeek: this.translationService.getTranslation('datePicker.daysOfWeek'),
+            monthNames: this.translationService.getTranslation('datePicker.monthNames')
+        };
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -170,15 +162,11 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
 
-        this.dateTimeFilterChange
-            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
-            .subscribe(() => this.setDateFilterBounds());
-
-        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
-    }
-
-    ngAfterViewInit(): void {
-        this.setDateFilterBounds();
+        this.parentForm.controls.publishDateRange.setValue({
+            startDate: this.defaultPublishMinDate,
+            endDate: this.defaultPublishMaxDate
+        });
+        this.parentForm.controls.activeDateRange.setValue(null);
     }
 
     clearMultiFilters() {
@@ -246,7 +234,11 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         );
         this.loadValuesForFilters();
         this.resetFormEvent.emit(null);
-        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
+        this.parentForm.controls.publishDateRange.setValue({
+            startDate: this.defaultPublishMinDate,
+            endDate: this.defaultPublishMaxDate
+        });
+        this.parentForm.controls.activeDateRange.setValue(null);
     }
 
     transformFiltersListToMap = (filters: any): void => {
@@ -255,29 +247,38 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
 
         Object.keys(filters).forEach((key) => {
             const element = filters[key];
-            // if the form element is date
-            if (element) {
-                if (checkElement(FilterDateTypes, key)) {
-                    this.dateFilterToMap(key, element);
-                } else {
-                    if (element.length) {
-                        if (key === 'state') {
-                            this.stateFilterToMap(element);
-                        } else if (key === 'processGroup') {
-                            this.processGroupFilterToMap(element);
-                        } else {
-                            this.otherFilterToMap(element, key);
-                        }
+            switch (key) {
+                case 'state':
+                    this.filterToMap(element, 'processStateKey');
+                    break;
+                case 'processGroup':
+                    this.processGroupFilterToMap(element);
+                    break;
+                case 'publishDateRange':
+                    if (element?.startDate && element?.endDate) {
+                        this.filters.set('publishDateFrom', [Date.parse(element.startDate.toISOString())]);
+                        this.filters.set('publishDateTo', [Date.parse(element.endDate.toISOString())]);
                     }
-                }
+                    break;
+                case 'activeDateRange':
+                    if (element?.startDate && element?.endDate) {
+                        this.filters.set('activeFrom', [Date.parse(element.startDate.toISOString())]);
+                        this.filters.set('activeTo', [Date.parse(element.endDate.toISOString())]);
+                    }
+                    break;
+                default:
+                    this.filterToMap(element, key);
+                    break;
             }
         });
     };
 
-    otherFilterToMap(element: any, key: string) {
+    filterToMap(element: any, key: string) {
         const ids = [];
-        element.forEach((val) => ids.push(val));
-        this.filters.set(key, ids);
+        if (element?.length) {
+            element.forEach((val) => ids.push(val));
+            this.filters.set(key, ids);
+        }
     }
 
     dateFilterToMap(key: string, element: any) {
@@ -297,15 +298,18 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     processGroupFilterToMap(element: any) {
         const ids = [];
 
-        element.forEach((processGroup) => {
-            if (processGroup === '--')
-                this.processesWithoutProcessGroupMultiSelectOptions.forEach((process) => ids.push(process.value));
-            else
-                this.processMultiSelectOptionsPerProcessGroups
-                    .get(processGroup)
-                    .forEach((process) => ids.push(process.value));
-        });
-        if (!this.filters.get('process')) this.filters.set('process', ids);
+        if (element?.length) {
+            element.forEach((processGroup) => {
+                if (processGroup === '--') {
+                    this.processesWithoutProcessGroupMultiSelectOptions.forEach((process) => ids.push(process.value));
+                } else {
+                    this.processMultiSelectOptionsPerProcessGroups
+                        .get(processGroup)
+                        .forEach((process) => ids.push(process.value));
+                }
+            });
+            if (!this.filters.get('process')) this.filters.set('process', ids);
+        }
     }
 
     addProcessesDropdownList(processesDropdownList: any[]): void {
@@ -363,50 +367,35 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     setDefaultPublishDateFilter() {
         const defaultPublishDateInterval = ConfigService.getConfigValue('archive.filters.publishDate.days', 10);
 
-        const min = new Date();
-        const minDate = sub(min, {days: defaultPublishDateInterval});
+        const currentDate = new Date();
+        this.defaultPublishMaxDate = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate(),
+            23,
+            59,
+            59
+        );
 
-        this.defaultMinPublishDateStringFormat =
-            minDate.getFullYear() +
-            '-' +
-            String(minDate.getMonth() + 1).padStart(2, '0') +
-            '-' +
-            String(minDate.getDate()).padStart(2, '0') +
-            'T00:00';
-    }
+        this.defaultPublishMinDate = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate(),
+            0,
+            0,
+            0
+        );
+        this.defaultPublishMinDate = sub(this.defaultPublishMinDate, {days: defaultPublishDateInterval});
 
-    setDateFilterBounds(): void {
-        if (this.parentForm.value.publishDateFrom?.length) {
-            this.publishMinDate = this.parentForm.value.publishDateFrom;
-        }
-
-        if (this.parentForm.value.publishDateTo?.length) {
-            this.publishMaxDate = this.parentForm.value.publishDateTo;
-        } else {
-            this.publishMaxDate = null;
-        }
-
-        if (this.parentForm.value.activeFrom?.length) {
-            this.activeMinDate = this.parentForm.value.activeFrom;
-        } else {
-            this.activeMinDate = null;
-        }
-        if (this.parentForm.value.activeTo?.length) {
-            this.activeMaxDate = this.parentForm.value.activeTo;
-        } else {
-            this.activeMaxDate = null;
-        }
-        this.changeDetector.markForCheck();
-    }
-
-    onDateTimeChange() {
-        this.dateTimeFilterChange.next(null);
+        this.parentForm.controls.publishDateRange.setValue({
+            startDate: this.defaultPublishMinDate,
+            endDate: this.defaultPublishMaxDate
+        });
+        this.parentForm.controls.activeDateRange.setValue(null);
     }
 
     query(): void {
-        if (this.isFormValid()) {
-            this.search.emit(null);
-        }
+        this.search.emit(null);
     }
 
     resetForm() {
@@ -415,96 +404,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processGroupSelected = [];
         this.processSelected = [];
         this.stateSelected = [];
-        this.publishMinDate = null;
-        this.publishMaxDate = null;
-        this.activeMinDate = null;
-        this.activeMaxDate = null;
-        this.parentForm.controls.publishDateFrom.setValue(this.defaultMinPublishDateStringFormat);
-        this.setDateFilterBounds();
+        this.parentForm.controls.publishDateRange.setValue({
+            startDate: this.defaultPublishMinDate,
+            endDate: this.defaultPublishMaxDate
+        });
+        this.parentForm.controls.activeDateRange.setValue(null);
     }
 
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-    }
-
-    private isFormValid(): boolean {
-        return this.areAllDatesWellFormatted() && this.areDatesInCorrectOrder();
-    }
-
-    private areAllDatesWellFormatted(): boolean {
-        const validationResult = this.validateDatesFormat();
-
-        if (!validationResult.areDatesCorrectlyFormatted) {
-            this.displayMessage(validationResult.errorMessageKey, '', MessageLevel.ERROR);
-        }
-
-        return validationResult.areDatesCorrectlyFormatted;
-    }
-
-    private validateDatesFormat(): {areDatesCorrectlyFormatted: boolean; errorMessageKey: string} {
-        if (!this.isDateWellFormatted('publishDateFrom'))
-            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishStartDate'};
-        if (!this.isDateWellFormatted('publishDateTo'))
-            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishEndDate'};
-        if (!this.isDateWellFormatted('activeFrom'))
-            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveStartDate'};
-        if (!this.isDateWellFormatted('activeTo'))
-            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveEndDate'};
-
-        return {areDatesCorrectlyFormatted: true, errorMessageKey: null};
-    }
-
-    private isDateWellFormatted(dateFieldName: string): boolean {
-        const dateControl = this.parentForm.get(dateFieldName);
-        const dateValue = this.extractTime(dateControl);
-        const isFieldEmpty = dateControl.value?.date == null;
-
-        return isFieldEmpty || !isNaN(dateValue);
-    }
-
-    private extractTime(form: AbstractControl) {
-        const val = form.value;
-        if (!val || val === '') {
-            return null;
-        }
-        return Date.parse(val);
-    }
-
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
-    }
-
-    private areDatesInCorrectOrder() {
-        let result = true;
-
-        const publishStart = this.extractTime(this.parentForm.get('publishDateFrom'));
-        const publishEnd = this.extractTime(this.parentForm.get('publishDateTo'));
-
-        if (
-            publishStart != null &&
-            !isNaN(publishStart) &&
-            publishEnd != null &&
-            !isNaN(publishEnd) &&
-            publishStart > publishEnd
-        ) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            result = false;
-        }
-
-        const activeStart = this.extractTime(this.parentForm.get('activeFrom'));
-        const activeEnd = this.extractTime(this.parentForm.get('activeTo'));
-
-        if (
-            activeStart != null &&
-            !isNaN(activeStart) &&
-            activeEnd != null &&
-            !isNaN(activeEnd) &&
-            activeStart > activeEnd
-        ) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            result = false;
-        }
-        return result;
     }
 }

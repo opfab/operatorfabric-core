@@ -72,11 +72,11 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-uid_test_0').should('have.text', singleMenuTitle);
         cy.get('#opfab-navbar-menu-label-menu2').should('have.text', secondMenuTitle);
-    
+
         // Test dropdown menus titles
         cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
         cy.get('#opfab-navbar-menu-dropdown-uid_test_1').should('have.text', firstEntryTitle);
-        cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', secondEntryTitle)
+        cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', secondEntryTitle);
     }
 
     function checkRightMenuStaticEntries(
@@ -121,20 +121,16 @@ describe('Test translations', function () {
         tagLabel,
         processLabel,
         stateLabel,
-        publishFromLabel,
-        publishToLabel,
-        activeFromLabel,
-        activeToLabel
+        publishDateRangeLabel,
+        activeDateRangeLabel
     ) {
         cy.get('#opfab-navbar-menu-archives').should('exist').click();
         checkLabel('#opfab-processGroup', serviceLabel);
         checkLabel('#opfab-tags', tagLabel);
         checkLabel('#opfab-process', processLabel);
         checkLabel('#opfab-state', stateLabel);
-        checkDatePickerLabel('#opfab-publish-date-from', publishFromLabel);
-        checkDatePickerLabel('#opfab-publish-date-to', publishToLabel);
-        checkDatePickerLabel('#opfab-active-from', activeFromLabel);
-        checkDatePickerLabel('#opfab-active-to', activeToLabel);
+        checkDatePickerLabel('#opfab-publish-date-range', publishDateRangeLabel);
+        checkDatePickerLabel('#opfab-active-date-range', activeDateRangeLabel);
     }
 
     function checkArchivesScreenTexts(
@@ -330,16 +326,7 @@ describe('Test translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkArchivesScreenLabels(
-            'SERVICE',
-            'TAGS',
-            'PROCESS',
-            'STATE',
-            'PUBLISH FROM',
-            'PUBLISH TO',
-            'ACTIVE FROM',
-            'ACTIVE TO'
-        );
+        checkArchivesScreenLabels('SERVICE', 'TAGS', 'PROCESS', 'STATE', 'PUBLISH DATE RANGE', 'ACTIVE DATE RANGE');
         checkArchivesScreenTexts(
             'Select a Service',
             'Select a Tag',
@@ -355,10 +342,8 @@ describe('Test translations', function () {
             'ÉTIQUETTES',
             'PROCESSUS',
             'ÉTAT',
-            'PUBLIÉE À PARTIR DE',
-            "PUBLIÉE JUSQU'À",
-            'ACTIVE À PARTIR DE',
-            "ACTIVE JUSQU'À"
+            'PERIODE DE PUBLICATION',
+            "PERIODE D'ACTIVITE"
         );
         checkArchivesScreenTexts(
             'Sélectionner un Service',
@@ -375,10 +360,8 @@ describe('Test translations', function () {
             'LABELS',
             'PROCES',
             'STATUS',
-            'PUBLICEREN VAN',
-            'PUBLICEREN TOT',
-            'ACTIEF VAN',
-            'ACTIEF TOT'
+            'PUBLICATIEDATUMBEREIK',
+            'ACTIEVE DATUMBEREIK'
         );
         checkArchivesScreenTexts(
             'Selecteer een Dienst',

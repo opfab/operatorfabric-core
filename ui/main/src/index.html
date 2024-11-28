@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,53 +6,44 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-  <title>OperatorFabric</title>
-  <base href="/">
+    <head>
+        <meta charset="utf-8" />
+        <title>OperatorFabric</title>
+        <base href="/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style title="opfabRootStyle">
-
-
-/** 
+        <style title="opfabRootStyle">
+            /** 
 Style parameters is define using css variables --params
 
 Just two variables are set here , the complete style is set by the navbar.component.ts using global-style.service.ts.
 
-This two values are used when navbar is not yet loaded
+These two values are used when navbar is not yet loaded
 
-These two parameters are place in this file as the style should have a title parameter (it 's not possible to give a name for the style in the angular.json file). 
+These two parameters are placed in this file as the style should have a title parameter (it 's not possible to give a name for the style in the angular.json file). 
 
 */
 
+            :root {
+                --opfab-bgcolor: #262f3d;
+                --opfab-bgcolor-darker: #262f3d;
+                --opfab-text-color: white;
+                --opfab-input-text-color: white;
+                --opfab-form-border-color: #606267;
+                --opfab-form-label-text-color: #bababa;
+            }
+        </style>
 
-:root {
-  --opfab-bgcolor: #262f3d;
-  --opfab-bgcolor-darker: #262f3d;
-  --opfab-text-color: white;
-  --opfab-input-text-color: white;
-  --opfab-form-border-color:  #606267;
-  --opfab-form-label-text-color: #bababa;
-}
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-
-
-</style>
-
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1976d2">
-</head>
-<body class="opfab-colors">
-  <of-root></of-root>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
-</body>
+        <link rel="manifest" href="manifest.webmanifest" />
+        <meta name="theme-color" content="#1976d2" />
+    </head>
+    <body class="opfab-colors">
+        <of-root></of-root>
+        <noscript>Please enable JavaScript to continue using this application.</noscript>
+    </body>
 </html>

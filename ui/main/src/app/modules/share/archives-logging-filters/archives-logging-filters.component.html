@@ -145,53 +145,43 @@
                 </div>
             </div>
 
-            <div class="opfab-vertical-bar" *ngIf="displayPublishDateFilter"></div>
-            <div
-                class="opfab-publish-date"
-                [formGroup]="this.parentForm"
-                *ngIf="displayPublishDateFilter"
-                style="width: 210px; min-width: 210px">
-                <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px">
-                    <label for="opfab-publish-date-from" translate>shared.filters.publishDateFrom</label>
+            <div class="opfab-vertical-bar"></div>
+
+            <div style="margin-left: 40px; margin-right: 40px">
+                <div
+                    class="opfab-input"
+                    style="margin-top: 28px; margin-bottom: 54px; width: 260px"
+                    [formGroup]="this.parentForm">
+                    <label for="opfab-publish-date-range" translate>shared.filters.publishDateRange</label>
                     <input
-                        type="datetime-local"
-                        id="opfab-publish-date-from"
-                        (change)="onDateTimeChange()"
-                        formControlName="publishDateFrom"
-                        [max]="publishMaxDate" />
+                        id="opfab-publish-date-range"
+                        type="button"
+                        ngxDaterangepickerMd
+                        [locale]="locale"
+                        [timePicker]="true"
+                        [timePicker24Hour]="true"
+                        [timePickerIncrement]="1"
+                        formControlName="publishDateRange" />
                 </div>
-                <div class="opfab-input">
-                    <label for="opfab-publish-date-to" translate>shared.filters.publishDateTo</label>
+                <div
+                    class="opfab-input"
+                    style="margin-top: 28px; margin-bottom: 54px; width: 260px"
+                    [formGroup]="this.parentForm">
+                    <label for="opfab-active-date-range" translate>shared.filters.activeDateRange</label>
                     <input
-                        type="datetime-local"
-                        id="opfab-publish-date-to"
-                        (change)="onDateTimeChange()"
-                        formControlName="publishDateTo"
-                        [min]="publishMinDate" />
+                        id="opfab-active-date-range"
+                        type="button"
+                        ngxDaterangepickerMd
+                        [locale]="locale"
+                        [timePicker]="true"
+                        [timePicker24Hour]="true"
+                        [timePickerIncrement]="1"
+                        formControlName="activeDateRange" />
                 </div>
             </div>
 
             <div class="opfab-vertical-bar"></div>
-            <div style="margin-left: 40px; width: 210px; min-width: 210px" [formGroup]="this.parentForm">
-                <div class="opfab-input" style="margin-top: 28px; margin-bottom: 54px">
-                    <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
-                    <input
-                        type="datetime-local"
-                        id="opfab-active-from"
-                        (change)="onDateTimeChange()"
-                        formControlName="activeFrom"
-                        [max]="activeMaxDate" />
-                </div>
-                <div class="opfab-input">
-                    <label for="opfab-active-to" translate>shared.filters.activeTo</label>
-                    <input
-                        type="datetime-local"
-                        id="opfab-active-to"
-                        (change)="onDateTimeChange()"
-                        formControlName="activeTo"
-                        [min]="activeMinDate" />
-                </div>
-            </div>
+
             <div class="opfab-buttons">
                 <label
                     *ngIf="
@@ -206,7 +196,7 @@
                     <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
-                <div style="display:flex; margin-bottom: 22px">
+                <div style="display: flex; margin-bottom: 22px">
                     <button
                         id="opfab-archives-logging-btn-search"
                         [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn opfab-btn-search-admin-mode' : 'opfab-btn'"

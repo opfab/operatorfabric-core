@@ -7,12 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
-import {ScriptCommands} from "../support/scriptCommands";
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ArchivesAndLoggingCommands} from '../support/archivesAndLoggingCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('Archives screen tests', function () {
-
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const script = new ScriptCommands();
@@ -25,7 +24,6 @@ describe('Archives screen tests', function () {
     after('Clean export directory', function () {
         script.cleanDownloadsDir();
     });
-
 
     it('Check archived cards reception', function () {
         script.deleteAllArchivedCards();
@@ -146,8 +144,11 @@ describe('Archives screen tests', function () {
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
-        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast',
-                            'Entity recipients : Control Center FR East, Control Center FR North, Control Center FR South');
+        openAndCheckArchiveCardContent(
+            'Electricity consumption forecast',
+            'Daily electrical consumption forecast',
+            'Entity recipients : Control Center FR East, Control Center FR North, Control Center FR South'
+        );
 
         // We deactivate the admin mode
         archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
@@ -188,8 +189,6 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkSeeAllCardsLinkIsDisplayed();
     });
 
-
-
     it('Check admin mode for operator2_it with VIEW_ALL_CARDS role ', function () {
         opfab.loginWithUser('operator2_fr');
         opfab.navigateToArchives();
@@ -207,8 +206,11 @@ describe('Archives screen tests', function () {
 
         checkNumberOfLineDisplayedIs(6);
 
-        openAndCheckArchiveCardContent('⚠️ NETWORK CONTINGENCIES ⚠️', 'ASPHL71SIERE',
-        'Entity recipients : Control Center FR North');
+        openAndCheckArchiveCardContent(
+            '⚠️ NETWORK CONTINGENCIES ⚠️',
+            'ASPHL71SIERE',
+            'Entity recipients : Control Center FR North'
+        );
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
@@ -241,7 +243,6 @@ describe('Archives screen tests', function () {
 
         script.loadTestConf();
     });
-    
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
         opfab.loginWithUser('operator1_fr');
@@ -419,7 +420,6 @@ describe('Archives screen tests', function () {
             });
         });
     });
-
 
     function clickOnCollapsibleUpdates() {
         cy.get('#opfab-archives-collapsible-updates').click();

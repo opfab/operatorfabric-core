@@ -6,7 +6,7 @@
             "compliant": "Compliant",
             "information": "Information"
         },
-        "keepChildCards" : "Keep existing answers",
+        "keepChildCards": "Keep existing answers",
         "typeOfState": {
             "typeOfState": "PROCESS STATUS",
             "FINISHED": "FINISHED",
@@ -22,19 +22,9 @@
             "selectProcessText": "Select a Process",
             "selectStateText": "Select a State",
             "selectTagText": "Select a Tag",
-            "publishDateFrom": "PUBLISH FROM",
-            "publishDateTo": "PUBLISH TO",
-            "activeFrom": "ACTIVE FROM",
-            "activeTo": "ACTIVE TO",
-            "invalidPublishStartDate": "'Publish from' date is invalid.",
-            "invalidPublishEndDate": "'Publish to' date is invalid.",
-            "invalidActiveStartDate": "'Active from' date is invalid.",
-            "invalidActiveEndDate": "'Active to' date is invalid.",
-            "publishEndDateBeforeStartDate": "'Publish to' date must be after 'Publish from' date.",
-            "activeEndDateBeforeStartDate": "'Active to' date must be after 'Active from' date.",
-            "invalidFromDate": "'From' date is invalid.",
-            "invalidToDate": "'To' date is invalid.",
-            "toDateBeforeFromDate": "'To' date must be after 'From' date."
+            "toDateBeforeFromDate": "'To' date must be after 'From' date.",
+            "publishDateRange": "PUBLISH DATE RANGE",
+            "activeDateRange": "ACTIVE DATE RANGE"
         },
         "result": {
             "severity": "SEVERITY",
@@ -687,27 +677,9 @@
         }
     },
     "datePicker": {
-        "monday": "Mo",
-        "tuesday": "Tu",
-        "wednesday": "We",
-        "thursday": "Th",
-        "friday": "Fr",
-        "saturday": "Sa",
-        "sunday": "Su",
-        "january": "Jan",
-        "february": "Feb",
-        "march": "Mar",
-        "april": "Apr",
-        "may": "May",
-        "june": "Jun",
-        "july": "Jul",
-        "august": "Aug",
-        "september": "Sep",
-        "october": "Oct",
-        "november": "Nov",
-        "december": "Dec",
-        "week": "Week",
-        "placeholder": "YYYY-MM-DD"
+        "applyLabel": "Apply",
+        "daysOfWeek": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+        "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     },
     "reloadRequired": {
         "message": "Application reload required. To reload please click ",
