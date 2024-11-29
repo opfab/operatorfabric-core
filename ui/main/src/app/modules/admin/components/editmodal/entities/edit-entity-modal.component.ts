@@ -219,6 +219,9 @@ export class EditEntityModalComponent implements OnInit {
         this.name.setValue(this.name.value.trim());
         this.description.setValue(this.description.value.trim());
         this.roles.setValue(this.roles.value);
+        if (this.parents.value.length === 0) {
+            this.parents.setValue([]);
+        }
     }
 
     get id() {
