@@ -17,6 +17,7 @@ import {initUtilsAPI} from './utils.api';
 import {initNavigateAPI} from './navigate.api';
 import {CurrentCardAPI} from './currentcard.api';
 import {CurrentUserCardAPI} from './currentusercard.api';
+import {initUiAPI} from './ui.api';
 
 declare const opfab: any;
 
@@ -33,6 +34,7 @@ export class OpfabAPI {
         initNavigateAPI();
         initUtilsAPI(translationService);
         initUserAPI();
+        initUiAPI();
         CurrentCardAPI.init();
         CurrentUserCardAPI.init();
         BusinessConfigAPI.init();

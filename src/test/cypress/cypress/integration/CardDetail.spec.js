@@ -138,6 +138,10 @@ describe('Card detail', function () {
             cy.get('#userContext-groups').contains(/^Maintainer,Dispatcher$/);
             cy.get('#userContext-entities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
+            cy.get('#opfab-ui-getCurrentVisiblePeriod').contains('Domain = RT');
+            cy.get('#opfab-ui-getCurrentVisiblePeriod').contains(/startPeriod = \d{4}\-\d{2}\-\d{2}/);
+            cy.get('#opfab-ui-getCurrentVisiblePeriod').contains(/endPeriod = \d{4}\-\d{2}\-\d{2}/);
+
             // Check opfab API calls
             cy.get('#opfab-users-entities-getEntityName').contains('Control Center FR North');
             cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');

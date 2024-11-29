@@ -8,7 +8,7 @@
 
 = Frontend API
 
-The frontend API is intended to provide a way for template to communicate with the core opfab code. It's divided as follow :
+The frontend API is intended to provide a way for template to communicate with the core opfab code. It's divided as follows :
 
 - Users API : API to get information about users and entities
 - BusinessConfig API : API to get business configuration information
@@ -188,7 +188,7 @@ If inside your template, you want to get the ids of the entities the user can an
 
 === Function isResponseLocked
 
-To know if template is locked (i.e user can not respond unless he unlocks the card)
+To know if template is locked (i.e. user can not respond unless he unlocks the card)
 ```
     const isResponseLocked =  opfab.currentCard.isResponseLocked()
 ```
@@ -216,7 +216,7 @@ An example of usage can be found in the file https://github.com/opfab/operatorfa
 
 === Function listenToResponseLock
 
-Register a function to be informed when template is locked (i.e user has responded to the current card)
+Register a function to be informed when template is locked (i.e. user has responded to the current card)
 
 ```
     opfab.currentCard.listenToResponseLock( () => {// do some stuff});
@@ -224,7 +224,7 @@ Register a function to be informed when template is locked (i.e user has respond
 
 === Function listenToResponseUnlock
 
-Register a function to be informed when template is unlocked (i.e user has clicked the modify button to prepare a new response)
+Register a function to be informed when template is unlocked (i.e. user has clicked the modify button to prepare a new response)
 
 
 ```
@@ -250,7 +250,7 @@ If the card has a last time to decide (lttd) configured, when the time is expire
 
 === Function listenToStyleChange
 
-Card template can be informed when switching day/night mode by registering a listener as follow : 
+Card template can be informed when switching day/night mode by registering a listener as follows :
 
 ```
     opfab.currentCard.listenToStyleChange( () => { // do some stuff });
@@ -630,16 +630,32 @@ To avoid script injection, OperatorFabric provides a utility function 'opfab.uti
 
 === Function show
 
-It’s possible to show an alert message as a popover by calling  by calling the following function from the template :
+It’s possible to show an alert message as a popover by calling the following function from the template :
 
 ```
 opfab.alertMessage.show('message', opfab.alertMessage.messageLevel.INFO);
 ```
 
-The popover will have a different backgroung color based on the message level specified.
+The popover will have a different background color based on the message level specified.
 The available message levels are:
 
 - DEBUG (blue)
 - INFO (green)
 - ERROR (orange)
 - ALARM (red)
+
+== UI API
+
+=== Function getCurrentVisiblePeriod
+
+You can use this function to get the current visible period on the timeline.
+
+```
+const currentVisiblePeriod = opfab.ui.getCurrentVisiblePeriod();
+```
+
+This function returns 3 fields :
+
+- domain : RT / D / 7D / W / M / Y
+- startPeriod : epochDate
+- endPeriod : epochDate

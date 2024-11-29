@@ -105,6 +105,12 @@ function loadData() {
   responses += opfab.users.entities.getEntity('ENTITY1_FR').labels;
   responses += '</span></div>';
 
+  responses += '<div> getCurrentVisiblePeriod() : <span id="opfab-ui-getCurrentVisiblePeriod">';
+  responses += 'Domain = ' + opfab.ui.getCurrentVisiblePeriod().domain + ', ';
+  responses += 'startPeriod = ' + new Date(opfab.ui.getCurrentVisiblePeriod().startPeriod).toISOString() + ', endPeriod = ' +
+          new Date(opfab.ui.getCurrentVisiblePeriod().endPeriod).toISOString();
+  responses += '</span></div>';
+
   opfabApiResults.innerHTML = responses;
 }
 
