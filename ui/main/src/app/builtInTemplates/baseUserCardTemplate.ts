@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LoggerService as logger} from '../services/logs/logger.service';
+import {LoggerService as logger} from '../business/services/logs/logger.service';
 
 declare const opfab;
 

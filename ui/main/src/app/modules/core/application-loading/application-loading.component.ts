@@ -40,6 +40,7 @@ import {NgIf} from '@angular/common';
 import {LoadingInProgressComponent} from './loading-in-progress/loading-in-progress.component';
 import {LoginComponent} from './login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {loadBuiltInTemplates} from 'app/builtInTemplates/templatesLoader';
 
 declare const opfab: any;
 @Component({
@@ -125,6 +126,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.applicationLoader.setAppLoadedInAnotherTabComponent(this.appLoadedInAnotherTabComponent);
             this.applicationLoader.setActivityAreaChoiceAfterLoginComponent(this.activityAreaChoiceAfterLoginComponent);
             this.applicationLoader.setMethodToAuthenticate(this.authenticate.bind(this));
+            loadBuiltInTemplates();
             const success = await this.applicationLoader.startOpfab();
             if (success) {
                 this.applicationLoadedDone.next(true);

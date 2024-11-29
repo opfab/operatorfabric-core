@@ -14,7 +14,6 @@ import {RemoteLoggerService} from './services/logs/remote-logger.service';
 import {I18nService} from './services/translation/i18n.service';
 import {UserService} from './services/users/user.service';
 import {OpfabAPI} from '../api/opfab.api';
-import {loadBuiltInTemplates} from './builtInTemplates/templatesLoader';
 import {GlobalStyleService} from './services/global-style.service';
 import {EntitiesService} from './services/users/entities.service';
 import {GroupsService} from './services/users/groups.service';
@@ -124,7 +123,6 @@ export class ApplicationLoader {
         this.initOpfabAPI();
         await this.loadCustomScripts();
         this.initServices();
-        loadBuiltInTemplates();
         await this.waitForStreamInitDone();
         logger.info('Card stream connection established');
         RealtimeDomainService.init(); // important to be after the stream init done
