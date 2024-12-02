@@ -7,10 +7,13 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <span *ngFor="let element of _stateRightsValues">
+  <span class="opfab-tooltip">
     <span class="opfab-badge opfab-bg-right-{{element.stateRight.right.toString()|lowercase}}"
-          style="font-size: 14px; margin: 3px; color: black"
-          [ngbPopover]="element.stateRight.right.toString()" [openDelay]="300" placement="top" triggers="mouseenter:mouseleave"
-          popoverClass="opfab-popover-unclickable" container="body">{{element.stateName}}</span>
+          style="font-size: 14px; margin: 3px; color: black">{{element.stateName}}</span>
+    <span class="opfab-tooltip-content left" style="text-align:center;min-width: unset;padding-top:0;padding-bottom:0;translate: 10px;">
+      {{element.stateRight.right.toString()}}
+    </span>
+  </span>
 </span>
 
 

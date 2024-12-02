@@ -36,7 +36,6 @@ export class CardHeaderComponent implements OnChanges {
     @Input() cardState: State;
     @Input() lttdExpiredIsTrue: boolean;
 
-    public showExpiredIcon = true;
     public showExpiredLabel = true;
     public expiredLabel = 'feed.lttdFinished';
     public entitiesForCardHeader: EntityForCardHeader[];
@@ -55,10 +54,8 @@ export class CardHeaderComponent implements OnChanges {
         ProcessesService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
             const state = process.states.get(this.card.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
-                this.showExpiredIcon = false;
                 this.showExpiredLabel = false;
             } else {
-                this.showExpiredIcon = false;
                 this.showExpiredLabel = true;
                 this.expiredLabel = 'feed.responsesClosed';
             }

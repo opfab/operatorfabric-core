@@ -377,6 +377,13 @@ ngb-pagination {
     )
 );
 
+// this settings is necessary to have tooltips in cell that can be visible outside the cell
+.opfab-cell-overflow-visible {
+    .ag-cell-value {
+        overflow: visible;
+    }
+}
+
 .ag-theme-opfab {
     --ag-borders: none;
     --ag-header-height: 70px;

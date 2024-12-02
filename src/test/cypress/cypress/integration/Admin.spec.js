@@ -471,7 +471,7 @@ describe('AdmininstrationPages', () => {
 
         agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'testperimeter');
         agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'Message');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'contains.text', 'Message');
         // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
@@ -522,7 +522,7 @@ describe('AdmininstrationPages', () => {
         // We check the perimeter is updated
         agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'testperimeter');
         agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'Message with no ack');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'contains.text', 'Message with no ack');
         // We check the right for Message is Receive (the badge must be from class opfab-bg-right-receive)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')

@@ -33,27 +33,24 @@
                     <table class="opfab-realtimeusers-entitiesgroups-table" aria-describedby="real time users table">
                         <tr *ngFor="let line of entitiesGroupsElement.lines;">
                             <th scope="row">{{line.entityName}}</th>
-
                             <td>
                                 <ng-template #connected>
+                                  <div class="opfab-tooltip">
                                     <span class="opfab-rounded-badge opfab-blue-background">{{line.connectedUsersCount}}
                                     </span>
-                                    <span [id]="'grouped-label-' + line.entityId" class="opfab-group-label"
-                                        [disablePopover]="!isEllipsisActive('grouped-label-' + line.entityId)"
-                                        placement="top-left"
-                                        [ngbPopover]="usersDropdown" container="body"
-                                        triggers="mouseenter:mouseleave"
-                                        popoverClass="opfab-popover-no-arrow">
+                                    <span [id]="'grouped-label-' + line.entityId" class="opfab-group-label">
                                         {{line.connectedUsers}}
+                                    </span>
+                                    <span  *ngIf="isEllipsisActive('grouped-label-' + line.entityId)">
+                                      <span class="opfab-tooltip-content bottom" style="z-index:1;text-align: left;">
+                                        <div *ngFor="let user of line.connectedUsers.split(', ')">
+                                          {{user}}
+                                        </div>
                                       </span>
+                                     </span>
+                                  </div>
                                 </ng-template>
-                                <ng-template #usersDropdown>
-                                    <div *ngFor="let user of line.connectedUsers.split(', ')">
-                                      {{user}}
-                                    </div>
-                                  </ng-template>
-                                
-                                  <ng-template #disconnected>
+                                <ng-template #disconnected>
                                     <span class="opfab-rounded-badge opfab-grey-background">0</span>
                                 </ng-template>
                                 <span *ngIf="line.connectedUsersCount;then connected else disconnected"></span>

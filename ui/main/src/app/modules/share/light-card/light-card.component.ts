@@ -43,7 +43,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     dateToDisplay: string;
     truncatedTitle: string;
     fromEntity = null;
-    showExpiredIcon = true;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
     expirationDateToDisplay: string;
@@ -79,10 +78,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         ProcessesService.queryProcess(this.lightCard.process, this.lightCard.processVersion).subscribe((process) => {
             const state = process.states.get(this.lightCard.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
-                this.showExpiredIcon = false;
                 this.showExpiredLabel = false;
             } else if (state.response) {
-                this.showExpiredIcon = false;
                 this.expiredLabel = 'feed.responsesClosed';
             }
         });

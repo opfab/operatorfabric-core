@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,8 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div [ngbPopover]="userEntitiesTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" container="body"
-triggers="manual" (mouseenter)="userEntitiesToDisplayTrimmed && p.open()" (mouseleave)="p.close()">
+<div class="opfab-tooltip" >
     <div class="navbar-info-block">
         <div class="opfab-menu-icon-profile"></div>
         <div class="time" >{{timeToDisplay}}</div>
@@ -18,8 +17,7 @@ triggers="manual" (mouseenter)="userEntitiesToDisplayTrimmed && p.open()" (mouse
         <div *ngIf="userEntitiesToDisplay"  class="user-entities" style="padding-top:10px;margin-left:5px;text-align:center; padding-right: 8px;">{{userEntitiesToDisplay}}</div>
         <div *ngIf="!userEntitiesToDisplay" class="user-entities" style="padding-top:5px; padding-right: 8px;"> &nbsp;</div>
     </div>
+    <div *ngIf="userEntitiesToDisplayTrimmed" class="opfab-tooltip-content bottom" style="max-width: 280px;text-align: left;white-space:normal;width:max-content">  
+        <div *ngFor="let entity of userEntities" style="margin: 5px 10px 5px 10px">{{entity}}</div>
+    </div>
 </div>
-
-<ng-template #userEntitiesTooltip>
-    <div *ngFor="let entity of userEntities" style="margin-bottom: 5px;">{{entity}}</div>
-</ng-template>

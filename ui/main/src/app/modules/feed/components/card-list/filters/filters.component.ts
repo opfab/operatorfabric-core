@@ -15,14 +15,13 @@ import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/feed
 import {FeedSearchComponent} from './feed-search/feed-search.component';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-filters',
     templateUrl: './filters.component.html',
     styleUrls: ['./filters.component.scss'],
     standalone: true,
-    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule, NgbPopover]
+    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule]
 })
 export class FiltersComponent implements OnInit {
     @Input() filterActive: boolean;

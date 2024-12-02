@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -15,13 +15,10 @@
 
         <div style="width:100%">
         </div>
-        <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
-            <ng-template #tipLoadingInProgress>
-                <span translate>feed.tips.loadingInProgress</span>
-            </ng-template>
-            <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover-unclickable" container="body"
-            triggers="mouseenter:mouseleave">
-            <em  class="fas fa-spinner fa-spin opfab-slow-spinner"  ></em>
+        <div *ngIf="loadingInProgress" class="opfab-loading-spinner opfab-tooltip">
+            <div>
+            <em  class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+            <span class="opfab-tooltip-content left" style="z-index:1;text-align: left;"> <span translate>feed.tips.loadingInProgress</span></span>
             </div>
 
          </div>

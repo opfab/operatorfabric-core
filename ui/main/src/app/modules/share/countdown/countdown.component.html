@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,17 +6,11 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<ng-template #tipLttd>
-    <span translate>feed.tips.lttd</span>
-</ng-template>
 
-<span *ngIf="this.countDown.isCounting()" class="lttd-timeleft" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover-unclickable" container="body" triggers="mouseenter:mouseleave">{{this.countDown.getCountDown()}}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
+<span *ngIf="this.countDown.isCounting()" class="opfab-tooltip lttd-timeleft">
+    {{this.countDown.getCountDown()}}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
+    <div class="opfab-tooltip-content left" style="white-space: nowrap;font-size: 11pt;">  <span translate>feed.tips.lttd</span></div>
 </span>
-<span *ngIf="this.countDown.isEnded() && showExpiredIcon" placement="right" [ngbPopover]="tipLttd" popoverClass="opfab-popover-unclickable" container="body" triggers="mouseenter:mouseleave">
-        <span *ngIf="showExpiredLabel" class="lttd-text">{{translatedExpiredLabel}}</span>  
-        <span *ngIf="showExpiredIcon"><em class="far fa-clock lttd-icon" ></em></span> 
-</span>
-<span *ngIf="this.countDown.isEnded() && !showExpiredIcon">
+<span *ngIf="this.countDown.isEnded()">
     <span *ngIf="showExpiredLabel" class="lttd-text">{{translatedExpiredLabel}}</span>  
-    <span *ngIf="showExpiredIcon"><em class="far fa-clock lttd-icon" ></em></span> 
 </span>

@@ -16,7 +16,6 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {Utilities} from '../../../../business/common/utilities';
 import {LoggerService} from 'app/business/services/logs/logger.service';
 import {NgFor, LowerCasePipe} from '@angular/common';
-import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',
@@ -24,7 +23,7 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./state-rights-cell-renderer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgFor, NgbPopover, LowerCasePipe]
+    imports: [NgFor, LowerCasePipe]
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see
