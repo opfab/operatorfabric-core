@@ -25,7 +25,7 @@ import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder/cardBuilder';
 import {CardSender} from './cardSender/cardSender';
 import {CardService} from 'app/business/services/card/card.service';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 /**
 
@@ -111,13 +111,14 @@ export class UserCardView {
         const {processId, stateId} = this.processStatesForm.getSelectedProcessState();
         this.currentProcessId = processId;
         this.currentStateId = stateId;
-        CurrentUserCardAPI.initUserCardTemplateInterface();
-        CurrentUserCardAPI.initCurrentUserCard();
-        CurrentUserCardAPI.currentUserCard.editionMode = this.editionMode;
-        CurrentUserCardAPI.currentUserCard.state = stateId;
-        CurrentUserCardAPI.currentUserCard.processId = processId;
-        CurrentUserCardAPI.currentUserCard.userEntityChildCard = this.existingChildCards?.find(
-            (child) => child.publisher === this.existingCard.publisher
+        UserCardTemplateGateway.initTemplateFunctions();
+        UserCardTemplateGateway.init();
+
+        UserCardTemplateGateway.setEditionMode(this.editionMode);
+        UserCardTemplateGateway.setState(stateId);
+        UserCardTemplateGateway.setProcessId(processId);
+        UserCardTemplateGateway.setUserEntityChildCard(
+            this.existingChildCards?.find((child) => child.publisher === this.existingCard.publisher)
         );
         this.initFieldsThatNeedToBeSetBeforeExecutingTemplateScripts();
         await this.renderTemplate();

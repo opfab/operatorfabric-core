@@ -11,7 +11,7 @@ import {State} from '@ofModel/processes.model';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Card} from '@ofModel/card.model';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 export class DatesForm {
     private static ONE_MINUTE = 60000;
@@ -48,7 +48,7 @@ export class DatesForm {
                 if (editionMode === EditionMode.EDITION)
                     this[field] = card?.[field] ?? this.getDefaultValueForDate(field);
                 else this[field] = this.getDefaultValueForDate(field);
-                CurrentUserCardAPI.currentUserCard[field] = this[field];
+                UserCardTemplateGateway[`set${field.charAt(0).toUpperCase() + field.slice(1)}`](this[field]);
             }
         });
     }
@@ -77,7 +77,7 @@ export class DatesForm {
 
     public initDatesAfterTemplateScriptsExecution() {
         this.dateFields.forEach((field) => {
-            this[field] = CurrentUserCardAPI.currentUserCard[field];
+            this[field] = UserCardTemplateGateway[`get${field.charAt(0).toUpperCase() + field.slice(1)}`]();
             this.userCardUIControl.setDate(field as InputFieldName, this[field]);
         });
     }
@@ -92,6 +92,6 @@ export class DatesForm {
 
     public userSetsDate(inputName: InputFieldName, dateSetByUser: number) {
         this[inputName] = dateSetByUser;
-        CurrentUserCardAPI.currentUserCard[inputName] = dateSetByUser;
+        UserCardTemplateGateway[`set${inputName.charAt(0).toUpperCase() + inputName.slice(1)}`](dateSetByUser);
     }
 }

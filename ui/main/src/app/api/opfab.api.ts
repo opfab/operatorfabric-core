@@ -24,10 +24,6 @@ declare const opfab: any;
 export class OpfabAPI {
     private static initAPIDone = false;
 
-    public static init() {
-        CurrentUserCardAPI.initCurrentUserCard();
-    }
-
     public static initAPI(translationService: TranslationService) {
         if (OpfabAPI.initAPIDone) return;
         OpfabAPI.initAlertAPI();

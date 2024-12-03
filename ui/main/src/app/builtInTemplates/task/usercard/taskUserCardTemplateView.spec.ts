@@ -9,10 +9,10 @@
 
 import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 import {Card} from '@ofModel/card.model';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 describe('Task UserCard Template View', () => {
     beforeEach(() => {
@@ -21,14 +21,14 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN a user WHEN create card THEN task title is empty', () => {
         const view = new TaskUserCardTemplateView();
-        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        UserCardTemplateGateway.setEditionMode('CREATE');
         CardTemplateGateway.setCard({data: {taskTitle: 'My task Title'}} as Card);
         expect(view.getTaskTitle()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card THEN task description is empty', () => {
         const view = new TaskUserCardTemplateView();
-        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        UserCardTemplateGateway.setEditionMode('CREATE');
         CardTemplateGateway.setCard({data: {richTaskDescription: 'My task Description'}} as Card);
         expect(view.getTaskDescription()).toEqual('');
     });
@@ -75,7 +75,7 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card WHEN user edit card THEN card data is current card data', () => {
         const view = new TaskUserCardTemplateView();
-        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        UserCardTemplateGateway.setEditionMode('EDITION');
         CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
@@ -108,7 +108,7 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card WHEN user copy card THEN data is current card data', () => {
         const view = new TaskUserCardTemplateView();
-        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        UserCardTemplateGateway.setEditionMode('COPY');
         CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',
@@ -140,7 +140,7 @@ describe('Task UserCard Template View', () => {
 
     it('GIVEN an existing card with taskDescription and not richTaskDescription WHEN user edit card THEN task description has rich text format', () => {
         const view = new TaskUserCardTemplateView();
-        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        UserCardTemplateGateway.setEditionMode('EDITION');
         CardTemplateGateway.setCard({
             data: {
                 taskTitle: 'My task Title',

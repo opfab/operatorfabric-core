@@ -46,6 +46,7 @@ import {ProcessStatesMultiSelectOptionsService} from './services/process-states-
 import {RealtimeDomainService} from './services/realtime-domain.service';
 import {NotificationDecision} from './services/notifications/notification-decision';
 import {CardTemplateGateway} from './templateGateway/cardTemplateGateway';
+import {UserCardTemplateGateway} from './templateGateway/userCardTemplateGateway';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;
@@ -300,7 +301,7 @@ export class ApplicationLoader {
 
     private initOpfabAPI(): void {
         CardTemplateGateway.init();
-        OpfabAPI.init();
+        UserCardTemplateGateway.init();
         OpfabAPI.initAPI(this.translationService);
     }
 

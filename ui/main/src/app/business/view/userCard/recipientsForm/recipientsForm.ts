@@ -16,7 +16,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 export class RecipientsForm {
     private isInCreationMode = true;
@@ -38,8 +38,9 @@ export class RecipientsForm {
     }
 
     private listenForRecipientListSetByTemplate() {
-        CurrentUserCardAPI.currentUserCard.setDropdownEntityRecipientList = (recipients) =>
-            this.loadRestrictedRecipientList(recipients);
+        UserCardTemplateGateway.setFunctionToSetDropdownEntityRecipientList((recipients) =>
+            this.loadRestrictedRecipientList(recipients)
+        );
     }
     private loadRestrictedRecipientList(recipients: EntitiesTree[]) {
         this.loadRecipients(EntitiesService.resolveEntities(recipients));
@@ -68,9 +69,11 @@ export class RecipientsForm {
     }
 
     private listenForRecipientForInformationListSetByTemplate() {
-        CurrentUserCardAPI.currentUserCard.setDropdownEntityRecipientForInformationList = (recipients) =>
-            this.loadRestrictedRecipientForInformationList(recipients);
+        UserCardTemplateGateway.setFunctionToSetDropdownEntityRecipientForInformationList((recipients) =>
+            this.loadRestrictedRecipientForInformationList(recipients)
+        );
     }
+
     private loadRestrictedRecipientForInformationList(recipients: EntitiesTree[]) {
         this.loadRecipientsForInformation(EntitiesService.resolveEntities(recipients));
     }
@@ -83,29 +86,29 @@ export class RecipientsForm {
     }
 
     private listenForSelectRecipients() {
-        CurrentUserCardAPI.currentUserCard.setSelectedRecipients = (recipients) => {
+        UserCardTemplateGateway.setFunctionToSetSelectedRecipients((recipients) => {
             this.setSelectedRecipients(recipients);
             this.userCardUIControl.setSelectedRecipients(recipients);
-        };
-        CurrentUserCardAPI.currentUserCard.setInitialSelectedRecipients = (recipients) => {
+        });
+        UserCardTemplateGateway.setFunctionToSetInitialSelectedRecipients((recipients) => {
             if (this.isInCreationMode) {
                 this.setSelectedRecipients(recipients);
                 this.userCardUIControl.setSelectedRecipients(recipients);
             }
-        };
+        });
     }
 
     private listenForSelectRecipientsForInformation() {
-        CurrentUserCardAPI.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
+        UserCardTemplateGateway.setFunctionToSetSelectedRecipientsForInformation((recipients) => {
             this.setSelectedRecipientsForInformation(recipients);
             this.userCardUIControl.setSelectedRecipientsForInformation(recipients);
-        };
-        CurrentUserCardAPI.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
+        });
+        UserCardTemplateGateway.setFunctionToSetInitialSelectedRecipientsForInformation((recipients) => {
             if (this.isInCreationMode) {
                 this.userCardUIControl.setSelectedRecipientsForInformation(recipients);
                 this.setSelectedRecipientsForInformation(recipients);
             }
-        };
+        });
     }
 
     public setProcessAndState(processId: string, stateId: string, card: Card = undefined) {
@@ -147,7 +150,7 @@ export class RecipientsForm {
 
     public setSelectedRecipients(selectedRecipients: string[]) {
         this.selectedRecipients = selectedRecipients;
-        CurrentUserCardAPI.currentUserCard.selectedEntityRecipients = selectedRecipients;
+        UserCardTemplateGateway.setSelectedEntityRecipientsForTemplate(selectedRecipients);
     }
 
     public getSelectedRecipientsForInformation(): string[] {
@@ -156,7 +159,7 @@ export class RecipientsForm {
 
     public setSelectedRecipientsForInformation(selectedRecipientsForInformation: string[]) {
         this.selectedRecipientsForInformation = selectedRecipientsForInformation;
-        CurrentUserCardAPI.currentUserCard.selectedEntityForInformationRecipients = selectedRecipientsForInformation;
+        UserCardTemplateGateway.setSelectedEntityForInformationRecipientsForTemplate(selectedRecipientsForInformation);
     }
 
     public isRecipientVisible(): boolean {

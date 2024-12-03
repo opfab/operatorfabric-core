@@ -20,7 +20,7 @@ import {Guid} from 'guid-typescript';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 export class CardBuilder {
     private card: Card;
@@ -87,7 +87,7 @@ export class CardBuilder {
     }
 
     public async getCard(): Promise<Card> {
-        this.specificCardInformation = CurrentUserCardAPI.userCardTemplateInterface.getSpecificCardInformation();
+        this.specificCardInformation = UserCardTemplateGateway.getSpecificCardInformationFromTemplate();
         if (!this.isSpecificCardInformationValid()) {
             return undefined;
         }
@@ -97,7 +97,7 @@ export class CardBuilder {
         }
         if (!this.inputFieldVisibility.get(InputFieldName.Severity)) {
             this.severity =
-                CurrentUserCardAPI.userCardTemplateInterface.getSpecificCardInformation().card?.severity ??
+                UserCardTemplateGateway.getSpecificCardInformationFromTemplate()?.card?.severity ??
                 Severity.INFORMATION;
         }
         let actions = this.specificCardInformation.card.actions ?? undefined;

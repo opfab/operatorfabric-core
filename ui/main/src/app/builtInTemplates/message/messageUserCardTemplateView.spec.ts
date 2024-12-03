@@ -9,10 +9,10 @@
 
 import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 import {initOpfabAPI} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;
@@ -27,21 +27,21 @@ describe('Message UserCard template', () => {
     }
 
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
-        CurrentUserCardAPI.currentUserCard.editionMode = 'EDITION';
+        UserCardTemplateGateway.setEditionMode('EDITION');
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getMessageTitle()).toEqual('My title');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message is actual message', () => {
-        CurrentUserCardAPI.currentUserCard.editionMode = 'COPY';
+        UserCardTemplateGateway.setEditionMode('COPY');
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('My message');
         expect(view.getMessageTitle()).toEqual('My title');
     });
 
     it('GIVEN a user WHEN create card THEN message is empty', () => {
-        CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+        UserCardTemplateGateway.setEditionMode('CREATE');
         mockGetCard('My message', 'My title');
         expect(view.getRichMessage()).toEqual('');
         expect(view.getMessageTitle()).toEqual('');

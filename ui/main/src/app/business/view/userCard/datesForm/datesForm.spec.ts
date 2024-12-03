@@ -12,7 +12,7 @@ import {DatesForm} from './datesForm';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
 import {State} from '@ofModel/processes.model';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 declare const opfab: any;
 
@@ -200,7 +200,7 @@ describe('UserCard DatesForm', () => {
     });
     describe('Dates initialization after template script execution', () => {
         beforeEach(() => {
-            CurrentUserCardAPI.currentUserCard.editionMode = 'CREATE';
+            UserCardTemplateGateway.setEditionMode('CREATE');
         });
         it('Should set start date from template via method opfab.currentUserCard.setInitialStartDate ', async () => {
             await setProcessConfigWithUserCardConfig({startDateVisible: true});

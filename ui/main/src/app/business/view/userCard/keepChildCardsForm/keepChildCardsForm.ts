@@ -11,7 +11,7 @@ import {Card} from '@ofModel/card.model';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {CardAction} from '@ofModel/light-card.model';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 export class KeepChildCardsForm {
     private keepChildCards: boolean;
@@ -34,8 +34,7 @@ export class KeepChildCardsForm {
                 this.keepChildCardsVisible && editionMode === EditionMode.EDITION
             );
             const cardKeepChildCards = card?.actions?.includes(CardAction.KEEP_CHILD_CARDS);
-            this.keepChildCards =
-                cardKeepChildCards ?? CurrentUserCardAPI.currentUserCard.initialKeepChildCards ?? true;
+            this.keepChildCards = cardKeepChildCards ?? UserCardTemplateGateway.getInitialKeepChildCards() ?? true;
             this.userCardUIControl.setKeepChildCards(this.keepChildCards);
         } else {
             this.userCardUIControl.setInputVisibility(InputFieldName.KeepChildCards, false);
