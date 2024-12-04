@@ -287,8 +287,21 @@ describe('Card detail', function () {
             cy.get('.opfab-alert-close').click();
 
         });
+
+        it(`Check getCards API call`, function () {
+            script.sendCard('cypress/userCard/message.json');
+            script.sendCard('cypress/cardDetail/cardDetail.json');
+    
+            opfab.loginWithUser('operator1_fr');
+    
+            feed.openFirstCard();
+            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
+    
+            cy.get('#opfabGetCardsResult').contains('"numberOfElements":1');
+            cy.get('#opfabGetCardsResult').contains('"_id":"defaultProcess.process1"');
+            cy.get('#opfabGetCardsResult').contains('"titleTranslated":"Message"');
+            
+        });
     });
-
-
 
 });

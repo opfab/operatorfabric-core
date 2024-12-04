@@ -659,3 +659,46 @@ This function returns 3 fields :
 - domain : RT / D / 7D / W / M / Y
 - startPeriod : epochDate
 - endPeriod : epochDate
+
+== Cards API
+
+=== Function getCards
+
+You can use this function to get a list of cards filtered on the specified filter.
+
+```
+opfab.cards.getCards(cardsFilter).then(...);
+```
+
+The function returns a Promise<Page> object with the result of the query.
+
+Page object contains the following fields:
+
+- totalPages: total number of pages
+- totalElements: total number of results
+- size: size of the page
+- number: page number
+- first: true if it is the first page
+- last: true if it is the last page
+- numberOfElements: number of cards in this page 
+- content: array of returned cards
+
+
+Card filter object has the following fields:
+
+- page: page number
+- size: page size,
+- adminMode: set to true to retrieve cards in admin mode (only if user has the permission)
+- includeChildCards: set to true to retrieve also child cards
+- filters: array of FilterModel
+- selectedFields: array of cards fields as string to be returned
+
+FilterModel object has the following fields:
+
+- columnName: card field to be tested
+- matchType: one of BLANK,CONTAINS,ENDSWITH,EQUALS,GREATERTHAN,IN,LESSTHAN,NOTBLANK,NOTCONTAINS,NOTEQUAL,STARTSWITH
+- filter: list of string values to be matched, for match types that need a single argument pass an array with one value
+
+
+
+

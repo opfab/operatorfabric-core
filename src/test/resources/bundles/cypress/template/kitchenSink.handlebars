@@ -27,6 +27,7 @@
 <H3> TEMPLATE GATEWAY CALLS</H3>
 
 <div id="opfabApiResults"></div>
+<div id="opfabGetCardsResult"></div>
 
 <div> screenSize : <span id="screenSize"> </span>  </div>
 <div> onTemplateRenderingComplete : <span id="opfab-currentCard-onTemplateRenderingComplete"> </span>  </div>
@@ -111,7 +112,9 @@ function loadData() {
           new Date(opfab.ui.getCurrentVisiblePeriod().endPeriod).toISOString();
   responses += '</span></div>';
 
+  responses += '</span></div>';
   opfabApiResults.innerHTML = responses;
+  getCards();
 }
 
 function simulateCardProcessing() {
@@ -126,5 +129,34 @@ opfab.currentCard.listenToScreenSize( (size) =>
 opfab.currentCard.listenToTemplateRenderingComplete( () => 
         document.getElementById("opfab-currentCard-onTemplateRenderingComplete").innerHTML = "ok"
 );
+
+function getCards() {
+    const cardsFilter = {
+    "page": 0,
+    "size": 10,
+    "adminMode": false,
+    "includeChildCards": false,
+    "latestUpdateOnly": true,
+    "filters": [
+      {
+        "columnName": "processStateKey",
+        "matchType": "IN",
+        "filter": [
+          "defaultProcess.messageState",
+          "defaultProcess.processState"
+        ]
+      },
+      {
+        "columnName": "process",
+        "matchType": "EQUALS",
+        "filter": ["defaultProcess"]
+      }
+    ],
+    "selectedFields": ["titleTranslated"]
+  }
+  opfab.cards.getCards(cardsFilter).then(page => {
+    document.getElementById("opfabGetCardsResult").innerHTML = JSON.stringify(page);
+  });
+}
 
 </script>
