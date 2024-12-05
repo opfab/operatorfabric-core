@@ -83,11 +83,13 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     };
     public recipientsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'userCard.filters.recipients',
-        sortOptions: true
+        sortOptions: true,
+        labelRenderer: this.entityRecipientLabelRenderer
     };
     public recipientsForInformationMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'userCard.filters.recipientsForInformation',
-        sortOptions: true
+        sortOptions: true,
+        labelRenderer: this.entityRecipientLabelRenderer
     };
 
     private readonly userCardForm = new FormGroup({
@@ -176,6 +178,22 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
             }, 10)
         );
     }
+
+    public entityRecipientLabelRenderer(data) {
+        const childEntities = EntitiesService.resolveChildEntities(data.value);
+        let label = data.label;
+        if (childEntities.length) {
+            label =
+                label + ' <i style="color: var(--opfab-color-grey);text-overflow: ellipsis">(' + childEntities[0].name;
+            if (childEntities.length > 1)
+                for (let i = 1; i < childEntities.length; i++) {
+                    if (i > 0) label = label + ',' + childEntities[i].name;
+                }
+            label = label + ')</i>';
+        }
+        return label;
+    }
+
     public setUserNotAllowedToSendCard(): void {
         this.userAllowedToSendCard = false;
     }
@@ -192,6 +210,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     public setRecipientsList(recipients: MultiselectItem[]) {
         this.recipientsOptions = recipients.map((entity) => new MultiSelectOption(entity.id, entity.label));
     }
+
     public setSelectedRecipients(selected: string[]) {
         this.selectedRecipients = selected;
     }

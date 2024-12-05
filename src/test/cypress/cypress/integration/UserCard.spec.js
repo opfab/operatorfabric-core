@@ -117,7 +117,22 @@ describe('User Card ', function () {
     })
 
   })
- 
+
+  describe('Recipients dropdown option for parent entity should display child entities list', function () {
+
+    it('Recipients dropdown option for parent entity should display child entities list', () => {
+
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('Base Examples');
+      usercard.selectProcess('Process example');
+      cy.get('#opfab-recipients').click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 16);
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(11).contains("French Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(11).contains("(Control Center FR East,Control Center FR North,Control Center FR South,Control Center FR West)");
+    })
+  })
+
   describe('Recipients dropdown should not be displayed or restricted for some user cards', function () {
 
     it('Recipients dropdown should not be displayed in Tasks user card and only current user shall receive the card ', () => {

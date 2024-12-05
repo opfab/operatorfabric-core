@@ -20,6 +20,10 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
 
+    beforeAll(() => {
+        EntitiesService.clearCachedValues();
+    });
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
@@ -324,14 +328,24 @@ describe('EntitiesService', () => {
             listEntities.push(entity3_1_2);
             listEntities.push(entity3_2);
 
+            expect(EntitiesService.getCachedChildEntities().size).toEqual(0);
+
             EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(8);
+
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(0);
+
                 const allowedEntities = EntitiesService.resolveChildEntities('ENTITY1');
                 expect(allowedEntities.length).toBe(0);
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(1);
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY1').length).toEqual(0);
 
                 const allowedEntities2 = EntitiesService.resolveChildEntities('ENTITY2');
                 expect(allowedEntities2.length).toBe(1);
                 expect(allowedEntities2[0].id).toBe('ENTITY2.1');
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(2);
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY2').length).toEqual(1);
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY2')[0].id).toEqual('ENTITY2.1');
 
                 const allowedEntities3 = EntitiesService.resolveChildEntities('ENTITY3');
                 expect(allowedEntities3.length).toBe(4);
@@ -339,10 +353,35 @@ describe('EntitiesService', () => {
                 expect(allowedEntities3[1].id).toBe('ENTITY3.1.1');
                 expect(allowedEntities3[2].id).toBe('ENTITY3.1.2');
                 expect(allowedEntities3[3].id).toBe('ENTITY3.2');
+
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(3);
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY3').length).toEqual(4);
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY3')[0].id).toEqual('ENTITY3.1');
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY3')[1].id).toEqual('ENTITY3.1.1');
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY3')[2].id).toEqual('ENTITY3.1.2');
+                expect(EntitiesService.getCachedChildEntities().get('ENTITY3')[3].id).toEqual('ENTITY3.2');
             });
-            const req = httpMock.expectOne(`${environment.url}users/entities`);
+            let req = httpMock.expectOne(`${environment.url}users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
+            EntitiesService.deleteById('ENTITY3.1.1').subscribe(() => {
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(2);
+                expect(EntitiesService.getCachedChildEntities().has('ENTITY1')).toBeTrue();
+                expect(EntitiesService.getCachedChildEntities().has('ENTITY2')).toBeTrue();
+                expect(EntitiesService.getCachedChildEntities().has('ENTITY3')).toBeFalse();
+            });
+            req = httpMock.expectOne(`${environment.url}users/entities/ENTITY3.1.1`);
+            expect(req.request.method).toBe('DELETE');
+            req.flush(null);
+
+            EntitiesService.deleteById('ENTITY2').subscribe(() => {
+                expect(EntitiesService.getCachedChildEntities().size).toEqual(1);
+                expect(EntitiesService.getCachedChildEntities().has('ENTITY1')).toBeTrue();
+                expect(EntitiesService.getCachedChildEntities().has('ENTITY2')).toBeFalse();
+            });
+            req = httpMock.expectOne(`${environment.url}users/entities/ENTITY2`);
+            expect(req.request.method).toBe('DELETE');
+            req.flush(null);
         });
     });
 });

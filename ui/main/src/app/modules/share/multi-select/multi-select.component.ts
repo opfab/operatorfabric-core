@@ -88,7 +88,9 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             hideClearButton: !this.getValueOrDefault(this.config.multiple, true),
             enableSecureText: true, // Do not remove this important security control to avoid script injection see #3826
             allowNewOption: allowNewOption,
-            autoSelectFirstOption: autoSelectFirstOption
+            autoSelectFirstOption: autoSelectFirstOption,
+            labelRenderer: this.config.labelRenderer,
+            selectedLabelRenderer: this.config.selectedLabelRenderer
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);

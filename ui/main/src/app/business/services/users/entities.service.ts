@@ -18,7 +18,8 @@ import {ErrorService} from '../error-service';
 import {RolesEnum} from '@ofModel/roles.model';
 
 export class EntitiesService {
-    protected static _entities: Entity[];
+    private static _entities: Entity[];
+    private static readonly _childEntities: Map<string, Entity[]> = new Map<string, Entity[]>();
     private static readonly ngUnsubscribe$ = new Subject<void>();
     private static entitiesServer: EntitiesServer;
 
@@ -40,6 +41,16 @@ export class EntitiesService {
 
     private static deleteFromCachedEntities(id: string): void {
         EntitiesService._entities = EntitiesService._entities.filter((entity) => entity.id !== id);
+        EntitiesService._childEntities.delete(id);
+        EntitiesService.deleteFromCachedChildEntities(id);
+    }
+
+    private static deleteFromCachedChildEntities(id: string) {
+        const parentEntitiesIds = [...EntitiesService._childEntities.entries()]
+            .filter(([, childs]) => childs.findIndex((child) => child.id === id) >= 0)
+            .map((entry) => entry[0]);
+
+        parentEntitiesIds.forEach((parentId) => EntitiesService._childEntities.delete(parentId));
     }
 
     public static queryAllEntities(): Observable<Entity[]> {
@@ -73,6 +84,7 @@ export class EntitiesService {
         const updatedEntities = EntitiesService._entities.filter((entity) => entity.id !== entityData.id);
         updatedEntities.push(entityData);
         EntitiesService._entities = updatedEntities;
+        EntitiesService.deleteFromCachedChildEntities(entityData.id);
     }
 
     public static getAll(): Observable<any[]> {
@@ -90,6 +102,7 @@ export class EntitiesService {
                 next: (entities) => {
                     if (entities) {
                         EntitiesService._entities = entities;
+                        EntitiesService._childEntities.clear();
                         logger.info('List of entities loaded');
                     }
                 },
@@ -113,6 +126,15 @@ export class EntitiesService {
 
     public static getCachedValues(): Array<Entity> {
         return EntitiesService.getEntities();
+    }
+
+    public static getCachedChildEntities(): Map<string, Entity[]> {
+        return EntitiesService._childEntities;
+    }
+
+    public static clearCachedValues() {
+        EntitiesService._entities = [];
+        EntitiesService._childEntities.clear();
     }
 
     public static getEntityName(idEntity: string): string {
@@ -197,12 +219,18 @@ export class EntitiesService {
 
     /** This method returns the list of descendant entities related to a given parent entity **/
     public static resolveChildEntities(parentId: string): Entity[] {
-        const resolved = new Set<Entity>();
-        const parent = EntitiesService._entities.find((e) => e.id === parentId);
-        if (parent) {
-            EntitiesService.findChildEntities(parent).forEach((cc) => resolved.add(cc));
+        let childEntities = EntitiesService._childEntities.get(parentId);
+        if (!childEntities) {
+            const resolved = new Set<Entity>();
+            const parent = EntitiesService._entities.find((e) => e.id === parentId);
+            if (parent) {
+                EntitiesService.findChildEntities(parent).forEach((cc) => resolved.add(cc));
+            }
+            childEntities = Array.from(resolved);
+            childEntities.sort((a, b) => a.description.localeCompare(b.description));
+            EntitiesService._childEntities.set(parentId, childEntities);
         }
-        return Array.from(resolved);
+        return childEntities;
     }
 
     private static findChildEntities(parent: Entity): Entity[] {
