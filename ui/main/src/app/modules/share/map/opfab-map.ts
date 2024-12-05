@@ -44,8 +44,8 @@ export abstract class OpfabMap {
     highlightPolygonStrokeWidth: number = 2;
 
     constructor(
-        private translate: TranslateService,
-        private changeDetector: ChangeDetectorRef
+        private readonly translate: TranslateService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         self = this;
     }

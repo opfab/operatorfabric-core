@@ -58,11 +58,11 @@ export class NavbarComponent {
     rightMenuCollapsedElements: NavbarMenuElement[];
 
     constructor(
-        private router: Router,
-        private modalService: NgbModal,
-        private domSanitizationService: DomSanitizer,
-        private translationService: TranslationService,
-        private changeDetector: ChangeDetectorRef
+        private readonly router: Router,
+        private readonly modalService: NgbModal,
+        private readonly domSanitizationService: DomSanitizer,
+        private readonly translationService: TranslationService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         this.navbarPage = new NavbarView().getNavbarPage();
         this.navbarMenuView = new NavbarMenuView(this.translationService);

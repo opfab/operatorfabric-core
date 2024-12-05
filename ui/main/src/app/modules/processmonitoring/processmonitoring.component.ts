@@ -178,13 +178,13 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     weekButtonClicked = false;
     periodClicked: string;
 
-    private mapSeverity = new Map([
+    private readonly mapSeverity = new Map([
         ['alarm', 1],
         ['action', 2],
         ['compliant', 3],
         ['information', 4]
     ]);
-    private processMonitoringDefaultConfig: ProcessMonitoringConfig;
+    private readonly processMonitoringDefaultConfig: ProcessMonitoringConfig;
     private processMonitoringFields: ProcessMonitoringField[];
     private readonly processMonitoringFieldsDefaultConfig: ProcessMonitoringField[];
     private readonly processMonitoringFieldsForProcesses: Map<string, ProcessMonitoringField[]>;
@@ -193,9 +193,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     isMapViewActivated: boolean;
 
     constructor(
-        private translationService: TranslationService,
-        private modalService: NgbModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly translationService: TranslationService,
+        private readonly modalService: NgbModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         this.processMonitoringDefaultConfig = ConfigService.getProcessMonitoringConfig();
         this.processMonitoringFieldsDefaultConfig = this.processMonitoringDefaultConfig?.fields;

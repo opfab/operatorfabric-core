@@ -42,10 +42,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
 
-    private canDeactivateSubject = new Subject<boolean>();
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly canDeactivateSubject = new Subject<boolean>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
 
-    constructor(private modalService: NgbModal) {}
+    constructor(private readonly modalService: NgbModal) {}
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView();

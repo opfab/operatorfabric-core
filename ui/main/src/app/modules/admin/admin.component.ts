@@ -9,7 +9,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SharingService} from './services/sharing.service';
 import {NgFor} from '@angular/common';
@@ -28,9 +28,8 @@ export class AdminComponent implements OnInit {
     public paginationPageSizeOptions = [5, 10, 25, 50, 100];
 
     constructor(
-        private route: ActivatedRoute,
         protected translate: TranslateService,
-        private dataHandlingService: SharingService
+        private readonly dataHandlingService: SharingService
     ) {}
 
     ngOnInit() {

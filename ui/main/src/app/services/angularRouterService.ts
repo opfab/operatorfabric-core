@@ -15,7 +15,7 @@ import {Router} from '@angular/router';
     providedIn: 'root'
 })
 export class AngularRouterService extends ApplicationRouter {
-    constructor(private router: Router) {
+    constructor(private readonly router: Router) {
         super();
     }
 

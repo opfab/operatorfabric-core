@@ -17,7 +17,7 @@ export class SeverityForm {
     private selectedSeverity: Severity;
     private severityVisible: boolean;
 
-    constructor(private userCardUIControl: UserCardUIControl) {}
+    constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
     public setProcessAndState(processId: string, stateId: string, card: Card = undefined) {
         const state = ProcessesService.getProcess(processId).states.get(stateId);

@@ -100,7 +100,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     columnFilters: FilterModel[] = [];
     isProcessGroupFilterVisible: boolean;
 
-    private mapSeverity = new Map([
+    private readonly mapSeverity = new Map([
         ['alarm', 1],
         ['action', 2],
         ['compliant', 3],
@@ -108,9 +108,9 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private translationService: TranslationService,
-        private modalService: NgbModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly translationService: TranslationService,
+        private readonly modalService: NgbModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.logging) {

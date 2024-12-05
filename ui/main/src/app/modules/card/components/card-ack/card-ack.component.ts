@@ -59,7 +59,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     public user: User;
 
-    private unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
     isReadOnlyUser: any;
 
     cardProcess: Process;

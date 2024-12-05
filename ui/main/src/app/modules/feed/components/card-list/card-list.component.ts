@@ -65,9 +65,9 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     filterActive: boolean;
     filterOpen: boolean;
 
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private router: Router) {
+    constructor(private readonly router: Router) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }

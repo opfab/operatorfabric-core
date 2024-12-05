@@ -26,7 +26,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingCom
     private modalRef: NgbModalRef;
     @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
 
-    constructor(private modalService: NgbModal) {
+    constructor(private readonly modalService: NgbModal) {
         super();
     }
 

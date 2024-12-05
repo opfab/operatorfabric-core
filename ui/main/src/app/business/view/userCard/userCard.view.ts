@@ -68,14 +68,14 @@ export class UserCardView {
     private existingCard: Card;
     private existingChildCards: Card[];
     private datesForm: DatesForm;
-    private processStatesForm: ProcessStatesForm;
-    private publisherForm: PublisherForm;
+    private readonly processStatesForm: ProcessStatesForm;
+    private readonly publisherForm: PublisherForm;
     private recipientsForm: RecipientsForm;
-    private severityForm: SeverityForm;
-    private keepChildCardsForm: KeepChildCardsForm;
+    private readonly severityForm: SeverityForm;
+    private readonly keepChildCardsForm: KeepChildCardsForm;
     private useCurrentDateForCardStartDate: boolean;
 
-    constructor(private userCardUIControl: UserCardUIControl) {
+    constructor(private readonly userCardUIControl: UserCardUIControl) {
         this.processStatesForm = new ProcessStatesForm(this.userCardUIControl);
         this.publisherForm = new PublisherForm(this.userCardUIControl);
         this.severityForm = new SeverityForm(this.userCardUIControl);

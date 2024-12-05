@@ -38,8 +38,8 @@ export class RichTextComponent implements OnInit {
     delta: string;
 
     constructor(
-        private translateService: TranslationService,
-        private clipboard: Clipboard,
+        private readonly translateService: TranslationService,
+        private readonly clipboard: Clipboard,
         public renderer: Renderer2
     ) {}
     ngOnInit(): void {

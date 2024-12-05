@@ -87,7 +87,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public btnUnlockLabel = 'response.btnUnlock';
     isReadOnlyUser: boolean;
 
-    constructor(private modalService: NgbModal) {
+    constructor(private readonly modalService: NgbModal) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }

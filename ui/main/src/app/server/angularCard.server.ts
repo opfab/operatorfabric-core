@@ -25,13 +25,13 @@ import {Page} from '@ofModel/page.model';
     providedIn: 'root'
 })
 export class AngularCardServer extends AngularServer implements CardServer {
-    private cardConsultationUrl: string;
-    private archivesUrl: string;
-    private cardPublicationUrl: string;
-    private userCardReadUrl: string;
-    private userCardUrl: string;
+    private readonly cardConsultationUrl: string;
+    private readonly archivesUrl: string;
+    private readonly cardPublicationUrl: string;
+    private readonly userCardReadUrl: string;
+    private readonly userCardUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.cardConsultationUrl = `${environment.url}cards-consultation/cards`;
         this.archivesUrl = `${environment.url}cards-consultation/archives`;

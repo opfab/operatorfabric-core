@@ -17,7 +17,7 @@ export class KeepChildCardsForm {
     private keepChildCards: boolean;
     private keepChildCardsVisible: boolean = false;
 
-    constructor(private userCardUIControl: UserCardUIControl) {}
+    constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
     public setValueAndVisibility(
         processId: string,

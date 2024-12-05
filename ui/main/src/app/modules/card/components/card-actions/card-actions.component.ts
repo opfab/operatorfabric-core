@@ -54,12 +54,12 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     public showCreateCopyButton = false;
     public deleteInProgress = false;
 
-    private unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
     isReadOnlyUser: boolean;
 
     constructor(
-        private modalService: NgbModal,
-        private router: Router
+        private readonly modalService: NgbModal,
+        private readonly router: Router
     ) {}
 
     ngOnChanges(): void {

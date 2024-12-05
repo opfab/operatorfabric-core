@@ -53,11 +53,11 @@ export class LightCardComponent implements OnInit, OnDestroy {
     hasGeoLocation;
     isGeoMapEnabled;
 
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
-        private router: Router,
-        private translateService: TranslateService
+        private readonly router: Router,
+        private readonly translateService: TranslateService
     ) {}
 
     ngOnInit() {

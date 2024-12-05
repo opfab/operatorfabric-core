@@ -23,14 +23,14 @@ import {CrudSupervisedEntitiesService} from 'app/business/services/admin/crud-su
 @Injectable()
 export class SharingService implements OnDestroy {
     private readonly _paginationPageSize$: ReplaySubject<number>;
-    private unsubscribe$: Subject<void> = new Subject<void>();
-    private crudUserService: CrudUserService;
-    private crudEntitiesService: CrudEntitiesService;
-    private crudGroupsService: CrudGroupsService;
-    private crudPerimetersService: CrudPerimetersService;
-    private crudProcessesService: CrudProcessesService;
-    private crudBusinessDataService: CrudBusinessDataService;
-    private supervisedEntitiesService: CrudSupervisedEntitiesService;
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly crudUserService: CrudUserService;
+    private readonly crudEntitiesService: CrudEntitiesService;
+    private readonly crudGroupsService: CrudGroupsService;
+    private readonly crudPerimetersService: CrudPerimetersService;
+    private readonly crudProcessesService: CrudProcessesService;
+    private readonly crudBusinessDataService: CrudBusinessDataService;
+    private readonly supervisedEntitiesService: CrudSupervisedEntitiesService;
 
     constructor() {
         this._paginationPageSize$ = new ReplaySubject<number>();

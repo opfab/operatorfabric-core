@@ -166,10 +166,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                     if (i !== 0) {
                         this.changeGraphConf(this.buttonList[i - 1], true);
                     }
-                } else {
-                    if (i !== this.buttonList.length - 1) {
-                        this.changeGraphConf(this.buttonList[i + 1], true);
-                    }
+                } else if (i !== this.buttonList.length - 1) {
+                    this.changeGraphConf(this.buttonList[i + 1], true);
                 }
                 return;
             }

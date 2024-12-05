@@ -21,7 +21,7 @@ import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 })
 export class AngularAdminProcessesServer extends AngularServer implements AdminProcessServer {
     readonly processesUrl: string;
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
     }

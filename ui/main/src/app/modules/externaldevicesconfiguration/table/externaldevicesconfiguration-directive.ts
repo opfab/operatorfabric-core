@@ -29,7 +29,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     public gridApi;
     public pageSize = 10;
     public page = 1;
-    private columnDefs: ColDef[] = [];
+    private readonly columnDefs: ColDef[] = [];
     public editModalComponent;
     modalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it

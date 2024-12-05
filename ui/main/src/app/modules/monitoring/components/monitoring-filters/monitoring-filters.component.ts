@@ -41,9 +41,9 @@ export class MonitoringFiltersComponent implements OnInit {
     eventForPublishingFilters: EventEmitter<Filter[]> = new EventEmitter<Filter[]>();
 
     constructor(
-        private translate: TranslateService,
-        private monitoringProcessList: MonitoringProcessList,
-        private monitoringFilterBuilder: MonitoringFilterBuilder
+        private readonly translate: TranslateService,
+        private readonly monitoringProcessList: MonitoringProcessList,
+        private readonly monitoringFilterBuilder: MonitoringFilterBuilder
     ) {}
 
     ngOnInit() {

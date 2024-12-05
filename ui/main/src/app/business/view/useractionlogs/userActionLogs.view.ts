@@ -26,7 +26,7 @@ import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
 import {ExcelExport} from '../../common/excel-export';
 
 export class UserActionLogsView {
-    private userActionLogPage = new UserActionLogsPageDescription();
+    private readonly userActionLogPage = new UserActionLogsPageDescription();
     private selectedLogins: string[] = [];
     private selectedActions: string[] = [];
     private dateFrom = 0;
@@ -34,8 +34,8 @@ export class UserActionLogsView {
     private pageNumber = 0;
 
     constructor(
-        private translationService: TranslationService,
-        private userActionLogsServer: UserActionLogsServer
+        private readonly translationService: TranslationService,
+        private readonly userActionLogsServer: UserActionLogsServer
     ) {
         this.initPage();
     }

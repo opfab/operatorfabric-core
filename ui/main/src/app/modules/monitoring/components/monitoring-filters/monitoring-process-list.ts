@@ -18,8 +18,8 @@ export const DEFAULT_PROCESS_GROUP_ID = '--';
     providedIn: 'root'
 })
 export class MonitoringProcessList {
-    private processList: Array<Process> = [];
-    private processByProcessGroup: Map<string, Process[]> = new Map();
+    private readonly processList: Array<Process> = [];
+    private readonly processByProcessGroup: Map<string, Process[]> = new Map();
     private processGroups: Array<any>;
 
     constructor() {

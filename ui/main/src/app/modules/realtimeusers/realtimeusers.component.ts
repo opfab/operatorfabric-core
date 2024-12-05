@@ -52,7 +52,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     realtimePage: RealtimePage;
     initialScreenOption: string;
 
-    constructor(private configServer: ConfigServer) {}
+    constructor(private readonly configServer: ConfigServer) {}
 
     ngOnInit(): void {
         this.realTimeScreensForm = new FormGroup({

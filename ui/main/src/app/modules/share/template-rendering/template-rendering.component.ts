@@ -68,13 +68,13 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     public isLoadingSpinnerToDisplay = false;
 
     private userContext: UserContext;
-    private unsubscribeToGlobalStyle$: Subject<void> = new Subject<void>();
+    private readonly unsubscribeToGlobalStyle$: Subject<void> = new Subject<void>();
     private templateLoaded: boolean;
 
     constructor(
-        private element: ElementRef,
-        private sanitizer: DomSanitizer,
-        private changeDetector: ChangeDetectorRef
+        private readonly element: ElementRef,
+        private readonly sanitizer: DomSanitizer,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     public ngOnInit() {
@@ -210,7 +210,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         this.computeRenderingHeight();
     }
 
-    private computeRenderingHeight = () => {
+    private readonly computeRenderingHeight = () => {
         const htmlElementForCardRendering = document.getElementById('opfab-div-card-template');
         if (htmlElementForCardRendering) {
             const renderingRect = htmlElementForCardRendering.getBoundingClientRect();

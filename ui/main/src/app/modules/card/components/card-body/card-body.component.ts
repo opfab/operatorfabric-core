@@ -98,16 +98,16 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
     public userEntityIdsPossibleForResponse = [];
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
-    private unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
     public user: User;
-    private userWithPerimeters: UserWithPerimeters;
+    private readonly userWithPerimeters: UserWithPerimeters;
     private cardBodyView: CardBodyView;
     public isCardAcknowledgedFooterVisible: boolean;
     private openNextCardOnAcknowledgment: boolean;
     private cardsLoaded: boolean;
 
-    constructor(private router: Router) {
+    constructor(private readonly router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;

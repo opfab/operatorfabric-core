@@ -56,7 +56,7 @@ export class UsersconfigurationModalComponent implements OnInit {
         sortOptions: true
     };
 
-    constructor(private activeModal: NgbActiveModal) {}
+    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         if (this.row) {

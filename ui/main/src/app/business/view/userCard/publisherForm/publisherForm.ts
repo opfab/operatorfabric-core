@@ -19,7 +19,7 @@ export class PublisherForm {
     private selectedPublisher: string;
     private editionMode: EditionMode;
 
-    constructor(private userCardUIControl: UserCardUIControl) {}
+    constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
     public setProcessAndState(processId: string, stateId: string, card?: Card, editionMode?: EditionMode) {
         this.editionMode = editionMode;

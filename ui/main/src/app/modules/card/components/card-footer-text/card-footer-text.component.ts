@@ -39,7 +39,7 @@ export class CardFooterTextComponent implements OnChanges, OnInit {
 
     public user: User;
 
-    private unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor() {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();

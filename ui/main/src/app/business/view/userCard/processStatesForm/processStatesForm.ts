@@ -44,7 +44,7 @@ export class ProcessStatesForm {
     private selectedStateId: string;
     private currentCard: Card;
 
-    constructor(private userCardUIControl: UserCardUIControl) {}
+    constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
     init(card: Card = undefined) {
         this.currentCard = card;

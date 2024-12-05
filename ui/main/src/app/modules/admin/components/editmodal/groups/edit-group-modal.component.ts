@@ -85,9 +85,9 @@ export class EditGroupModalComponent implements OnInit {
     };
 
     constructor(
-        private activeModal: NgbActiveModal,
-        private dataHandlingService: SharingService,
-        private changeDetector: ChangeDetectorRef
+        private readonly activeModal: NgbActiveModal,
+        private readonly dataHandlingService: SharingService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
     }

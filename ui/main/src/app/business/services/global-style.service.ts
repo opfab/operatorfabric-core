@@ -15,8 +15,8 @@ import {MenuService} from 'app/business/services/menu.service';
 declare const opfabStyle: any;
 
 export class GlobalStyleService {
-    public static DAY = 'DAY';
-    public static NIGHT = 'NIGHT';
+    public static readonly DAY = 'DAY';
+    public static readonly NIGHT = 'NIGHT';
 
     private static style: string;
 

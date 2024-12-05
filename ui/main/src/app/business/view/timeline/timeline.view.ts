@@ -15,16 +15,16 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 export class TimelineView {
-    private circles: Circles;
-    private xAxis: XAxis;
+    private readonly circles: Circles;
+    private readonly xAxis: XAxis;
     private domainId: string;
     private title: string;
     private gridTimeDomain: any;
     private cardsTimeDomain: any;
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
 
-    private circlesSubject = new Subject<Circle[]>();
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly circlesSubject = new Subject<Circle[]>();
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
     constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();

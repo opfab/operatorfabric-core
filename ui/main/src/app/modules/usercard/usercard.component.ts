@@ -90,7 +90,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         sortOptions: true
     };
 
-    private userCardForm = new FormGroup({
+    private readonly userCardForm = new FormGroup({
         cardPublisher: new FormControl(''),
         endDate: new FormControl(''),
         expirationDate: new FormControl(''),

@@ -69,27 +69,27 @@ export class ApplicationLoadingComponent implements OnInit {
     public showLoginScreen = false;
 
     constructor(
-        private authService: AuthService,
-        private configServer: ConfigServer,
-        private opfabEventStreamServer: OpfabEventStreamServer,
-        private translationService: TranslationService,
-        private remoteLoggerServer: RemoteLoggerServer,
-        private userServer: UserServer,
-        private routerService: AngularRouterService,
-        private entitiesServer: EntitiesServer,
-        private groupsServer: GroupsServer,
-        private perimetersServer: PerimetersServer,
-        private processServer: ProcessServer,
-        private adminProcessServer: AdminProcessServer,
-        private acknowledgeServer: AcknowledgeServer,
-        private businessDataServer: BusinessDataServer,
-        private cardServer: CardServer,
-        private supervisedEntitiesServer: SupervisedEntitiesServer,
-        private externalDevicesServer: ExternalDevicesServer,
-        private templateCssServer: TemplateCssServer,
-        private settingsServer: SettingsServer,
-        private modalServer: ModalServer,
-        private soundServer: SoundServer
+        private readonly authService: AuthService,
+        private readonly configServer: ConfigServer,
+        private readonly opfabEventStreamServer: OpfabEventStreamServer,
+        private readonly translationService: TranslationService,
+        private readonly remoteLoggerServer: RemoteLoggerServer,
+        private readonly userServer: UserServer,
+        private readonly routerService: AngularRouterService,
+        private readonly entitiesServer: EntitiesServer,
+        private readonly groupsServer: GroupsServer,
+        private readonly perimetersServer: PerimetersServer,
+        private readonly processServer: ProcessServer,
+        private readonly adminProcessServer: AdminProcessServer,
+        private readonly acknowledgeServer: AcknowledgeServer,
+        private readonly businessDataServer: BusinessDataServer,
+        private readonly cardServer: CardServer,
+        private readonly supervisedEntitiesServer: SupervisedEntitiesServer,
+        private readonly externalDevicesServer: ExternalDevicesServer,
+        private readonly templateCssServer: TemplateCssServer,
+        private readonly settingsServer: SettingsServer,
+        private readonly modalServer: ModalServer,
+        private readonly soundServer: SoundServer
     ) {
         LoggerService.setLogLevel(LogLevel.DEBUG);
     }

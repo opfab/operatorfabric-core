@@ -30,7 +30,7 @@ export class RoleCellRendererComponent implements ICellRendererAngularComp {
     entities: Entity[];
     _roles = [];
 
-    constructor(private translationService: TranslationService) {
+    constructor(private readonly translationService: TranslationService) {
         this.entities = EntitiesService.getEntities();
     }
 

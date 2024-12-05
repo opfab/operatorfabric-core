@@ -25,7 +25,7 @@ import {TranslateModule} from '@ngx-translate/core';
 export class SessionEndComponent implements OnInit {
     public isDisconnectedByNewUser = false;
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.subscribeToSessionEnd();

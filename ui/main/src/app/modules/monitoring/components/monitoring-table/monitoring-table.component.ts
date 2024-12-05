@@ -63,7 +63,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     private columnDefs: ColDef[] = [];
     private rowData = [];
     rowData$: Observable<any>;
-    private rowDataSubject = new Subject();
+    private readonly rowDataSubject = new Subject();
     private firstNgOnChange = true;
 
     private readonly timeColumnName;
@@ -77,7 +77,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     private readonly entitiesResponsesColumnName;
     private readonly requiredResponsesColumnName;
 
-    private mapSeverity = new Map([
+    private readonly mapSeverity = new Map([
         ['alarm', 1],
         ['action', 2],
         ['compliant', 3],
@@ -85,8 +85,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ]);
 
     constructor(
-        private translationService: TranslationService,
-        private modalService: NgbModal
+        private readonly translationService: TranslationService,
+        private readonly modalService: NgbModal
     ) {
         this.monitoringConfig = ConfigService.getMonitoringConfig();
 

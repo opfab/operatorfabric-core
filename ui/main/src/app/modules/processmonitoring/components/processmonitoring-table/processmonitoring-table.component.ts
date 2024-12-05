@@ -52,8 +52,8 @@ export class ProcessmonitoringTableComponent {
     private columnDefs: ColDef[] = [];
 
     constructor(
-        private translate: TranslateService,
-        private modalService: NgbModal
+        private readonly translate: TranslateService,
+        private readonly modalService: NgbModal
     ) {
         this.gridOptions = <GridOptions>{
             context: {

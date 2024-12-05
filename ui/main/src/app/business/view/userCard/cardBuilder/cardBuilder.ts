@@ -28,7 +28,7 @@ export class CardBuilder {
     private editionMode: EditionMode;
     private endDate: number;
     private expirationDate: number;
-    private inputFieldVisibility: Map<InputFieldName, boolean> = new Map();
+    private readonly inputFieldVisibility: Map<InputFieldName, boolean> = new Map();
     private lttd: number;
     private processId: string;
     private processVersion: string;

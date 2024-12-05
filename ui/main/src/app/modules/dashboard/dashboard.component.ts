@@ -42,8 +42,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private processStateRedirects: any;
 
     constructor(
-        private modalService: NgbModal,
-        private router: Router
+        private readonly modalService: NgbModal,
+        private readonly router: Router
     ) {
         this.dashboard = new Dashboard();
     }

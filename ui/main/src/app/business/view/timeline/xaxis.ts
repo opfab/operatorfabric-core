@@ -23,7 +23,7 @@ export class XAxis {
     private ticks: Array<Date> = [];
     private ticksLabel: Map<number, string> = new Map<number, string>();
 
-    private tickSizeMap = {
+    private readonly tickSizeMap = {
         RT: {minutes: 15},
         J: {minutes: 30},
         '7D': {hours: 4},
@@ -111,7 +111,7 @@ export class XAxis {
         });
     }
 
-    private computeTickLabel = (value: Date, domainId: string): string => {
+    private readonly computeTickLabel = (value: Date, domainId: string): string => {
         switch (domainId) {
             case 'RT':
                 if (value.getMinutes() === 0) return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';

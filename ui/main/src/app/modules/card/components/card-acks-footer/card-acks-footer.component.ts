@@ -34,10 +34,10 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     public acknowledgedList: any[];
     public notAcknowledgedList: any[];
 
-    private unsubscribe$: Subject<void> = new Subject<void>();
+    private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-    private static ORANGE: string = 'var(--opfab-color-darker-orange)';
-    private static GREEN: string = 'var(--opfab-color-green)';
+    private static readonly ORANGE: string = 'var(--opfab-color-darker-orange)';
+    private static readonly GREEN: string = 'var(--opfab-color-green)';
 
     ngOnInit() {
         OpfabStore.getLightCardStore()

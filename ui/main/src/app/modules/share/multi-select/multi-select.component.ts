@@ -40,7 +40,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     private virtualSelectComponent: any;
     private disabled: boolean;
 
-    constructor(private translateService: TranslateService) {}
+    constructor(private readonly translateService: TranslateService) {}
 
     ngAfterViewInit() {
         setTimeout(() => {

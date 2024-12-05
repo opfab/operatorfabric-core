@@ -25,13 +25,13 @@ import {Utilities} from 'app/business/common/utilities';
 
 export class RealtimeUsersView {
     private realtimePage: RealtimePage;
-    private realtimeScreens: RealtimePageScreen[] = [];
-    private connectedUsersPerEntity: Map<string, string[]> = new Map<string, string[]>();
-    private connectedUsersGroups: Map<string, string[]> = new Map<string, string[]>();
-    private pageLoaded = new ReplaySubject<RealtimePage>(1);
+    private readonly realtimeScreens: RealtimePageScreen[] = [];
+    private readonly connectedUsersPerEntity: Map<string, string[]> = new Map<string, string[]>();
+    private readonly connectedUsersGroups: Map<string, string[]> = new Map<string, string[]>();
+    private readonly pageLoaded = new ReplaySubject<RealtimePage>(1);
     private updateInterval;
 
-    constructor(private configServer: ConfigServer) {
+    constructor(private readonly configServer: ConfigServer) {
         this.init();
     }
 

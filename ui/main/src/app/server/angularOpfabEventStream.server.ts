@@ -23,24 +23,24 @@ import {Guid} from 'guid-typescript';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
-    private static TWO_MINUTES = 120000;
-    private eventStreamUrl: string;
-    private closeEventStreamUrl: string;
-    private heartbeatUrl: string;
+    private static readonly TWO_MINUTES = 120000;
+    private readonly eventStreamUrl: string;
+    private readonly closeEventStreamUrl: string;
+    private readonly heartbeatUrl: string;
     private isHeartbeatRunning: boolean;
     private heartbeatSendingIntervalId;
     private heartbeatSendingIntervalSeconds;
     private heartbeatReceptionIntervalId;
 
-    private businessEvents = new Subject<any>();
-    private streamInitDoneEvent = new Subject<void>();
-    private streamStatusEvents = new Subject<string>();
+    private readonly businessEvents = new Subject<any>();
+    private readonly streamInitDoneEvent = new Subject<void>();
+    private readonly streamStatusEvents = new Subject<string>();
 
     private lastheartbeatDate = 0;
     private firstSubscriptionInitDone = false;
     private eventSource;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         const subscriptionClientId = Guid.create().toString();
         this.eventStreamUrl = `${environment.url}cards-consultation/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;
@@ -68,22 +68,20 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
             if (message.data === 'HEARTBEAT') {
                 this.lastheartbeatDate = new Date().valueOf();
                 logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
-            } else {
-                if (message.data === 'INIT') {
-                    if (this.firstSubscriptionInitDone) {
-                        this.recoverAnyLostCardWhenConnectionHasBeenReset();
-                        // process or user config may have change during connection loss
-                        // so reload both configuration
-                        this.businessEvents.next({data: 'BUSINESS_CONFIG_CHANGE'});
-                        this.businessEvents.next({data: 'USER_CONFIG_CHANGE'});
-                    } else {
-                        this.firstSubscriptionInitDone = true;
-                        this.streamInitDoneEvent.next();
-                        this.streamInitDoneEvent.complete();
-                        this.lastheartbeatDate = new Date().valueOf();
-                    }
-                } else this.businessEvents.next(message);
-            }
+            } else if (message.data === 'INIT') {
+                if (this.firstSubscriptionInitDone) {
+                    this.recoverAnyLostCardWhenConnectionHasBeenReset();
+                    // process or user config may have change during connection loss
+                    // so reload both configuration
+                    this.businessEvents.next({data: 'BUSINESS_CONFIG_CHANGE'});
+                    this.businessEvents.next({data: 'USER_CONFIG_CHANGE'});
+                } else {
+                    this.firstSubscriptionInitDone = true;
+                    this.streamInitDoneEvent.next();
+                    this.streamInitDoneEvent.complete();
+                    this.lastheartbeatDate = new Date().valueOf();
+                }
+            } else this.businessEvents.next(message);
         };
         this.eventSource.onerror = (error) => {
             this.streamStatusEvents.next('close');

@@ -84,11 +84,11 @@ export class EditEntityModalComponent implements OnInit {
     private crudService: CrudService;
 
     constructor(
-        private translationService: TranslationService,
-        private translate: TranslateService,
-        private activeModal: NgbActiveModal,
-        private dataHandlingService: SharingService,
-        private changeDetector: ChangeDetectorRef
+        private readonly translationService: TranslationService,
+        private readonly translate: TranslateService,
+        private readonly activeModal: NgbActiveModal,
+        private readonly dataHandlingService: SharingService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {

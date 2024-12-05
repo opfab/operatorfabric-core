@@ -37,14 +37,14 @@ export class FeedComponent implements OnInit, OnDestroy {
     hallwayModeSelectedCardUid: string;
     totalNumberOfLightsCards = 0;
     maxNbOfCardsToDisplay = 100;
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
     private readonly hallwayMode: boolean;
     filtersVisible = false;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute
+        private readonly router: Router,
+        private readonly route: ActivatedRoute
     ) {
         this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.processFilter = params.processFilter;

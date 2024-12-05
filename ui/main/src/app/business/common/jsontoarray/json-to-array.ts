@@ -42,14 +42,12 @@ export class JsonToArray {
                 this.fieldsProcessOnlyIfPreviousArraysAreEmpty.add(rule.jsonField);
             rule.fields.forEach((field) => this.processRule(field, true));
             this.nestedJsonToArrays.set(rule.jsonField, new JsonToArray(rule.fields));
-        } else {
-            if (rule.columnName) {
-                this.addColumn(rule.columnName);
-                if (!innerRule)
-                    this.fieldDescriptions.push(
-                        new FieldDescription(rule.jsonField, rule.type, this.columnIndexes.get(rule.columnName), false)
-                    );
-            }
+        } else if (rule.columnName) {
+            this.addColumn(rule.columnName);
+            if (!innerRule)
+                this.fieldDescriptions.push(
+                    new FieldDescription(rule.jsonField, rule.type, this.columnIndexes.get(rule.columnName), false)
+                );
         }
     }
 

@@ -114,9 +114,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private translationService: TranslationService,
-        private modalService: NgbModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly translationService: TranslationService,
+        private readonly modalService: NgbModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;

@@ -79,7 +79,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public openPopover: NgbPopover;
     public popoverTimeOut;
 
-    private changeDetectorRef: ChangeDetectorRef;
+    private readonly changeDetectorRef: ChangeDetectorRef;
     private isDestroyed = false;
 
     public circles$: Observable<any>;
@@ -88,7 +88,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         chartElement: ElementRef,
         zone: NgZone,
         cd: ChangeDetectorRef,
-        private router: Router,
+        private readonly router: Router,
         @Inject(PLATFORM_ID) platformId: any
     ) {
         super(chartElement, zone, cd, platformId);

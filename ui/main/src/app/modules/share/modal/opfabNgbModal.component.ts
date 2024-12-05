@@ -25,7 +25,7 @@ import {TranslateModule} from '@ngx-translate/core';
 export class OpfabNgbModalComponent {
     @Input() modalConfig: ModalConfig;
 
-    constructor(private activeModal: NgbActiveModal) {}
+    constructor(private readonly activeModal: NgbActiveModal) {}
 
     public close(buttonId: string) {
         this.activeModal.close(buttonId);

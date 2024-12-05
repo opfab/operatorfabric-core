@@ -80,12 +80,10 @@ export class CardComponent implements OnInit, OnDestroy {
                             }
                         }
                     });
-                } else {
-                    if (selectedCard.notFound) {
-                        this.cardNotFound = true;
-                        this.cardLoadingInProgress = false;
-                        LoggerService.warn('Card not found.');
-                    }
+                } else if (selectedCard.notFound) {
+                    this.cardNotFound = true;
+                    this.cardLoadingInProgress = false;
+                    LoggerService.warn('Card not found.');
                 }
             });
         this.checkForCardLoadingInProgressForMoreThanOneSecond();

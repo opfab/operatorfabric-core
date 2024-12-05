@@ -33,7 +33,7 @@ export class NotificationConfigurationView {
     private setEmailEnabled: Function = () => {};
     private notificationConfigurationPage: NotificationConfigurationPage;
     private processList: ProcessForNotification[] = [];
-    private translationService: TranslationService;
+    private readonly translationService: TranslationService;
     private lastProcessesStatesNotNotifiedSaved;
     private lastProcessesStatesNotifiedByEmailSaved;
 

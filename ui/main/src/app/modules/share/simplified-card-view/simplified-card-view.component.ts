@@ -40,7 +40,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     public cardState: State;
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
-    private user: User;
+    private readonly user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = true;
 

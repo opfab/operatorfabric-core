@@ -58,7 +58,7 @@ export class LoggingTableComponent implements OnDestroy {
     private readonly descriptionColumnName;
     private readonly senderColumnName;
 
-    constructor(private translate: TranslateService) {
+    constructor(private readonly translate: TranslateService) {
         this.timeColumnName = this.translateColumn('shared.result.timeOfAction');
         this.processGroupColumnName = this.translateColumn('shared.result.processGroup');
         this.processColumnName = this.translateColumn('shared.result.process');

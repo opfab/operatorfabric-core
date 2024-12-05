@@ -24,9 +24,9 @@ export class RecipientsForm {
     private recipientVisible = false;
     private selectedRecipients: string[] = [];
     private selectedRecipientsForInformation: string[] = [];
-    private useDescriptionFieldForEntityList = false;
+    private readonly useDescriptionFieldForEntityList = false;
 
-    constructor(private userCardUIControl: UserCardUIControl) {
+    constructor(private readonly userCardUIControl: UserCardUIControl) {
         this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(
             'usercard.useDescriptionFieldForEntityList',
             false

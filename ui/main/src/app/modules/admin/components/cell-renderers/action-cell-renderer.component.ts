@@ -27,7 +27,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     public actionType: string;
 
     // Defines icons to display depending on action type
-    private actionIconsMapping = {
+    private readonly actionIconsMapping = {
         edit: 'fas fa-pen',
         delete: 'far fa-trash-alt',
         download: 'fas fa-download',

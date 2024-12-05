@@ -91,13 +91,13 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     protected i18NPrefix = 'admin.input.';
     protected crudService: CrudService;
-    private currentUserLogin;
+    private readonly currentUserLogin;
 
     constructor(
         protected translateService: TranslateService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
-        private changeDetector: ChangeDetectorRef
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.processesDefinition = ProcessesService.getAllProcesses();

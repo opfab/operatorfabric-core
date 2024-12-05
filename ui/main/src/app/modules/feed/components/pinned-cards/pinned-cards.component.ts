@@ -26,7 +26,7 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgFor, NgIf, NgbPopover, TranslateModule, LowerCasePipe]
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
     pinnedCards: LightCard[];
     visiblePinnedCards: LightCard[];
     hiddenPinnedCards: LightCard[];
@@ -35,7 +35,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
 
     maxHiddenPinnedCards = 20;
 
-    constructor(private router: Router) {}
+    constructor(private readonly router: Router) {}
 
     ngOnInit(): void {
         this.pinnedCards = [];

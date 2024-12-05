@@ -49,7 +49,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
     public isDisconnectedByAnotherTab = false;
     private isApplicationActive = false;
 
-    constructor(private urlLockService: UrlLockService) {
+    constructor(private readonly urlLockService: UrlLockService) {
         super();
     }
 

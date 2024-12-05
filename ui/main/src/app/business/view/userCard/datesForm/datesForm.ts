@@ -14,8 +14,8 @@ import {Card} from '@ofModel/card.model';
 import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
 
 export class DatesForm {
-    private static ONE_MINUTE = 60000;
-    private static ONE_DAY = 60000 * 60 * 24;
+    private static readonly ONE_MINUTE = 60000;
+    private static readonly ONE_DAY = 60000 * 60 * 24;
 
     private endDate: number;
     private endDateVisible: boolean;
@@ -28,9 +28,9 @@ export class DatesForm {
     private startDateVisible: boolean;
     private stateId: string;
 
-    private dateFields = ['startDate', 'endDate', 'lttd', 'expirationDate'];
+    private readonly dateFields = ['startDate', 'endDate', 'lttd', 'expirationDate'];
 
-    constructor(private userCardUIControl: UserCardUIControl) {}
+    constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
     public initDatesBeforeTemplateScriptsExecution(
         processId: string,

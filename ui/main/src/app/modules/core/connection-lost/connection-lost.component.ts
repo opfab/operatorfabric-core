@@ -26,8 +26,8 @@ export class ConnectionLostComponent implements OnInit {
     previousStatus = '';
 
     constructor(
-        private opfabEventStreamServer: OpfabEventStreamServer,
-        private changeDetector: ChangeDetectorRef
+        private readonly opfabEventStreamServer: OpfabEventStreamServer,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {

@@ -40,8 +40,8 @@ import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.
 })
 export class EditPerimeterModalComponent implements OnInit {
     constructor(
-        private activeModal: NgbActiveModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly activeModal: NgbActiveModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         Object.keys(RightsEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
