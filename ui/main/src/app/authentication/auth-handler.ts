@@ -124,7 +124,7 @@ export abstract class AuthHandler {
     }
 
     public regularCheckIfTokenExpireSoon() {
-        if (this.doesTokenExpireSoon()) {
+        if (this.isTokenStillValid()) {
             setTimeout(() => {
                 this.regularCheckIfTokenExpireSoon();
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
@@ -133,7 +133,7 @@ export abstract class AuthHandler {
             this.tokenWillSoonExpire.next(true);
         }
     }
-    protected doesTokenExpireSoon(): boolean {
+    protected isTokenStillValid(): boolean {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem('expirationDate');
         const isNotANumber = isNaN(expirationDate);

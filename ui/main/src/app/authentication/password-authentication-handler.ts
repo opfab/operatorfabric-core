@@ -19,7 +19,7 @@ export class PasswordAuthenticationHandler extends AuthHandler {
             // no token stored or token invalid
             if (!payload) this.rejectAuthentication.next(new Message('No token (password mode)'));
             else {
-                if (this.doesTokenExpireSoon()) {
+                if (this.isTokenStillValid()) {
                     this.userAuthenticated.next(null);
                 } else
                     this.rejectAuthentication.next(
