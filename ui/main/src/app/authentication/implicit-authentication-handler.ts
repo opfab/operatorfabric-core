@@ -26,7 +26,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
     public async initializeAuthentication() {
         const authConfig: AuthConfig = {
             issuer: this.delegateUrl,
-            redirectUri: this.getRedirectUri(),
+            redirectUri: location.href,
             silentRefreshRedirectUri: this.getRedirectUri() + 'silent-refresh.html',
             clientId: this.clientId,
             scope: 'openid profile email',
