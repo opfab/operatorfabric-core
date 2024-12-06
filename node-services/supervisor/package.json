@@ -29,7 +29,7 @@
         "winston-daily-rotate-file": "5.0.0"
     },
     "devDependencies": {
-        "@types/amqplib": "0.10.5",
+        "@types/amqplib": "0.10.6",
         "@types/config": "3.3.5",
         "@types/express": "5.0.0",
         "@types/jest": "29.5.14",
