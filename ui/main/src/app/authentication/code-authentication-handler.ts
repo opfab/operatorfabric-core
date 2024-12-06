@@ -19,10 +19,10 @@ export class CodeAuthenticationHandler extends AuthHandler {
         const foundIndex = window.location.href.indexOf(searchCodeString);
         if (foundIndex !== -1) {
             authCode = window.location.href.substring(foundIndex + searchCodeString.length);
-        }
-        this.checkAuthentication().subscribe((payload) => {
+        } else this.saveOpfabRoute();
+        this.checkAuthentication().subscribe((token) => {
             // no token stored or token invalid
-            if (!payload) {
+            if (!token) {
                 if (authCode) {
                     this.askToken(authCode).subscribe({
                         next: (authInfo) => {
@@ -41,6 +41,19 @@ export class CodeAuthenticationHandler extends AuthHandler {
                 }
             }
         });
+    }
+    // With the code flow it is not possible to pass a hash in the redirect_uri
+    // so we need to save in the session storage the route before login.
+    // We do not use the local storage because the local storage is shared between tabs
+    private saveOpfabRoute() {
+        const hash = window.location.hash;
+        const hashLength = hash.length;
+        const routeAfterLogin = hashLength > 2 ? hash.substring(1, hashLength) : '/';
+        window.sessionStorage.setItem('route_after_login_for_code_flow', routeAfterLogin);
+    }
+
+    public getOpfabRouteAfterLogin(): string {
+        return window.sessionStorage.getItem('route_after_login_for_code_flow');
     }
 
     private askToken(code: string): Observable<HttpAuthInfo> {

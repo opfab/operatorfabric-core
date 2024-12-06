@@ -15,9 +15,9 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 
 export class PasswordAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {
-        this.checkAuthentication().subscribe((payload) => {
+        this.checkAuthentication().subscribe((token) => {
             // no token stored or token invalid
-            if (!payload) this.rejectAuthentication.next(new Message('No token (password mode)'));
+            if (!token) this.rejectAuthentication.next(new Message('No token (password mode)'));
             else {
                 if (this.isTokenStillValid()) {
                     this.userAuthenticated.next(null);

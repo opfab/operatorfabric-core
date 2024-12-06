@@ -10,6 +10,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../modules/core/application-loading/login/login.component';
+import {FeedComponent} from 'app/modules/feed/feed.component';
+import {CardComponent} from 'app/modules/card/card.component';
+import {CardBodyComponent} from 'app/modules/card/components/card-body/card-body.component';
+import {MapComponent} from 'app/modules/feed/components/map/map.component';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -17,8 +21,36 @@ import {LoginComponent} from '../modules/core/application-loading/login/login.co
 
 const routes: Routes = [
     {
+        // Avoid lazy loading otherwise it may cause issues when accessing
+        // a card direclty via the url (e.g. /feed/cards/1234)
+        // see issue #7632
         path: 'feed',
-        loadChildren: () => import('../modules/feed/feed-routing')
+        component: FeedComponent,
+        children: [
+            {
+                path: 'cards',
+                children: [
+                    {
+                        path: '',
+                        component: CardComponent
+                    },
+                    {
+                        path: ':cid',
+                        component: CardComponent,
+                        children: [
+                            {
+                                path: 'details/:did',
+                                component: CardBodyComponent
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                path: '',
+                component: MapComponent
+            }
+        ]
     },
     {
         path: 'archives',

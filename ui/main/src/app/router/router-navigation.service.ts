@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {filter} from 'rxjs';
@@ -32,9 +32,14 @@ export class RouterNavigationService {
     }
 
     updateRouterStore() {
-        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            RouterStore.setCurrentRoute(event.url);
-        });
+        // Store the current route as soon as the navigation starts and not at the end
+        // otherwise it may cause issues with lazy loading when accessing a module direclty
+        // via the url (e.g. /#/archives), see issue #7632
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationStart))
+            .subscribe((event: NavigationStart) => {
+                RouterStore.setCurrentRoute(event.url);
+            });
     }
 
     clearSelectedCardWhenUserNavigateAwayFromTheFeed() {

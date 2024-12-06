@@ -62,6 +62,15 @@ export abstract class AuthHandler {
         return this.userAuthenticated.asObservable();
     }
 
+    public getOpfabRouteAfterLogin(): string {
+        const hash = window.location.hash;
+        const hashWithoutAuthenticationFields = hash.split('&')[0].split('?')[0];
+        const hashLength = hash.length;
+        const routeAfterLogin = hashLength > 2 ? hashWithoutAuthenticationFields.substring(1, hashLength) : '/';
+
+        return routeAfterLogin;
+    }
+
     public getRejectAuthentication(): Observable<Message> {
         return this.rejectAuthentication.asObservable();
     }

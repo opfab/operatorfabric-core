@@ -9,7 +9,6 @@
 
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
@@ -22,6 +21,7 @@ import {CodeAuthenticationHandler} from './code-authentication-handler';
 import {ImplicitAuthenticationHandler} from './implicit-authentication-handler';
 import {NoneAuthenticationHandler} from './none-authentication-handler';
 import {PasswordAuthenticationHandler} from './password-authentication-handler';
+import {RouterService} from 'app/business/services/router.service';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +34,6 @@ export class AuthService {
     private authHandler: AuthHandler;
 
     constructor(
-        private readonly router: Router,
         private readonly oauthServiceForImplicitMode: OAuthService,
         private readonly httpClient: HttpClient
     ) {}
@@ -78,7 +77,7 @@ export class AuthService {
             CurrentUserStore.setCurrentUserAuthenticationValid(this.login);
             this.authHandler.regularCheckIfTokenExpireSoon();
             this.authHandler.regularCheckIfTokenIsExpired();
-            this.redirectToCurrentLocation();
+            this.redirectToUrlChoosenBeforeLogin();
         });
         this.authHandler.getTokenWillSoonExpire().subscribe(() => {
             CurrentUserStore.setSessionWillSoonExpire();
@@ -99,11 +98,8 @@ export class AuthService {
         localStorage.setItem('expirationDate', user.expirationDate?.getTime().toString());
     }
 
-    private redirectToCurrentLocation(): void {
-        const pathname = window.location.hash;
-        const hashLength = pathname.length;
-        const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/';
-        this.router.navigate([decodeURI(lastDestination)]);
+    private redirectToUrlChoosenBeforeLogin(): void {
+        RouterService.navigateTo(decodeURI(this.authHandler.getOpfabRouteAfterLogin()));
     }
 
     public rejectLogin(message: Message) {
@@ -130,7 +126,7 @@ export class AuthService {
     private goBackToLoginPage() {
         logger.info('Go back to login page');
         this.removeUserFromStorage();
-        this.redirectToCurrentLocation();
+        this.redirectToUrlChoosenBeforeLogin();
     }
 
     public getAuthMode(): AuthenticationMode {
