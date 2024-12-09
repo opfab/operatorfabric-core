@@ -44,7 +44,7 @@ The task output can be found under `$OF_HOME/build/docs/asciidoc`
 == Generating API documentation
 
 The documentation for the API is generated from the `swagger.yaml` definitions using SwaggerUI. To generate the
-API documentation, use the `generateSwaggerUI` gradle task, either from the project root or from one of the services:
+API documentation, use the `generateSwaggerUI` gradle task, either from the project root or from one of the client directory:
 
 [source,bash]
 ----
@@ -52,6 +52,6 @@ cd $OF_HOME
 ./gradlew generateSwaggerUI
 ----
 
-The task output can be found for each service under `[service-path]/build/docs/api`
-(for example `services/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
+The task output can be found for each client library under `client/[service-path]/build/docs/api`
+(for example `client/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
 the generated SwaggerUI.
