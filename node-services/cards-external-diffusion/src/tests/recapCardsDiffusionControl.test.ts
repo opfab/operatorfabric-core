@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import DailyCardsDiffusionControl from '../domain/application/dailyCardsDiffusionControl';
+import RecapCardsDiffusionControl from '../domain/application/recapCardsDiffusionControl';
 import {getLogger} from '../common/server-side/logger';
 import {
     DatabaseServiceStub,
@@ -18,11 +18,12 @@ import {
 } from './testHelpers';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
 const logger = getLogger();
 
 describe('Cards external diffusion', function () {
-    let dailyCardsDiffusionControl: DailyCardsDiffusionControl;
+    let recapCardsDiffusionControl: RecapCardsDiffusionControl;
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
     let opfabBusinessConfigServicesInterfaceStub: OpfabBusinessConfigServicesInterfaceStub;
     let databaseServiceStub: DatabaseServiceStub;
@@ -43,9 +44,8 @@ describe('Cards external diffusion', function () {
         opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
         opfabBusinessConfigServicesInterfaceStub = new OpfabBusinessConfigServicesInterfaceStub();
         databaseServiceStub = new DatabaseServiceStub();
-
         mailService = new SendMailServiceStub({smtpHost: 'localhost', smtpPort: 1025});
-        dailyCardsDiffusionControl = new DailyCardsDiffusionControl()
+        recapCardsDiffusionControl = new RecapCardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterfaceStub)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterfaceStub)
@@ -53,6 +53,7 @@ describe('Cards external diffusion', function () {
             .setMailService(mailService)
             .setFrom('test@opfab.com')
             .setDailyEmailTitle('Daily Email Title')
+            .setWeeklyEmailTitle('Weekly Email Title')
             .setOpfabUrlInMailContent('http://localhost');
     }
 
@@ -72,13 +73,13 @@ describe('Cards external diffusion', function () {
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
                 userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
+                sendDailyEmail: true,
                 email: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
-                sendCardsByEmail: true,
+                sendDailyEmail: true,
                 email: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
@@ -99,7 +100,48 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await dailyCardsDiffusionControl.checkCardsOfTheDay(time);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
+
+        expect(mailService.numberOfMailsSent).toEqual(0);
+    });
+
+    it('Should not send weekly email when cards are older than a week before config date', async function () {
+        const time = Date.now();
+        const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_WEEK - 1000;
+        setup();
+        initConfig();
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendWeeklyEmail: true,
+                email: 'operator_1@opfab.com',
+                computedPerimeters: perimeters
+            },
+            {
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
+                sendWeeklyEmail: true,
+                email: 'operator_2@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        databaseServiceStub.cards = [
+            {
+                uid: '0001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            }
+        ];
+
+        await recapCardsDiffusionControl.checkCardsStartingFrom('weekly');
 
         expect(mailService.numberOfMailsSent).toEqual(0);
     });
@@ -156,7 +198,7 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await dailyCardsDiffusionControl.checkCardsOfTheDay(time);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
@@ -169,7 +211,7 @@ describe('Cards external diffusion', function () {
         );
     });
 
-    it('Should not send email when setting sendDailyEmail is set to false', async function () {
+    it('Should not send daily recap email when setting sendDailyEmail is set to false', async function () {
         const time = Date.now();
         const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
         setup();
@@ -208,12 +250,12 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await dailyCardsDiffusionControl.checkCardsOfTheDay(time);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
 
         expect(mailService.numberOfMailsSent).toEqual(0);
     });
 
-    it('Should not send email when setting sendDailyEmail is not set', async function () {
+    it('Should not send daily recap email when setting sendDailyEmail is not set', async function () {
         const time = Date.now();
         const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
         setup();
@@ -251,12 +293,12 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await dailyCardsDiffusionControl.checkCardsOfTheDay(time);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
 
         expect(mailService.numberOfMailsSent).toEqual(0);
     });
 
-    it('Should send email to all enabled users', async function () {
+    it('Should send daily recap email to all enabled users', async function () {
         const time = Date.now();
         const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
         setup();
@@ -297,7 +339,98 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        await dailyCardsDiffusionControl.checkCardsOfTheDay(time);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
+
+        expect(mailService.numberOfMailsSent).toEqual(2);
+        expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
+        expect(mailService.sent[1].toAddress).toEqual('operator_2@opfab.com');
+    });
+
+    it('Should not send weekly recap email when setting sendWeeklyEmail is not set', async function () {
+        const time = Date.now();
+        const publishDateBeforeConfigDate = time - 3 * MILLISECONDS_IN_A_DAY;
+        setup();
+        initConfig();
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                email: 'operator_1@opfab.com',
+                computedPerimeters: perimeters
+            },
+            {
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
+                sendCardsByEmail: true,
+                email: 'operator_2@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1000',
+                id: 'defaultProcess.process1',
+                severity: 'INFORMATION',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            }
+        ];
+
+        await recapCardsDiffusionControl.checkCardsStartingFrom('weekly');
+
+        expect(mailService.numberOfMailsSent).toEqual(0);
+    });
+
+    it('Should send weekly recap email to all enabled users', async function () {
+        const time = Date.now();
+        const publishDateBeforeConfigDate = time - 3 * MILLISECONDS_IN_A_DAY;
+        setup();
+        initConfig();
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                sendWeeklyEmail: true,
+                email: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            },
+            {
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
+                sendCardsByEmail: true,
+                sendWeeklyEmail: true,
+                email: 'operator_2@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1000',
+                id: 'defaultProcess.process1',
+                severity: 'INFORMATION',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            }
+        ];
+
+        await recapCardsDiffusionControl.checkCardsStartingFrom('weekly');
 
         expect(mailService.numberOfMailsSent).toEqual(2);
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');

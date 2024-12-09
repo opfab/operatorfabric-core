@@ -322,6 +322,7 @@
         "sendCardsByEmail": "Kaartmeldingen per e-mail versturen",
         "emailToPlainText": "De e-mails versturen in platte tekst",
         "sendDailyEmail": "Stuur dagelijks een e-mail om de kaarten van de dag samen te vatten",
+        "sendWeeklyEmail": "Stuur wekelijks een e-mail om de kaarten van de week samen te vatten",
         "email": "EMAIL",
         "settingsSaved": "Instellingen bewaard",
         "invalidSettings": "Corrigeer de ongeldige velden alstublieft",

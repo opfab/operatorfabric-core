@@ -10,192 +10,247 @@
 <div class="opfab-settings-title" translate>settings.title</div>
 
 <form [formGroup]="settingsForm">
-  <div class="opfab-settings">
+    <div class="opfab-settings">
+        <div
+            class="opfab-border-box opfab-settings-item"
+            style="margin-bottom: 0px"
+            *ngIf="settingsView.isSettingVisible('sounds')">
+            <label translate>settings.playSoundLabel</label>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-alarm">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-alarm" translate> settings.playSoundForAlarm </span>
+                    <input type="checkbox" formControlName="playSoundForAlarm" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-action">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-action" translate> settings.playSoundForAction </span>
+                    <input type="checkbox" formControlName="playSoundForAction" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-compliant">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-compliant" translate> settings.playSoundForCompliant </span>
+                    <input type="checkbox" formControlName="playSoundForCompliant" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-information">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-information" translate> settings.playSoundForInformation </span>
+                    <input type="checkbox" formControlName="playSoundForInformation" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+        </div>
 
-    <div class="opfab-border-box opfab-settings-item" style="margin-bottom:0px;"
-      *ngIf="settingsView.isSettingVisible('sounds')">
-      <label translate>settings.playSoundLabel</label>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-alarm">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-alarm" translate> settings.playSoundForAlarm </span>
-          <input type="checkbox" formControlName="playSoundForAlarm">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-action">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-action" translate> settings.playSoundForAction </span>
-          <input type="checkbox" formControlName="playSoundForAction">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-compliant">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-compliant" translate> settings.playSoundForCompliant </span>
-          <input type="checkbox" formControlName="playSoundForCompliant">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-sev-information">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-information" translate> settings.playSoundForInformation </span>
-          <input type="checkbox" formControlName="playSoundForInformation">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-    </div>
+        <div class="opfab-settings-sounds opfab-settings-item" *ngIf="settingsView.isSettingVisible('sounds')">
+            <div class="opfab-sound-checkbox-label" id="opfab-setting-input-replayEnabled">
+                <span class="opfab-settings-sub-item">
+                    <label class="opfab-checkbox">
+                        <span class="label-replay" translate> settings.replayEnabled </span>
+                        <input type="checkbox" formControlName="replayEnabled" />
+                        <span class="opfab-checkbox-checkmark"></span>
+                    </label>
+                </span>
+                <span class="opfab-settings-sub-item" *ngIf="isExternalDeviceSettingVisible">
+                    <label class="opfab-checkbox">
+                        <span class="label-external-devices" translate> settings.playSoundOnExternalDevice </span>
+                        <input
+                            id="opfab-setting-input-external-devices"
+                            type="checkbox"
+                            formControlName="playSoundOnExternalDevice" />
+                        <span class="opfab-checkbox-checkmark"></span>
+                    </label>
+                </span>
+            </div>
+            <div class="opfab-input">
+                <label for="opfab-setting-replayInterval" translate>settings.replayInterval</label>
+                <input
+                    id="opfab-setting-input-replayInterval"
+                    #replayIntervalValue
+                    min="0"
+                    formControlName="replayInterval"
+                    inputmode="numeric"
+                    (input)="validateNumericInput(replayIntervalValue)" />
+            </div>
+        </div>
 
-    <div class="opfab-settings-sounds opfab-settings-item" *ngIf="settingsView.isSettingVisible('sounds')">
-      <div class="opfab-sound-checkbox-label" id="opfab-setting-input-replayEnabled">
-        <span class="opfab-settings-sub-item">
-          <label class="opfab-checkbox ">
-            <span class="label-replay" translate> settings.replayEnabled </span>
-            <input type="checkbox" formControlName="replayEnabled">
-            <span class="opfab-checkbox-checkmark"></span>
-          </label>
-        </span>
-        <span class="opfab-settings-sub-item" *ngIf="isExternalDeviceSettingVisible">
-          <label class="opfab-checkbox ">
-            <span class="label-external-devices" translate>
-              settings.playSoundOnExternalDevice </span>
-            <input id="opfab-setting-input-external-devices" type="checkbox"
-              formControlName="playSoundOnExternalDevice">
-            <span class="opfab-checkbox-checkmark"></span>
-          </label>
-        </span>
-      </div>
-      <div class="opfab-input">
-        <label for="opfab-setting-replayInterval" translate>settings.replayInterval</label>
-        <input id="opfab-setting-input-replayInterval" #replayIntervalValue min="0" formControlName="replayInterval" inputmode="numeric"
-               (input)="validateNumericInput(replayIntervalValue)">
-      </div>
-    </div>
+        <div
+            class="opfab-border-box opfab-settings-item"
+            style="margin-bottom: 0px"
+            *ngIf="settingsView.isSettingVisible('systemNotifications')">
+            <label translate>settings.notificationOnOperatingSystem</label>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-alarm">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-alarm" translate> settings.systemNotificationAlarm </span>
+                    <input type="checkbox" formControlName="systemNotificationAlarm" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-action">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-action" translate> settings.systemNotificationAction </span>
+                    <input type="checkbox" formControlName="systemNotificationAction" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-compliant">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-compliant" translate> settings.systemNotificationCompliant </span>
+                    <input type="checkbox" formControlName="systemNotificationCompliant" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+            <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-information">
+                <label class="opfab-checkbox">
+                    <span class="label-sev-information" translate> settings.systemNotificationInformation </span>
+                    <input type="checkbox" formControlName="systemNotificationInformation" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </span>
+        </div>
 
-    <div class="opfab-border-box opfab-settings-item" style="margin-bottom:0px;"
-      *ngIf="settingsView.isSettingVisible('systemNotifications')">
-      <label translate>settings.notificationOnOperatingSystem</label>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-alarm">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-alarm" translate> settings.systemNotificationAlarm </span>
-          <input type="checkbox" formControlName="systemNotificationAlarm">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-action">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-action" translate> settings.systemNotificationAction </span>
-          <input type="checkbox" formControlName="systemNotificationAction">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-compliant">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-compliant" translate> settings.systemNotificationCompliant </span>
-          <input type="checkbox" formControlName="systemNotificationCompliant">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-notif-sev-information">
-        <label class="opfab-checkbox ">
-          <span class="label-sev-information" translate> settings.systemNotificationInformation </span>
-          <input type="checkbox" formControlName="systemNotificationInformation">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-    </div>
+        <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('language')">
+            <of-multi-select
+                id="opfab-setting-locale"
+                multiSelectId="locale"
+                [parentForm]="settingsForm"
+                [config]="languageMultiSelectConfig"
+                [options]="languageOptionList"
+                [selectedOptions]="languageSelectedOption">
+            </of-multi-select>
+        </div>
 
-    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('language')">
-      <of-multi-select id="opfab-setting-locale" multiSelectId="locale" [parentForm]="settingsForm"
-        [config]="languageMultiSelectConfig" [options]=" languageOptionList" [selectedOptions]="languageSelectedOption">
-      </of-multi-select>
-    </div>
+        <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
+            <div class="opfab-input">
+                <label for="opfab-setting-email" translate>settings.email</label>
+                <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off" />
+            </div>
+            <div *ngIf="email.invalid" class="opfab-input-invalid" style="margin-top: 0px">
+                <div *ngIf="email.errors.email" translate>settings.input.errors.invalidEmail</div>
+            </div>
+        </div>
 
+        <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('timezoneForEmails')">
+            <of-multi-select
+                id="opfab-setting-timezoneForEmails"
+                multiSelectId="timezoneForEmails"
+                [parentForm]="settingsForm"
+                [config]="timezoneForEmailsMultiSelectConfig"
+                [options]="timezoneForEmailsOptionList"
+                [selectedOptions]="timezoneForEmailsSelectedOption">
+            </of-multi-select>
+        </div>
 
-    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
-      <span id="opfab-setting-input-sendCardsByEmail" class="opfab-settings-sub-item">
-        <label class="opfab-checkbox ">
-          <span class="label-send-cards-by-email" translate> settings.sendCardsByEmail </span>
-          <input type="checkbox" formControlName="sendCardsByEmail">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <span class="opfab-settings-sub-item" id="opfab-setting-input-emailToPlainText">
-        <label class="opfab-checkbox ">
-          <span class="label-email-to-plain-text" translate> settings.emailToPlainText </span>
-          <input type="checkbox" formControlName="emailToPlainText">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </span>
-      <div *ngIf="settingsView.isSettingVisible('sendDailyEmail')" id="opfab-setting-input-sendDailyEmail">
-        <label class="opfab-checkbox ">
-          <span class="label-send-daily-email" translate> settings.sendDailyEmail </span>
-          <input type="checkbox" formControlName="sendDailyEmail">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </div>
-    </div>
-    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
-      <div class="opfab-input">
-        <label for="opfab-setting-email" translate>settings.email</label>
-        <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off">
-      </div>
-      <div *ngIf="email.invalid" class="opfab-input-invalid" style="margin-top: 0px;">
-        <div *ngIf="email.errors.email" translate>settings.input.errors.invalidEmail</div>
-      </div>
-    </div>
+        <div
+            class="opfab-settings-item"
+            *ngIf="settingsView.isSettingVisible('sendCardsByEmail')"
+            style="margin-top: 20px">
+            <div id="opfab-setting-input-sendCardsByEmail">
+                <label class="opfab-checkbox">
+                    <span class="label-send-cards-by-email" translate> settings.sendCardsByEmail </span>
+                    <input type="checkbox" formControlName="sendCardsByEmail" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+            <div id="opfab-setting-input-emailToPlainText">
+                <label class="opfab-checkbox">
+                    <span class="label-email-to-plain-text" translate> settings.emailToPlainText </span>
+                    <input type="checkbox" formControlName="emailToPlainText" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+        </div>
+        <div
+            class="opfab-settings-item"
+            *ngIf="settingsView.isSettingVisible('sendCardsByEmail')"
+            style="margin-top: 20px">
+            <div *ngIf="settingsView.isSettingVisible('sendDailyEmail')" id="opfab-setting-input-sendDailyEmail">
+                <label class="opfab-checkbox">
+                    <span class="label-send-daily-email" translate> settings.sendDailyEmail </span>
+                    <input type="checkbox" formControlName="sendDailyEmail" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+            <div *ngIf="settingsView.isSettingVisible('sendWeeklyEmail')" id="opfab-setting-input-sendWeeklyEmail">
+                <label class="opfab-checkbox">
+                    <span class="label-send-weekly-email" translate> settings.sendWeeklyEmail </span>
+                    <input type="checkbox" formControlName="sendWeeklyEmail" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+        </div>
 
-    <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('timezoneForEmails')">
-        <of-multi-select id="opfab-setting-timezoneForEmails" multiSelectId="timezoneForEmails" [parentForm]="settingsForm"
-                         [config]="timezoneForEmailsMultiSelectConfig" [options]=" timezoneForEmailsOptionList"
-                         [selectedOptions]="timezoneForEmailsSelectedOption">
-        </of-multi-select>
-    </div>
+        <div
+            class="opfab-settings-item"
+            *ngIf="
+                settingsView.isSettingVisible('hallwayMode') ||
+                settingsView.isSettingVisible('openNextCardOnAcknowledgment')
+            "
+            style="margin-top: 30px">
+            <div id="opfab-setting-input-hallway-mode" *ngIf="settingsView.isSettingVisible('hallwayMode')">
+                <label class="opfab-checkbox">
+                    <span class="label-hallway-mode" id="opfab-setting-input-hallway-mode-checkbox" translate>
+                        settings.hallwayMode
+                    </span>
+                    <input type="checkbox" formControlName="hallwayMode" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
 
-    <div class="opfab-settings-item"
-      *ngIf="settingsView.isSettingVisible('hallwayMode') || settingsView.isSettingVisible('openNextCardOnAcknowledgment')">
-      <div id="opfab-setting-input-hallway-mode" *ngIf="settingsView.isSettingVisible('hallwayMode')">
-        <label class="opfab-checkbox ">
-          <span class="label-hallway-mode" id="opfab-setting-input-hallway-mode-checkbox" translate> settings.hallwayMode
-          </span>
-          <input type="checkbox" formControlName="hallwayMode">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </div>
-    
-      <div id="opfab-setting-input-open-next-card" *ngIf="settingsView.isSettingVisible('openNextCardOnAcknowledgment')">
-        <label class="opfab-checkbox ">
-          <span class="label-open-next-card" id="opfab-setting-input-open-next-card-checkbox" translate>
-            settings.openNextCardOnAcknowledgment </span>
-          <input type="checkbox" formControlName="openNextCardOnAcknowledgment">
-          <span class="opfab-checkbox-checkmark"></span>
-        </label>
-      </div>
-    </div>
+            <div
+                id="opfab-setting-input-open-next-card"
+                *ngIf="settingsView.isSettingVisible('openNextCardOnAcknowledgment')">
+                <label class="opfab-checkbox">
+                    <span class="label-open-next-card" id="opfab-setting-input-open-next-card-checkbox" translate>
+                        settings.openNextCardOnAcknowledgment
+                    </span>
+                    <input type="checkbox" formControlName="openNextCardOnAcknowledgment" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+        </div>
 
-    <div class="opfab-settings-item" id="opfab-setting-input-ack-footer"
-      *ngIf="settingsView.isSettingVisible('showAcknowledgmentFooter')">
-      <label class="opfab-checkbox ">
-        <span class="label-hallway-mode" id="opfab-setting-input-ack-footer-checkbox" translate>
-          settings.showAcknowledgmentFooter </span>
-        <input type="checkbox" formControlName="showAcknowledgmentFooter">
-        <span class="opfab-checkbox-checkmark"></span>
-      </label>
+        <div
+            class="opfab-settings-item"
+            id="opfab-setting-input-ack-footer"
+            *ngIf="settingsView.isSettingVisible('showAcknowledgmentFooter')"
+            style="margin-top: 30px">
+            <label class="opfab-checkbox">
+                <span class="label-hallway-mode" id="opfab-setting-input-ack-footer-checkbox" translate>
+                    settings.showAcknowledgmentFooter
+                </span>
+                <input type="checkbox" formControlName="showAcknowledgmentFooter" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </div>
+        <div
+            class="opfab-settings-item"
+            id="opfab-setting-input-remoteLoggingEnabled"
+            *ngIf="settingsView.isSettingVisible('remoteLoggingEnabled')">
+            <label class="opfab-checkbox">
+                <span class="label-remote-logging-enabled" translate> settings.remoteLoggingEnabled </span>
+                <input type="checkbox" formControlName="remoteLoggingEnabled" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </div>
     </div>
-    <div class="opfab-settings-item" id="opfab-setting-input-remoteLoggingEnabled"
-      *ngIf="settingsView.isSettingVisible('remoteLoggingEnabled')">
-      <label class="opfab-checkbox ">
-        <span class="label-remote-logging-enabled" translate> settings.remoteLoggingEnabled </span>
-        <input type="checkbox" formControlName="remoteLoggingEnabled">
-        <span class="opfab-checkbox-checkmark"></span>
-      </label>
-    </div>
-  </div>
 </form>
 
 <br />
 
-<div style="text-align: center;width:100%">
-  <button id="opfab-settings-btn-save" type="button" class="opfab-btn" [disabled]="!settingsForm.valid"
-    (click)='saveSettings()' style="text-align: center;min-width: 243px;"
-    translate>shared.confirmSettings</button>
+<div style="text-align: center; width: 100%">
+    <button
+        id="opfab-settings-btn-save"
+        type="button"
+        class="opfab-btn"
+        [disabled]="!settingsForm.valid"
+        (click)="saveSettings()"
+        style="text-align: center; min-width: 243px"
+        translate>
+        shared.confirmSettings
+    </button>
 </div>

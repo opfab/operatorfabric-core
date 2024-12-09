@@ -32,6 +32,7 @@ public class CurrentUserWithPerimeters {
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
+    private Boolean sendWeeklyEmail;
     private String email;
     private String timezoneForEmails;
 
@@ -71,11 +72,19 @@ public class CurrentUserWithPerimeters {
     }
 
     public Boolean getSendDailyEmail() {
-            return sendDailyEmail;
-        }
-    
+        return sendDailyEmail;
+    }
+
+    public Boolean getSendWeeklyEmail() {
+        return sendWeeklyEmail;
+    }
+
     public void setSendDailyEmail(Boolean sendDailyEmail) {
         this.sendDailyEmail = sendDailyEmail;
+    }
+
+    public void setSendWeeklyEmail(Boolean sendWeeklyEmail) {
+        this.sendWeeklyEmail = sendWeeklyEmail;
     }
 
     public String getEmail() {
@@ -86,9 +95,13 @@ public class CurrentUserWithPerimeters {
         this.email = email;
     }
 
-    public String getTimezoneForEmails() { return timezoneForEmails; }
+    public String getTimezoneForEmails() {
+        return timezoneForEmails;
+    }
 
-    public void setTimezoneForEmails(String timezoneForEmails) { this.timezoneForEmails = timezoneForEmails; }
+    public void setTimezoneForEmails(String timezoneForEmails) {
+        this.timezoneForEmails = timezoneForEmails;
+    }
 
     public User getUserData() {
         return userData;

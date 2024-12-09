@@ -46,7 +46,8 @@ public class UserSettingsService {
     private boolean userActionLogActivated;
 
     public UserSettingsService(UserSettingsRepository userSettingsRepository, UsersService usersService,
-            NotificationService notificationService, UserActionLogService userActionLogService, boolean userActionLogActivated) {
+            NotificationService notificationService, UserActionLogService userActionLogService,
+            boolean userActionLogActivated) {
         this.userSettingsRepository = userSettingsRepository;
         this.userService = usersService;
         this.notificationService = notificationService;
@@ -57,20 +58,23 @@ public class UserSettingsService {
     public OperationResult<UserSettings> fetchUserSettings(String login) {
         Optional<UserSettings> foundUserSettings = userSettingsRepository.findById(login);
         UserSettings userSettings;
-        if (foundUserSettings.isPresent()) userSettings = foundUserSettings.get();
+        if (foundUserSettings.isPresent())
+            userSettings = foundUserSettings.get();
         else {
             Optional<User> user = userService.fetchUserByLogin(login);
             if (user.isPresent())
                 userSettings = userSettingsRepository.save(this.getNewUserSettings(login));
-            else return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
-                    String.format(USER_SETTINGS_NOT_FOUND_MSG, login));
+            else
+                return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
+                        String.format(USER_SETTINGS_NOT_FOUND_MSG, login));
         }
-        
+
         return new OperationResult<>(userSettings, true, null, null);
     }
 
-    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
-    public OperationResult<UserSettings> patchUserSettings(User userRequestingPatch, String userLoginToPatch, UserSettings userSettingsPatch) {
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says
+    public OperationResult<UserSettings> patchUserSettings(User userRequestingPatch, String userLoginToPatch,
+            UserSettings userSettingsPatch) {
 
         Optional<User> patchedUser = userService.fetchUserByLogin(userLoginToPatch);
         if (patchedUser.isEmpty())
@@ -91,23 +95,25 @@ public class UserSettingsService {
                 || (userSettingsPatch.getSendCardsByEmail() != null)
                 || (userSettingsPatch.getEmailToPlainText() != null)
                 || (userSettingsPatch.getSendDailyEmail() != null)
+                || (userSettingsPatch.getSendWeeklyEmail() != null)
                 || (userSettingsPatch.getEmail() != null)
                 || (userSettingsPatch.getTimezoneForEmails() != null))
             notificationService.publishUpdatedUserMessage(userLoginToPatch);
 
         if (userActionLogActivated && userSettingsPatch.getProcessesStatesNotNotified() != null) {
-            userActionLogService.insertUserActionLog(userRequestingPatch.getLogin(), UserActionEnum.NOTIFICATION_CONFIG, userRequestingPatch.getEntities(), null,
+            userActionLogService.insertUserActionLog(userRequestingPatch.getLogin(), UserActionEnum.NOTIFICATION_CONFIG,
+                    userRequestingPatch.getEntities(), null,
                     getProcessesStatesNotNotifiedText(userLoginToPatch, newSettings.getProcessesStatesNotNotified()));
         }
         return new OperationResult<>(newSettings, true, null, null);
     }
 
-    private String getProcessesStatesNotNotifiedText(String login, Map<String, List<String>> processesStatesNotNotified) {
+    private String getProcessesStatesNotNotifiedText(String login,
+            Map<String, List<String>> processesStatesNotNotified) {
         StringBuilder sb = new StringBuilder();
         sb.append("Patch " + login + ":\n");
-        processesStatesNotNotified.forEach((process, states) ->
-            sb.append(process).append(": [").append(String.join(",", states)).append("]\n")
-        );
+        processesStatesNotNotified.forEach(
+                (process, states) -> sb.append(process).append(": [").append(String.join(",", states)).append("]\n"));
         return sb.toString();
     }
 
@@ -118,7 +124,8 @@ public class UserSettingsService {
 
     }
 
-    @SuppressWarnings({"java:S2583","java:S3516"}) // false positive , it does not return always the same value as Sonar says
+    @SuppressWarnings({ "java:S2583", "java:S3516" }) // false positive , it does not return always the same value as
+                                                      // Sonar says
     private boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
         if ((userSettings.getProcessesStatesNotNotified() != null)
                 && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
@@ -156,7 +163,7 @@ public class UserSettingsService {
         return processStatesWithFilteringNotificationNotAllowed;
     }
 
-    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says
     private boolean isFilteringNotificationAllowedForAllProcessesStates(
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
             Map<String, List<String>> processesStates) {
@@ -174,7 +181,7 @@ public class UserSettingsService {
         return true;
     }
 
-    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says
     private boolean isFilteringNotificationAllowedForAllProcessStates(
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
             String processId,
@@ -200,7 +207,7 @@ public class UserSettingsService {
         return true;
     }
 
-    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says 
+    @SuppressWarnings("java:S2583") // false positive , it does not return always the same value as Sonar says
     public OperationResult<UserSettings> updateUserSettings(String login, UserSettings newSettings) {
         if (!checkFilteringNotificationIsAllowedForAllProcessesStates(login, newSettings))
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
@@ -216,7 +223,8 @@ public class UserSettingsService {
         List<UserSettings> settings = userSettingsRepository.findAll();
 
         settings.forEach(userSettings -> {
-            if (userSettings.getProcessesStatesNotNotified() != null && userSettings.getProcessesStatesNotNotified().get(process) != null) {
+            if (userSettings.getProcessesStatesNotNotified() != null
+                    && userSettings.getProcessesStatesNotNotified().get(process) != null) {
                 List<String> statesNotNotified = userSettings.getProcessesStatesNotNotified().get(process);
                 int stateIndex = statesNotNotified.indexOf(state);
                 if (stateIndex >= 0) {
@@ -233,8 +241,10 @@ public class UserSettingsService {
         List<UserSettings> settings = userSettingsRepository.findAll();
 
         settings.forEach(userSettings -> {
-            if (userSettings.getProcessesStatesNotNotified() == null) userSettings.setProcessesStatesNotNotified(new HashMap<>());
-            List<String> statesNotNotified = userSettings.getProcessesStatesNotNotified().computeIfAbsent(process, p -> new ArrayList<String>());
+            if (userSettings.getProcessesStatesNotNotified() == null)
+                userSettings.setProcessesStatesNotNotified(new HashMap<>());
+            List<String> statesNotNotified = userSettings.getProcessesStatesNotNotified().computeIfAbsent(process,
+                    p -> new ArrayList<String>());
             int stateIndex = statesNotNotified.indexOf(state);
             if (stateIndex < 0) {
                 statesNotNotified.add(state);
@@ -249,8 +259,10 @@ public class UserSettingsService {
         List<UserSettings> settings = userSettingsRepository.findAll();
 
         settings.forEach(userSettings -> {
-            if (userSettings.getProcessesStatesNotifiedByEmail() == null) userSettings.setProcessesStatesNotifiedByEmail(new HashMap<>());
-            List<String> statesNotified = userSettings.getProcessesStatesNotifiedByEmail().computeIfAbsent(process, p -> new ArrayList<String>());
+            if (userSettings.getProcessesStatesNotifiedByEmail() == null)
+                userSettings.setProcessesStatesNotifiedByEmail(new HashMap<>());
+            List<String> statesNotified = userSettings.getProcessesStatesNotifiedByEmail().computeIfAbsent(process,
+                    p -> new ArrayList<String>());
             int stateIndex = statesNotified.indexOf(state);
             if (stateIndex < 0) {
                 statesNotified.add(state);
@@ -265,7 +277,8 @@ public class UserSettingsService {
         List<UserSettings> settings = userSettingsRepository.findAll();
 
         settings.forEach(userSettings -> {
-            if (userSettings.getProcessesStatesNotifiedByEmail() != null && userSettings.getProcessesStatesNotifiedByEmail().get(process) != null) {
+            if (userSettings.getProcessesStatesNotifiedByEmail() != null
+                    && userSettings.getProcessesStatesNotifiedByEmail().get(process) != null) {
                 List<String> statesNotified = userSettings.getProcessesStatesNotifiedByEmail().get(process);
                 int stateIndex = statesNotified.indexOf(state);
                 if (stateIndex >= 0) {

@@ -9,6 +9,7 @@
 
 export class UserWithPerimeters {
     readonly sendDailyEmail?: true;
+    readonly sendWeeklyEmail?: true;
     readonly email?: string;
     readonly timezoneForEmails?: string;
     readonly userData: UserData;

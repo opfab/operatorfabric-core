@@ -13,17 +13,19 @@ import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigO
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
-import DailyCardsDiffusionControl from '../application/dailyCardsDiffusionControl';
+import RecapCardsDiffusionControl from '../application/recapCardsDiffusionControl';
 import RealTimeCardsDiffusionControl from '../application/realTimeCardsDiffusionControl';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
 export default class CardsExternalDiffusionService {
-    private readonly dailyCardsDiffusionControl: DailyCardsDiffusionControl;
+    private readonly recapCardsDiffusionControl: RecapCardsDiffusionControl;
     private readonly realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
     private checkPeriodInSeconds: number;
-    private readonly hourToSendDailyEmail: number;
-    private readonly minuteToSendDailyEmail: number;
+    private readonly hourToSendRecapEmail: number;
+    private readonly minuteToSendRecapEmail: number;
+    private readonly dayOfWeekToSendWeeklyRecapEmail: number;
     private active = false;
     private readonly logger: any;
 
@@ -37,10 +39,11 @@ export default class CardsExternalDiffusionService {
     ) {
         this.logger = logger;
         this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
-        this.hourToSendDailyEmail = serviceConfig.hourToSendDailyEmail;
-        this.minuteToSendDailyEmail = serviceConfig.minuteToSendDailyEmail;
+        this.hourToSendRecapEmail = serviceConfig.hourToSendRecapEmail;
+        this.minuteToSendRecapEmail = serviceConfig.minuteToSendRecapEmail;
+        this.dayOfWeekToSendWeeklyRecapEmail = serviceConfig.dayOfWeekToSendWeeklyRecapEmail;
 
-        this.dailyCardsDiffusionControl = new DailyCardsDiffusionControl()
+        this.recapCardsDiffusionControl = new RecapCardsDiffusionControl()
             .setLogger(logger)
             .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
             .setOpfabServicesInterface(opfabServicesInterface)
@@ -48,6 +51,7 @@ export default class CardsExternalDiffusionService {
             .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
             .setDailyEmailTitle(serviceConfig.dailyEmailTitle as string)
+            .setWeeklyEmailTitle(serviceConfig.weeklyEmailTitle as string)
             .setFrom(serviceConfig.mailFrom as string)
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris');
 
@@ -73,16 +77,17 @@ export default class CardsExternalDiffusionService {
             this.realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
             this.realTimeCardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
         }
-
+        this.logger.info('Starting checks');
         this.checkRegularly();
         this.checkDaily();
+        this.checkWeekly();
     }
 
     setConfiguration(serviceConfig: ConfigDTO): this {
         if (serviceConfig.checkPeriodInSeconds != null) this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
 
         this.realTimeCardsDiffusionControl.setConfiguration(serviceConfig);
-        this.dailyCardsDiffusionControl.setConfiguration(serviceConfig);
+        this.recapCardsDiffusionControl.setConfiguration(serviceConfig);
         return this;
     }
 
@@ -117,47 +122,88 @@ export default class CardsExternalDiffusionService {
 
     private checkDaily(): void {
         this.logger.info('Daily email scheduler launch');
-        const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingDailyEmail();
+        const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingRecapEmail('daily');
 
         setTimeout(() => {
             if (this.active)
                 this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
-            setInterval(
-                () => {
-                    if (this.active)
-                        this.sendDailyRecap().catch((error) =>
-                            this.logger.error('error during daily email sending' + error)
-                        );
-                },
-                24 * 60 * 60 * 1000
-            );
+            setInterval(() => {
+                if (this.active)
+                    this.sendDailyRecap().catch((error) =>
+                        this.logger.error('error during daily email sending' + error)
+                    );
+            }, MILLISECONDS_IN_A_DAY);
         }, millisBeforeSendingDailyEmail);
     }
 
-    private getMillisBeforeSendingDailyEmail(): number {
+    private checkWeekly(): void {
+        this.logger.info('Weekly email scheduler launch');
+        const millisBeforeSendingWeeklyEmail = this.getMillisBeforeSendingRecapEmail('weekly');
+        setTimeout(() => {
+            if (this.active)
+                this.sendWeeklyRecap().catch((error) => this.logger.error('error during weekly email sending' + error));
+            setInterval(() => {
+                if (this.active)
+                    this.sendWeeklyRecap().catch((error) =>
+                        this.logger.error('error during weekly email sending' + error)
+                    );
+            }, MILLISECONDS_IN_A_WEEK);
+        }, millisBeforeSendingWeeklyEmail);
+    }
+
+    private getMillisBeforeSendingRecapEmail(mode: string): number {
         const now = new Date();
-        const configHour = new Date(
+        const configTime = new Date(
             now.getFullYear(),
             now.getMonth(),
             now.getDate(),
-            this.hourToSendDailyEmail,
-            this.minuteToSendDailyEmail,
+            this.hourToSendRecapEmail,
+            this.minuteToSendRecapEmail,
             0,
             0
         );
-        let millisTillConfigHour = configHour.getTime() - now.getTime();
-        if (millisTillConfigHour < 0) {
-            millisTillConfigHour += MILLISECONDS_IN_A_DAY;
+        let millisUntilConfigTime = 0;
+        switch (mode) {
+            case 'daily':
+                millisUntilConfigTime = configTime.getTime() - now.getTime();
+                if (millisUntilConfigTime < 0) {
+                    millisUntilConfigTime += MILLISECONDS_IN_A_DAY;
+                }
+                this.logger.info(
+                    'Next daily email is scheduled at : ' + new Date(now.getTime() + millisUntilConfigTime)
+                );
+                break;
+            case 'weekly':
+                configTime.setDate(configTime.getDate() - configTime.getDay() + this.dayOfWeekToSendWeeklyRecapEmail);
+                millisUntilConfigTime = configTime.getTime() - now.getTime();
+                if (millisUntilConfigTime < 0) {
+                    millisUntilConfigTime += MILLISECONDS_IN_A_WEEK;
+                }
+                this.logger.info(
+                    'Next weekly email is scheduled at : ' + new Date(now.getTime() + millisUntilConfigTime)
+                );
+                break;
+            default:
+                return 0;
         }
-        return millisTillConfigHour;
+        return millisUntilConfigTime;
     }
 
     public async sendDailyRecap(): Promise<void> {
         this.logger.info('Sending daily recap emails');
         try {
-            await this.dailyCardsDiffusionControl.checkCardsOfTheDay();
+            await this.recapCardsDiffusionControl.checkCardsStartingFrom('daily');
         } catch (error) {
             this.logger.error('Could not send daily recap emails, ' + JSON.stringify(error));
+        }
+    }
+
+    public async sendWeeklyRecap(): Promise<void> {
+        this.logger.info('Sending Weekly recap emails');
+        try {
+            await this.recapCardsDiffusionControl.checkCardsStartingFrom('weekly');
+        } catch (error) {
+            this.logger.error('Could not send weekly recap emails, ' + JSON.stringify(error));
         }
     }
 }

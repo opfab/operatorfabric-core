@@ -249,6 +249,25 @@ app.post('/sendDailyEmail', (req, res) => {
         });
 });
 
+app.post('/sendWeeklyEmail', (req, res) => {
+    authorizationService
+        .isAdminUser(req)
+        .then((isAdmin) => {
+            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
+            else {
+                logger.info('Sending email with cards from the last 7 days');
+                cardsExternalDiffusionService.sendWeeklyRecap().catch((err) => {
+                    logger.error('Error in sendWeeklyEmail' + err);
+                });
+                res.send();
+            }
+        })
+        .catch((err) => {
+            logger.error('Error in POST /sendWeeklyEmail' + err);
+            res.status(500).send();
+        });
+});
+
 async function start(): Promise<void> {
     await cardsExternalDiffusionDatabaseService.connectToMongoDB();
     const response = await opfabServicesInterface.loadUsersData();

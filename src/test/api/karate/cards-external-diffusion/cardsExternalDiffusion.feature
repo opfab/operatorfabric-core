@@ -54,6 +54,7 @@ Feature: Cards external diffusion
     "login" : "operator1_fr",
     "sendCardsByEmail": true,
     "sendDailyEmail": true,
+    "sendWeeklyEmail": true,
     "email" : "operator1_fr@opfab.com",
     "processesStatesNotifiedByEmail": {"api_test": ["mailState"]}
     }
@@ -286,6 +287,33 @@ Scenario: Check daily recap email is being sent
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the day') == 0
+    And match response.items[0].Content.Body contains 'api_test.process1'
+
+    # Delete sent email
+    Given url 'http://localhost:8025/api/v1/messages'
+	And header Authorization = 'Bearer ' + authTokenOperator1
+    When method delete
+    Then status 200
+
+Scenario: Check weekly recap email is being sent
+
+    # Send the weekly recap
+    Given url 'http://localhost:2106/sendWeeklyEmail'
+	And header Authorization = 'Bearer ' + authTokenAdmin	
+    When method post
+    Then status 200
+
+    # Check weekly recap is sent and a card link is in it
+    * configure retry = { count: 45, interval: 1000 }
+    Given url 'http://localhost:8025/api/v2/messages'
+	And header Authorization = 'Bearer ' + authTokenOperator2
+    And retry until responseStatus == 200  && response.count == 1
+    When method get
+    Then status 200
+    And match response.items[0].To[0].Mailbox == 'operator1_fr'
+    And match response.items[0].To[0].Domain == 'opfab.com'
+    And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
+    And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the week') == 0
     And match response.items[0].Content.Body contains 'api_test.process1'
 
     # Delete sent email

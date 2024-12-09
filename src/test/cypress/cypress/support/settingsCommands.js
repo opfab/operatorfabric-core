@@ -41,7 +41,7 @@ export class SettingsCommands extends OpfabCommands {
     };
 
     clickOnSendNotificationByEmailAndSave = function () {
-        cy.get('#opfab-setting-input-sendCardsByEmail').click();
+        cy.get('input[formControlName="sendCardsByEmail"]').click({force: true});
         this.save();
     };
 
@@ -54,10 +54,10 @@ export class SettingsCommands extends OpfabCommands {
     clickHallwayModeAndSave = function () {
         cy.get('#opfab-setting-input-hallway-mode-checkbox').click();
         this.save();
-    }
+    };
 
     clickOpenNextCardOnAcknowledgment = function () {
         cy.get('#opfab-setting-input-open-next-card-checkbox').click();
         this.save();
-    }
+    };
 }

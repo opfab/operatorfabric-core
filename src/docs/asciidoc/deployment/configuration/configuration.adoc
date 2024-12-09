@@ -395,8 +395,10 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.cardsExternalDiffusion.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
 |operatorfabric.cardsExternalDiffusion.defaultConfig.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject prefix
-|operatorfabric.cardsExternalDiffusion.defaultConfig.hourToSendDailyEmail|7|no|Hour at which to send the daily recap email
-|operatorfabric.cardsExternalDiffusion.defaultConfig.minuteToSendDailyEmail|30|no|Minute at which to send the daily recap email
+|operatorfabric.cardsExternalDiffusion.defaultConfig.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.dayOfWeekToSendWeeklyRecapEmail|1|no|Day of the week to send the weekly recap emails (0 is Sunday, 6 is Saturday)
+|operatorfabric.cardsExternalDiffusion.defaultConfig.hourToSendRecapEmail|7|no|Hour at which to send the recap emails
+|operatorfabric.cardsExternalDiffusion.defaultConfig.minuteToSendRecapEmail|30|no|Minute at which to send the recap emails
 |operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix|'Opfab card received'|no|Mail subject prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPostfix|'This email has been sent by Opfab, there is no need to reply.'|no|Mail body postfix

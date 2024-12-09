@@ -322,6 +322,7 @@
         "sendCardsByEmail": "Send notification by email",
         "emailToPlainText": "Send emails in plain text",
         "sendDailyEmail": "Send daily email to recap the cards of the day",
+        "sendWeeklyEmail": "Send weekly email to recap the cards of the week",
         "email": "EMAIL",
         "settingsSaved": "Settings saved",
         "invalidSettings": "Please correct the invalid fields",

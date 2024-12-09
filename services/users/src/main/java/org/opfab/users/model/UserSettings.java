@@ -42,6 +42,7 @@ public class UserSettings {
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
+    private Boolean sendWeeklyEmail;
     private String email;
     private String timezoneForEmails;
     private Map<String, List<String>> processesStatesNotNotified;
@@ -72,6 +73,7 @@ public class UserSettings {
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
         this.sendDailyEmail = settings.getSendDailyEmail();
+        this.sendWeeklyEmail = settings.getSendWeeklyEmail();
         this.email = settings.getEmail();
         this.timezoneForEmails = settings.getTimezoneForEmails();
 
@@ -250,7 +252,15 @@ public class UserSettings {
     public void setSendDailyEmail(Boolean sendDailyEmail) {
         this.sendDailyEmail = sendDailyEmail;
     }
-    
+
+    public Boolean getSendWeeklyEmail() {
+        return sendWeeklyEmail;
+    }
+
+    public void setSendWeeklyEmail(Boolean sendWeeklyEmail) {
+        this.sendWeeklyEmail = sendWeeklyEmail;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -359,6 +369,8 @@ public class UserSettings {
                 this.getEmailToPlainText());
         result.sendDailyEmail = ObjectUtils.getNotNullOrDefault(other.getSendDailyEmail(),
                 this.getSendDailyEmail());
+        result.sendWeeklyEmail = ObjectUtils.getNotNullOrDefault(other.getSendWeeklyEmail(),
+                this.getSendWeeklyEmail());
         result.email = ObjectUtils.getNotNullOrDefault(other.getEmail(), this.getEmail());
         result.timezoneForEmails = ObjectUtils.getNotNullOrDefault(other.getTimezoneForEmails(),
                 this.getTimezoneForEmails());

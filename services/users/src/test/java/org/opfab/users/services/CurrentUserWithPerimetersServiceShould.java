@@ -54,7 +54,8 @@ class CurrentUserWithPerimetersServiceShould {
                 groupRepositoryStub = new GroupRepositoryStub();
                 userRepositoryStub = new UserRepositoryStub();
                 usersServiceStub = new UsersServiceStub(userRepositoryStub, groupRepositoryStub, null, null, null);
-                userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub, null, null, false);
+                userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub, null, null,
+                                false);
 
                 initEntities();
                 initUserSettings();
@@ -122,7 +123,7 @@ class CurrentUserWithPerimetersServiceShould {
                 user.addEntity(ENTITY_1);
                 user.addEntity("ENTITY_NOT_CONNECTED");
                 user.addGroup(GROUP_3);
-                
+
                 userRepositoryStub.save(user);
         }
 
@@ -155,6 +156,7 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setSendCardsByEmail(false);
                 userSettings.setEmailToPlainText(false);
                 userSettings.setSendDailyEmail(false);
+                userSettings.setSendWeeklyEmail(false);
                 userSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
                 userSettings.setEntitiesDisconnected(entitiesDisconnected);
 
@@ -262,7 +264,7 @@ class CurrentUserWithPerimetersServiceShould {
                 user.addGroup(GROUP_2);
                 user.addGroup(GROUP_3);
                 user.addGroup(GROUP_4);
-                
+
                 CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
                                 usersServiceStub, userSettingsService, entityRepositoryStub);
                 CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService

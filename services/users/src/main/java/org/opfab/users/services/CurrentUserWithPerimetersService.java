@@ -18,13 +18,12 @@ import java.util.stream.Collectors;
 
 public class CurrentUserWithPerimetersService {
 
-
     private UsersService usersService;
     private UserSettingsService userSettingsService;
     private EntityRepository entityRepository;
 
     public CurrentUserWithPerimetersService(UsersService usersService, UserSettingsService userSettingsService,
-             EntityRepository entityRepository) {
+            EntityRepository entityRepository) {
         this.usersService = usersService;
         this.userSettingsService = userSettingsService;
         this.entityRepository = entityRepository;
@@ -80,11 +79,14 @@ public class CurrentUserWithPerimetersService {
         OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
 
         if (operationResult.isSuccess()) {
-            userWithPerimeterData.setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
-            userWithPerimeterData.setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
+            userWithPerimeterData
+                    .setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
+            userWithPerimeterData
+                    .setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
             userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
+            userWithPerimeterData.setSendWeeklyEmail(operationResult.getResult().getSendWeeklyEmail());
             userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
             userWithPerimeterData.setTimezoneForEmails(operationResult.getResult().getTimezoneForEmails());
         }

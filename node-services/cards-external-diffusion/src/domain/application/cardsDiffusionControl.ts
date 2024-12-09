@@ -74,7 +74,7 @@ export default class CardsDiffusionControl {
     }
 
     protected shouldEmailBePlainText(userWithPerimeters: any): boolean {
-        return userWithPerimeters.emailToPlainText ?? false;
+        return userWithPerimeters?.emailToPlainText ?? false;
     }
 
     protected removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {

@@ -14,8 +14,10 @@ export default class ConfigDTO {
     public bodyPostfix: string;
     public publisherEntityPrefix: string;
     public dailyEmailTitle: string;
-    public hourToSendDailyEmail: 0;
-    public minuteToSendDailyEmail: 0;
+    public weeklyEmailTitle: string;
+    public dayOfWeekToSendWeeklyRecapEmail: 0;
+    public hourToSendRecapEmail: 0;
+    public minuteToSendRecapEmail: 0;
     public opfabUrlInMailContent: string;
     public windowInSecondsForCardSearch = 0;
     public checkPeriodInSeconds = 0;

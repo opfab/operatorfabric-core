@@ -83,6 +83,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'sendCardsByEmail',
             'emailToPlainText',
             'sendDailyEmail',
+            'sendWeeklyEmail',
             'email',
             'timezoneForEmails',
             'hallwayMode',

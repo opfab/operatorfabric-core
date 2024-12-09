@@ -179,6 +179,7 @@ a|authentication mode, available options:
 "sendCardsByEmail" : if present, the email options will not be displayed +
 "emailToPlainText" : if present, the email option to have the emails sent as plain text will not be displayed +
 "sendDailyEmail" : if present, the email option to have the daily email recap will not be displayed +
+"sendWeeklyEmail" : if present, the email option to have the weekly email recap will not be displayed +
 "timezoneForEmails" : if present, the field to choose the timezone for emails will not be displayed +
 "hallwayMode": if present, the checkbox to activate hallway mode won't be displayed +
 "openNextCardOnAcknowledgment": if present, the checkbox to automaticaly open next card after acknowledgment won't be displayed +

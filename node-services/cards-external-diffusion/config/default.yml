@@ -42,8 +42,10 @@ operatorfabric:
       bodyPostfix: 'This email has been sent by Opfab, there is no need to reply.'
       publisherEntityPrefix: 'The card has been sent by '
       dailyEmailTitle: 'Cards received during the day'
-      hourToSendDailyEmail: 7
-      minuteToSendDailyEmail: 30
+      weeklyEmailTitle: 'Cards received during the week'
+      dayOfWeekToSendWeeklyRecapEmail: 1
+      hourToSendRecapEmail: 7
+      minuteToSendRecapEmail: 30
       opfabUrlInMailContent: http://localhost:2002
       windowInSecondsForCardSearch: 360
       checkPeriodInSeconds: 10

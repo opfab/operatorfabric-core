@@ -14,11 +14,13 @@ import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
-export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
+export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
     opfabUrlInMailContent: any;
 
     protected dailyEmailTitle: string;
+    protected weeklyEmailTitle: string;
     protected titlePrefix: string;
 
     public setDailyEmailTitle(dailyEmailTitle: string): this {
@@ -26,17 +28,25 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
         return this;
     }
 
+    public setWeeklyEmailTitle(weeklyEmailTitle: string): this {
+        this.weeklyEmailTitle = weeklyEmailTitle;
+        return this;
+    }
+
     public setConfiguration(updated: ConfigDTO): void {
         this.from = updated.mailFrom;
         this.dailyEmailTitle = updated.dailyEmailTitle;
+        this.weeklyEmailTitle = updated.weeklyEmailTitle;
     }
 
-    public async checkCardsOfTheDay(limitDateForRecap: number = Date.now()): Promise<void> {
+    public async checkCardsStartingFrom(mode: string): Promise<void> {
         const users = this.cardsExternalDiffusionOpfabServicesInterface.getUsers();
         const userLogins = users.map((u) => u.login);
 
-        const dateFrom = limitDateForRecap - MILLISECONDS_IN_A_DAY;
+        const dateFrom = this.getStartingDate(mode);
+
         const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as Card[];
+
         for (const login of userLogins) {
             try {
                 const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(
@@ -45,41 +55,68 @@ export default class DailyCardsDiffusionControl extends CardsDiffusionControl {
                 if (resp.isValid()) {
                     const userWithPerimeters = resp.getData() as UserWithPerimeters;
                     const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
-
-                    if (userWithPerimeters.sendDailyEmail) {
-                        const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
-                        const visibleCards = cards.filter((card: Card) =>
-                            CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card)
-                        );
-                        if (visibleCards.length > 0) {
-                            await this.sendDailyRecap(
+                    const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
+                    const visibleCards = cards.filter((card: Card) =>
+                        CardsRoutingUtilities.shouldUserReceiveTheCard(userWithPerimeters, card)
+                    );
+                    if (visibleCards.length > 0) {
+                        if (mode === 'daily' && userWithPerimeters.sendDailyEmail) {
+                            await this.sendEmailRecap(
                                 visibleCards,
                                 userWithPerimeters.email,
                                 emailToPlainText,
+                                this.dailyEmailTitle,
                                 timezoneForEmails
                             );
                             this.logger.info(`Sent daily recap to user ${login}`);
+                        } else if (mode === 'weekly' && userWithPerimeters.sendWeeklyEmail) {
+                            await this.sendEmailRecap(
+                                visibleCards,
+                                userWithPerimeters.email,
+                                emailToPlainText,
+                                this.weeklyEmailTitle,
+                                timezoneForEmails
+                            );
+                            this.logger.info(`Sent weekly recap to user ${login}`);
                         }
                     }
                 }
             } catch (error) {
-                this.logger.error(`Failed to send daily recap email to user ${login}. Error: ` + JSON.stringify(error));
+                this.logger.error(
+                    `Failed to send ${mode} recap email to user ${login}. Error: ` + JSON.stringify(error)
+                );
             }
         }
     }
 
-    async sendDailyRecap(
+    private getStartingDate(mode: string): number {
+        let dateFrom = 0;
+        switch (mode) {
+            case 'daily':
+                dateFrom = Date.now() - MILLISECONDS_IN_A_DAY;
+                break;
+            case 'weekly':
+                dateFrom = Date.now() - MILLISECONDS_IN_A_WEEK;
+                break;
+            default:
+                this.logger.error(`Unknown email recap mode: ${mode} `);
+        }
+        return dateFrom;
+    }
+
+    async sendEmailRecap(
         cards: Card[],
         userEmailAddress: string | undefined,
         emailToPlainText: boolean,
+        emailTitle: string,
         timezoneForEmails: string
     ): Promise<void> {
         if (userEmailAddress == null) return;
-        const emailBody = this.dailyFormat(cards, timezoneForEmails);
-        await this.mailService.sendMail(this.dailyEmailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
+        const emailBody = this.recapFormat(cards, timezoneForEmails);
+        await this.mailService.sendMail(emailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
     }
 
-    dailyFormat(cards: Card[], timezoneForEmails: string): string {
+    recapFormat(cards: Card[], timezoneForEmails: string): string {
         let body = '';
         for (const card of cards) {
             body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';

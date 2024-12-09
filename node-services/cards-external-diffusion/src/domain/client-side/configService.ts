@@ -27,9 +27,11 @@ export default class ConfigService {
                 this.config = new ConfigDTO();
 
                 this.config.mailFrom = defaultConfig.mailFrom;
-                this.config.hourToSendDailyEmail = defaultConfig.hourToSendDailyEmail;
-                this.config.minuteToSendDailyEmail = defaultConfig.minuteToSendDailyEmail;
+                this.config.hourToSendRecapEmail = defaultConfig.hourToSendRecapEmail;
+                this.config.minuteToSendRecapEmail = defaultConfig.minuteToSendRecapEmail;
+                this.config.dayOfWeekToSendWeeklyRecapEmail = defaultConfig.dayOfWeekToSendWeeklyRecapEmail;
                 this.config.dailyEmailTitle = defaultConfig.dailyEmailTitle;
+                this.config.weeklyEmailTitle = defaultConfig.weeklyEmailTitle;
                 this.config.subjectPrefix = defaultConfig.subjectPrefix;
                 this.config.bodyPrefix = defaultConfig.bodyPrefix;
                 this.config.bodyPostfix = defaultConfig.bodyPostfix;

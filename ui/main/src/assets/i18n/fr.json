@@ -322,6 +322,7 @@
         "sendCardsByEmail": "Envoi des notifications par mail",
         "emailToPlainText": "Envoi des mails en texte brut",
         "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
+        "sendWeeklyEmail": "Envoi un mail hebdomadaire récapitulatif des cartes de la semaine",
         "email": "EMAIL",
         "settingsSaved": "Paramètres sauvegardés",
         "invalidSettings": "Veuillez corriger les champs invalides",

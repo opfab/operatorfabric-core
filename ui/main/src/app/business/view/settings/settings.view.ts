@@ -60,11 +60,14 @@ export class SettingsView {
             this.newSettings?.emailToPlainText ?? this.getSetting('emailToPlainText')
         );
         const sendDailyEmail: boolean = Boolean(this.newSettings?.sendDailyEmail ?? this.getSetting('sendDailyEmail'));
+        const sendWeeklyEmail: boolean = Boolean(
+            this.newSettings?.sendWeeklyEmail ?? this.getSetting('sendWeeklyEmail')
+        );
         const sendCardsByEmail: boolean = Boolean(
             this.newSettings?.sendCardsByEmail ?? this.getSetting('sendCardsByEmail')
         );
 
-        return emailToPlainText || sendDailyEmail || sendCardsByEmail;
+        return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail;
     }
 
     private isEmailFilled(): boolean {

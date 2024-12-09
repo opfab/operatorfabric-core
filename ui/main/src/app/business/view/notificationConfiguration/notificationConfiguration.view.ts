@@ -54,6 +54,7 @@ export class NotificationConfigurationView {
 
         this.notificationConfigurationPage.isEmailEnabled =
             (ConfigService.getConfigValue('settings.sendDailyEmail', false) ||
+                ConfigService.getConfigValue('settings.sendWeeklyEmail', false) ||
                 ConfigService.getConfigValue('settings.sendCardsByEmail', false)) &&
             ConfigService.getConfigValue('settings.email')?.length > 0;
 
