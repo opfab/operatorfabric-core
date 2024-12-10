@@ -39,6 +39,7 @@ import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {BusinessConfigAPI} from 'app/api/businessconfig.api';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 
 @Component({
     selector: 'of-logging',
@@ -60,7 +61,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     tags: any[] = [];
-    size: number;
     loggingForm = new FormGroup({
         tags: new FormControl([]),
         state: new FormControl([]),
@@ -76,6 +76,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     totalElements: number;
     totalPages: number;
     page: number;
+    pageSize: number = 10;
 
     firstQueryHasBeenDone = false;
     firstQueryHasResults = false;
@@ -133,7 +134,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
+        const savedPageSize = UserPreferencesService.getPreference('opfab.archives.page.size');
+        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
         BusinessConfigAPI.getTags('logging').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('logging.filters.tags.list');
             this.changeDetector.markForCheck();
@@ -159,7 +161,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
 
-        const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
+        const filter = this.getFilter(page_number, this.pageSize, this.filtersTemplate.filters);
 
         CardService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
@@ -238,6 +240,12 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         // page on ngb-pagination component start at 1 , and page on backend start at 0
         this.sendFilterQuery(currentPage - 1);
         this.page = currentPage;
+    }
+
+    onPageSizeChange(pageSize: number): void {
+        this.pageSize = pageSize;
+        UserPreferencesService.setPreference('opfab.archives.page.size', this.pageSize);
+        this.sendFilterQuery(0);
     }
 
     onTableFilterChange(filterModel) {

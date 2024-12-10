@@ -20,12 +20,24 @@
 
 <div style="height:2%"> </div>
 <div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
+<div>
   <div style="display:flex; justify-content:flex-start;">
-    <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
-      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
+    <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox"
+      translate>archive.collapsibleUpdates
+      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated">
       <span class="opfab-checkbox-checkmark"></span>
     </label>
   </div>
+  <div style="float: right; margin-top: -35px;">
+    <select (change)="onPageSizeChanged($event.target)" #pageSizeSelect>
+      <option *ngFor="let option of paginationPageSizeOptions" [value]="option"
+        [attr.selected]="option===pageSize ? true : null">
+        {{option}}
+      </option>
+    </select>
+    <label for="opfab-page-size-select" style="font-weight:bold;" translate>&nbsp;shared.pageSize</label>
+  </div>
+</div>
   <div class="opfab-table">
     <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
       <thead>
@@ -105,8 +117,8 @@
         <span translate> shared.resultsNumber </span> : {{resultsNumber}}
       </div>
       <div style="width:40%;margin-top:5px">
-        <ngb-pagination *ngIf="resultsNumber > size" [collectionSize]="resultsNumber"
-          [page]="currentPage" [pageSize]="size" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        <ngb-pagination *ngIf="resultsNumber > pageSize" [collectionSize]="resultsNumber"
+          [page]="currentPage" [pageSize]="pageSize" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
         </ngb-pagination>
       </div>
       <div style="width:50%;text-align:right;padding-right:8px;">

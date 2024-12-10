@@ -62,6 +62,7 @@
         "entity": "ENTITÉ",
         "goToAdminMode": "Voir toutes les cartes (que je sois destinataire ou non)",
         "adminMode": "Voir uniquement les cartes dont je suis destinataire",
+        "pageSize": "lignes par page",
         "popup": {
             "title": "CONFIRMATION",
             "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?"
@@ -570,8 +571,7 @@
                 "label": "NOM",
                 "alreadyExisting": "Le nom existe déjà."
             },
-            "description": "DESCRIPTION",
-            "lines": "lignes par page"
+            "description": "DESCRIPTION"
         },
         "tabs": {
             "users": "Gestion des utilisateurs",

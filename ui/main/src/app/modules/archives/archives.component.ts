@@ -67,8 +67,11 @@ import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 export class ArchivesComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
+    pageSize: number = 10;
+
+    readonly paginationPageSizeOptions = [10, 20, 50, 100];
+
     tags: any[] = [];
-    size: number;
     historySize: number;
     archiveForm = new FormGroup({
         tags: new FormControl([]),
@@ -135,7 +138,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         );
         this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
 
-        this.size = ConfigService.getConfigValue('archive.filters.page.size', 10);
+        const savedPageSize = UserPreferencesService.getPreference('opfab.archives.page.size');
+        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
         this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
         BusinessConfigAPI.getTags('archive').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('archive.filters.tags.list');
@@ -164,7 +168,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     sendQuery(page_number): void {
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
-        this.filtersTemplate.filters.set('size', [this.size.toString()]);
+        this.filtersTemplate.filters.set('size', [this.pageSize.toString()]);
 
         this.getResults(page_number);
     }
@@ -178,7 +182,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         const filter = this.getFilter(
             page_number,
-            Number(this.size),
+            this.pageSize,
             this.filtersTemplate.filters,
             this.isCollapsibleUpdatesActivated
         );
@@ -225,6 +229,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     this.technicalError = true;
                 }
             });
+    }
+
+    onPageSizeChanged(target: EventTarget | null) {
+        if (target) {
+            this.pageSize = Number((<HTMLSelectElement>target).value);
+            UserPreferencesService.setPreference('opfab.archives.page.size', this.pageSize);
+            this.sendQuery(0);
+        }
     }
 
     private getFilter(

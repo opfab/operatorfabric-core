@@ -19,14 +19,14 @@ import {StateDescriptionCellRendererComponent} from '../cell-renderers/state-des
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {Subject} from 'rxjs';
 import {AgGridAngular} from 'ag-grid-angular';
-import {NgIf} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-logging-table',
     templateUrl: './logging-table.component.html',
     standalone: true,
-    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination]
+    imports: [AgGridAngular, NgIf, NgFor, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
     @Input() result: LightCard[];
@@ -34,9 +34,11 @@ export class LoggingTableComponent implements OnDestroy {
     @Input() totalElements: number;
     @Input() totalPages: number;
     @Input() page: number;
+    @Input() pageSize: number = 10;
     @Input() processStateNameMap: Map<string, string>;
     @Input() processStateDescriptionMap: Map<string, string>;
 
+    @Output() pageSizeChange = new EventEmitter<number>();
     @Output() pageChange = new EventEmitter<number>();
     @Output() filterChange = new EventEmitter<number>();
     @Output() export = new EventEmitter<number>();
@@ -57,6 +59,8 @@ export class LoggingTableComponent implements OnDestroy {
     private readonly stateColumnName;
     private readonly descriptionColumnName;
     private readonly senderColumnName;
+
+    readonly paginationPageSizeOptions = [10, 20, 50, 100];
 
     constructor(private readonly translate: TranslateService) {
         this.timeColumnName = this.translateColumn('shared.result.timeOfAction');
@@ -259,6 +263,13 @@ export class LoggingTableComponent implements OnDestroy {
 
     updateResultPage(currentPage): void {
         this.pageChange.next(currentPage);
+    }
+
+    onPageSizeChanged(target: EventTarget | null) {
+        if (target) {
+            this.pageSize = Number((<HTMLSelectElement>target).value);
+            this.pageSizeChange.next(this.pageSize);
+        }
     }
 
     exportToExcel() {

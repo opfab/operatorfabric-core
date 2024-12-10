@@ -34,3 +34,6 @@ So if necessary, you have to update your config file `web-ui.json`, replacing va
    ]
  }
 ----
+
+== UI archives and logging number of lines per page
+Since it is now possible to select the number of lines per page displayed in the archive and logging screens, the configuration parameters `archive.filters.page.size` and `logging.filters.page.size` are no longer needed and can be removed from the web-ui.json file.

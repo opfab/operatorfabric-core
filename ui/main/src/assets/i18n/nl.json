@@ -62,6 +62,7 @@
         "entity": "ENTITEIT",
         "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
         "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
+        "pageSize": "regels per pagina",
         "popup": {
             "title": "BEVESTIGING",
             "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
@@ -570,8 +571,7 @@
                 "label": "NAAM",
                 "alreadyExisting": "Naam bestaat al."
             },
-            "description": "OMSCHRIJVING",
-            "lines": "regels per pagina"
+            "description": "OMSCHRIJVING"
         },
         "tabs": {
             "users": "Gebruikers Beheer",

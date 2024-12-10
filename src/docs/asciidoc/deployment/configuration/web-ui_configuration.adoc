@@ -64,7 +64,6 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |alerts.alarmLevelAutoClose|false|no| if set to true, the ALARM (red) alert message will automatically close after a few seconds
 |alerts.messageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page
 
-|archive.filters.page.size|10|no|The page size of archive filters
 |archive.filters.publishDate.days|10|no|The default search period (days) for publish date filter in archives page
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives page
 |archive.history.size|100|no|The maximum size of card history visible

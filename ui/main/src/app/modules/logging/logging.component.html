@@ -25,9 +25,9 @@
 
 <div *ngIf="firstQueryHasBeenDone" [hidden]="!firstQueryHasResults || technicalError" style="margin-left:5%;margin-right:5%">
   <of-logging-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible"
-    [page]="page" [totalElements]="totalElements" [totalPages]="totalPages"
+    [page]="page" [pageSize]="pageSize" [totalElements]="totalElements" [totalPages]="totalPages"
     [processStateNameMap]="processStateName" [processStateDescriptionMap]="processStateDescription"
-    (filterChange)="onTableFilterChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
+    (filterChange)="onTableFilterChange($event)" (pageSizeChange)="onPageSizeChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
   </of-logging-table>
 
 </div>

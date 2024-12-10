@@ -62,6 +62,7 @@
         "entity": "ENTITY",
         "goToAdminMode": "See all cards (whether I am the recipient or not)",
         "adminMode": "See only the cards I am recipient of",
+        "pageSize": "lines per page",
         "popup": {
             "title": "CONFIRMATION",
             "areYouSure": "You have made some changes. Are you sure you want to save them ?"
@@ -570,8 +571,7 @@
                 "label": "NAME",
                 "alreadyExisting": "Name already existing."
             },
-            "description": "DESCRIPTION",
-            "lines": "lines per page"
+            "description": "DESCRIPTION"
         },
         "tabs": {
             "users": "Users Management",
