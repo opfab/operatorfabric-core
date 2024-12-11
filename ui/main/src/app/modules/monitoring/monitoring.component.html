@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,40 +7,53 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <ng-template #noProcessStateToDisplay>
-    <div id="opfab-monitoring-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
+    <div
+        id="opfab-monitoring-no-process-state-available"
+        style="text-align: center; font-size: 20px; padding-top: 100px"
+        translate>
+        shared.noProcessStateAvailable
+    </div>
 </ng-template>
 <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay">
-<div>
-        <of-monitoring-filters #filters
-       (eventForPublishingFilters)="applyCardsFilters($event)"
-        ></of-monitoring-filters>
-</div>
+    <div>
+        <of-monitoring-filters #filters (eventForPublishingFilters)="applyCardsFilters($event)"></of-monitoring-filters>
+    </div>
 
-<div style="height: 50px" *ngIf="isThereProcessStateToDisplay">
-    <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
-        <ng-template #tipLoadingInProgress>
-            <span translate>feed.tips.loadingInProgress</span>
-        </ng-template>
-        <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover-unclickable" container="body"
-        triggers="mouseenter:mouseleave">
-        <em  class="fas fa-spinner fa-spin opfab-slow-spinner"  ></em>
+    <div style="height: 50px" *ngIf="isThereProcessStateToDisplay">
+        <div *ngIf="loadingInProgress" class="opfab-loading-spinner">
+            <ng-template #tipLoadingInProgress>
+                <span translate>feed.tips.loadingInProgress</span>
+            </ng-template>
+            <div
+                [ngbPopover]="tipLoadingInProgress"
+                popoverClass="opfab-popover-unclickable"
+                container="body"
+                triggers="mouseenter:mouseleave">
+                <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+            </div>
         </div>
-
-     </div>
-     <div  class="opfab-response-checkbox">
-        <label id="opfab-show-cards-with-response" style="font-weight:bold; margin-left:5px; margin-bottom: 0px;" class="opfab-checkbox" translate>feed.filters.showCardsWithResponse.label
-            <input type="checkbox" (click)="switchResponseFilter()" [checked]="responseFilterValue" id="opfab-archives-collapsible-updates">
-            <span class="opfab-checkbox-checkmark"></span>
-          </label>
+        <div class="opfab-response-checkbox">
+            <label
+                id="opfab-show-cards-with-response"
+                style="font-weight: bold; margin-left: 5px; margin-bottom: 0px"
+                class="opfab-checkbox"
+                translate
+                >feed.filters.showCardsWithResponse.label
+                <input
+                    type="checkbox"
+                    (click)="switchResponseFilter()"
+                    [checked]="responseFilterValue"
+                    id="opfab-archives-collapsible-updates" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
         </div>
-</div>
+    </div>
 
-<div *ngIf="result || selectedCardId; else noResult" style="margin-left:5%;margin-right:5%">
-    <of-monitoring-table [result]="result">
-    </of-monitoring-table>
-</div>
+    <div *ngIf="result || selectedCardId; else noResult" style="margin-left: 5%; margin-right: 5%">
+        <of-monitoring-table [result]="result"> </of-monitoring-table>
+    </div>
 
-<ng-template #noResult>
-    <div id="opfab-monitoring-noResult" style="text-align: center;font-size: 20px;" translate>shared.noResult</div>
-</ng-template>
+    <ng-template #noResult>
+        <div id="opfab-monitoring-noResult" style="text-align: center; font-size: 20px" translate>shared.noResult</div>
+    </ng-template>
 </div>

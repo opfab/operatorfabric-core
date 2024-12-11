@@ -9,7 +9,11 @@
 <ng-template #tipHasAResponseFromYourEntity>
     <span translate>monitoring.tips.hasAResponseFromYourEntity</span>
 </ng-template>
-<em *ngIf="params.value" 
-    [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover-unclickable" container="body"
+<em
+    *ngIf="params.value"
+    [ngbPopover]="tipHasAResponseFromYourEntity"
+    popoverClass="opfab-popover-unclickable"
+    container="body"
     triggers="mouseenter:mouseleave"
-    style="color: var(--opfab-color-blue);" class="fa fa-reply"></em>
+    style="color: var(--opfab-color-blue)"
+    class="fa fa-reply"></em>

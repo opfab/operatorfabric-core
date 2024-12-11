@@ -6,54 +6,63 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="opfab-realtimeusers-title" translate>
-    menu.realtimeusers
-</div>
+<div class="opfab-realtimeusers-title" translate>menu.realtimeusers</div>
 
 <form [formGroup]="realTimeScreensForm">
-
- <of-spinner *ngIf="!isPageLoaded"></of-spinner>
+    <of-spinner *ngIf="!isPageLoaded"></of-spinner>
 
     <div *ngIf="isPageLoaded && !realtimePage">
         <div id="opfab-realtimeusers-no-screen-configuration" translate>shared.featureNotConfigured</div>
     </div>
     <div *ngIf="isPageLoaded && realtimePage">
         <div class="opfab-realtimeusers-header">
-                <div class="opfab-realtimeusers-select">
-                    <of-multi-select id="of-realtimeusers-screen-selector" multiSelectId="realTimeScreen" [parentForm]="realTimeScreensForm"
-                                     [config]="multiSelectConfig" [options]="realtimePage.screenOptions" [selectedOptions]="initialScreenOption">
-                    </of-multi-select>
-                </div>
+            <div class="opfab-realtimeusers-select">
+                <of-multi-select
+                    id="of-realtimeusers-screen-selector"
+                    multiSelectId="realTimeScreen"
+                    [parentForm]="realTimeScreensForm"
+                    [config]="multiSelectConfig"
+                    [options]="realtimePage.screenOptions"
+                    [selectedOptions]="initialScreenOption">
+                </of-multi-select>
+            </div>
         </div>
 
         <div class="opfab-realtimeusers-body">
-            <div class="opfab-realtimeusers-column" *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index;">
-                <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entityPages;">
-                    <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
+            <div
+                class="opfab-realtimeusers-column"
+                *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index">
+                <div
+                    class="opfab-realtimeusers-entitiesgroups"
+                    *ngFor="let entitiesGroupsElement of column.entityPages">
+                    <span class="opfab-realtimeusers-entitiesgroups-title">{{ entitiesGroupsElement.name }}</span>
                     <table class="opfab-realtimeusers-entitiesgroups-table" aria-describedby="real time users table">
-                        <tr *ngFor="let line of entitiesGroupsElement.lines;">
-                            <th scope="row">{{line.entityName}}</th>
+                        <tr *ngFor="let line of entitiesGroupsElement.lines">
+                            <th scope="row">{{ line.entityName }}</th>
                             <td>
                                 <ng-template #connected>
-                                  <div class="opfab-tooltip">
-                                    <span class="opfab-rounded-badge opfab-blue-background">{{line.connectedUsersCount}}
-                                    </span>
-                                    <span [id]="'grouped-label-' + line.entityId" class="opfab-group-label">
-                                        {{line.connectedUsers}}
-                                    </span>
-                                    <span  *ngIf="isEllipsisActive('grouped-label-' + line.entityId)">
-                                      <span class="opfab-tooltip-content bottom" style="z-index:1;text-align: left;">
-                                        <div *ngFor="let user of line.connectedUsers.split(', ')">
-                                          {{user}}
-                                        </div>
-                                      </span>
-                                     </span>
-                                  </div>
+                                    <div class="opfab-tooltip">
+                                        <span class="opfab-rounded-badge opfab-blue-background"
+                                            >{{ line.connectedUsersCount }}
+                                        </span>
+                                        <span [id]="'grouped-label-' + line.entityId" class="opfab-group-label">
+                                            {{ line.connectedUsers }}
+                                        </span>
+                                        <span *ngIf="isEllipsisActive('grouped-label-' + line.entityId)">
+                                            <span
+                                                class="opfab-tooltip-content bottom"
+                                                style="z-index: 1; text-align: left">
+                                                <div *ngFor="let user of line.connectedUsers.split(', ')">
+                                                    {{ user }}
+                                                </div>
+                                            </span>
+                                        </span>
+                                    </div>
                                 </ng-template>
                                 <ng-template #disconnected>
                                     <span class="opfab-rounded-badge opfab-grey-background">0</span>
                                 </ng-template>
-                                <span *ngIf="line.connectedUsersCount;then connected else disconnected"></span>
+                                <span *ngIf="line.connectedUsersCount; then connected; else disconnected"></span>
                             </td>
                         </tr>
                     </table>

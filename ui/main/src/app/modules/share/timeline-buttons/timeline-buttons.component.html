@@ -7,42 +7,46 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-menu-timeline">
-    <div *ngIf='hideTimeLine || isMonitoringScreen' class="opfab-business-period">
-      <span translate>timeline.businessPeriod</span> : {{startDateForBusinessPeriodDisplay}}<span *ngIf='this.currentDomainId !== "J"'> &#45;&#45;  {{endDateForBusinessPeriodDisplay}} </span>
+    <div *ngIf="hideTimeLine || isMonitoringScreen" class="opfab-business-period">
+        <span translate>timeline.businessPeriod</span> : {{ startDateForBusinessPeriodDisplay
+        }}<span *ngIf="this.currentDomainId !== 'J'"> &#45;&#45; {{ endDateForBusinessPeriodDisplay }} </span>
     </div>
     <div id="opfab-menu-timeline-links">
+        <ul style="padding-top: 0.15em">
+            <li *ngIf="hideTimeLine || isMonitoringScreen">
+                <a id="timeline-left-arrow" (click)="moveDomain(false)" style="cursor: pointer"> &lt;&lt; </a>
+            </li>
 
-      <ul style="padding-top: 0.15em;">
-        <li *ngIf='hideTimeLine || isMonitoringScreen'>
-          <a id="timeline-left-arrow" (click)="moveDomain(false)" style="cursor: pointer"> &lt;&lt;
-          </a>
-        </li>
+            <li *ngFor="let button of buttonList">
+                <a
+                    id="opfab-timeline-link-period-{{ button.domainId }}"
+                    [ngClass]="button.selected ? 'link-selected' : 'link-unselect'"
+                    (click)="changeGraphConf(button, true)"
+                    translate>
+                    {{ button.buttonTitle }}
+                </a>
+            </li>
 
-        <li *ngFor="let button of buttonList">
-          <a id="opfab-timeline-link-period-{{button.domainId}}" [ngClass]="button.selected ? 'link-selected' : 'link-unselect'" (click)="changeGraphConf(button, true)"
-            translate>
-            {{button.buttonTitle}}
-          </a>
-        </li>
+            <li *ngIf="hideTimeLine || isMonitoringScreen">
+                <a id="timeline-right-arrow" (click)="moveDomain(true)" style="cursor: pointer"> &gt;&gt; </a>
+            </li>
 
-        <li *ngIf='hideTimeLine || isMonitoringScreen'>
-          <a id="timeline-right-arrow" (click)="moveDomain(true)" style="cursor: pointer">
-            &gt;&gt;
-          </a>
-        </li>
-
-        <li style="width:1.5em;cursor: pointer">
-        <span *ngIf="isTimelineLocked()" class="opfab-tooltip" style="position:absolute">
-          <em id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()" ></em>
-          <!-- z-index is to be set superior to navabr z-index otherwise the tooltip is partially hidden-->
-          <div class="opfab-tooltip-content left" style="z-index: 1001;"> <span translate>timeline.lockTooltip</span> </div>
-        </span>
-        <span *ngIf="!isTimelineLocked()" class="opfab-tooltip" style="position:absolute">
-          <em id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline() "></em>
-          <!-- z-index is to be set superior to navabr z-index otherwise the tooltip is partially hidden-->
-          <div class="opfab-tooltip-content left" style="z-index: 1001;"> <span translate>timeline.unlockTooltip</span> </div>
-        </span>
-        </li>
-      </ul>
+            <li style="width: 1.5em; cursor: pointer">
+                <span *ngIf="isTimelineLocked()" class="opfab-tooltip" style="position: absolute">
+                    <em id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()"></em>
+                    <!-- z-index is to be set superior to navabr z-index otherwise the tooltip is partially hidden-->
+                    <div class="opfab-tooltip-content left" style="z-index: 1001">
+                        <span translate>timeline.lockTooltip</span>
+                    </div>
+                </span>
+                <span *ngIf="!isTimelineLocked()" class="opfab-tooltip" style="position: absolute">
+                    <em id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()"></em>
+                    <!-- z-index is to be set superior to navabr z-index otherwise the tooltip is partially hidden-->
+                    <div class="opfab-tooltip-content left" style="z-index: 1001">
+                        <span translate>timeline.unlockTooltip</span>
+                    </div>
+                </span>
+            </li>
+        </ul>
     </div>
-  </div>
+</div>

@@ -8,79 +8,103 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="modal-content user-modal">
-  <div class="modal-header">
-    <span class="modal-title" *ngIf="row">{{row.login}}</span>
-    <span class="modal-title" *ngIf="!row" translate>admin.input.user.add</span>
-    <div id="opfab-admin-edit-user-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </div>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="userForm" class="opfab-form-lighter">
-      <div class="container">
-        <div class="col">
-
-          <div *ngIf="!row" class="opfab-input opfab-edit-row">
-            <label for="opfab-login" translate>admin.input.user.login</label>
-            <input formControlName="login" name="login" id="opfab-login" type="text">
-          </div>
-          <div *ngIf="login.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
-            <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
-            <div *ngIf="login.errors.pattern" translate>admin.input.login.pattern</div>
-            <div *ngIf="login.errors.uniqueLoginViolation" translate>admin.input.login.alreadyExisting</div>
-          </div>
-
-          <div class="opfab-input opfab-edit-row">
-            <label for="opfab-firstName" translate>admin.input.user.firstName</label>
-            <input formControlName="firstName" name="firstName" id="opfab-firstName" type="text">
-          </div>
-          <div *ngIf="firstName.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
-          </div>
-          <div class="opfab-input opfab-edit-row">
-            <label for="opfab-lastName" translate>admin.input.user.lastName</label>
-            <input formControlName="lastName" name="lastName" id="opfab-lastName" type="text">
-          </div>
-          <div *ngIf="lastName.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
-          </div>
-          <div class="opfab-edit-row">
-            <of-multi-select 
-            id="opfab-groups"
-            multiSelectId="groups"
-            [parentForm]="userForm"
-            [config] = "groupsMultiSelectConfig"
-            [options]="groupsMultiSelectOptions"
-            [selectedOptions]="selectedGroups">    
-            </of-multi-select>
-          </div>
-          <div class="opfab-edit-row">
-            <of-multi-select 
-            id="opfab-entities"
-            multiSelectId="entities"
-            [parentForm]="userForm"
-            [config] = "entitiesMultiSelectConfig"
-            [options]="entitiesMultiSelectOptions"
-            [selectedOptions]="selectedEntities">    
-            </of-multi-select>
-          </div>
-
-          <div class="opfab-input opfab-edit-row">
-            <label for="opfab-comment" translate>admin.input.user.comment</label>
-            <input formControlName="comment" name="comment" id="opfab-comment" type="text">
-          </div>
+    <div class="modal-header">
+        <span class="modal-title" *ngIf="row">{{ row.login }}</span>
+        <span class="modal-title" *ngIf="!row" translate>admin.input.user.add</span>
+        <div
+            id="opfab-admin-edit-user-btn-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="dismissModal('Cross click')">
+            <span aria-hidden="true">&times;</span>
         </div>
-      </div>
-    </form>
-
-    <div class="modal-footer" style="border-top: none">
-      <button id="opfab-admin-user-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-              translate>admin.input.close</button>
-      <button id="opfab-admin-user-btn-add" [disabled]="!userForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-              translate>admin.input.user.add</button>
-      <button id="opfab-admin-user-btn-save" [disabled]="!userForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-              translate>admin.input.save</button>
     </div>
-  </div>
+    <div class="modal-body">
+        <form [formGroup]="userForm" class="opfab-form-lighter">
+            <div class="container">
+                <div class="col">
+                    <div *ngIf="!row" class="opfab-input opfab-edit-row">
+                        <label for="opfab-login" translate>admin.input.user.login</label>
+                        <input formControlName="login" name="login" id="opfab-login" type="text" />
+                    </div>
+                    <div *ngIf="login.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="login.errors.required" translate>admin.input.login.required</div>
+                        <div *ngIf="login.errors.minlength" translate>admin.input.login.minLength</div>
+                        <div *ngIf="login.errors.pattern" translate>admin.input.login.pattern</div>
+                        <div *ngIf="login.errors.uniqueLoginViolation" translate>admin.input.login.alreadyExisting</div>
+                    </div>
+
+                    <div class="opfab-input opfab-edit-row">
+                        <label for="opfab-firstName" translate>admin.input.user.firstName</label>
+                        <input formControlName="firstName" name="firstName" id="opfab-firstName" type="text" />
+                    </div>
+                    <div *ngIf="firstName.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="firstName.errors.required" translate>admin.input.firstName.required</div>
+                    </div>
+                    <div class="opfab-input opfab-edit-row">
+                        <label for="opfab-lastName" translate>admin.input.user.lastName</label>
+                        <input formControlName="lastName" name="lastName" id="opfab-lastName" type="text" />
+                    </div>
+                    <div *ngIf="lastName.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="lastName.errors.required" translate>admin.input.lastName.required</div>
+                    </div>
+                    <div class="opfab-edit-row">
+                        <of-multi-select
+                            id="opfab-groups"
+                            multiSelectId="groups"
+                            [parentForm]="userForm"
+                            [config]="groupsMultiSelectConfig"
+                            [options]="groupsMultiSelectOptions"
+                            [selectedOptions]="selectedGroups">
+                        </of-multi-select>
+                    </div>
+                    <div class="opfab-edit-row">
+                        <of-multi-select
+                            id="opfab-entities"
+                            multiSelectId="entities"
+                            [parentForm]="userForm"
+                            [config]="entitiesMultiSelectConfig"
+                            [options]="entitiesMultiSelectOptions"
+                            [selectedOptions]="selectedEntities">
+                        </of-multi-select>
+                    </div>
+
+                    <div class="opfab-input opfab-edit-row">
+                        <label for="opfab-comment" translate>admin.input.user.comment</label>
+                        <input formControlName="comment" name="comment" id="opfab-comment" type="text" />
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="modal-footer" style="border-top: none">
+            <button
+                id="opfab-admin-user-btn-close"
+                type="button"
+                (click)="dismissModal('Cancel click')"
+                class="opfab-btn-cancel"
+                data-dismiss="modal"
+                translate>
+                admin.input.close
+            </button>
+            <button
+                id="opfab-admin-user-btn-add"
+                [disabled]="!userForm.valid"
+                *ngIf="!row"
+                (click)="update()"
+                class="opfab-btn"
+                translate>
+                admin.input.user.add
+            </button>
+            <button
+                id="opfab-admin-user-btn-save"
+                [disabled]="!userForm.valid"
+                *ngIf="row"
+                (click)="update()"
+                class="opfab-btn"
+                translate>
+                admin.input.save
+            </button>
+        </div>
+    </div>
 </div>

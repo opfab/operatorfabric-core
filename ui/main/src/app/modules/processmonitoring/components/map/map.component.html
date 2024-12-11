@@ -7,22 +7,22 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class='opfab-map' id='ol-monitoring-map' [hidden]='isSmallscreen()'>
-    <div id='popup' class='opfab-ol-popup'>
-        <a href='#' id='popup-closer' class='opfab-ol-popup-closer'></a>
-        <div *ngFor="let lightCard of lightCardsToDisplay; let i=index">
-                <button class="btn btn-cardlink btn-sm" (click)="showCard(lightCard._id)">
-                    <span style="text-align:left">
-                         {{displayCardDetailsOnButton(lightCard)}}
-                    </span>
-                </button>
+<div class="opfab-map" id="ol-monitoring-map" [hidden]="isSmallscreen()">
+    <div id="popup" class="opfab-ol-popup">
+        <a href="#" id="popup-closer" class="opfab-ol-popup-closer"></a>
+        <div *ngFor="let lightCard of lightCardsToDisplay; let i = index">
+            <button class="btn btn-cardlink btn-sm" (click)="showCard(lightCard._id)">
+                <span style="text-align: left">
+                    {{ displayCardDetailsOnButton(lightCard) }}
+                </span>
+            </button>
         </div>
     </div>
 </div>
 <ng-template #cardDetail let-modal>
     <div class="modal-body">
         <div>
-            <of-card [parentModalRef] = "modalRef" [screenSize]="'lg'"> </of-card>
+            <of-card [parentModalRef]="modalRef" [screenSize]="'lg'"> </of-card>
         </div>
     </div>
 </ng-template>

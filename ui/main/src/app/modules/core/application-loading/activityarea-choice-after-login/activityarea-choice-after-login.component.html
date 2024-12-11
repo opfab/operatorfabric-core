@@ -6,9 +6,11 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <ng-template #activityArea let-modal>
     <div class="modal-body modal-body-squared">
-      <of-activityarea [titleI18nKey]="'activityArea.titleOnLogin'" [askConfirmation]="false"  (confirm)="onActivityAreaConfirm()"></of-activityarea>
+        <of-activityarea
+            [titleI18nKey]="'activityArea.titleOnLogin'"
+            [askConfirmation]="false"
+            (confirm)="onActivityAreaConfirm()"></of-activityarea>
     </div>
-  </ng-template>
+</ng-template>

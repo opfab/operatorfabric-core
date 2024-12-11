@@ -58,14 +58,14 @@ describe('Response card tests', function () {
 
         // Response button is present
         cy.get('#opfab-card-details-btn-response');
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+        cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
 
         // Respond to the card
         cy.get('#question-choice1').click();
         card.sendResponse();
 
         // The label of the validate button must be "MODIFY RESPONSE" now
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
+        cy.contains('#opfab-card-details-btn-response', 'MODIFY RESPONSE');
 
         // See in the feed the fact that user has responded (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
@@ -92,7 +92,7 @@ describe('Response card tests', function () {
 
         // Respond  to the new card
 
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+        cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
 
         cy.waitDefaultTime(); // to avoid detach dom error, we need to wait the new template has been rendered
         cy.get('#question-choice3').click();
@@ -544,7 +544,7 @@ describe('Response card tests', function () {
         opfab.loginWithUser('operator1_fr');
         feed.openFirstCard();
 
-        // Mock and delay card response 
+        // Mock and delay card response
         cy.intercept('/cards-publication/cards/userCard', {
             statusCode: 201,
             delay: 3000
@@ -553,7 +553,7 @@ describe('Response card tests', function () {
         // Check template is loaded
         cy.get('#question-choice1');
 
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+        cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
         card.clickOnSendResponse();
 
         // Send response button should be disabled
@@ -561,7 +561,7 @@ describe('Response card tests', function () {
 
         // Modify response button should be enabled after response is sent
         cy.get('#opfab-card-details-btn-response').should('not.be.disabled');
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
+        cy.contains('#opfab-card-details-btn-response', 'MODIFY RESPONSE');
         card.closeMessageAfterResponseSend();
     });
 
@@ -572,7 +572,7 @@ describe('Response card tests', function () {
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Question', 1);
-        cy.get('#opfab-question-label').should('have.text', 'QUESTION');
+        cy.contains('#opfab-question-label', 'QUESTION');
         cy.get('#usercard_question_input').find('div').eq(0).type('question');
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
@@ -585,8 +585,8 @@ describe('Response card tests', function () {
 
         card.openEntityDropdownInCardHeader();
         cy.get('ngb-popover-window').should('exist');
-        cy.get('#opfab-answered-list').find('span').should("have.length", 0);
-        cy.get('#opfab-not-answered-list').find('span').should("have.length", 6);
+        cy.get('#opfab-answered-list').find('span').should('have.length', 0);
+        cy.get('#opfab-not-answered-list').find('span').should('have.length', 6);
 
         card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
@@ -602,8 +602,8 @@ describe('Response card tests', function () {
         card.sendResponse();
 
         card.openEntityDropdownInCardHeader();
-        cy.get('#opfab-answered-list').find('span').should("have.length", 1);
-        cy.get('#opfab-not-answered-list').find('span').should("have.length", 5);
+        cy.get('#opfab-answered-list').find('span').should('have.length', 1);
+        cy.get('#opfab-not-answered-list').find('span').should('have.length', 5);
         card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
         card.checkEntityIsGreenInCardHeader('ENTITY1_IT');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');
@@ -616,7 +616,7 @@ describe('Response card tests', function () {
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Confirmation');
-        cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
+        cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works
         cy.get('#message').invoke('val', 'Cypress test for response publisher');
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
@@ -627,14 +627,13 @@ describe('Response card tests', function () {
         // Feed preview show response from current entity
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
         // Card preview show responses list
-        cy.get("#childs-div").should('not.be.empty');
-        // Response table has 1 header and 1 row 
-        cy.get("#childs-div").find('tr').should('have.length', 2);
-        // Publisher of child card is set by the template 
-        cy.get("#childs-div").find('tr').eq(1).find('td').eq(0).contains('Control Center FR South');
+        cy.get('#childs-div').should('not.be.empty');
+        // Response table has 1 header and 1 row
+        cy.get('#childs-div').find('tr').should('have.length', 2);
+        // Publisher of child card is set by the template
+        cy.get('#childs-div').find('tr').eq(1).find('td').eq(0).contains('Control Center FR South');
         usercard.sendCard();
 
-        
         feed.openFirstCard();
         card.modifyResponse();
 
@@ -643,7 +642,6 @@ describe('Response card tests', function () {
         // Check the popup for the entities choice is displayed
         cy.get('#opfab-card-details-entities-choice-selector').should('exist');
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').should('have.length', 4);
-        
 
         cy.get('#opfab-card-details-entity-choice-btn-cancel').click();
 
@@ -653,13 +651,14 @@ describe('Response card tests', function () {
         //Response was sent without showing popup for the entities choice
         //Response is updated
         cy.get('#childs-div').find('tr').should('have.length', 2);
-        cy.get('#childs-div').find('td')
-        .first()
-        .should('have.text', ' Control Center FR South ')
-        .next()
-        .should('have.text', ' YES ')
-        .next()
-        .should('have.text', ' Cypress test for response publisher ');
+        cy.get('#childs-div')
+            .find('td')
+            .first()
+            .should('have.text', ' Control Center FR South ')
+            .next()
+            .should('have.text', ' YES ')
+            .next()
+            .should('have.text', ' Cypress test for response publisher ');
     });
 
     it('Check read and acknowledgment when response actions contains PROPAGATE_READ_ACK_TO_PARENT_CARD', () => {
@@ -689,14 +688,16 @@ describe('Response card tests', function () {
 
         card.sendResponse();
         opfab.logout();
-
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
         //Check card is unread
-        cy.get('of-light-card').eq(0).find('.card-title, .card-title').should('have.css', 'font-weight')
+        cy.get('of-light-card')
+            .eq(0)
+            .find('.card-title, .card-title')
+            .should('have.css', 'font-weight')
             .and('match', /700|bold/);
 
         //Check is not acknowledged
-        cy.get('of-light-card').eq(0).find('.fa-check').should('not.exist')
+        cy.get('of-light-card').eq(0).find('.fa-check').should('not.exist');
     });
 });

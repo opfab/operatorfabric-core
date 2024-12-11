@@ -6,49 +6,73 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 
 <div class="flex-container">
-      <div id="opfab-card-response-header-left" style="width:30%;padding-left:15px;margin-top:2px">
-            <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
-                  <span translate>response.status</span> :
-                  <!--The translate directive should stay there rather than in the element see OC-1603-->
-                  <span class="opfab-type-of-state-{{cardState.type}}">{{"shared.typeOfState."+cardState.type |
-                        translate}}</span>
-            </span>
-            <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> |
-            </span>
-            <span *ngIf="!!card.lttd">
-                  <of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon"
-                        [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
-            </span>
-      </div>
+    <div id="opfab-card-response-header-left" style="width: 30%; padding-left: 15px; margin-top: 2px">
+        <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
+            <span translate>response.status</span> :
+            <!--The translate directive should stay there rather than in the element see OC-1603-->
+            <span class="opfab-type-of-state-{{ cardState.type }}">{{
+                'shared.typeOfState.' + cardState.type | translate
+            }}</span>
+        </span>
+        <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')">
+            |
+        </span>
+        <span *ngIf="!!card.lttd">
+            <of-countdown
+                [lttd]="card.lttd"
+                [showExpiredIcon]="showExpiredIcon"
+                [showExpiredLabel]="showExpiredLabel"
+                [expiredLabel]="expiredLabel"></of-countdown>
+        </span>
+    </div>
 
-      <div id="opfab-card-response-header-right" class="opfab-entities-dropdown" style="width:70%;text-align: right"
-            placement="bottom-right" [ngbPopover]="entitiesDropdown" container="body" triggers="click" [autoClose]="'outside'" popoverClass="opfab-popover-arrow-shift-right">
-            <span translate>response.answers</span> :
-            <span *ngFor="let entity of entitiesForCardHeader; let isLast = last"
-                  [ngStyle]="{'color': entity.color,'text-align': 'center'}" [id]="'opfab-card-header-entity-'+entity.id">
-                  &nbsp; {{entity.name}} &nbsp;
-            </span>
-      </div>
+    <div
+        id="opfab-card-response-header-right"
+        class="opfab-entities-dropdown"
+        style="width: 70%; text-align: right"
+        placement="bottom-right"
+        [ngbPopover]="entitiesDropdown"
+        container="body"
+        triggers="click"
+        [autoClose]="'outside'"
+        popoverClass="opfab-popover-arrow-shift-right">
+        <span translate>response.answers</span> :
+        <span
+            *ngFor="let entity of entitiesForCardHeader; let isLast = last"
+            [ngStyle]="{color: entity.color, 'text-align': 'center'}"
+            [id]="'opfab-card-header-entity-' + entity.id">
+            &nbsp; {{ entity.name }} &nbsp;
+        </span>
+    </div>
 </div>
 
 <ng-template #entitiesDropdown>
-      <table>
-          <tr>
-              <th style="padding:10px"><span translate>response.answered</span></th>
-              <th style="padding:10px"><span translate>response.unanswered</span></th>
-          </tr>
-          <tr>
-              <td id="opfab-answered-list" style="vertical-align:top; padding:10px">
-                  <div *ngFor="let entity of answeredList">
-                      <span style="white-space: nowrap;" [ngStyle]="{'color': entity.color}" [id]="'opfab-list-answered-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
-                  </div> 
-              </td>
-              <td id="opfab-not-answered-list" style="vertical-align:top; padding:10px">
-                  <div *ngFor="let entity of notAnsweredList">
-                      <span style="white-space: nowrap;" [ngStyle]="{'color': entity.color}" [id]="'opfab-list-not-answered-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
-                  </div> 
-              </td>
-          </tr>
-      </table>
-  
-  </ng-template>
+    <table>
+        <tr>
+            <th style="padding: 10px"><span translate>response.answered</span></th>
+            <th style="padding: 10px"><span translate>response.unanswered</span></th>
+        </tr>
+        <tr>
+            <td id="opfab-answered-list" style="vertical-align: top; padding: 10px">
+                <div *ngFor="let entity of answeredList">
+                    <span
+                        style="white-space: nowrap"
+                        [ngStyle]="{color: entity.color}"
+                        [id]="'opfab-list-answered-entity-' + entity.id"
+                        >&nbsp; {{ entity.name }} &nbsp;</span
+                    >
+                </div>
+            </td>
+            <td id="opfab-not-answered-list" style="vertical-align: top; padding: 10px">
+                <div *ngFor="let entity of notAnsweredList">
+                    <span
+                        style="white-space: nowrap"
+                        [ngStyle]="{color: entity.color}"
+                        [id]="'opfab-list-not-answered-entity-' + entity.id"
+                        >&nbsp; {{ entity.name }} &nbsp;</span
+                    >
+                </div>
+            </td>
+        </tr>
+    </table>
+</ng-template>

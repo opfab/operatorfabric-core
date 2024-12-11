@@ -6,33 +6,34 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<div class="opfab-right-menu-item" *ngIf='showCreateCopyButton'>
-    <a id="opfab-card-create-copy" class="opfab-right-menu-link" (click)='createCopy()'>
+<div class="opfab-right-menu-item" *ngIf="showCreateCopyButton">
+    <a id="opfab-card-create-copy" class="opfab-right-menu-link" (click)="createCopy()">
         <div class="opfab-menu-icon opfab-icon-copy"></div>
-        <div translate>{{'button.createCopy'}}</div>
+        <div translate>{{ 'button.createCopy' }}</div>
     </a>
 </div>
 
-<div class="opfab-right-menu-item" *ngIf='showEditButton'>
-    <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
+<div class="opfab-right-menu-item" *ngIf="showEditButton">
+    <a id="opfab-card-edit" class="opfab-right-menu-link" (click)="editCard()">
         <div class="opfab-menu-icon opfab-icon-edit"></div>
-        <div translate>{{'button.edit'}}</div>
+        <div translate>{{ 'button.edit' }}</div>
     </a>
 </div>
 
-<div class="opfab-right-menu-item" *ngIf='showDeleteButton'>
-    <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openDeleteConfirmationModal()'>
-        <div class="opfab-menu-icon  opfab-icon-trash"></div>
-        <div translate>{{'button.delete'}}</div>
+<div class="opfab-right-menu-item" *ngIf="showDeleteButton">
+    <a id="opfab-card-delete" class="opfab-right-menu-link" (click)="openDeleteConfirmationModal()">
+        <div class="opfab-menu-icon opfab-icon-trash"></div>
+        <div translate>{{ 'button.delete' }}</div>
     </a>
 </div>
-
 
 <ng-template #userCardEdition let-modal>
     <div class="modal-header">
-        <div translate> userCard.editTitle </div>
-        <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
+        <div translate>userCard.editTitle</div>
+        <div
+            id="opfab-usercard-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
             (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </div>
@@ -46,9 +47,12 @@
 
 <ng-template #userCardCreateCopy let-modal>
     <div class="modal-header">
-        <div translate> userCard.title </div>
-        <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-             (click)="modal.dismiss('Cross click')">
+        <div translate>userCard.title</div>
+        <div
+            id="opfab-usercard-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </div>
     </div>
@@ -59,5 +63,4 @@
     </div>
 </ng-template>
 
-<of-spinner *ngIf="deleteInProgress" [seeInModal]="true" loadingText="shared.deleteInProgress">
-</of-spinner>
+<of-spinner *ngIf="deleteInProgress" [seeInModal]="true" loadingText="shared.deleteInProgress"> </of-spinner>

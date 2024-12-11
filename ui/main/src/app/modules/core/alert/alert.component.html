@@ -7,9 +7,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id='opfab-alert-detail-msg' class="opfab-info-message"  *ngIf='alertPage.display' [style]="alertPage.style + ';background-color:' + alertPage.backgroundColor">
-    <span> &nbsp; {{alertPage.message}}</span>
-    <div id="opfab-close-alert" class="opfab-alert-close" aria-label="Close" (click)=" this.alertView.closeAlert();">
-      <span aria-hidden="true">&times;</span>
+<div
+    id="opfab-alert-detail-msg"
+    class="opfab-info-message"
+    *ngIf="alertPage.display"
+    [style]="alertPage.style + ';background-color:' + alertPage.backgroundColor">
+    <span> &nbsp; {{ alertPage.message }}</span>
+    <div id="opfab-close-alert" class="opfab-alert-close" aria-label="Close" (click)="this.alertView.closeAlert()">
+        <span aria-hidden="true">&times;</span>
     </div>
 </div>

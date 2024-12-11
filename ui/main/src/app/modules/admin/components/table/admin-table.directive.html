@@ -6,52 +6,57 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<div *ngIf="!hasAnyPermission([ADMIN_PERMISSION]) && !(this.tableType === 'businessData' && hasAnyPermission([BUSINESS_PROCESS_PERMISSION]))" style="text-align: center; font-size: 20px; padding-top: 100px" translate>
+<div
+    *ngIf="!hasAnyPermission([ADMIN_PERMISSION]) && !(this.tableType === 'businessData' && hasAnyPermission([BUSINESS_PROCESS_PERMISSION]))"
+    style="text-align: center; font-size: 20px; padding-top: 100px"
+    translate>
     errors.pageNotAllowed
 </div>
 
-<div *ngIf="hasAnyPermission([ADMIN_PERMISSION]) || (this.tableType === 'businessData' && hasAnyPermission([BUSINESS_PROCESS_PERMISSION]))">
-
-    <span *ngIf="this.tableType === 'businessData'" >
+<div
+    *ngIf="hasAnyPermission([ADMIN_PERMISSION]) || (this.tableType === 'businessData' && hasAnyPermission([BUSINESS_PROCESS_PERMISSION]))">
+    <span *ngIf="this.tableType === 'businessData'">
         <form action="/" method="post" enctype="multipart/form-data">
-            <input id="fileUploader" type="file" class="file-input" (change)="onFileSelected($event)">
+            <input id="fileUploader" type="file" class="file-input" (change)="onFileSelected($event)" />
         </form>
     </span>
-    <div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
-        <div *ngIf="showAddButton" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="add-item">
-            <em class="fas fa-plus-circle"></em></a>
+    <div style="background-color: var(--opfab-bgcolor-darker); border: solid 5px var(--opfab-bgcolor-darker)">
+        <div *ngIf="showAddButton" style="padding: 10px">
+            <a class="btn btn-primary" (click)="createNewItem()" id="add-item"> <em class="fas fa-plus-circle"></em></a>
             <span>&nbsp;<label for="add-item" translate> admin.input.{{this.tableType}}.add </label></span>
-            <br>
-            <br>
+            <br />
+            <br />
         </div>
 
         <ag-grid-angular
-                (gridReady)="onGridReady($event)"
-                [gridOptions]="gridOptions"
-                [rowData]="rowData"
-                class="ag-theme-opfab opfab-cell-overflow-visible"
-                (filterChanged)="onFilterChanged($event)"
-        >
+            (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions"
+            [rowData]="rowData"
+            class="ag-theme-opfab opfab-cell-overflow-visible"
+            (filterChanged)="onFilterChanged($event)">
         </ag-grid-angular>
 
         <div *ngIf="gridApi" class="opfab-pagination">
-            <div style="white-space: nowrap;margin-top:17px">
-            <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+            <div style="white-space: nowrap; margin-top: 17px">
+                <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
             </div>
-            <div style="width:40%;margin-top:5px">
-            <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 5" [collectionSize]="gridApi.paginationGetRowCount()"
-                [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
-            </ngb-pagination>
+            <div style="width: 40%; margin-top: 5px">
+                <ngb-pagination
+                    *ngIf="gridApi.paginationGetRowCount() > 5"
+                    [collectionSize]="gridApi.paginationGetRowCount()"
+                    [page]="page"
+                    [pageSize]="gridApi.paginationGetPageSize()"
+                    (pageChange)="updateResultPage($event)"
+                    [maxSize]="3"
+                    [rotate]="true">
+                </ngb-pagination>
             </div>
             <div class="opfab-admin-export-div">
                 <div id="opfab-admin-btn-exportToExcel" class="opfab-admin-export-btn" (click)="export()">
                     <span class="opfab-icon-export-data"></span>
-                    <span style="font-weight: bold;" translate> shared.exportToExcel </span>
+                    <span style="font-weight: bold" translate> shared.exportToExcel </span>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>

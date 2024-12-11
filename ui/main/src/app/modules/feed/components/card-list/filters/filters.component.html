@@ -6,20 +6,21 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <div class="opfab-feedbar opfab-form-lighter">
-        <div style="width:180px;display:flex;">
-            <of-feed-filter-icon [filterActive]="filterActive" (showFiltersAndSort)="onShowFiltersAndSortChange($event)"></of-feed-filter-icon>
-            <of-feed-search [showSearchFilter]="showSearchFilter" ></of-feed-search>
-        </div>
+    <div style="width: 180px; display: flex">
+        <of-feed-filter-icon
+            [filterActive]="filterActive"
+            (showFiltersAndSort)="onShowFiltersAndSortChange($event)"></of-feed-filter-icon>
+        <of-feed-search [showSearchFilter]="showSearchFilter"></of-feed-search>
+    </div>
 
-        <div style="width:100%">
+    <div style="width: 100%"></div>
+    <div *ngIf="loadingInProgress" class="opfab-loading-spinner opfab-tooltip">
+        <div>
+            <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+            <span class="opfab-tooltip-content left" style="z-index: 1; text-align: left">
+                <span translate>feed.tips.loadingInProgress</span></span
+            >
         </div>
-        <div *ngIf="loadingInProgress" class="opfab-loading-spinner opfab-tooltip">
-            <div>
-            <em  class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
-            <span class="opfab-tooltip-content left" style="z-index:1;text-align: left;"> <span translate>feed.tips.loadingInProgress</span></span>
-            </div>
-
-         </div>
+    </div>
 </div>

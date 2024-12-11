@@ -6,35 +6,37 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="sort-header">
+    <span translate>feed.sort.title</span>
+</div>
+<form [formGroup]="sortForm" id="opfab-sort-form" style="padding-left: 10px; padding-top: 10px">
+    <label class="opfab-radio-button">
+        <span translate> feed.sort.unread</span>
+        <input type="radio" id="opfab-feed-filter-unread" formControlName="sortControl" value="unread" />
+        <span class="opfab-radio-button-checkmark"></span>
+    </label>
 
-    <div class="sort-header">
-        <span translate>feed.sort.title</span>
-    </div>
-    <form [formGroup]="sortForm" id="opfab-sort-form" style="padding-left: 10px; padding-top: 10px">
+    <label class="opfab-radio-button">
+        <span translate> feed.sort.publish</span>
+        <input type="radio" id="opfab-feed-filter-publication-date" formControlName="sortControl" value="date" />
+        <span class="opfab-radio-button-checkmark"></span>
+    </label>
 
-        <label class="opfab-radio-button"> <span  translate> feed.sort.unread</span>
-            <input type="radio"  id="opfab-feed-filter-unread" formControlName="sortControl" value="unread">
-            <span class="opfab-radio-button-checkmark"></span>
-        </label>
+    <label class="opfab-radio-button">
+        <span translate> feed.sort.severity</span>
+        <input type="radio" id="opfab-feed-filter-severity" formControlName="sortControl" value="severity" />
+        <span class="opfab-radio-button-checkmark"></span>
+    </label>
 
-        <label class="opfab-radio-button"> <span  translate> feed.sort.publish</span>
-            <input type="radio"  id="opfab-feed-filter-publication-date" formControlName="sortControl" value="date">
-            <span class="opfab-radio-button-checkmark"></span>
-        </label>
+    <label class="opfab-radio-button">
+        <span translate> feed.sort.startDate</span>
+        <input type="radio" id="opfab-feed-filter-start-date" formControlName="sortControl" value="startDate" />
+        <span class="opfab-radio-button-checkmark"></span>
+    </label>
 
-        <label class="opfab-radio-button"> <span  translate> feed.sort.severity</span>
-            <input type="radio"  id="opfab-feed-filter-severity" formControlName="sortControl" value="severity">
-            <span class="opfab-radio-button-checkmark"></span>
-        </label>
-
-        <label class="opfab-radio-button"> <span  translate> feed.sort.startDate</span>
-            <input type="radio"  id="opfab-feed-filter-start-date" formControlName="sortControl" value="startDate">
-            <span class="opfab-radio-button-checkmark"></span>
-        </label>
-
-        <label class="opfab-radio-button"> <span  translate> feed.sort.endDate</span>
-            <input type="radio"  id="opfab-feed-filter-end-date" formControlName="sortControl" value="endDate">
-            <span class="opfab-radio-button-checkmark"></span>
-        </label>
-    </form>
-
+    <label class="opfab-radio-button">
+        <span translate> feed.sort.endDate</span>
+        <input type="radio" id="opfab-feed-filter-end-date" formControlName="sortControl" value="endDate" />
+        <span class="opfab-radio-button-checkmark"></span>
+    </label>
+</form>

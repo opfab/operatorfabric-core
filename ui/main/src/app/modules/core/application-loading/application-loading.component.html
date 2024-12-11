@@ -7,27 +7,38 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<of-loading-in-progress *ngIf="applicationLoader.loadingInProgress && !showLoginScreen && applicationLoader.isAllowedToAccessOpfab"></of-loading-in-progress>
+<of-loading-in-progress
+    *ngIf="
+        applicationLoader.loadingInProgress && !showLoginScreen && applicationLoader.isAllowedToAccessOpfab
+    "></of-loading-in-progress>
 
 <of-app-loaded-in-another-tab #appLoadedInAnotherTab> </of-app-loaded-in-another-tab>
 
 <of-login *ngIf="showLoginScreen"></of-login>
 
-<of-activityarea-choice-after-login #activityAreaChoiceAfterLogin>
-</of-activityarea-choice-after-login>
+<of-activityarea-choice-after-login #activityAreaChoiceAfterLogin> </of-activityarea-choice-after-login>
 
 <div id="opfab-disconnected-message" class="opfab-disconnected-message" *ngIf="applicationLoader.isDisconnected">
-    <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
+    <div style="text-align: center; font-size: 16px; font-weight: bold; margin-top: 10px" translate>
         global.disconnected
     </div>
 </div>
 
-<div *ngIf="applicationLoader.displayEnvironmentName && showLoginScreen"
-     style=" position:absolute;right:0;top:0;width:80px;height:87px;overflow:hidden;">
-    <div [style.background-color]="applicationLoader.environmentColor"
-         style="font-size:10px;transform:rotate(45deg);color:white;
-          margin-top:33px; margin-left: -57px; width:210px;
-          text-align: center; font-weight: bold;">
-        {{applicationLoader.environmentName}}
+<div
+    *ngIf="applicationLoader.displayEnvironmentName && showLoginScreen"
+    style="position: absolute; right: 0; top: 0; width: 80px; height: 87px; overflow: hidden">
+    <div
+        [style.background-color]="applicationLoader.environmentColor"
+        style="
+            font-size: 10px;
+            transform: rotate(45deg);
+            color: white;
+            margin-top: 33px;
+            margin-left: -57px;
+            width: 210px;
+            text-align: center;
+            font-weight: bold;
+        ">
+        {{ applicationLoader.environmentName }}
     </div>
 </div>

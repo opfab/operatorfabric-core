@@ -34,7 +34,7 @@ describe('Feed notification configuration tests', function () {
 
         opfab.navigateToNotificationConfiguration();
 
-        cy.get('.opfab-notificationconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
+        cy.contains('.opfab-notificationconfiguration-title', 'NOTIFICATION CONFIGURATION');
         cy.get('.opfab-notificationconfiguration-processlist').should('have.length', 3);
 
         // First process group
@@ -98,7 +98,7 @@ describe('Feed notification configuration tests', function () {
 
         opfab.navigateToNotificationConfiguration();
 
-        cy.get('.opfab-notificationconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
+        cy.contains('.opfab-notificationconfiguration-title', 'NOTIFICATION CONFIGURATION');
         cy.get('.opfab-notificationconfiguration-processlist').should('have.length', 0);
         cy.get('#opfab-notificationconfiguration-no-process-state-available')
             .contains('No process/state available')

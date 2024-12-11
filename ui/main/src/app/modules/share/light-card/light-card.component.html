@@ -6,78 +6,108 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
-<div id="opfab-feed-light-card-{{lightCard.process}}-{{lightCard.processInstanceId}}"
-     attr.data-urlId="{{lightCard.process}}.{{lightCard.processInstanceId}}"
-     class="card light-card-detail "
-     [class.light-card-detail-selected]="open || groupedCardOpen" [class.light-card-detail-unselected]="!open && !groupedCardOpen"
-     [class.light-card-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
-     (click)="select($event)"
-     (mouseenter)='highlightOnMap(true)'
-     (mouseleave)='highlightOnMap(false)'
->
+<div
+    id="opfab-feed-light-card-{{ lightCard.process }}-{{ lightCard.processInstanceId }}"
+    attr.data-urlId="{{ lightCard.process }}.{{ lightCard.processInstanceId }}"
+    class="card light-card-detail"
+    [class.light-card-detail-selected]="open || groupedCardOpen"
+    [class.light-card-detail-unselected]="!open && !groupedCardOpen"
+    [class.light-card-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
+    (click)="select($event)"
+    (mouseenter)="highlightOnMap(true)"
+    (mouseleave)="highlightOnMap(false)">
     <div class="opfab-lightcard">
-        <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
-        </div>
-        <div  style="width: 100%">
-            <div style="display: grid;grid-template-columns: auto auto;margin-top:2px">
-                <p class="card-title ">
-                    <span id="opfab-feed-list-card-title">{{this.truncatedTitle | opfabTitleCase}}</span>
+        <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }}"></div>
+        <div style="width: 100%">
+            <div style="display: grid; grid-template-columns: auto auto; margin-top: 2px">
+                <p class="card-title">
+                    <span id="opfab-feed-list-card-title">{{ this.truncatedTitle | opfabTitleCase }}</span>
                 </p>
-                <div style="text-align: right;padding-right: 5px;">
+                <div style="text-align: right; padding-right: 5px">
                     <div>
-                        <span class="opfab-tooltip" *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" style="padding:.25rem">
-                            <em style="color: var(--opfab-color-blue);" class="fa fa-reply"></em>
-                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip"><span translate>feed.tips.hasAResponseFromYourEntity</span></div>
+                        <span
+                            class="opfab-tooltip"
+                            *ngIf="lightCard.hasChildCardFromCurrentUserEntity"
+                            id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity"
+                            style="padding: 0.25rem">
+                            <em style="color: var(--opfab-color-blue)" class="fa fa-reply"></em>
+                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
+                                <span translate>feed.tips.hasAResponseFromYourEntity</span>
+                            </div>
                         </span>
-                        <span class="opfab-tooltip" *ngIf="this.lightCard.hasBeenAcknowledged" style="padding:.25rem">
-                            <em style="color: var(--opfab-color-blue);" class="fa fa-check"></em>
-                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip"> <span translate>feed.tips.acknowledged</span></div>
+                        <span class="opfab-tooltip" *ngIf="this.lightCard.hasBeenAcknowledged" style="padding: 0.25rem">
+                            <em style="color: var(--opfab-color-blue)" class="fa fa-check"></em>
+                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
+                                <span translate>feed.tips.acknowledged</span>
+                            </div>
                         </span>
-                        <span class="opfab-tooltip" *ngIf="showGroupedCardsIcon" style="padding:.25rem">
-                            <em id="opfab-feed-light-card-group-icon" style="color: var(--opfab-color-blue);" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
-                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip"><span translate>feed.tips.seeGroupedCards</span></div>
+                        <span class="opfab-tooltip" *ngIf="showGroupedCardsIcon" style="padding: 0.25rem">
+                            <em
+                                id="opfab-feed-light-card-group-icon"
+                                style="color: var(--opfab-color-blue)"
+                                class="fa"
+                                [class.fa-angle-down]="open"
+                                [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
+                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
+                                <span translate>feed.tips.seeGroupedCards</span>
+                            </div>
                         </span>
-                        <span class="opfab-tooltip" *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' style="padding:.25rem">
-                            <em style="color: var(--opfab-color-blue);" class="fa fa-location-crosshairs"></em>
-                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip"><span translate>feed.tips.seeGeolocation</span></div>
+                        <span
+                            class="opfab-tooltip"
+                            *ngIf="isGeoMapEnabled && hasGeoLocation"
+                            (click)="zoomToLocation($event)"
+                            style="padding: 0.25rem">
+                            <em style="color: var(--opfab-color-blue)" class="fa fa-location-crosshairs"></em>
+                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
+                                <span translate>feed.tips.seeGeolocation</span>
+                            </div>
                         </span>
                     </div>
                 </div>
             </div>
-            <div style="display: grid;grid-template-columns: auto auto;margin-top: 8px;">
+            <div style="display: grid; grid-template-columns: auto auto; margin-top: 8px">
+                <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="card-subtitle">
+                    ({{ this.dateToDisplay }})
+                </p>
 
-                <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="card-subtitle">({{this.dateToDisplay}})</p>
-
-                <div style="text-align: right;margin-top: -5px;margin-right: 5px;padding-right: 5px; ">
-                        <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
-                        <span class="opfab-tooltip expiration-date" *ngIf="lightCard.expirationDate" id="opfab-card-expiration-date">
-                            <em style="color: var(--opfab-color-darker-orange);margin-left: 8px;" class="fa fa-hourglass"></em>
-                            <div class="opfab-tooltip-content left opfab-lightcard-tooltip"><span >{{this.expirationDateToDisplay}}</span></div>
-                        </span>
+                <div style="text-align: right; margin-top: -5px; margin-right: 5px; padding-right: 5px">
+                    <of-countdown
+                        *ngIf="!!lightCard.lttd"
+                        [lttd]="lightCard.lttd"
+                        [showExpiredLabel]="showExpiredLabel"
+                        [expiredLabel]="expiredLabel"></of-countdown>
+                    <span
+                        class="opfab-tooltip expiration-date"
+                        *ngIf="lightCard.expirationDate"
+                        id="opfab-card-expiration-date">
+                        <em
+                            style="color: var(--opfab-color-darker-orange); margin-left: 8px"
+                            class="fa fa-hourglass"></em>
+                        <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
+                            <span>{{ this.expirationDateToDisplay }}</span>
+                        </div>
+                    </span>
                 </div>
             </div>
         </div>
-
-
     </div>
     <div class="opfab-lightcard">
-        <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
-        <div style="width: 100%;margin-top:3px;padding:.25rem">
+        <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }}"></div>
+        <div style="width: 100%; margin-top: 3px; padding: 0.25rem">
             <span *ngIf="open">
-                <span id="opfab-selected-card-summary">{{lightCard.summaryTranslated}}</span>
-                <div id="opfab-form-entity" *ngIf="fromEntity" style="font-style: italic;text-align: right;width: 100%">
+                <span id="opfab-selected-card-summary">{{ lightCard.summaryTranslated }}</span>
+                <div
+                    id="opfab-form-entity"
+                    *ngIf="fromEntity"
+                    style="font-style: italic; text-align: right; width: 100%">
                     <span style="text-transform: capitalize" translate>feed.from</span>
-                    <span class="text-uppercase">&nbsp;:&nbsp;{{fromEntity}}</span>
+                    <span class="text-uppercase">&nbsp;:&nbsp;{{ fromEntity }}</span>
                 </div>
             </span>
         </div>
     </div>
 
-    <div class="opfab-lightcard-severity  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
-
-
+    <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }} "></div>
 </div>
 
 <div *ngIf="open && groupedCardsVisible">

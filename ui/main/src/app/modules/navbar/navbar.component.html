@@ -98,23 +98,31 @@
     </nav>
     <nav class="opfab-full-navbar" aria-label="Full Navigation Icons">
         <ul class="opfab-icons-menu">
-            <ng-template #createNewCard>
-              
-            </ng-template>
-            <li class="opfab-tooltip" id="opfab-newcard-menu" *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
+            <ng-template #createNewCard> </ng-template>
+            <li
+                class="opfab-tooltip"
+                id="opfab-newcard-menu"
+                *ngIf="navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible">
                 <a tabindex="0" (click)="openCardCreation()" (keydown.enter)="openCardCreation()">
                     <div class="opfab-menu-icon-newcard"></div>
                 </a>
-                <div class="opfab-tooltip-content bottom" style="margin-top: 0px;min-width: unset;">  <span translate>menu.newcardTooltip</span></div>
+                <div class="opfab-tooltip-content bottom" style="margin-top: 0px; min-width: unset">
+                    <span translate>menu.newcardTooltip</span>
+                </div>
             </li>
             <ng-template #calendartooltip>
                 <span translate>menu.calendarTooltip</span>
             </ng-template>
-            <li class="opfab-tooltip" id="opfab-calendar-menu" *ngIf="navbarMenuView.getNavbarMenu().isCalendarIconVisible">
+            <li
+                class="opfab-tooltip"
+                id="opfab-calendar-menu"
+                *ngIf="navbarMenuView.getNavbarMenu().isCalendarIconVisible">
                 <a tabindex="0" (click)="goToCoreMenu('calendar')" (keydown.enter)="goToCoreMenu('calendar')">
                     <div class="opfab-menu-icon-calendar"></div>
                 </a>
-                <div class="opfab-tooltip-content bottom" style="margin-top: 0px;min-width:unset;">  <span translate>menu.calendarTooltip</span></div>
+                <div class="opfab-tooltip-content bottom" style="margin-top: 0px; min-width: unset">
+                    <span translate>menu.calendarTooltip</span>
+                </div>
             </li>
             <li class="opfab-navbar-info">
                 <a

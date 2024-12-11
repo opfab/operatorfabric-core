@@ -6,27 +6,34 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
 <div>
-    
     <div class="opfab-timeline-margin">
-       <div [hidden]="!enoughSpaceForTimeLine()">
-           <of-time-line></of-time-line> 
-        </div> 
-        <div *ngIf="!enoughSpaceForTimeLine()" style="position: relative; display: flex; justify-content: right;
-        margin-bottom: 10px; margin-right: 25px;">
-            <of-pinned-cards></of-pinned-cards> 
-         </div> 
+        <div [hidden]="!enoughSpaceForTimeLine()">
+            <of-time-line></of-time-line>
+        </div>
+        <div
+            *ngIf="!enoughSpaceForTimeLine()"
+            style="position: relative; display: flex; justify-content: right; margin-bottom: 10px; margin-right: 25px">
+            <of-pinned-cards></of-pinned-cards>
+        </div>
     </div>
 
-    <div id="opfab-parentFeedContent" style="margin-left: 38px;margin-right:20px;display:flex">
-        <div style="padding-left: 0px;padding-right:0px" [class.opfab-standard-filters-screen]="enoughSpaceForCardDetail() && filtersVisible" [class.opfab-standard-screen]="enoughSpaceForCardDetail() && !filtersVisible" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
-            <of-card-list (showFilters)="showFilters($event)" [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards" [processFilter]="processFilter" [stateFilter]="stateFilter"></of-card-list>
+    <div id="opfab-parentFeedContent" style="margin-left: 38px; margin-right: 20px; display: flex">
+        <div
+            style="padding-left: 0px; padding-right: 0px"
+            [class.opfab-standard-filters-screen]="enoughSpaceForCardDetail() && filtersVisible"
+            [class.opfab-standard-screen]="enoughSpaceForCardDetail() && !filtersVisible"
+            [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
+            <of-card-list
+                (showFilters)="showFilters($event)"
+                [lightCards]="lightCards$ | async"
+                [selection]="selection$"
+                [totalNumberOfLightsCards]="totalNumberOfLightsCards"
+                [processFilter]="processFilter"
+                [stateFilter]="stateFilter"></of-card-list>
         </div>
         <div [class.opfab-standard-card-detail]="!filtersVisible" [class.opfab-slim-card-detail]="filtersVisible">
             <router-outlet></router-outlet>
         </div>
     </div>
 </div>
-

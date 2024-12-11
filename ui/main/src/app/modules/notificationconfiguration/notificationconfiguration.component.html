@@ -6,72 +6,95 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="opfab-notificationconfiguration-title" translate>notificationConfiguration.title</div>
 
-<div class="opfab-notificationconfiguration-title" translate>
-    notificationConfiguration.title
-</div>
-
-<div *ngIf="notificationConfigurationPage.isThereProcessStatesToDisplay; else noProcessStateToDisplay" #opfabNotificationConfigurationScreen>
-    <div *ngFor="let processGroup of notificationConfigurationPage.processGroups; "
+<div
+    *ngIf="notificationConfigurationPage.isThereProcessStatesToDisplay; else noProcessStateToDisplay"
+    #opfabNotificationConfigurationScreen>
+    <div
+        *ngFor="let processGroup of notificationConfigurationPage.processGroups"
         class="opfab-notificationconfiguration-processlist">
         <label class="opfab-checkbox">
-            <h5 class="font-weight-bold">{{processGroup.label}}</h5>
-            <input type="checkbox" (click)="notificationConfigurationView.clickOnProcessGroup(processGroup.id)"
-                [id]="'opfab_notification_processgroup_' + processGroup.id" [checked]="processGroup.checked">
+            <h5 class="font-weight-bold">{{ processGroup.label }}</h5>
+            <input
+                type="checkbox"
+                (click)="notificationConfigurationView.clickOnProcessGroup(processGroup.id)"
+                [id]="'opfab_notification_processgroup_' + processGroup.id"
+                [checked]="processGroup.checked" />
             <span class="opfab-checkbox-checkmark"></span>
         </label>
         <div class="opfab-notificationconfiguration-processgrid">
             <ng-container *ngFor="let process of processGroup.processes">
-                <ng-container *ngTemplateOutlet="processTemplate; context: { process: process }"></ng-container>
+                <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
             </ng-container>
         </div>
     </div>
     <br />
-    <div *ngIf="notificationConfigurationPage.processesWithNoProcessGroup.length"
-         class="opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
+    <div
+        *ngIf="notificationConfigurationPage.processesWithNoProcessGroup.length"
+        class="opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
         <ng-container *ngFor="let process of notificationConfigurationPage.processesWithNoProcessGroup">
-            <ng-container *ngTemplateOutlet="processTemplate; context: { process: process }"></ng-container>
+            <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
         </ng-container>
     </div>
     <br />
-    <div style="text-align: center;width:100%">
-        <button id="opfab-notificationconfiguration-btn-confirm" type="button" class="opfab-btn" (click)='notificationConfigurationView.clickOnSaveButton()'
-            style="text-align: center;min-width: 243px;" translate>shared.confirmSettings</button>
+    <div style="text-align: center; width: 100%">
+        <button
+            id="opfab-notificationconfiguration-btn-confirm"
+            type="button"
+            class="opfab-btn"
+            (click)="notificationConfigurationView.clickOnSaveButton()"
+            style="text-align: center; min-width: 243px"
+            translate>
+            shared.confirmSettings
+        </button>
     </div>
 </div>
 
 <ng-template #noProcessStateToDisplay>
-    <div id="opfab-notificationconfiguration-no-process-state-available"
-        style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
+    <div
+        id="opfab-notificationconfiguration-no-process-state-available"
+        style="text-align: center; font-size: 20px; padding-top: 100px"
+        translate>
+        shared.noProcessStateAvailable
+    </div>
 </ng-template>
-
 
 <ng-template #processTemplate let-process="process">
     <div class="opfab-notificationconfiguration-process">
         <p class="font-weight-bold">
-            <label style="font-weight: bold;width: auto" class="opfab-checkbox">{{process.label}}
-                <input [id]="'opfab_notification_process_' + process.id" type="checkbox"
-                    [disabled]="!process.filteringNotificationAllowed" (click)="notificationConfigurationView.clickOnProcess(process.id)"
-                    [checked]="process.checked">
+            <label style="font-weight: bold; width: auto" class="opfab-checkbox"
+                >{{ process.label }}
+                <input
+                    [id]="'opfab_notification_process_' + process.id"
+                    type="checkbox"
+                    [disabled]="!process.filteringNotificationAllowed"
+                    (click)="notificationConfigurationView.clickOnProcess(process.id)"
+                    [checked]="process.checked" />
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
         </p>
         <table style="margin-left: 15px" aria-label="Table of states and email icon">
             <th scope="col" hidden>state</th>
             <th scope="col" hidden>notified by email or not</th>
-            <tr *ngFor="let state of process.states; ">
+            <tr *ngFor="let state of process.states">
                 <td>
-                    <label class="opfab-checkbox">{{state.label}}
-                        <input type="checkbox" [checked]="state.checked"
+                    <label class="opfab-checkbox"
+                        >{{ state.label }}
+                        <input
+                            type="checkbox"
+                            [checked]="state.checked"
                             [id]="'opfab_notification_state_' + process.id + '.' + state.id"
-                            (click)="notificationConfigurationView.clickOnState(process.id, state.id);"
-                            [disabled]="!state.filteringNotificationAllowed">
+                            (click)="notificationConfigurationView.clickOnState(process.id, state.id)"
+                            [disabled]="!state.filteringNotificationAllowed" />
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </td>
-                <td *ngIf="notificationConfigurationPage.isEmailEnabled"
+                <td
+                    *ngIf="notificationConfigurationPage.isEmailEnabled"
                     [id]="'opfab_email_notification_state_td_' + process.id + '.' + state.id"
-                    (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)" style="padding-left: 13px"
+                    (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
+                    style="padding-left: 13px"
                     class="opfab-notificationconfiguration-slash">
                     <div [id]="'opfab_email_notification_state_div_' + process.id + '.' + state.id"></div>
                 </td>

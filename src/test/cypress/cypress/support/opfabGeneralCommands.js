@@ -94,7 +94,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
     navigateToCalendar = function () {
         cy.get('#opfab-calendar-menu').click();
         cy.get('of-calendar').should('exist');
-    }
+    };
 
     navigateToDashboard = function () {
         cy.get('#opfab-navbar-menu-dashboard').click();
@@ -104,7 +104,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
     navigateToMonitoring = function () {
         cy.get('#opfab-navbar-menu-monitoring').click();
         cy.get('of-monitoring').should('exist');
-    }
+    };
 
     navigateToMonitoringProcessus = function () {
         cy.get('#opfab-navbar-menu-processmonitoring').click();

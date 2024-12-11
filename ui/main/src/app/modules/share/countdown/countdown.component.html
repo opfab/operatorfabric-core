@@ -6,11 +6,12 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <span *ngIf="this.countDown.isCounting()" class="opfab-tooltip lttd-timeleft">
-    {{this.countDown.getCountDown()}}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
-    <div class="opfab-tooltip-content left" style="white-space: nowrap;font-size: 11pt;">  <span translate>feed.tips.lttd</span></div>
+    {{ this.countDown.getCountDown() }}<em class="far fa-clock lttd-icon lttd-timeleft"></em>
+    <div class="opfab-tooltip-content left" style="white-space: nowrap; font-size: 11pt">
+        <span translate>feed.tips.lttd</span>
+    </div>
 </span>
 <span *ngIf="this.countDown.isEnded()">
-    <span *ngIf="showExpiredLabel" class="lttd-text">{{translatedExpiredLabel}}</span>  
+    <span *ngIf="showExpiredLabel" class="lttd-text">{{ translatedExpiredLabel }}</span>
 </span>

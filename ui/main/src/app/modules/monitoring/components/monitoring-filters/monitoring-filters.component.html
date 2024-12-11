@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,47 +7,64 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <form [formGroup]="monitoringForm" #currentForm>
-    <div class="opfab-filters-summary" style="padding-right: 60px;">
+    <div class="opfab-filters-summary" style="padding-right: 60px">
         <of-timeline-buttons [isMonitoringScreen]="true" #timelineButtons (domainChange)="businessPeriodChanged()">
         </of-timeline-buttons>
     </div>
 
     <div class="opfab-monitoring">
-        <div style="display: flex;">
-
-            <div *ngIf="isProcessGroupFilterVisible()"
-                style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
-                <of-multi-select id="opfab-processGroup" [multiSelectId]="processGroupMultiSelect.id" [parentForm]="monitoringForm"
-                    [config]="processGroupMultiSelect.config" [options]="processGroupMultiSelect.options"
+        <div style="display: flex">
+            <div
+                *ngIf="isProcessGroupFilterVisible()"
+                style="margin-top: 28px; margin-right: 40px; position: relative; min-width: 300px; max-width: 400px">
+                <of-multi-select
+                    id="opfab-processGroup"
+                    [multiSelectId]="processGroupMultiSelect.id"
+                    [parentForm]="monitoringForm"
+                    [config]="processGroupMultiSelect.config"
+                    [options]="processGroupMultiSelect.options"
                     [selectedOptions]="processGroupMultiSelect.selectedOptions">
                 </of-multi-select>
             </div>
 
-            <div style="margin-top: 28px;margin-right: 40px;position:relative; min-width:300px;max-width:400px;">
-                <of-multi-select id="opfab-process" [multiSelectId]="processMultiSelect.id" [parentForm]="monitoringForm"
-                    [config]="processMultiSelect.config" [options]="processMultiSelect.options"
+            <div style="margin-top: 28px; margin-right: 40px; position: relative; min-width: 300px; max-width: 400px">
+                <of-multi-select
+                    id="opfab-process"
+                    [multiSelectId]="processMultiSelect.id"
+                    [parentForm]="monitoringForm"
+                    [config]="processMultiSelect.config"
+                    [options]="processMultiSelect.options"
                     [selectedOptions]="processMultiSelect.selectedOptions">
                 </of-multi-select>
             </div>
 
-            <div style="margin-top: 28px;position:relative; min-width:300px;max-width:400px;">
-                <of-multi-select id="opfab-typeOfState" [multiSelectId]="typeOfStateMultiSelect.id" [parentForm]="monitoringForm"
-                    [config]="typeOfStateMultiSelect.config" [options]="typeOfStateMultiSelect.options"
+            <div style="margin-top: 28px; position: relative; min-width: 300px; max-width: 400px">
+                <of-multi-select
+                    id="opfab-typeOfState"
+                    [multiSelectId]="typeOfStateMultiSelect.id"
+                    [parentForm]="monitoringForm"
+                    [config]="typeOfStateMultiSelect.config"
+                    [options]="typeOfStateMultiSelect.options"
                     [selectedOptions]="typeOfStateMultiSelect.selectedOptions">
                 </of-multi-select>
             </div>
 
-            <div style="margin-top: 20px;margin-bottom: 20px ; margin-left:60px;min-width: 320px; ">
+            <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 60px; min-width: 320px">
                 <div class="form-group">
                     <div class="opfab-buttons">
-                        <button id="opfab-monitoring-btn-search" class="opfab-btn" (click)='sendQuery()'
-                            translate>button.search</button>
-                        <button id="opfab-monitoring-btn-reset" class="opfab-btn-cancel" (click)='resetForm()'
-                            translate>button.reset</button>
+                        <button id="opfab-monitoring-btn-search" class="opfab-btn" (click)="sendQuery()" translate>
+                            button.search
+                        </button>
+                        <button
+                            id="opfab-monitoring-btn-reset"
+                            class="opfab-btn-cancel"
+                            (click)="resetForm()"
+                            translate>
+                            button.reset
+                        </button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </form>

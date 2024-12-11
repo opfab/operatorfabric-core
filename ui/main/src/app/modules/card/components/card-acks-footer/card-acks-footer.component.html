@@ -6,34 +6,56 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="flex-container" id="opfab-card-acknowledged-footer"
-    style="width:100%;padding-left: 15px;flex-direction: row">
+<div
+    class="flex-container"
+    id="opfab-card-acknowledged-footer"
+    style="width: 100%; padding-left: 15px; flex-direction: row">
     <span translate>cardAcknowledgment.acknowledgments</span>&nbsp;:
-    <div class="opfab-two-lines-ellipsis" container="body" #p1="ngbPopover" [ngbPopover]="acksTemplate"
-        triggers="click"  [autoClose]="'outside'" popoverClass="opfab-popover-wide">
-        <span *ngFor="let entity of listEntitiesToAck" style="display:inline-block;" [ngStyle]="{'color': entity.color}"
-            [id]="'opfab-card-acknowledged-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
+    <div
+        class="opfab-two-lines-ellipsis"
+        container="body"
+        #p1="ngbPopover"
+        [ngbPopover]="acksTemplate"
+        triggers="click"
+        [autoClose]="'outside'"
+        popoverClass="opfab-popover-wide">
+        <span
+            *ngFor="let entity of listEntitiesToAck"
+            style="display: inline-block"
+            [ngStyle]="{color: entity.color}"
+            [id]="'opfab-card-acknowledged-entity-' + entity.id"
+            >&nbsp; {{ entity.name }} &nbsp;</span
+        >
     </div>
 </div>
 
 <ng-template #acksTemplate>
     <table>
         <tr>
-            <th style="padding:10px"><span translate>cardAcknowledgment.acknowledgedHeader</span></th>
-            <th style="padding:10px"><span translate>cardAcknowledgment.notAcknowledgedHeader</span></th>
+            <th style="padding: 10px"><span translate>cardAcknowledgment.acknowledgedHeader</span></th>
+            <th style="padding: 10px"><span translate>cardAcknowledgment.notAcknowledgedHeader</span></th>
         </tr>
         <tr>
-            <td id="opfab-acknowledged-list" style="vertical-align:top; padding:10px">
+            <td id="opfab-acknowledged-list" style="vertical-align: top; padding: 10px">
                 <div *ngFor="let entity of acknowledgedList">
-                    <span style="white-space: nowrap;" [ngStyle]="{'color': entity.color}" [id]="'opfab-list-acknowledged-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
-                </div> 
+                    <span
+                        style="white-space: nowrap"
+                        [ngStyle]="{color: entity.color}"
+                        [id]="'opfab-list-acknowledged-entity-' + entity.id"
+                        >&nbsp; {{ entity.name }} &nbsp;</span
+                    >
+                </div>
             </td>
-            <td id="opfab-not-acknowledged-list" style="vertical-align:top; padding:10px">
+            <td id="opfab-not-acknowledged-list" style="vertical-align: top; padding: 10px">
                 <div *ngFor="let entity of notAcknowledgedList">
-                    <span style="white-space: nowrap;" [ngStyle]="{'color': entity.color}" [id]="'opfab-list-not-acknowledged-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
-                </div> 
+                    <span
+                        style="white-space: nowrap"
+                        [ngStyle]="{color: entity.color}"
+                        [id]="'opfab-list-not-acknowledged-entity-' + entity.id"
+                        >&nbsp; {{ entity.name }} &nbsp;</span
+                    >
+                </div>
             </td>
         </tr>
     </table>
-
 </ng-template>

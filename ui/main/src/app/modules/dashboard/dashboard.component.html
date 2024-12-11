@@ -7,29 +7,37 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-dashboard-timeline" style="padding-right: 60px">
-    <of-timeline-buttons [isMonitoringScreen]="true" #timelineButtons>
-    </of-timeline-buttons>
+    <of-timeline-buttons [isMonitoringScreen]="true" #timelineButtons> </of-timeline-buttons>
 </div>
 
 <ng-template #noProcessStateToDisplay>
-    <div id="opfab-dashboard-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
+    <div
+        id="opfab-dashboard-no-process-state-available"
+        style="text-align: center; font-size: 20px; padding-top: 100px"
+        translate>
+        shared.noProcessStateAvailable
+    </div>
 </ng-template>
 
 <div class="opfab-dashboard" *ngIf="dashboardPage.processes.length > 0; else noProcessStateToDisplay">
     <div class="opfab-dashboardGrid" *ngFor="let process of dashboardPage.processes">
         <div class="opfab-dashboard-process">
-            <span [ngClass]="{'opfab-feed-link': !hideProcessFilter}" (click)="onProcessClick(process.id)"><b style="font-size: 16px">{{ process.name }}</b></span>
+            <span [ngClass]="{'opfab-feed-link': !hideProcessFilter}" (click)="onProcessClick(process.id)"
+                ><b style="font-size: 16px">{{ process.name }}</b></span
+            >
             <div class="opfab-dashboard-cell" *ngFor="let state of process.states">
-                <span *ngFor="let circle of state.circles;let index = index;">
-                    <svg *ngIf="!!circle.severity" 
+                <span *ngFor="let circle of state.circles; let index = index">
+                    <svg
+                        *ngIf="!!circle.severity"
                         height="20"
-                        [attr.width]="2*circle.width +1"
+                        [attr.width]="2 * circle.width + 1"
                         type="button"
-                        [id]="'opfab-dashboardCircle-'+ state.id + index"
+                        [id]="'opfab-dashboardCircle-' + state.id + index"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                        style=" max-height: 500px; overflow: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0;">
-                        <g (click)="onCircleClick(circle)"
+                        style="max-height: 500px; overflow: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0">
+                        <g
+                            (click)="onCircleClick(circle)"
                             [ngbPopover]="tooltipTemplate"
                             #p1="ngbPopover"
                             (mouseenter)="dashboardCircleHovered(circle, p1)"
@@ -37,9 +45,14 @@
                             container="body"
                             triggers="mouseenter"
                             popoverClass="opfab-popover opfab-popover-with-scrolling">
-                            <ellipse [attr.cx]="circle.width+0.5" cy="10" [attr.rx]="circle.width" ry="10" [attr.fill]="circle.color" />
+                            <ellipse
+                                [attr.cx]="circle.width + 0.5"
+                                cy="10"
+                                [attr.rx]="circle.width"
+                                ry="10"
+                                [attr.fill]="circle.color" />
                             <text
-                                [attr.x]="circle.width+0.25"
+                                [attr.x]="circle.width + 0.25"
                                 y="14.5"
                                 text-anchor="middle"
                                 fill="white"
@@ -49,10 +62,11 @@
                             </text>
                         </g>
                     </svg>
-                    <svg *ngIf="!circle.severity" 
+                    <svg
+                        *ngIf="!circle.severity"
                         height="20"
                         width="21"
-                        [id]="'opfab-dashboardCircle-'+ state.id + index"
+                        [id]="'opfab-dashboardCircle-' + state.id + index"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g>
@@ -69,30 +83,38 @@
                         </g>
                     </svg>
                 </span>
-                <span [ngClass]="{'opfab-feed-link': !hideProcessFilter && !hideStateFilter}" (click)="onStateClick(process.id, state.id)"> {{ state.name }}</span>
+                <span
+                    [ngClass]="{'opfab-feed-link': !hideProcessFilter && !hideStateFilter}"
+                    (click)="onStateClick(process.id, state.id)">
+                    {{ state.name }}</span
+                >
                 <br />
             </div>
         </div>
     </div>
 </div>
 
-
 <ng-template #tooltipTemplate>
-    <div (mouseenter)="onMouseEnter()" (mouseleave)="closePopover(400)" style="padding:10px;overflow-y: auto;max-height: 500px;">
-            <div *ngFor="let card of currentCircleHovered.cards" style="padding: 0px; margin: 0px; line-height: 8px">
-                <button id="opfab-dashboard-bubble-btn-{{card.id}}" class="btn btn-verycardlink btn-sm" (click)="selectCard(card.id)" style="width:100%">
-                    <div style="text-align: left" class="opfab-bubble-text">
-                        {{ card.publishDate }} {{ card.title }}
-                    </div>
-                </button>
-            </div>
+    <div
+        (mouseenter)="onMouseEnter()"
+        (mouseleave)="closePopover(400)"
+        style="padding: 10px; overflow-y: auto; max-height: 500px">
+        <div *ngFor="let card of currentCircleHovered.cards" style="padding: 0px; margin: 0px; line-height: 8px">
+            <button
+                id="opfab-dashboard-bubble-btn-{{ card.id }}"
+                class="btn btn-verycardlink btn-sm"
+                (click)="selectCard(card.id)"
+                style="width: 100%">
+                <div style="text-align: left" class="opfab-bubble-text">{{ card.publishDate }} {{ card.title }}</div>
+            </button>
+        </div>
     </div>
 </ng-template>
 
 <ng-template #cardDetail let-modal>
     <div class="modal-body modal-body-squared">
         <div>
-            <of-card [parentModalRef] = "modalRef" [screenSize]="'lg'"> </of-card>
+            <of-card [parentModalRef]="modalRef" [screenSize]="'lg'"> </of-card>
         </div>
     </div>
 </ng-template>

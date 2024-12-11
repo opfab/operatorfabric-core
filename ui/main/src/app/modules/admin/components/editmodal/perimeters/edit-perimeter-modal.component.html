@@ -8,87 +8,120 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="modal-content perimeter-modal">
-  <div class="modal-header">
-    <span class="modal-title" *ngIf="row">{{row.id}}</span>
-    <span class="modal-title" *ngIf="!row" translate>admin.input.perimeter.add</span>
-    <div id="opfab-admin-edit-perimeter-btn-close" class="opfab-close-modal-icon" aria-label="Close"
-         (click)="dismissModal('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </div>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="perimeterForm" class="opfab-form-lighter">
-      <div class="container">
-        <div class="col">
-
-          <div *ngIf="!row" class="opfab-input opfab-edit-row" style="position: relative;">
-            <label for="opfab-id" translate>admin.input.perimeter.id</label>
-            <input formControlName="id" name="id" id="opfab-id" type="text">
-          </div>
-
-          <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-            <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
-            <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
-          </div>
-
-          <div class="opfab-edit-row"  style="position: relative;">
-            <of-multi-select id="opfab-admin-perimeter-process-filter"
-                             multiSelectId="process"
-                             [parentForm]="perimeterForm"
-                             [config]="multiSelectConfigForProcess"
-                             [options]="processOptions"
-                             [selectedOptions]="perimeterForm.get('process').value">
-            </of-multi-select>
-          </div>
-
+    <div class="modal-header">
+        <span class="modal-title" *ngIf="row">{{ row.id }}</span>
+        <span class="modal-title" *ngIf="!row" translate>admin.input.perimeter.add</span>
+        <div
+            id="opfab-admin-edit-perimeter-btn-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="dismissModal('Cross click')">
+            <span aria-hidden="true">&times;</span>
         </div>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="perimeterForm" class="opfab-form-lighter">
+            <div class="container">
+                <div class="col">
+                    <div *ngIf="!row" class="opfab-input opfab-edit-row" style="position: relative">
+                        <label for="opfab-id" translate>admin.input.perimeter.id</label>
+                        <input formControlName="id" name="id" id="opfab-id" type="text" />
+                    </div>
 
-        <form [formGroup]="perimeterForm">
-          <div class="opfab-edit-row opfab-row" *ngFor="let i of stateRightControlsIndexes;">
-            <div class="opfab-col-6">
-              <of-multi-select id="opfab-admin-perimeter-state-filter"
-                               [multiSelectId]="'state'+i"
-                               [parentForm]="perimeterForm"
-                               [config]="multiSelectConfigForState"
-                               [options]="stateOptions"
-                               [selectedOptions]="perimeterForm.get('state'+i).value">
-              </of-multi-select>
+                    <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+                        <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
+                        <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+                    </div>
+
+                    <div class="opfab-edit-row" style="position: relative">
+                        <of-multi-select
+                            id="opfab-admin-perimeter-process-filter"
+                            multiSelectId="process"
+                            [parentForm]="perimeterForm"
+                            [config]="multiSelectConfigForProcess"
+                            [options]="processOptions"
+                            [selectedOptions]="perimeterForm.get('process').value">
+                        </of-multi-select>
+                    </div>
+                </div>
+
+                <form [formGroup]="perimeterForm">
+                    <div class="opfab-edit-row opfab-row" *ngFor="let i of stateRightControlsIndexes">
+                        <div class="opfab-col-6">
+                            <of-multi-select
+                                id="opfab-admin-perimeter-state-filter"
+                                [multiSelectId]="'state' + i"
+                                [parentForm]="perimeterForm"
+                                [config]="multiSelectConfigForState"
+                                [options]="stateOptions"
+                                [selectedOptions]="perimeterForm.get('state' + i).value">
+                            </of-multi-select>
+                        </div>
+                        <div class="opfab-col" style="min-width: 18%">
+                            <of-multi-select
+                                id="opfab-admin-perimeter-right-filter"
+                                [multiSelectId]="'right' + i"
+                                [parentForm]="perimeterForm"
+                                [config]="multiSelectConfigForRight"
+                                [options]="rightOptions"
+                                [selectedOptions]="perimeterForm.get('right' + i).value">
+                            </of-multi-select>
+                        </div>
+                        <div class="opfab-col">
+                            <label
+                                [for]="'opfab-admin-perimeter-filtering-notification-allowed' + i"
+                                class="opfab-checkbox"
+                                style="white-space: pre-line; margin: auto"
+                                translate
+                                >admin.input.perimeter.filteringNotificationAllowed
+                                <input
+                                    [formControlName]="'filteringNotificationAllowed' + i"
+                                    [name]="'filteringNotificationAllowed' + i"
+                                    [id]="'opfab-admin-perimeter-filtering-notification-allowed' + i"
+                                    type="checkbox" />
+                                <span class="opfab-checkbox-checkmark" style="top: 10px"></span>
+                            </label>
+                        </div>
+                        <div class="opfab-col icons" [hidden]="stateRightControlsIndexes.length === 1">
+                            <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
+                        </div>
+                        <div class="opfab-col icons">
+                            <em class="fas fa-plus-circle" (click)="addStateRightControl()"></em>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="opfab-col" style="min-width: 18%">
-              <of-multi-select id="opfab-admin-perimeter-right-filter"
-                               [multiSelectId]="'right'+i"
-                               [parentForm]="perimeterForm"
-                               [config]="multiSelectConfigForRight"
-                               [options]="rightOptions"
-                               [selectedOptions]="perimeterForm.get('right'+i).value">
-              </of-multi-select>
-            </div>
-            <div class="opfab-col">
-              <label [for]="'opfab-admin-perimeter-filtering-notification-allowed'+i" class="opfab-checkbox" style="white-space: pre-line; margin: auto" translate>admin.input.perimeter.filteringNotificationAllowed
-                <input [formControlName]="'filteringNotificationAllowed'+i" [name]="'filteringNotificationAllowed'+i" [id]="'opfab-admin-perimeter-filtering-notification-allowed'+i" type="checkbox">
-                <span class="opfab-checkbox-checkmark" style="top: 10px"></span>
-              </label>
-            </div>
-            <div class="opfab-col icons" [hidden]="stateRightControlsIndexes.length === 1">
-              <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
-            </div>
-            <div class="opfab-col icons">
-              <em class="fas fa-plus-circle" (click)="addStateRightControl()"></em>
-            </div>
-          </div>
         </form>
 
-      </div>
-    </form>
-
-    <div class="modal-footer" style="border-top: none">
-      <button id="opfab-admin-perimeter-btn-close" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-              translate>admin.input.close</button>
-      <button id="opfab-admin-perimeter-btn-add" [disabled]="!perimeterForm.valid" *ngIf="!row" (click)="create()" class="opfab-btn"
-              translate>admin.input.perimeter.add</button>
-      <button id="opfab-admin-perimeter-btn-save" [disabled]="!perimeterForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-              translate>admin.input.save</button>
+        <div class="modal-footer" style="border-top: none">
+            <button
+                id="opfab-admin-perimeter-btn-close"
+                type="button"
+                (click)="dismissModal('Cancel click')"
+                class="opfab-btn-cancel"
+                data-dismiss="modal"
+                translate>
+                admin.input.close
+            </button>
+            <button
+                id="opfab-admin-perimeter-btn-add"
+                [disabled]="!perimeterForm.valid"
+                *ngIf="!row"
+                (click)="create()"
+                class="opfab-btn"
+                translate>
+                admin.input.perimeter.add
+            </button>
+            <button
+                id="opfab-admin-perimeter-btn-save"
+                [disabled]="!perimeterForm.valid"
+                *ngIf="row"
+                (click)="update()"
+                class="opfab-btn"
+                translate>
+                admin.input.save
+            </button>
+        </div>
     </div>
-  </div>
 </div>

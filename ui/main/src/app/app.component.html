@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,26 +6,22 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
 <div class="app-content opfab-bgcolor">
+    <of-application-loading (applicationLoadedDone)="onApplicationLoaded()"> </of-application-loading>
 
-  <of-application-loading (applicationLoadedDone)=" onApplicationLoaded()"> </of-application-loading>
+    <of-alert *ngIf="applicationLoaded"> </of-alert>
 
-  <of-alert *ngIf="applicationLoaded"> </of-alert>
+    <of-navbar *ngIf="applicationLoaded"></of-navbar>
 
-  <of-navbar *ngIf="applicationLoaded"></of-navbar>
+    <router-outlet *ngIf="applicationLoaded"></router-outlet>
 
-  <router-outlet *ngIf="applicationLoaded"></router-outlet>
+    <of-connection-lost *ngIf="applicationLoaded"> </of-connection-lost>
 
-  <of-connection-lost *ngIf="applicationLoaded"> </of-connection-lost>
+    <of-session-end> </of-session-end>
 
-  <of-session-end> </of-session-end>
-
-  <of-reload-required *ngIf="applicationLoaded"></of-reload-required>
-
+    <of-reload-required *ngIf="applicationLoaded"></of-reload-required>
 </div>
 
 <!-- This element is used by Cypress tests to make sure actual tests are not launched until the application has
  finished loading -->
-<div id="opfab-cypress-loaded-check" hidden>{{applicationLoaded}}</div>
+<div id="opfab-cypress-loaded-check" hidden>{{ applicationLoaded }}</div>

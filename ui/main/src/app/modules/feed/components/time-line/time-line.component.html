@@ -6,45 +6,42 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div class="opfab-timeline-bgcolor">
+    <div class="timeline">
+        <div style="margin-right: 10px">
+            <of-timeline-buttons [isMonitoringScreen]="false" #timelineButtons> </of-timeline-buttons>
+        </div>
 
+        <div class="opfab-timeline-grid" [hidden]="this.timelineButtons.hideTimeLine">
+            <div class="opfab-move-domain">
+                <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt; </a>
+            </div>
+            <of-custom-timeline-chart
+                class="of-custom-timeline-chart"
+                [domainId]="this.timelineButtons.currentDomainId"
+                [valueDomain]="this.timelineButtons.currentDomain"
+                [isHidden]="this.timelineButtons.hideTimeLine"
+                (zoomChange)="this.timelineButtons.applyNewZoom($event)">
+            </of-custom-timeline-chart>
 
-<div class="opfab-timeline-bgcolor" >
-  <div class="timeline">
-
-    <div style="margin-right: 10px;">
-      <of-timeline-buttons [isMonitoringScreen]="false" #timelineButtons>
-      </of-timeline-buttons>
+            <div class="opfab-move-domain">
+                <a id="opfab-timeline-link-move-right" (click)="this.timelineButtons.moveDomain(true)"> &gt;&gt; </a>
+            </div>
+        </div>
     </div>
+    <div class="opfab-showhide-timeline">
+        <of-pinned-cards style="width: 88%"></of-pinned-cards>
 
-    <div class="opfab-timeline-grid" [hidden]="this.timelineButtons.hideTimeLine">
-      <div class="opfab-move-domain">
-        <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt;
-        </a>
-      </div>
-      <of-custom-timeline-chart class="of-custom-timeline-chart" [domainId]="this.timelineButtons.currentDomainId"
-                                [valueDomain]="this.timelineButtons.currentDomain" [isHidden]="this.timelineButtons.hideTimeLine"
-                                (zoomChange)="this.timelineButtons.applyNewZoom($event)">
-      </of-custom-timeline-chart>
+        <div id="opfab-timeline-link-hide-timeline" style="width: 12%" *ngIf="!this.timelineButtons.hideTimeLine">
+            <a (click)="this.timelineButtons.showOrHideTimeline()"
+                >˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a
+            >
+        </div>
 
-      <div class="opfab-move-domain">
-        <a id="opfab-timeline-link-move-right" (click)="this.timelineButtons.moveDomain(true)">
-          &gt;&gt;
-        </a>
-      </div>
-
+        <div id="opfab-timeline-link-show-timeline" style="width: 12%" *ngIf="this.timelineButtons.hideTimeLine">
+            <a (click)="this.timelineButtons.showOrHideTimeline()"
+                >˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a
+            >
+        </div>
     </div>
-  </div>
-  <div class="opfab-showhide-timeline">
-    <of-pinned-cards style="width:88%"></of-pinned-cards>
-
-    <div id="opfab-timeline-link-hide-timeline" style="width:12%" *ngIf="!this.timelineButtons.hideTimeLine">
-      <a (click)="this.timelineButtons.showOrHideTimeline()">˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a>
-    </div>
-
-    <div id="opfab-timeline-link-show-timeline" style="width:12%" *ngIf="this.timelineButtons.hideTimeLine">
-      <a  (click)="this.timelineButtons.showOrHideTimeline()">˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a>
-    </div>
-
-  </div>
 </div>
-

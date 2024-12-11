@@ -169,8 +169,8 @@ describe('Test translations', function () {
         checkLabel('#opfab-typeOfState', processStatusLabel);
         checkPlaceholderText('#opfab-typeOfState', processStatusPlaceholder);
 
-        cy.get('#opfab-monitoring-btn-search').should('have.text', searchText);
-        cy.get('#opfab-monitoring-btn-reset').should('have.text', resetText);
+        cy.contains('#opfab-monitoring-btn-search', searchText);
+        cy.contains('#opfab-monitoring-btn-reset', resetText);
     }
 
     function checkMonitoringResultTexts(cardsWithResponseText) {
@@ -234,7 +234,7 @@ describe('Test translations', function () {
     }
 
     function checkFeedTexts(cardNotFoundText) {
-        cy.get('#opfab-feed-card-not-found').should('exist').should('have.text', cardNotFoundText);
+        cy.contains('#opfab-feed-card-not-found', cardNotFoundText);
     }
 
     before('Set up configuration and cards', function () {

@@ -7,20 +7,33 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="modal-header" *ngIf="modalConfig.title">
-  <div *ngIf="isI18n(modalConfig.title)">{{ modalConfig.title.key | translate: modalConfig.title.parameters }}</div>
-  <div *ngIf="!isI18n(modalConfig.title)">{{ modalConfig.title }}</div>
+    <div *ngIf="isI18n(modalConfig.title)">{{ modalConfig.title.key | translate: modalConfig.title.parameters }}</div>
+    <div *ngIf="!isI18n(modalConfig.title)">{{ modalConfig.title }}</div>
 </div>
 
-<div [ngClass]="modalConfig.title ? 'modal-body text-center' : 'modal-body modal-body-rounded text-center'" style="white-space: pre-wrap;" id="opfab-modal-body">
-  <p *ngIf="isI18n(modalConfig.message)">{{ modalConfig.message.key | translate: modalConfig.message.parameters }}</p>
-  <p *ngIf="!isI18n(modalConfig.message)">{{ modalConfig.message }}</p>
+<div
+    [ngClass]="modalConfig.title ? 'modal-body text-center' : 'modal-body modal-body-rounded text-center'"
+    style="white-space: pre-wrap"
+    id="opfab-modal-body">
+    <p *ngIf="isI18n(modalConfig.message)">{{ modalConfig.message.key | translate: modalConfig.message.parameters }}</p>
+    <p *ngIf="!isI18n(modalConfig.message)">{{ modalConfig.message }}</p>
 
-  <span *ngFor="let button of modalConfig.buttons">
-    <button *ngIf="isI18n(button.label)" id="opfab-btn-{{ button.id }}" type="button"
-      [ngClass]="button.isSelected ? 'opfab-btn opfab-small-button' : 'opfab-btn-cancel opfab-small-button'" (click)="close(button.id)">{{ button.label.key
-      | translate: button.label.parameters}}</button>
-    <button *ngIf="!isI18n(button.label)" id="opfab-btn-{{ button.id }}" type="button"
-      [ngClass]="button.isSelected ? 'opfab-btn opfab-small-button' : 'opfab-btn-cancel opfab-small-button'" (click)="close(button.id)">{{ button.label
-      }}</button>
-  </span>
+    <span *ngFor="let button of modalConfig.buttons">
+        <button
+            *ngIf="isI18n(button.label)"
+            id="opfab-btn-{{ button.id }}"
+            type="button"
+            [ngClass]="button.isSelected ? 'opfab-btn opfab-small-button' : 'opfab-btn-cancel opfab-small-button'"
+            (click)="close(button.id)">
+            {{ button.label.key | translate: button.label.parameters }}
+        </button>
+        <button
+            *ngIf="!isI18n(button.label)"
+            id="opfab-btn-{{ button.id }}"
+            type="button"
+            [ngClass]="button.isSelected ? 'opfab-btn opfab-small-button' : 'opfab-btn-cancel opfab-small-button'"
+            (click)="close(button.id)">
+            {{ button.label }}
+        </button>
+    </span>
 </div>

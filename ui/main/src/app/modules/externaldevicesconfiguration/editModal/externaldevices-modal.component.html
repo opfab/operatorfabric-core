@@ -7,77 +7,121 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="modal-content entity-modal">
-  <div class="modal-header">
-    <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.editDevice</span>
-    <span class="modal-title" *ngIf="!row" translate>externalDevicesConfiguration.input.addDevice</span>
-    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </div>
-  </div>
-  <div class="modal-body">
-
-    <div>
-      <of-spinner *ngIf="isLoading()" loadingText="shared.loadingInProgress"></of-spinner> 
-
-      <div *ngIf="!isLoading()">
-        <form [formGroup]="deviceForm" class="opfab-form-lighter">
-          <div class="container">
-            <div class="col">
-
-              <div *ngIf="row" class="opfab-input opfab-edit-row">
-                <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
-                <input type="text" disabled value="{{row.id}}"/>
-              </div>
-              <div *ngIf="!row"  class="opfab-input opfab-edit-row">
-                <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
-                <input formControlName="id" name="id" id="opfab-deviceId" type="text"/>
-              </div>
-              <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-                <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-                <div *ngIf="id.errors.uniqueDeviceIdViolation" translate>admin.input.id.alreadyExisting</div>
-              </div>
-
-              <div class="opfab-input opfab-edit-row">
-                <label for="opfab-host" translate>externalDevicesConfiguration.host</label>
-                <input formControlName="host" name="host" id="opfab-host" type="text"/>
-              </div>
-              <div *ngIf="host.invalid" class="opfab-admin-input-invalid">
-                <div *ngIf="host.errors.required" translate>externalDevicesConfiguration.input.host.required</div>
-              </div>
-              <div class="opfab-input opfab-edit-row">
-                <label for="opfab-port" translate>externalDevicesConfiguration.port</label>
-                <input formControlName="port" name="port" id="opfab-port" type="number"/>
-              </div>
-              <div *ngIf="port.invalid" class="opfab-admin-input-invalid">
-                <div *ngIf="port.errors.required" translate>externalDevicesConfiguration.input.port.required</div>
-              </div>
-              <div class="opfab-edit-row" *ngIf="signalMappingMultiSelectOptions.length > 0">
-                <of-multi-select  id="opfab-signalMappingDropdownList" multiSelectId="signalMappingId"
-                  [parentForm]="deviceForm" [config]="signalMappingMultiSelectConfig"
-                [options]="signalMappingMultiSelectOptions" [selectedOptions]="selectedSignalMapping">
-              </of-multi-select>
-              </div>
-
-              <div class="opfab-edit-row">
-                <label for="opfab-enabled" class="opfab-checkbox "> <span class="" translate>externalDevicesConfiguration.isEnabled</span>
-                    <input *ngIf="row"  name="enabled" id="opfab-enabled" type="checkbox" [checked]="row.isEnabled" disabled>
-                    <input *ngIf="!row" name="enabled" id="opfab-enabled" type="checkbox" formControlName="enabled">
-                  <span class="opfab-checkbox-checkmark"></span>
-                </label>
-              </div>
-
-            </div>
-          </div>
-        </form>
-        <div class="modal-footer" style="border-top: none">
-          <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-                  translate>admin.input.close</button>
-          <button id="opfab-admin-edit-btn-add" [disabled]="!deviceForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-                  translate>externalDevicesConfiguration.input.addDevice</button>
-          <button id="opfab-admin-user-btn-save" [disabled]="!deviceForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-                  translate>admin.input.save</button>
+    <div class="modal-header">
+        <span class="modal-title" *ngIf="row" translate>externalDevicesConfiguration.input.editDevice</span>
+        <span class="modal-title" *ngIf="!row" translate>externalDevicesConfiguration.input.addDevice</span>
+        <div
+            id="opfab-admin-edit-btn-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="dismissModal('Cross click')">
+            <span aria-hidden="true">&times;</span>
         </div>
-      </div>
     </div>
-  </div>
+    <div class="modal-body">
+        <div>
+            <of-spinner *ngIf="isLoading()" loadingText="shared.loadingInProgress"></of-spinner>
+
+            <div *ngIf="!isLoading()">
+                <form [formGroup]="deviceForm" class="opfab-form-lighter">
+                    <div class="container">
+                        <div class="col">
+                            <div *ngIf="row" class="opfab-input opfab-edit-row">
+                                <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
+                                <input type="text" disabled value="{{ row.id }}" />
+                            </div>
+                            <div *ngIf="!row" class="opfab-input opfab-edit-row">
+                                <label for="opfab-deviceId" translate>externalDevicesConfiguration.deviceId</label>
+                                <input formControlName="id" name="id" id="opfab-deviceId" type="text" />
+                            </div>
+                            <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
+                                <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+                                <div *ngIf="id.errors.uniqueDeviceIdViolation" translate>
+                                    admin.input.id.alreadyExisting
+                                </div>
+                            </div>
+
+                            <div class="opfab-input opfab-edit-row">
+                                <label for="opfab-host" translate>externalDevicesConfiguration.host</label>
+                                <input formControlName="host" name="host" id="opfab-host" type="text" />
+                            </div>
+                            <div *ngIf="host.invalid" class="opfab-admin-input-invalid">
+                                <div *ngIf="host.errors.required" translate>
+                                    externalDevicesConfiguration.input.host.required
+                                </div>
+                            </div>
+                            <div class="opfab-input opfab-edit-row">
+                                <label for="opfab-port" translate>externalDevicesConfiguration.port</label>
+                                <input formControlName="port" name="port" id="opfab-port" type="number" />
+                            </div>
+                            <div *ngIf="port.invalid" class="opfab-admin-input-invalid">
+                                <div *ngIf="port.errors.required" translate>
+                                    externalDevicesConfiguration.input.port.required
+                                </div>
+                            </div>
+                            <div class="opfab-edit-row" *ngIf="signalMappingMultiSelectOptions.length > 0">
+                                <of-multi-select
+                                    id="opfab-signalMappingDropdownList"
+                                    multiSelectId="signalMappingId"
+                                    [parentForm]="deviceForm"
+                                    [config]="signalMappingMultiSelectConfig"
+                                    [options]="signalMappingMultiSelectOptions"
+                                    [selectedOptions]="selectedSignalMapping">
+                                </of-multi-select>
+                            </div>
+
+                            <div class="opfab-edit-row">
+                                <label for="opfab-enabled" class="opfab-checkbox">
+                                    <span class="" translate>externalDevicesConfiguration.isEnabled</span>
+                                    <input
+                                        *ngIf="row"
+                                        name="enabled"
+                                        id="opfab-enabled"
+                                        type="checkbox"
+                                        [checked]="row.isEnabled"
+                                        disabled />
+                                    <input
+                                        *ngIf="!row"
+                                        name="enabled"
+                                        id="opfab-enabled"
+                                        type="checkbox"
+                                        formControlName="enabled" />
+                                    <span class="opfab-checkbox-checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer" style="border-top: none">
+                    <button
+                        id="opfab-admin-edit-btn-cancel"
+                        type="button"
+                        (click)="dismissModal('Cancel click')"
+                        class="opfab-btn-cancel"
+                        data-dismiss="modal"
+                        translate>
+                        admin.input.close
+                    </button>
+                    <button
+                        id="opfab-admin-edit-btn-add"
+                        [disabled]="!deviceForm.valid"
+                        *ngIf="!row"
+                        (click)="update()"
+                        class="opfab-btn"
+                        translate>
+                        externalDevicesConfiguration.input.addDevice
+                    </button>
+                    <button
+                        id="opfab-admin-user-btn-save"
+                        [disabled]="!deviceForm.valid"
+                        *ngIf="row"
+                        (click)="update()"
+                        class="opfab-btn"
+                        translate>
+                        admin.input.save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

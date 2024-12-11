@@ -6,20 +6,26 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div style="margin-left: 15px;margin-right: 15px; padding-top: 30px; padding-bottom: 10px;
-font-size: 20px;font-weight: bold;border-bottom: solid 1px;" translate>
+<div
+    style="
+        margin-left: 15px;
+        margin-right: 15px;
+        padding-top: 30px;
+        padding-bottom: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: solid 1px;
+    "
+    translate>
     devtools.richTextComposer.title
 </div>
-<div style="margin-top:50px; margin-left: 50px; margin-right: 50px; width:1000px">
-<div id="richtext" class="opfab-textarea" >
-    
-</div>
-<button class="opfab-btn" (click)="convert()" translate>devtools.richTextComposer.convert</button>
+<div style="margin-top: 50px; margin-left: 50px; margin-right: 50px; width: 1000px">
+    <div id="richtext" class="opfab-textarea"></div>
+    <button class="opfab-btn" (click)="convert()" translate>devtools.richTextComposer.convert</button>
 
-<div id="delta" class="opfab-textarea" style="margin-top:30px;">
-    <label translate>devtools.richTextComposer.result</label>
-    <textarea id="message_delta" style="height: 160px;">{{delta}}</textarea>
-    
-</div>
-<button class="opfab-btn" (click)="copyToClipboard()" translate>devtools.richTextComposer.copy</button>
+    <div id="delta" class="opfab-textarea" style="margin-top: 30px">
+        <label translate>devtools.richTextComposer.result</label>
+        <textarea id="message_delta" style="height: 160px">{{ delta }}</textarea>
+    </div>
+    <button class="opfab-btn" (click)="copyToClipboard()" translate>devtools.richTextComposer.copy</button>
 </div>

@@ -8,81 +8,109 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="modal-content group-modal">
-  <div class="modal-header">
-    <span class="modal-title" style="overflow-wrap: break-word; max-width: 700px;" *ngIf="row">{{row.id}}</span>
-    <span class="modal-title" *ngIf="!row" translate>admin.input.{{type}}.add</span>
-    <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </div>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="groupForm" class="opfab-form-lighter">
-      <div class="container">
-        <div class="col">
-
-          <div *ngIf="!row" class="opfab-input opfab-edit-row">
-            <label for="opfab-id" translate>admin.input.id.label</label>
-            <input formControlName="id" name="id" id="opfab-id" type="text">
-          </div>
-          <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-            <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
-            <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
-            <div *ngIf="id.errors.uniqueGroupIdViolation" translate>admin.input.id.alreadyExisting</div>
-          </div>
-
-          <div class="opfab-input opfab-edit-row">
-            <label for="opfab-name" translate>admin.input.name.label</label>
-            <input formControlName="name" name="name" id="opfab-name" type="text">
-          </div>
-          <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
-            <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
-            <div *ngIf="name.errors.uniqueGroupNameViolation" translate>admin.input.name.alreadyExisting</div>
-          </div>
-
-          <div class="opfab-input opfab-edit-row">
-            <label for="opfab-description" translate>admin.input.description</label>
-            <input formControlName="description" name="description" id="opfab-description" type="text">
-          </div>
-
-          <div class="opfab-edit-row">
-            <of-multi-select 
-            id="opfab-perimeters"
-            multiSelectId="perimeters"
-            [parentForm]="groupForm"
-            [config] = "perimetersMultiSelectConfig"
-            [options]="perimetersMultiSelectOptions"
-            [selectedOptions]="selectedPerimeters">    
-            </of-multi-select>
-          </div>
-          <div class="opfab-edit-row">
-            <of-multi-select id="opfab-permissions"
-                             multiSelectId="permissions"
-                             [parentForm]="groupForm"
-                             [config]="permissionsMultiSelectConfig"
-                             [options]="groupPermissions"
-                             [selectedOptions]="selectedGroupPermissions">
-            </of-multi-select>
-          </div>
-          <div class="opfab-edit-row">
-            <of-multi-select id="opfab-group-users"
-              multiSelectId="users"
-              [parentForm]="groupForm"
-              [config]="usersMultiSelectConfig"
-              [options]="usersMultiSelectOptions"
-              [selectedOptions]="selectedUsers">
-            </of-multi-select>
-          </div>
+    <div class="modal-header">
+        <span class="modal-title" style="overflow-wrap: break-word; max-width: 700px" *ngIf="row">{{ row.id }}</span>
+        <span class="modal-title" *ngIf="!row" translate>admin.input.{{ type }}.add</span>
+        <div
+            id="opfab-admin-edit-btn-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="dismissModal('Cross click')">
+            <span aria-hidden="true">&times;</span>
         </div>
-      </div>
-    </form>
-    <div class="modal-footer" style="border-top: none">
-      <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-              translate>admin.input.close</button>
-      <button id="opfab-admin-edit-btn-add" [disabled]="!groupForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-              translate>admin.input.{{type}}.add</button>
-      <button id="opfab-admin-user-btn-save" [disabled]="!groupForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-              translate>admin.input.save</button>
     </div>
-  </div>
+    <div class="modal-body">
+        <form [formGroup]="groupForm" class="opfab-form-lighter">
+            <div class="container">
+                <div class="col">
+                    <div *ngIf="!row" class="opfab-input opfab-edit-row">
+                        <label for="opfab-id" translate>admin.input.id.label</label>
+                        <input formControlName="id" name="id" id="opfab-id" type="text" />
+                    </div>
+                    <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
+                        <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
+                        <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+                        <div *ngIf="id.errors.uniqueGroupIdViolation" translate>admin.input.id.alreadyExisting</div>
+                    </div>
+
+                    <div class="opfab-input opfab-edit-row">
+                        <label for="opfab-name" translate>admin.input.name.label</label>
+                        <input formControlName="name" name="name" id="opfab-name" type="text" />
+                    </div>
+                    <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
+                        <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
+                        <div *ngIf="name.errors.uniqueGroupNameViolation" translate>
+                            admin.input.name.alreadyExisting
+                        </div>
+                    </div>
+
+                    <div class="opfab-input opfab-edit-row">
+                        <label for="opfab-description" translate>admin.input.description</label>
+                        <input formControlName="description" name="description" id="opfab-description" type="text" />
+                    </div>
+
+                    <div class="opfab-edit-row">
+                        <of-multi-select
+                            id="opfab-perimeters"
+                            multiSelectId="perimeters"
+                            [parentForm]="groupForm"
+                            [config]="perimetersMultiSelectConfig"
+                            [options]="perimetersMultiSelectOptions"
+                            [selectedOptions]="selectedPerimeters">
+                        </of-multi-select>
+                    </div>
+                    <div class="opfab-edit-row">
+                        <of-multi-select
+                            id="opfab-permissions"
+                            multiSelectId="permissions"
+                            [parentForm]="groupForm"
+                            [config]="permissionsMultiSelectConfig"
+                            [options]="groupPermissions"
+                            [selectedOptions]="selectedGroupPermissions">
+                        </of-multi-select>
+                    </div>
+                    <div class="opfab-edit-row">
+                        <of-multi-select
+                            id="opfab-group-users"
+                            multiSelectId="users"
+                            [parentForm]="groupForm"
+                            [config]="usersMultiSelectConfig"
+                            [options]="usersMultiSelectOptions"
+                            [selectedOptions]="selectedUsers">
+                        </of-multi-select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="modal-footer" style="border-top: none">
+            <button
+                id="opfab-admin-edit-btn-cancel"
+                type="button"
+                (click)="dismissModal('Cancel click')"
+                class="opfab-btn-cancel"
+                data-dismiss="modal"
+                translate>
+                admin.input.close
+            </button>
+            <button
+                id="opfab-admin-edit-btn-add"
+                [disabled]="!groupForm.valid"
+                *ngIf="!row"
+                (click)="update()"
+                class="opfab-btn"
+                translate>
+                admin.input.{{ type }}.add
+            </button>
+            <button
+                id="opfab-admin-user-btn-save"
+                [disabled]="!groupForm.valid"
+                *ngIf="row"
+                (click)="update()"
+                class="opfab-btn"
+                translate>
+                admin.input.save
+            </button>
+        </div>
+    </div>
 </div>

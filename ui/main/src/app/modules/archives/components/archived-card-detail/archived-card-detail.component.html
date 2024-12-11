@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2023-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,29 +6,33 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-  <div>
-    <of-simplified-card-view [card]="card" [childCards]="childCards" [screenSize]="'lg'"
-      [displayContext]="displayContext"> </of-simplified-card-view>
-  </div>
-  <div id="opfab-card-detail-footer">
+<div>
+    <of-simplified-card-view
+        [card]="card"
+        [childCards]="childCards"
+        [screenSize]="'lg'"
+        [displayContext]="displayContext">
+    </of-simplified-card-view>
+</div>
+<div id="opfab-card-detail-footer">
     <span class="opfab-card-received-footer">
-      <span translate>feed.received</span>
-      {{getFormattedDate(card.publishDate)}} <span translate> feed.at </span>
-      <span>{{getFormattedTime(card.publishDate)}}</span>
-      <span *ngIf="fromEntityOrRepresentativeSelectedCard" translate> feed.from </span>
-      <span>{{fromEntityOrRepresentativeSelectedCard}}</span>
-      <span *ngIf="!!card.deletionDate">
-        <span style="margin-left: 10px; margin-right: 10px;">-</span>
-        <span translate>feed.deleted</span>
-        {{getFormattedDate(card.deletionDate)}} <span translate> feed.at </span> {{getFormattedTime(card.deletionDate)}}
-      </span>
-      <br>
-      <span translate> feed.businessPeriod </span>
-      {{getFormattedDateAndTime(card.startDate)}} - {{getFormattedDateAndTime(card.endDate)}}
-      <br *ngIf="entityRecipientsForFooter.length>0">
-      {{entityRecipientsForFooter}}
-      <br *ngIf="entityRecipientsForInformationForFooter.length>0">
-      {{entityRecipientsForInformationForFooter}}
+        <span translate>feed.received</span>
+        {{ getFormattedDate(card.publishDate) }} <span translate> feed.at </span>
+        <span>{{ getFormattedTime(card.publishDate) }}</span>
+        <span *ngIf="fromEntityOrRepresentativeSelectedCard" translate> feed.from </span>
+        <span>{{ fromEntityOrRepresentativeSelectedCard }}</span>
+        <span *ngIf="!!card.deletionDate">
+            <span style="margin-left: 10px; margin-right: 10px">-</span>
+            <span translate>feed.deleted</span>
+            {{ getFormattedDate(card.deletionDate) }} <span translate> feed.at </span>
+            {{ getFormattedTime(card.deletionDate) }}
+        </span>
+        <br />
+        <span translate> feed.businessPeriod </span>
+        {{ getFormattedDateAndTime(card.startDate) }} - {{ getFormattedDateAndTime(card.endDate) }}
+        <br *ngIf="entityRecipientsForFooter.length > 0" />
+        {{ entityRecipientsForFooter }}
+        <br *ngIf="entityRecipientsForInformationForFooter.length > 0" />
+        {{ entityRecipientsForInformationForFooter }}
     </span>
-  </div>
+</div>

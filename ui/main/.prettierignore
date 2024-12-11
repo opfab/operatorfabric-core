@@ -1,5 +1,4 @@
 tsconfig.json
-**/*.html
 **/*.css
 **/*.scss
 **/*.json

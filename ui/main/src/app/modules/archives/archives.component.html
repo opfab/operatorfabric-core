@@ -6,172 +6,262 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <div class="opfab-archives-header">
     <form [formGroup]="archiveForm" #currentForm>
-          <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" (resetFormEvent)='resetForm()'
-                                       (search)='sendQuery(0)'
-                                       [hideChildStates]="true" [tags]="tags" #filters>
-          </of-archives-logging-filters>
-
+        <of-archives-logging-filters
+            [parentForm]="archiveForm"
+            [visibleProcesses]="listOfProcesses"
+            (resetFormEvent)="resetForm()"
+            (search)="sendQuery(0)"
+            [hideChildStates]="true"
+            [tags]="tags"
+            #filters>
+        </of-archives-logging-filters>
     </form>
 </div>
 
-
-<div style="height:2%"> </div>
-<div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
-<div>
-  <div style="display:flex; justify-content:flex-start;">
-    <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox"
-      translate>archive.collapsibleUpdates
-      <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated">
-      <span class="opfab-checkbox-checkmark"></span>
-    </label>
-  </div>
-  <div style="float: right; margin-top: -35px;">
-    <select (change)="onPageSizeChanged($event.target)" #pageSizeSelect>
-      <option *ngFor="let option of paginationPageSizeOptions" [value]="option"
-        [attr.selected]="option===pageSize ? true : null">
-        {{option}}
-      </option>
-    </select>
-    <label for="opfab-page-size-select" style="font-weight:bold;" translate>&nbsp;shared.pageSize</label>
-  </div>
-</div>
-  <div class="opfab-table">
-    <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col" *ngIf="isCollapsibleUpdatesActivated"></th>
-          <th scope="col" style="padding-left: 5px" translate>shared.result.publishDate</th>
-          <th scope="col" translate>shared.result.emitter</th>
-          <th scope="col" translate>shared.result.entityRecipients</th>
-          <th scope="col" translate>shared.result.title</th>
-          <th scope="col" translate>shared.result.summary</th>
-          <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>shared.result.processGroup</th>
-          <th scope="col" translate>shared.result.process</th>
-        </tr>
-      </thead>
-
-      <tbody>
-      <ng-container *ngFor="let updates of updatesByCardId">
-        <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
-          <td style ="min-width: 15px" class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
-          <td class="opfab-archive-sev"></td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates)">
-            <div class="opfab-archives-icon-plus"></div>
-          </td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)">
-            <div class="opfab-archives-icon-minus"></div>
-          </td>
-          <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
-          <td style="padding-left: 5px;min-width: 150px"> {{ displayTime(updates.mostRecent.publishDate) }} </td>
-          <td style ="min-width: 180px">{{ getEntityName(updates.mostRecent.publisher) }}</td>
-          <td style ="min-width: 180px"
-          [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: updates.mostRecent.entityRecipients}"
-          triggers="manual" (mouseenter)="updates.mostRecent.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
-            <ng-container *ngFor="let recipient of getEntityRecipientsNames(updates.mostRecent.entityRecipients, 2)">{{ recipient }}<br/></ng-container>
-          </td>
-          <td style ="min-width: 280px">{{ updates.mostRecent.titleTranslated | opfabTitleCase }}</td>
-          <td style ="min-width: 280px">{{ updates.mostRecent.summaryTranslated }}</td>
-          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
-          <td style ="min-width: 150px">{{ getProcessName(updates.mostRecent.process) }}</td>
-        </tr>
-
-        <!--history of the card-->
-        <ng-container *ngIf="updates.displayHistory">
-          <tr *ngFor="let historyCard of updates.cardHistories" (click)="openCard(historyCard.id)" class="opfab-archives-table-line" style="cursor: pointer;">
-            <td class="opfab-archive-sev"></td>
-            <td class="opfab-archive-sev opfab-archive-sev-{{historyCard.severity.toLowerCase()}}"></td>
-            <td></td>
-            <td style="padding-left: 30px"> {{ displayTime(historyCard.publishDate) }} </td>
-            <td style="padding-left: 30px">{{ getEntityName(historyCard.publisher) }}</td>
-            <td style="padding-left: 30px; min-width: 200px"
-            [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: historyCard.entityRecipients}"
-            triggers="manual" (mouseenter)="historyCard.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
-              <ng-container *ngFor="let recipient of getEntityRecipientsNames(historyCard.entityRecipients, 2)">{{ recipient }}<br/></ng-container>
-            </td>
-            <td style="padding-left: 30px"> {{ historyCard.titleTranslated | opfabTitleCase }}</td>
-            <td style="padding-left: 30px"> {{ historyCard.summaryTranslated }}</td>
-            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(historyCard.process) }}</td>
-            <td style="padding-left: 30px">{{ getProcessName(historyCard.process) }}</td>
-          </tr>
-          <tr *ngIf="updates.tooManyRows">
-            <td colspan="3"></td>
-            <td colspan="4" style="padding-left: 30px" translate>archive.tooManyRows</td>
-            <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()"></td>
-          </tr>
-        </ng-container>
-
-        <ng-template #entityRecipientsTooltip let-recipientsId="recipientsId">
-          <div *ngFor="let recipient of getEntityRecipientsNames(recipientsId)" style="margin-bottom: 5px;">{{ recipient }}</div>
-        </ng-template>
-      </ng-container>
-      </tbody>
-    </table>
-
-    <div class="opfab-pagination">
-      <div style="white-space: nowrap;margin-top:17px" id="opfab-archive-results-number">
-        <span translate> shared.resultsNumber </span> : {{resultsNumber}}
-      </div>
-      <div style="width:40%;margin-top:5px">
-        <ngb-pagination *ngIf="resultsNumber > pageSize" [collectionSize]="resultsNumber"
-          [page]="currentPage" [pageSize]="pageSize" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
-        </ngb-pagination>
-      </div>
-      <div style="width:50%;text-align:right;padding-right:8px;">
-        <div id="opfab-archives-btn-exportToExcel" style="float: right;cursor:pointer" (click)="export()" fileName="archiveResults" >
-          <span class="opfab-icon-export-data"></span>
-          <span style="font-weight: bold;" translate>shared.exportToExcel</span>
+<div style="height: 2%"></div>
+<div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left: 5%; margin-right: 5%">
+    <div>
+        <div style="display: flex; justify-content: flex-start">
+            <label
+                id="opfab-archives-collapsible-updates"
+                style="font-weight: bold; margin-left: 5px"
+                class="opfab-checkbox"
+                translate
+                >archive.collapsibleUpdates
+                <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
         </div>
-      </div>
+        <div style="float: right; margin-top: -35px">
+            <select (change)="onPageSizeChanged($event.target)" #pageSizeSelect>
+                <option
+                    *ngFor="let option of paginationPageSizeOptions"
+                    [value]="option"
+                    [attr.selected]="option === pageSize ? true : null">
+                    {{ option }}
+                </option>
+            </select>
+            <label for="opfab-page-size-select" style="font-weight: bold" translate>&nbsp;shared.pageSize</label>
+        </div>
     </div>
-  </div>
+    <div class="opfab-table">
+        <table aria-describedby="Archive results table" id="opfab-archives-cards-list">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" *ngIf="isCollapsibleUpdatesActivated"></th>
+                    <th scope="col" style="padding-left: 5px" translate>shared.result.publishDate</th>
+                    <th scope="col" translate>shared.result.emitter</th>
+                    <th scope="col" translate>shared.result.entityRecipients</th>
+                    <th scope="col" translate>shared.result.title</th>
+                    <th scope="col" translate>shared.result.summary</th>
+                    <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>
+                        shared.result.processGroup
+                    </th>
+                    <th scope="col" translate>shared.result.process</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-container *ngFor="let updates of updatesByCardId">
+                    <tr
+                        (click)="openCard(updates.mostRecent.id)"
+                        class="opfab-archives-table-line"
+                        style="cursor: pointer">
+                        <td
+                            style="min-width: 15px"
+                            class="opfab-archive-sev opfab-archive-sev-{{
+                                updates.mostRecent.severity.toLowerCase()
+                            }}"></td>
+                        <td class="opfab-archive-sev"></td>
+                        <td
+                            *ngIf="
+                                isCollapsibleUpdatesActivated &&
+                                updates.cardHistories.length > 0 &&
+                                !updates.displayHistory
+                            "
+                            style="width: 32px"
+                            (click)="$event.stopPropagation(); displayHistoryOfACard(updates)">
+                            <div class="opfab-archives-icon-plus"></div>
+                        </td>
+                        <td
+                            *ngIf="
+                                isCollapsibleUpdatesActivated &&
+                                updates.cardHistories.length > 0 &&
+                                updates.displayHistory
+                            "
+                            style="width: 32px"
+                            (click)="$event.stopPropagation(); hideHistoryOfACard(updates)">
+                            <div class="opfab-archives-icon-minus"></div>
+                        </td>
+                        <td *ngIf="isCollapsibleUpdatesActivated && !updates.cardHistories.length"></td>
+                        <td style="padding-left: 5px; min-width: 150px">
+                            {{ displayTime(updates.mostRecent.publishDate) }}
+                        </td>
+                        <td style="min-width: 180px">{{ getEntityName(updates.mostRecent.publisher) }}</td>
+                        <td
+                            style="min-width: 180px"
+                            [ngbPopover]="entityRecipientsTooltip"
+                            #p="ngbPopover"
+                            popoverClass="opfab-popover-unclickable"
+                            placement="top"
+                            container="body"
+                            [popoverContext]="{recipientsId: updates.mostRecent.entityRecipients}"
+                            triggers="manual"
+                            (mouseenter)="updates.mostRecent.entityRecipients?.length > 2 && p.open()"
+                            (mouseleave)="p.close()">
+                            <ng-container
+                                *ngFor="
+                                    let recipient of getEntityRecipientsNames(updates.mostRecent.entityRecipients, 2)
+                                "
+                                >{{ recipient }}<br
+                            /></ng-container>
+                        </td>
+                        <td style="min-width: 280px">{{ updates.mostRecent.titleTranslated | opfabTitleCase }}</td>
+                        <td style="min-width: 280px">{{ updates.mostRecent.summaryTranslated }}</td>
+                        <td style="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>
+                            {{ findProcessGroupLabelForProcess(updates.mostRecent.process) }}
+                        </td>
+                        <td style="min-width: 150px">{{ getProcessName(updates.mostRecent.process) }}</td>
+                    </tr>
+
+                    <!--history of the card-->
+                    <ng-container *ngIf="updates.displayHistory">
+                        <tr
+                            *ngFor="let historyCard of updates.cardHistories"
+                            (click)="openCard(historyCard.id)"
+                            class="opfab-archives-table-line"
+                            style="cursor: pointer">
+                            <td class="opfab-archive-sev"></td>
+                            <td
+                                class="opfab-archive-sev opfab-archive-sev-{{
+                                    historyCard.severity.toLowerCase()
+                                }}"></td>
+                            <td></td>
+                            <td style="padding-left: 30px">{{ displayTime(historyCard.publishDate) }}</td>
+                            <td style="padding-left: 30px">{{ getEntityName(historyCard.publisher) }}</td>
+                            <td
+                                style="padding-left: 30px; min-width: 200px"
+                                [ngbPopover]="entityRecipientsTooltip"
+                                #p="ngbPopover"
+                                popoverClass="opfab-popover-unclickable"
+                                placement="top"
+                                container="body"
+                                [popoverContext]="{recipientsId: historyCard.entityRecipients}"
+                                triggers="manual"
+                                (mouseenter)="historyCard.entityRecipients?.length > 2 && p.open()"
+                                (mouseleave)="p.close()">
+                                <ng-container
+                                    *ngFor="let recipient of getEntityRecipientsNames(historyCard.entityRecipients, 2)"
+                                    >{{ recipient }}<br
+                                /></ng-container>
+                            </td>
+                            <td style="padding-left: 30px">{{ historyCard.titleTranslated | opfabTitleCase }}</td>
+                            <td style="padding-left: 30px">{{ historyCard.summaryTranslated }}</td>
+                            <td
+                                style="padding-left: 30px"
+                                *ngIf="filtersTemplate.isProcessGroupFilterVisible()"
+                                translate>
+                                {{ findProcessGroupLabelForProcess(historyCard.process) }}
+                            </td>
+                            <td style="padding-left: 30px">{{ getProcessName(historyCard.process) }}</td>
+                        </tr>
+                        <tr *ngIf="updates.tooManyRows">
+                            <td colspan="3"></td>
+                            <td colspan="4" style="padding-left: 30px" translate>archive.tooManyRows</td>
+                            <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()"></td>
+                        </tr>
+                    </ng-container>
+
+                    <ng-template #entityRecipientsTooltip let-recipientsId="recipientsId">
+                        <div
+                            *ngFor="let recipient of getEntityRecipientsNames(recipientsId)"
+                            style="margin-bottom: 5px">
+                            {{ recipient }}
+                        </div>
+                    </ng-template>
+                </ng-container>
+            </tbody>
+        </table>
+
+        <div class="opfab-pagination">
+            <div style="white-space: nowrap; margin-top: 17px" id="opfab-archive-results-number">
+                <span translate> shared.resultsNumber </span> : {{ resultsNumber }}
+            </div>
+            <div style="width: 40%; margin-top: 5px">
+                <ngb-pagination
+                    *ngIf="resultsNumber > pageSize"
+                    [collectionSize]="resultsNumber"
+                    [page]="currentPage"
+                    [pageSize]="pageSize"
+                    (pageChange)="updateResultPage($event)"
+                    [maxSize]="3"
+                    [rotate]="true">
+                </ngb-pagination>
+            </div>
+            <div style="width: 50%; text-align: right; padding-right: 8px">
+                <div
+                    id="opfab-archives-btn-exportToExcel"
+                    style="float: right; cursor: pointer"
+                    (click)="export()"
+                    fileName="archiveResults">
+                    <span class="opfab-icon-export-data"></span>
+                    <span style="font-weight: bold" translate>shared.exportToExcel</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div *ngIf="firstQueryHasBeenDone&&!hasResult&&!loadingInProgress" style="text-align: center;font-size: 20px;" translate>shared.noResult
+<div
+    *ngIf="firstQueryHasBeenDone && !hasResult && !loadingInProgress"
+    style="text-align: center; font-size: 20px"
+    translate>
+    shared.noResult
 </div>
 
-
-<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
-</div>
+<div *ngIf="technicalError" style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
 
 <of-spinner *ngIf="loadingInProgress"></of-spinner>
 
 <ng-template #cardDetail let-modal>
-  <div class="modal-header">
-    <div id="opfab-archives-card-title">{{selectedCardTruncatedTitle | opfabTitleCase}}</div>
-    <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
+    <div class="modal-header">
+        <div id="opfab-archives-card-title">{{ selectedCardTruncatedTitle | opfabTitleCase }}</div>
+        <div
+            id="opfab-archives-card-detail-close"
+            class="opfab-close-modal-icon"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
     </div>
-  </div>
 
-  <div class="modal-body modal-body-squared">
-    <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
-  </div>
+    <div class="modal-body modal-body-squared">
+        <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
+    </div>
 </ng-template>
 
 <ng-template #cardLoadingInProgress let-modal>
-  <div class="modal-body modal-body-rounded">
-    <div class="opfab-card-loading-spinner">
-      <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+    <div class="modal-body modal-body-rounded">
+        <div class="opfab-card-loading-spinner">
+            <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+        </div>
+        <div style="text-align: center; font-size: 16px; font-weight: bold; margin-top: 10px" translate>
+            archive.cardLoadingInProgress
+        </div>
     </div>
-    <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
-      archive.cardLoadingInProgress
-    </div>
-  </div>
 </ng-template>
 
 <ng-template #exportInProgress let-modal>
-  <div class="modal-body modal-body-rounded">
-    <div class="opfab-card-loading-spinner">
-      <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+    <div class="modal-body modal-body-rounded">
+        <div class="opfab-card-loading-spinner">
+            <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+        </div>
+        <div style="text-align: center; font-size: 16px; font-weight: bold; margin-top: 10px" translate>
+            shared.exportInProgress
+        </div>
     </div>
-    <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
-      shared.exportInProgress
-    </div>
-  </div>
 </ng-template>

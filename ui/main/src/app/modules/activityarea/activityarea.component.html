@@ -6,51 +6,62 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <div class="opfab-activityarea-title" translate>
-    {{titleI18nKey}}
+    {{ titleI18nKey }}
 </div>
 
 <of-spinner *ngIf="!isScreenLoaded"></of-spinner>
 <div *ngIf="activityAreaPage?.activityAreaClusters?.length === 0">
-    <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>activityArea.noAreaAvailable</div>
+    <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>
+        activityArea.noAreaAvailable
+    </div>
 </div>
 <div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length">
     <form [formGroup]="activityAreaForm">
-        <div class="opfab-activityarea-container" >
+        <div class="opfab-activityarea-container">
             <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
-                <span *ngIf="cluster.name !== ' ' || activityAreaPage?.activityAreaClusters?.length > 1 " class="opfab-activityarea-cluster-name">{{cluster.name}} &nbsp;</span>
-                <table class ="opfab-activityarea-table" aria-describedby="activity area table">
-                    <tr *ngFor="let line of cluster.lines;">
-                        <th class ="opfab-table-line" >
+                <span
+                    *ngIf="cluster.name !== ' ' || activityAreaPage?.activityAreaClusters?.length > 1"
+                    class="opfab-activityarea-cluster-name"
+                    >{{ cluster.name }} &nbsp;</span
+                >
+                <table class="opfab-activityarea-table" aria-describedby="activity area table">
+                    <tr *ngFor="let line of cluster.lines">
+                        <th class="opfab-table-line">
                             <label class="opfab-checkbox opfab-activityarea-checkbox">
-                                <input type="checkbox" [formControlName]=line.entityId [checked]="true">{{line.entityName}}
+                                <input type="checkbox" [formControlName]="line.entityId" [checked]="true" />{{
+                                    line.entityName
+                                }}
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </th>
                         <td>
-                            <ng-template #connected >
-                               <div class="opfab-tooltip">
-                                <span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{line.connectedUsers.length}}
-                                </span>&nbsp;&nbsp;<span [id]="'table-line-' + line.entityId"
-                                                         class="opfab-activityarea-table-line"
-                                                         >{{line.connectedUsersText}}
-
-                                </span>
-                                    <span *ngIf="isEllipsisActive('table-line-' + line.entityId)" class="opfab-tooltip-content bottom" style="margin-top:0px;z-index:1;text-align: left;">  
-                                      <div *ngFor="let user of line.connectedUsers">
-                                        &nbsp; {{user}} &nbsp;
-                                      </div> 
+                            <ng-template #connected>
+                                <div class="opfab-tooltip">
+                                    <span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge"
+                                        >{{ line.connectedUsers.length }} </span
+                                    >&nbsp;&nbsp;<span
+                                        [id]="'table-line-' + line.entityId"
+                                        class="opfab-activityarea-table-line"
+                                        >{{ line.connectedUsersText }}
                                     </span>
-                            </div>
-                            </ng-template>
-                            <ng-template #disconnected> <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">0</span></ng-template>
-                            <ng-template #usersDropdown>
-                                <div *ngFor="let user of line.connectedUsers">
-                                    &nbsp; {{user}} &nbsp;
+                                    <span
+                                        *ngIf="isEllipsisActive('table-line-' + line.entityId)"
+                                        class="opfab-tooltip-content bottom"
+                                        style="margin-top: 0px; z-index: 1; text-align: left">
+                                        <div *ngFor="let user of line.connectedUsers">&nbsp; {{ user }} &nbsp;</div>
+                                    </span>
                                 </div>
                             </ng-template>
-                            <span *ngIf="line.connectedUsers.length>0;then connected else disconnected"></span>
+                            <ng-template #disconnected>
+                                <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge"
+                                    >0</span
+                                ></ng-template
+                            >
+                            <ng-template #usersDropdown>
+                                <div *ngFor="let user of line.connectedUsers">&nbsp; {{ user }} &nbsp;</div>
+                            </ng-template>
+                            <span *ngIf="line.connectedUsers.length > 0; then connected; else disconnected"></span>
                         </td>
                     </tr>
                 </table>
@@ -60,10 +71,18 @@
         <br />
 
         <div *ngIf="displaySendResultError">
-            <h4 translate style="text-align: center" class="text-danger"> {{messageAfterSavingSettings}} </h4>
+            <h4 translate style="text-align: center" class="text-danger">{{ messageAfterSavingSettings }}</h4>
         </div>
-        <div style="text-align: center;width:100%">
-            <button id="opfab-activityarea-btn-confirm" type="button" class="opfab-btn" (click)='openConfirmSaveSettingsModal(confirmationPopup)' style="text-align: center;min-width: 243px;" translate>shared.confirmSettings</button>
+        <div style="text-align: center; width: 100%">
+            <button
+                id="opfab-activityarea-btn-confirm"
+                type="button"
+                class="opfab-btn"
+                (click)="openConfirmSaveSettingsModal(confirmationPopup)"
+                style="text-align: center; min-width: 243px"
+                translate>
+                shared.confirmSettings
+            </button>
         </div>
     </form>
 </div>
@@ -71,17 +90,29 @@
 <div class="my-3">
     <ng-template #confirmationPopup let-modal>
         <div class="modal-header">
-            <div translate> shared.popup.title </div>
+            <div translate>shared.popup.title</div>
         </div>
         <div class="modal-body text-center">
             <p translate>shared.popup.areYouSure</p>
-            <button id="opfab-activityarea-btn-no" type="button" class="opfab-btn-cancel" (click)="doNotConfirmSaveSettings()" translate>button.cancel</button>
-            <button id="opfab-activityarea-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+            <button
+                id="opfab-activityarea-btn-no"
+                type="button"
+                class="opfab-btn-cancel"
+                (click)="doNotConfirmSaveSettings()"
+                translate>
+                button.cancel
+            </button>
+            <button
+                id="opfab-activityarea-btn-yes"
+                type="button"
+                class="opfab-btn"
+                (click)="confirmSaveSettings()"
+                translate>
+                button.yes
+            </button>
         </div>
     </ng-template>
-    
-    <of-spinner *ngIf="saveSettingsInProgress"
-                [seeInModal]="true"
-                loadingText="activityArea.savingInProgress">
+
+    <of-spinner *ngIf="saveSettingsInProgress" [seeInModal]="true" loadingText="activityArea.savingInProgress">
     </of-spinner>
 </div>

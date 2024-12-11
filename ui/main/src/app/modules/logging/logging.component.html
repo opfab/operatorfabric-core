@@ -6,42 +6,56 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
 <div class="logging-page">
     <form [formGroup]="loggingForm" #currentForm>
-          <of-archives-logging-filters [parentForm]="loggingForm" [visibleProcesses]="listOfProcessesForFilter"
-                                       (resetFormEvent)='resetForm()' (search)='search()'
-                                       [tags]="tags" [hideChildStates]="false" #filters>
-          </of-archives-logging-filters>
-
+        <of-archives-logging-filters
+            [parentForm]="loggingForm"
+            [visibleProcesses]="listOfProcessesForFilter"
+            (resetFormEvent)="resetForm()"
+            (search)="search()"
+            [tags]="tags"
+            [hideChildStates]="false"
+            #filters>
+        </of-archives-logging-filters>
     </form>
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
 <of-spinner *ngIf="loadingInProgress && !firstQueryHasBeenDone"></of-spinner>
 
+<div style="height: 5%"></div>
 
-<div style="height:5%"> </div>
-
-<div *ngIf="firstQueryHasBeenDone" [hidden]="!firstQueryHasResults || technicalError" style="margin-left:5%;margin-right:5%">
-  <of-logging-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible"
-    [page]="page" [pageSize]="pageSize" [totalElements]="totalElements" [totalPages]="totalPages"
-    [processStateNameMap]="processStateName" [processStateDescriptionMap]="processStateDescription"
-    (filterChange)="onTableFilterChange($event)" (pageSizeChange)="onPageSizeChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
-  </of-logging-table>
-
+<div
+    *ngIf="firstQueryHasBeenDone"
+    [hidden]="!firstQueryHasResults || technicalError"
+    style="margin-left: 5%; margin-right: 5%">
+    <of-logging-table
+        [result]="results"
+        [processGroupVisible]="isProcessGroupFilterVisible"
+        [page]="page"
+        [pageSize]="pageSize"
+        [totalElements]="totalElements"
+        [totalPages]="totalPages"
+        [processStateNameMap]="processStateName"
+        [processStateDescriptionMap]="processStateDescription"
+        (filterChange)="onTableFilterChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (pageChange)="onPageChange($event)"
+        (export)="exportToExcel()">
+    </of-logging-table>
 </div>
 
-<div *ngIf="firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress"
-     style="text-align: center;font-size: 20px;" translate>shared.noResult
+<div
+    *ngIf="firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress"
+    style="text-align: center; font-size: 20px"
+    translate>
+    shared.noResult
 </div>
 
-<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
-</div>
-
+<div *ngIf="technicalError" style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
 
 <ng-template #exportInProgress let-modal>
-  <div class="modal-body modal-body-rounded">
-    <of-spinner timeBeforeDisplayingSpinner="0" loadingText="shared.exportInProgress"></of-spinner>
-  </div>
+    <div class="modal-body modal-body-rounded">
+        <of-spinner timeBeforeDisplayingSpinner="0" loadingText="shared.exportInProgress"></of-spinner>
+    </div>
 </ng-template>
