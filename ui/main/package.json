@@ -87,7 +87,7 @@
         "karma-jasmine-html-reporter": "2.1.0",
         "karma-junit-reporter": "2.0.1",
         "karma-mocha-reporter": "2.2.5",
-        "prettier":"3.3.3",
+        "prettier":"3.4.2",
         "stylelint": "^16.8.2",
         "stylelint-config-standard": "^36.0.1",
         "stylelint-config-standard-scss": "^13.1.0",
