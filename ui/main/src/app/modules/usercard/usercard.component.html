@@ -255,17 +255,17 @@
     <div class="opfab-section-header" style="display: flex; flex-wrap: wrap" id="opfab-entity-recipients">
         <span translate>userCard.recipients</span>&nbsp;
         <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">
-            <span *ngIf="this.connectedRecipients.has(entityId); then connected; else disconnected"></span>
-            <ng-template #connected
-                >&nbsp;<span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{
-                    getEntityName(entityId)
-                }}</span>
-            </ng-template>
-            <ng-template #disconnected
-                >&nbsp;<span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">{{
-                    getEntityName(entityId)
-                }}</span>
-            </ng-template>
+            &nbsp;
+            <span
+                [ngClass]="{'opfab-tooltip': hasChildEntities(entityId)}"
+                class="opfab-rounded-badge opfab-activityarea-badge"
+                [class.opfab-blue-background]="this.connectedRecipients.has(entityId)"
+                [class.opfab-grey-background]="!this.connectedRecipients.has(entityId)">
+                {{ getEntityName(entityId) }}
+                <span *ngIf="hasChildEntities(entityId)" class="opfab-tooltip-content top opfab-child-entities">
+                    {{ getChildEntitiesNames(entityId) }}
+                </span>
+            </span>
         </span>
     </div>
 
@@ -276,17 +276,16 @@
         *ngIf="!!cardPreview.entityRecipientsForInformation && cardPreview.entityRecipientsForInformation.length">
         <span translate>userCard.recipientsForInformation</span>&nbsp;
         <span *ngFor="let entityId of cardPreview.entityRecipientsForInformation" style="padding-right: 10px">
-            <span *ngIf="this.connectedRecipients.has(entityId); then connected; else disconnected"></span>
-            <ng-template #connected
-                >&nbsp;<span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge">{{
-                    getEntityName(entityId)
-                }}</span>
-            </ng-template>
-            <ng-template #disconnected
-                >&nbsp;<span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">{{
-                    getEntityName(entityId)
-                }}</span>
-            </ng-template>
+            <span
+                [ngClass]="{'opfab-tooltip': hasChildEntities(entityId)}"
+                class="opfab-rounded-badge opfab-activityarea-badge"
+                [class.opfab-blue-background]="this.connectedRecipients.has(entityId)"
+                [class.opfab-grey-background]="!this.connectedRecipients.has(entityId)">
+                {{ getEntityName(entityId) }}
+                <span *ngIf="hasChildEntities(entityId)" class="opfab-child-entities opfab-tooltip-content bottom">
+                    {{ getChildEntitiesNames(entityId) }}
+                </span>
+            </span>
         </span>
     </div>
 

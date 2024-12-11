@@ -161,6 +161,11 @@ describe('User Card ', function () {
       cy.get('#opfab-entity-recipients').get('.opfab-activityarea-badge').should('have.length', 2);
       cy.get('#opfab-entity-recipients').get('.opfab-blue-background').should('have.length', 1);
       cy.get('#opfab-entity-recipients').get('.opfab-grey-background').should('have.length', 1);
+
+      // Check tooltip show child entities list
+      cy.get('#opfab-entity-recipients').find('.opfab-tooltip-content').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').find('.opfab-tooltip-content').eq(0).contains('Control Center FR East,Control Center FR North,Control Center FR South,Control Center FR West');
+
       script.resetUIConfigurationFiles();
     })
 
@@ -1212,14 +1217,20 @@ describe('User Card ', function () {
       usercard.selectRecipient('Control Center FR North');
       usercard.selectRecipientForInformation('Control Center FR West');
       usercard.selectRecipientForInformation('Control Center FR East');
+      usercard.selectRecipientForInformation('European Supervision Centers');
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('.opfab-activityarea-badge').should('have.length', 1);
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
 
-      cy.get("#opfab-entity-recipients-for-information").find('.opfab-activityarea-badge').should('have.length', 2);
+      cy.get("#opfab-entity-recipients-for-information").find('.opfab-activityarea-badge').should('have.length', 3);
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
       usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR East");
+      usercard.checkEntityRecipientsForInformationInPreviewContains("European Supervision Centers");
+
+      // Check tooltip show child entities list
+      cy.get('#opfab-entity-recipients-for-information').find('.opfab-tooltip-content').should('have.length', 1);
+      cy.get('#opfab-entity-recipients-for-information').find('.opfab-tooltip-content').eq(0).contains('IT SUPERVISION CENTER');
 
       usercard.sendCard();
       feed.openFirstCard();

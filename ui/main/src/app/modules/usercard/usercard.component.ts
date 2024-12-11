@@ -28,11 +28,12 @@ import {MultiSelectComponent} from '../share/multi-select/multi-select.component
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {NgIf, NgFor} from '@angular/common';
+import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from '../share/simplified-card-view/simplified-card-view.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LightCardModule} from '../share/light-card/light-card.module';
+import {Entity} from '@ofModel/entity.model';
 
 @Component({
     selector: 'of-usercard',
@@ -46,6 +47,7 @@ import {LightCardModule} from '../share/light-card/light-card.module';
         ReactiveFormsModule,
         MultiSelectComponent,
         NgFor,
+        NgClass,
         LightCardModule,
         SimplifiedCardViewComponent,
         SpinnerComponent
@@ -184,14 +186,25 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         let label = data.label;
         if (childEntities.length) {
             label =
-                label + ' <i style="color: var(--opfab-color-grey);text-overflow: ellipsis">(' + childEntities[0].name;
-            if (childEntities.length > 1)
-                for (let i = 1; i < childEntities.length; i++) {
-                    if (i > 0) label = label + ',' + childEntities[i].name;
-                }
+                label +
+                ' <i style="color: var(--opfab-color-grey);text-overflow: ellipsis">(' +
+                UserCardComponent.formatEntitiesNamesAsString(childEntities);
             label = label + ')</i>';
         }
         return label;
+    }
+
+    hasChildEntities(entityId) {
+        const childEntities = EntitiesService.resolveChildEntities(entityId);
+        return childEntities?.length > 0;
+    }
+
+    getChildEntitiesNames(entityId: string) {
+        return UserCardComponent.formatEntitiesNamesAsString(EntitiesService.resolveChildEntities(entityId));
+    }
+
+    public static formatEntitiesNamesAsString(entities: Entity[]): string {
+        return entities ? entities.map((entity) => entity.name).join(',') : '';
     }
 
     public setUserNotAllowedToSendCard(): void {
