@@ -40,9 +40,6 @@
                     </div>
                     <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
                         <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
-                        <div *ngIf="name.errors.uniqueEntityNameViolation" translate>
-                            admin.input.name.alreadyExisting
-                        </div>
                     </div>
 
                     <div class="opfab-input opfab-edit-row">

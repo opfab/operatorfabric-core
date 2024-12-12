@@ -93,12 +93,11 @@ export class EditEntityModalComponent implements OnInit {
 
     ngOnInit() {
         const uniqueEntityIdValidator = [];
-        const uniqueEntityNameValidator = [];
+        const entityNameValidator = [];
         if (!this.row) {
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
         }
-        uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
-        uniqueEntityNameValidator.push(this.emptyNameValidatorFn());
+        entityNameValidator.push(this.emptyNameValidatorFn());
         // modal used for creating a new entity
 
         this.entityForm = new FormGroup({
@@ -107,7 +106,7 @@ export class EditEntityModalComponent implements OnInit {
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new FormControl('', [Validators.required], uniqueEntityNameValidator),
+            name: new FormControl('', [Validators.required], entityNameValidator),
             description: new FormControl(''),
             roles: new FormControl([]),
             labels: new FormControl([]),
@@ -190,24 +189,6 @@ export class EditEntityModalComponent implements OnInit {
         return (control: AbstractControl): Observable<ValidationErrors> | null => {
             const trimmedName = control.value ? control.value.trim() : '';
             return trimmedName === '' ? of({required: true}) : of(null);
-        };
-    }
-
-    isUniqueEntityName(entityName: string): boolean {
-        if (
-            entityName &&
-            EntitiesService.getEntities().filter(
-                (entity) => entity.name === entityName.trim() && entity.id !== this.row?.id
-            ).length
-        )
-            return false;
-        else return true;
-    }
-
-    uniqueEntityNameValidatorFn(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<ValidationErrors> => {
-            const err: ValidationErrors = {uniqueEntityNameViolation: true};
-            return this.isUniqueEntityName(this.entityForm.controls['name'].value) ? of(null) : of(err);
         };
     }
 

@@ -154,26 +154,6 @@ class EntitiesServiceShould {
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(entityRepositoryStub.findById("entity1").get().getParents()).isEmpty();
         }
-        
-        @Test
-        void GIVEN_A_Valid_Entity_with_An_Already_Existing_Name_WHEN_Try_To_Create_Entity_THEN_Return_Bad_Request() {
-            Entity entity = new Entity("newEntity", "Entity 1", "myDescription", null, null, null);
-            OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Entity with name Entity 1 already exists");
-            assertThat(entityRepositoryStub.findById("newEntity")).isEmpty();
-        }
-
-        @Test
-        void GIVEN_A_Valid_Existing_Entity_WHEN_Try_To_Update_Entity_with_An_Already_Existing_Name_THEN_Return_Bad_Request() {
-            Entity entity = new Entity("entity2", "Entity 1", "myDescription", null, null, null);
-            OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Entity with name Entity 1 already exists");
-        }
-
     }
 
     @Nested
