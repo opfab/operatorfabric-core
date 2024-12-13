@@ -110,7 +110,7 @@ Feature: fetchArchive
 	"processInstanceId" : "process1",
 	"state": "messageState",
 	"groupRecipients": ["Dispatcher"],
-	"externalRecipients" : ["api_test2","api_test16566111"],
+	"externalRecipients" : ["externalRecipient1","externalRecipient2"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -132,7 +132,7 @@ Feature: fetchArchive
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
-        And match response.card.externalRecipients[1] == "api_test16566111"
+        And match response.card.externalRecipients[1] == "externalRecipient2"
         And def cardUid = response.uid
 
 #delete perimeter created previously

@@ -36,6 +36,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ExternalAppServiceShould {
@@ -45,6 +47,9 @@ class ExternalAppServiceShould {
 
     @Mock
     private RestTemplate restTemplate;
+
+    @Mock
+    private ObjectMapper mapper;
 
     @InjectMocks
     private ExternalAppService externalAppService;

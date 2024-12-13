@@ -83,7 +83,8 @@ Scenario: Post a new version of the card
     }
     """
 
-  # Push card
+    # Push card 
+
   Given url opfabPublishCardUrl + 'cards'
   And header Authorization = 'Bearer ' + authToken
   And request card
@@ -91,7 +92,6 @@ Scenario: Post a new version of the card
   Then status 201
   And def cardUid = response.uid
   And def cardId = response.id
-
   # Get card with user operator1_fr
   Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
   And header Authorization = 'Bearer ' + authToken
@@ -119,6 +119,7 @@ Scenario: Delete the card
   And def cardUid = response.card.uid
 
   # Delete card without authentication
+
   Given url opfabPublishCardUrl + 'cards/api_test.process1'
   When method delete
   Then status 401
@@ -145,9 +146,10 @@ Scenario: Post card with attribute externalRecipients
       "processInstanceId": "process1",
       "state": "messageState",
       "groupRecipients": ["Dispatcher"],
-      "externalRecipients": ["api_test_externalRecipient1", "api_test165"],
+      "externalRecipients": ["api_test_externalRecipient1"],
       "severity": "INFORMATION",
       "startDate": 1553186770681,
+      "endDate": 1553186999999,
       "summary": {"key": "defaultProcess.summary"},
       "title": {"key": "defaultProcess.title2"},
       "data": {"message": "test externalRecipients"}
@@ -166,8 +168,18 @@ Scenario: Post card with attribute externalRecipients
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
-  And match response.card.externalRecipients[1] == "api_test165"
+  And match response.card.externalRecipients[0] == "api_test_externalRecipient1"
   And def cardUid = response.card.uid
+
+  # Make sure externalRecipient received the card 
+  # with correct startDate and endDate
+  * configure retry = { count: 3, interval: 3000 }
+  Given url opfabUrl + 'cards-consultation/cards/api_test.process1_created'
+  And header Authorization = 'Bearer ' + authTokenForOperator5
+  And retry until responseStatus == 200 
+  When method get
+  And match response.card.startDate == 1553186770681
+  And match response.card.endDate == 1553186999999
 
   # Delete the card
   Given url opfabPublishCardUrl + 'cards/api_test.process1'
@@ -182,7 +194,7 @@ Scenario: Post card with attribute externalRecipients
   And retry until responseStatus == 200 
   When method get
   Then match response.card.data.message == "Card with id=api_test.process1 received by externalApp. Card sent for karate tests, addressed to : operator5_fr   "
-
+  
   # Delete the confirmation card to clean the test environment
   Given url opfabPublishCardUrl + 'cards/api_test.process1_deleted'
   And header Authorization = 'Bearer ' + authToken

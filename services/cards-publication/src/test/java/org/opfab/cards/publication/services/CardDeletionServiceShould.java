@@ -147,33 +147,21 @@ class CardDeletionServiceShould {
                 Card card = TestHelpers.generateOneCard();
                 List<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
-                card.setExternalRecipients(externalRecipients);
-                cardProcessingService.processCard(card);
-
+                card.setExternalRecipients(externalRecipients); 
                 mockServer.expect(ExpectedCount.once(),
-                                requestTo(new URI(EXTERNALAPP_URL + "/" + card.getId())))
+                                requestTo(new URI(EXTERNALAPP_URL)))
+                                .andExpect(method(HttpMethod.POST))
+                                .andRespond(withStatus(HttpStatus.ACCEPTED));
+                mockServer.expect(ExpectedCount.once(),
+                                requestTo(new URI(EXTERNALAPP_URL + "/PROCESS_CARD_USER.PROCESS_1")))
                                 .andExpect(method(HttpMethod.DELETE))
                                 .andRespond(withStatus(HttpStatus.ACCEPTED));
-
-                cardDeletionService.deleteCardByIdWithUser(card.getId(), Optional.empty(), token);
-                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
-        }
-
-        @Test
-        void GIVEN_an_existing_card_with_invalid_external_recipient_WHEN_deleting_the_card_THEN_card_is_deleted_and_delete_is_not_send_to_external_recipient()
-                        throws URISyntaxException {
-
-                Card card = TestHelpers.generateOneCard();
-                List<String> externalRecipients = new ArrayList<>();
-                externalRecipients.add("invalidRecipient");
-                card.setExternalRecipients(externalRecipients);
                 cardProcessingService.processCard(card);
-                mockServer.expect(ExpectedCount.never(), requestTo(new URI(EXTERNALAPP_URL + "/" + card.getId())));
-
                 cardDeletionService.deleteCardByIdWithUser(card.getId(), Optional.empty(), token);
-
                 Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
+                mockServer.verify();
         }
+
 
         @Test
         void GIVEN_existing_cards_WHEN_try_to_delete_card_with_none_existing_id_THEN_no_card_is_delete() {

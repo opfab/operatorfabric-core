@@ -30,6 +30,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 @Service
 @Slf4j
 public class ExternalAppService {
@@ -44,12 +47,14 @@ public class ExternalAppService {
     private ExternalRecipients externalRecipients;
     private RestTemplate restTemplate;
     private ResponseCardProducer responseCardProducer;
+    private final ObjectMapper mapper;
 
-
-    public ExternalAppService(ExternalRecipients externalRecipients,RestTemplate restTemplate,ResponseCardProducer responseCardProducer) {
+    public ExternalAppService(ExternalRecipients externalRecipients, RestTemplate restTemplate,
+            ResponseCardProducer responseCardProducer, ObjectMapper mapper) {
         this.externalRecipients = externalRecipients;
         this.restTemplate = restTemplate;
         this.responseCardProducer = responseCardProducer;
+        this.mapper = mapper;
     }
 
     public void sendCardToExternalApplication(Card card, Optional<Jwt> jwt) {
@@ -62,12 +67,13 @@ public class ExternalAppService {
                         Optional<ExternalRecipients.ExternalRecipient> externalRecipient = getExternalRecipient(item);
                         if (externalRecipient.isPresent()) {
                             ExternalRecipients.ExternalRecipient recipient = externalRecipient.get();
-                            callExternalApplication(card, recipient.getUrl(), recipient.isPropagateUserToken() ? jwt : Optional.empty());
+                            callExternalApplication(card, recipient.getUrl(),
+                                    recipient.isPropagateUserToken() ? jwt : Optional.empty());
                         } else
                             throw createApiError(HttpStatus.BAD_REQUEST, INVALID_URL_MESSAGE);
 
                     });
-        }else {
+        } else {
             log.debug(NO_EXTERNALRECIPIENTS_MESSAGE + " {} from {}", card.getId(), card.getPublisher());
         }
     }
@@ -83,7 +89,8 @@ public class ExternalAppService {
                         Optional<ExternalRecipients.ExternalRecipient> externalRecipient = getExternalRecipient(item);
                         if (externalRecipient.isPresent()) {
                             ExternalRecipients.ExternalRecipient recipient = externalRecipient.get();
-                            notifyExternalApplication(card, recipient.getUrl(), recipient.isPropagateUserToken() ? jwt : Optional.empty());
+                            notifyExternalApplication(card, recipient.getUrl(),
+                                    recipient.isPropagateUserToken() ? jwt : Optional.empty());
                         } else {
                             log.debug("ExternalRecipient extracted from {} is empty", item);
                         }
@@ -95,27 +102,27 @@ public class ExternalAppService {
 
     private Optional<ExternalRecipients.ExternalRecipient> getExternalRecipient(String item) {
         return externalRecipients
-        .getRecipients()
-        .stream()
-        .filter(x -> x.getId().equals(item))
-        .findFirst();
+                .getRecipients()
+                .stream()
+                .filter(x -> x.getId().equals(item))
+                .findFirst();
     }
 
     private void callExternalApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         if (externalRecipientUrl.startsWith("kafka:")) {
             callExternalKafkaApplication(card);
-        } else{
+        } else {
             callExternalHttpApplication(card, externalRecipientUrl, jwt);
         }
     }
+
     private void notifyExternalApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         if (externalRecipientUrl.startsWith("kafka:")) {
             notifyExternalKafkaApplication(card);
-        } else{
+        } else {
             notifyExternalHttpApplication(card, externalRecipientUrl, jwt);
         }
     }
-
 
     private void callExternalKafkaApplication(Card card) {
         responseCardProducer.send(card);
@@ -128,15 +135,15 @@ public class ExternalAppService {
     private void callExternalHttpApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         try {
             log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
-
             HttpHeaders headers = createRequestHeader(jwt);
-
-            HttpEntity<Card> requestBody = new HttpEntity<>(card, headers);
-
+            String cardJson = mapper.writeValueAsString(card);
+            HttpEntity<String> requestBody = new HttpEntity<>(cardJson, headers);
             restTemplate.postForObject(externalRecipientUrl, requestBody, Void.class);
-
             log.debug("End to Send card {} \n", card);
 
+        } catch (JsonProcessingException ex) {
+            log.error("Error converting card to Json string", ex);
+            throwException(ex);
         } catch (Exception ex) {
             log.error("Error calling external application ", ex);
             throwException(ex);
@@ -148,7 +155,8 @@ public class ExternalAppService {
         try {
             HttpHeaders headers = createRequestHeader(jwt);
             HttpEntity<String> requestBody = new HttpEntity<>("", headers);
-            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, Void.class);
+            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody,
+                    Void.class);
 
         } catch (Exception ex) {
             log.error("Error sending card deletion notification to external application ", ex);
@@ -160,7 +168,7 @@ public class ExternalAppService {
     private void throwException(Exception e) {
         if (e instanceof HttpClientErrorException.NotFound) {
             throw createApiError(HttpStatus.INTERNAL_SERVER_ERROR, REMOTE_404_MESSAGE);
-        } else if ( e instanceof HttpClientErrorException || e instanceof HttpServerErrorException ) {
+        } else if (e instanceof HttpClientErrorException || e instanceof HttpServerErrorException) {
             throw createApiError(((HttpStatusCodeException) e).getStatusCode(), UNEXPECTED_REMOTE_MESSAGE);
         } else if (e instanceof IllegalArgumentException) {
             throw createApiError(HttpStatus.BAD_REQUEST, INVALID_URL_MESSAGE);

@@ -109,6 +109,9 @@ services/**/logs
 # ignoring .env file needed by docker-compose
 config/**/.env
 
+# Eclipse files
+**/.factorypath
+
 # Karate tests
 ## Results
 src/test/**/karate/target/**/*

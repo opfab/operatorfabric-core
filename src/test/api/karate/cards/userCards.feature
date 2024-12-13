@@ -287,7 +287,7 @@ Scenario: Create perimeter for initial process
 
 # We check externalApp has sent a card following reception of card process_1.process_id_w
     * configure retry = { count: 3, interval: 3000 }
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process_id_w'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.process_id_w_created'
     And header Authorization = 'Bearer ' + authTokenAsItsupervisor1
     And retry until responseStatus == 200 && response.card.data.message == "Card with id=process_1.process_id_w received by externalApp. Card sent for karate tests, addressed to :   IT_SUPERVISOR_ENTITY "
     When method get

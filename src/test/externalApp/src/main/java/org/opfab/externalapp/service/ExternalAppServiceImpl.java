@@ -52,8 +52,10 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		ArrayList<String> groupRecipients = new ArrayList<>();
 		ArrayList<String> userRecipients = new ArrayList<>();
 		requestBody.ifPresent(card -> sendBackCard("api_test", "messageState",
-				card.path("processInstanceId").textValue(), entitiesRecipients, groupRecipients,
-				userRecipients, card.path("id").textValue()));
+				card.path("processInstanceId").textValue() + "_created", entitiesRecipients, groupRecipients,
+				userRecipients, card.path("id").textValue(),
+				card.hasNonNull("startDate") ? card.path("startDate").asLong() : null,
+				card.hasNonNull("endDate") ? card.path("endDate").asLong() : null));
 	}
 
 	@Override
@@ -62,20 +64,23 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		ArrayList<String> entitiesRecipients = new ArrayList<>();
 		ArrayList<String> groupRecipients = new ArrayList<>();
 		ArrayList<String> userRecipients = new ArrayList<>(List.of("operator5_fr"));
-		sendBackCard("api_test", "messageState","process1_deleted", entitiesRecipients, groupRecipients, userRecipients, id);
+		sendBackCard("api_test", "messageState", "process1_deleted", entitiesRecipients, groupRecipients,
+				userRecipients, id, null, null);
 	}
 
 	public String welcomeMessage() {
-		return   "Welcome to External Application";
+		return "Welcome to External Application";
 	}
 
 	public void sendBackCard(String processToSend,
-							 String state,
-							 String processInstanceIdReceived,
-							 List<String> entitiesRecipients,
-							 List<String> groupRecipients,
-							 List<String> userRecipients,
-							 String idReceived) {
+			String state,
+			String processInstanceIdReceived,
+			List<String> entitiesRecipients,
+			List<String> groupRecipients,
+			List<String> userRecipients,
+			String idReceived,
+			Long startDate,
+			Long endDate) {
 
 		Card card = new Card();
 		card.setPublisher("operator1_fr");
@@ -84,8 +89,14 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		card.setProcessInstanceId(processInstanceIdReceived);
 		card.setState(state);
 		card.setSeverity(SeverityEnum.INFORMATION);
-		card.setStartDate(Instant.now());
-
+		if (startDate != null) {
+			card.setStartDate(Instant.ofEpochMilli(startDate));
+		} else {
+			card.setStartDate(Instant.now());
+		}
+		if (endDate != null) {
+			card.setEndDate(Instant.ofEpochMilli(endDate));
+		}
 		card.setUserRecipients(userRecipients);
 		card.setGroupRecipients(groupRecipients);
 		card.setEntityRecipients(entitiesRecipients);
@@ -100,10 +111,10 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 
 		LinkedHashMap<String, String> data = new LinkedHashMap<>();
 		data.put("message", "Card with id=" + idReceived + " received by externalApp. " +
-						"Card sent for karate tests, addressed to : " +
-						recipientsToString(userRecipients) + " " +
-						recipientsToString(groupRecipients) + " " +
-						recipientsToString(entitiesRecipients) + " ");
+				"Card sent for karate tests, addressed to : " +
+				recipientsToString(userRecipients) + " " +
+				recipientsToString(groupRecipients) + " " +
+				recipientsToString(entitiesRecipients) + " ");
 		card.setData(data);
 
 		String token = null;

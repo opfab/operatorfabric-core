@@ -157,9 +157,8 @@ public class CardProcessingService {
             if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
                 // throw a runtime exception to be handled by Mono.onErrorResume()
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
-            log.info("Send user card to external app with jwt present " + jwt.isPresent());
-            externalAppService.sendCardToExternalApplication(card, jwt);
         }
+
         if (card.getToNotify() != null) log.warn("Using deprecated field 'toNotify'. Use STORE_ONLY_IN_ARCHIVES card action instead");
         boolean storeOnlyInArchives = isCardToBeStoredOnlyInArchives(card);        
 
@@ -168,6 +167,7 @@ public class CardProcessingService {
                 processCardUpdate(card, oldCard);
                 processChildCardsWhenCardUpdate(card, jwt);
             }
+            externalAppService.sendCardToExternalApplication(card, jwt);
             processChildCard(card);
 
             cardRepository.saveCard(card);
