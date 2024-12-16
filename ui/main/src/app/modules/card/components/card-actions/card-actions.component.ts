@@ -7,7 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, TemplateRef, ViewChild} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
@@ -29,6 +39,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {UserCardComponent} from '../../../usercard/usercard.component';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {EntitiesService} from 'app/business/services/users/entities.service';
+import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({
     selector: 'of-card-actions',
@@ -37,7 +48,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
     standalone: true,
     imports: [NgIf, TranslateModule, UserCardComponent, SpinnerComponent]
 })
-export class CardActionsComponent implements OnChanges, OnDestroy {
+export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;
     @Input() cardState: State;
     @Input() parentModalRef: NgbModalRef;
@@ -55,31 +66,31 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     public deleteInProgress = false;
 
     private readonly unsubscribe$: Subject<void> = new Subject<void>();
-    isReadOnlyUser: boolean;
 
     constructor(
         private readonly modalService: NgbModal,
         private readonly router: Router
     ) {}
 
+    ngOnInit(): void {
+        CardTemplateGateway.registerFunctionToEditCard(() => {
+            if (this.doesTheUserHavePermissionToEditCard()) this.editCard();
+        });
+    }
+
     ngOnChanges(): void {
         this.setButtonsVisibility();
-        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
     }
 
     private setButtonsVisibility() {
         this.showEditButton =
-            !this.isReadOnlyUser &&
-            this.cardState.editCardEnabledOnUserInterface &&
-            this.doesTheUserHavePermissionToEditCard();
+            this.cardState.editCardEnabledOnUserInterface && this.doesTheUserHavePermissionToEditCard();
 
         this.showDeleteButton =
-            !this.isReadOnlyUser &&
-            this.cardState.deleteCardEnabledOnUserInterface &&
-            this.doesTheUserHavePermissionToDeleteCard();
+            this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
 
         this.showCreateCopyButton =
-            !this.isReadOnlyUser &&
+            !UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
             this.isUserMemberOfAnEntityAllowedToPublishForThisState() &&

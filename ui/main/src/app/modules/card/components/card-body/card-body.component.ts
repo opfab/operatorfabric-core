@@ -51,6 +51,7 @@ import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 @Component({
     selector: 'of-card-body',
@@ -106,6 +107,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public isCardAcknowledgedFooterVisible: boolean;
     private openNextCardOnAcknowledgment: boolean;
     private cardsLoaded: boolean;
+    private isUserAllowedToEdit: boolean;
 
     constructor(private readonly router: Router) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -224,6 +226,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     ProcessesService.getProcess(this.card.process)
                 );
             }
+            this.computeUserAllowedToEdit();
             this.cardBodyView = new CardBodyView(this.card, this.userWithPerimeters);
             this.truncatedTitle = this.card.titleTranslated;
             this.computeShowDetailCardHeader();
@@ -231,6 +234,17 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
             this.markAsReadIfNecessary();
         }
+    }
+
+    private computeUserAllowedToEdit() {
+        this.isUserAllowedToEdit = this.doesTheUserHavePermissionToEditCard();
+    }
+
+    private doesTheUserHavePermissionToEditCard(): boolean {
+        return UserPermissionsService.doesTheUserHavePermissionToEditCard(
+            UserService.getCurrentUserWithPerimeters(),
+            this.card
+        );
     }
 
     private computeCardHasBeenRead() {
@@ -348,6 +362,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards
         );
         CardTemplateGateway.setEntitiesUsableForUserResponse(this.userEntityIdsPossibleForResponse);
+        CardTemplateGateway.setUserAllowedToEdit(this.isUserAllowedToEdit);
     }
 
     private stopRegularlyCheckLttd() {

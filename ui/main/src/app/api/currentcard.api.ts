@@ -15,6 +15,7 @@ export class CurrentCardAPI {
     public static init() {
         opfab.currentCard = {
             displayLoadingSpinner: CardTemplateGateway.displayLoadingSpinner,
+            editCard: CardTemplateGateway.editCard,
             getCard: CardTemplateGateway.getCard,
             getChildCards: CardTemplateGateway.getChildCards,
             getDisplayContext: CardTemplateGateway.getDisplayContext,
@@ -22,6 +23,7 @@ export class CurrentCardAPI {
             getEntitiesUsableForUserResponse: CardTemplateGateway.getEntitiesUsableForUserResponse,
             hideLoadingSpinner: CardTemplateGateway.hideLoadingSpinner,
             isResponseLocked: CardTemplateGateway.isResponseLocked,
+            isUserAllowedToEdit: CardTemplateGateway.isUserAllowedToEdit,
             isUserAllowedToRespond: CardTemplateGateway.isUserAllowedToRespond,
             isUserMemberOfAnEntityRequiredToRespond: CardTemplateGateway.isUserMemberOfAnEntityRequiredToRespond,
             listenToResponseLock: (listener) => CardTemplateGateway.setTemplateListenerForResponseLock(listener),

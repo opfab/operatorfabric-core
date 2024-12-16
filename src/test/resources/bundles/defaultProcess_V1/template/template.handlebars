@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2023-2024, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -18,6 +18,21 @@
 <br/>
 <br/>
 <br/>
+
+<div>
+    <button id="editButton"  class="opfab-btn" onClick="editCard()">Edit</button>
+</div>
+
+
 <script>
     opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
+
+    if (!opfab.currentCard.isUserAllowedToEdit()) {
+        document.getElementById("editButton").setAttribute('hidden', true);
+    }
+
+    function editCard() {
+        opfab.currentCard.editCard();
+    }
+
 </script>

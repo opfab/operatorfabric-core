@@ -18,6 +18,7 @@ export class CardTemplateGateway {
     private static _entitiesAllowedToRespond: string[];
     private static _entitiesUsableForUserResponse: string[];
     private static _responseLocked: boolean;
+    private static _userAllowedToEdit: boolean;
     private static _userAllowedToRespond: boolean;
     private static _userMemberOfAnEntityRequiredToRespond: boolean;
 
@@ -33,6 +34,7 @@ export class CardTemplateGateway {
     private static _functionToSendTemplateRenderingCompleteToTemplate: Function;
 
     private static _functionToGetUserResponseFromTemplate: Function;
+    private static _functionToEditCard: Function;
 
     public static init() {
         CardTemplateGateway._card = undefined;
@@ -41,6 +43,7 @@ export class CardTemplateGateway {
         CardTemplateGateway._entitiesAllowedToRespond = [];
         CardTemplateGateway._entitiesUsableForUserResponse = [];
         CardTemplateGateway._responseLocked = false;
+        CardTemplateGateway._userAllowedToEdit = false;
         CardTemplateGateway._userAllowedToRespond = false;
         CardTemplateGateway._userMemberOfAnEntityRequiredToRespond = false;
 
@@ -60,10 +63,20 @@ export class CardTemplateGateway {
             logger.info(` Template : no getUserResponse method provided , valid set to false`);
             return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
         };
+
+        CardTemplateGateway._functionToEditCard = () => {};
+    }
+
+    public static registerFunctionToEditCard(editCard: Function) {
+        CardTemplateGateway._functionToEditCard = editCard;
     }
 
     public static displayLoadingSpinner() {
         CardTemplateGateway._functionToDisplayLoadingSpinner();
+    }
+
+    public static editCard() {
+        CardTemplateGateway._functionToEditCard();
     }
 
     public static getChildCards(): Card[] {
@@ -96,6 +109,10 @@ export class CardTemplateGateway {
 
     public static isResponseLocked() {
         return CardTemplateGateway._responseLocked;
+    }
+
+    public static isUserAllowedToEdit() {
+        return CardTemplateGateway._userAllowedToEdit;
     }
 
     public static isUserAllowedToRespond() {
@@ -201,6 +218,10 @@ export class CardTemplateGateway {
 
     public static setTemplateListenerForTemplateRenderingComplete(listener: Function) {
         CardTemplateGateway._functionToSendTemplateRenderingCompleteToTemplate = listener;
+    }
+
+    public static setUserAllowedToEdit(userAllowedToEdit: boolean) {
+        CardTemplateGateway._userAllowedToEdit = userAllowedToEdit;
     }
 
     public static setUserAllowedToRespond(userAllowedToRespond: boolean) {

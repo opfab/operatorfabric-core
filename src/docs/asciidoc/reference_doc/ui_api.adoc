@@ -154,6 +154,21 @@ You can access the current selected card as a js object using the getCard() meth
         const currentCard = opfab.currentCard.getCard();
 ```
 
+
+=== Function isUserAllowedToEdit
+
+To check if current user has the permission to edit the current card, you can call the isUserAllowedToEdit() method.
+```
+   const editAllowed = opfab.currentCard.isUserAllowedToEdit()
+```
+
+=== Function editCard
+
+It is possible to open current card edition modal, if current user has the permission, by calling the editCard() method.
+```
+    opfab.currentCard.editCard()
+```
+
 === Function getDisplayContext
 
 To adapt the template content to the display context it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function getDisplayContext(). The function returns a string with one of the following values :

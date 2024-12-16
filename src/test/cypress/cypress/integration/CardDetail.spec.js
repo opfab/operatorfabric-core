@@ -302,6 +302,33 @@ describe('Card detail', function () {
             cy.get('#opfabGetCardsResult').contains('"titleTranslated":"Message"');
             
         });
+
+        it(`Check isUserAllowedToEdit and editCard API call`, function () {
+            script.sendCard('defaultProcess/message.json');
+            opfab.loginWithUser('operator1_fr');
+    
+            feed.openFirstCard();
+            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
+    
+           // check allowed user can use the edit button to edit card
+            cy.get('#opfab-div-card-template-processed').find('#editButton').eq(0).should('contain.text', 'Edit');
+            cy.get('#opfab-div-card-template-processed').find('#editButton').eq(0).click();
+
+            cy.get("of-usercard").should('exist');
+            cy.get('#opfab-usercard-btn-cancel').click();
+
+            opfab.logout();
+
+            opfab.loginWithUser('operator3_fr');
+    
+            feed.openFirstCard();
+            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
+
+            // check user not allowed to edit does not see the edit button
+            cy.get('#opfab-div-card-template-processed').should('exist');
+            cy.get('#editButton').should('not.exist');
+
+        });
     });
 
 });

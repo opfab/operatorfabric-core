@@ -14,6 +14,8 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {User} from '@ofModel/user.model';
 import {LoggerService} from 'app/services/logs/LoggerService';
+import {UserService} from './users/user.service';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 export class UserPermissionsService {
     public static isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
@@ -30,13 +32,18 @@ export class UserPermissionsService {
    3rd check : the user has the Write access to the process/state of the card */
     public static doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
         let permission = false;
-        if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher)) {
+        if (
+            !UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
+            card.publisherType === 'ENTITY' &&
+            user.userData.entities.includes(card.publisher)
+        ) {
             permission = UserPermissionsService.checkUserWritePerimeter(user, card);
         }
         return permission;
     }
 
     public static doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
+        if (UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) return false;
         if (card.entitiesAllowedToEdit && UserPermissionsService.isUserInEntityAllowedToEditCard(user.userData, card))
             return UserPermissionsService.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))
