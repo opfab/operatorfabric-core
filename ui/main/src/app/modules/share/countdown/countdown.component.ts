@@ -9,7 +9,7 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {CountDown} from '../../../business/common/countdown/countdown';
 import {NgIf} from '@angular/common';
 

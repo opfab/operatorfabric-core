@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {RemoteLoggerService} from './remote-logger.service';
+import {RemoteLoggerService} from './RemoteLoggerService';
 
 export enum LogOption {
     LOCAL,

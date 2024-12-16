@@ -26,7 +26,7 @@ import {
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {UserService} from 'app/business/services/users/user.service';
 import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

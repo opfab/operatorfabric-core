@@ -8,7 +8,7 @@
  */
 
 import {fr, enUS, nl} from 'date-fns/locale';
-import {ConfigService} from './config.service';
+import {ConfigService} from '../config/ConfigService';
 import {format} from 'date-fns';
 import {Subject, takeUntil} from 'rxjs';
 

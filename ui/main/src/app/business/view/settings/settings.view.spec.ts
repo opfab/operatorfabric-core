@@ -8,7 +8,7 @@
  */
 
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {ReplaySubject, firstValueFrom} from 'rxjs';
 import {SettingsView} from './settings.view';
 import {ExternalDevicesServerMock} from '@tests/mocks/externalDevicesServer.mock';

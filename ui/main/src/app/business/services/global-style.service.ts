@@ -9,7 +9,7 @@
 
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserPreferencesService} from './users/user-preference.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {MenuService} from 'app/business/services/menu.service';
 
 declare const opfabStyle: any;

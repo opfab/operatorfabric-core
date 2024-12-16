@@ -13,7 +13,7 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {RolesEnum} from '@ofModel/roles.model';
 import {Utilities} from 'app/business/common/utilities';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';

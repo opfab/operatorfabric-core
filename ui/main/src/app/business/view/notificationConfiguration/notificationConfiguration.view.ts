@@ -16,7 +16,7 @@ import {
 } from './notificationConfigurationPage';
 import {Process} from '@ofModel/processes.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';

@@ -31,7 +31,7 @@ import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';

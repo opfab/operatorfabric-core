@@ -18,7 +18,7 @@ import {SelectedCardStore} from '../../../../business/store/selectedCard.store';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/card.component';
-import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofModel/process-monitoring-config.model';
+import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/config/model/ProcessMonitoringConfig';
 
 @Component({
     selector: 'of-processmonitoring-table',

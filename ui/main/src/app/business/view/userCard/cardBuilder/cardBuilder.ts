@@ -12,7 +12,7 @@ import {CardAction, Severity} from '@ofModel/light-card.model';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {I18n} from '@ofModel/i18n.model';
 import {firstValueFrom} from 'rxjs';
 import {CardService} from 'app/business/services/card/card.service';

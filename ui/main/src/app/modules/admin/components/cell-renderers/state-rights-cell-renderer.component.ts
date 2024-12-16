@@ -14,7 +14,7 @@ import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Utilities} from '../../../../business/common/utilities';
-import {LoggerService} from 'app/business/services/logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgFor, LowerCasePipe} from '@angular/common';
 
 @Component({

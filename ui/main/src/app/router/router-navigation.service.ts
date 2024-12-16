@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {filter} from 'rxjs';
 import {RouterStore} from 'app/business/store/router.store';

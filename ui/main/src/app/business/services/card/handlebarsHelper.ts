@@ -8,7 +8,7 @@
  */
 
 import * as Handlebars from 'handlebars/dist/handlebars.js';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {format, FormatOptions} from 'date-fns';
 import {enUS, fr, nl} from 'date-fns/locale';
 

@@ -8,7 +8,7 @@
  */
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';

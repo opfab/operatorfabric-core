@@ -13,7 +13,7 @@ import {Process} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {User} from '@ofModel/user.model';
-import {LoggerService} from './logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class UserPermissionsService {
     public static isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {

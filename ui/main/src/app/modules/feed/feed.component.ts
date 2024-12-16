@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {OpfabStore} from 'app/business/store/opfabStore';

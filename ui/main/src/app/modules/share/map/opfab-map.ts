@@ -21,14 +21,14 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
-import {ConfigService} from 'app/business/services/config.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {ConfigService} from 'app/services/config/ConfigService';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {ChangeDetectorRef} from '@angular/core';
-import {DateTimeFormatterService} from '../../../business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from '../../../services/dateTimeFormatter/DateTimeFormatterService';
 
 let self;
 

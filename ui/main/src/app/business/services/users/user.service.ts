@@ -15,7 +15,7 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserServer} from '../../server/user.server';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ErrorService} from '../error-service';
 
 export class UserService {

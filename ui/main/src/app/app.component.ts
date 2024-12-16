@@ -8,8 +8,8 @@
  */
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
+import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
 import {RouterNavigationService} from 'app/router/router-navigation.service';

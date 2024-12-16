@@ -9,7 +9,7 @@
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';

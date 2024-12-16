@@ -12,7 +12,7 @@ import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {HandlebarsHelper} from './handlebarsHelper';
 import {HandlebarsAPI} from 'app/api/handlebars.api';
 

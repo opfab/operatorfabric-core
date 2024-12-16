@@ -12,7 +12,7 @@ import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit} from 
 import {Severity} from '@ofModel/light-card.model';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {takeUntil} from 'rxjs/operators';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';

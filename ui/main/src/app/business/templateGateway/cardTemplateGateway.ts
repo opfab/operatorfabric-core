@@ -9,7 +9,7 @@
 
 import {Card} from '@ofModel/card.model';
 import {Utilities} from '../common/utilities';
-import {LoggerService as logger} from '../services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class CardTemplateGateway {
     private static _card: Card;

@@ -11,7 +11,7 @@ import {Process, State} from '@ofModel/processes.model';
 import {NotificationConfigurationView} from './notificationConfiguration.view';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';

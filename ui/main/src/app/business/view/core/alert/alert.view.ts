@@ -8,11 +8,11 @@
  */
 
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {AlertPage} from './alertPage';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {TranslationService} from 'app/business/services/translation/translation.service';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class AlertView {
     private readonly alarmMessageAutoClose: boolean;

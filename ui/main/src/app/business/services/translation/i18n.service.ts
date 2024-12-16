@@ -9,12 +9,12 @@
 
 import {Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {Utilities} from 'app/business/common/utilities';
-import {ConfigServer} from '../../server/config.server';
+import {ConfigServer} from '../../../services/config/ConfigServer';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {environment} from '@env/environment';
 
 declare const opfab: any;

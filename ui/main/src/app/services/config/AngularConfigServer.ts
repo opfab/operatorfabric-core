@@ -11,27 +11,27 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofModel/menu.model';
-import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
-import {RealTimeScreens} from '@ofModel/real-time-screens.model';
+import {MonitoringConfig} from './model/MonitoringConfig';
+import {RealTimeScreens} from './model/RealTimeScreensConfig';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
-import {ConfigServer} from '../business/server/config.server';
-import {AngularServer} from './angular.server';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
+import {ConfigServer} from './ConfigServer';
+import {AngularServer} from 'app/server/angular.server';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
+import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularConfigServer extends AngularServer implements ConfigServer {
-    private configUrl: string;
-    private menuUrl: string;
-    private monitoringConfigUrl: string;
-    private processMonitoringConfigUrl: string;
-    private localUrl: string;
-    readonly realTimeScreensUrl: string;
+    private readonly configUrl: string;
+    private readonly menuUrl: string;
+    private readonly monitoringConfigUrl: string;
+    private readonly processMonitoringConfigUrl: string;
+    private readonly localUrl: string;
+    private readonly realTimeScreensUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.configUrl = `${environment.url}config/web-ui.json`;
         this.menuUrl = `${environment.url}config/ui-menu.json`;

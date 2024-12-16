@@ -31,7 +31,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/template.model';
 import {CardComponent} from '../../card.component';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
@@ -49,7 +49,7 @@ import {CardResponseComponent} from '../card-reponse/card-response.component';
 import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({

@@ -11,11 +11,11 @@ import {filter, map, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject} from 'rxjs';
 import {Locale, UIMenuFile} from '@ofModel/menu.model';
-import {ConfigServer} from '../server/config.server';
-import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
-import {ServerResponseStatus} from '../server/serverResponse';
-import {LoggerService} from './logs/logger.service';
-import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
+import {ConfigServer} from './ConfigServer';
+import {MonitoringConfig} from './model/MonitoringConfig';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {LoggerService} from 'app/services/logs/LoggerService';
+import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
 
 export class ConfigService {
     private static configServer: ConfigServer;

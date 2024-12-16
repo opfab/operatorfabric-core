@@ -8,10 +8,9 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigService} from './config.service';
+import {ConfigService} from './ConfigService';
 import {firstValueFrom} from 'rxjs';
-import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 describe('ConfigService', () => {
     let configServerMock: ConfigServerMock;
 

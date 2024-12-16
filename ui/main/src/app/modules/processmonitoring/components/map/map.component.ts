@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 
 import {LightCard} from '@ofModel/light-card.model';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';

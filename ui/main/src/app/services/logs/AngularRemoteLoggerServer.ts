@@ -9,23 +9,23 @@
 
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../server/angular.server';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
-import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
+import {RemoteLoggerServer} from './RemoteLoggerServer';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularRemoteLoggerServer extends AngularServer implements RemoteLoggerServer {
-    private remoteLogsUrl;
-    constructor(private httpClient: HttpClient) {
+    private readonly remoteLogsUrl: string;
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.remoteLogsUrl = `${environment.url}cards-consultation/logs`;
     }
 
-    postLogs(logsToPush): Observable<ServerResponse<any>> {
+    postLogs(logsToPush: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush));
     }
 }

@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {Subject} from 'rxjs';
 import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/feed-filter-and-sort-icons.component';

@@ -20,7 +20,7 @@ import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Process, ShowAcknowledgmentFooterEnum, State} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('CardBodyView', () => {

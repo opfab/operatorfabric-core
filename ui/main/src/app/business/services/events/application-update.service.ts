@@ -9,7 +9,7 @@
 
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {HandlebarsService} from 'app/business/services/card/handlebars.service';
@@ -19,7 +19,7 @@ import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
 import {ProcessesService} from '../businessconfig/processes.service';
 import {BusinessDataService} from '../businessconfig/businessdata.service';
-import {ConfigService} from '../config.service';
+import {ConfigService} from '../../../services/config/ConfigService';
 
 export class ApplicationUpdateService {
     public static init() {

@@ -10,7 +10,7 @@
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
 import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
@@ -21,7 +21,7 @@ import {GroupedCardsService} from 'app/business/services/lightcards/grouped-card
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';

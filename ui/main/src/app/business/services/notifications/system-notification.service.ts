@@ -10,8 +10,8 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {merge, Subject} from 'rxjs';
-import {ConfigService} from '../config.service';
-import {LogOption, LoggerService as logger} from '../logs/logger.service';
+import {ConfigService} from '../../../services/config/ConfigService';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {filter} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from '../alert-message.service';

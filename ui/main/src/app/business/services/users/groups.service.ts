@@ -13,7 +13,7 @@ import {takeUntil, tap, map} from 'rxjs/operators';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
-import {LoggerService} from '../logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class GroupsService {
     private static _groups: Group[];

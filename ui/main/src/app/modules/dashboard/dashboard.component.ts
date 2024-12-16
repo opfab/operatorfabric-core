@@ -13,7 +13,7 @@ import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {Router} from '@angular/router';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-buttons.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgClass} from '@angular/common';

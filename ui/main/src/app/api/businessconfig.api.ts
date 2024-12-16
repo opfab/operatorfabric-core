@@ -8,7 +8,7 @@
  */
 
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
-import {LogOption, LoggerService as logger} from '../business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 
 declare const opfab: any;
 

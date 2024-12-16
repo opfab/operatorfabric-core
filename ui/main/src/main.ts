@@ -11,7 +11,7 @@ import {enableProdMode, importProvidersFrom} from '@angular/core';
 
 import {environment} from './environments/environment';
 
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {TokenInjector} from 'app/server/interceptors.service';
@@ -31,10 +31,10 @@ import {UserActionLogsServer} from './app/business/server/user-action-logs.serve
 import {AngularUserActionLogsServer} from './app/server/angularUser-Action-Logs.server';
 import {AdminProcessServer} from './app/business/server/adminprocess.server';
 import {AngularAdminProcessesServer} from './app/server/angularAdminProcess.server';
-import {RemoteLoggerServer} from './app/business/server/remote-logger.server';
-import {AngularRemoteLoggerServer} from './app/server/angularRemoteLogger.server';
-import {ConfigServer} from './app/business/server/config.server';
-import {AngularConfigServer} from './app/server/angularConfig.server';
+import {RemoteLoggerServer} from './app/services/logs/RemoteLoggerServer';
+import {AngularRemoteLoggerServer} from './app/services/logs/AngularRemoteLoggerServer';
+import {ConfigServer} from './app/services/config/ConfigServer';
+import {AngularConfigServer} from './app/services/config/AngularConfigServer';
 import {TemplateCssServer} from './app/business/server/template-css.server';
 import {AngularTemplateCssServer} from './app/server/angularTemplate-css.service';
 import {ProcessServer} from './app/business/server/process.server';

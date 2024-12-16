@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserService} from 'app/business/services/users/user.service';

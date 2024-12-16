@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 

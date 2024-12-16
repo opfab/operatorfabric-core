@@ -19,7 +19,7 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';

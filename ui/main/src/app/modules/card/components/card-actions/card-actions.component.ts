@@ -21,7 +21,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
-import {LoggerService} from 'app/business/services/logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf} from '@angular/common';

@@ -13,7 +13,7 @@ import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
-import {LoggerService} from '../logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class PerimetersService {
     private static perimeterServer: PerimetersServer;

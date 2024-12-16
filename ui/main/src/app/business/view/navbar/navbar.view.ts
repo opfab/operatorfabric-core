@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {Logo, NavbarPage} from './navbarPage';
-import {LoggerService} from 'app/business/services/logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class NavbarView {
     private readonly navbarPage: NavbarPage;

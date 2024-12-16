@@ -20,8 +20,8 @@ import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
+import {ConfigService} from 'app/services/config/ConfigService';
 
 describe('Process Monitoring view ', () => {
     let processServerMock: ProcessServerMock;

@@ -8,7 +8,7 @@
  */
 
 import {Severity} from '@ofModel/light-card.model';
-import {LoggerService as logger} from '../services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class UserCardTemplateGateway {
     private static _editionMode: string;

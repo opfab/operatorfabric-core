@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {add, sub, startOfDay, startOfMonth} from 'date-fns';
 
 export class Rectangle {

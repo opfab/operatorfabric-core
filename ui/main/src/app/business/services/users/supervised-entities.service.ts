@@ -13,7 +13,7 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 import {SupervisedEntity} from '@ofModel/supervised-entity.model';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class SupervisedEntitiesService {
     protected static _entities: SupervisedEntity[];

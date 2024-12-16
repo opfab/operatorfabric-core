@@ -16,14 +16,14 @@ import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {Router} from '@angular/router';
-import {LoggerService} from 'app/business/services/logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/card-body.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 
 @Component({
     selector: 'of-card',

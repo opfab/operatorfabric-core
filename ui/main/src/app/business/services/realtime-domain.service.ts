@@ -10,11 +10,11 @@
 import {FilteredLightCardsStore} from '../store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../store/opfabStore';
 import {UserPreferencesService} from './users/user-preference.service';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
-import {DateTimeFormatterService} from './date-time-formatter.service';
-import {ConfigService} from './config.service';
+import {DateTimeFormatterService} from '../../services/dateTimeFormatter/DateTimeFormatterService';
+import {ConfigService} from '../../services/config/ConfigService';
 
 export class RealtimeDomainService {
     private static readonly OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;

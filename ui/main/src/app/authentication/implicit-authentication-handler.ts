@@ -12,8 +12,8 @@ import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import {LoggerService} from 'app/business/services/logs/logger.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
+import {ConfigService} from 'app/services/config/ConfigService';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
     constructor(

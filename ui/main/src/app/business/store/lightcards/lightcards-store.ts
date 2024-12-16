@@ -25,7 +25,7 @@ import {
 import {UserService} from 'app/business/services/users/user.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {AcknowledgeService} from '../../services/acknowledge.service';
 

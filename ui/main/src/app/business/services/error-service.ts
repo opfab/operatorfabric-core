@@ -9,7 +9,7 @@
  */
 
 import {MessageLevel} from '@ofModel/message.model';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {throwError} from 'rxjs';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from './alert-message.service';

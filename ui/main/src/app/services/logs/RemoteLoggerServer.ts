@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from 'app/business/server/serverResponse';
 
 export abstract class RemoteLoggerServer {
     abstract postLogs(logsToPush): Observable<ServerResponse<any>>;

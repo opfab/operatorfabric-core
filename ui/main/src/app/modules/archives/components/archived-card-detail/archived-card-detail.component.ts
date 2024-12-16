@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {Card} from '@ofModel/card.model';
 import {DisplayContext} from '@ofModel/template.model';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Utilities} from '../../../../business/common/utilities';
 import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/simplified-card-view.component';

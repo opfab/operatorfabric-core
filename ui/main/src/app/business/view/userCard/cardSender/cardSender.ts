@@ -14,7 +14,7 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {firstValueFrom} from 'rxjs';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
 
 export class CardSender {

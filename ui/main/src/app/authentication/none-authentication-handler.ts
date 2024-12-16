@@ -11,7 +11,7 @@ import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {UserService} from 'app/business/services/users/user.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class NoneAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {

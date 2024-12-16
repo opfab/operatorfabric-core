@@ -13,7 +13,7 @@ import {Entity} from '@ofModel/entity.model';
 import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ErrorService} from '../error-service';
 import {RolesEnum} from '@ofModel/roles.model';
 

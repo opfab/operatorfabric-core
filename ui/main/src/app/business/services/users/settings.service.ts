@@ -9,7 +9,7 @@
 
 import {Observable} from 'rxjs';
 import {SettingsServer} from '../../server/settings.server';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {CurrentUserStore} from '../../store/current-user.store';
 import {ServerResponse} from 'app/business/server/serverResponse';
 

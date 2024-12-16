@@ -10,8 +10,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ConfigService} from 'app/business/services/config.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {ConfigService} from 'app/services/config/ConfigService';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
 import {RolesEnum} from '@ofModel/roles.model';

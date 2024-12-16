@@ -8,7 +8,7 @@
  */
 
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
-import {LogLevel, LoggerService, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogLevel, LoggerService, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {firstValueFrom, Subject, tap} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
@@ -16,8 +16,8 @@ import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.serve
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
-import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
-import {ConfigServer} from 'app/business/server/config.server';
+import {RemoteLoggerServer} from 'app/services/logs/RemoteLoggerServer';
+import {ConfigServer} from 'app/services/config/ConfigServer';
 import {ApplicationLoader} from 'app/business/application-loader';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserServer} from 'app/business/server/user.server';

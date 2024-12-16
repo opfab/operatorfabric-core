@@ -10,7 +10,7 @@
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {MenuService} from './menu.service';
-import {ConfigService} from './config.service';
+import {ConfigService} from '../../services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserService} from './users/user.service';

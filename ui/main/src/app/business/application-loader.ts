@@ -8,9 +8,9 @@
  */
 
 import {firstValueFrom} from 'rxjs';
-import {ConfigService} from './services/config.service';
-import {LoggerService as logger, LogOption} from 'app/business/services/logs/logger.service';
-import {RemoteLoggerService} from './services/logs/remote-logger.service';
+import {ConfigService} from '../services/config/ConfigService';
+import {LoggerService as logger, LogOption} from 'app/services/logs/LoggerService';
+import {RemoteLoggerService} from '../services/logs/RemoteLoggerService';
 import {I18nService} from './services/translation/i18n.service';
 import {UserService} from './services/users/user.service';
 import {OpfabAPI} from '../api/opfab.api';
@@ -21,7 +21,7 @@ import {PerimetersService} from './services/users/perimeters.service';
 import {ProcessesService} from './services/businessconfig/processes.service';
 import {OpfabEventStreamService} from './services/events/opfabEventStream.service';
 import {AcknowledgeService} from './services/acknowledge.service';
-import {DateTimeFormatterService} from './services/date-time-formatter.service';
+import {DateTimeFormatterService} from '../services/dateTimeFormatter/DateTimeFormatterService';
 import {AdminProcessesService} from './services/businessconfig/adminprocess.service';
 import {BusinessDataService} from './services/businessconfig/businessdata.service';
 import {CardService} from './services/card/card.service';

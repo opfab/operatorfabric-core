@@ -11,7 +11,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {ConfigServer} from 'app/business/server/config.server';
+import {ConfigServer} from 'app/services/config/ConfigServer';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
 import {TranslateModule} from '@ngx-translate/core';

@@ -19,7 +19,7 @@ import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LoggerService as logger} from '../logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class ProcessesService {
     private static processServer: ProcessServer;

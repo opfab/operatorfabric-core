@@ -10,7 +10,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {EventSourcePolyfill} from 'ng-event-source';
@@ -18,7 +18,7 @@ import {Observable, Subject} from 'rxjs';
 import packageInfo from '../../../package.json';
 import {AngularServer} from './angular.server';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {Guid} from 'guid-typescript';
 
 @Injectable()

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigServer} from 'app/business/server/config.server';
+import {ConfigServer} from 'app/services/config/ConfigServer';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, ReplaySubject} from 'rxjs';

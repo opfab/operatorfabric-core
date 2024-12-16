@@ -8,11 +8,11 @@
  */
 
 import {Observable, ReplaySubject} from 'rxjs';
-import {ConfigServer} from 'app/business/server/config.server';
-import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {ConfigServer} from 'app/services/config/ConfigServer';
+import {MonitoringConfig} from 'app/services/config/model/MonitoringConfig';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {RealTimeScreens} from '@ofModel/real-time-screens.model';
-import {ProcessMonitoringConfig} from '@ofModel/process-monitoring-config.model';
+import {RealTimeScreens} from 'app/services/config/model/RealTimeScreensConfig';
+import {ProcessMonitoringConfig} from 'app/services/config/model/ProcessMonitoringConfig';
 
 export class ConfigServerMock implements ConfigServer {
     private webUiConf = new ReplaySubject<ServerResponse<any>>();

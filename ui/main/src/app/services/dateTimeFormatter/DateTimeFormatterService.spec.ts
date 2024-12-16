@@ -10,8 +10,8 @@
 import {waitForAsync} from '@angular/core/testing';
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {ConfigService} from 'app/services/config/ConfigService';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 
 describe('DateTimeFormatterService', () => {
     beforeEach(waitForAsync(() => {

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {UserService} from 'app/business/services/users/user.service';
-import {LoggerService as logger} from './logs/logger.service';
+import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class MenuService {
     public static queryMenuEntryURL(id: string): string {

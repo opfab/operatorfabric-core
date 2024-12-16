@@ -8,10 +8,10 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

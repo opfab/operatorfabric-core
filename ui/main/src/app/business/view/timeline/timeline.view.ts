@@ -12,7 +12,7 @@ import {XAxis} from './xaxis';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Observable, Subject, takeUntil} from 'rxjs';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 
 export class TimelineView {
     private readonly circles: Circles;

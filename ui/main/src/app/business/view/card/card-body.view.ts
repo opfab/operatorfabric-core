@@ -11,7 +11,7 @@ import {ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Utilities} from 'app/business/common/utilities';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 
 export class CardBodyView {

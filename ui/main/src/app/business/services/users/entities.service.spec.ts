@@ -12,7 +12,7 @@ import {HttpTestingController, provideHttpClientTesting} from '@angular/common/h
 import {environment} from '../../../../environments/environment';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
+import {RemoteLoggerServer} from 'app/services/logs/RemoteLoggerServer';
 import {AngularEntitiesServer} from 'app/server/angularEntities.server';
 import {RolesEnum} from '@ofModel/roles.model';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';

@@ -26,7 +26,7 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {ModalService} from 'app/business/services/modal.service';
 import {ModalServerMock} from './mocks/modalServer.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesServerMock} from './mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';

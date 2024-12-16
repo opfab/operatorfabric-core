@@ -8,7 +8,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

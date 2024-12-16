@@ -14,7 +14,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 
 export class ProcessMonitoringView {
     private processesToMonitor: ProcessToMonitor[] = null;

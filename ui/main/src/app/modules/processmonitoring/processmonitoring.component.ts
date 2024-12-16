@@ -20,8 +20,8 @@ import {
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ConfigService} from 'app/business/services/config.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {ConfigService} from 'app/services/config/ConfigService';
+import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
@@ -46,7 +46,7 @@ import {
     ProcessMonitoringConfig,
     ProcessMonitoringField,
     ProcessMonitoringFieldEnum
-} from '@ofModel/process-monitoring-config.model';
+} from 'app/services/config/model/ProcessMonitoringConfig';
 import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 
 export enum FilterDateTypes {

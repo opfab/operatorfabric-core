@@ -8,7 +8,7 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
+import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {UserActionLogsView} from './userActionLogs.view';

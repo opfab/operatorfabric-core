@@ -17,7 +17,7 @@ import {User} from '@ofModel/user.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/template.model';
-import {LoggerService} from 'app/business/services/logs/logger.service';
+import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {TemplateRenderingComponent} from '../template-rendering/template-rendering.component';
