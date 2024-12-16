@@ -19,8 +19,8 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {DeviceConfiguration} from '@ofModel/external-devices.model';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
+import {DeviceConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {Observable, of} from 'rxjs';
 import {NgIf} from '@angular/common';

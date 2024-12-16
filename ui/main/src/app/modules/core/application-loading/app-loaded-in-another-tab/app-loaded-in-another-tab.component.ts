@@ -12,7 +12,7 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
+import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {ModalService} from '../../../../business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';

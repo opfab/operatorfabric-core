@@ -15,7 +15,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {firstValueFrom} from 'rxjs';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
+import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 
 export class CardSender {
     public async sendCardAndChildCard(card: Card, childCard?: Card, setCurrentDateForStartDate = false) {

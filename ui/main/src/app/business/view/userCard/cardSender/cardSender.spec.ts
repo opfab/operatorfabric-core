@@ -14,7 +14,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
+import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 
 describe('UserCard CardSender', () => {
     let cardServerMock: CardServerMock;

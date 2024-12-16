@@ -9,19 +9,19 @@
 
 import {Injectable} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {Notification} from '@ofModel/external-devices.model';
+import {Notification} from '@ofServices/notifications/model/ExternalDevices';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {SoundServer} from 'app/business/server/sound.server';
+import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {ModalService} from '../modal.service';
+import {ModalService} from '../../business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
-import {NotificationDecision} from './notification-decision';
+import {NotificationDecision} from './NotificationDecision';
 
 @Injectable({
     providedIn: 'root'

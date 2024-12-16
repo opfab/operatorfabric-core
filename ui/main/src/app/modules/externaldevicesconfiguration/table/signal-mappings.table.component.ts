@@ -10,7 +10,7 @@
 import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SignalMappingsModalComponent} from '../editModal/signal-mappings-modal.component';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

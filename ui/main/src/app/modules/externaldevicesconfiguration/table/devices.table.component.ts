@@ -11,7 +11,7 @@ import {Component} from '@angular/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';

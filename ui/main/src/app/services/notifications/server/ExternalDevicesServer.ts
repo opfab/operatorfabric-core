@@ -7,9 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UserConfiguration, Notification, DeviceConfiguration, SignalMapping} from '@ofModel/external-devices.model';
+import {
+    UserConfiguration,
+    Notification,
+    DeviceConfiguration,
+    SignalMapping
+} from '@ofServices/notifications/model/ExternalDevices';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class ExternalDevicesServer {
     abstract sendNotification(notification: Notification): Observable<ServerResponse<any>>;

@@ -10,14 +10,14 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {merge, Subject} from 'rxjs';
-import {ConfigService} from '../../../services/config/ConfigService';
+import {ConfigService} from '../config/ConfigService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {filter} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageService} from '../alert-message.service';
+import {AlertMessageService} from '../../business/services/alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RouterService} from '../router.service';
-import {NotificationDecision} from './notification-decision';
+import {RouterService} from '../../business/services/router.service';
+import {NotificationDecision} from './NotificationDecision';
 
 export class SystemNotificationService {
     private static systemNotificationConfigBySeverity: Map<Severity, string>;

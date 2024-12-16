@@ -14,7 +14,7 @@ import {SettingsView} from './settings.view';
 import {ExternalDevicesServerMock} from '@tests/mocks/externalDevicesServer.mock';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';

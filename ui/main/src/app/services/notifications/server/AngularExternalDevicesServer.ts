@@ -8,10 +8,15 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
-import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
+import {
+    DeviceConfiguration,
+    Notification,
+    SignalMapping,
+    UserConfiguration
+} from '@ofServices/notifications/model/ExternalDevices';
+import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {environment} from '@env/environment';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Injectable} from '@angular/core';

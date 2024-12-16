@@ -18,7 +18,7 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {DisplayContext} from '@ofModel/template.model';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
+import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';

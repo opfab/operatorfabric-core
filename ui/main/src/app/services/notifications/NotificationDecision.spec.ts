@@ -8,7 +8,7 @@
  */
 
 import {CardAction, Severity} from '@ofModel/light-card.model';
-import {NotificationDecision} from './notification-decision';
+import {NotificationDecision} from './NotificationDecision';
 import {getOneLightCard} from '@tests/helpers';
 
 describe('Sound decisions', () => {

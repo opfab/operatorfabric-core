@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {CurrentUserStore} from '../store/current-user.store';
 import {OpfabEventStreamService} from './events/opfabEventStream.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {SoundNotificationService} from './notifications/sound-notification.service';
+import {SoundNotificationService} from '../../services/notifications/SoundNotificationService';
 
 export class SessionManagerService {
     private static readonly endSessionEvent = new Subject<string>();

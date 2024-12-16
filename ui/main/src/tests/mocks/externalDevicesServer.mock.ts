@@ -7,8 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
-import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
+import {
+    DeviceConfiguration,
+    Notification,
+    SignalMapping,
+    UserConfiguration
+} from '@ofServices/notifications/model/ExternalDevices';
+import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
 

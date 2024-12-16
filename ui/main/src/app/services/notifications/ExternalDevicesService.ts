@@ -9,11 +9,10 @@
 
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from '@ofModel/external-devices.model';
-
+import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from './model/ExternalDevices';
 import {ErrorService} from 'app/business/services/error-service';
-import {ExternalDevicesServer} from '../../server/external-devices.server';
-import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
+import {ExternalDevicesServer} from './server/ExternalDevicesServer';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 
 export class ExternalDevicesService {
     private static externalDevicesServer: ExternalDevicesServer;

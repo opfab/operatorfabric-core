@@ -26,7 +26,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {NotificationDecision} from 'app/business/services/notifications/notification-decision';
+import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';

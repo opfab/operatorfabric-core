@@ -19,8 +19,8 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {SignalMapping} from '@ofModel/external-devices.model';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
+import {SignalMapping} from '@ofServices/notifications/model/ExternalDevices';
 import {Observable, of} from 'rxjs';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

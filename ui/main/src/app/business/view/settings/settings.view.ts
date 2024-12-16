@@ -6,13 +6,13 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {UserConfiguration} from '@ofModel/external-devices.model';
+import {UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {firstValueFrom} from 'rxjs';

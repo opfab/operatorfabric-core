@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {SoundServer} from 'app/business/server/sound.server';
+import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 import {PlatformLocation} from '@angular/common';
 
 @Injectable({

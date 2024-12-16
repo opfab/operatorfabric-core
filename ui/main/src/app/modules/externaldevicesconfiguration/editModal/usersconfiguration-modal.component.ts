@@ -12,8 +12,8 @@ import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} fr
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {DeviceConfiguration, UserConfiguration} from '@ofModel/external-devices.model';
+import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
+import {DeviceConfiguration, UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
