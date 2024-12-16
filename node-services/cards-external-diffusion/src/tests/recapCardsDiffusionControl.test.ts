@@ -54,6 +54,8 @@ describe('Cards external diffusion', function () {
             .setFrom('test@opfab.com')
             .setDailyEmailTitle('Daily Email Title')
             .setWeeklyEmailTitle('Weekly Email Title')
+            .setDailyEmailBodyPrefix('Daily Email Body Prefix')
+            .setWeeklyEmailBodyPrefix('Weekly Email Body Prefix')
             .setOpfabUrlInMailContent('http://localhost');
     }
 
@@ -203,6 +205,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
+        expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
         expect(mailService.sent[0].body).toMatch(
             `INFORMATION - <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a>`
         );
@@ -435,5 +438,6 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(2);
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[1].toAddress).toEqual('operator_2@opfab.com');
+        expect(mailService.sent[0].body).toMatch(`Weekly Email Body Prefix`);
     });
 });

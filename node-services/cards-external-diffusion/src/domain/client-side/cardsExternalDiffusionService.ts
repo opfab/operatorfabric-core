@@ -52,6 +52,8 @@ export default class CardsExternalDiffusionService {
             .setMailService(mailService)
             .setDailyEmailTitle(serviceConfig.dailyEmailTitle as string)
             .setWeeklyEmailTitle(serviceConfig.weeklyEmailTitle as string)
+            .setDailyEmailBodyPrefix(serviceConfig.dailyEmailBodyPrefix as string)
+            .setWeeklyEmailBodyPrefix(serviceConfig.weeklyEmailBodyPrefix as string)
             .setFrom(serviceConfig.mailFrom as string)
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris');
 

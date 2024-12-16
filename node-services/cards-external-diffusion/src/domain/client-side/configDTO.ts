@@ -15,6 +15,8 @@ export default class ConfigDTO {
     public publisherEntityPrefix: string;
     public dailyEmailTitle: string;
     public weeklyEmailTitle: string;
+    public dailyEmailBodyPrefix: string;
+    public weeklyEmailBodyPrefix: string;
     public dayOfWeekToSendWeeklyRecapEmail: 0;
     public hourToSendRecapEmail: 0;
     public minuteToSendRecapEmail: 0;

@@ -49,11 +49,21 @@ Before, this was the default configuration for the daily email :
   minuteToSendDailyEmail: 30
 ```
 
-And now a weekly email title field and a day of the week field have been added. 
-Furthermore the fields for the hour and minute have changed names as such :
+And now the following fields have been changed or added :
+
+  - dailyEmailBodyPrefix
+  - weeklyEmailBodyPrefix
+  - weeklyEmailTitle
+  - dayOfWeekToSendWeeklyRecapEmail
+  - hourToSendRecapEmail
+  - minuteToSendRecapEmail
+
+The new default configuration is as such :
 ```
   dailyEmailTitle: 'Cards received during the day'
   weeklyEmailTitle: 'Cards received during the week'
+  dailyEmailBodyPrefix: 'You received the following cards during the past 24 hours : '
+  weeklyEmailBodyPrefix: 'You received the following cards during the past 7 days : '
   dayOfWeekToSendWeeklyRecapEmail: 1
   hourToSendRecapEmail: 7
   minuteToSendRecapEmail: 30

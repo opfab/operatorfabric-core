@@ -28,6 +28,8 @@ operatorfabric:
       publisherEntityPrefix: 'The card has been sent by '
       dailyEmailTitle: 'Cards received during the day'
       weeklyEmailTitle: 'Cards received during the week'
+      dailyEmailBodyPrefix: 'You received the following cards during the past 24 hours : '
+      weeklyEmailBodyPrefix: 'You received the following cards during the past 7 days : '
       dayOfWeekToSendWeeklyRecapEmail: 1
       hourToSendRecapEmail: 7
       minuteToSendRecapEmail: 30

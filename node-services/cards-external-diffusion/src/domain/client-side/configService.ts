@@ -32,6 +32,8 @@ export default class ConfigService {
                 this.config.dayOfWeekToSendWeeklyRecapEmail = defaultConfig.dayOfWeekToSendWeeklyRecapEmail;
                 this.config.dailyEmailTitle = defaultConfig.dailyEmailTitle;
                 this.config.weeklyEmailTitle = defaultConfig.weeklyEmailTitle;
+                this.config.dailyEmailBodyPrefix = defaultConfig.dailyEmailBodyPrefix;
+                this.config.weeklyEmailBodyPrefix = defaultConfig.weeklyEmailBodyPrefix;
                 this.config.subjectPrefix = defaultConfig.subjectPrefix;
                 this.config.bodyPrefix = defaultConfig.bodyPrefix;
                 this.config.bodyPostfix = defaultConfig.bodyPostfix;

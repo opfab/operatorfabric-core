@@ -53,22 +53,6 @@ export default class CardsRoutingUtilities {
         return userWithPerimeters.processesStatesNotifiedByEmail[process]?.includes(state);
     }
 
-    private static checkFilteringNotification(
-        userWithPerimeters: UserWithPerimeters,
-        process: string,
-        perimeter: any
-    ): boolean {
-        if (
-            perimeter.filteringNotificationAllowed == null ||
-            userWithPerimeters.processesStatesNotNotified == null ||
-            userWithPerimeters.processesStatesNotNotified.length === 0
-        ) {
-            return true;
-        }
-        const isNotNotified = userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
-        return isNotNotified === false || isNotNotified === undefined;
-    }
-
     private static checkUserRecipients(user: UserWithPerimeters, card: Card): boolean {
         return (
             card.userRecipients != null &&

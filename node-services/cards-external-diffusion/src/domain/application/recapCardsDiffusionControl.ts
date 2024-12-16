@@ -23,6 +23,9 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
     protected weeklyEmailTitle: string;
     protected titlePrefix: string;
 
+    protected dailyEmailBodyPrefix: string;
+    protected weeklyEmailBodyPrefix: string;
+
     public setDailyEmailTitle(dailyEmailTitle: string): this {
         this.dailyEmailTitle = dailyEmailTitle;
         return this;
@@ -33,10 +36,22 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         return this;
     }
 
+    public setDailyEmailBodyPrefix(dailyEmailBodyPrefix: string): this {
+        this.dailyEmailBodyPrefix = dailyEmailBodyPrefix;
+        return this;
+    }
+
+    public setWeeklyEmailBodyPrefix(weeklyEmailBodyPrefix: string): this {
+        this.weeklyEmailBodyPrefix = weeklyEmailBodyPrefix;
+        return this;
+    }
+
     public setConfiguration(updated: ConfigDTO): void {
         this.from = updated.mailFrom;
         this.dailyEmailTitle = updated.dailyEmailTitle;
         this.weeklyEmailTitle = updated.weeklyEmailTitle;
+        this.dailyEmailBodyPrefix = updated.dailyEmailBodyPrefix;
+        this.weeklyEmailBodyPrefix = updated.weeklyEmailBodyPrefix;
     }
 
     public async checkCardsStartingFrom(mode: string): Promise<void> {
@@ -66,6 +81,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                                 userWithPerimeters.email,
                                 emailToPlainText,
                                 this.dailyEmailTitle,
+                                this.dailyEmailBodyPrefix,
                                 timezoneForEmails
                             );
                             this.logger.info(`Sent daily recap to user ${login}`);
@@ -75,6 +91,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                                 userWithPerimeters.email,
                                 emailToPlainText,
                                 this.weeklyEmailTitle,
+                                this.weeklyEmailBodyPrefix,
                                 timezoneForEmails
                             );
                             this.logger.info(`Sent weekly recap to user ${login}`);
@@ -109,15 +126,16 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         userEmailAddress: string | undefined,
         emailToPlainText: boolean,
         emailTitle: string,
+        emailBodyPrefix: string,
         timezoneForEmails: string
     ): Promise<void> {
         if (userEmailAddress == null) return;
-        const emailBody = this.recapFormat(cards, timezoneForEmails);
+        const emailBody = this.recapFormat(cards, emailBodyPrefix, timezoneForEmails);
         await this.mailService.sendMail(emailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
     }
 
-    recapFormat(cards: Card[], timezoneForEmails: string): string {
-        let body = '';
+    recapFormat(cards: Card[], emailBodyPrefix: string, timezoneForEmails: string): string {
+        let body = emailBodyPrefix + '</br></br>\n';
         for (const card of cards) {
             body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';
             if (card.endDate != null)

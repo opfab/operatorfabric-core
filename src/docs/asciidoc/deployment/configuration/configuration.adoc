@@ -394,8 +394,10 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.cardsExternalDiffusion.adminPort|2106|no|Listen port
 |operatorfabric.cardsExternalDiffusion.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
-|operatorfabric.cardsExternalDiffusion.defaultConfig.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject prefix
-|operatorfabric.cardsExternalDiffusion.defaultConfig.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject title
+|operatorfabric.cardsExternalDiffusion.defaultConfig.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject title
+|operatorfabric.cardsExternalDiffusion.defaultConfig.dailyEmailBodyPrefix|'You received the following cards during the past 24 hours : '|no|Daily email body prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.weeklyEmailBodyPrefix|'You received the following cards during the past 7 days : '|no|Weekly email body prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.dayOfWeekToSendWeeklyRecapEmail|1|no|Day of the week to send the weekly recap emails (0 is Sunday, 6 is Saturday)
 |operatorfabric.cardsExternalDiffusion.defaultConfig.hourToSendRecapEmail|7|no|Hour at which to send the recap emails
 |operatorfabric.cardsExternalDiffusion.defaultConfig.minuteToSendRecapEmail|30|no|Minute at which to send the recap emails
