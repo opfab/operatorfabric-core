@@ -49,12 +49,20 @@ Before, this was the default configuration for the daily email :
   minuteToSendDailyEmail: 30
 ```
 
-And now the following fields have been changed or added :
+Now the following fields have been added :
 
   - dailyEmailBodyPrefix
   - weeklyEmailBodyPrefix
   - weeklyEmailTitle
   - dayOfWeekToSendWeeklyRecapEmail
+
+And the time fields have changed from :
+
+  - hourToSendDailyEmail
+  - minuteToSendDailyEmail
+
+to :
+
   - hourToSendRecapEmail
   - minuteToSendRecapEmail
 

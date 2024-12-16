@@ -198,7 +198,7 @@ describe('Cards external diffusion', function () {
             publishDate,
             startDate: publishDate,
             titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 </br>',
+            summaryTranslated: '" Summary1 <br>',
             process: 'defaultProcess',
             state: 'processState',
             entityRecipients: ['ENTITY1']
@@ -215,7 +215,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;/br&gt; - ' +
+            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;br&gt; - ' +
                 startDateString +
                 ' - ' +
                 '</a> <br> Title1 &amp; &lt;br&gt; <br/>Sent by ENTITY2 name. <br/>Postfix'
@@ -255,7 +255,7 @@ describe('Cards external diffusion', function () {
             publishDate,
             startDate: publishDate,
             titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 </br>',
+            summaryTranslated: '" Summary1 <br>',
             process: 'defaultProcess',
             state: 'processState',
             entityRecipients: ['ENTITY1']
@@ -272,7 +272,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
             'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; ' +
-                'Summary1 &lt;/br&gt; - ' +
+                'Summary1 &lt;br&gt; - ' +
                 startDateString +
                 ' - </a> <br> Title1 &amp; &lt;br&gt; <br/>Postfix'
         );

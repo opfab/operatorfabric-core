@@ -56,6 +56,7 @@ describe('Cards external diffusion', function () {
             .setWeeklyEmailTitle('Weekly Email Title')
             .setDailyEmailBodyPrefix('Daily Email Body Prefix')
             .setWeeklyEmailBodyPrefix('Weekly Email Body Prefix')
+            .setBodyPostfix('Email Body Postfix')
             .setOpfabUrlInMailContent('http://localhost');
     }
 
@@ -212,6 +213,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].body).toMatch(
             `ALARM - <a href=" http://localhost/#/feed/cards/defaultProcess.process2 ">Title1 - Summary1</a>`
         );
+        expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });
 
     it('Should not send daily recap email when setting sendDailyEmail is set to false', async function () {
@@ -439,5 +441,6 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[1].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toMatch(`Weekly Email Body Prefix`);
+        expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });
 });

@@ -25,6 +25,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
 
     protected dailyEmailBodyPrefix: string;
     protected weeklyEmailBodyPrefix: string;
+    protected bodyPostfix: string;
 
     public setDailyEmailTitle(dailyEmailTitle: string): this {
         this.dailyEmailTitle = dailyEmailTitle;
@@ -46,12 +47,18 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         return this;
     }
 
+    public setBodyPostfix(bodyPostfix: string): this {
+        this.bodyPostfix = bodyPostfix;
+        return this;
+    }
+
     public setConfiguration(updated: ConfigDTO): void {
         this.from = updated.mailFrom;
         this.dailyEmailTitle = updated.dailyEmailTitle;
         this.weeklyEmailTitle = updated.weeklyEmailTitle;
         this.dailyEmailBodyPrefix = updated.dailyEmailBodyPrefix;
         this.weeklyEmailBodyPrefix = updated.weeklyEmailBodyPrefix;
+        this.bodyPostfix = updated.bodyPostfix;
     }
 
     public async checkCardsStartingFrom(mode: string): Promise<void> {
@@ -135,7 +142,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
     }
 
     recapFormat(cards: Card[], emailBodyPrefix: string, timezoneForEmails: string): string {
-        let body = emailBodyPrefix + '</br></br>\n';
+        let body = emailBodyPrefix + '<br><br>\n';
         for (const card of cards) {
             body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';
             if (card.endDate != null)
@@ -151,7 +158,10 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                 this.escapeHtml(card.titleTranslated) +
                 ' - ' +
                 this.escapeHtml(card.summaryTranslated) +
-                '</a></br></br>\n';
+                '</a><br><br>\n';
+        }
+        if (this.bodyPostfix != null) {
+            body += ' <br>' + this.bodyPostfix;
         }
         return body;
     }
