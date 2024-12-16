@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {BusinessDataService} from '@ofServices/businessdata/businessdata.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 
 declare const opfab: any;

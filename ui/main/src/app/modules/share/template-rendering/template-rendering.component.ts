@@ -34,7 +34,7 @@ import {User} from '@ofModel/user.model';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
 import {NgIf} from '@angular/common';

@@ -9,7 +9,7 @@
 
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable} from 'rxjs';
-import {AngularServer} from '../../server/angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';

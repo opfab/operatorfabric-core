@@ -13,7 +13,7 @@ import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {AcknowledgeService} from 'app/business/services/acknowledge.service';
+import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';

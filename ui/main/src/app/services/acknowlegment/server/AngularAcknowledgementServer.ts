@@ -11,8 +11,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {AngularServer} from './angular.server';
-import {AcknowledgeServer} from 'app/business/server/acknowledge.server';
+import {AngularServer} from '../../../server/angular.server';
+import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
 
 @Injectable({

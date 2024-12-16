@@ -18,7 +18,7 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {setUserPerimeter} from '@tests/helpers';
 

@@ -12,7 +12,7 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {RouterService} from 'app/business/services/router.service';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Subject, skip, takeUntil} from 'rxjs';
 

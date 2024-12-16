@@ -11,7 +11,7 @@ import {Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Utilities} from 'app/business/common/utilities';
-import {ConfigServer} from '../../../services/config/ConfigServer';
+import {ConfigServer} from '../../../services/config/server/ConfigServer';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

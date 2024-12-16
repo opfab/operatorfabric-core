@@ -12,13 +12,13 @@ import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
-import {AcknowledgeServer} from '../server/acknowledge.server';
-import {ServerResponse} from '../server/serverResponse';
+import {AcknowledgeServer} from './server/AcknowledgeServer';
+import {ServerResponse} from '../../business/server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {ProcessesService} from './businessconfig/processes.service';
-import {EntitiesService} from './users/entities.service';
-import {UserService} from './users/user.service';
+import {ProcessesService} from '../../business/services/businessconfig/processes.service';
+import {EntitiesService} from '../../business/services/users/entities.service';
+import {UserService} from '../../business/services/users/user.service';
 
 export class AcknowledgeService {
     private static acknowledgeServer: AcknowledgeServer;

@@ -8,7 +8,7 @@
  */
 
 import {Observable, ReplaySubject} from 'rxjs';
-import {ConfigServer} from 'app/services/config/ConfigServer';
+import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {MonitoringConfig} from 'app/services/config/model/MonitoringConfig';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {RealTimeScreens} from 'app/services/config/model/RealTimeScreensConfig';

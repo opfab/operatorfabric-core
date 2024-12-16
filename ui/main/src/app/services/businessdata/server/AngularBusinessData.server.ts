@@ -10,10 +10,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {BusinessDataServer} from 'app/business/server/businessData.server';
+import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 
 @Injectable({
     providedIn: 'root'

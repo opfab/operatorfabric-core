@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigServer} from 'app/services/config/ConfigServer';
+import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {EntitiesService} from 'app/business/services/users/entities.service';

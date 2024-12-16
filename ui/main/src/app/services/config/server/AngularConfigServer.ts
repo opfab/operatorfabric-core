@@ -11,14 +11,14 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofModel/menu.model';
-import {MonitoringConfig} from './model/MonitoringConfig';
-import {RealTimeScreens} from './model/RealTimeScreensConfig';
+import {MonitoringConfig} from '../model/MonitoringConfig';
+import {RealTimeScreens} from '../model/RealTimeScreensConfig';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
 import {ConfigServer} from './ConfigServer';
 import {AngularServer} from 'app/server/angular.server';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
+import {ProcessMonitoringConfig} from '../model/ProcessMonitoringConfig';
 
 @Injectable({
     providedIn: 'root'

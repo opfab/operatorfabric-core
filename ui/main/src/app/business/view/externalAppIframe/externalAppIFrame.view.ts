@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';

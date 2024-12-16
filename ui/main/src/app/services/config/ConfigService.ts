@@ -11,7 +11,7 @@ import {filter, map, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject} from 'rxjs';
 import {Locale, UIMenuFile} from '@ofModel/menu.model';
-import {ConfigServer} from './ConfigServer';
+import {ConfigServer} from './server/ConfigServer';
 import {MonitoringConfig} from './model/MonitoringConfig';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';

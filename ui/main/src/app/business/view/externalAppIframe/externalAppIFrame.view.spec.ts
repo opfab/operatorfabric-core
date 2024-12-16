@@ -10,7 +10,7 @@
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {firstValueFrom} from 'rxjs';
 import {ExternalAppIFrameView} from './externalAppIFrame.view';

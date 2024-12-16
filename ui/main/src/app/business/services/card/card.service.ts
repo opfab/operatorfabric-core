@@ -19,7 +19,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardServer} from '../../server/card.server';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
-import {AcknowledgeService} from '../acknowledge.service';
+import {AcknowledgeService} from '../../../services/acknowlegment/AcknowledgeService';
 import {LightCard} from '@ofModel/light-card.model';
 
 export class CardService {

@@ -9,7 +9,7 @@
 
 import {Card, TimeSpan} from '@ofModel/card.model';
 import {getOneCard} from '@tests/helpers';
-import {getNextTimeForRepeating} from './rrule-reminderUtils';
+import {getNextTimeForRepeating} from './RruleReminderUtils';
 import {Day, Frequency} from '@ofModel/light-card.model';
 import {fromZonedTime} from 'date-fns-tz';
 

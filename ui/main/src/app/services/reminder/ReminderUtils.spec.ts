@@ -9,7 +9,7 @@
 
 import {Card, Recurrence, TimeSpan} from '@ofModel/card.model';
 import {getOneCard} from '@tests/helpers';
-import {getNextTimeForRepeating} from './reminderUtils';
+import {getNextTimeForRepeating} from './ReminderUtils';
 import {fromZonedTime} from 'date-fns-tz';
 
 describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {

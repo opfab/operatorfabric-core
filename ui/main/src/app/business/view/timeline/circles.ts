@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUtils';
-import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
+import {getNextTimeForRepeating} from '@ofServices/reminder/ReminderUtils';
+import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from '@ofServices/reminder/RruleReminderUtils';
 import {add, format} from 'date-fns';
 
 export class Circle {

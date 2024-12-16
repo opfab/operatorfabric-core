@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AcknowledgeService} from './acknowledge.service';
+import {AcknowledgeService} from './AcknowledgeService';
 import {
     AcknowledgmentAllowedEnum,
     ConsideredAcknowledgedForUserWhenEnum,
@@ -22,12 +22,12 @@ import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {UserService} from './users/user.service';
+import {UserService} from '../../business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
-import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-import {ProcessesService} from './businessconfig/processes.service';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {ProcessesService} from '../../business/services/businessconfig/processes.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {RolesEnum} from '@ofModel/roles.model';
 

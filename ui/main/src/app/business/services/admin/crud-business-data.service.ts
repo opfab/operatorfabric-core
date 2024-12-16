@@ -9,7 +9,7 @@
 
 import {Observable} from 'rxjs';
 import {CrudService} from './crud-service';
-import {BusinessDataService} from '../businessconfig/businessdata.service';
+import {BusinessDataService} from '../../../services/businessdata/businessdata.service';
 
 export class CrudBusinessDataService extends CrudService {
     getAll(): Observable<Array<any>> {

@@ -26,7 +26,7 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {ChangeDetectorRef} from '@angular/core';
 import {DateTimeFormatterService} from '../../../services/dateTimeFormatter/DateTimeFormatterService';
 

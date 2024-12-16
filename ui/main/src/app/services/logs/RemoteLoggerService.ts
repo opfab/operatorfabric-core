@@ -8,7 +8,7 @@
  */
 
 import packageInfo from '../../../../package.json';
-import {RemoteLoggerServer} from './RemoteLoggerServer';
+import {RemoteLoggerServer} from './server/RemoteLoggerServer';
 
 export class RemoteLoggerService {
     private static remoteLoggerServer: RemoteLoggerServer;

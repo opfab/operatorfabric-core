@@ -8,13 +8,13 @@
  */
 
 import {firstValueFrom, map, Observable} from 'rxjs';
-import {BusinessDataServer} from '../../server/businessData.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
+import {BusinessDataServer} from './server/BusinessDataServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {OpfabEventStreamService} from '../events/opfabEventStream.service';
+import {OpfabEventStreamService} from '../../business/services/events/opfabEventStream.service';
 import * as _ from 'lodash-es';
-import {ErrorService} from '../error-service';
-import {AlertMessageService} from '../alert-message.service';
+import {ErrorService} from '../../business/services/error-service';
+import {AlertMessageService} from '../../business/services/alert-message.service';
 import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofModel/message.model';
 

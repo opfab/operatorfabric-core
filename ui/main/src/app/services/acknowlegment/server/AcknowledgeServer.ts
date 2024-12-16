@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class AcknowledgeServer {
     abstract postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>>;

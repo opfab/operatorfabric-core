@@ -13,7 +13,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Process, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
-import {AcknowledgeService} from 'app/business/services/acknowledge.service';
+import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';

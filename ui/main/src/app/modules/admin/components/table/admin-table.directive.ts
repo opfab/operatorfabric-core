@@ -26,7 +26,7 @@ import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {saveAs} from 'file-saver-es';
-import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {BusinessDataService} from '@ofServices/businessdata/businessdata.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserService} from 'app/business/services/users/user.service';
