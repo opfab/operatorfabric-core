@@ -123,33 +123,23 @@ export default class CardsExternalDiffusionService {
     }
 
     private checkDaily(): void {
-        this.logger.info('Daily email scheduler launch');
         const millisBeforeSendingDailyEmail = this.getMillisBeforeSendingRecapEmail('daily');
 
         setTimeout(() => {
-            if (this.active)
+            if (this.active) {
                 this.sendDailyRecap().catch((error) => this.logger.error('error during daily email sending' + error));
-            setInterval(() => {
-                if (this.active)
-                    this.sendDailyRecap().catch((error) =>
-                        this.logger.error('error during daily email sending' + error)
-                    );
-            }, MILLISECONDS_IN_A_DAY);
+                this.checkDaily();
+            }
         }, millisBeforeSendingDailyEmail);
     }
 
     private checkWeekly(): void {
-        this.logger.info('Weekly email scheduler launch');
         const millisBeforeSendingWeeklyEmail = this.getMillisBeforeSendingRecapEmail('weekly');
         setTimeout(() => {
-            if (this.active)
+            if (this.active) {
                 this.sendWeeklyRecap().catch((error) => this.logger.error('error during weekly email sending' + error));
-            setInterval(() => {
-                if (this.active)
-                    this.sendWeeklyRecap().catch((error) =>
-                        this.logger.error('error during weekly email sending' + error)
-                    );
-            }, MILLISECONDS_IN_A_WEEK);
+                this.checkWeekly();
+            }
         }, millisBeforeSendingWeeklyEmail);
     }
 
