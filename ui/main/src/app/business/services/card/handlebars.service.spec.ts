@@ -16,7 +16,8 @@ import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {OpfabAPI} from '../../../api/opfab.api';
 import {HandlebarsHelper} from './handlebarsHelper';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('Handlebars Services', () => {
     let processServerMock: ProcessServerMock;
@@ -24,7 +25,8 @@ describe('Handlebars Services', () => {
     const now = Date.now();
 
     beforeAll(() => {
-        OpfabAPI.initAPI(new TranslationServiceMock());
+        OpfabAPI.initAPI();
+        TranslationService.setTranslationLib(new TranslationLibMock());
         HandlebarsService.init();
     });
 

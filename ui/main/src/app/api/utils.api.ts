@@ -8,11 +8,11 @@
  */
 
 import {Utilities} from 'app/business/common/utilities';
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 declare const opfab: any;
 
-export function initUtilsAPI(translationService: TranslationService) {
+export function initUtilsAPI() {
     opfab.utils = {
         escapeHtml: function (html: string) {
             return Utilities.escapeHtml(html);
@@ -23,7 +23,7 @@ export function initUtilsAPI(translationService: TranslationService) {
         },
 
         getTranslation: function (key, params) {
-            return translationService.getTranslation(key, params);
+            return TranslationService.getTranslation(key, params);
         }
     };
 

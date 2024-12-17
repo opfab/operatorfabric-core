@@ -13,11 +13,9 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
 
 describe('Notification configuration view ', () => {
-    const translationServiceMock = new TranslationServiceMock();
     let notificationConfigurationPage: NotificationConfigurationPage;
     const defaultProcesses: Process[] = [
         {
@@ -69,7 +67,7 @@ describe('Notification configuration view ', () => {
     }
 
     function getNotificationConfigurationPage() {
-        return new NotificationConfigurationView(translationServiceMock).getNotificationConfigurationPage();
+        return new NotificationConfigurationView().getNotificationConfigurationPage();
     }
 
     describe('getNotificationConfigurationPage with no processGroup ', () => {

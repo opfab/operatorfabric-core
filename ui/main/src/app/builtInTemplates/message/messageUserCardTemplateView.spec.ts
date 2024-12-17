@@ -13,12 +13,15 @@ import {initOpfabAPI} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {TranslationService} from '@ofServices/translation/TranslationService';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;
 
     beforeEach(() => {
         initOpfabAPI();
+        TranslationService.setTranslationLib(new TranslationLibMock());
         view = new MessageUserCardTemplateView();
     });
 

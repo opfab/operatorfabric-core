@@ -8,14 +8,14 @@
  */
 
 import {Injectable} from '@angular/core';
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularTranslationService extends TranslationService {
-    constructor(private translateService: TranslateService) {
+export class AngularTranslationLib extends TranslationLib {
+    constructor(private readonly translateService: TranslateService) {
         super();
     }
     setTranslation(lang: string, translation: Object, shouldMerge: boolean) {

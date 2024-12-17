@@ -51,8 +51,8 @@ import {CardServer} from './app/business/server/card.server';
 import {AngularCardServer} from './app/server/angularCard.server';
 import {SoundServer} from './app/services/notifications/server/SoundServer';
 import {AngularSoundServer} from './app/services/notifications/server/AngularSoundServer';
-import {TranslationService} from './app/business/services/translation/translation.service';
-import {AngularTranslationService} from '@ofServices/angularTranslationService';
+import {TranslationLib} from './app/services/translation/lib/TranslationLib';
+import {AngularTranslationLib} from '@ofServices/translation/lib/AngularTranslationLib';
 import {ModalServer} from './app/business/server/modal.server';
 import {NgbModalServer} from './app/server/ngbModal.server';
 import {SharingService} from './app/modules/admin/services/sharing.service';
@@ -110,7 +110,7 @@ bootstrapApplication(AppComponent, {
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
         {provide: CardServer, useClass: AngularCardServer},
         {provide: SoundServer, useClass: AngularSoundServer},
-        {provide: TranslationService, useClass: AngularTranslationService},
+        {provide: TranslationLib, useClass: AngularTranslationLib},
         {provide: ModalServer, useClass: NgbModalServer},
         {provide: SharingService, useClass: SharingService},
         provideHttpClient(withInterceptorsFromDi()),

@@ -11,17 +11,11 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {Process} from '@ofModel/processes.model';
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 /** This class contains functions to get the list of process and states for filters in UI */
 
 export class ProcessStatesMultiSelectOptionsService {
-    private static translationService: TranslationService;
-
-    public static init(translationService: TranslationService) {
-        this.translationService = translationService;
-    }
-
     static getStatesMultiSelectOptionsPerProcess(
         isAdminModeAndUserHasRightToSeeAllStates: boolean,
         hideChildStates: boolean
@@ -122,7 +116,7 @@ export class ProcessStatesMultiSelectOptionsService {
 
         if (processesWithoutProcessGroupMultiSelectOptions.length > 0)
             processGroupsMultiSelectOptions.push(
-                new MultiSelectOption('--', this.translationService.getTranslation('processGroup.defaultLabel'))
+                new MultiSelectOption('--', TranslationService.getTranslation('processGroup.defaultLabel'))
             );
 
         const processGroupIds = Array.from(processMultiSelectOptionsPerProcessGroups.keys());

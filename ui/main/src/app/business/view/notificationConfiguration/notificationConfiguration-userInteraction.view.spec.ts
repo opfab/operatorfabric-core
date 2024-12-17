@@ -24,7 +24,7 @@ import {
     setUserPerimeter,
     waitForAllPromises
 } from '@tests/helpers';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
@@ -32,9 +32,10 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
 import {ModalServerMock} from '@tests/mocks/modalServer.mock';
 import {I18n} from '@ofModel/i18n.model';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('Notification configuration view - User interaction ', () => {
-    const translationServiceMock = new TranslationServiceMock();
+    const translationServiceMock = new TranslationLibMock();
     let notificationConfigurationView: NotificationConfigurationView;
     let notificationConfigurationPage: NotificationConfigurationPage;
     let modalServerMock: ModalServerMock;
@@ -95,7 +96,8 @@ describe('Notification configuration view - User interaction ', () => {
             });
             settingsServerMock = getSettingsServerMock();
             modalServerMock = getModalServerMock();
-            notificationConfigurationView = new NotificationConfigurationView(translationServiceMock);
+            TranslationService.setTranslationLib(translationServiceMock);
+            notificationConfigurationView = new NotificationConfigurationView();
         });
         it('should popup a message when filteringNotificationAllowed is false and state is not checked', async () => {
             notificationConfigurationView.manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
@@ -120,9 +122,7 @@ describe('Notification configuration view - User interaction ', () => {
                 ],
                 userData: null
             });
-            new NotificationConfigurationView(
-                translationServiceMock
-            ).manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
+            new NotificationConfigurationView().manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
             expect(modalServerMock.modalConfigReceived).toBeUndefined();
         });
 
@@ -202,7 +202,7 @@ describe('Notification configuration view - User interaction ', () => {
                 userData: null
             });
 
-            notificationConfigurationView = new NotificationConfigurationView(translationServiceMock);
+            notificationConfigurationView = new NotificationConfigurationView();
             initFunctionsToSet();
         });
 
@@ -508,7 +508,7 @@ describe('Notification configuration view - User interaction ', () => {
                 ],
                 userData: null
             });
-            notificationConfigurationView = new NotificationConfigurationView(translationServiceMock);
+            notificationConfigurationView = new NotificationConfigurationView();
         });
         it('should exit if nothing to saved as configuration has not changed', async () => {
             let canUserExit;

@@ -11,11 +11,14 @@ import {TaskCardTemplateView} from './taskCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 import {Card} from '@ofModel/card.model';
+import {TranslationService} from '@ofServices/translation/TranslationService';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 
 describe('Task Card Template View', () => {
     let view: TaskCardTemplateView;
     beforeEach(() => {
         initOpfabAPI();
+        TranslationService.setTranslationLib(new TranslationLibMock());
         view = new TaskCardTemplateView();
     });
 

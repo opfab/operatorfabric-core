@@ -14,7 +14,6 @@ import {SessionManagerService} from 'app/business/services/session-manager.servi
 import {NavbarView} from 'app/business/view/navbar/navbar.view';
 import {NavbarMenuElement, NavbarPage} from 'app/business/view/navbar/navbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NavbarMenuView} from 'app/business/view/navbar/navbarMenu.view';
 import {NgClass, NgTemplateOutlet, NgFor, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
@@ -61,11 +60,10 @@ export class NavbarComponent {
         private readonly router: Router,
         private readonly modalService: NgbModal,
         private readonly domSanitizationService: DomSanitizer,
-        private readonly translationService: TranslationService,
         private readonly changeDetector: ChangeDetectorRef
     ) {
         this.navbarPage = new NavbarView().getNavbarPage();
-        this.navbarMenuView = new NavbarMenuView(this.translationService);
+        this.navbarMenuView = new NavbarMenuView();
         this.upperMenuElements = this.navbarMenuView.getNavbarMenu().upperMenuElements;
         this.rightMenuElements = this.navbarMenuView.getNavbarMenu().rightMenuElements;
         this.rightMenuCollapsedElements = this.navbarMenuView.getNavbarMenu().rightMenuCollapsedElements;

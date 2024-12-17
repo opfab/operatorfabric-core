@@ -9,7 +9,6 @@
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NotificationConfigurationView} from 'app/business/view/notificationConfiguration/notificationConfiguration.view';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NotificationConfigurationPage} from 'app/business/view/notificationConfiguration/notificationConfigurationPage';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
@@ -27,8 +26,8 @@ export class NotificationConfigurationComponent implements OnInit, AfterViewInit
     notificationConfigurationPage: NotificationConfigurationPage;
     @ViewChild('opfabNotificationConfigurationScreen') rootElement: ElementRef;
 
-    constructor(translationService: TranslationService) {
-        this.notificationConfigurationView = new NotificationConfigurationView(translationService);
+    constructor() {
+        this.notificationConfigurationView = new NotificationConfigurationView();
     }
     ngOnInit() {
         this.notificationConfigurationView.setFunctionToSetProcessCheckBoxValue((processId, checked) => {

@@ -37,7 +37,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../multi-select/multi-select.component';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-archives-logging-filters',
@@ -121,10 +121,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
 
     locale: any = {};
 
-    constructor(
-        private readonly changeDetector: ChangeDetectorRef,
-        private readonly translationService: TranslationService
-    ) {
+    constructor(private readonly changeDetector: ChangeDetectorRef) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UserService.isCurrentUserAdmin() ||
             UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);
@@ -143,9 +140,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
 
         this.locale = {
             format: 'YYYY-MM-DD HH:mm',
-            applyLabel: this.translationService.getTranslation('datePicker.applyLabel'),
-            daysOfWeek: this.translationService.getTranslation('datePicker.daysOfWeek'),
-            monthNames: this.translationService.getTranslation('datePicker.monthNames')
+            applyLabel: TranslationService.getTranslation('datePicker.applyLabel'),
+            daysOfWeek: TranslationService.getTranslation('datePicker.daysOfWeek'),
+            monthNames: TranslationService.getTranslation('datePicker.monthNames')
         };
     }
 

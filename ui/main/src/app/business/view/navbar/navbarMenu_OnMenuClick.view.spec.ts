@@ -11,18 +11,19 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {NavbarMenuElement} from './navbarPage';
 import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 import {RouterService} from 'app/business/services/router.service';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 declare const opfabStyle;
 
 describe('NavbarMenuView - OnMenuClick', () => {
-    const translationService = new TranslationServiceMock();
+    const translationLib = new TranslationLibMock();
     let applicationRouterMock: ApplicationRouterMock;
 
     const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
@@ -209,7 +210,8 @@ describe('NavbarMenuView - OnMenuClick', () => {
         url = '',
         openInNewTab = false
     }): NavbarMenuView {
-        const navbarMenuView = new NavbarMenuView(translationService);
+        TranslationService.setTranslationLib(translationLib);
+        const navbarMenuView = new NavbarMenuView();
         const navbarMenuElement = new NavbarMenuElement();
         navbarMenuElement.id = menuId;
         navbarMenuElement.isCoreMenu = isCoreMenu;

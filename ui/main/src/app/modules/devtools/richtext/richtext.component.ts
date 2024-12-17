@@ -10,10 +10,8 @@
 import {ChangeDetectionStrategy, Component, OnInit, Renderer2} from '@angular/core';
 
 import {Clipboard} from '@angular/cdk/clipboard';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslateModule} from '@ngx-translate/core';
-
-declare const opfab;
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-richtext-helper',
@@ -38,12 +36,11 @@ export class RichTextComponent implements OnInit {
     delta: string;
 
     constructor(
-        private readonly translateService: TranslationService,
         private readonly clipboard: Clipboard,
         public renderer: Renderer2
     ) {}
     ngOnInit(): void {
-        const label = this.translateService.getTranslation('devtools.richTextComposer.richTextEditor');
+        const label = TranslationService.getTranslation('devtools.richTextComposer.richTextEditor');
         const container = document.getElementById('richtext');
         container.innerHTML = `
         <label translate>${label}</label>

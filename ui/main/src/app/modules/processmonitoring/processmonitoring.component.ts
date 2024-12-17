@@ -30,7 +30,6 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {SelectedCardStore} from '../../business/store/selectedCard.store';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
@@ -48,6 +47,7 @@ import {
     ProcessMonitoringFieldEnum
 } from 'app/services/config/model/ProcessMonitoringConfig';
 import {BusinessConfigAPI} from 'app/api/businessconfig.api';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -193,7 +193,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     isMapViewActivated: boolean;
 
     constructor(
-        private readonly translationService: TranslationService,
         private readonly modalService: NgbModal,
         private readonly changeDetector: ChangeDetectorRef
     ) {
@@ -627,7 +626,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
-        return this.translationService.getTranslation(key, interpolateParams);
+        return TranslationService.getTranslation(key, interpolateParams);
     }
 
     toggleShowMap() {

@@ -8,13 +8,13 @@
  */
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {RouterService} from 'app/business/services/router.service';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Subject, skip, takeUntil} from 'rxjs';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class NavbarMenuView {
     private static readonly ADMIN_MENUS = ['admin', 'externaldevicesconfiguration'];
@@ -28,7 +28,7 @@ export class NavbarMenuView {
     private readonly destroy$ = new Subject<void>();
     private menuChangeListener: Function;
 
-    constructor(private readonly translationService: TranslationService) {
+    constructor() {
         this.navbarMenu = new NavbarMenu();
         this.computeUpperMenuElements();
         this.computeRightIconsVisibility();
@@ -70,7 +70,7 @@ export class NavbarMenuView {
         const navbarMenuElement = new NavbarMenuElement();
         if (menuElementConfig.entries) {
             navbarMenuElement.id = menuElementConfig.id;
-            navbarMenuElement.label = this.translationService.getTranslation(menuElementConfig.label);
+            navbarMenuElement.label = TranslationService.getTranslation(menuElementConfig.label);
             navbarMenuElement.dropdownMenu = this.getDropdownMenuElements(menuElementConfig.entries);
             if (navbarMenuElement.dropdownMenu.length !== 0) {
                 if (
@@ -113,10 +113,10 @@ export class NavbarMenuView {
     private getTranslation(menuElementConfig): string {
         if (menuElementConfig.opfabCoreMenuId === 'nightdaymode') {
             if (GlobalStyleService.getStyle() === GlobalStyleService.DAY)
-                return this.translationService.getTranslation('menu.switchToNightMode');
-            else return this.translationService.getTranslation('menu.switchToDayMode');
+                return TranslationService.getTranslation('menu.switchToNightMode');
+            else return TranslationService.getTranslation('menu.switchToDayMode');
         }
-        return this.translationService.getTranslation(
+        return TranslationService.getTranslation(
             menuElementConfig.opfabCoreMenuId ? 'menu.' + menuElementConfig.opfabCoreMenuId : menuElementConfig.label
         );
     }
@@ -210,9 +210,9 @@ export class NavbarMenuView {
             .filter((menu) => menu.id === 'nightdaymode')
             .forEach((menu) => {
                 if (GlobalStyleService.getStyle() === GlobalStyleService.DAY) {
-                    menu.label = this.translationService.getTranslation('menu.switchToNightMode');
+                    menu.label = TranslationService.getTranslation('menu.switchToNightMode');
                 } else {
-                    menu.label = this.translationService.getTranslation('menu.switchToDayMode');
+                    menu.label = TranslationService.getTranslation('menu.switchToDayMode');
                 }
             });
     }

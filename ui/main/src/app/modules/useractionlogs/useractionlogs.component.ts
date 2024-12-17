@@ -21,7 +21,6 @@ import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstr
 import {Card} from '@ofModel/card.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
 import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
 import {UserActionLogsPageDescription} from 'app/business/view/useractionlogs/userActionLogsPageDescription';
@@ -77,12 +76,11 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     selectedChildCards: Card[];
 
     constructor(
-        translationService: TranslationService,
         userActionLogsServer: UserActionLogsServer,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.userActionLogsView = new UserActionLogsView(translationService, userActionLogsServer);
+        this.userActionLogsView = new UserActionLogsView(userActionLogsServer);
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }
 

@@ -8,12 +8,12 @@
  */
 import {TestBed} from '@angular/core/testing';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {AngularTranslationService} from './angularTranslationService';
+import {AngularTranslationLib} from './AngularTranslationLib';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('AngularTranslationService', () => {
-    let service: AngularTranslationService;
+    let service: AngularTranslationLib;
     let translateService: TranslateService;
 
     beforeEach(() => {
@@ -23,7 +23,7 @@ describe('AngularTranslationService', () => {
         });
 
         translateService = TestBed.inject(TranslateService);
-        service = new AngularTranslationService(translateService);
+        service = new AngularTranslationLib(translateService);
     });
 
     it('should get translation', () => {

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {TimelineView} from './timeline.view';
-import {I18nService} from 'app/business/services/translation/i18n.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigService} from 'app/services/config/ConfigService';
 
@@ -18,9 +18,9 @@ describe('TimeLine view title', () => {
 
     beforeEach(() => {
         timeLineView = new TimelineView();
-        const translationService = new TranslationServiceMock();
-        I18nService.setTranslationService(translationService);
-        I18nService.initLocale();
+        const translationService = new TranslationLibMock();
+        TranslationService.setTranslationLib(translationService);
+        TranslationService.initLocale();
         DateTimeFormatterService.init();
         ConfigService.setConfigValue('settings.locale', 'en');
     });

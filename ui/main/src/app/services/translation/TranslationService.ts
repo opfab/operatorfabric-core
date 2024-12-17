@@ -11,34 +11,40 @@ import {Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Utilities} from 'app/business/common/utilities';
-import {ConfigServer} from '../../../services/config/server/ConfigServer';
-import {ServerResponseStatus} from '../../server/serverResponse';
-import {TranslationService} from './translation.service';
+import {ConfigServer} from '../config/server/ConfigServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {TranslationLib} from './lib/TranslationLib';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {environment} from '@env/environment';
 
-declare const opfab: any;
-
-export class I18nService {
+export class TranslationService {
     private static readonly localUrl = `${environment.url}assets/i18n/`;
     private static _locale: string;
     private static configServer: ConfigServer;
-    private static translationService: TranslationService;
+    private static translationLib: TranslationLib;
     private static readonly destroy$ = new Subject<void>();
 
     public static setConfigServer(configServer: ConfigServer) {
         this.configServer = configServer;
     }
 
-    public static setTranslationService(translationService: TranslationService) {
-        this.translationService = translationService;
+    public static setTranslationLib(translationLib: TranslationLib) {
+        this.translationLib = translationLib;
+    }
+
+    public static setLang(lang: string) {
+        this.translationLib.setLang(lang);
+    }
+
+    public static getTranslation(key: string, params?: Object): string {
+        return this.translationLib.getTranslation(key, params);
     }
 
     public static initLocale() {
         this.destroy$.next(); // unsubscribe from previous subscription , only useful for unit tests as we init more than one time
         ConfigService.getConfigValueAsObservable('settings.locale', 'en')
-            .pipe(takeUntil(I18nService.destroy$))
-            .subscribe((locale) => I18nService.changeLocale(locale));
+            .pipe(takeUntil(TranslationService.destroy$))
+            .subscribe((locale) => TranslationService.changeLocale(locale));
     }
 
     public static changeLocale(locale: string) {
@@ -47,45 +53,33 @@ export class I18nService {
         } else {
             this._locale = 'en';
         }
-        this.translationService.setLang(this._locale);
-        this.setTranslationForMultiSelectUsedInTemplates();
+        this.translationLib.setLang(this._locale);
         this.setTranslationForRichTextEditor();
-    }
-
-    public static setTranslationForMultiSelectUsedInTemplates() {
-        opfab.multiSelect.searchPlaceholderText = this.translationService.getTranslation(
-            'multiSelect.searchPlaceholderText'
-        );
-        opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
-        opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
-        opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation(
-            'multiSelect.noSearchResultsText'
-        );
     }
 
     public static setTranslationForRichTextEditor() {
         const root = document.documentElement;
         root.style.setProperty(
             '--opfab-richtext-link-enter',
-            '"' + this.translationService.getTranslation('userCard.richTextEditor.enterLink') + '"'
+            '"' + this.translationLib.getTranslation('userCard.richTextEditor.enterLink') + '"'
         );
         root.style.setProperty(
             '--opfab-richtext-link-visit',
-            '"' + this.translationService.getTranslation('userCard.richTextEditor.visitLink') + '"'
+            '"' + this.translationLib.getTranslation('userCard.richTextEditor.visitLink') + '"'
         );
 
         root.style.setProperty(
             '--opfab-richtext-link-save',
-            '"' + this.translationService.getTranslation('userCard.richTextEditor.saveLink') + '"'
+            '"' + this.translationLib.getTranslation('userCard.richTextEditor.saveLink') + '"'
         );
 
         root.style.setProperty(
             '--opfab-richtext-link-edit',
-            '"' + this.translationService.getTranslation('userCard.richTextEditor.editLink') + '"'
+            '"' + this.translationLib.getTranslation('userCard.richTextEditor.editLink') + '"'
         );
         root.style.setProperty(
             '--opfab-richtext-link-remove',
-            '"' + this.translationService.getTranslation('userCard.richTextEditor.removeLink') + '"'
+            '"' + this.translationLib.getTranslation('userCard.richTextEditor.removeLink') + '"'
         );
     }
 
@@ -98,9 +92,9 @@ export class I18nService {
             tap({
                 next: (serverResponse) => {
                     if (serverResponse.status === ServerResponseStatus.OK) {
-                        this.translationService.setTranslation(locale, serverResponse.data, true);
+                        this.translationLib.setTranslation(locale, serverResponse.data, true);
                     } else {
-                        logger.error(`Impossible to load locale ${I18nService.localUrl}${locale}.json`);
+                        logger.error(`Impossible to load locale ${TranslationService.localUrl}${locale}.json`);
                     }
                 }
             })
@@ -118,7 +112,7 @@ export class I18nService {
     public static loadTranslationForMenu(): void {
         ConfigService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
-                this.translationService.setTranslation(locale.language, locale.i18n, true);
+                this.translationLib.setTranslation(locale.language, locale.i18n, true);
             });
         });
 
@@ -126,5 +120,9 @@ export class I18nService {
             logger.error('Impossible to load configuration file ui-menu.json' + JSON.stringify(err));
             return caught;
         });
+    }
+
+    public static translateSeverity(severity: string): string {
+        return this.translationLib.getTranslation('shared.severity.' + severity.toLowerCase());
     }
 }

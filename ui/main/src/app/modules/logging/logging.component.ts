@@ -33,13 +33,13 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {BusinessConfigAPI} from 'app/api/businessconfig.api';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-logging',
@@ -109,7 +109,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private readonly translationService: TranslationService,
         private readonly modalService: NgbModal,
         private readonly changeDetector: ChangeDetectorRef
     ) {
@@ -298,7 +297,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     // TO DO translation for old process should be done  , but loading local arrives too late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
-                            [severityColumnName]: this.translationService.translateSeverity(card.severity),
+                            [severityColumnName]: TranslationService.translateSeverity(card.severity),
                             [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                 card.publishDate
                             ),
@@ -334,7 +333,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
-        return this.translationService.getTranslation(key, interpolateParams);
+        return TranslationService.getTranslation(key, interpolateParams);
     }
 
     ngOnDestroy() {

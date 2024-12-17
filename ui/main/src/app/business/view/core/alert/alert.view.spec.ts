@@ -11,16 +11,14 @@ import {AlertView} from './alert.view';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
-import {TranslationService} from 'app/business/services/translation/translation.service';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {loadWebUIConf, waitForAllPromises} from '@tests/helpers';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('Alert view ', () => {
-    let translationService: TranslationService;
-
     beforeEach(() => {
         jasmine.clock().uninstall();
-        translationService = new TranslationServiceMock();
+        TranslationService.setTranslationLib(new TranslationLibMock());
     });
 
     afterEach(() => {
@@ -29,14 +27,14 @@ describe('Alert view ', () => {
 
     it('GIVEN an alertView WHEN no message is sent THEN no message is display ', async () => {
         await loadWebUIConf({});
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 
     it('GIVEN a message WHEN message is sent THEN message is displayed ', async () => {
         await loadWebUIConf({});
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -46,7 +44,7 @@ describe('Alert view ', () => {
     it('GIVEN a message with a translation key WHEN message is sent THEN message is displayed translated ', async () => {
         await loadWebUIConf({});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(
             new Message('', MessageLevel.DEBUG, new I18n('messageKey', {param: 'value'}))
         );
@@ -58,7 +56,7 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN message is DEBUG level THEN message background color is blue (#0070da) ', async () => {
         await loadWebUIConf({});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -69,7 +67,7 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN message is INFO level THEN message background color is green (#67a854) ', async () => {
         await loadWebUIConf({});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.INFO));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -80,7 +78,7 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN message is ERROR level THEN message background color is orange (#e87a08) ', async () => {
         await loadWebUIConf({});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ERROR));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -91,7 +89,7 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN message is ALARM level THEN message background color is red (#a71a1a) ', async () => {
         await loadWebUIConf({});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -102,7 +100,7 @@ describe('Alert view ', () => {
     it('GIVEN messageOnBottomOfTheScreen is true  WHEN message is display THEN message is on bottom of the screen ', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: true}});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -113,7 +111,7 @@ describe('Alert view ', () => {
     it('GIVEN messageOnBottomOfTheScreen is false  WHEN message is display THEN message is on top of the screen ', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -124,7 +122,7 @@ describe('Alert view ', () => {
     it('GIVEN a message WHEN alert is closed THEN message disappear', async () => {
         await loadWebUIConf({alerts: {messageOnBottomOfTheScreen: false}});
 
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await waitForAllPromises();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -138,7 +136,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -155,7 +153,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -177,7 +175,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -198,7 +196,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(translationService);
+        const alertView = new AlertView();
         AlertMessageService.sendAlertMessage(new Message('message', MessageLevel.ALARM));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();

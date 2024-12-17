@@ -159,3 +159,5 @@ node-services/*/logs
 
 bin/dependencies/report*.txt
 
+# Eclipse LSP files 
+**/.factorypath

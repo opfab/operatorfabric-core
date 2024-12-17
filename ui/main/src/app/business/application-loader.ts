@@ -11,7 +11,7 @@ import {firstValueFrom} from 'rxjs';
 import {ConfigService} from '../services/config/ConfigService';
 import {LoggerService as logger, LogOption} from 'app/services/logs/LoggerService';
 import {RemoteLoggerService} from '../services/logs/RemoteLoggerService';
-import {I18nService} from './services/translation/i18n.service';
+import {TranslationService} from '../services/translation/TranslationService';
 import {UserService} from './services/users/user.service';
 import {OpfabAPI} from '../api/opfab.api';
 import {GlobalStyleService} from '../services/style/global-style.service';
@@ -42,7 +42,6 @@ import {ModalService} from './services/modal.service';
 import {SessionManagerService} from './services/session-manager.service';
 import {SoundNotificationService} from '../services/notifications/SoundNotificationService';
 import {I18n} from '@ofModel/i18n.model';
-import {ProcessStatesMultiSelectOptionsService} from './services/process-states-multi-select-options.service';
 import {RealtimeDomainService} from './services/realtime-domain.service';
 import {NotificationDecision} from '../services/notifications/NotificationDecision';
 import {CardTemplateGateway} from './templateGateway/cardTemplateGateway';
@@ -61,13 +60,12 @@ export class ApplicationLoader {
     private activityAreaChoiceAfterLoginComponent: ApplicationLoadingComponent;
     private methodToAuthenticate: Function;
     private opfabEventStreamServer;
-    private translationService;
 
     public setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
         RemoteLoggerService.setRemoteLoggerServer(servers.remoteLoggerServer);
-        I18nService.setConfigServer(servers.configServer);
-        I18nService.setTranslationService(servers.translationService);
+        TranslationService.setConfigServer(servers.configServer);
+        TranslationService.setTranslationLib(servers.translationLib);
         UserService.setUserServer(servers.userServer);
         RouterService.setApplicationRouter(servers.routerService);
         EntitiesService.setEntitiesServer(servers.entitiesServer);
@@ -86,9 +84,6 @@ export class ApplicationLoader {
         ModalService.setModalServer(servers.modalServer);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);
-        ProcessStatesMultiSelectOptionsService.init(servers.translationService);
-        this.translationService = servers.translationService;
-
         this.opfabEventStreamServer = servers.opfabEventStreamServer;
     }
 
@@ -157,15 +152,14 @@ export class ApplicationLoader {
     private loadTranslations() {
         const locales = ConfigService.getConfigValue('i18n.supported.locales');
         if (locales) {
-            I18nService.loadGlobalTranslations(locales).subscribe(() => {
+            TranslationService.loadGlobalTranslations(locales).subscribe(() => {
                 logger.info('opfab translation loaded for locales: ' + locales, LogOption.LOCAL_AND_REMOTE);
-                I18nService.loadTranslationForMenu();
-                I18nService.setTranslationForMultiSelectUsedInTemplates();
-                I18nService.setTranslationForRichTextEditor();
+                TranslationService.loadTranslationForMenu();
+                TranslationService.setTranslationForRichTextEditor();
             });
         } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
 
-        I18nService.initLocale();
+        TranslationService.initLocale();
         DateTimeFormatterService.init();
     }
 
@@ -302,7 +296,7 @@ export class ApplicationLoader {
     private initOpfabAPI(): void {
         CardTemplateGateway.init();
         UserCardTemplateGateway.init();
-        OpfabAPI.initAPI(this.translationService);
+        OpfabAPI.initAPI();
     }
 
     private goToEntryPage() {

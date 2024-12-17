@@ -34,7 +34,6 @@ import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf, NgFor} from '@angular/common';
@@ -43,6 +42,7 @@ import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ArchivedCardDetailComponent} from './components/archived-card-detail/archived-card-detail.component';
 import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
 import {BusinessConfigAPI} from 'app/api/businessconfig.api';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-archives',
@@ -117,7 +117,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private readonly translationService: TranslationService,
         private readonly modalService: NgbModal,
         private readonly changeDetector: ChangeDetectorRef
     ) {
@@ -365,7 +364,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     if (card) {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
-                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
+                                [severityColumnName]: TranslationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                     card.publishDate
                                 ),
@@ -382,7 +381,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                         else
                             exportArchiveData.push({
-                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
+                                [severityColumnName]: TranslationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTime(
                                     card.publishDate
                                 ),
@@ -406,7 +405,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
-        return this.translationService.getTranslation(key, interpolateParams);
+        return TranslationService.getTranslation(key, interpolateParams);
     }
 
     openCard(cardId) {

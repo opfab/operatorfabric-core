@@ -14,8 +14,8 @@ import {AdminItemType} from '../../services/sharing.service';
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Utilities} from 'app/business/common/utilities';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {NgFor} from '@angular/common';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-role-cell-renderer',
@@ -30,7 +30,7 @@ export class RoleCellRendererComponent implements ICellRendererAngularComp {
     entities: Entity[];
     _roles = [];
 
-    constructor(private readonly translationService: TranslationService) {
+    constructor() {
         this.entities = EntitiesService.getEntities();
     }
 
@@ -39,7 +39,7 @@ export class RoleCellRendererComponent implements ICellRendererAngularComp {
 
         if (currentEntity?.roles) {
             currentEntity.roles.forEach((role) => {
-                const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.' + role);
+                const roleTranslation = TranslationService.getTranslation('admin.input.entity.roleValues.' + role);
                 this._roles.push(roleTranslation);
             });
             this._roles.sort((a, b) => Utilities.compareObj(a, b));

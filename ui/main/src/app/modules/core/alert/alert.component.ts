@@ -9,7 +9,6 @@
  */
 
 import {Component} from '@angular/core';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {AlertView} from 'app/business/view/core/alert/alert.view';
 import {AlertPage} from 'app/business/view/core/alert/alertPage';
 import {NgIf} from '@angular/common';
@@ -25,8 +24,8 @@ export class AlertComponent {
     public alertView: AlertView;
     public alertPage: AlertPage;
 
-    constructor(translationService: TranslationService) {
-        this.alertView = new AlertView(translationService);
+    constructor() {
+        this.alertView = new AlertView();
         this.alertPage = this.alertView.getAlertPage();
     }
 }

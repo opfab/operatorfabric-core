@@ -9,8 +9,7 @@
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {TranslationService} from 'app/business/services/translation/translation.service';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {UserActionLogsView} from './userActionLogs.view';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
@@ -30,9 +29,9 @@ import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {RolesEnum} from '@ofModel/roles.model';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('User action logs view ', () => {
-    let translationService: TranslationService;
     let userActionLogsView: UserActionLogsView;
     let userServerMock: UserServerMock;
     let userActionLogsServerMock: UserActionLogsServerMock;
@@ -43,7 +42,7 @@ describe('User action logs view ', () => {
 
     beforeEach(async () => {
         ConfigService.setConfigServer(new ConfigServerMock());
-        translationService = new TranslationServiceMock();
+        TranslationService.setTranslationLib(new TranslationLibMock());
         cardServerMock = new CardServerMock();
         CardService.setCardServer(cardServerMock);
         await initEntityService();
@@ -92,26 +91,26 @@ describe('User action logs view ', () => {
 
     it('GIVEN user is not admin  WHEN get view THEN user is not authorized to access the view ', async () => {
         setUserWithPermissions([]);
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeFalsy();
     });
 
     it('GIVEN user is  admin  WHEN get view THEN user is authorized to access the view ', async () => {
         setUserWithPermissions([PermissionEnum.ADMIN]);
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
     });
 
     it('GIVEN user has permission VIEW_USER_ACTION_LOGS  WHEN get view THEN user is authorized to access the view ', async () => {
         setUserWithPermissions([PermissionEnum.VIEW_USER_ACTION_LOGS]);
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
     });
 
     it('GIVEN a list of user WHEN get all user login THEN user login list is provided ', async () => {
         const user2 = new User('login2', 'firstName2', 'lastName2', null, ['group1'], ['ENTITY1']);
         userServerMock.setResponseForQueryAllUsers(new ServerResponse([user, user2], ServerResponseStatus.OK, ''));
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         const users = await firstValueFrom(userActionLogsView.getAllUserLogins());
         expect(users).toContain('login');
         expect(users).toContain('login2');
@@ -119,13 +118,13 @@ describe('User action logs view ', () => {
 
     it('GIVEN date is 20/11/2022 WHEN get initial from date THEN initial day is 10 days before 10/11/2022', async () => {
         jasmine.clock().mockDate(new Date(2022, 11, 20));
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         const pubDate = userActionLogsView.getUserActionLogPage().initialFromDate;
         expect(pubDate).toEqual(new Date(2022, 11, 10));
     });
 
     it('GIVEN a search is performed THEN data is obtain', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -141,7 +140,7 @@ describe('User action logs view ', () => {
         userActionLogsServerMock = new UserActionLogsServerMock();
         userActionLogsServerMock.setResponse(new ServerResponse(null, ServerResponseStatus.UNKNOWN_ERROR, ''));
 
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
@@ -153,7 +152,7 @@ describe('User action logs view ', () => {
         const page = new Page(1, 0, []);
         userActionLogsServerMock.setResponse(new ServerResponse(page, ServerResponseStatus.OK, ''));
 
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
@@ -161,7 +160,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN end date before start date THEN error message is provide ', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         userActionLogsView.setDateFrom(2);
         userActionLogsView.setDateTo(1);
 
@@ -171,7 +170,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains entity names', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -181,7 +180,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains formatted dates', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -191,7 +190,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by login THEN request is send with login list', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         userActionLogsView.setSelectedLogins(['login1', 'login2']);
         await firstValueFrom(userActionLogsView.search());
 
@@ -203,7 +202,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by action THEN request is send with action list', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         userActionLogsView.setSelectedActions(['ACK_CARD', 'SEND_CARD']);
         await firstValueFrom(userActionLogsView.search());
 
@@ -214,7 +213,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN setting page number 2 THEN request is send with page 2', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         userActionLogsView.setPageNumber(2);
         await firstValueFrom(userActionLogsView.search());
 
@@ -224,7 +223,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filtering by date THEN request is send with date filtering', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         userActionLogsView.setDateTo(2);
         userActionLogsView.setDateFrom(1);
         await firstValueFrom(userActionLogsView.search());
@@ -235,7 +234,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN an uid WHEN getCard THEN card is obtain from archives', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse({card: {uid: 'uidtest'}}, ServerResponseStatus.OK, '');
         });
@@ -245,7 +244,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a child card uid WHEN getCard THEN initial parent card is obtain from archives', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard((cardUid) => {
             if (cardUid === 'childUid')
                 return new ServerResponse(
@@ -261,7 +260,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN an unexisting uid WHEN getCard THEN alert message is send and no card is return ', async () => {
-        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
+        userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse(null, ServerResponseStatus.NOT_FOUND, '');
         });

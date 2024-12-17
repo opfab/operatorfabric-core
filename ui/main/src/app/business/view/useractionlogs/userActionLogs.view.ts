@@ -15,7 +15,6 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {format, sub} from 'date-fns';
@@ -24,6 +23,7 @@ import {UserActionLogLine} from './userActionLogLine';
 import {UserActionLogsResult} from './userActionLogsResult';
 import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
 import {ExcelExport} from '../../common/excel-export';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class UserActionLogsView {
     private readonly userActionLogPage = new UserActionLogsPageDescription();
@@ -33,10 +33,7 @@ export class UserActionLogsView {
     private dateTo = 0;
     private pageNumber = 0;
 
-    constructor(
-        private readonly translationService: TranslationService,
-        private readonly userActionLogsServer: UserActionLogsServer
-    ) {
+    constructor(private readonly userActionLogsServer: UserActionLogsServer) {
         this.initPage();
     }
 
@@ -44,15 +41,15 @@ export class UserActionLogsView {
         this.setDefaultFromDate();
         this.userActionLogPage.initialFromDate = new Date(this.dateFrom);
         this.userActionLogPage.isUserAuthorized = this.isUserAuthorized();
-        this.userActionLogPage.pageTitle = this.translationService.getTranslation('useractionlogs.title');
-        this.userActionLogPage.pageNotAllowedMessage = this.translationService.getTranslation('errors.pageNotAllowed');
+        this.userActionLogPage.pageTitle = TranslationService.getTranslation('useractionlogs.title');
+        this.userActionLogPage.pageNotAllowedMessage = TranslationService.getTranslation('errors.pageNotAllowed');
         this.userActionLogPage.columnTitle = {
-            date: this.translationService.getTranslation('useractionlogs.date'),
-            action: this.translationService.getTranslation('useractionlogs.action'),
-            login: this.translationService.getTranslation('useractionlogs.login'),
-            entities: this.translationService.getTranslation('useractionlogs.entities'),
-            cardUid: this.translationService.getTranslation('useractionlogs.cardUid'),
-            comment: this.translationService.getTranslation('useractionlogs.comment')
+            date: TranslationService.getTranslation('useractionlogs.date'),
+            action: TranslationService.getTranslation('useractionlogs.action'),
+            login: TranslationService.getTranslation('useractionlogs.login'),
+            entities: TranslationService.getTranslation('useractionlogs.entities'),
+            cardUid: TranslationService.getTranslation('useractionlogs.cardUid'),
+            comment: TranslationService.getTranslation('useractionlogs.comment')
         };
     }
 
@@ -116,7 +113,7 @@ export class UserActionLogsView {
     private buildErrorResult(messageKey: string): UserActionLogsResult {
         const result = new UserActionLogsResult();
         result.hasError = true;
-        result.errorMessage = this.translationService.getTranslation(messageKey);
+        result.errorMessage = TranslationService.getTranslation(messageKey);
         return result;
     }
 
@@ -189,7 +186,7 @@ export class UserActionLogsView {
             switchMap((card) => {
                 if (!card) {
                     AlertMessageService.sendAlertMessage({
-                        message: this.translationService.getTranslation('feed.selectedCardDeleted'),
+                        message: TranslationService.getTranslation('feed.selectedCardDeleted'),
                         level: MessageLevel.ERROR
                     });
                     return of(null);

@@ -18,8 +18,8 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {I18nService} from 'app/business/services/translation/i18n.service';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationService} from '@ofServices/translation/TranslationService';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigService} from 'app/services/config/ConfigService';
 
@@ -433,8 +433,8 @@ describe('Process Monitoring view ', () => {
 
     describe('get dates after period click if the current day/time is 2024-04-29 15:32 (summer time)', () => {
         beforeEach(() => {
-            I18nService.setTranslationService(new TranslationServiceMock());
-            I18nService.initLocale();
+            TranslationService.setTranslationLib(new TranslationLibMock());
+            TranslationService.initLocale();
             DateTimeFormatterService.init();
             ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();
@@ -467,8 +467,8 @@ describe('Process Monitoring view ', () => {
 
     describe('get dates after period click if the current day/time is 2023-12-31 9:18 (winter time)', () => {
         beforeEach(() => {
-            I18nService.setTranslationService(new TranslationServiceMock());
-            I18nService.initLocale();
+            TranslationService.setTranslationLib(new TranslationLibMock());
+            TranslationService.initLocale();
             DateTimeFormatterService.init();
             ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();

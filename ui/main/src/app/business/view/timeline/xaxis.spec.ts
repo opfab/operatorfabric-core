@@ -8,19 +8,19 @@
  */
 
 import {XAxis} from './xaxis';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {I18nService} from 'app/business/services/translation/i18n.service';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('XAxis', () => {
     let xAxis: XAxis;
 
     beforeEach(() => {
         xAxis = new XAxis();
-        const translationService = new TranslationServiceMock();
-        I18nService.setTranslationService(translationService);
-        I18nService.initLocale();
+        const translationService = new TranslationLibMock();
+        TranslationService.setTranslationLib(translationService);
+        TranslationService.initLocale();
         DateTimeFormatterService.init();
         ConfigService.setConfigValue('settings.locale', 'en');
     });

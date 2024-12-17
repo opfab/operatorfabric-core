@@ -25,13 +25,13 @@ import {LightCard} from '@ofModel/light-card.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardComponent} from '../../../card/card.component';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -84,10 +84,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         ['information', 4]
     ]);
 
-    constructor(
-        private readonly translationService: TranslationService,
-        private readonly modalService: NgbModal
-    ) {
+    constructor(private readonly modalService: NgbModal) {
         this.monitoringConfig = ConfigService.getMonitoringConfig();
 
         this.timeColumnName = this.translateColumn('shared.result.time');
@@ -116,7 +113,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             getLocaleText: function (params) {
                 // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
                 // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translationService.getTranslation('ag-grid.' + params.key);
+                return TranslationService.getTranslation('ag-grid.' + params.key);
             },
             columnTypes: {
                 timeColumn: {
@@ -316,7 +313,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     [this.titleColumnName]: line.data.title,
                     [this.summaryColumnName]: line.data.summary,
                     [this.typeOfStateColumnName]: line.data.processStatus,
-                    [this.severityColumnName]: this.translationService.translateSeverity(line.data.severity),
+                    [this.severityColumnName]: TranslationService.translateSeverity(line.data.severity),
                     [this.emitterColumnName]: line.data.emitter,
                     [this.requiredResponsesColumnName]: line.data.requiredResponses
                         ? this.getEntitiesNames(line.data.requiredResponses).join()
@@ -387,7 +384,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
-        card.card.severity = this.translationService.translateSeverity(card.card.severity);
+        card.card.severity = TranslationService.translateSeverity(card.card.severity);
         if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
@@ -399,11 +396,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     translateValue(key: string, interpolateParams?: Map<string, string>): any {
-        return this.translationService.getTranslation(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
+        return TranslationService.getTranslation(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
     }
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
-        return this.translationService.getTranslation(key, interpolateParams);
+        return TranslationService.getTranslation(key, interpolateParams);
     }
 
     ngOnDestroy() {

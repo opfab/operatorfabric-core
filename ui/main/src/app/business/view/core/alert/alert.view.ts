@@ -11,15 +11,15 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {AlertPage} from './alertPage';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class AlertView {
     private readonly alarmMessageAutoClose: boolean;
     private readonly alertPage: AlertPage;
     private lastMessageDate: number;
 
-    constructor(private readonly translationService: TranslationService) {
+    constructor() {
         this.alarmMessageAutoClose = ConfigService.getConfigValue('alerts.alarmLevelAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';
@@ -32,7 +32,7 @@ export class AlertView {
     private processAlertMessage(message: Message) {
         this.alertPage.display = true;
         if (message.i18n?.key)
-            this.alertPage.message = this.translationService.getTranslation(message.i18n.key, message.i18n.parameters);
+            this.alertPage.message = TranslationService.getTranslation(message.i18n.key, message.i18n.parameters);
         else this.alertPage.message = message.message;
         logger.debug(`AlertMessage : ${this.alertPage.message}`, LogOption.LOCAL_AND_REMOTE);
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationService} from '../business/services/translation/translation.service';
 import {AlertMessageService} from '../business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {BusinessConfigAPI} from './businessconfig.api';
@@ -25,11 +24,11 @@ declare const opfab: any;
 export class OpfabAPI {
     private static initAPIDone = false;
 
-    public static initAPI(translationService: TranslationService) {
+    public static initAPI() {
         if (OpfabAPI.initAPIDone) return;
         OpfabAPI.initAlertAPI();
         initNavigateAPI();
-        initUtilsAPI(translationService);
+        initUtilsAPI();
         initUserAPI();
         initUiAPI();
         initCardsAPI();

@@ -11,7 +11,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
-import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -21,14 +21,13 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {setUserPerimeter} from '@tests/helpers';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 declare const opfabStyle;
 
 describe('NavbarMenuView', () => {
-    let translationService;
-
     beforeEach(() => {
-        translationService = new TranslationServiceMock();
+        TranslationService.setTranslationLib(new TranslationLibMock());
     });
 
     describe('get core navbar menus', () => {
@@ -453,7 +452,7 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration', visible: true}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].id).toEqual('realtimeusers');
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
@@ -467,7 +466,7 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration', visible: true}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.realtimeusers');
             expect(rightMenuElements[1].label).toEqual('Translation (en) of menu.feedconfiguration');
@@ -480,7 +479,7 @@ describe('NavbarMenuView', () => {
             });
             GlobalStyleService.init();
             GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.switchToDayMode');
         });
@@ -492,7 +491,7 @@ describe('NavbarMenuView', () => {
             });
             GlobalStyleService.init();
             GlobalStyleService.setStyle(GlobalStyleService.DAY);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.switchToNightMode');
         });
@@ -505,7 +504,7 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration'}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -522,7 +521,7 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -539,7 +538,7 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].id).toEqual('realtimeusers');
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
@@ -553,7 +552,7 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([]);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -567,7 +566,7 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([], [PermissionEnum.ADMIN]);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(3);
             expect(rightMenuElements[0].id).toEqual('admin');
             expect(rightMenuElements[1].id).toEqual('externaldevicesconfiguration');
@@ -580,7 +579,7 @@ describe('NavbarMenuView', () => {
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
             await stubCurrentUserData([], [PermissionEnum.VIEW_USER_ACTION_LOGS]);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].id).toEqual('useractionlogs');
         });
@@ -591,7 +590,7 @@ describe('NavbarMenuView', () => {
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
             await stubCurrentUserData([], []);
-            const rightMenuElements = new NavbarMenuView(translationService).getNavbarMenu().rightMenuElements;
+            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -614,8 +613,7 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([], [PermissionEnum.ADMIN]);
-            const rightMenuCollapsedElements = new NavbarMenuView(translationService).getNavbarMenu()
-                .rightMenuCollapsedElements;
+            const rightMenuCollapsedElements = new NavbarMenuView().getNavbarMenu().rightMenuCollapsedElements;
             expect(rightMenuCollapsedElements.length).toEqual(4);
             expect(rightMenuCollapsedElements[0].id).toEqual('settings');
             expect(rightMenuCollapsedElements[0].label).toEqual('Translation (en) of menu.settings');
@@ -631,7 +629,7 @@ describe('NavbarMenuView', () => {
         it('should be core menu feed if current route is /', async () => {
             RouterStore.setCurrentRoute('/');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
             });
@@ -640,7 +638,7 @@ describe('NavbarMenuView', () => {
         it('should be core menu feed if current route is feed', async () => {
             RouterStore.setCurrentRoute('/feed');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
             });
@@ -649,7 +647,7 @@ describe('NavbarMenuView', () => {
         it('should be core menu feed if current route is a card in feed : /feed/cards/cardId', async () => {
             RouterStore.setCurrentRoute('/feed/cards/cardId');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('feed');
             });
@@ -658,7 +656,7 @@ describe('NavbarMenuView', () => {
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
             });
@@ -667,7 +665,7 @@ describe('NavbarMenuView', () => {
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id/customUrlElement', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id/customUrlElement');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
             });
@@ -676,7 +674,7 @@ describe('NavbarMenuView', () => {
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id?customUrlParam=test', async () => {
             RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id?customUrlParam=test');
             await stubMenuConfigLoading({});
-            const navBarView = new NavbarMenuView(translationService);
+            const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
                 expect(currentSelectedMenuId).toEqual('custom_menu_id');
             });
@@ -703,10 +701,10 @@ describe('NavbarMenuView', () => {
                     }
                 ]
             });
-            const navbarMenuView = new NavbarMenuView(translationService);
+            const navbarMenuView = new NavbarMenuView();
             const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of menu.feed');
-            translationService.setLang('fr');
+            TranslationService.setLang('fr');
             ConfigService.setConfigValue('settings.locale', 'fr');
 
             const newNavBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
@@ -722,11 +720,11 @@ describe('NavbarMenuView', () => {
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
-            const navbarMenuView = new NavbarMenuView(translationService);
+            const navbarMenuView = new NavbarMenuView();
             const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.realtimeusers');
 
-            translationService.setLang('fr');
+            TranslationService.setLang('fr');
             ConfigService.setConfigValue('settings.locale', 'fr');
 
             const newRightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
@@ -738,12 +736,12 @@ describe('NavbarMenuView', () => {
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
             });
-            const navbarMenuView = new NavbarMenuView(translationService);
+            const navbarMenuView = new NavbarMenuView();
             let listenerHasBeenCalled = false;
             navbarMenuView.setMenuChangeListener(() => {
                 listenerHasBeenCalled = true;
             });
-            translationService.setLang('fr');
+            TranslationService.setLang('fr');
             ConfigService.setConfigValue('settings.locale', 'fr');
             expect(listenerHasBeenCalled).toBeTruthy();
             navbarMenuView.destroy();
@@ -751,7 +749,7 @@ describe('NavbarMenuView', () => {
     });
 
     function getNavbarNavigationBar(): NavbarMenuElement[] {
-        return new NavbarMenuView(translationService).getNavbarMenu().upperMenuElements;
+        return new NavbarMenuView().getNavbarMenu().upperMenuElements;
     }
 
     async function stubMenuConfigLoading(menuConfig: any) {
@@ -768,6 +766,6 @@ describe('NavbarMenuView', () => {
     }
 
     function getNavbarMenu(): NavbarMenu {
-        return new NavbarMenuView(translationService).getNavbarMenu();
+        return new NavbarMenuView().getNavbarMenu();
     }
 });

@@ -20,11 +20,11 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
-import {TranslationService} from 'app/business/services/translation/translation.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {firstValueFrom} from 'rxjs';
 import _ from 'lodash';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class NotificationConfigurationView {
     private setProcessStateCheckBoxValue: Function = () => {};
@@ -33,12 +33,10 @@ export class NotificationConfigurationView {
     private setEmailEnabled: Function = () => {};
     private notificationConfigurationPage: NotificationConfigurationPage;
     private processList: ProcessForNotification[] = [];
-    private readonly translationService: TranslationService;
     private lastProcessesStatesNotNotifiedSaved;
     private lastProcessesStatesNotifiedByEmailSaved;
 
-    public constructor(translationService: TranslationService) {
-        this.translationService = translationService;
+    public constructor() {
         this.computeNotificationConfigurationPage();
     }
 
@@ -318,9 +316,9 @@ export class NotificationConfigurationView {
 
         if (processStatesThatShouldBeNotified) {
             const message = `
-                ${this.translationService.getTranslation('notificationConfiguration.youAreUnsubscribedFrom')}
+                ${TranslationService.getTranslation('notificationConfiguration.youAreUnsubscribedFrom')}
                 ${processStatesThatShouldBeNotified}
-                ${this.translationService.getTranslation('notificationConfiguration.youWillBeSubscribedAgain')}
+                ${TranslationService.getTranslation('notificationConfiguration.youWillBeSubscribedAgain')}
             `;
 
             await ModalService.openInformationModal(message.trim());

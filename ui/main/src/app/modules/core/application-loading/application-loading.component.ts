@@ -19,7 +19,7 @@ import {AuthenticationMode} from 'app/authentication/auth.model';
 import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ApplicationLoader} from 'app/business/application-loader';
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 import {UserServer} from 'app/business/server/user.server';
 import {AngularRouterService} from '@ofServices/angularRouterService';
 import {EntitiesServer} from 'app/business/server/entities.server';
@@ -42,7 +42,6 @@ import {LoginComponent} from './login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {loadBuiltInTemplates} from 'app/builtInTemplates/templatesLoader';
 
-declare const opfab: any;
 @Component({
     selector: 'of-application-loading',
     styleUrls: ['./application-loading.component.scss'],
@@ -72,7 +71,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly configServer: ConfigServer,
         private readonly opfabEventStreamServer: OpfabEventStreamServer,
-        private readonly translationService: TranslationService,
+        private readonly translationLib: TranslationLib,
         private readonly remoteLoggerServer: RemoteLoggerServer,
         private readonly userServer: UserServer,
         private readonly routerService: AngularRouterService,
@@ -99,7 +98,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.applicationLoader.setServers({
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
-            translationService: this.translationService,
+            translationLib: this.translationLib,
             userServer: this.userServer,
             routerService: this.routerService,
             entitiesServer: this.entitiesServer,

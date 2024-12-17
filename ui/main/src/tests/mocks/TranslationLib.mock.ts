@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationService} from 'app/business/services/translation/translation.service';
+import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 
-export class TranslationServiceMock extends TranslationService {
+export class TranslationLibMock extends TranslationLib {
     lang = 'en';
 
     getTranslation(key: string, params?: Object): string {

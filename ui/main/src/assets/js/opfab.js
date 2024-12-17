@@ -10,13 +10,6 @@
 const opfab = {};
 
 opfab.multiSelect = {
-    // these values are to be provided at launch by opfab angular application
-    // it is done in i18n.service.ts
-    searchPlaceholderText: '',
-    clearButtonText: 'test',
-    noOptionsText: '',
-    noSearchResultsText: '',
-
     init: function (config) {
         const multiSelect = {
             id: config.id,
@@ -44,10 +37,10 @@ opfab.multiSelect = {
             showValueAsTags: true,
             placeholder: '',
             selectAllOnlyVisible: true,
-            searchPlaceholderText: this.searchPlaceholderText,
-            clearButtonText: this.clearButtonText,
-            noOptionsText: this.noOptionsText,
-            noSearchResultsText: this.noSearchResultsText,
+            searchPlaceholderText: opfab.utils.getTranslation('multiSelect.searchPlaceholderText'),
+            clearButtonText: opfab.utils.getTranslation('multiSelect.clearButtonText'),
+            noOptionsText: opfab.utils.getTranslation('multiSelect.noOptionsText'),
+            noSearchResultsText: opfab.utils.getTranslation('multiSelect.noSearchResultsText'),
             search: config.search,
             hideClearButton: config.multiple !== undefined ? !config.multiple : false,
             allowNewOption: config.allowNewOption !== undefined ? config.allowNewOption : false,

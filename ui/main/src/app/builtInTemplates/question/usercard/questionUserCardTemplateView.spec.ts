@@ -12,6 +12,8 @@ import {initOpfabAPI} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {TranslationService} from '@ofServices/translation/TranslationService';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 
 class QuillEditorMock {
     contents: string;
@@ -32,6 +34,7 @@ class QuillEditorMock {
 describe('Question UserCard template', () => {
     beforeEach(() => {
         initOpfabAPI();
+        TranslationService.setTranslationLib(new TranslationLibMock());
     });
 
     it('GIVEN an existing card WHEN user edit card THEN question and title are actual question and title', () => {

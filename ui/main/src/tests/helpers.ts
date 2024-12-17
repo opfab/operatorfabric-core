@@ -33,7 +33,6 @@ import {Entity} from '@ofModel/entity.model';
 import {OpfabAPI} from 'app/api/opfab.api';
 import {Message} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {TranslationServiceMock} from './mocks/translation.service.mock';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
@@ -231,7 +230,7 @@ export async function setEntities(entities: Entity[]) {
 export function initOpfabAPI() {
     CardTemplateGateway.init();
     UserCardTemplateGateway.init();
-    OpfabAPI.initAPI(new TranslationServiceMock());
+    OpfabAPI.initAPI();
     CardTemplateGateway.initTemplateFunctions();
     UserCardTemplateGateway.initTemplateFunctions();
 }
