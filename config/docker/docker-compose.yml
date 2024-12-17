@@ -166,6 +166,7 @@ services:
     ports:
       - "2106:2106"
     environment:
+      - TZ=Europe/Paris
       - NODE_ENV=base,common,docker
     volumes:
       - "./cards-external-diffusion.yml:/usr/app/config/docker.yml"

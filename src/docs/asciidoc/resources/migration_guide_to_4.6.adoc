@@ -68,3 +68,7 @@ The new default configuration is as such :
   hourToSendRecapEmail: 7
   minuteToSendRecapEmail: 30
 ```
+
+== Timezone
+
+For the cards-external-diffusion service, the timezone configuration has been moved from the Dockerfile to the docker-compose.yml file. If nothing is set in the docker compose file, the default value will be the local timezone of your machine.
