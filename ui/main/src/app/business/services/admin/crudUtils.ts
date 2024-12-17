@@ -10,6 +10,7 @@
 import {Utilities} from 'app/business/common/utilities';
 import {EntitiesService} from '../users/entities.service';
 import {GroupsService} from '../users/groups.service';
+import {MultiSelectOption} from '@ofModel/multiselect.model';
 
 export class CrudUtilities {
     public static formatArrayToString(arrayToFormat: any) {
@@ -27,5 +28,25 @@ export class CrudUtilities {
     public static formatEntityIdsToNames(entityIds: string[]): string {
         const entityNames = entityIds?.map(EntitiesService.getEntityName);
         return this.formatArrayToString(entityNames);
+    }
+
+    public static entityLabelRenderer(data: MultiSelectOption): string {
+        if (CrudUtilities.isDuplicatedEntityName(data.label, data.value)) {
+            return (
+                data.label +
+                ' <i style="color: var(--opfab-color-grey);text-overflow: ellipsis">(' +
+                data.value +
+                ')</i>'
+            );
+        }
+        return data.label;
+    }
+
+    private static isDuplicatedEntityName(label: string, id: string): boolean {
+        return (
+            label &&
+            EntitiesService.getEntities().filter((entity) => entity.name === label.trim() && entity.id !== id).length >
+                0
+        );
     }
 }

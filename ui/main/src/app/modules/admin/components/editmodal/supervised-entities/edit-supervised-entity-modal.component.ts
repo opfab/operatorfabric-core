@@ -19,6 +19,7 @@ import {SupervisedEntitiesService} from 'app/business/services/users/supervised-
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {CrudUtilities} from 'app/business/services/admin/crudUtils';
 
 @Component({
     selector: 'of-edit-supervised-entity-modal',
@@ -43,14 +44,16 @@ export class EditSupervisedEntityModalComponent implements OnInit {
         placeholderKey: 'admin.input.selectEntityText',
         multiple: false,
         search: true,
-        sortOptions: true
+        sortOptions: true,
+        labelRenderer: CrudUtilities.entityLabelRenderer
     };
     supervisorsMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedSupervisors = [];
     supervisorsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.supervisedEntity.supervisors',
         placeholderKey: 'admin.input.selectEntityText',
-        sortOptions: true
+        sortOptions: true,
+        labelRenderer: CrudUtilities.entityLabelRenderer
     };
 
     private crudService: CrudService;

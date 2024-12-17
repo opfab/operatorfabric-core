@@ -21,6 +21,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {CrudUtilities} from 'app/business/services/admin/crudUtils';
 
 @Component({
     selector: 'of-edit-user-modal',
@@ -45,7 +46,8 @@ export class EditUserModalComponent implements OnInit {
     entitiesMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.user.entities',
         placeholderKey: 'admin.input.selectEntityText',
-        sortOptions: true
+        sortOptions: true,
+        labelRenderer: CrudUtilities.entityLabelRenderer
     };
 
     groupsMultiSelectOptions: Array<MultiSelectOption> = [];
