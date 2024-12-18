@@ -9,7 +9,7 @@
 
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';

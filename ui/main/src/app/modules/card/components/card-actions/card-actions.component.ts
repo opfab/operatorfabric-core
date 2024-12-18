@@ -12,7 +12,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';

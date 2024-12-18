@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
-export abstract class ProcessServer {
+export abstract class ProcessesServer {
     abstract getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>>;
     abstract getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>>;
     abstract getAllProcessesDefinition(): Observable<ServerResponse<Process[]>>;

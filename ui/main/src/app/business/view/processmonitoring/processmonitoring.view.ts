@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ProcessGroups, ProcessToMonitor, StatePerProcessToMonitor} from './processmonitoringPage';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';

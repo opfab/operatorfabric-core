@@ -20,7 +20,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserCardView} from './userCard.view';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
-import {EntitiesTree, State} from '@ofModel/processes.model';
+import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName} from './userCard.model';
 import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 

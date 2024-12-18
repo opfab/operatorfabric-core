@@ -9,10 +9,10 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {Router} from '@angular/router';

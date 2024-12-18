@@ -13,7 +13,7 @@ import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';
 import {getOneCard, initOpfabAPI, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../userCard.model';
-import {EntitiesTree, State} from '@ofModel/processes.model';
+import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
 
 declare const opfab: any;
 

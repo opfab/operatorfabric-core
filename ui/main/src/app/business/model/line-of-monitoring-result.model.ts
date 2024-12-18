@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {I18n} from '@ofModel/i18n.model';
-import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 
 export interface LineOfMonitoringResult {
     creationDateTime: number;

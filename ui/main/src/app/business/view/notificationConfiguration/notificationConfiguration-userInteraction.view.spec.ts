@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {NotificationConfigurationView} from './notificationConfiguration.view';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';

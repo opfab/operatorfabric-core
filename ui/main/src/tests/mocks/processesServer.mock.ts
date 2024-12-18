@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process} from '@ofModel/processes.model';
-import {ProcessServer} from 'app/business/server/process.server';
+import {Process} from '@ofServices/processes/model/Processes';
+import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject, of} from 'rxjs';
 
-export class ProcessServerMock implements ProcessServer {
+export class ProcessesServerMock implements ProcessesServer {
     private processSubject = new ReplaySubject<ServerResponse<Process>>();
     private processesSubject = new ReplaySubject<ServerResponse<Process[]>>();
     private processesWithAllVersionsSubject = new ReplaySubject<ServerResponse<Process[]>>();

@@ -10,7 +10,7 @@
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {KeepChildCardsForm} from './keepChildCardsForm';
 import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
-import {Response, State} from '@ofModel/processes.model';
+import {Response, State} from '@ofServices/processes/model/Processes';
 import {EditionMode} from '../userCard.model';
 
 declare const opfab: any;

@@ -19,7 +19,7 @@ import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {TranslateModule} from '@ngx-translate/core';

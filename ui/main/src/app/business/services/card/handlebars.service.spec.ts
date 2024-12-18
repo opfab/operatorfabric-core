@@ -12,15 +12,15 @@ import {getOneCard} from '@tests/helpers';
 import {HandlebarsService} from './handlebars.service';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {OpfabAPI} from '../../../api/opfab.api';
 import {HandlebarsHelper} from './handlebarsHelper';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('Handlebars Services', () => {
-    let processServerMock: ProcessServerMock;
+    let processesServerMock: ProcessesServerMock;
 
     const now = Date.now();
 
@@ -31,9 +31,9 @@ describe('Handlebars Services', () => {
     });
 
     beforeEach(() => {
-        processServerMock = new ProcessServerMock();
-        processServerMock.setTemplateResponseWithParamFromMethodCall(false);
-        ProcessesService.setProcessServer(processServerMock);
+        processesServerMock = new ProcessesServerMock();
+        processesServerMock.setTemplateResponseWithParamFromMethodCall(false);
+        ProcessesService.setProcessServer(processesServerMock);
         HandlebarsService.clearCache();
     });
 
@@ -71,7 +71,7 @@ describe('Handlebars Services', () => {
         });
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
-            processServerMock.setResponseTemplateForGetTemplate(template);
+            processesServerMock.setResponseTemplateForGetTemplate(template);
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
                     expect(result).withContext(contextMessage).toEqual(expectedResult);
@@ -335,7 +335,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile  now ', (done) => {
-            processServerMock.setResponseTemplateForGetTemplate('{{now}}');
+            processesServerMock.setResponseTemplateForGetTemplate('{{now}}');
             HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
                 (result) => {
                     // As it takes times to execute and the test are asynchronous we could not test the exact value,

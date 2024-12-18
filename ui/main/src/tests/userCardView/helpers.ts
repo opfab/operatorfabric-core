@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process, State} from '@ofModel/processes.model';
+import {Process, State} from '@ofServices/processes/model/Processes';
 
 export function getProcessConfigWith(nbProcess: number, nbStatePerProcess: number): Process[] {
     const processes: Process[] = [];

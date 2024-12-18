@@ -8,7 +8,7 @@
  */
 
 import {InputFieldName} from '../userCard.model';
-import {EntitiesTree, State} from '@ofModel/processes.model';
+import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
 import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';

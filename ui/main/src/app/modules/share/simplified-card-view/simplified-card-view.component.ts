@@ -9,13 +9,13 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {DisplayContext} from '@ofModel/template.model';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';

@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 /** This class contains functions to get the list of process and states for filters in UI */

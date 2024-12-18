@@ -18,7 +18,7 @@ import {GlobalStyleService} from '../services/style/global-style.service';
 import {EntitiesService} from './services/users/entities.service';
 import {GroupsService} from './services/users/groups.service';
 import {PerimetersService} from './services/users/perimeters.service';
-import {ProcessesService} from './services/businessconfig/processes.service';
+import {ProcessesService} from '../services/processes/ProcessesService';
 import {OpfabEventStreamService} from './services/events/opfabEventStream.service';
 import {AcknowledgeService} from '../services/acknowlegment/AcknowledgeService';
 import {DateTimeFormatterService} from '../services/dateTimeFormatter/DateTimeFormatterService';
@@ -71,7 +71,7 @@ export class ApplicationLoader {
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
-        ProcessesService.setProcessServer(servers.processServer);
+        ProcessesService.setProcessServer(servers.processesServer);
         OpfabEventStreamService.setEventStreamServer(servers.opfabEventStreamServer);
         AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
         AdminProcessesService.setAdminProcessServer(servers.adminProcessServer);

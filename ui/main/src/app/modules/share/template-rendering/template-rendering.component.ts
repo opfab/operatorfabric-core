@@ -25,7 +25,7 @@ import {
 import {Card} from '@ofModel/card.model';
 import {HandlebarsService} from '../../../business/services/card/handlebars.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';

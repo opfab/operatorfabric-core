@@ -12,7 +12,7 @@ import {EditionMode, InputFieldName, MultiselectItem, UserCardUIControl} from '.
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {RolesEnum} from '@ofModel/roles.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
 export class PublisherForm {

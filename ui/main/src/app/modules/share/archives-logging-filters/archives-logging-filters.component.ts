@@ -23,7 +23,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from '@ofModel/card.model';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 

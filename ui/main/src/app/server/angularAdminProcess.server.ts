@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {AngularServer} from './angular.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {AdminProcessServer} from 'app/business/server/adminprocess.server';

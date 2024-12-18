@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntitiesTree, State} from '@ofModel/processes.model';
+import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
 import {getOneCard, initOpfabAPI, loadWebUIConf, setEntities, setProcessConfiguration} from '@tests/helpers';
 import {RecipientsForm} from './recipientsForm';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';

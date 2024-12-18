@@ -7,7 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, Process} from '@ofModel/processes.model';
+import {
+    AcknowledgmentAllowedEnum,
+    ConsideredAcknowledgedForUserWhenEnum,
+    Process
+} from '@ofServices/processes/model/Processes';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
@@ -16,7 +20,7 @@ import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../business/server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {ProcessesService} from '../../business/services/businessconfig/processes.service';
+import {ProcessesService} from '../processes/ProcessesService';
 import {EntitiesService} from '../../business/services/users/entities.service';
 import {UserService} from '../../business/services/users/user.service';
 

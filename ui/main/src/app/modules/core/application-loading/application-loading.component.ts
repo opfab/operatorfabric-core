@@ -25,7 +25,7 @@ import {AngularRouterService} from '@ofServices/angularRouterService';
 import {EntitiesServer} from 'app/business/server/entities.server';
 import {GroupsServer} from 'app/business/server/groups.server';
 import {PerimetersServer} from 'app/business/server/perimeters.server';
-import {ProcessServer} from 'app/business/server/process.server';
+import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
 import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataServer';
@@ -78,7 +78,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly entitiesServer: EntitiesServer,
         private readonly groupsServer: GroupsServer,
         private readonly perimetersServer: PerimetersServer,
-        private readonly processServer: ProcessServer,
+        private readonly processesServer: ProcessesServer,
         private readonly adminProcessServer: AdminProcessServer,
         private readonly acknowledgeServer: AcknowledgeServer,
         private readonly businessDataServer: BusinessDataServer,
@@ -104,7 +104,7 @@ export class ApplicationLoadingComponent implements OnInit {
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,
-            processServer: this.processServer,
+            processesServer: this.processesServer,
             opfabEventStreamServer: this.opfabEventStreamServer,
             adminProcessServer: this.adminProcessServer,
             acknowledgeServer: this.acknowledgeServer,

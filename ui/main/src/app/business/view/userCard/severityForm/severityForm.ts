@@ -9,7 +9,7 @@
 
 import {Card} from '@ofModel/card.model';
 import {InputFieldName, UserCardUIControl} from '../userCard.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Severity} from '@ofModel/light-card.model';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 

@@ -9,12 +9,12 @@
 
 import {Card} from '@ofModel/card.model';
 import {InputFieldName, MultiselectItem, UserCardUIControl} from '../userCard.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {RolesEnum} from '@ofModel/roles.model';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {EntitiesTree} from '@ofModel/processes.model';
+import {EntitiesTree} from '@ofServices/processes/model/Processes';
 import {Entity} from '@ofModel/entity.model';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 

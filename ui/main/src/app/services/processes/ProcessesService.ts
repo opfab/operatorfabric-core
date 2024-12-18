@@ -14,15 +14,15 @@ import {
     Process,
     ShowAcknowledgmentFooterEnum,
     TypeOfStateEnum
-} from '@ofModel/processes.model';
+} from '@ofServices/processes/model/Processes';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {ProcessServer} from 'app/business/server/process.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
+import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class ProcessesService {
-    private static processServer: ProcessServer;
+    private static processesServer: ProcessesServer;
     private static readonly processesWithAllVersionsCache = new Map();
     private static processesWithLatestVersionOnly: Process[];
     private static processesWithAllVersions: Process[];
@@ -30,8 +30,8 @@ export class ProcessesService {
 
     private static typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
-    public static setProcessServer(processServer: ProcessServer) {
-        this.processServer = processServer;
+    public static setProcessServer(processesServer: ProcessesServer) {
+        this.processesServer = processesServer;
     }
 
     public static loadAllProcessesWithLatestVersion(): Observable<any> {
@@ -166,7 +166,7 @@ export class ProcessesService {
     }
 
     public static queryAllProcesses(): Observable<Process[]> {
-        return ProcessesService.processServer.getAllProcessesDefinition().pipe(
+        return ProcessesService.processesServer.getAllProcessesDefinition().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     logger.error('An error occurred when loading processes configuration');
@@ -178,7 +178,7 @@ export class ProcessesService {
     }
 
     public static queryAllProcessesWithAllVersions(): Observable<Process[]> {
-        return ProcessesService.processServer.getAllProcessesWithAllVersions().pipe(
+        return ProcessesService.processesServer.getAllProcessesWithAllVersions().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     logger.error('An error occurred when loading all versions of processes');
@@ -190,7 +190,7 @@ export class ProcessesService {
     }
 
     public static queryProcessGroups(): Observable<any> {
-        return ProcessesService.processServer.getProcessGroups();
+        return ProcessesService.processesServer.getProcessGroups();
     }
 
     public static queryProcess(id: string, version: string): Observable<Process> {
@@ -199,7 +199,7 @@ export class ProcessesService {
         if (process) {
             return of(process);
         }
-        return ProcessesService.processServer.getProcessDefinition(id, version).pipe(
+        return ProcessesService.processesServer.getProcessDefinition(id, version).pipe(
             map((response) => {
                 if (response.status === ServerResponseStatus.OK && response.data)
                     ProcessesService.processesWithAllVersionsCache.set(key, response.data);
@@ -210,7 +210,7 @@ export class ProcessesService {
     }
 
     public static fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        return ProcessesService.processServer.getTemplate(process, version, name).pipe(
+        return ProcessesService.processesServer.getTemplate(process, version, name).pipe(
             map((serverResponse) => {
                 if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Template not available');
                 return serverResponse.data;

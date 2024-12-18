@@ -12,7 +12,7 @@ import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {MessageLevel} from '@ofModel/message.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';

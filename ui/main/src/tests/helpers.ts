@@ -20,9 +20,9 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {UserServerMock} from './mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {UserService} from 'app/business/services/users/user.service';
-import {ProcessServerMock} from './mocks/processServer.mock';
-import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesServerMock} from './mocks/processesServer.mock';
+import {Process} from '@ofServices/processes/model/Processes';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ModalService} from 'app/business/services/modal.service';
 import {ModalServerMock} from './mocks/modalServer.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
@@ -191,13 +191,13 @@ export async function setProcessConfiguration(
     processesWithAllVersions: Process[] = undefined,
     processGroups: any = {groups: []}
 ) {
-    const processServerMock = new ProcessServerMock();
-    processServerMock.setResponseForProcessesDefinition(new ServerResponse(processes, ServerResponseStatus.OK, null));
-    processServerMock.setResponseForProcessesWithAllVersions(
+    const processesServerMock = new ProcessesServerMock();
+    processesServerMock.setResponseForProcessesDefinition(new ServerResponse(processes, ServerResponseStatus.OK, null));
+    processesServerMock.setResponseForProcessesWithAllVersions(
         new ServerResponse(processesWithAllVersions ?? processes, ServerResponseStatus.OK, null)
     );
-    processServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
-    ProcessesService.setProcessServer(processServerMock);
+    processesServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
+    ProcessesService.setProcessServer(processesServerMock);
     await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
     await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
     await firstValueFrom(ProcessesService.loadProcessGroups());

@@ -17,7 +17,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {firstValueFrom} from 'rxjs';
 import {CardService} from 'app/business/services/card/card.service';
 import {Guid} from 'guid-typescript';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';

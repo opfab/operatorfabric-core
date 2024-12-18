@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {Observable, catchError, forkJoin, of, take} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 

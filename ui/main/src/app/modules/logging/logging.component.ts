@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import {Subject} from 'rxjs';
 
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/services/config/ConfigService';

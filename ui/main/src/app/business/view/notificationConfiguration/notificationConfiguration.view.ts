@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {
     NotificationConfigurationPage,
     ProcessForNotification,
     ProcessGroupForNotification,
     StateForNotification
 } from './notificationConfigurationPage';
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {UserService} from 'app/business/services/users/user.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {SettingsService} from 'app/business/services/users/settings.service';

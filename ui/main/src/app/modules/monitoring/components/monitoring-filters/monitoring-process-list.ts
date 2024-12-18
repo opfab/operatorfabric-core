@@ -8,8 +8,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {Process} from '@ofServices/processes/model/Processes';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserService} from 'app/business/services/users/user.service';
 
 export const DEFAULT_PROCESS_GROUP_ID = '--';

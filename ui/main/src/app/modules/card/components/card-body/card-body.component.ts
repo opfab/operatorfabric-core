@@ -19,9 +19,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {SafeHtml} from '@angular/platform-browser';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';

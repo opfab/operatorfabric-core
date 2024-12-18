@@ -12,7 +12,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {ProcessStatesForm} from './processStatesForm/processStatesForm';
 import {HandlebarsService} from 'app/business/services/card/handlebars.service';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {firstValueFrom, map} from 'rxjs';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {DatesForm} from './datesForm/datesForm';

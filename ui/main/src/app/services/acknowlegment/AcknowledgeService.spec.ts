@@ -14,20 +14,20 @@ import {
     Process,
     Response,
     State
-} from '@ofModel/processes.model';
+} from '@ofServices/processes/model/Processes';
 import {getOneCard} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {UserService} from '../../business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
-import {ProcessesService} from '../../business/services/businessconfig/processes.service';
+import {ProcessesService} from '../processes/ProcessesService';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {RolesEnum} from '@ofModel/roles.model';
 
@@ -57,14 +57,14 @@ describe('AcknowledgeService testing ', () => {
         );
         UserService.setUserServer(userServerMock);
 
-        const processServerMock = new ProcessServerMock();
-        processServerMock.setResponseForProcessesDefinition(
+        const processesServerMock = new ProcessesServerMock();
+        processesServerMock.setResponseForProcessesDefinition(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
-        processServerMock.setResponseForProcessesWithAllVersions(
+        processesServerMock.setResponseForProcessesWithAllVersions(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
-        ProcessesService.setProcessServer(processServerMock);
+        ProcessesService.setProcessServer(processesServerMock);
         ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
         ProcessesService.loadAllProcessesWithAllVersions().subscribe();
         UserService.loadUserWithPerimetersData().subscribe();

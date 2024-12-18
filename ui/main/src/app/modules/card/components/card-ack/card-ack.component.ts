@@ -11,12 +11,12 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {Process, State} from '@ofModel/processes.model';
+import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Subject, map, takeUntil} from 'rxjs';

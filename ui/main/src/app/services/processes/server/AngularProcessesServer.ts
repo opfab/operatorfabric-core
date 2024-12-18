@@ -10,20 +10,20 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {Process, State} from '@ofModel/processes.model';
-import {ProcessServer} from 'app/business/server/process.server';
+import {Process, State} from '@ofServices/processes/model/Processes';
+import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularProcessServer extends AngularServer implements ProcessServer {
-    private processesUrl: string;
-    private processGroupsUrl: string;
+export class AngularProcessesServer extends AngularServer implements ProcessesServer {
+    private readonly processesUrl: string;
+    private readonly processGroupsUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
         this.processGroupsUrl = `${environment.url}businessconfig/processgroups`;

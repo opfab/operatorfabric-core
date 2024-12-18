@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 import {Card} from '@ofModel/card.model';
-import {ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
+import {ShowAcknowledgmentFooterEnum} from '@ofServices/processes/model/Processes';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Utilities} from 'app/business/common/utilities';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 

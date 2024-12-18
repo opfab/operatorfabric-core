@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process, State} from '@ofModel/processes.model';
+import {Process, State} from '@ofServices/processes/model/Processes';
 import {NotificationConfigurationView} from './notificationConfiguration.view';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';

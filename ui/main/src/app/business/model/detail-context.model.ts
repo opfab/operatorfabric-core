@@ -9,7 +9,7 @@
 
 import {Card} from '@ofModel/card.model';
 import {UserContext} from '@ofModel/user-context.model';
-import {Response} from './processes.model';
+import {Response} from '../../services/processes/model/Processes';
 
 export class DetailContext {
     constructor(

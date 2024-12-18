@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process, State, UiVisibility} from '@ofModel/processes.model';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {Process, State, UiVisibility} from '@ofServices/processes/model/Processes';
+import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {firstValueFrom} from 'rxjs';
 import {ProcessMonitoringView} from './processmonitoring.view';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -24,7 +24,7 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {ConfigService} from 'app/services/config/ConfigService';
 
 describe('Process Monitoring view ', () => {
-    let processServerMock: ProcessServerMock;
+    let processesServerMock: ProcessesServerMock;
     let userServerMock: UserServerMock;
 
     async function initProcesses(
@@ -91,12 +91,12 @@ describe('Process Monitoring view ', () => {
             )
         ];
 
-        processServerMock = new ProcessServerMock();
-        ProcessesService.setProcessServer(processServerMock);
-        processServerMock.setResponseForProcessesDefinition(
+        processesServerMock = new ProcessesServerMock();
+        ProcessesService.setProcessServer(processesServerMock);
+        processesServerMock.setResponseForProcessesDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        processServerMock.setResponseForProcessesWithAllVersions(
+        processesServerMock.setResponseForProcessesWithAllVersions(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
@@ -137,7 +137,9 @@ describe('Process Monitoring view ', () => {
             ]
         }
     ) {
-        processServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
+        processesServerMock.setResponseForProcessGroups(
+            new ServerResponse(processGroups, ServerResponseStatus.OK, null)
+        );
         await firstValueFrom(ProcessesService.loadProcessGroups());
     }
 

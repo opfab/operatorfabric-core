@@ -9,7 +9,7 @@
 
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Process} from '@ofModel/processes.model';
+import {Process} from '@ofServices/processes/model/Processes';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';

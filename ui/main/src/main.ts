@@ -37,8 +37,8 @@ import {ConfigServer} from './app/services/config/server/ConfigServer';
 import {AngularConfigServer} from './app/services/config/server/AngularConfigServer';
 import {TemplateCssServer} from './app/business/server/template-css.server';
 import {AngularTemplateCssServer} from './app/server/angularTemplate-css.service';
-import {ProcessServer} from './app/business/server/process.server';
-import {AngularProcessServer} from './app/server/angularProcess.server';
+import {ProcessesServer} from './app/services/processes/server/ProcessesServer';
+import {AngularProcessesServer} from './app/services/processes/server/AngularProcessesServer';
 import {BusinessDataServer} from './app/services/businessdata/server/BusinessDataServer';
 import {AngularBusinessDataServer} from './app/services/businessdata/server/AngularBusinessData.server';
 import {SettingsServer} from './app/business/server/settings.server';
@@ -103,7 +103,7 @@ bootstrapApplication(AppComponent, {
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: TemplateCssServer, useClass: AngularTemplateCssServer},
-        {provide: ProcessServer, useClass: AngularProcessServer},
+        {provide: ProcessesServer, useClass: AngularProcessesServer},
         {provide: BusinessDataServer, useClass: AngularBusinessDataServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},

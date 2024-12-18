@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 

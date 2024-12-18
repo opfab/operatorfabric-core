@@ -16,9 +16,9 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {firstValueFrom} from 'rxjs';
 import {getOneCard} from '@tests/helpers';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {Process, ShowAcknowledgmentFooterEnum, State} from '@ofModel/processes.model';
+import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
+import {Process, ShowAcknowledgmentFooterEnum, State} from '@ofServices/processes/model/Processes';
 import {Card} from '@ofModel/card.model';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
@@ -45,14 +45,14 @@ describe('CardBodyView', () => {
     }
 
     function mockProcessesService() {
-        const processServerMock = new ProcessServerMock();
-        processServerMock.setResponseForProcessesDefinition(
+        const processesServerMock = new ProcessesServerMock();
+        processesServerMock.setResponseForProcessesDefinition(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
-        processServerMock.setResponseForProcessesWithAllVersions(
+        processesServerMock.setResponseForProcessesWithAllVersions(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
-        ProcessesService.setProcessServer(processServerMock);
+        ProcessesService.setProcessServer(processesServerMock);
         ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
         ProcessesService.loadAllProcessesWithAllVersions().subscribe();
     }

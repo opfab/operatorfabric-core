@@ -10,7 +10,7 @@
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {SeverityForm} from './severityForm';
 import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
-import {State} from '@ofModel/processes.model';
+import {State} from '@ofServices/processes/model/Processes';
 import {Severity} from '@ofModel/light-card.model';
 
 declare const opfab: any;

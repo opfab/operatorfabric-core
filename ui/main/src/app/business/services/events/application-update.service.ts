@@ -17,7 +17,7 @@ import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../../common/utilities';
 import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
-import {ProcessesService} from '../businessconfig/processes.service';
+import {ProcessesService} from '../../../services/processes/ProcessesService';
 import {BusinessDataService} from '../../../services/businessdata/businessdata.service';
 import {ConfigService} from '../../../services/config/ConfigService';
 

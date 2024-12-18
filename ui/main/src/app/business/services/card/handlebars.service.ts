@@ -10,7 +10,7 @@
 import * as Handlebars from 'handlebars/dist/handlebars.js';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {HandlebarsHelper} from './handlebarsHelper';

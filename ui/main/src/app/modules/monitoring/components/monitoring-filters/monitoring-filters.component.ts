@@ -10,7 +10,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {TypeOfStateEnum} from '@ofModel/processes.model';
+import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Filter} from '@ofModel/feed-filter.model';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MonitoringFilterBuilder} from './monitoring-filter-builder';

@@ -7,24 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from './processes.service';
-import {Process} from '@ofModel/processes.model';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
+import {ProcessesService} from './ProcessesService';
+import {Process} from '@ofServices/processes/model/Processes';
+import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 
 describe('Processes Services', () => {
-    let processServerMock: ProcessServerMock;
+    let processesServerMock: ProcessesServerMock;
 
     beforeEach(() => {
-        processServerMock = new ProcessServerMock();
-        ProcessesService.setProcessServer(processServerMock);
+        processesServerMock = new ProcessesServerMock();
+        ProcessesService.setProcessServer(processesServerMock);
     });
 
     describe('Query a process', () => {
         it('GIVEN an existing process WHEN query the process THEN process is returned', () => {
             const processDefinition = new Process('testPublisher', '0', 'businessconfig.label');
             const serverResponse = new ServerResponse<Process>(processDefinition, null, null);
-            processServerMock.setResponseForProcessDefinition(serverResponse);
+            processesServerMock.setResponseForProcessDefinition(serverResponse);
             ProcessesService.queryProcess('testPublisher', '0').subscribe((result) =>
                 expect(result).toEqual(processDefinition)
             );
@@ -32,7 +32,7 @@ describe('Processes Services', () => {
 
         it('GIVEN a non-existing process WHEN query the process THEN null is returned', () => {
             const serverResponse = new ServerResponse<Process>(null, ServerResponseStatus.NOT_FOUND, null);
-            processServerMock.setResponseForProcessDefinition(serverResponse);
+            processesServerMock.setResponseForProcessDefinition(serverResponse);
             ProcessesService.queryProcess('testPublisher', '0').subscribe((result) => expect(result).toEqual(null));
         });
     });
