@@ -23,11 +23,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {HandlebarsService} from '../../../business/services/card/handlebars.service';
+import {HandlebarsService} from '../../../services/handlebars/HandlebarsService';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofServices/processes/model/Processes';
-import {DetailContext} from '@ofModel/detail-context.model';
-import {UserContext} from '@ofModel/user-context.model';
+import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
+import {UserContext} from '@ofServices/handlebars/model/UserContext.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
@@ -169,7 +169,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private getHTMLFromTemplate(): Observable<SafeHtml> {
         const htmlContent$ = HandlebarsService.executeTemplate(
             this.cardState.templateName,
-            new DetailContext(this.card, this.userContext, this.cardState.response)
+            new DetailContext(this.card, this.userContext)
         );
         const cssContent$ = this.getCssFilesContent();
         const html = zip(htmlContent$, cssContent$)

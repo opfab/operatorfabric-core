@@ -98,16 +98,6 @@ export class AngularProcessesServer extends AngularServer implements ProcessesSe
         return this.processHttpResponse(this.httpClient.get(this.processGroupsUrl));
     }
 
-    getTemplate(processId: string, processVersion: string, templateName: string): Observable<ServerResponse<string>> {
-        const params = new HttpParams().set('version', processVersion);
-        return this.processHttpResponse(
-            this.httpClient.get(`${this.processesUrl}/${processId}/templates/${templateName}`, {
-                params,
-                responseType: 'text'
-            })
-        );
-    }
-
     getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>> {
         return null;
     }

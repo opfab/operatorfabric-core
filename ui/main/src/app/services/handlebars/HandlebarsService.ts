@@ -10,15 +10,21 @@
 import * as Handlebars from 'handlebars/dist/handlebars.js';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {DetailContext} from '@ofModel/detail-context.model';
+import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {HandlebarsHelper} from './handlebarsHelper';
+import {HandlebarsHelper} from './HandlebarsHelper';
 import {HandlebarsAPI} from 'app/api/handlebars.api';
+import {HandlebarsTemplateServer} from './server/HandlebarsTemplateServer';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 export class HandlebarsService {
     private static templateCache: Map<string, Function> = new Map();
     private static initDone = false;
+    private static handlebarsTemplateServer: HandlebarsTemplateServer;
+
+    public static setHandlebarsTemplateServer(handlebarsTemplateServer: HandlebarsTemplateServer) {
+        HandlebarsService.handlebarsTemplateServer = handlebarsTemplateServer;
+    }
 
     public static init() {
         if (!HandlebarsService.initDone) {
@@ -49,9 +55,18 @@ export class HandlebarsService {
         if (template) {
             return of(template);
         }
-        return ProcessesService.fetchHbsTemplate(process, version, name).pipe(
+        return HandlebarsService.fetchHbsTemplate(process, version, name).pipe(
             map((s) => Handlebars.compile(s)),
             tap((t) => (HandlebarsService.templateCache[key] = t))
+        );
+    }
+
+    private static fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
+        return HandlebarsService.handlebarsTemplateServer.getTemplate(process, version, name).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Template not available');
+                return serverResponse.data;
+            })
         );
     }
 

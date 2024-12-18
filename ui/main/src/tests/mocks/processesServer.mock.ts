@@ -19,9 +19,6 @@ export class ProcessesServerMock implements ProcessesServer {
     private processGroupsSubject = new ReplaySubject<ServerResponse<any>>();
     private cssSubject = new ReplaySubject<ServerResponse<string>>();
 
-    private templateString = 'Data:{{card.data}}';
-    private prefixWithParamsFormMethodCall = true;
-
     setResponseForProcessDefinition(process: ServerResponse<Process>) {
         this.processSubject.next(process);
     }
@@ -34,14 +31,6 @@ export class ProcessesServerMock implements ProcessesServer {
 
     setResponseForProcessGroups(processGroups: ServerResponse<any>) {
         this.processGroupsSubject.next(processGroups);
-    }
-
-    setResponseTemplateForGetTemplate(template: string, prefixWithParamsFormMethodCall: boolean = false) {
-        this.templateString = template;
-    }
-
-    setTemplateResponseWithParamFromMethodCall(addParam: boolean) {
-        this.prefixWithParamsFormMethodCall = addParam;
     }
 
     setResponseForCss(css: ServerResponse<string>) {
@@ -59,14 +48,6 @@ export class ProcessesServerMock implements ProcessesServer {
     }
     getProcessGroups(): Observable<ServerResponse<any>> {
         return this.processGroupsSubject.asObservable();
-    }
-    getTemplate(processid: string, processVersion: string, templateName: string): Observable<ServerResponse<string>> {
-        let response = '';
-        if (this.prefixWithParamsFormMethodCall) {
-            response = `process:${processid},version:${processVersion},template:${templateName},`;
-        }
-        response += this.templateString;
-        return of(new ServerResponse(response, ServerResponseStatus.OK, null));
     }
     getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>> {
         return this.cssSubject.asObservable();

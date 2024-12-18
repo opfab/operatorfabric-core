@@ -12,7 +12,7 @@ import {GroupsService} from 'app/business/services/users/groups.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {HandlebarsService} from 'app/business/services/card/handlebars.service';
+import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../../common/utilities';
 import {ApplicationEventsService} from './application-events.service';

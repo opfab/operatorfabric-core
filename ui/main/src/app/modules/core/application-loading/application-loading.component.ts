@@ -41,6 +41,7 @@ import {LoadingInProgressComponent} from './loading-in-progress/loading-in-progr
 import {LoginComponent} from './login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {loadBuiltInTemplates} from 'app/builtInTemplates/templatesLoader';
+import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';
 
 @Component({
     selector: 'of-application-loading',
@@ -86,6 +87,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly supervisedEntitiesServer: SupervisedEntitiesServer,
         private readonly externalDevicesServer: ExternalDevicesServer,
         private readonly templateCssServer: TemplateCssServer,
+        private readonly handlebarsTemplateServer: HandlebarsTemplateServer,
         private readonly settingsServer: SettingsServer,
         private readonly modalServer: ModalServer,
         private readonly soundServer: SoundServer
@@ -113,6 +115,7 @@ export class ApplicationLoadingComponent implements OnInit {
             supervisedEntitiesServer: this.supervisedEntitiesServer,
             externalDevicesServer: this.externalDevicesServer,
             templateCssServer: this.templateCssServer,
+            handlebarsTemplateServer: this.handlebarsTemplateServer,
             settingsServer: this.settingsServer,
             modalServer: this.modalServer,
             authService: this.authService,

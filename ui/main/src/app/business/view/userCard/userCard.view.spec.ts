@@ -24,7 +24,7 @@ import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName} from './userCard.model';
 import {Entity} from '@ofModel/entity.model';
 import {RolesEnum} from '@ofModel/roles.model';
-import {HandlebarsService} from 'app/business/services/card/handlebars.service';
+import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {setSpecificCardInformation} from '@tests/userCardView/helpers';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
@@ -32,6 +32,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {I18n} from '@ofModel/i18n.model';
 import {CardWithChildCards} from '@ofModel/card.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {HandlebarsTemplateServerMock} from '@tests/mocks/HandlebarsTemplateServer.mock';
 
 declare const opfab: any;
 
@@ -76,6 +77,7 @@ describe('UserCard view ', () => {
         ) => Promise<void>
     ) {
         initOpfabAPI();
+        HandlebarsService.setHandlebarsTemplateServer(new HandlebarsTemplateServerMock());
         HandlebarsService.clearCache();
         cardServerMock = new CardServerMock();
         CardService.setCardServer(cardServerMock);

@@ -9,18 +9,17 @@
 
 import {getOneCard} from '@tests/helpers';
 
-import {HandlebarsService} from './handlebars.service';
-import {UserContext} from '@ofModel/user-context.model';
-import {DetailContext} from '@ofModel/detail-context.model';
-import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
-import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {OpfabAPI} from '../../../api/opfab.api';
-import {HandlebarsHelper} from './handlebarsHelper';
+import {HandlebarsService} from './HandlebarsService';
+import {UserContext} from '@ofServices/handlebars/model/UserContext.model';
+import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
+import {OpfabAPI} from '../../api/opfab.api';
+import {HandlebarsHelper} from './HandlebarsHelper';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {HandlebarsTemplateServerMock} from '@tests/mocks/HandlebarsTemplateServer.mock';
 
 describe('Handlebars Services', () => {
-    let processesServerMock: ProcessesServerMock;
+    let handlebarsTemplateServerMock: HandlebarsTemplateServerMock;
 
     const now = Date.now();
 
@@ -31,9 +30,9 @@ describe('Handlebars Services', () => {
     });
 
     beforeEach(() => {
-        processesServerMock = new ProcessesServerMock();
-        processesServerMock.setTemplateResponseWithParamFromMethodCall(false);
-        ProcessesService.setProcessServer(processesServerMock);
+        handlebarsTemplateServerMock = new HandlebarsTemplateServerMock();
+        handlebarsTemplateServerMock.setTemplateResponseWithParamFromMethodCall(false);
+        HandlebarsService.setHandlebarsTemplateServer(handlebarsTemplateServerMock);
         HandlebarsService.clearCache();
     });
 
@@ -71,13 +70,11 @@ describe('Handlebars Services', () => {
         });
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
-            processesServerMock.setResponseTemplateForGetTemplate(template);
-            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
-                (result) => {
-                    expect(result).withContext(contextMessage).toEqual(expectedResult);
-                    done();
-                }
-            );
+            handlebarsTemplateServerMock.setResponseTemplateForGetTemplate(template);
+            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext)).subscribe((result) => {
+                expect(result).withContext(contextMessage).toEqual(expectedResult);
+                done();
+            });
         }
 
         it('compile simple template', (done) => {
@@ -335,19 +332,17 @@ describe('Handlebars Services', () => {
         });
 
         it('compile  now ', (done) => {
-            processesServerMock.setResponseTemplateForGetTemplate('{{now}}');
-            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext, null)).subscribe(
-                (result) => {
-                    // As it takes times to execute and the test are asynchronous we could not test the exact value,
-                    // so we test the range of the result
-                    // taking into account asynchronous mechanism for test tool
-                    // it can take more than 10s to have the execution done,
-                    // so we set the range starting form now to now plus one minute
-                    expect(result).toBeGreaterThan(now.valueOf());
-                    expect(result).toBeLessThan(now.valueOf() + 60000);
-                    done();
-                }
-            );
+            handlebarsTemplateServerMock.setResponseTemplateForGetTemplate('{{now}}');
+            HandlebarsService.executeTemplate('test', new DetailContext(card, userContext)).subscribe((result) => {
+                // As it takes times to execute and the test are asynchronous we could not test the exact value,
+                // so we test the range of the result
+                // taking into account asynchronous mechanism for test tool
+                // it can take more than 10s to have the execution done,
+                // so we set the range starting form now to now plus one minute
+                expect(result).toBeGreaterThan(now.valueOf());
+                expect(result).toBeLessThan(now.valueOf() + 60000);
+                done();
+            });
         });
 
         it('compile dateFormat with number for epoch date  (using en locale fallback)', (done) => {

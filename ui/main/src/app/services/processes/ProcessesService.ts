@@ -209,15 +209,6 @@ export class ProcessesService {
         );
     }
 
-    public static fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        return ProcessesService.processesServer.getTemplate(process, version, name).pipe(
-            map((serverResponse) => {
-                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Template not available');
-                return serverResponse.data;
-            })
-        );
-    }
-
     public static findProcessGroupIdForProcessId(processId: string): string {
         const data = ProcessesService.findProcessGroupForProcess(processId);
 

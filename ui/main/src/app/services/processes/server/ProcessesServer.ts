@@ -16,10 +16,5 @@ export abstract class ProcessesServer {
     abstract getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>>;
     abstract getAllProcessesDefinition(): Observable<ServerResponse<Process[]>>;
     abstract getProcessGroups(): Observable<ServerResponse<any>>;
-    abstract getTemplate(
-        processid: string,
-        processVersion: string,
-        templateName: string
-    ): Observable<ServerResponse<string>>;
     abstract getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>>;
 }

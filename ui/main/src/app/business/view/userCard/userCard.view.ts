@@ -11,10 +11,10 @@ import {EditionMode, InputFieldName, UserCardUIControl} from './userCard.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {ProcessStatesForm} from './processStatesForm/processStatesForm';
-import {HandlebarsService} from 'app/business/services/card/handlebars.service';
+import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {firstValueFrom, map} from 'rxjs';
-import {DetailContext} from '@ofModel/detail-context.model';
+import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
 import {DatesForm} from './datesForm/datesForm';
 import {SeverityForm} from './severityForm/severityForm';
 import {KeepChildCardsForm} from './keepChildCardsForm/keepChildCardsForm';
@@ -145,7 +145,7 @@ export class UserCardView {
             this.userCardUIControl.setLoadingTemplateInProgress(true);
             const html = await firstValueFrom(
                 HandlebarsService.queryTemplate(this.currentProcessId, process.version, templateName).pipe(
-                    map((t) => t(new DetailContext(this.existingCard, null, null)))
+                    map((t) => t(new DetailContext(this.existingCard, null)))
                 )
             );
             this.userCardUIControl.setLoadingTemplateInProgress(false);

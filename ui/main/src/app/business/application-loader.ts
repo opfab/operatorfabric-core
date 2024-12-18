@@ -27,7 +27,7 @@ import {BusinessDataService} from '../services/businessdata/businessdata.service
 import {CardService} from './services/card/card.service';
 import {SupervisedEntitiesService} from './services/users/supervised-entities.service';
 import {SelectedCardLoaderService} from './services/card/selectedCardLoader.service';
-import {HandlebarsService} from './services/card/handlebars.service';
+import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';
 import {TemplateCssService} from './services/card/template-css.service';
 import {SettingsService} from './services/users/settings.service';
@@ -79,6 +79,7 @@ export class ApplicationLoader {
         CardService.setCardServer(servers.cardServer);
         SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
+        HandlebarsService.setHandlebarsTemplateServer(servers.handlebarsTemplateServer);
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         SettingsService.setSettingsServer(servers.settingsServer);
         ModalService.setModalServer(servers.modalServer);

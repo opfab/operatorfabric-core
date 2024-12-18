@@ -8,13 +8,11 @@
  */
 
 import {Card} from '@ofModel/card.model';
-import {UserContext} from '@ofModel/user-context.model';
-import {Response} from '../../services/processes/model/Processes';
+import {UserContext} from './UserContext.model';
 
 export class DetailContext {
     constructor(
         readonly card: Card,
-        readonly userContext: UserContext,
-        readonly responseData: Response
+        readonly userContext: UserContext
     ) {}
 }

@@ -66,6 +66,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {AppRoutingModule} from './app/router/app-routing.module';
 import {AppComponent} from './app/app.component';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
+import {AngularHandlebarsTemplateServer} from '@ofServices/handlebars/server/AngularHandlebarsTemplateServer';
+import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';
 
 if (environment.production) {
     enableProdMode();
@@ -103,6 +105,7 @@ bootstrapApplication(AppComponent, {
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: TemplateCssServer, useClass: AngularTemplateCssServer},
+        {provide: HandlebarsTemplateServer, useClass: AngularHandlebarsTemplateServer},
         {provide: ProcessesServer, useClass: AngularProcessesServer},
         {provide: BusinessDataServer, useClass: AngularBusinessDataServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},
