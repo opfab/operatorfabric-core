@@ -80,3 +80,35 @@ The new default configuration is as such :
 == Timezone
 
 For the cards-external-diffusion service, the timezone configuration has been moved from the Dockerfile to the docker-compose.yml file. If nothing is set in the docker compose file, the default value will be the local timezone of your machine.
+
+== Email templates custom parameters
+It is now possible to configure custom parameters to be used in handlebars email templates.
+The custom parameter can be added in cards-external-diffusion configuration under the "defaultConfig.customConfig" section:
+
+```
+cardsExternalDiffusion:
+    adminPort: 2106
+    activeOnStartup: true
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      subjectPrefix: 'Opfab card received '
+      customConfig: 
+             myParam1: 'myValue1'
+             myParam2: 'myValue2'
+```
+The custom parameters can then be referred in handlebars template prefixed with "config", for example:
+```
+{{#config.myParam1}}
+```
+
+This change has an impact on existing mail templates, as the existing handlebars variables will have to be prefixed with "card", for example on the existing example:
+```
+<div id="apogee-contingencies">
+    {{#data.networkContingencies}}
+```
+is to be changed to
+```
+<div id="apogee-contingencies">
+  {{#card.data.networkContingencies}}
+
+```

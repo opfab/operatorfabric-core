@@ -71,7 +71,8 @@ export default class CardsExternalDiffusionService {
             .setBodyPostfix(serviceConfig.bodyPostfix as string)
             .setPublisherEntityPrefix(serviceConfig.publisherEntityPrefix as string)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
-            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris');
+            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
+            .setCustomConfig(serviceConfig.customConfig);
 
         if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()

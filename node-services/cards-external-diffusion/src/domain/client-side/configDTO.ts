@@ -27,4 +27,5 @@ export default class ConfigDTO {
     public sendRateLimit = 100;
     public sendRateLimitPeriodInSec = 3600;
     public defaultTimeZone: string;
+    public customConfig: any;
 }

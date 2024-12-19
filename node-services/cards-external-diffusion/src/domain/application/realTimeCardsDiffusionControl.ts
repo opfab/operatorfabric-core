@@ -23,6 +23,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     private publisherEntityPrefix: string;
     private activateCardsDiffusionRateLimiter: boolean;
     private cardsDiffusionRateLimiter: CardsDiffusionRateLimiter;
+    private customConfig: any;
 
     public setSubjectPrefix(subjectPrefix: string): this {
         this.subjectPrefix = subjectPrefix;
@@ -58,6 +59,11 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         this.cardsDiffusionRateLimiter = cardsDiffusionRateLimiter;
     }
 
+    public setCustomConfig(config: any) {
+        this.customConfig = config;
+        return this;
+    }
+
     public setConfiguration(updated: ConfigDTO): void {
         this.from = updated.mailFrom;
         this.subjectPrefix = updated.subjectPrefix;
@@ -71,6 +77,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 .setLimitPeriodInSec(updated.sendRateLimitPeriodInSec)
                 .setSendRateLimit(updated.sendRateLimit);
         }
+        this.customConfig = updated.customConfig;
     }
 
     public async checkCardsNeedToBeSent(): Promise<void> {
@@ -232,7 +239,8 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         cardConfig.states[stateName].emailBodyTemplate as string,
                         card.processVersion
                     );
-                    cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler(cardContent);
+                    cardBodyHtml =
+                        cardBodyHtml + ' <br> ' + templateCompiler({card: cardContent, config: this.customConfig});
                 }
             }
             if (this.publisherEntityPrefix != null && card.publisher != null && card.publisherType === 'ENTITY') {

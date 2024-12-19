@@ -59,7 +59,8 @@ describe('Cards external diffusion', function () {
             .setPublisherEntityPrefix('Sent by ')
             .setOpfabUrlInMailContent('http://localhost')
             .setWindowInSecondsForCardSearch(120)
-            .setDefaultTimeZone('Europe/Paris');
+            .setDefaultTimeZone('Europe/Paris')
+            .setCustomConfig({customParam1: 'Param1'});
     }
 
     it('Should send card when publishDate is after configured period', async function () {
@@ -148,7 +149,7 @@ describe('Cards external diffusion', function () {
         databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
         const startDateString = getFormattedDateAndTimeFromEpochDate(publishDate);
 
-        opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}} {{config.customParam1}}';
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));
@@ -160,7 +161,7 @@ describe('Cards external diffusion', function () {
             'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1 - ' +
                 startDateString +
                 ' - ' +
-                '</a> <br> Title1 <br/>Postfix'
+                '</a> <br> Title1 Param1 <br/>Postfix'
         );
     });
 
@@ -206,7 +207,7 @@ describe('Cards external diffusion', function () {
 
         databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
 
-        opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
         const startDateString = getFormattedDateAndTimeFromEpochDate(publishDate);
 
@@ -263,7 +264,7 @@ describe('Cards external diffusion', function () {
 
         databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
 
-        opfabBusinessConfigServicesInterfaceStub.template = '{{titleTranslated}}';
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));

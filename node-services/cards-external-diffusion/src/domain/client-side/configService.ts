@@ -44,6 +44,7 @@ export default class ConfigService {
                 this.config.activateCardsDiffusionRateLimiter = defaultConfig.activateCardsDiffusionRateLimiter;
                 this.config.sendRateLimit = defaultConfig.sendRateLimit;
                 this.config.sendRateLimitPeriodInSec = defaultConfig.sendRateLimitPeriodInSec;
+                this.config.customConfig = defaultConfig.customConfig;
                 this.save();
             }
         } catch (err) {

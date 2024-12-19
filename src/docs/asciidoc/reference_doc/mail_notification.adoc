@@ -21,13 +21,41 @@ the "timezone for mails" field in the user settings screen.
 The email body contains a link to the card details in OpFab. In the config.json file containing the state definition, the "emailBodyTemplate" field allows to define a template specific to the email body content.
 This template can use handlebars helpers for formatting but can't run javascript. If no template is specified, the mail is sent with just the link to the card in the body.
 
+== Email templates
+In email handlebars templates it is possible to refer card fields by prefixing with "card" prefix. For example:
+
+....
+<div id="apogee-contingencies">
+  {{#card.data.networkContingencies}}
+....
+
 A specific handlebars helper `deltaToHtml` allows to display rich text content from a card containing the 'richMessage' field with the following syntax:
 
 ....
 
-{{{ deltaToHtml data.richMessage }}}
+{{{ deltaToHtml card.data.richMessage }}}
 
 ....
 
 Ensure to encapsulate the expression within three curly braces to prevent HTML escaping.
+
+
+It is also possible to configure custom parameters to be used in handlebars email templates.
+The custom parameter can be added in cards-external-diffusion configuration under the "defaultConfig.customConfig" section:
+
+```
+cardsExternalDiffusion:
+    adminPort: 2106
+    activeOnStartup: true
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      subjectPrefix: 'Opfab card received '
+      customConfig: 
+             myParam1: 'myValue1'
+             myParam2: 'myValue2'
+```
+The custom parameters can then be referred in handlebars template prefixed with "config", for example:
+....
+{{#config.myParam1}}
+....
 
