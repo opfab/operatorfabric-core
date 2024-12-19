@@ -50,7 +50,7 @@ import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 @Component({

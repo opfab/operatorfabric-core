@@ -17,7 +17,7 @@ import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
+import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
@@ -154,7 +154,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     acknowledgeAllVisibleCardsInTheFeed() {
         this.lightCards.forEach((lightCard) => {
             this.acknowledgeVisibleCardInTheFeed(lightCard);
-            GroupedCardsService.getChildCardsByTags(lightCard.tags).forEach((groupedCard) =>
+            GroupedLightCardsService.getChildCardsByTags(lightCard.tags).forEach((groupedCard) =>
                 this.acknowledgeVisibleCardInTheFeed(groupedCard)
             );
         });
@@ -227,7 +227,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     isCardInGroup(selected: string, id: string) {
-        return GroupedCardsService.isCardInGroup(selected, id);
+        return GroupedLightCardsService.isCardInGroup(selected, id);
     }
 
     onFilterActiveChange(active: boolean) {

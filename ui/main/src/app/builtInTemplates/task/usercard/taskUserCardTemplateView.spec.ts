@@ -10,9 +10,9 @@
 import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 import {initOpfabAPI} from '@tests/helpers';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {Card} from '@ofModel/card.model';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 describe('Task UserCard Template View', () => {
     beforeEach(() => {

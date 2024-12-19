@@ -42,10 +42,10 @@ import {ModalService} from './services/modal.service';
 import {SessionManagerService} from './services/session-manager.service';
 import {SoundNotificationService} from '../services/notifications/SoundNotificationService';
 import {I18n} from '@ofModel/i18n.model';
-import {RealtimeDomainService} from './services/realtime-domain.service';
+import {RealTimeDomainService} from '../services/realTimeDomain/RealTimeDomainService';
 import {NotificationDecision} from '../services/notifications/NotificationDecision';
-import {CardTemplateGateway} from './templateGateway/cardTemplateGateway';
-import {UserCardTemplateGateway} from './templateGateway/userCardTemplateGateway';
+import {CardTemplateGateway} from '../services/templateGateway/CardTemplateGateway';
+import {UserCardTemplateGateway} from '../services/templateGateway/UserCardTemplateGateway';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;
@@ -122,7 +122,7 @@ export class ApplicationLoader {
         this.initServices();
         await this.waitForStreamInitDone();
         logger.info('Card stream connection established');
-        RealtimeDomainService.init(); // important to be after the stream init done
+        RealTimeDomainService.init(); // important to be after the stream init done
         this.goToEntryPage();
         this.loadingInProgress = false;
         return true;

@@ -8,7 +8,7 @@
  */
 
 import {Severity} from '@ofModel/light-card.model';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 declare const opfab: any;
 

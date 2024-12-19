@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 declare const opfab: any;
 

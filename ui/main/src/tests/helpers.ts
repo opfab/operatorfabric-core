@@ -33,8 +33,8 @@ import {Entity} from '@ofServices/entities/model/Entity';
 import {OpfabAPI} from 'app/api/opfab.api';
 import {Message} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;

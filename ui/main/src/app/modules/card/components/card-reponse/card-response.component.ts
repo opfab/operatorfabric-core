@@ -30,7 +30,7 @@ import {NotificationDecision} from 'app/services/notifications/NotificationDecis
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 class FormResult {
     valid: boolean;

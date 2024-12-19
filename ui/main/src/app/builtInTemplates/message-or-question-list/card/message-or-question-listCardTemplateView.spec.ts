@@ -12,7 +12,7 @@ import {MessageOrQuestionListCardTemplateView} from './message-or-question-listC
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 describe('MessageOrQuestionList Card template', () => {
     let view: MessageOrQuestionListCardTemplateView;

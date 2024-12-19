@@ -20,7 +20,7 @@ import {Guid} from 'guid-typescript';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class CardBuilder {
     private card: Card;

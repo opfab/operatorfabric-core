@@ -21,7 +21,7 @@ import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {TemplateRenderingComponent} from '../template-rendering/template-rendering.component';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 @Component({
     selector: 'of-simplified-card-view',

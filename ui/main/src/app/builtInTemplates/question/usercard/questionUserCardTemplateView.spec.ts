@@ -10,8 +10,8 @@
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 

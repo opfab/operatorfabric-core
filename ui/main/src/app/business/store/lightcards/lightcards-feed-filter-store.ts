@@ -12,13 +12,13 @@ import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsFilter} from './lightcards-filter';
 import {LightCardsSorter} from './lightcards-sorter';
-import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {LightCardsTextFilter} from './lightcards-text-filter';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {OpfabEventStreamService} from '../../services/events/opfabEventStream.service';
 import {LightCardsStore} from './lightcards-store';
+import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 
 export class FilteredLightCardsStore {
     private readonly filteredAndSortedLightCards = new ReplaySubject();
@@ -46,8 +46,8 @@ export class FilteredLightCardsStore {
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
                     if (this.isGroupedCardsEnabled()) {
-                        GroupedCardsService.computeGroupedCards(results[1]);
-                        results[1] = GroupedCardsService.filterGroupedChilds(results[1]);
+                        GroupedLightCardsService.computeGroupedCards(results[1]);
+                        results[1] = GroupedLightCardsService.filterGroupedChilds(results[1]);
                     }
                     return results[1];
                 })

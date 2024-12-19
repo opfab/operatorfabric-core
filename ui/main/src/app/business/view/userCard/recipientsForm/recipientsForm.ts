@@ -15,7 +15,7 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 export class RecipientsForm {

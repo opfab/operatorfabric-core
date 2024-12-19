@@ -12,7 +12,7 @@ import {initOpfabAPI, setEntities} from '@tests/helpers';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {Card} from '@ofModel/card.model';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 describe('Question Card template', () => {
     let view: QuestionCardTemplateView;

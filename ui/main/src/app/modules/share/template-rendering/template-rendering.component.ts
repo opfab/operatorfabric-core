@@ -39,7 +39,7 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 @Component({
     selector: 'of-template-rendering',

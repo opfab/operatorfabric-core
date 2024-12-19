@@ -11,7 +11,7 @@ import {State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from '@ofModel/card.model';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class DatesForm {
     private static readonly ONE_MINUTE = 60000;

@@ -13,7 +13,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class PublisherForm {
     private selectedPublisher: string;

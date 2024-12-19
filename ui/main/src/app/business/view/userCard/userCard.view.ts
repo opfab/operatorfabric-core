@@ -25,7 +25,7 @@ import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder/cardBuilder';
 import {CardSender} from './cardSender/cardSender';
 import {CardService} from 'app/business/services/card/card.service';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 /**
 

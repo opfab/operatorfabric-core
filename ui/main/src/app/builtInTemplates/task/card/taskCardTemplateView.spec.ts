@@ -9,7 +9,7 @@
 
 import {TaskCardTemplateView} from './taskCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {Card} from '@ofModel/card.model';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';

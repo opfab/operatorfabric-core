@@ -11,7 +11,7 @@ import {Card} from '@ofModel/card.model';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {CardAction} from '@ofModel/light-card.model';
-import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class KeepChildCardsForm {
     private keepChildCards: boolean;

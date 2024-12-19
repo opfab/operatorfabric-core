@@ -16,7 +16,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {DisplayContext} from '@ofModel/template.model';
-import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
+import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
@@ -61,8 +61,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
-        GroupedCardsService.computeEvent
-            .pipe(takeUntil(this.ngUnsubscribe))
+        GroupedLightCardsService.computeEvent
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
@@ -120,12 +119,12 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     private computeGroupedCardsIcon() {
         this.showGroupedCardsIcon =
-            GroupedCardsService.isParentGroupCard(this.lightCard) &&
-            GroupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
+            GroupedLightCardsService.isParentGroupCard(this.lightCard) &&
+            GroupedLightCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {
-        return GroupedCardsService.getChildCardsByTags(this.lightCard.tags);
+        return GroupedLightCardsService.getChildCardsByTags(this.lightCard.tags);
     }
 
     handleDate(timeStamp: number): string {
@@ -136,7 +135,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         SoundNotificationService.clearOutstandingNotifications();
-        if (this.open && GroupedCardsService.isParentGroupCard(this.lightCard)) {
+        if (this.open && GroupedLightCardsService.isParentGroupCard(this.lightCard)) {
             this.groupedCardsVisible = !this.groupedCardsVisible;
         } else {
             this.groupedCardsVisible = true;

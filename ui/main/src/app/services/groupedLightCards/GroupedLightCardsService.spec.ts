@@ -10,9 +10,9 @@
 
 import {Severity} from '@ofModel/light-card.model';
 import {getSeveralLightCards} from '@tests/helpers';
-import {GroupedCardsService} from './grouped-cards.service';
+import {GroupedLightCardsService} from './GroupedLightCardsService';
 
-describe('GroupedCardFilterService ', () => {
+describe('GroupedLightCardsService ', () => {
     function getCardWithTag(tags: string[]) {
         return getSeveralLightCards(1, {
             startDate: new Date().valueOf(),
@@ -28,8 +28,8 @@ describe('GroupedCardFilterService ', () => {
     describe('group cards', () => {
         it('no child cards', () => {
             const cards = getCardWithTag(['tag1']);
-            GroupedCardsService.computeGroupedCards(cards);
-            const childCards = GroupedCardsService.getChildCardsByTags(['tag1']);
+            GroupedLightCardsService.computeGroupedCards(cards);
+            const childCards = GroupedLightCardsService.getChildCardsByTags(['tag1']);
             expect(childCards.length).toBe(0);
         });
         it('Three tags that are the same', () => {
@@ -37,8 +37,8 @@ describe('GroupedCardFilterService ', () => {
                 .concat(getCardWithTag(['tag1']))
                 .concat(getCardWithTag(['tag1']));
 
-            GroupedCardsService.computeGroupedCards(cards);
-            const childCards = GroupedCardsService.getChildCardsByTags(['tag1']);
+            GroupedLightCardsService.computeGroupedCards(cards);
+            const childCards = GroupedLightCardsService.getChildCardsByTags(['tag1']);
             expect(childCards.length).toBe(2);
         });
         it('Two sets of two different tags', () => {
@@ -46,25 +46,25 @@ describe('GroupedCardFilterService ', () => {
                 .concat(getCardWithTag(['tag1', 'tag2']))
                 .concat(getCardWithTag(['tag1', 'tag3']));
 
-            GroupedCardsService.computeGroupedCards(cards);
-            const childCardsTwo = GroupedCardsService.getChildCardsByTags(['tag1', 'tag2']);
+            GroupedLightCardsService.computeGroupedCards(cards);
+            const childCardsTwo = GroupedLightCardsService.getChildCardsByTags(['tag1', 'tag2']);
             expect(childCardsTwo.length).toBe(1);
 
-            const childCardsOneTag = GroupedCardsService.getChildCardsByTags(['tag1', 'tag3']);
+            const childCardsOneTag = GroupedLightCardsService.getChildCardsByTags(['tag1', 'tag3']);
             expect(childCardsOneTag.length).toBe(0);
         });
         it('Three cards with empty tags => expect no child cards', () => {
             const cards = getCardWithTag([]).concat(getCardWithTag([])).concat(getCardWithTag([]));
 
-            GroupedCardsService.computeGroupedCards(cards);
-            const childCards = GroupedCardsService.getChildCardsByTags([]);
+            GroupedLightCardsService.computeGroupedCards(cards);
+            const childCards = GroupedLightCardsService.getChildCardsByTags([]);
             expect(childCards.length).toBe(0);
         });
         it('Three cards with null tags => expect no child cards', () => {
             const cards = getCardWithTag(null).concat(getCardWithTag(null)).concat(getCardWithTag([]));
 
-            GroupedCardsService.computeGroupedCards(cards);
-            const childCards = GroupedCardsService.getChildCardsByTags(null);
+            GroupedLightCardsService.computeGroupedCards(cards);
+            const childCards = GroupedLightCardsService.getChildCardsByTags(null);
             expect(childCards.length).toBe(0);
         });
     });

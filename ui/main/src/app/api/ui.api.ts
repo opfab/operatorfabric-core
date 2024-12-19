@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {RealtimeDomainService} from '../business/services/realtime-domain.service';
+import {RealTimeDomainService} from '../services/realTimeDomain/RealTimeDomainService';
 
 declare const opfab: any;
 
@@ -15,9 +15,9 @@ export function initUiAPI() {
     opfab.ui = {
         getCurrentVisiblePeriod: function () {
             return {
-                domain: RealtimeDomainService.getDomainId(),
-                startPeriod: RealtimeDomainService.getCurrentDomain().startDate,
-                endPeriod: RealtimeDomainService.getCurrentDomain().endDate
+                domain: RealTimeDomainService.getDomainId(),
+                startPeriod: RealTimeDomainService.getCurrentDomain().startDate,
+                endPeriod: RealTimeDomainService.getCurrentDomain().endDate
             };
         }
     };

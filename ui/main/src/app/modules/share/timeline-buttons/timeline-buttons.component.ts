@@ -12,7 +12,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
@@ -88,13 +88,13 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     setInitialDomain(): void {
-        let currentDomain: string = RealtimeDomainService.getDomainId();
+        let currentDomain: string = RealTimeDomainService.getDomainId();
 
         if (!currentDomain) {
             // the domain can be undefined when coming back from calendar
             // as calendar is not using timeline domains
-            RealtimeDomainService.init();
-            currentDomain = RealtimeDomainService.getDomainId();
+            RealTimeDomainService.init();
+            currentDomain = RealTimeDomainService.getDomainId();
         }
 
         const buttonToActivate = this.buttonList.find((b) => b.domainId === currentDomain);
@@ -106,7 +106,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param conf button clicked
      */
     changeGraphConf(conf: any, reset: boolean): void {
-        if (reset) RealtimeDomainService.unlockTimeline();
+        if (reset) RealTimeDomainService.unlockTimeline();
 
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
@@ -115,8 +115,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
-        RealtimeDomainService.setDomainId(this.currentDomainId, reset);
-        this.currentDomain = RealtimeDomainService.getCurrentDomain();
+        RealTimeDomainService.setDomainId(this.currentDomainId, reset);
+        this.currentDomain = RealTimeDomainService.getCurrentDomain();
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         this.domainChange.emit(true);
@@ -174,31 +174,31 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     isTimelineLocked(): boolean {
-        return RealtimeDomainService.isTimelineLocked();
+        return RealTimeDomainService.isTimelineLocked();
     }
 
     lockTimeline(): void {
-        RealtimeDomainService.lockTimeline();
+        RealTimeDomainService.lockTimeline();
     }
 
     unlockTimeline(): void {
-        RealtimeDomainService.unlockTimeline();
+        RealTimeDomainService.unlockTimeline();
         // Restore default domain when the user unlocks the timeline
-        this.currentDomain = RealtimeDomainService.setDefaultStartAndEndDomain();
+        this.currentDomain = RealTimeDomainService.setDefaultStartAndEndDomain();
     }
 
     moveDomain(moveForward: boolean): void {
-        this.currentDomain = RealtimeDomainService.moveDomain(moveForward);
+        this.currentDomain = RealTimeDomainService.moveDomain(moveForward);
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         this.domainChange.emit(true);
     }
 
     private shiftTimeLineIfNecessary() {
-        if (!RealtimeDomainService.isTimelineLocked()) {
-            RealtimeDomainService.shiftIfNecessaryDomainUsingOverlap();
+        if (!RealTimeDomainService.isTimelineLocked()) {
+            RealTimeDomainService.shiftIfNecessaryDomainUsingOverlap();
 
-            this.currentDomain = RealtimeDomainService.getCurrentDomain();
+            this.currentDomain = RealTimeDomainService.getCurrentDomain();
             this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
             this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         }

@@ -39,7 +39,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {UserCardComponent} from '../../../usercard/usercard.component';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
+import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 @Component({
     selector: 'of-card-actions',

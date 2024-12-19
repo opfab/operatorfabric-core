@@ -25,7 +25,7 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RealtimeDomainService} from 'app/business/services/realtime-domain.service';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../card/card.component';
 
@@ -208,7 +208,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
 
     datesRangeChange(dateInfo) {
-        RealtimeDomainService.setStartAndEndPeriod(
+        RealTimeDomainService.setStartAndEndPeriod(
             dateInfo.view.activeStart.getTime(),
             dateInfo.view.activeEnd.getTime()
         );
