@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from 'app/services/entities/model/Entity';
 import {firstValueFrom} from 'rxjs';
 import {CrudUtilities} from './crudUtils';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 describe('Entities multiselect options labels ', () => {
     let entityServerMock: EntitiesServerMock;

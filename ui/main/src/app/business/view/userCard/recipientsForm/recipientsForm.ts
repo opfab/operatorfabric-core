@@ -10,13 +10,13 @@
 import {Card} from '@ofModel/card.model';
 import {InputFieldName, MultiselectItem, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {RolesEnum} from '@ofModel/roles.model';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {EntitiesTree} from '@ofServices/processes/model/Processes';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 export class RecipientsForm {
     private isInCreationMode = true;
@@ -56,7 +56,7 @@ export class RecipientsForm {
     private buildMultiSelectItems(entities: Entity[]): MultiselectItem[] {
         const recipients: MultiselectItem[] = [];
         entities?.forEach((entity) => {
-            if (entity.roles?.includes(RolesEnum.CARD_RECEIVER)) {
+            if (entity.roles?.includes(RoleEnum.CARD_RECEIVER)) {
                 const label = this.useDescriptionFieldForEntityList ? entity.description : entity.name || entity.id;
                 recipients.push({
                     id: entity.id,

@@ -22,14 +22,14 @@ import {
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, of} from 'rxjs';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 import {TagInputModule} from 'ngx-chips';
@@ -149,7 +149,7 @@ export class EditEntityModalComponent implements OnInit {
             }
         });
 
-        for (const role in RolesEnum) {
+        for (const role in RoleEnum) {
             const roleTranslation = TranslationService.getTranslation('admin.input.entity.roleValues.' + role);
             this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation));
         }

@@ -8,7 +8,7 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {EntitiesService} from '../users/entities.service';
+import {EntitiesService} from '../../../services/entities/EntitiesService';
 import {CrudUtilities} from './crudUtils';
 
 export class CrudEntitiesService {

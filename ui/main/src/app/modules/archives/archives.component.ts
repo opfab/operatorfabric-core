@@ -34,7 +34,7 @@ import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {CardService} from 'app/business/services/card/card.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

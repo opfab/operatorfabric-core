@@ -9,8 +9,8 @@
 
 import {QuestionCardTemplateView} from './questionCardTemplateView';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
-import {RolesEnum} from '@ofModel/roles.model';
-import {Entity} from '@ofModel/entity.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {Card} from '@ofModel/card.model';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
@@ -22,8 +22,8 @@ describe('Question Card template', () => {
         jasmine.clock().mockDate(new Date(0));
         initOpfabAPI();
         await setEntities([
-            new Entity('entity1', 'entity1 name', '', [RolesEnum.CARD_RECEIVER], [], null),
-            new Entity('entity2', 'entity2 name', '', [RolesEnum.CARD_RECEIVER], [], null)
+            new Entity('entity1', 'entity1 name', '', [RoleEnum.CARD_RECEIVER], [], null),
+            new Entity('entity2', 'entity2 name', '', [RoleEnum.CARD_RECEIVER], [], null)
         ]);
         view = new QuestionCardTemplateView();
     });

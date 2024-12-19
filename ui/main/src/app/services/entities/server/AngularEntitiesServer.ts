@@ -10,11 +10,11 @@
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {Injectable} from '@angular/core';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {AngularServer} from './angular.server';
-import {EntitiesServer} from 'app/business/server/entities.server';
+import {AngularServer} from '../../../server/angular.server';
+import {EntitiesServer} from '@ofServices/entities/server/EntitiesServer';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +26,7 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
      * @constructor
      * @param httpClient - Angular built-in
      */
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.entitiesUrl = `${environment.url}users/entities`;
     }

@@ -16,7 +16,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
@@ -25,7 +25,7 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {FiltersComponent} from './filters/filters.component';
@@ -171,7 +171,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 const entitiesAcks = [];
                 const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
                 entities.forEach((entity) => {
-                    if (entity.roles?.includes(RolesEnum.CARD_SENDER))
+                    if (entity.roles?.includes(RoleEnum.CARD_SENDER))
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });

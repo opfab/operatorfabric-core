@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
+import {State} from '@ofServices/processes/model/Processes';
 import {getOneCard, initOpfabAPI, loadWebUIConf, setEntities, setProcessConfiguration} from '@tests/helpers';
 import {RecipientsForm} from './recipientsForm';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 declare const opfab: any;
 
@@ -33,13 +34,13 @@ async function setEntitiesConfiguration() {
             'ENTITY1',
             'ENTITY1_NAME',
             '',
-            [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER],
+            [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER],
             [],
             ['PARENT_ENTITY']
         ),
-        new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_RECEIVER], [], ['PARENT_ENTITY']),
-        new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.ACTIVITY_AREA], [], []),
-        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_RECEIVER], [], null),
+        new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_RECEIVER], [], ['PARENT_ENTITY']),
+        new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
+        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_RECEIVER], [], null),
         new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
     ]);
 }
@@ -87,13 +88,13 @@ describe('UserCard RecipientsForm', () => {
             });
             it('Should use entity description as label if usercard.useDescriptionFieldForEntityList is true in web-ui config', async () => {
                 await setEntities([
-                    new Entity('ENTITY1', 'ENTITY1_NAME', 'ENTITY1_DESCRIPTION', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY2', 'ENTITY1_NAME', 'ENTITY2_DESCRIPTION', [RolesEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY1', 'ENTITY1_NAME', 'ENTITY1_DESCRIPTION', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY2', 'ENTITY1_NAME', 'ENTITY2_DESCRIPTION', [RoleEnum.CARD_RECEIVER], [], null),
                     new Entity(
                         'PARENT_ENTITY',
                         'PARENT_ENTITY_NAME',
                         'PARENT_ENTITY_DESCRIPTION',
-                        [RolesEnum.CARD_RECEIVER],
+                        [RoleEnum.CARD_RECEIVER],
                         [],
                         null
                     )
@@ -110,11 +111,11 @@ describe('UserCard RecipientsForm', () => {
             });
             it(`Should contain all entities by label alphabetical order`, async () => {
                 await setEntities([
-                    new Entity('ENTITY1', 'AAA', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY2', 'aaa', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY3', 'BBB', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY4', 'bbb', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY5', '123', '', [RolesEnum.CARD_RECEIVER], [], null)
+                    new Entity('ENTITY1', 'AAA', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY2', 'aaa', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY3', 'BBB', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY4', 'bbb', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY5', '123', '', [RoleEnum.CARD_RECEIVER], [], null)
                 ]);
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');
@@ -128,8 +129,8 @@ describe('UserCard RecipientsForm', () => {
             });
             it('Should use entity id if entity name is not defined', async () => {
                 await setEntities([
-                    new Entity('ENTITY1', '', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY2', '', '', [RolesEnum.CARD_RECEIVER], [], null)
+                    new Entity('ENTITY1', '', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY2', '', '', [RoleEnum.CARD_RECEIVER], [], null)
                 ]);
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');
@@ -269,13 +270,13 @@ describe('UserCard RecipientsForm', () => {
             });
             it('Should use entity description as label if usercard.useDescriptionFieldForEntityList is true in web-ui config', async () => {
                 await setEntities([
-                    new Entity('ENTITY1', 'ENTITY1_NAME', 'ENTITY1_DESCRIPTION', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY2', 'ENTITY1_NAME', 'ENTITY2_DESCRIPTION', [RolesEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY1', 'ENTITY1_NAME', 'ENTITY1_DESCRIPTION', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY2', 'ENTITY1_NAME', 'ENTITY2_DESCRIPTION', [RoleEnum.CARD_RECEIVER], [], null),
                     new Entity(
                         'PARENT_ENTITY',
                         'PARENT_ENTITY_NAME',
                         'PARENT_ENTITY_DESCRIPTION',
-                        [RolesEnum.CARD_RECEIVER],
+                        [RoleEnum.CARD_RECEIVER],
                         [],
                         null
                     )
@@ -292,11 +293,11 @@ describe('UserCard RecipientsForm', () => {
             });
             it(`Should contain all entities by label alphabetical order`, async () => {
                 await setEntities([
-                    new Entity('ENTITY1', 'AAA', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY2', 'aaa', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY3', 'BBB', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY4', 'bbb', '', [RolesEnum.CARD_RECEIVER], [], null),
-                    new Entity('ENTITY5', '123', '', [RolesEnum.CARD_RECEIVER], [], null)
+                    new Entity('ENTITY1', 'AAA', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY2', 'aaa', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY3', 'BBB', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY4', 'bbb', '', [RoleEnum.CARD_RECEIVER], [], null),
+                    new Entity('ENTITY5', '123', '', [RoleEnum.CARD_RECEIVER], [], null)
                 ]);
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');

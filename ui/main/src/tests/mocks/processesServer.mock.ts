@@ -9,8 +9,8 @@
 
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {Observable, ReplaySubject, of} from 'rxjs';
+import {ServerResponse} from 'app/business/server/serverResponse';
+import {Observable, ReplaySubject} from 'rxjs';
 
 export class ProcessesServerMock implements ProcessesServer {
     private processSubject = new ReplaySubject<ServerResponse<Process>>();

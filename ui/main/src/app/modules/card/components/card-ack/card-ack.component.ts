@@ -10,11 +10,11 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
@@ -24,7 +24,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from '@ofModel/light-card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {CardOperationType} from '@ofModel/card-operation.model';
@@ -232,7 +232,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.isReadOnlyUser) {
             const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
             entities.forEach((entity) => {
-                if (entity.roles?.includes(RolesEnum.CARD_SENDER))
+                if (entity.roles?.includes(RoleEnum.CARD_SENDER))
                     // this avoids to display entities used only for grouping
                     entitiesAcks.push(entity.id);
             });

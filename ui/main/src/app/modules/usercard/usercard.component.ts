@@ -25,7 +25,7 @@ import {
 } from 'app/business/view/userCard/userCard.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserService} from 'app/business/services/users/user.service';
 import {NgIf, NgFor, NgClass} from '@angular/common';
@@ -33,7 +33,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from '../share/simplified-card-view/simplified-card-view.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LightCardModule} from '../share/light-card/light-card.module';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 
 @Component({
     selector: 'of-usercard',

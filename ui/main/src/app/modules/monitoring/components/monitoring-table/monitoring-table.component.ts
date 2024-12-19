@@ -17,7 +17,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {MonitoringConfig} from '@ofServices/config/model/MonitoringConfig';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {Process} from '@ofServices/processes/model/Processes';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';

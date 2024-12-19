@@ -12,7 +12,7 @@ import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {Card} from '@ofModel/card.model';
 import {DisplayContext} from '@ofModel/template.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../business/common/utilities';
 import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/simplified-card-view.component';
 import {NgIf} from '@angular/common';

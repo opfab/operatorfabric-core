@@ -9,8 +9,8 @@
 
 import {Card} from '@ofModel/card.model';
 import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
@@ -19,8 +19,8 @@ describe('MessageOrQuestionList Card template', () => {
     beforeEach(async () => {
         initOpfabAPI();
         await setEntities([
-            new Entity('entity1', 'entity1 name', '', [RolesEnum.CARD_RECEIVER], [], null),
-            new Entity('entity2', 'entity2 name', '', [RolesEnum.CARD_RECEIVER], [], null)
+            new Entity('entity1', 'entity1 name', '', [RoleEnum.CARD_RECEIVER], [], null),
+            new Entity('entity2', 'entity2 name', '', [RoleEnum.CARD_RECEIVER], [], null)
         ]);
         view = new MessageOrQuestionListCardTemplateView();
     });

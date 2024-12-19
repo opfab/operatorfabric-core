@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -25,7 +25,7 @@ import {OpfabEventStreamService} from 'app/business/services/events/opfabEventSt
 import {getOneLightCard} from '@tests/helpers';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
@@ -54,7 +54,7 @@ describe('ActivityAreaView', () => {
                 'CLUSTERING_ENTITY',
                 'CLUSTERING_ENTITY_NAME',
                 '',
-                [RolesEnum.CARD_SENDER, RolesEnum.ACTIVITY_AREA_GROUP],
+                [RoleEnum.CARD_SENDER, RoleEnum.ACTIVITY_AREA_GROUP],
                 [],
                 []
             ),
@@ -63,7 +63,7 @@ describe('ActivityAreaView', () => {
                 'ENTITY1',
                 'ENTITY1_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
             ),
@@ -71,7 +71,7 @@ describe('ActivityAreaView', () => {
                 'ENTITY2',
                 'ENTITY2_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
             ),
@@ -80,7 +80,7 @@ describe('ActivityAreaView', () => {
                 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE',
                 'ENTITY3_NAME',
                 '',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['CLUSTERING_ENTITY']
             ),
@@ -89,7 +89,7 @@ describe('ActivityAreaView', () => {
                 'ENTITY_WITH_NO_CLUSTERING_PARENT',
                 'ENTITY4_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY1']
             ),
@@ -98,7 +98,7 @@ describe('ActivityAreaView', () => {
                 'ENTITY_WITH_NO_PARENT',
                 'ENTITY5_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 null
             )

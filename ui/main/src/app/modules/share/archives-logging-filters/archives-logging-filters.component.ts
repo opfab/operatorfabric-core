@@ -31,7 +31,7 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {UserService} from 'app/business/services/users/user.service';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {sub} from 'date-fns';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';

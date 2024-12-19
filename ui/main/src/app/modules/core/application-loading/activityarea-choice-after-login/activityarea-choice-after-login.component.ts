@@ -9,9 +9,9 @@
 
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {ActivityareaComponent} from '../../../activityarea/activityarea.component';
@@ -42,7 +42,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingCom
         const login = UserService.getCurrentUserWithPerimeters().userData.login;
         UserService.getUser(login).subscribe((currentUser) => {
             const entities = EntitiesService.getEntitiesFromIds(currentUser.entities);
-            if (entities.filter((entity) => entity.roles?.includes(RolesEnum.ACTIVITY_AREA)).length > 1)
+            if (entities.filter((entity) => entity.roles?.includes(RoleEnum.ACTIVITY_AREA)).length > 1)
                 this.modalRef = this.modalService.open(this.activityAreaPopupRef, {
                     centered: true,
                     backdrop: 'static',

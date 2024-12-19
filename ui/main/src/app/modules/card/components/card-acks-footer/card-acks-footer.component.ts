@@ -9,12 +9,12 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';
@@ -86,12 +86,12 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
         entityRecipientsToAck.forEach((entityRecipient) => {
             const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity?.roles?.includes(RolesEnum.CARD_SENDER)) {
+            if (entity?.roles?.includes(RoleEnum.CARD_SENDER)) {
                 resolved.add(entityRecipient);
             }
 
             EntitiesService.resolveChildEntities(entityRecipient)
-                .filter((child) => child.roles?.includes(RolesEnum.CARD_SENDER))
+                .filter((child) => child.roles?.includes(RoleEnum.CARD_SENDER))
                 .forEach((child) => resolved.add(child.id));
         });
 

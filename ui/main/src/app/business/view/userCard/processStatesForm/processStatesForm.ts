@@ -10,7 +10,7 @@
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {InputFieldName, UserCardUIControl} from '../userCard.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Card} from '@ofModel/card.model';
 
 class ProcessGroupForUserCard {

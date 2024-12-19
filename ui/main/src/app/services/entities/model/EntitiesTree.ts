@@ -7,15 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {RolesEnum} from './roles.model';
-
-export class Entity {
-    public constructor(
+export class EntitiesTree {
+    constructor(
         readonly id: string,
-        readonly name: string,
-        readonly description: string,
-        readonly roles: RolesEnum[],
-        readonly labels: string[],
-        readonly parents: string[]
+        readonly levels?: number[]
     ) {}
 }

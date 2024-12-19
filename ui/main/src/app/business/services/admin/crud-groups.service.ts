@@ -8,7 +8,7 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {GroupsService} from '../users/groups.service';
+import {GroupsService} from '../../../services/groups/GroupsService';
 import {CrudUtilities} from './crudUtils';
 
 export class CrudGroupsService {

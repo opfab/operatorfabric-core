@@ -17,7 +17,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';

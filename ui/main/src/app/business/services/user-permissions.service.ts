@@ -11,11 +11,11 @@ import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process} from '@ofServices/processes/model/Processes';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {User} from '@ofModel/user.model';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {UserService} from './users/user.service';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserPermissionsService {
     public static isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {

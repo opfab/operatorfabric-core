@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {NgIf, NgFor, NgStyle} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

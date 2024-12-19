@@ -12,8 +12,8 @@ import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} fr
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/admin/crud-service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
 import {NgIf} from '@angular/common';

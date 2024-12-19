@@ -11,7 +11,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {User} from '@ofModel/user.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';

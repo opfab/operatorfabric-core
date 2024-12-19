@@ -12,7 +12,7 @@ import {ProcessGroups, ProcessToMonitor, StatePerProcessToMonitor} from './proce
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofServices/processes/model/Processes';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 

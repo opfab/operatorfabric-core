@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-export enum RolesEnum {
+export enum RoleEnum {
     ACTIVITY_AREA_GROUP = 'ACTIVITY_AREA_GROUP',
     ACTIVITY_AREA = 'ACTIVITY_AREA',
     CARD_RECEIVER = 'CARD_RECEIVER',

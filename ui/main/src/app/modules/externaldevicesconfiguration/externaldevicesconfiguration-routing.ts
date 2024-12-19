@@ -11,7 +11,7 @@ import {ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, Routes} from
 import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
 import {DevicesTableComponent} from './table/devices.table.component';
 import {UsersTableComponent} from './table/users.table.component';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserService} from 'app/business/services/users/user.service';
 import {SignalMappingsTableComponent} from './table/signal-mappings.table.component';
 

@@ -17,13 +17,13 @@ import {
 } from '@tests/helpers';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserCardView} from './userCard.view';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
-import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
+import {State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName} from './userCard.model';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {setSpecificCardInformation} from '@tests/userCardView/helpers';
@@ -33,6 +33,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {CardWithChildCards} from '@ofModel/card.model';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {HandlebarsTemplateServerMock} from '@tests/mocks/HandlebarsTemplateServer.mock';
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 declare const opfab: any;
 
@@ -82,9 +83,9 @@ describe('UserCard view ', () => {
         cardServerMock = new CardServerMock();
         CardService.setCardServer(cardServerMock);
         await setEntities([
-            new Entity('ENTITY1', 'ENTITY1_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], []),
-            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], []),
-            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], [])
+            new Entity('ENTITY1', 'ENTITY1_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
+            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
+            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], [])
         ]);
         await setProcessConfiguration(
             [

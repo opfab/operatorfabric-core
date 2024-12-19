@@ -10,7 +10,7 @@
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, ReplaySubject} from 'rxjs';
 import {

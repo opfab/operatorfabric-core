@@ -9,7 +9,7 @@
 
 import {Observable, Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {RightsEnum} from '@ofModel/perimeter.model';

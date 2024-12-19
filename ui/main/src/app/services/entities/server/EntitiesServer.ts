@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class EntitiesServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>;

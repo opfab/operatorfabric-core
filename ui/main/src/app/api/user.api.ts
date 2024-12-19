@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 declare const opfab: any;
 

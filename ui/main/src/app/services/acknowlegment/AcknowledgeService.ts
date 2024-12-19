@@ -19,9 +19,9 @@ import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../business/server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessesService} from '../processes/ProcessesService';
-import {EntitiesService} from '../../business/services/users/entities.service';
+import {EntitiesService} from '../entities/EntitiesService';
 import {UserService} from '../../business/services/users/user.service';
 
 export class AcknowledgeService {

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {PermissionEnum} from './permission.model';
+import {PermissionEnum} from './PermissionEnum';
 
 export class Group {
     public constructor(

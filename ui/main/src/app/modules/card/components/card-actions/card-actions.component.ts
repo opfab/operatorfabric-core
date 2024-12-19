@@ -21,7 +21,7 @@ import {
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
@@ -38,7 +38,7 @@ import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {UserCardComponent} from '../../../usercard/usercard.component';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
 
 @Component({

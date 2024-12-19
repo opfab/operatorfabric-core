@@ -9,13 +9,13 @@
 
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {Entity} from '@ofModel/entity.model';
-import {EntitiesServer} from '../../server/entities.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
-import {EntitiesTree} from '@ofServices/processes/model/Processes';
+import {Entity} from './model/Entity';
+import {EntitiesServer} from './server/EntitiesServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ErrorService} from '../error-service';
-import {RolesEnum} from '@ofModel/roles.model';
+import {ErrorService} from '../../business/services/error-service';
+import {RoleEnum} from './model/RoleEnum';
+import {EntitiesTree} from './model/EntitiesTree';
 
 export class EntitiesService {
     private static _entities: Entity[];
@@ -146,7 +146,7 @@ export class EntitiesService {
 
     public static isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = EntitiesService._entities.find((entity) => entity.id === idEntity);
-        return found?.roles?.includes(RolesEnum.CARD_SENDER);
+        return found?.roles?.includes(RoleEnum.CARD_SENDER);
     }
 
     /** Given a list of entities that might contain parent entities, EntitiesService method returns the list of entities
@@ -155,7 +155,7 @@ export class EntitiesService {
     public static resolveEntitiesAllowedToSendCards(selected: Entity[]): Entity[] {
         const allowed = new Set<Entity>();
         selected.forEach((entity) => {
-            if (entity.roles?.includes(RolesEnum.CARD_SENDER)) {
+            if (entity.roles?.includes(RoleEnum.CARD_SENDER)) {
                 allowed.add(entity);
             } else {
                 const children = EntitiesService._entities.filter((child) => child.parents?.includes(entity.id));
@@ -163,7 +163,6 @@ export class EntitiesService {
                 childrenAllowed.forEach((c) => allowed.add(c));
             }
         });
-
         return Array.from(allowed);
     }
 
@@ -178,12 +177,10 @@ export class EntitiesService {
                         }
                     });
                 });
-            } else {
-                if (!resolvedEntities.find((o) => o.id === r.id)) {
-                    const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
-                    if (entity) resolvedEntities.push(entity);
-                    else logger.info('Entity not found : ' + r.id);
-                }
+            } else if (!resolvedEntities.find((o) => o.id === r.id)) {
+                const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
+                if (entity) resolvedEntities.push(entity);
+                else logger.info('Entity not found : ' + r.id);
             }
         });
         return resolvedEntities;

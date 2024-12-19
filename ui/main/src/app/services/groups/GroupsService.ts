@@ -8,11 +8,11 @@
  */
 
 import {Observable, Subject} from 'rxjs';
-import {Group} from '@ofModel/group.model';
+import {Group} from '@ofServices/groups/model/Group';
 import {takeUntil, tap, map} from 'rxjs/operators';
-import {GroupsServer} from '../../server/groups.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
-import {ErrorService} from '../error-service';
+import {GroupsServer} from './server/GroupsServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ErrorService} from '../../business/services/error-service';
 import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class GroupsService {

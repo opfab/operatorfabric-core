@@ -8,12 +8,12 @@
  */
 
 import {Observable} from 'rxjs';
-import {Group} from '@ofModel/group.model';
-import {GroupsServer} from 'app/business/server/groups.server';
+import {Group} from '@ofServices/groups/model/Group';
+import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 @Injectable({
     providedIn: 'root'
@@ -21,11 +21,7 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 export class AngularGroupsServer extends AngularServer implements GroupsServer {
     readonly groupsUrl: string;
 
-    /**
-     * @constructor
-     * @param httpClient - Angular built-in
-     */
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.groupsUrl = `${environment.url}users/groups`;
     }

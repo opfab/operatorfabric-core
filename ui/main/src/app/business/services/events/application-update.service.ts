@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {GroupsService} from 'app/business/services/users/groups.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {GroupsService} from '@ofServices/groups/GroupsService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {UserService} from 'app/business/services/users/user.service';

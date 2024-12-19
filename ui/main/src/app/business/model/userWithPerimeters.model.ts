@@ -9,7 +9,7 @@
 
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserWithPerimeters {
     public constructor(

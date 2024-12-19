@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {DisplayContext} from '@ofModel/template.model';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';

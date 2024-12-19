@@ -9,12 +9,12 @@
 
 import {TestBed} from '@angular/core/testing';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {environment} from '../../../../environments/environment';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {Entity} from '@ofModel/entity.model';
+import {environment} from '../../../environments/environment';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
-import {AngularEntitiesServer} from 'app/server/angularEntities.server';
-import {RolesEnum} from '@ofModel/roles.model';
+import {AngularEntitiesServer} from '@ofServices/entities/server/AngularEntitiesServer';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('EntitiesService', () => {
@@ -43,8 +43,8 @@ describe('EntitiesService', () => {
     describe('#queryAllEntities', () => {
         it('should return an Observable<Entity[]>', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RoleEnum.CARD_SENDER], [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RoleEnum.CARD_SENDER], [], []);
             listEntities.push(entity1);
             listEntities.push(entity2);
             EntitiesService.queryAllEntities().subscribe((result) => {
@@ -61,8 +61,8 @@ describe('EntitiesService', () => {
     describe('#getEntitiesAllowedToRespond', () => {
         it('should return 3 entities', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RoleEnum.CARD_SENDER], [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RoleEnum.CARD_SENDER], [], []);
             const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], [], []);
             const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', [], [], ['ENTITY3']);
             const entity3_1_1 = new Entity(
@@ -77,7 +77,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3.1']
             );
@@ -85,7 +85,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.2',
                 'Control Room 3.2',
                 'Control Room 3.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3']
             );
@@ -121,7 +121,7 @@ describe('EntitiesService', () => {
                 'ENTITYGROUP',
                 'Control Rooms',
                 'Control Rooms',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 []
             );
@@ -129,7 +129,7 @@ describe('EntitiesService', () => {
                 'ENTITY1',
                 'Control Room 1',
                 'Control Room 1',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITYGROUP']
             );
@@ -137,7 +137,7 @@ describe('EntitiesService', () => {
                 'ENTITY2',
                 'Control Room 2',
                 'Control Room 2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITYGROUP']
             );
@@ -168,7 +168,7 @@ describe('EntitiesService', () => {
                 'ENTITY1',
                 'Control Room 1',
                 'Control Room 1',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITYGROUP']
             );
@@ -176,7 +176,7 @@ describe('EntitiesService', () => {
                 'ENTITY2',
                 'Control Room 2',
                 'Control Room 2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITYGROUP']
             );
@@ -206,8 +206,8 @@ describe('EntitiesService', () => {
     describe('#resolveChildEntitiesByLevel', () => {
         it('should return the child entities with the specified connection level', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RoleEnum.CARD_SENDER], [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RoleEnum.CARD_SENDER], [], []);
             const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], [], []);
             const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', [], [], ['ENTITY3']);
             const entity3_1_1 = new Entity(
@@ -222,7 +222,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3.1']
             );
@@ -230,7 +230,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.2',
                 'Control Room 3.2',
                 'Control Room 3.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3']
             );
@@ -274,13 +274,13 @@ describe('EntitiesService', () => {
     describe('#resolveChildEntities', () => {
         it('should return all the child and sub child entities', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RolesEnum.CARD_SENDER], [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RolesEnum.CARD_SENDER], [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RoleEnum.CARD_SENDER], [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RoleEnum.CARD_SENDER], [], []);
             const entity2_1 = new Entity(
                 'ENTITY2.1',
                 'Control Room 2.1',
                 'Control Room 2.1',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY2']
             );
@@ -290,7 +290,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.1',
                 'Control Room 3.1',
                 'Control Room 3.1',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3']
             );
@@ -298,7 +298,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',
                 'Control Room 3.1.1',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3.1']
             );
@@ -306,7 +306,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3.1']
             );
@@ -314,7 +314,7 @@ describe('EntitiesService', () => {
                 'ENTITY3.2',
                 'Control Room 3.2',
                 'Control Room 3.2',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['ENTITY3']
             );

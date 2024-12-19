@@ -9,12 +9,12 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserService} from 'app/business/services/users/user.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {NgIf, NgFor} from '@angular/common';
 
 @Component({
@@ -61,7 +61,7 @@ export class InfoComponent implements OnInit {
             this.userEntities = [];
             const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
-                if (entity.roles?.includes(RolesEnum.ACTIVITY_AREA)) {
+                if (entity.roles?.includes(RoleEnum.ACTIVITY_AREA)) {
                     // this avoids to display entities used only for grouping
                     this.userEntities.push(entity.name);
                 }

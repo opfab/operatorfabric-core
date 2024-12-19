@@ -11,12 +11,12 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {RealtimeUsersView} from './realtimeusers.view';
 import {RealtimePage} from './realtimePage';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('Realtimeusers', () => {
     let view: RealtimeUsersView;
@@ -42,15 +42,15 @@ describe('Realtimeusers', () => {
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         const entities: Entity[] = [
-            new Entity('ENTITY_FR', 'French Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
-            new Entity('ENTITY2_FR', 'ENTITY2_FR_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_FR']),
-            new Entity('ENTITY_IT', 'Italian Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY_FR', 'French Control Centers', '', [RoleEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [RoleEnum.CARD_SENDER], [], ['ENTITY_FR']),
+            new Entity('ENTITY2_FR', 'ENTITY2_FR_NAME', '', [RoleEnum.CARD_SENDER], [], ['ENTITY_FR']),
+            new Entity('ENTITY_IT', 'Italian Control Centers', '', [RoleEnum.CARD_SENDER], [], []),
             new Entity(
                 'EUROPEAN_SUPERVISION_CENTERS',
                 'EUROPEAN_SUPERVISION_CENTERS',
                 '',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 []
             ),
@@ -58,13 +58,13 @@ describe('Realtimeusers', () => {
                 'IT_SUPERVISOR_ENTITY',
                 'IT SUPERVISION CENTER',
                 '',
-                [RolesEnum.CARD_SENDER],
+                [RoleEnum.CARD_SENDER],
                 [],
                 ['EUROPEAN_SUPERVISION_CENTERS']
             ),
-            new Entity('ENTITY_NL', 'Dutch Control Centers', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('ENTITY1_NL', 'ENTITY1_NL_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_NL']),
-            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [RolesEnum.CARD_SENDER], [], ['ENTITY_IT'])
+            new Entity('ENTITY_NL', 'Dutch Control Centers', '', [RoleEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY1_NL', 'ENTITY1_NL_NAME', '', [RoleEnum.CARD_SENDER], [], ['ENTITY_NL']),
+            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [RoleEnum.CARD_SENDER], [], ['ENTITY_IT'])
         ];
         entitiesServerMock.setEntities(entities);
 

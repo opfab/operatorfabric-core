@@ -20,16 +20,16 @@ import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {UserService} from '../../business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {ProcessesService} from '../processes/ProcessesService';
-import {PermissionEnum} from '@ofModel/permission.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('AcknowledgeService testing ', () => {
     let card: Card;
@@ -71,10 +71,10 @@ describe('AcknowledgeService testing ', () => {
 
         const mockEntitiesServer = new EntitiesServerMock();
         mockEntitiesServer.setEntities([
-            new Entity('ENTITY1', 'ENTITY 1', '', [RolesEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY2', 'ENTITY 2', '', [RolesEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY3', 'ENTITY 3', '', [RolesEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY_FR', 'ENTITY FR', '', [RolesEnum.CARD_SENDER], null, null)
+            new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
+            new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
+            new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, null),
+            new Entity('ENTITY_FR', 'ENTITY FR', '', [RoleEnum.CARD_SENDER], null, null)
         ]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
 

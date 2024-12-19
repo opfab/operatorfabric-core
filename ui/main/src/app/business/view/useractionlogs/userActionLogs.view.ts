@@ -10,12 +10,12 @@
 import {CardWithChildCards} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {Page} from '@ofModel/page.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserService} from 'app/business/services/users/user.service';
 import {format, sub} from 'date-fns';
 import {map, Observable, of, switchMap} from 'rxjs';

@@ -9,7 +9,7 @@
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {UserService} from 'app/business/services/users/user.service';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {RouterService} from 'app/business/services/router.service';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';

@@ -25,8 +25,8 @@ import {State} from '@ofServices/processes/model/Processes';
 import {HourAndMinutes, Recurrence, TimeSpan} from '@ofModel/card.model';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {I18n} from '@ofModel/i18n.model';
 import {setSpecificCardInformation} from '@tests/userCardView/helpers';
 
@@ -511,9 +511,9 @@ describe('UserCard CardBuilder', () => {
         let childCard;
         beforeEach(async () => {
             await setEntities([
-                new Entity('ENTITY1', 'ENTITY1_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], []),
-                new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], []),
-                new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.CARD_SENDER, RolesEnum.CARD_RECEIVER], [], [])
+                new Entity('ENTITY1', 'ENTITY1_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
+                new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
+                new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], [])
             ]);
             await setProcessConfiguration([
                 {

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Group} from '@ofModel/group.model';
+import {Group} from '@ofServices/groups/model/Group';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class GroupsServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>;

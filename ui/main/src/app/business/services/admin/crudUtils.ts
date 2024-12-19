@@ -8,9 +8,9 @@
  */
 
 import {Utilities} from 'app/business/common/utilities';
-import {EntitiesService} from '../users/entities.service';
-import {GroupsService} from '../users/groups.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {EntitiesService} from '../../../services/entities/EntitiesService';
+import {GroupsService} from '../../../services/groups/GroupsService';
 
 export class CrudUtilities {
     public static formatArrayToString(arrayToFormat: any) {

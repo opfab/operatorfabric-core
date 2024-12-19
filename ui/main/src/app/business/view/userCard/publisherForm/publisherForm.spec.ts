@@ -9,11 +9,12 @@
 
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {PublisherForm} from './publisherForm';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {getOneCard, initOpfabAPI, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../userCard.model';
-import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
+import {State} from '@ofServices/processes/model/Processes';
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 declare const opfab: any;
 
@@ -37,15 +38,15 @@ describe('UserCard PublisherForm', () => {
                 'ENTITY1',
                 'ENTITY1_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 ['PARENT_ENTITY']
             ),
-            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
-            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.ACTIVITY_AREA], [], []),
-            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('ENTITY_WITH_NO_NAME', '', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_SENDER], [], null),
+            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
+            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
+            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
+            new Entity('ENTITY_WITH_NO_NAME', '', '', [RoleEnum.CARD_SENDER], [], []),
+            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null),
             new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
         ]);
     }

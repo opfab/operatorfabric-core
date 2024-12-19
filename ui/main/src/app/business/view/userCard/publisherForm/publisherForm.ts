@@ -10,8 +10,8 @@
 import {Card} from '@ofModel/card.model';
 import {EditionMode, InputFieldName, MultiselectItem, UserCardUIControl} from '../userCard.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
-import {RolesEnum} from '@ofModel/roles.model';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserCardTemplateGateway} from 'app/business/templateGateway/userCardTemplateGateway';
 
@@ -44,7 +44,7 @@ export class PublisherForm {
     private getUserEntitiesWithCardSenderRole(): string[] {
         const user = UserService.getCurrentUserWithPerimeters();
         return user.userData.entities?.filter((entity) => {
-            return EntitiesService.getEntity(entity)?.roles?.includes(RolesEnum.CARD_SENDER);
+            return EntitiesService.getEntity(entity)?.roles?.includes(RoleEnum.CARD_SENDER);
         });
     }
 

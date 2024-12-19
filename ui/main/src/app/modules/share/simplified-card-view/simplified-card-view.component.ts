@@ -14,7 +14,7 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {State} from '@ofServices/processes/model/Processes';
 import {DisplayContext} from '@ofModel/template.model';
 import {LoggerService} from 'app/services/logs/LoggerService';

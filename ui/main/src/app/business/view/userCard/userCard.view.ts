@@ -9,7 +9,7 @@
 
 import {EditionMode, InputFieldName, UserCardUIControl} from './userCard.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessStatesForm} from './processStatesForm/processStatesForm';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';

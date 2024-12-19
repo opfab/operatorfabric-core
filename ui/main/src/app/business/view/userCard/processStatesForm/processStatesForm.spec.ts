@@ -8,18 +8,19 @@
  */
 
 import {InputFieldName} from '../userCard.model';
-import {EntitiesTree, State} from '@ofServices/processes/model/Processes';
+import {State} from '@ofServices/processes/model/Processes';
 import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ProcessStatesForm} from './processStatesForm';
 import {User} from '@ofModel/user.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {getProcessConfigWith} from '@tests/userCardView/helpers';
-import {Entity} from '@ofModel/entity.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {Entity} from '@ofServices/entities/model/Entity';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Card} from '@ofModel/card.model';
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 describe('UserCard ProcessStateForm ', () => {
     let processStateForm: ProcessStatesForm;
@@ -55,14 +56,14 @@ describe('UserCard ProcessStateForm ', () => {
                 'ENTITY1',
                 'ENTITY1_NAME',
                 '',
-                [RolesEnum.ACTIVITY_AREA, RolesEnum.CARD_SENDER],
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 ['PARENT_ENTITY']
             ),
-            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RolesEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
-            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RolesEnum.ACTIVITY_AREA], [], []),
-            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RolesEnum.CARD_SENDER], [], []),
-            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RolesEnum.CARD_SENDER], [], null)
+            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
+            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
+            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
+            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null)
         ]);
     }
 

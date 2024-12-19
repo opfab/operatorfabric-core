@@ -9,14 +9,14 @@
 
 import {Utilities} from 'app/business/common/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 
 export class ActivityAreaView {
@@ -61,7 +61,7 @@ export class ActivityAreaView {
 
     private addEntityToClusters(entity: Entity) {
         const entitiesConnected = UserService.getCurrentUserWithPerimeters().userData.entities;
-        if (entity?.roles?.includes(RolesEnum.ACTIVITY_AREA)) {
+        if (entity?.roles?.includes(RoleEnum.ACTIVITY_AREA)) {
             const activityAreaLine = new ActivityAreaLine();
             activityAreaLine.entityId = entity.id;
             activityAreaLine.entityName = entity.name;
@@ -70,7 +70,7 @@ export class ActivityAreaView {
             if (entity.parents?.length > 0) {
                 entity.parents.forEach((parentId) => {
                     const parentEntity = EntitiesService.getEntity(parentId);
-                    if (parentEntity?.roles?.includes(RolesEnum.ACTIVITY_AREA_GROUP)) {
+                    if (parentEntity?.roles?.includes(RoleEnum.ACTIVITY_AREA_GROUP)) {
                         this.isEntityAlreadyACluster(parentEntity.name)
                             ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.name), activityAreaLine)
                             : this.activityAreaClusters.set(

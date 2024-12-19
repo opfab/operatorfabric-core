@@ -26,7 +26,7 @@ import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/template.model';
@@ -51,7 +51,7 @@ import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from 'app/business/templateGateway/cardTemplateGateway';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 @Component({
     selector: 'of-card-body',

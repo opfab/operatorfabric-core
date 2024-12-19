@@ -17,7 +17,7 @@ import {MonitoringFiltersComponent} from './components/monitoring-filters/monito
 import {Process, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Filter} from '@ofModel/feed-filter.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {TranslateModule} from '@ngx-translate/core';

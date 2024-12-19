@@ -15,20 +15,20 @@ import {UserService} from 'app/business/services/users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {PermissionEnum} from '@ofModel/permission.model';
+import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {User} from '@ofModel/user.model';
 import {firstValueFrom, ReplaySubject} from 'rxjs';
 import {UserActionLogsServerMock} from '@tests/mocks/userActionLogsServer.mock';
 import {Page} from '@ofModel/page.model';
 import {ActionTypeEnum, UserActionLog} from '@ofModel/user-action-log.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {Entity} from '@ofModel/entity.model';
+import {Entity} from '@ofServices/entities/model/Entity';
 import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {RolesEnum} from '@ofModel/roles.model';
+import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('User action logs view ', () => {
@@ -57,9 +57,9 @@ describe('User action logs view ', () => {
     async function initEntityService() {
         entityServerMock = new EntitiesServerMock();
         entityServerMock.setEntities([
-            new Entity('entity1', 'ENTITY1 NAME', null, [RolesEnum.CARD_SENDER], null, null),
-            new Entity('entity2', 'ENTITY2 NAME', null, [RolesEnum.CARD_SENDER], null, null),
-            new Entity('entity3', 'ENTITY3 NAME', null, [RolesEnum.CARD_SENDER], null, null)
+            new Entity('entity1', 'ENTITY1 NAME', null, [RoleEnum.CARD_SENDER], null, null),
+            new Entity('entity2', 'ENTITY2 NAME', null, [RoleEnum.CARD_SENDER], null, null),
+            new Entity('entity3', 'ENTITY3 NAME', null, [RoleEnum.CARD_SENDER], null, null)
         ]);
         EntitiesService.setEntitiesServer(entityServerMock);
         await firstValueFrom(EntitiesService.loadAllEntitiesData());

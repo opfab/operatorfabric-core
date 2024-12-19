@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
+
 export class Process {
     constructor(
         readonly id: string,
@@ -65,13 +67,6 @@ export class UserCard {
         readonly recipientVisible?: boolean,
         readonly recipientForInformationVisible?: boolean,
         readonly publisherList?: EntitiesTree[]
-    ) {}
-}
-
-export class EntitiesTree {
-    constructor(
-        readonly id: string,
-        readonly levels?: number[]
     ) {}
 }
 
