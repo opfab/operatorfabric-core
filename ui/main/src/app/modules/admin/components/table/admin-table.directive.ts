@@ -13,7 +13,7 @@ import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
-import {CrudService} from 'app/business/services/admin/crud-service';
+import {CrudService} from '@ofServices/admin/CrudService';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';

@@ -8,9 +8,9 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {SupervisedEntitiesService} from '../users/supervised-entities.service';
-import {CrudUtilities} from './crudUtils';
-import {EntitiesService} from '../../../services/entities/EntitiesService';
+import {SupervisedEntitiesService} from '../../business/services/users/supervised-entities.service';
+import {CrudUtilities} from './CrudUtils';
+import {EntitiesService} from '../entities/EntitiesService';
 
 export class CrudSupervisedEntitiesService {
     getAll(): Observable<Array<any>> {

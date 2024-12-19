@@ -21,7 +21,7 @@ import {
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from 'app/business/services/admin/crud-service';
+import {CrudService} from '@ofServices/admin/CrudService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
@@ -34,7 +34,6 @@ import {NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
 import {TagInputModule} from 'ngx-chips';
 import {TranslationService} from '@ofServices/translation/TranslationService';
-import {CrudUtilities} from 'app/business/services/admin/crudUtils';
 
 @Component({
     selector: 'of-edit-entity-modal',
@@ -68,8 +67,7 @@ export class EditEntityModalComponent implements OnInit {
     entityParentsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.entity.parents',
         placeholderKey: 'admin.input.selectEntityText',
-        sortOptions: true,
-        labelRenderer: CrudUtilities.entityLabelRenderer
+        sortOptions: true
     };
     entityRolesMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.entity.roles',

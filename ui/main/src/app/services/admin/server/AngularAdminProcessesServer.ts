@@ -12,14 +12,14 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
 import {Process} from '@ofServices/processes/model/Processes';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {AdminProcessServer} from 'app/business/server/adminprocess.server';
+import {AdminProcessesServer} from '@ofServices/admin/server/AdminProcessesServer';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularAdminProcessesServer extends AngularServer implements AdminProcessServer {
+export class AngularAdminProcessesServer extends AngularServer implements AdminProcessesServer {
     readonly processesUrl: string;
     constructor(private readonly httpClient: HttpClient) {
         super();

@@ -11,7 +11,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from 'app/business/services/admin/crud-service';
+import {CrudService} from '@ofServices/admin/CrudService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -19,7 +19,7 @@ import {SupervisedEntitiesService} from 'app/business/services/users/supervised-
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
-import {CrudUtilities} from 'app/business/services/admin/crudUtils';
+import {CrudUtilities} from '@ofServices/admin/CrudUtils';
 
 @Component({
     selector: 'of-edit-supervised-entity-modal',

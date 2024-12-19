@@ -8,23 +8,22 @@
  */
 
 import {Observable} from 'rxjs';
-import {CrudService} from './crud-service';
-import {AdminProcessesService} from '../businessconfig/adminprocess.service';
+import {PerimetersService} from '../../business/services/users/perimeters.service';
 
-export class CrudProcessesService extends CrudService {
+export class CrudPerimetersService {
     getAll(): Observable<Array<any>> {
-        return AdminProcessesService.getAll();
+        return PerimetersService.getAll();
     }
 
     update(data: any): Observable<any> {
-        return AdminProcessesService.update(data);
+        return PerimetersService.update(data);
     }
 
     deleteById(id: string): Observable<any> {
-        return AdminProcessesService.deleteById(id);
+        return PerimetersService.deleteById(id);
     }
 
     getCachedValues(): Array<any> {
-        throw new Error('getCachedValue not implemented');
+        return PerimetersService.getCachedValues();
     }
 }

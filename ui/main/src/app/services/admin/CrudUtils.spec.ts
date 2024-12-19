@@ -10,7 +10,7 @@
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from 'app/services/entities/model/Entity';
 import {firstValueFrom} from 'rxjs';
-import {CrudUtilities} from './crudUtils';
+import {CrudUtilities} from './CrudUtils';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 

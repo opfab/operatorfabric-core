@@ -8,17 +8,17 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {CrudService} from 'app/business/services/admin/crud-service';
+import {CrudService} from '@ofServices/admin/CrudService';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
-import {CrudProcessesService} from 'app/business/services/admin/crud-processes-service';
-import {CrudUserService} from 'app/business/services/admin/crud-user.service';
-import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
-import {CrudGroupsService} from 'app/business/services/admin/crud-groups.service';
-import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters.service';
-import {CrudBusinessDataService} from 'app/business/services/admin/crud-business-data.service';
-import {CrudSupervisedEntitiesService} from 'app/business/services/admin/crud-supervised-entities-service';
+import {CrudProcessesService} from '@ofServices/admin/CrudProcessesService';
+import {CrudUserService} from '@ofServices/admin/CrudUserService';
+import {CrudEntitiesService} from '@ofServices/admin/CrudEntitiesService';
+import {CrudGroupsService} from '@ofServices/admin/CrudGroupsService';
+import {CrudPerimetersService} from '@ofServices/admin/CrudPerimetersService';
+import {CrudBusinessDataService} from '@ofServices/admin/CrudBusinessDataService';
+import {CrudSupervisedEntitiesService} from '@ofServices/admin/CrudSupervisedEntitiesService';
 
 @Injectable()
 export class SharingService implements OnDestroy {

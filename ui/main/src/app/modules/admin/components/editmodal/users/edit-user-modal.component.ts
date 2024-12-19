@@ -21,7 +21,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
-import {CrudUtilities} from 'app/business/services/admin/crudUtils';
+import {CrudUtilities} from '@ofServices/admin/CrudUtils';
 
 @Component({
     selector: 'of-edit-user-modal',

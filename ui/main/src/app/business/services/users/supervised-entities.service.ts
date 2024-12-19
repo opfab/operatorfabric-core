@@ -11,8 +11,8 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
-import {SupervisedEntity} from '@ofModel/supervised-entity.model';
-import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {SupervisedEntity} from '@ofServices/admin/model/SupervisedEntity';
+import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class SupervisedEntitiesService {

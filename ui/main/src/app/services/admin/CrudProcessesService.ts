@@ -8,20 +8,20 @@
  */
 
 import {Observable} from 'rxjs';
-import {CrudService} from './crud-service';
-import {BusinessDataService} from '../../../services/businessdata/businessdata.service';
+import {CrudService} from './CrudService';
+import {AdminProcessesService} from './AdminProcessesService';
 
-export class CrudBusinessDataService extends CrudService {
+export class CrudProcessesService extends CrudService {
     getAll(): Observable<Array<any>> {
-        return BusinessDataService.getAll();
+        return AdminProcessesService.getAll();
     }
 
     update(data: any): Observable<any> {
-        return BusinessDataService.update(data);
+        return AdminProcessesService.update(data);
     }
 
     deleteById(id: string): Observable<any> {
-        return BusinessDataService.deleteById(id);
+        return AdminProcessesService.deleteById(id);
     }
 
     getCachedValues(): Array<any> {

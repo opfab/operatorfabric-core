@@ -27,10 +27,10 @@ import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
 import {PerimetersServer} from 'app/business/server/perimeters.server';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
-import {AdminProcessServer} from 'app/business/server/adminprocess.server';
+import {AdminProcessesServer} from '@ofServices/admin/server/AdminProcessesServer';
 import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataServer';
 import {CardServer} from 'app/business/server/card.server';
-import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
@@ -80,7 +80,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly groupsServer: GroupsServer,
         private readonly perimetersServer: PerimetersServer,
         private readonly processesServer: ProcessesServer,
-        private readonly adminProcessServer: AdminProcessServer,
+        private readonly adminProcessesServer: AdminProcessesServer,
         private readonly acknowledgeServer: AcknowledgeServer,
         private readonly businessDataServer: BusinessDataServer,
         private readonly cardServer: CardServer,
@@ -108,7 +108,7 @@ export class ApplicationLoadingComponent implements OnInit {
             perimetersServer: this.perimetersServer,
             processesServer: this.processesServer,
             opfabEventStreamServer: this.opfabEventStreamServer,
-            adminProcessServer: this.adminProcessServer,
+            adminProcessesServer: this.adminProcessesServer,
             acknowledgeServer: this.acknowledgeServer,
             businessDataServer: this.businessDataServer,
             cardServer: this.cardServer,

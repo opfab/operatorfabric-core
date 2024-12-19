@@ -19,8 +19,8 @@ import {AcknowledgeServer} from './app/services/acknowlegment/server/Acknowledge
 import {AngularAcknowledgeServer} from './app/services/acknowlegment/server/AngularAcknowledgementServer';
 import {EntitiesServer} from './app/services/entities/server/EntitiesServer';
 import {AngularEntitiesServer} from './app/services/entities/server/AngularEntitiesServer';
-import {SupervisedEntitiesServer} from './app/business/server/supervised-entities.server';
-import {AngularSupervisedEntitiesServer} from './app/server/angularSupervisedEntities.server';
+import {SupervisedEntitiesServer} from './app/services/admin/server/SupervisedEntitiesServer';
+import {AngularSupervisedEntitiesServer} from './app/services/admin/server/AngularSupervisedEntities.server';
 import {PerimetersServer} from './app/business/server/perimeters.server';
 import {AngularPerimetersServer} from './app/server/angularPerimeters.server';
 import {GroupsServer} from './app/services/groups/server/GroupsServer';
@@ -29,8 +29,8 @@ import {UserServer} from './app/business/server/user.server';
 import {AngularUserServer} from './app/server/angularUser.server';
 import {UserActionLogsServer} from './app/business/server/user-action-logs.server';
 import {AngularUserActionLogsServer} from './app/server/angularUser-Action-Logs.server';
-import {AdminProcessServer} from './app/business/server/adminprocess.server';
-import {AngularAdminProcessesServer} from './app/server/angularAdminProcess.server';
+import {AdminProcessesServer} from './app/services/admin/server/AdminProcessesServer';
+import {AngularAdminProcessesServer} from './app/services/admin/server/AngularAdminProcessesServer';
 import {RemoteLoggerServer} from './app/services/logs/server/RemoteLoggerServer';
 import {AngularRemoteLoggerServer} from './app/services/logs/server/AngularRemoteLoggerServer';
 import {ConfigServer} from './app/services/config/server/ConfigServer';
@@ -101,7 +101,7 @@ bootstrapApplication(AppComponent, {
         {provide: GroupsServer, useClass: AngularGroupsServer},
         {provide: UserServer, useClass: AngularUserServer},
         {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
-        {provide: AdminProcessServer, useClass: AngularAdminProcessesServer},
+        {provide: AdminProcessesServer, useClass: AngularAdminProcessesServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: TemplateCssServer, useClass: AngularTemplateCssServer},

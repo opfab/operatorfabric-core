@@ -22,7 +22,7 @@ import {ProcessesService} from '../services/processes/ProcessesService';
 import {OpfabEventStreamService} from './services/events/opfabEventStream.service';
 import {AcknowledgeService} from '../services/acknowlegment/AcknowledgeService';
 import {DateTimeFormatterService} from '../services/dateTimeFormatter/DateTimeFormatterService';
-import {AdminProcessesService} from './services/businessconfig/adminprocess.service';
+import {AdminProcessesService} from '../services/admin/AdminProcessesService';
 import {BusinessDataService} from '../services/businessdata/businessdata.service';
 import {CardService} from './services/card/card.service';
 import {SupervisedEntitiesService} from './services/users/supervised-entities.service';
@@ -74,7 +74,7 @@ export class ApplicationLoader {
         ProcessesService.setProcessServer(servers.processesServer);
         OpfabEventStreamService.setEventStreamServer(servers.opfabEventStreamServer);
         AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
-        AdminProcessesService.setAdminProcessServer(servers.adminProcessServer);
+        AdminProcessesService.setAdminProcessesServer(servers.adminProcessesServer);
         BusinessDataService.setBusinessDataServer(servers.businessDataServer);
         CardService.setCardServer(servers.cardServer);
         SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);

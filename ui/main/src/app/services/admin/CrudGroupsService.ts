@@ -8,8 +8,8 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {GroupsService} from '../../../services/groups/GroupsService';
-import {CrudUtilities} from './crudUtils';
+import {GroupsService} from '../groups/GroupsService';
+import {CrudUtilities} from './CrudUtils';
 
 export class CrudGroupsService {
     getAll(): Observable<Array<any>> {

@@ -7,12 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process} from '@ofServices/processes/model/Processes';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
+import {SupervisedEntity} from '@ofServices/admin/model/SupervisedEntity';
 
-export abstract class AdminProcessServer {
+export abstract class SupervisedEntitiesServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>;
-    abstract queryAllProcesses(): Observable<ServerResponse<Process[]>>;
-    abstract update(processData: Process): Observable<ServerResponse<Process>>;
+    abstract queryAllSupervisedEntities(): Observable<ServerResponse<SupervisedEntity[]>>;
+    abstract updateSupervisedEntity(
+        supervisedEntityData: SupervisedEntity
+    ): Observable<ServerResponse<SupervisedEntity>>;
 }

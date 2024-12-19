@@ -10,11 +10,11 @@
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {SupervisedEntity} from '@ofModel/supervised-entity.model';
+import {SupervisedEntity} from '@ofServices/admin/model/SupervisedEntity';
 import {Injectable} from '@angular/core';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {AngularServer} from './angular.server';
-import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {AngularServer} from '../../../server/angular.server';
+import {SupervisedEntitiesServer} from './SupervisedEntitiesServer';
 
 @Injectable({
     providedIn: 'root'
@@ -22,11 +22,8 @@ import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.
 export class AngularSupervisedEntitiesServer extends AngularServer implements SupervisedEntitiesServer {
     readonly supervisedEntitiesUrl: string;
     protected _entities: SupervisedEntity[];
-    /**
-     * @constructor
-     * @param httpClient - Angular built-in
-     */
-    constructor(private httpClient: HttpClient) {
+
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.supervisedEntitiesUrl = `${environment.url}supervisor/supervisedEntities`;
     }
