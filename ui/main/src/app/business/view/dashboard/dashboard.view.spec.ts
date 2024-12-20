@@ -9,7 +9,7 @@
 
 import {Dashboard} from './dashboard.view';
 import {State} from '@ofServices/processes/model/Processes';
-import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';

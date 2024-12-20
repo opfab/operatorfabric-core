@@ -17,13 +17,13 @@ import {
 } from '@ofServices/processes/model/Processes';
 import {getOneCard} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {User} from '@ofModel/user.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
+import {User} from '@ofServices/users/model/User';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
-import {UserService} from '../../business/services/users/user.service';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersService} from '../users/UsersService';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
@@ -35,7 +35,7 @@ describe('AcknowledgeService testing ', () => {
     let card: Card;
     let userMemberOfEntity1: User, userMemberOfEntity2: User, userMemberOfEntity1AndEntity3: User;
     let statesList: Map<string, State>;
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
 
     beforeEach(() => {
         userMemberOfEntity1 = new User('userMemberOfEntity1', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
@@ -51,11 +51,11 @@ describe('AcknowledgeService testing ', () => {
 
         statesList = new Map<string, State>();
 
-        userServerMock = new UserServerMock();
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock = new UsersServerMock();
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, '')
         );
-        UserService.setUserServer(userServerMock);
+        UsersService.setUsersServer(usersServerMock);
 
         const processesServerMock = new ProcessesServerMock();
         processesServerMock.setResponseForProcessesDefinition(
@@ -67,7 +67,7 @@ describe('AcknowledgeService testing ', () => {
         ProcessesService.setProcessServer(processesServerMock);
         ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
         ProcessesService.loadAllProcessesWithAllVersions().subscribe();
-        UserService.loadUserWithPerimetersData().subscribe();
+        UsersService.loadUserWithPerimetersData().subscribe();
 
         const mockEntitiesServer = new EntitiesServerMock();
         mockEntitiesServer.setEntities([
@@ -638,10 +638,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with only ENTITY1 connected, no other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -661,10 +661,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with only ENTITY1 connected, other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -684,10 +684,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with all of its entities (ENTITY1 and ENTITY3), no other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -707,10 +707,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but its entities (ENTITY1 and ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -730,10 +730,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but one of his entities (ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -754,10 +754,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but one of his entities (ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -779,10 +779,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but all of his entities (ENTITY1 and ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -804,10 +804,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with all of his entities (ENTITY1 and ENTITY3), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -829,10 +829,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with only one of his entities (ENTITY3), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -854,10 +854,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but one of his entities (ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -879,10 +879,10 @@ describe('AcknowledgeService testing ', () => {
             'user has not ack the card but all of his entities (ENTITY1 and ENTITY3) have ack the card (other members dit it), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -904,10 +904,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with all of his entities (ENTITY1 and ENTITY3), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -929,10 +929,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with only one of his entities (ENTITY3), ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -954,10 +954,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with only ENTITY3 connected, other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 publisher: 'ENTITY1',
                 publisherType: 'ENTITY',
@@ -980,10 +980,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card with all of his entities (publisher ENTITY1 and ENTITY3), other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 publisher: 'ENTITY1',
                 publisherType: 'ENTITY',
@@ -1006,10 +1006,10 @@ describe('AcknowledgeService testing ', () => {
             'user has ack the card, no other entity has ack the card, ' +
             'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
         () => {
-            userServerMock.setResponseForCurrentUserWithPerimeter(
+            usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1WithPerimeterAndReadonly(), ServerResponseStatus.OK, '')
             );
-            UserService.loadUserWithPerimetersData().subscribe();
+            UsersService.loadUserWithPerimetersData().subscribe();
             const cardWithAck = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',

@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 
 export const DEFAULT_PROCESS_GROUP_ID = '--';
 
@@ -30,7 +30,7 @@ export class MonitoringProcessList {
 
     private loadVisibleProcessesForCurrentUser() {
         ProcessesService.getAllProcesses().forEach((process) => {
-            if (process.uiVisibility?.monitoring && UserService.isReceiveRightsForProcess(process.id)) {
+            if (process.uiVisibility?.monitoring && UsersService.isReceiveRightsForProcess(process.id)) {
                 this.processList.push(process);
             }
         });

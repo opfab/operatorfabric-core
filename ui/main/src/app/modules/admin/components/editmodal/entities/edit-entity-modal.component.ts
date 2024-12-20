@@ -26,8 +26,8 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
-import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {User} from '@ofServices/users/model/User';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Observable, of} from 'rxjs';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {NgIf} from '@angular/common';
@@ -122,7 +122,7 @@ export class EditEntityModalComponent implements OnInit {
             this.selectedRoles = this.row.roles;
         }
 
-        UserService.getAll().subscribe((users) => {
+        UsersService.getAll().subscribe((users) => {
             this.entityUsersMultiSelectOptions = [];
             users.forEach((u) => this.entityUsersMultiSelectOptions.push(new MultiSelectOption(u.login, u.login)));
             if (this.row)

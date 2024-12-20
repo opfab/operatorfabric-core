@@ -16,11 +16,11 @@ import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
@@ -88,7 +88,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(private readonly modalService: NgbModal) {
-        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -101,16 +101,16 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     ngOnChanges(): void {
         this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card,
             ProcessesService.getProcess(this.card.process)
         );
         this.userEntitiesAllowedToRespond = UserPermissionsService.getUserEntitiesAllowedToRespond(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card,
             ProcessesService.getProcess(this.card.process)
         );
-        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntitiesAllowedToRespond[0];

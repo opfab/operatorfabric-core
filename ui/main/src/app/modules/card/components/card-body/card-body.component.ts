@@ -24,15 +24,15 @@ import {SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofServices/processes/model/Processes';
 import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {User} from '@ofServices/users/model/User';
+import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/template.model';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardService} from 'app/business/services/card/card.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
@@ -111,7 +111,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private cardsLoaded: boolean;
 
     constructor(private readonly router: Router) {
-        this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        this.userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
         }
@@ -222,7 +222,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.computeUserEntityIdsPossibleForResponse();
                 this.computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards();
                 this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
-                    UserService.getCurrentUserWithPerimeters(),
+                    UsersService.getCurrentUserWithPerimeters(),
                     this.card,
                     ProcessesService.getProcess(this.card.process)
                 );
@@ -356,7 +356,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     private doesTheUserHavePermissionToEditCard(): boolean {
         return UserPermissionsService.doesTheUserHavePermissionToEditCard(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card
         );
     }

@@ -25,7 +25,7 @@ import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -93,16 +93,16 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
             this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
 
         this.showCreateCopyButton =
-            !UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
+            !UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
             this.isUserMemberOfAnEntityAllowedToPublishForThisState() &&
-            UserService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
+            UsersService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
     private isUserMemberOfAnEntityAllowedToPublishForThisState(): boolean {
         if (!this.cardState.userCard.publisherList) return true;
-        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         const allowedPublishers = EntitiesService.resolveEntities(this.cardState.userCard.publisherList);
         const userAllowedEntities = allowedPublishers.filter((publisher) => userEntities.includes(publisher.id));
         return userAllowedEntities.length > 0;
@@ -110,14 +110,14 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
 
     private doesTheUserHavePermissionToEditCard(): boolean {
         return UserPermissionsService.doesTheUserHavePermissionToEditCard(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card
         );
     }
 
     private doesTheUserHavePermissionToDeleteCard(): boolean {
         return UserPermissionsService.doesTheUserHavePermissionToDeleteCard(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card
         );
     }

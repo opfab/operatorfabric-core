@@ -16,10 +16,10 @@ import {Type} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Guid} from 'guid-typescript';
 import SpyObj = jasmine.SpyObj;
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {UserServerMock} from './mocks/userServer.mock';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
+import {UsersServerMock} from './mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesServerMock} from './mocks/processesServer.mock';
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -178,12 +178,12 @@ export function injectedSpy<S>(service: Type<S>): SpyObj<S> {
 }
 
 export async function setUserPerimeter(userWithPerimeters: UserWithPerimeters) {
-    const userServerMock = new UserServerMock();
-    UserService.setUserServer(userServerMock);
-    userServerMock.setResponseForCurrentUserWithPerimeter(
+    const usersServerMock = new UsersServerMock();
+    UsersService.setUsersServer(usersServerMock);
+    usersServerMock.setResponseForCurrentUserWithPerimeter(
         new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
     );
-    await firstValueFrom(UserService.loadUserWithPerimetersData());
+    await firstValueFrom(UsersService.loadUserWithPerimetersData());
 }
 
 export async function setProcessConfiguration(

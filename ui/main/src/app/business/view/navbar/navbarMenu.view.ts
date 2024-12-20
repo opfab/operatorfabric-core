@@ -8,7 +8,7 @@
  */
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {RouterService} from 'app/business/services/router.service';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
@@ -52,17 +52,17 @@ export class NavbarMenuView {
     private isUserAllowedToSeeMenuElement(menuElementConfig: any): boolean {
         if (
             NavbarMenuView.ADMIN_MENUS.includes(menuElementConfig.opfabCoreMenuId) &&
-            !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+            !UsersService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
         )
             return false;
         if (
             menuElementConfig.opfabCoreMenuId === 'useractionlogs' &&
-            !UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_USER_ACTION_LOGS, PermissionEnum.ADMIN])
+            !UsersService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_USER_ACTION_LOGS, PermissionEnum.ADMIN])
         )
             return false;
         if (!menuElementConfig.showOnlyForGroups || menuElementConfig.showOnlyForGroups.length === 0) return true;
 
-        const userGroups = UserService.getCurrentUserWithPerimeters().userData?.groups;
+        const userGroups = UsersService.getCurrentUserWithPerimeters().userData?.groups;
         return userGroups?.some((group: string) => menuElementConfig.showOnlyForGroups.includes(group));
     }
 

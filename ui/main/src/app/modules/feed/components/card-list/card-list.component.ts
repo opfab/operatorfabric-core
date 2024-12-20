@@ -14,8 +14,8 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UsersService} from '@ofServices/users/UsersService';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
@@ -69,7 +69,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(private readonly router: Router) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UsersService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {

@@ -10,7 +10,7 @@
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {NotificationConfigurationView} from './notificationConfiguration.view';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
+import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';

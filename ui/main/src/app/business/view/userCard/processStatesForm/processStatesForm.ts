@@ -9,7 +9,7 @@
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {InputFieldName, UserCardUIControl} from '../userCard.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Card} from '@ofModel/card.model';
 
@@ -81,7 +81,7 @@ export class ProcessStatesForm {
             process.states.forEach((state, stateId) => {
                 if (
                     state.userCard &&
-                    UserService.isWriteRightsForProcessAndState(process.id, stateId) &&
+                    UsersService.isWriteRightsForProcessAndState(process.id, stateId) &&
                     this.checkIfUserHasAtLeastOneEntityAllowedToSendCard(process.id, stateId)
                 ) {
                     stateList.push(new StateForUserCard(stateId, state.name || stateId));
@@ -112,7 +112,7 @@ export class ProcessStatesForm {
     }
 
     private checkIfUserHasAtLeastOneEntityAllowedToSendCard(processId: string, stateId: string): boolean {
-        const userEntities = UserService.getCurrentUserWithPerimeters().userData?.entities;
+        const userEntities = UsersService.getCurrentUserWithPerimeters().userData?.entities;
         const publisherList = ProcessesService.getProcess(processId).states.get(stateId).userCard?.publisherList;
         if (userEntities.length === 0) return false;
         if (userEntities && publisherList?.length > 0) {

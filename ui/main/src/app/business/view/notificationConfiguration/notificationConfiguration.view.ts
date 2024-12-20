@@ -15,7 +15,7 @@ import {
     StateForNotification
 } from './notificationConfigurationPage';
 import {Process} from '@ofServices/processes/model/Processes';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {ModalService} from 'app/business/services/modal.service';
@@ -87,13 +87,13 @@ export class NotificationConfigurationView {
         return Array.from(process.states.entries())
             .filter(
                 ([stateId, state]) =>
-                    !state.isOnlyAChildState && UserService.isReceiveRightsForProcessAndState(process.id, stateId)
+                    !state.isOnlyAChildState && UsersService.isReceiveRightsForProcessAndState(process.id, stateId)
             )
             .map(([stateId, state]) => ({
                 id: stateId,
                 label: state.name,
                 checked: this.isProcessStateNotified(process.id, stateId),
-                filteringNotificationAllowed: UserService.isFilteringNotificationAllowedForProcessAndState(
+                filteringNotificationAllowed: UsersService.isFilteringNotificationAllowedForProcessAndState(
                     process.id,
                     stateId
                 ),
@@ -102,14 +102,14 @@ export class NotificationConfigurationView {
     }
 
     private isProcessStateNotified(processId: string, stateId: string): boolean {
-        const processStatesNotNotified = UserService.getCurrentUserWithPerimeters().processesStatesNotNotified;
+        const processStatesNotNotified = UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified;
         const statesNotNotified = processStatesNotNotified?.get(processId);
         if (statesNotNotified == null) return true;
         return !statesNotNotified.includes(stateId);
     }
 
     private isProcessStateNotifiedByEmail(processId: string, stateId: string): boolean {
-        const processStatesNotifiedByEmail = UserService.getCurrentUserWithPerimeters().processesStatesNotifiedByEmail;
+        const processStatesNotifiedByEmail = UsersService.getCurrentUserWithPerimeters().processesStatesNotifiedByEmail;
         const statesNotifiedByEmail = processStatesNotifiedByEmail?.get(processId);
         if (statesNotifiedByEmail == null) return false;
         return statesNotifiedByEmail.includes(stateId);
@@ -297,7 +297,7 @@ export class NotificationConfigurationView {
         this.lastProcessesStatesNotifiedByEmailSaved = processesStatesNotifiedByEmail;
 
         OpfabStore.getLightCardStore().removeAllLightCards();
-        UserService.loadUserWithPerimetersData().subscribe();
+        UsersService.loadUserWithPerimetersData().subscribe();
         await ModalService.openInformationModal(new I18n('settings.settingsSaved'));
     }
 

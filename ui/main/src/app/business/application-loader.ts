@@ -12,7 +12,7 @@ import {ConfigService} from '../services/config/ConfigService';
 import {LoggerService as logger, LogOption} from 'app/services/logs/LoggerService';
 import {RemoteLoggerService} from '../services/logs/RemoteLoggerService';
 import {TranslationService} from '../services/translation/TranslationService';
-import {UserService} from './services/users/user.service';
+import {UsersService} from '../services/users/UsersService';
 import {OpfabAPI} from '../api/opfab.api';
 import {GlobalStyleService} from '../services/style/global-style.service';
 import {EntitiesService} from '../services/entities/EntitiesService';
@@ -66,7 +66,7 @@ export class ApplicationLoader {
         RemoteLoggerService.setRemoteLoggerServer(servers.remoteLoggerServer);
         TranslationService.setConfigServer(servers.configServer);
         TranslationService.setTranslationLib(servers.translationLib);
-        UserService.setUserServer(servers.userServer);
+        UsersService.setUsersServer(servers.usersServer);
         RouterService.setApplicationRouter(servers.routerService);
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
@@ -194,7 +194,7 @@ export class ApplicationLoader {
     }
 
     private synchronizeUserTokenWithOpfabUserDatabase() {
-        UserService.synchronizeWithToken().subscribe({
+        UsersService.synchronizeWithToken().subscribe({
             next: () => logger.info('Synchronization of user token with user database done'),
             error: () => logger.warn('Impossible to synchronize user token with user database')
         });
@@ -221,7 +221,7 @@ export class ApplicationLoader {
     private async isUserToBeDisconnectedBecauseLoginAlreadyInUse(): Promise<boolean> {
         this.loadingInProgress = false;
         const isAccountAlreadyUsed = await firstValueFrom(
-            UserService.willNewSubscriptionDisconnectAnExistingSubscription()
+            UsersService.willNewSubscriptionDisconnectAnExistingSubscription()
         );
 
         if (isAccountAlreadyUsed) {
@@ -247,7 +247,7 @@ export class ApplicationLoader {
     private async loadAllConfigurationData(): Promise<any[]> {
         const requestsToLaunch$ = [
             ConfigService.loadUiMenuConfig(),
-            UserService.loadUserWithPerimetersData(),
+            UsersService.loadUserWithPerimetersData(),
             EntitiesService.loadAllEntitiesData(),
             GroupsService.loadAllGroupsData(),
             ProcessesService.loadAllProcessesWithLatestVersion(),
@@ -261,8 +261,8 @@ export class ApplicationLoader {
 
     private async isUserToBeDisconnectedBecauseIsNotAssociatedToAnyGroups(): Promise<boolean> {
         if (
-            UserService.getCurrentUserWithPerimeters().userData.groups === undefined ||
-            UserService.getCurrentUserWithPerimeters().userData.groups.length === 0
+            UsersService.getCurrentUserWithPerimeters().userData.groups === undefined ||
+            UsersService.getCurrentUserWithPerimeters().userData.groups.length === 0
         ) {
             this.isAllowedToAccessOpfab = false;
             await ModalService.openInformationModal(new I18n('global.isNotAllowedToAccessOpfab'));

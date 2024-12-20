@@ -8,12 +8,12 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {UserService} from '../../business/services/users/user.service';
+import {UsersService} from '../users/UsersService';
 import {CrudUtilities} from './CrudUtils';
 
 export class CrudUserService {
     getAll(): Observable<Array<any>> {
-        return UserService.getAll().pipe(
+        return UsersService.getAll().pipe(
             map((users) => {
                 return users.map((user) => ({
                     ...user,
@@ -25,11 +25,11 @@ export class CrudUserService {
     }
 
     update(data: any): Observable<any> {
-        return UserService.update(data);
+        return UsersService.update(data);
     }
 
     deleteById(id: string): Observable<any> {
-        return UserService.deleteById(id);
+        return UsersService.deleteById(id);
     }
 
     getCachedValues(): Array<any> {

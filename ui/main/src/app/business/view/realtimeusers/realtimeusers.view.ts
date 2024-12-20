@@ -11,7 +11,7 @@ import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Observable, ReplaySubject} from 'rxjs';
 import {
     RealtimePage,
@@ -87,7 +87,7 @@ export class RealtimeUsersView {
     }
 
     private updateConnectedUsers() {
-        UserService.loadConnectedUsers().subscribe((connectedUsers) => {
+        UsersService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
 
             connectedUsers.forEach((connectedUser) => {

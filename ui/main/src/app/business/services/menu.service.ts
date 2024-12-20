@@ -8,7 +8,7 @@
  */
 
 import {ConfigService} from 'app/services/config/ConfigService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class MenuService {
@@ -41,7 +41,7 @@ export class MenuService {
         return (
             !menuConfig.showOnlyForGroups ||
             menuConfig.showOnlyForGroups.length === 0 ||
-            (menuConfig.showOnlyForGroups && UserService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups))
+            (menuConfig.showOnlyForGroups && UsersService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups))
         );
     }
 }

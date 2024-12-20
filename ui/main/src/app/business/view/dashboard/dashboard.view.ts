@@ -10,7 +10,7 @@
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
@@ -38,7 +38,7 @@ export class Dashboard {
             const statesContent = new Array<StateContent>();
             process.states.forEach((state, key) => {
                 if (
-                    UserService.isReceiveRightsForProcessAndState(process.id, key) &&
+                    UsersService.isReceiveRightsForProcessAndState(process.id, key) &&
                     this.isStateNotified(process.id, key) &&
                     !state.isOnlyAChildState
                 ) {
@@ -141,8 +141,8 @@ export class Dashboard {
     }
 
     private isStateNotified(id: string, name: string): boolean {
-        if (UserService.getCurrentUserWithPerimeters().processesStatesNotNotified.has(id)) {
-            return UserService.getCurrentUserWithPerimeters().processesStatesNotNotified.get(id).indexOf(name) <= -1;
+        if (UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified.has(id)) {
+            return UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified.get(id).indexOf(name) <= -1;
         }
         return true;
     }

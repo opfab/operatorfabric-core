@@ -11,12 +11,12 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {UserActionLogsView} from './userActionLogs.view';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersService} from '@ofServices/users/UsersService';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {firstValueFrom, ReplaySubject} from 'rxjs';
 import {UserActionLogsServerMock} from '@tests/mocks/userActionLogsServer.mock';
 import {Page} from '@ofModel/page.model';
@@ -33,7 +33,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('User action logs view ', () => {
     let userActionLogsView: UserActionLogsView;
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
     let userActionLogsServerMock: UserActionLogsServerMock;
     let entityServerMock: EntitiesServerMock;
     let cardServerMock: CardServerMock;
@@ -71,13 +71,12 @@ describe('User action logs view ', () => {
 
     async function setUserWithPermissions(permissions: PermissionEnum[]) {
         const userWithPerimeters = new UserWithPerimeters(user, [], permissions);
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock = new UsersServerMock();
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, '')
         );
-        UserService.setUserServer(userServerMock);
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        UsersService.setUsersServer(usersServerMock);
+        await firstValueFrom(UsersService.loadUserWithPerimetersData());
     }
 
     async function mockUserActionLogsService() {
@@ -109,7 +108,7 @@ describe('User action logs view ', () => {
 
     it('GIVEN a list of user WHEN get all user login THEN user login list is provided ', async () => {
         const user2 = new User('login2', 'firstName2', 'lastName2', null, ['group1'], ['ENTITY1']);
-        userServerMock.setResponseForQueryAllUsers(new ServerResponse([user, user2], ServerResponseStatus.OK, ''));
+        usersServerMock.setResponseForQueryAllUsers(new ServerResponse([user, user2], ServerResponseStatus.OK, ''));
         userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
         const users = await firstValueFrom(userActionLogsView.getAllUserLogins());
         expect(users).toContain('login');

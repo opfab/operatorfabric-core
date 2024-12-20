@@ -13,10 +13,10 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {firstValueFrom} from 'rxjs';
 import {ProcessMonitoringView} from './processmonitoring.view';
-import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {UserService} from 'app/business/services/users/user.service';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersService} from '@ofServices/users/UsersService';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
@@ -25,7 +25,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 
 describe('Process Monitoring view ', () => {
     let processesServerMock: ProcessesServerMock;
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
 
     async function initProcesses(
         processNames: string[] = ['process name 1', 'process name 2'],
@@ -112,13 +112,13 @@ describe('Process Monitoring view ', () => {
     }
 
     async function setUserPerimeter(computedPerimeters: ComputedPerimeter[], permissions?: PermissionEnum[]) {
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
+        usersServerMock = new UsersServerMock();
+        UsersService.setUsersServer(usersServerMock);
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, permissions, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await firstValueFrom(UsersService.loadUserWithPerimetersData());
     }
 
     async function initProcessGroups(

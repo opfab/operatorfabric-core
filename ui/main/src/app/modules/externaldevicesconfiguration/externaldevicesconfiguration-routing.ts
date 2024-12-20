@@ -12,13 +12,13 @@ import {ExternaldevicesconfigurationComponent} from './externaldevicesconfigurat
 import {DevicesTableComponent} from './table/devices.table.component';
 import {UsersTableComponent} from './table/users.table.component';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {SignalMappingsTableComponent} from './table/signal-mappings.table.component';
 
 const defaultPath = 'devices';
 
 const canActivateAdmin: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+    return UsersService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
 };
 
 const routes: Routes = [

@@ -9,10 +9,10 @@
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class CardFooterTextComponent implements OnChanges, OnInit {
     private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor() {
-        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 

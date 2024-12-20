@@ -20,7 +20,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
@@ -239,7 +239,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private loadVisibleProcessesForCurrentUser() {
         ProcessesService.getAllProcesses().forEach((process) => {
-            if (UserService.isReceiveRightsForProcess(process.id)) {
+            if (UsersService.isReceiveRightsForProcess(process.id)) {
                 this.processList.push(process);
             }
         });

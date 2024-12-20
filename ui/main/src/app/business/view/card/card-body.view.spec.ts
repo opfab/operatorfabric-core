@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {CardBodyView} from './card-body.view';
-import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {User} from '@ofServices/users/model/User';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {firstValueFrom} from 'rxjs';
 import {getOneCard} from '@tests/helpers';
 import {RightsEnum} from '@ofModel/perimeter.model';
@@ -24,14 +24,14 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('CardBodyView', () => {
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
     let configServerMock: ConfigServerMock;
     let user: User;
     let card: Card;
     let cardBodyView: CardBodyView;
 
     beforeEach(() => {
-        mockUserService();
+        mockUsersService();
         mockProcessesService();
 
         ConfigService.reset();
@@ -39,9 +39,9 @@ describe('CardBodyView', () => {
         ConfigService.setConfigServer(configServerMock);
     });
 
-    function mockUserService() {
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
+    function mockUsersService() {
+        usersServerMock = new UsersServerMock();
+        UsersService.setUsersServer(usersServerMock);
     }
 
     function mockProcessesService() {
@@ -106,7 +106,7 @@ describe('CardBodyView', () => {
 
     function getUserWithPerimeters(userEntities: string[]) {
         user = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
-        userServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
         const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
         return getUserMemberOfEntity1WithPerimeter(userForPerimeter);
     }

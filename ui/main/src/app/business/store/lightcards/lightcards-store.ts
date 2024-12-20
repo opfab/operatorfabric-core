@@ -22,7 +22,7 @@ import {
     takeUntil,
     tap
 } from 'rxjs';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
@@ -313,7 +313,7 @@ export class LightCardsStore {
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
-        return UserService.getCurrentUserWithPerimeters().userData.entities.some(
+        return UsersService.getCurrentUserWithPerimeters().userData.entities.some(
             (entity) => entity === childCard.publisher
         );
     }
@@ -379,7 +379,7 @@ export class LightCardsStore {
     }
 
     private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
-        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         return children.filter((c) => userEntities.includes(c.publisher));
     }
 

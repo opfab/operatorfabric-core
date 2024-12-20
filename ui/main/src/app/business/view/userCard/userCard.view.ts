@@ -8,7 +8,7 @@
  */
 
 import {EditionMode, InputFieldName, UserCardUIControl} from './userCard.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessStatesForm} from './processStatesForm/processStatesForm';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
@@ -84,7 +84,7 @@ export class UserCardView {
 
     async init(existingCardId?: string, editionMode: EditionMode = EditionMode.CREATE) {
         this.editionMode = editionMode;
-        if (UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) {
+        if (UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) {
             this.userCardUIControl.setUserNotAllowedToSendCard();
             return;
         }

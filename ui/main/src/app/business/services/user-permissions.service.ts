@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {userRight, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Card} from '@ofModel/card.model';
 import {Process} from '@ofServices/processes/model/Processes';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {UserService} from './users/user.service';
+import {UsersService} from '../../services/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserPermissionsService {
@@ -33,7 +33,7 @@ export class UserPermissionsService {
     public static doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
         let permission = false;
         if (
-            !UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
+            !UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
             card.publisherType === 'ENTITY' &&
             user.userData.entities.includes(card.publisher)
         ) {
@@ -43,7 +43,7 @@ export class UserPermissionsService {
     }
 
     public static doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-        if (UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) return false;
+        if (UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) return false;
         if (card.entitiesAllowedToEdit && UserPermissionsService.isUserInEntityAllowedToEditCard(user.userData, card))
             return UserPermissionsService.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))

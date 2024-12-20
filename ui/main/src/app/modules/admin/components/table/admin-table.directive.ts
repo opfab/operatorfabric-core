@@ -29,7 +29,7 @@ import {saveAs} from 'file-saver-es';
 import {BusinessDataService} from '@ofServices/businessdata/businessdata.service';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
@@ -99,7 +99,7 @@ export abstract class AdminTableDirective implements OnDestroy {
         protected dataHandlingService: SharingService,
         private readonly changeDetector: ChangeDetectorRef
     ) {
-        this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
+        this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
             context: {
@@ -446,7 +446,7 @@ export abstract class AdminTableDirective implements OnDestroy {
     }
 
     hasAnyPermission(permissions: PermissionEnum[]) {
-        return UserService.hasCurrentUserAnyPermission(permissions);
+        return UsersService.hasCurrentUserAnyPermission(permissions);
     }
 }
 

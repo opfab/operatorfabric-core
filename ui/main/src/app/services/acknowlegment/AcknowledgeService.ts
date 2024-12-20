@@ -13,7 +13,7 @@ import {
     Process
 } from '@ofServices/processes/model/Processes';
 import {Card} from '@ofModel/card.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
@@ -22,7 +22,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessesService} from '../processes/ProcessesService';
 import {EntitiesService} from '../entities/EntitiesService';
-import {UserService} from '../../business/services/users/user.service';
+import {UsersService} from '../users/UsersService';
 
 export class AcknowledgeService {
     private static acknowledgeServer: AcknowledgeServer;
@@ -54,7 +54,7 @@ export class AcknowledgeService {
         return (
             state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
-                (UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
+                (UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
                     !isUserEnabledToRespond ||
                     (isUserEnabledToRespond && AcknowledgeService.isLttdExpired(card))))
         );
@@ -84,7 +84,7 @@ export class AcknowledgeService {
     ): boolean {
         return (
             consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
-            UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
+            UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
             !lightCard.entityRecipients?.length ||
             !AcknowledgeService.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)
         );
@@ -94,7 +94,7 @@ export class AcknowledgeService {
         const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter((entityId) => {
             return (
                 EntitiesService.isEntityAllowedToSendCard(entityId) &&
-                UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                UsersService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
             );
         });
         return entitiesOfUserThatAreRecipients.length > 0;
@@ -141,7 +141,7 @@ export class AcknowledgeService {
             const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter((entityId) => {
                 return (
                     EntitiesService.isEntityAllowedToSendCard(entityId) &&
-                    UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                    UsersService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
                 );
             });
             return entitiesOfUserAndWaitedForAck.length === 0;
@@ -151,7 +151,7 @@ export class AcknowledgeService {
     private static isMemberOfEntityThatPublishedTheCard(lightCard: LightCard): boolean {
         if (
             lightCard.publisherType === 'ENTITY' &&
-            UserService.getCurrentUserWithPerimeters().userData.entities?.includes(lightCard.publisher)
+            UsersService.getCurrentUserWithPerimeters().userData.entities?.includes(lightCard.publisher)
         ) {
             return true;
         } else {

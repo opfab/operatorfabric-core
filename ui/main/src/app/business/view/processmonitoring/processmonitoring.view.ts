@@ -9,7 +9,7 @@
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ProcessGroups, ProcessToMonitor, StatePerProcessToMonitor} from './processmonitoringPage';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {Process} from '@ofServices/processes/model/Processes';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -34,7 +34,7 @@ export class ProcessMonitoringView {
 
     private addProcessIfUserHasPermission(process: Process) {
         for (const stateId of process.states.keys()) {
-            if (UserService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+            if (UsersService.isReceiveRightsForProcessAndState(process.id, stateId)) {
                 this.processesToMonitor.push({
                     id: process.id,
                     label: process.name ? process.name : process.id
@@ -50,7 +50,7 @@ export class ProcessMonitoringView {
             if (processIds.includes(process.id)) {
                 const statesToMonitor = [];
                 for (const stateId of process.states.keys()) {
-                    if (UserService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                    if (UsersService.isReceiveRightsForProcessAndState(process.id, stateId)) {
                         statesToMonitor.push({
                             id: stateId,
                             label: process.states.get(stateId).name
@@ -99,7 +99,7 @@ export class ProcessMonitoringView {
     }
 
     public mustViewAllCardsFeatureBeDisplayed(): boolean {
-        return UserService.hasCurrentUserAnyPermission([
+        return UsersService.hasCurrentUserAnyPermission([
             PermissionEnum.ADMIN,
             PermissionEnum.VIEW_ALL_CARDS,
             PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS

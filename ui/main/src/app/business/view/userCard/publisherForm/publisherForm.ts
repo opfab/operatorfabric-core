@@ -9,7 +9,7 @@
 
 import {Card} from '@ofModel/card.model';
 import {EditionMode, InputFieldName, MultiselectItem, UserCardUIControl} from '../userCard.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -42,7 +42,7 @@ export class PublisherForm {
     }
 
     private getUserEntitiesWithCardSenderRole(): string[] {
-        const user = UserService.getCurrentUserWithPerimeters();
+        const user = UsersService.getCurrentUserWithPerimeters();
         return user.userData.entities?.filter((entity) => {
             return EntitiesService.getEntity(entity)?.roles?.includes(RoleEnum.CARD_SENDER);
         });

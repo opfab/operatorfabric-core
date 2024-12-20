@@ -10,10 +10,10 @@
 import {InputFieldName} from '../userCard.model';
 import {State} from '@ofServices/processes/model/Processes';
 import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
-import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
+import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ProcessStatesForm} from './processStatesForm';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {getProcessConfigWith} from '@tests/userCardView/helpers';

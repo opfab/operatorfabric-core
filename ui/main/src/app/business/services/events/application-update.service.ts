@@ -11,7 +11,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupsService} from '@ofServices/groups/GroupsService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../../common/utilities';
@@ -55,7 +55,7 @@ export class ApplicationUpdateService {
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 switchMap(() => {
                     const requestsToLaunch$ = [
-                        UserService.loadUserWithPerimetersData(),
+                        UsersService.loadUserWithPerimetersData(),
                         EntitiesService.loadAllEntitiesData(),
                         GroupsService.loadAllGroupsData()
                     ];

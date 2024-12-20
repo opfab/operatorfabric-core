@@ -8,8 +8,8 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
+import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -24,7 +24,7 @@ describe('Realtimeusers', () => {
     let clock: jasmine.Clock;
 
     let configServerMock: ConfigServerMock;
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
     let entitiesServerMock: EntitiesServerMock;
 
     beforeEach(() => {
@@ -39,7 +39,7 @@ describe('Realtimeusers', () => {
             {login: 'user3', entitiesConnected: ['ENTITY1_NL'], groups: ['group2', 'group3']},
             {login: 'user4'}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         const entities: Entity[] = [
             new Entity('ENTITY_FR', 'French Control Centers', '', [RoleEnum.CARD_SENDER], [], []),
@@ -91,8 +91,8 @@ describe('Realtimeusers', () => {
     }
 
     function mockUserService() {
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
+        usersServerMock = new UsersServerMock();
+        UsersService.setUsersServer(usersServerMock);
     }
 
     function mockEntitiesService() {
@@ -148,7 +148,7 @@ describe('Realtimeusers', () => {
             {login: 'user1', entitiesConnected: ['IT_SUPERVISOR_ENTITY']},
             {login: 'user2', entitiesConnected: ['IT_SUPERVISOR_ENTITY']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         clock.tick(2500);
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);

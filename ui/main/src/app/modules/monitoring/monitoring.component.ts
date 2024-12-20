@@ -24,7 +24,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 
 @Component({
     selector: 'of-monitoring',
@@ -113,7 +113,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     private hasStatesToDisplay(): boolean {
         for (const process of ProcessesService.getAllProcesses()) {
             for (const [stateId] of process.states) {
-                if (UserService.isReceiveRightsForProcessAndState(process.id, stateId)) {
+                if (UsersService.isReceiveRightsForProcessAndState(process.id, stateId)) {
                     return true;
                 }
             }

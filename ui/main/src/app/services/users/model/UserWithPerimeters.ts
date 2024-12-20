@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
@@ -36,7 +36,7 @@ export class ComputedPerimeter {
 }
 
 export function userRight(rights: RightsEnum) {
-    let result;
+    let result: number;
     switch (rights) {
         case RightsEnum.ReceiveAndWrite:
             result = 0;

@@ -9,12 +9,12 @@
 
 import {State} from '@ofServices/processes/model/Processes';
 import {NotificationConfigurationView} from './notificationConfiguration.view';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {firstValueFrom} from 'rxjs';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
+import {UsersService} from '@ofServices/users/UsersService';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {
@@ -444,9 +444,9 @@ describe('Notification configuration view - User interaction ', () => {
             });
 
             it('should reload user perimeter if save is successful', async () => {
-                const userServerMock = new UserServerMock();
-                UserService.setUserServer(userServerMock);
-                userServerMock.setResponseForCurrentUserWithPerimeter(
+                const usersServerMock = new UsersServerMock();
+                UsersService.setUsersServer(usersServerMock);
+                usersServerMock.setResponseForCurrentUserWithPerimeter(
                     new ServerResponse(
                         {
                             computedPerimeters: [],
@@ -459,7 +459,7 @@ describe('Notification configuration view - User interaction ', () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
                 modalServerMock.clickOnButton('ok');
-                expect(userServerMock.numberOfCallsToCurrentUserWithPerimeter).toEqual(1);
+                expect(usersServerMock.numberOfCallsToCurrentUserWithPerimeter).toEqual(1);
             });
         });
     });

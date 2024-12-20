@@ -20,7 +20,7 @@ import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ApplicationLoader} from 'app/business/application-loader';
 import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
-import {UserServer} from 'app/business/server/user.server';
+import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {AngularRouterService} from '@ofServices/angularRouterService';
 import {EntitiesServer} from '@ofServices/entities/server/EntitiesServer';
 import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
@@ -74,7 +74,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly opfabEventStreamServer: OpfabEventStreamServer,
         private readonly translationLib: TranslationLib,
         private readonly remoteLoggerServer: RemoteLoggerServer,
-        private readonly userServer: UserServer,
+        private readonly usersServer: UsersServer,
         private readonly routerService: AngularRouterService,
         private readonly entitiesServer: EntitiesServer,
         private readonly groupsServer: GroupsServer,
@@ -101,7 +101,7 @@ export class ApplicationLoadingComponent implements OnInit {
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
             translationLib: this.translationLib,
-            userServer: this.userServer,
+            usersServer: this.usersServer,
             routerService: this.routerService,
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,

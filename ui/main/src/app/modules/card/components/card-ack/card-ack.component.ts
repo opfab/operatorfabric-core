@@ -12,13 +12,13 @@ import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
@@ -26,7 +26,7 @@ import {RouterStore, PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from '@ofModel/light-card.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
@@ -66,7 +66,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     currentUserWithPerimeters: UserWithPerimeters;
 
     constructor() {
-        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -116,12 +116,12 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         this.cardProcess = ProcessesService.getProcess(this.card.process);
-        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card,
             ProcessesService.getProcess(this.card.process)
         );

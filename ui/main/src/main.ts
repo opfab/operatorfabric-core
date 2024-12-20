@@ -25,8 +25,8 @@ import {PerimetersServer} from './app/business/server/perimeters.server';
 import {AngularPerimetersServer} from './app/server/angularPerimeters.server';
 import {GroupsServer} from './app/services/groups/server/GroupsServer';
 import {AngularGroupsServer} from './app/services/groups/server/AngularGroupsServer';
-import {UserServer} from './app/business/server/user.server';
-import {AngularUserServer} from './app/server/angularUser.server';
+import {UsersServer} from './app/services/users/server/UsersServer';
+import {AngularUserServer} from './app/services/users/server/AngularUsersServer';
 import {UserActionLogsServer} from './app/business/server/user-action-logs.server';
 import {AngularUserActionLogsServer} from './app/server/angularUser-Action-Logs.server';
 import {AdminProcessesServer} from './app/services/admin/server/AdminProcessesServer';
@@ -99,7 +99,7 @@ bootstrapApplication(AppComponent, {
         {provide: SupervisedEntitiesServer, useClass: AngularSupervisedEntitiesServer},
         {provide: PerimetersServer, useClass: AngularPerimetersServer},
         {provide: GroupsServer, useClass: AngularGroupsServer},
-        {provide: UserServer, useClass: AngularUserServer},
+        {provide: UsersServer, useClass: AngularUserServer},
         {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
         {provide: AdminProcessesServer, useClass: AngularAdminProcessesServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},

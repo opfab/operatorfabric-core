@@ -30,13 +30,13 @@ import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
 import {UserContext} from '@ofServices/handlebars/model/UserContext.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
@@ -115,7 +115,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
-            const user = UserService.getCurrentUserWithPerimeters().userData;
+            const user = UsersService.getCurrentUserWithPerimeters().userData;
             const token = CurrentUserStore.getToken();
             this.userContext = new UserContext(
                 user.login,

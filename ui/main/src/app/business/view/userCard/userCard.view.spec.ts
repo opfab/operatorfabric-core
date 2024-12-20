@@ -15,7 +15,7 @@ import {
     setProcessConfiguration,
     setUserPerimeter
 } from '@tests/helpers';
-import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
+import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserCardView} from './userCard.view';

@@ -19,7 +19,7 @@ import {CardService} from 'app/business/services/card/card.service';
 import {Guid} from 'guid-typescript';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class CardBuilder {
@@ -326,7 +326,7 @@ export class CardBuilder {
 
     public getCurrentUserChildCard(): Card {
         const userCanRespond = UserPermissionsService.isUserEnabledToRespond(
-            UserService.getCurrentUserWithPerimeters(),
+            UsersService.getCurrentUserWithPerimeters(),
             this.card,
             ProcessesService.getProcess(this.processId)
         );

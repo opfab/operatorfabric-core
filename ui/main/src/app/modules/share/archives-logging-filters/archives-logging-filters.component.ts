@@ -30,7 +30,7 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {sub} from 'date-fns';
 import {TranslateModule} from '@ngx-translate/core';
@@ -123,12 +123,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
 
     constructor(private readonly changeDetector: ChangeDetectorRef) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
-            UserService.isCurrentUserAdmin() ||
-            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);
+            UsersService.isCurrentUserAdmin() ||
+            UsersService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);
 
         this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters =
             !this.hasCurrentUserRightsToViewAllArchivedCards &&
-            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS]);
+            UsersService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS]);
 
         const seeOnlyCardsForWhichUserIsRecipientInStorage =
             UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') ?? true;

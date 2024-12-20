@@ -16,7 +16,7 @@ import {UserActionLogsServer} from 'app/business/server/user-action-logs.server'
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {format, sub} from 'date-fns';
 import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './userActionLogLine';
@@ -58,7 +58,7 @@ export class UserActionLogsView {
     }
 
     private isUserAuthorized() {
-        return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
+        return UsersService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
     }
 
     public getUserActionLogPage() {
@@ -66,7 +66,7 @@ export class UserActionLogsView {
     }
 
     public getAllUserLogins(): Observable<Array<string>> {
-        return UserService.getAll().pipe(
+        return UsersService.getAll().pipe(
             map((users) => {
                 return users.map((user) => user.login);
             })

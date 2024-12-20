@@ -14,7 +14,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {firstValueFrom} from 'rxjs';
 
 export class SettingsView {
@@ -38,7 +38,7 @@ export class SettingsView {
     }
 
     public async isExternalDeviceSettingVisible(): Promise<boolean> {
-        const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
+        const userLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         const userConfiguration: UserConfiguration = await firstValueFrom(
             ExternalDevicesService.fetchUserConfiguration(userLogin)
         );

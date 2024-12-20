@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UserServer} from 'app/business/server/user.server';
+import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
-import {User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {User} from '@ofServices/users/model/User';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 
-export class UserServerMock implements UserServer {
+export class UsersServerMock implements UsersServer {
     private currentUserWithPerimeterSubject: ReplaySubject<ServerResponse<UserWithPerimeters>>;
     private userSubject: ReplaySubject<ServerResponse<User>>;
     private connectedUsersSubject: ReplaySubject<ServerResponse<any>>;

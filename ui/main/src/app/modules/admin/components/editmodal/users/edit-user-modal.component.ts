@@ -10,9 +10,9 @@
 
 import {AsyncValidatorFn, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {GroupsService} from '@ofServices/groups/GroupsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
@@ -92,7 +92,7 @@ export class EditUserModalComponent implements OnInit {
             this.userForm.patchValue({login, firstName, lastName, comment}, {onlySelf: false});
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
-            UserService.getUser(login).subscribe((user) => {
+            UsersService.getUser(login).subscribe((user) => {
                 this.selectedEntities = user.entities;
                 this.selectedGroups = user.groups;
                 this.changeDetector.markForCheck();
@@ -115,7 +115,7 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        UserService.update(this.userForm.value).subscribe(() => {
+        UsersService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
             // user chose to perform an action (here, update the selected item).
@@ -128,7 +128,7 @@ export class EditUserModalComponent implements OnInit {
         const subject = new Subject<boolean>();
 
         if (login) {
-            UserService.queryAllUsers().subscribe((users) => {
+            UsersService.queryAllUsers().subscribe((users) => {
                 if (users.filter((user) => user.login === login).length) subject.next(false);
                 else subject.next(true);
             });

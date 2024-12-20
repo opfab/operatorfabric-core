@@ -9,13 +9,13 @@
 
 import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class NoneAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {
-        UserService.currentUserWithPerimeters().subscribe((foundUser) => {
+        UsersService.currentUserWithPerimeters().subscribe((foundUser) => {
             if (foundUser != null) {
                 logger.info('None auth mode - User (' + foundUser.userData.login + ') found');
                 const user = new AuthenticatedUser();

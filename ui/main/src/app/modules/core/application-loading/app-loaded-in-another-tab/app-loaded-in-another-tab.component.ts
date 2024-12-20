@@ -10,7 +10,7 @@
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UrlLockService} from './url-lock.service';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
@@ -99,7 +99,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
             this.isApplicationActive = false;
             SoundNotificationService.stopService();
             OpfabEventStreamService.closeEventStream();
-            const login = UserService.getCurrentUserWithPerimeters().userData.login;
+            const login = UsersService.getCurrentUserWithPerimeters().userData.login;
             logger.info(
                 'User ' + login + ' was disconnected by another browser tab having loaded the application',
                 LogOption.LOCAL_AND_REMOTE

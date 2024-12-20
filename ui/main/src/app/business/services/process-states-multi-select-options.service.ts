@@ -8,7 +8,7 @@
  */
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {Process} from '@ofServices/processes/model/Processes';
 import {TranslationService} from '@ofServices/translation/TranslationService';
@@ -65,7 +65,7 @@ export class ProcessStatesMultiSelectOptionsService {
         return (
             !(hideChildStates && isOnlyAChildState) &&
             (isAdminModeAndUserHasRightToSeeAllStates ||
-                UserService.isReceiveRightsForProcessAndState(processId, stateId))
+                UsersService.isReceiveRightsForProcessAndState(processId, stateId))
         );
     }
 
@@ -76,7 +76,7 @@ export class ProcessStatesMultiSelectOptionsService {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
         ProcessesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
-            if (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcess(process.id))
+            if (isAdminModeAndUserHasRightToSeeAllStates || UsersService.isReceiveRightsForProcess(process.id))
                 processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
         });
         return processesWithoutProcessGroupMultiSelectOptions;
@@ -92,7 +92,7 @@ export class ProcessStatesMultiSelectOptionsService {
         processMultiSelectOptionsPerProcessGroups.forEach((processList, processGroupId) => {
             if (!isAdminModeAndUserHasRightToSeeAllStates) {
                 processList = processList.filter((processData) =>
-                    UserService.isReceiveRightsForProcess(processData.value)
+                    UsersService.isReceiveRightsForProcess(processData.value)
                 );
             }
 

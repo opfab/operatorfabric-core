@@ -8,7 +8,7 @@
  */
 import {Card} from '@ofModel/card.model';
 import {ShowAcknowledgmentFooterEnum} from '@ofServices/processes/model/Processes';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Utilities} from 'app/business/common/utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ConfigService} from 'app/services/config/ConfigService';

@@ -8,15 +8,15 @@
  */
 
 import {Entity} from '@ofServices/entities/model/Entity';
-import {User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {User} from '@ofServices/users/model/User';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
@@ -28,7 +28,7 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('ActivityAreaView', () => {
-    let userServerMock: UserServerMock;
+    let usersServerMock: UsersServerMock;
     let entitiesServerMock: EntitiesServerMock;
     let settingsServerMock: UserSettingsServerMock;
     let user: User;
@@ -36,14 +36,14 @@ describe('ActivityAreaView', () => {
 
     beforeEach(() => {
         jasmine.clock().uninstall();
-        mockUserService();
+        mockUsersService();
         mockEntitiesService();
         mockSettingsService();
     });
 
-    function mockUserService() {
-        userServerMock = new UserServerMock();
-        UserService.setUserServer(userServerMock);
+    function mockUsersService() {
+        usersServerMock = new UsersServerMock();
+        UsersService.setUsersServer(usersServerMock);
     }
 
     function mockEntitiesService() {
@@ -105,7 +105,7 @@ describe('ActivityAreaView', () => {
         ];
         entitiesServerMock.setEntities(entities);
         EntitiesService.loadAllEntitiesData().subscribe();
-        userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
     }
 
     function mockSettingsService() {
@@ -121,13 +121,13 @@ describe('ActivityAreaView', () => {
 
     async function mockUserConfig(userEntities: string[], userConnectedEntities: string[]) {
         user = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
-        userServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
         const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userConnectedEntities);
         const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        await firstValueFrom(UsersService.loadUserWithPerimetersData());
     }
 
     function initActivityAreaView() {
@@ -206,7 +206,7 @@ describe('ActivityAreaView', () => {
         mockUserConfig(['ENTITY1', 'ENTITY2'], []);
 
         const connectedUsers = [{login: 'anotherUser', entitiesConnected: ['ENTITY1']}];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -225,7 +225,7 @@ describe('ActivityAreaView', () => {
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
             {login: 'currentUser', entitiesConnected: ['ENTITY1']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -247,7 +247,7 @@ describe('ActivityAreaView', () => {
             {login: 'anotherUser2', entitiesConnected: ['ENTITY1', 'ENTITY2']},
             {login: 'anotherUser3', entitiesConnected: ['ENTITY1', 'ENTITY4']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -273,7 +273,7 @@ describe('ActivityAreaView', () => {
             {login: 'zz', entitiesConnected: ['ENTITY1']},
             {login: 'abc', entitiesConnected: ['ENTITY1']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -330,12 +330,12 @@ describe('ActivityAreaView', () => {
 
         // set new perimeter after save
         const newUserWithPerimeters = new UserWithPerimeters(user, new Array(), null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(newUserWithPerimeters, ServerResponseStatus.OK, null)
         );
         const saved = await firstValueFrom(activityAreaView.saveActivityArea());
         expect(saved).toBeTruthy();
-        expect(UserService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
+        expect(UsersService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
     it('GIVEN a user WHEN set entity connected THEN Activity Area needs to be saved ', async () => {
@@ -385,7 +385,7 @@ describe('ActivityAreaView', () => {
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
             {login: 'currentUser', entitiesConnected: ['ENTITY1']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
@@ -401,7 +401,7 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
 
         const newConnectedUsers = [{login: 'currentUser', entitiesConnected: ['ENTITY1']}];
-        userServerMock.setResponseForConnectedUsers(
+        usersServerMock.setResponseForConnectedUsers(
             new ServerResponse(newConnectedUsers, ServerResponseStatus.OK, null)
         );
         jasmine.clock().tick(2500);
@@ -420,7 +420,7 @@ describe('ActivityAreaView', () => {
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
             {login: 'currentUser', entitiesConnected: ['ENTITY1']}
         ];
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
@@ -428,7 +428,7 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
 
         const newConnectedUsers = [{login: 'currentUser', entitiesConnected: ['ENTITY1']}];
-        userServerMock.setResponseForConnectedUsers(
+        usersServerMock.setResponseForConnectedUsers(
             new ServerResponse(newConnectedUsers, ServerResponseStatus.OK, null)
         );
         jasmine.clock().tick(2500);
@@ -439,7 +439,7 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
 
-        userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
         activityAreaView.stopUpdateRegularyConnectedUser();
         jasmine.clock().tick(2500);
         // should be set again set to new connected users

@@ -27,7 +27,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from '../share/simplified-card-view/simplified-card-view.component';
@@ -390,7 +390,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     }
 
     private buildLightCardPreview(cardWithChildCards: CardWithChildCards) {
-        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         const hasChildCardFromCurrentUserEntity =
             cardWithChildCards.childCards?.some((child) => userEntities.includes(child.publisher)) ?? false;
         this.lightCardPreview = {...fromCardToLightCard(this.cardPreview), hasChildCardFromCurrentUserEntity};

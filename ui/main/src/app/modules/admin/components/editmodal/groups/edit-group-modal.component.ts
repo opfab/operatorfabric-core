@@ -26,8 +26,8 @@ import {PerimetersService} from 'app/business/services/users/perimeters.service'
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups/GroupsService';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
-import {UserService} from 'app/business/services/users/user.service';
-import {User} from '@ofModel/user.model';
+import {UsersService} from '@ofServices/users/UsersService';
+import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Observable, of} from 'rxjs';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
@@ -128,7 +128,7 @@ export class EditGroupModalComponent implements OnInit {
             this.selectedGroupPermissions = group.permissions;
         }
 
-        UserService.getAll().subscribe((users) => {
+        UsersService.getAll().subscribe((users) => {
             this.usersMultiSelectOptions = [];
             users.forEach((u) => this.usersMultiSelectOptions.push(new MultiSelectOption(u.login, u.login)));
             if (this.row)

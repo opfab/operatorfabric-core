@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
@@ -36,10 +36,10 @@ export class InfoComponent implements OnInit {
 
     ngOnInit() {
         this.updateTime();
-        const firstName = UserService.getCurrentUserWithPerimeters().userData.firstName;
-        const lastName = UserService.getCurrentUserWithPerimeters().userData.lastName;
+        const firstName = UsersService.getCurrentUserWithPerimeters().userData.firstName;
+        const lastName = UsersService.getCurrentUserWithPerimeters().userData.lastName;
         if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
-        else this.userName = UserService.getCurrentUserWithPerimeters().userData.login;
+        else this.userName = UsersService.getCurrentUserWithPerimeters().userData.login;
 
         if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
@@ -56,7 +56,7 @@ export class InfoComponent implements OnInit {
     }
 
     setUserEntitiesToDisplay() {
-        const user_entities = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const user_entities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         if (user_entities) {
             this.userEntities = [];
             const entities = EntitiesService.getEntitiesFromIds(user_entities);

@@ -12,8 +12,8 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserService} from 'app/business/services/users/user.service';
-import {User} from '@ofModel/user.model';
+import {UsersService} from '@ofServices/users/UsersService';
+import {User} from '@ofServices/users/model/User';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {State} from '@ofServices/processes/model/Processes';
 import {DisplayContext} from '@ofModel/template.model';
@@ -45,7 +45,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     public isLoading = true;
 
     constructor() {
-        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 

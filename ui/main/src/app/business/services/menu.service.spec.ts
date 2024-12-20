@@ -12,10 +12,10 @@ import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {MenuService} from './menu.service';
 import {ConfigService} from '../../services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
-import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {UserService} from './users/user.service';
-import {User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
+import {UsersService} from '../../services/users/UsersService';
+import {User} from '@ofServices/users/model/User';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 
 describe('MenuService', () => {
     async function setMenuConfig(config: any) {
@@ -27,15 +27,15 @@ describe('MenuService', () => {
 
     async function setCurrentUser(userGroups: string[]) {
         const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const userServerMock = new UserServerMock();
-        userServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
+        const usersServerMock = new UsersServerMock();
+        usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
         const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
         const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
-        userServerMock.setResponseForCurrentUserWithPerimeter(
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        UserService.setUserServer(userServerMock);
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
+        UsersService.setUsersServer(usersServerMock);
+        await firstValueFrom(UsersService.loadUserWithPerimetersData());
     }
 
     describe('Night day mode menu', () => {

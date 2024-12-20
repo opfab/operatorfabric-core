@@ -8,17 +8,17 @@
  */
 
 import {Observable, Subject} from 'rxjs';
-import {User} from '@ofModel/user.model';
+import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {UserServer} from '../../server/user.server';
-import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
+import {UsersServer} from './server/UsersServer';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ErrorService} from '../error-service';
+import {ErrorService} from '../../business/services/error-service';
 
-export class UserService {
+export class UsersService {
     private static _userWithPerimeters: UserWithPerimeters;
     private static readonly ngUnsubscribe = new Subject<void>();
     private static _userRightsPerProcessAndState: Map<
@@ -26,14 +26,14 @@ export class UserService {
         {rights: RightsEnum; filteringNotificationAllowed: boolean}
     > = new Map();
     private static readonly _receiveRightPerProcess: Map<string, number> = new Map();
-    private static userServer;
+    private static usersServer: UsersServer;
 
-    public static setUserServer(userServer: UserServer) {
-        UserService.userServer = userServer;
+    public static setUsersServer(usersServer: UsersServer) {
+        UsersService.usersServer = usersServer;
     }
 
     public static deleteById(login: string) {
-        return UserService.userServer.deleteById(login).pipe(
+        return UsersService.usersServer.deleteById(login).pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -46,7 +46,7 @@ export class UserService {
     }
 
     public static getUser(user: string): Observable<User> {
-        return UserService.userServer.getUser(user).pipe(
+        return UsersService.usersServer.getUser(user).pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -59,7 +59,7 @@ export class UserService {
     }
 
     public static synchronizeWithToken(): Observable<User> {
-        return UserService.userServer.synchronizeWithToken().pipe(
+        return UsersService.usersServer.synchronizeWithToken().pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -72,7 +72,7 @@ export class UserService {
     }
 
     public static currentUserWithPerimeters(): Observable<UserWithPerimeters> {
-        return UserService.userServer.currentUserWithPerimeters().pipe(
+        return UsersService.usersServer.currentUserWithPerimeters().pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -85,7 +85,7 @@ export class UserService {
     }
 
     public static queryAllUsers(): Observable<User[]> {
-        return UserService.userServer.queryAllUsers().pipe(
+        return UsersService.usersServer.queryAllUsers().pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -98,11 +98,11 @@ export class UserService {
     }
 
     public static getAll(): Observable<User[]> {
-        return this.queryAllUsers();
+        return UsersService.queryAllUsers();
     }
 
     public static updateUser(userData: User): Observable<User> {
-        return UserService.userServer.updateUser(userData).pipe(
+        return UsersService.usersServer.updateUser(userData).pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -115,18 +115,18 @@ export class UserService {
     }
 
     public static update(userData: any): Observable<User> {
-        return UserService.updateUser(userData);
+        return UsersService.updateUser(userData);
     }
 
     public static loadUserWithPerimetersData(): Observable<any> {
-        return this.currentUserWithPerimeters().pipe(
-            takeUntil(this.ngUnsubscribe),
+        return UsersService.currentUserWithPerimeters().pipe(
+            takeUntil(UsersService.ngUnsubscribe),
             tap({
                 next: (userWithPerimeters) => {
                     if (userWithPerimeters) {
-                        UserService._userWithPerimeters = userWithPerimeters;
+                        UsersService._userWithPerimeters = userWithPerimeters;
                         logger.info('User perimeter loaded');
-                        UserService.loadUserRightsPerProcessAndState();
+                        UsersService.loadUserRightsPerProcessAndState();
                     }
                 },
                 error: (error) =>
@@ -136,30 +136,32 @@ export class UserService {
     }
 
     public static getCurrentUserWithPerimeters(): UserWithPerimeters {
-        return UserService._userWithPerimeters;
+        return UsersService._userWithPerimeters;
     }
 
     public static isCurrentUserAdmin(): boolean {
-        return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+        return UsersService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
     }
 
     public static isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
-        return UserService._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
+        return (
+            UsersService._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0
+        );
     }
 
     public static hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            UserService._userWithPerimeters?.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
+            UsersService._userWithPerimeters?.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
                 .length > 0
         );
     }
 
     private static loadUserRightsPerProcessAndState() {
-        UserService._userRightsPerProcessAndState = new Map();
-        UserService._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
-            UserService._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, {
+        UsersService._userRightsPerProcessAndState = new Map();
+        UsersService._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
+            UsersService._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, {
                 rights: computedPerimeter.rights,
                 filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed
             });
@@ -167,12 +169,12 @@ export class UserService {
                 computedPerimeter.rights === RightsEnum.Receive ||
                 computedPerimeter.rights === RightsEnum.ReceiveAndWrite
             )
-                UserService._receiveRightPerProcess.set(computedPerimeter.process, 1);
+                UsersService._receiveRightPerProcess.set(computedPerimeter.process, 1);
         });
     }
 
     public static isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const processState = UserService._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        const processState = UsersService._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!processState) return false;
         const rights = processState.rights;
         if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
@@ -182,7 +184,7 @@ export class UserService {
     }
 
     public static isWriteRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const processState = UserService._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        const processState = UsersService._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!processState) {
             return false;
         }
@@ -194,7 +196,9 @@ export class UserService {
     }
 
     public static isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
-        const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        const rightsAndFilteringNotificationAllowed = UsersService._userRightsPerProcessAndState.get(
+            processId + '.' + stateId
+        );
         if (rightsAndFilteringNotificationAllowed) {
             const filteringNotificationAllowed = rightsAndFilteringNotificationAllowed.filteringNotificationAllowed;
             if (
@@ -209,11 +213,11 @@ export class UserService {
     }
 
     public static isReceiveRightsForProcess(processId: string): boolean {
-        return !!this._receiveRightPerProcess.get(processId);
+        return !!UsersService._receiveRightPerProcess.get(processId);
     }
 
     public static loadConnectedUsers(): Observable<any[]> {
-        return this.userServer.loadConnectedUsers().pipe(
+        return UsersService.usersServer.loadConnectedUsers().pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
@@ -226,7 +230,7 @@ export class UserService {
     }
 
     public static willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
-        return this.userServer.willNewSubscriptionDisconnectAnExistingSubscription().pipe(
+        return UsersService.usersServer.willNewSubscriptionDisconnectAnExistingSubscription().pipe(
             map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;

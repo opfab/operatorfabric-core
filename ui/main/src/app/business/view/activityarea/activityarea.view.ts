@@ -11,7 +11,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
-import {UserService} from 'app/business/services/users/user.service';
+import {UsersService} from '@ofServices/users/UsersService';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
@@ -32,12 +32,12 @@ export class ActivityAreaView {
     private newActivityAreas: any = new Map<string, boolean>();
 
     constructor() {
-        this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
+        this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
         this.activityAreaClusters = new Map();
         this.activityAreaOrphanEntitiesCluster = new ActivityAreaEntityCluster(' ', []);
 
-        UserService.getUser(this.currentUserLogin).subscribe((user) => {
+        UsersService.getUser(this.currentUserLogin).subscribe((user) => {
             if (user.entities) {
                 const entities = EntitiesService.getEntitiesFromIds(user.entities);
                 entities.sort((a, b) => Utilities.compareObj(a.name, b.name));
@@ -60,7 +60,7 @@ export class ActivityAreaView {
     }
 
     private addEntityToClusters(entity: Entity) {
-        const entitiesConnected = UserService.getCurrentUserWithPerimeters().userData.entities;
+        const entitiesConnected = UsersService.getCurrentUserWithPerimeters().userData.entities;
         if (entity?.roles?.includes(RoleEnum.ACTIVITY_AREA)) {
             const activityAreaLine = new ActivityAreaLine();
             activityAreaLine.entityId = entity.id;
@@ -98,7 +98,7 @@ export class ActivityAreaView {
     }
 
     private getConnectedUsers(): Observable<boolean> {
-        return UserService.loadConnectedUsers().pipe(
+        return UsersService.loadConnectedUsers().pipe(
             map((connectedUsers) => {
                 this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
                     cluster.lines.forEach((line) => {
@@ -173,7 +173,7 @@ export class ActivityAreaView {
                 map((response) => {
                     if (response.status === ServerResponseStatus.OK) {
                         OpfabStore.getLightCardStore().removeAllLightCards();
-                        UserService.loadUserWithPerimetersData().subscribe(() => {
+                        UsersService.loadUserWithPerimetersData().subscribe(() => {
                             // needed to trigger change in the list of entities in the top right corner
                             ApplicationEventsService.setUserConfigChange();
                         });

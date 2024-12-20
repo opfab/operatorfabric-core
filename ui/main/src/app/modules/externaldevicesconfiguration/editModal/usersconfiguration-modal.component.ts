@@ -10,8 +10,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/users/user.service';
+import {User} from '@ofServices/users/model/User';
+import {UsersService} from '@ofServices/users/UsersService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {DeviceConfiguration, UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -67,7 +67,7 @@ export class UsersconfigurationModalComponent implements OnInit {
 
         if (!this.row) {
             this.isLoadingUsers = true;
-            UserService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
+            UsersService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
         }
         this.isLoadingExternalDevices = true;
         ExternalDevicesService.queryAllDevices().subscribe((allDevices) => this.setDevicesList(allDevices));

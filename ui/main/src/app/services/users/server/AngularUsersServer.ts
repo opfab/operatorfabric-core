@@ -9,17 +9,17 @@
 
 import {environment} from '@env/environment';
 import {map, Observable} from 'rxjs';
-import {User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {User} from '@ofServices/users/model/User';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AngularServer} from './angular.server';
-import {UserServer} from 'app/business/server/user.server';
+import {AngularServer} from '../../../server/angular.server';
+import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 @Injectable({
     providedIn: 'root'
 })
-export class AngularUserServer extends AngularServer implements UserServer {
+export class AngularUserServer extends AngularServer implements UsersServer {
     readonly userUrl: string;
     readonly connectionsUrl: string;
     readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
@@ -27,7 +27,7 @@ export class AngularUserServer extends AngularServer implements UserServer {
      * @constructor
      * @param httpClient - Angular built-in
      */
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.userUrl = `${environment.url}users`;
         this.connectionsUrl = `${environment.url}cards-consultation/connections`;

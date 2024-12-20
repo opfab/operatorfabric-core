@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {User} from '@ofServices/users/model/User';
+import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
-export abstract class UserServer {
+export abstract class UsersServer {
     abstract deleteById(login: string): Observable<ServerResponse<any>>;
     abstract getUser(user: string): Observable<ServerResponse<User>>;
     abstract synchronizeWithToken(): Observable<ServerResponse<User>>;
