@@ -13,7 +13,7 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UserService} from 'app/business/services/users/user.service';
 import {firstValueFrom} from 'rxjs';
 
@@ -93,7 +93,7 @@ export class SettingsView {
                 this.newSettings.replayInterval = ConfigService.getConfigValue('settings.replayInterval', 5);
             }
 
-            const serverResponse = await firstValueFrom(SettingsService.patchUserSettings(this.newSettings));
+            const serverResponse = await firstValueFrom(UserSettingsService.patchUserSettings(this.newSettings));
             if (serverResponse.status === ServerResponseStatus.OK) {
                 for (const setting in this.newSettings) {
                     if (this.newSettings.hasOwnProperty(setting)) {

@@ -8,9 +8,9 @@
  */
 
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {SettingsServer} from 'app/business/server/settings.server';
+import {UserSettingsServer} from '@ofServices/userSettings/server/UserSettingsServer';
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
@@ -18,9 +18,9 @@ import {Injectable} from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-export class AngularSettingsServer extends AngularServer implements SettingsServer {
+export class AngularUserSettingsServer extends AngularServer implements UserSettingsServer {
     usersUrl: string;
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.usersUrl = `${environment.url}users`;
     }

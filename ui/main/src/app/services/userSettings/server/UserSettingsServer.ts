@@ -8,9 +8,9 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
-export abstract class SettingsServer {
+export abstract class UserSettingsServer {
     abstract getUserSettings(userId: string): Observable<ServerResponse<any>>;
     abstract patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>>;
 }

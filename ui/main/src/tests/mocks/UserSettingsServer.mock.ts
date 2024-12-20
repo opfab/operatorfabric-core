@@ -8,10 +8,10 @@
  */
 
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {SettingsServer} from 'app/business/server/settings.server';
+import {UserSettingsServer} from '@ofServices/userSettings/server/UserSettingsServer';
 import {Observable, ReplaySubject} from 'rxjs';
 
-export class SettingsServerMock implements SettingsServer {
+export class UserSettingsServerMock implements UserSettingsServer {
     public userIdPatch = '';
     public settingsPatch: any = {};
     public numberOfCallsToPatchUserSettings = 0;

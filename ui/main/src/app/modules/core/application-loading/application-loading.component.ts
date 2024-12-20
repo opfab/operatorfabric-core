@@ -33,7 +33,7 @@ import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
-import {SettingsServer} from '../../../business/server/settings.server';
+import {UserSettingsServer} from '../../../services/userSettings/server/UserSettingsServer';
 import {ModalServer} from 'app/business/server/modal.server';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 import {NgIf} from '@angular/common';
@@ -88,7 +88,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly externalDevicesServer: ExternalDevicesServer,
         private readonly templateCssServer: TemplateCssServer,
         private readonly handlebarsTemplateServer: HandlebarsTemplateServer,
-        private readonly settingsServer: SettingsServer,
+        private readonly userSettingsServer: UserSettingsServer,
         private readonly modalServer: ModalServer,
         private readonly soundServer: SoundServer
     ) {
@@ -116,7 +116,7 @@ export class ApplicationLoadingComponent implements OnInit {
             externalDevicesServer: this.externalDevicesServer,
             templateCssServer: this.templateCssServer,
             handlebarsTemplateServer: this.handlebarsTemplateServer,
-            settingsServer: this.settingsServer,
+            userSettingsServer: this.userSettingsServer,
             modalServer: this.modalServer,
             authService: this.authService,
             soundServer: this.soundServer

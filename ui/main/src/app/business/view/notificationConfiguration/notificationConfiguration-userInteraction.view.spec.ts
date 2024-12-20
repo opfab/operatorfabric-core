@@ -15,8 +15,8 @@ import {firstValueFrom} from 'rxjs';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ComputedPerimeter} from '@ofModel/userWithPerimeters.model';
 import {UserService} from 'app/business/services/users/user.service';
-import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {
     getModalServerMock,
     getOneLightCard,
@@ -39,16 +39,16 @@ describe('Notification configuration view - User interaction ', () => {
     let notificationConfigurationView: NotificationConfigurationView;
     let notificationConfigurationPage: NotificationConfigurationPage;
     let modalServerMock: ModalServerMock;
-    let settingsServerMock: SettingsServerMock;
+    let settingsServerMock: UserSettingsServerMock;
     let statesCheckboxActivated = '';
     let processesCheckboxActivated = '';
     let processesGroupCheckboxActivated = '';
     let emailEnabledActivated = '';
 
-    function getSettingsServerMock(): SettingsServerMock {
-        const settingsServerMock = new SettingsServerMock();
+    function getSettingsServerMock(): UserSettingsServerMock {
+        const settingsServerMock = new UserSettingsServerMock();
         settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
-        SettingsService.setSettingsServer(settingsServerMock);
+        UserSettingsService.setUserSettingsServer(settingsServerMock);
         return settingsServerMock;
     }
 

@@ -20,7 +20,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';

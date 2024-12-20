@@ -8,7 +8,7 @@
  */
 
 import {BehaviorSubject, Observable} from 'rxjs';
-import {UserPreferencesService} from '../../business/services/users/user-preference.service';
+import {UserPreferencesService} from '../userPreferences/UserPreferencesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {MenuService} from 'app/business/services/menu.service';
 

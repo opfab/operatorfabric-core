@@ -30,7 +30,7 @@ import {SelectedCardLoaderService} from './services/card/selectedCardLoader.serv
 import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';
 import {TemplateCssService} from './services/card/template-css.service';
-import {SettingsService} from './services/users/settings.service';
+import {UserSettingsService} from '../services/userSettings/UserSettingsService';
 import {RouterService} from './services/router.service';
 import {OpfabStore} from './store/opfabStore';
 import {ApplicationUpdateService} from './services/events/application-update.service';
@@ -81,7 +81,7 @@ export class ApplicationLoader {
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
         HandlebarsService.setHandlebarsTemplateServer(servers.handlebarsTemplateServer);
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
-        SettingsService.setSettingsServer(servers.settingsServer);
+        UserSettingsService.setUserSettingsServer(servers.userSettingsServer);
         ModalService.setModalServer(servers.modalServer);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);
@@ -201,7 +201,7 @@ export class ApplicationLoader {
     }
 
     private async loadSettings(): Promise<void> {
-        const {status, data} = await firstValueFrom(SettingsService.getUserSettings());
+        const {status, data} = await firstValueFrom(UserSettingsService.getUserSettings());
         switch (status) {
             case ServerResponseStatus.OK:
                 logger.info('Settings loaded ' + JSON.stringify(data));

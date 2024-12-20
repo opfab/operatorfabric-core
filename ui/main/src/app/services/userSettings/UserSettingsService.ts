@@ -8,26 +8,26 @@
  */
 
 import {Observable} from 'rxjs';
-import {SettingsServer} from '../../server/settings.server';
+import {UserSettingsServer} from './server/UserSettingsServer';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {CurrentUserStore} from '../../store/current-user.store';
+import {CurrentUserStore} from '../../business/store/current-user.store';
 import {ServerResponse} from 'app/business/server/serverResponse';
 
-export class SettingsService {
+export class UserSettingsService {
     private static userId: string;
-    private static settingsServer;
+    private static userSettingsServer: UserSettingsServer;
 
-    public static setSettingsServer(settingsServer: SettingsServer) {
-        CurrentUserStore.getCurrentUserLogin().subscribe((id) => (SettingsService.userId = id));
-        SettingsService.settingsServer = settingsServer;
+    public static setUserSettingsServer(settingsServer: UserSettingsServer) {
+        CurrentUserStore.getCurrentUserLogin().subscribe((id) => (UserSettingsService.userId = id));
+        UserSettingsService.userSettingsServer = settingsServer;
     }
 
     static getUserSettings(): Observable<any> {
-        return SettingsService.settingsServer.getUserSettings(this.userId);
+        return UserSettingsService.userSettingsServer.getUserSettings(this.userId);
     }
 
     static patchUserSettings(settings: any): Observable<ServerResponse<any>> {
         logger.debug('Patch settings : ' + JSON.stringify(settings), LogOption.REMOTE);
-        return SettingsService.settingsServer.patchUserSettings(this.userId, settings);
+        return UserSettingsService.userSettingsServer.patchUserSettings(this.userId, settings);
     }
 }

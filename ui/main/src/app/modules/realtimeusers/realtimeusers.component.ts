@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';

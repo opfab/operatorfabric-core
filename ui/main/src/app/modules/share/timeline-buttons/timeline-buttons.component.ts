@@ -9,7 +9,7 @@
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';

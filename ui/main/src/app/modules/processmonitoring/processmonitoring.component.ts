@@ -34,7 +34,7 @@ import {SelectedCardStore} from '../../business/store/selectedCard.store';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';

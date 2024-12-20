@@ -13,7 +13,7 @@ import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModul
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MessageLevel} from '@ofModel/message.model';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {AlertMessageService} from 'app/business/services/alert-message.service';

@@ -15,8 +15,8 @@ import {ExternalDevicesServerMock} from '@tests/mocks/externalDevicesServer.mock
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
-import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
@@ -99,13 +99,13 @@ describe('Settings view ', () => {
 
     describe('saveSettings', () => {
         let settingsView: SettingsView;
-        let settingsServerMock: SettingsServerMock;
+        let settingsServerMock: UserSettingsServerMock;
 
         beforeEach(async () => {
             await loadWebUIConf({settings: {}});
-            settingsServerMock = new SettingsServerMock();
+            settingsServerMock = new UserSettingsServerMock();
             settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
-            SettingsService.setSettingsServer(settingsServerMock);
+            UserSettingsService.setUserSettingsServer(settingsServerMock);
             settingsView = new SettingsView();
             settingsView.setSetting('remoteLoggingEnabled', true);
             settingsView.setSetting('replayInterval', 10);
@@ -218,9 +218,9 @@ describe('Settings view ', () => {
         });
 
         it('should return false if settings have been modified and then saved', async () => {
-            const settingsServerMock = new SettingsServerMock();
+            const settingsServerMock = new UserSettingsServerMock();
             settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
-            SettingsService.setSettingsServer(settingsServerMock);
+            UserSettingsService.setUserSettingsServer(settingsServerMock);
             settingsView.setSetting('remoteLoggingEnabled', true);
             await settingsView.saveSettings();
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(false);

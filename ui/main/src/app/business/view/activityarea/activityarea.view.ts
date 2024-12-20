@@ -10,7 +10,7 @@
 import {Utilities} from 'app/business/common/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UserService} from 'app/business/services/users/user.service';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
@@ -166,7 +166,7 @@ export class ActivityAreaView {
                 });
             });
             this.newActivityAreas = new Map<string, boolean>();
-            return SettingsService.patchUserSettings({
+            return UserSettingsService.patchUserSettings({
                 login: this.currentUserLogin,
                 entitiesDisconnected: entitiesDisconnected
             }).pipe(

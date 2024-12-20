@@ -9,7 +9,7 @@
 
 import {FilteredLightCardsStore} from '../../business/store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../../business/store/opfabStore';
-import {UserPreferencesService} from '../../business/services/users/user-preference.service';
+import {UserPreferencesService} from '../userPreferences/UserPreferencesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';

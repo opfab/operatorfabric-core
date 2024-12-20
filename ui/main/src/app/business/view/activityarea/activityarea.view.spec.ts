@@ -11,11 +11,11 @@ import {Entity} from '@ofServices/entities/model/Entity';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
+import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {firstValueFrom} from 'rxjs';
@@ -30,7 +30,7 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
     let entitiesServerMock: EntitiesServerMock;
-    let settingsServerMock: SettingsServerMock;
+    let settingsServerMock: UserSettingsServerMock;
     let user: User;
     let activityAreaView: ActivityAreaView;
 
@@ -109,8 +109,8 @@ describe('ActivityAreaView', () => {
     }
 
     function mockSettingsService() {
-        settingsServerMock = new SettingsServerMock();
-        SettingsService.setSettingsServer(settingsServerMock);
+        settingsServerMock = new UserSettingsServerMock();
+        UserSettingsService.setUserSettingsServer(settingsServerMock);
         CurrentUserStore.setCurrentUserAuthenticationValid('currentUser');
     }
 

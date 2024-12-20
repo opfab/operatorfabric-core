@@ -17,7 +17,7 @@ import {
 import {Process} from '@ofServices/processes/model/Processes';
 import {UserService} from 'app/business/services/users/user.service';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
@@ -282,7 +282,7 @@ export class NotificationConfigurationView {
         const processesStatesNotifiedByEmail = this.getCheckedStatesForEmailNotificationPerProcesses();
 
         const {status} = await firstValueFrom(
-            SettingsService.patchUserSettings({
+            UserSettingsService.patchUserSettings({
                 processesStatesNotNotified,
                 processesStatesNotifiedByEmail
             })

@@ -41,8 +41,8 @@ import {ProcessesServer} from './app/services/processes/server/ProcessesServer';
 import {AngularProcessesServer} from './app/services/processes/server/AngularProcessesServer';
 import {BusinessDataServer} from './app/services/businessdata/server/BusinessDataServer';
 import {AngularBusinessDataServer} from './app/services/businessdata/server/AngularBusinessData.server';
-import {SettingsServer} from './app/business/server/settings.server';
-import {AngularSettingsServer} from './app/server/angularSettings.server';
+import {UserSettingsServer} from './app/services/userSettings/server/UserSettingsServer';
+import {AngularUserSettingsServer} from './app/services/userSettings/server/AngularUserSettingsServer';
 import {OpfabEventStreamServer} from './app/business/server/opfabEventStream.server';
 import {AngularOpfabEventStreamServer} from './app/server/angularOpfabEventStream.server';
 import {ExternalDevicesServer} from './app/services/notifications/server/ExternalDevicesServer';
@@ -108,7 +108,7 @@ bootstrapApplication(AppComponent, {
         {provide: HandlebarsTemplateServer, useClass: AngularHandlebarsTemplateServer},
         {provide: ProcessesServer, useClass: AngularProcessesServer},
         {provide: BusinessDataServer, useClass: AngularBusinessDataServer},
-        {provide: SettingsServer, useClass: AngularSettingsServer},
+        {provide: UserSettingsServer, useClass: AngularUserSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
         {provide: CardServer, useClass: AngularCardServer},
