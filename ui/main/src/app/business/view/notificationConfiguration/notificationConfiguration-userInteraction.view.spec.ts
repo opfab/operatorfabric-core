@@ -12,7 +12,7 @@ import {NotificationConfigurationView} from './notificationConfiguration.view';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {firstValueFrom} from 'rxjs';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
@@ -87,9 +87,9 @@ describe('Notification configuration view - User interaction ', () => {
             ]);
             await setUserPerimeter({
                 computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process1', 'state1_2', RightsEnum.Receive, false),
-                    new ComputedPerimeter('process1', 'state1_3', RightsEnum.Receive, false)
+                    new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process1', 'state1_2', RightEnum.Receive, false),
+                    new ComputedPerimeter('process1', 'state1_3', RightEnum.Receive, false)
                 ],
                 userData: null,
                 processesStatesNotNotified: new Map<string, Array<string>>([['process1', ['state1_2', 'state1_3']]])
@@ -117,8 +117,8 @@ describe('Notification configuration view - User interaction ', () => {
         it('should not popup a message when filteringNotificationAllowed is false and state is checked', async () => {
             await setUserPerimeter({
                 computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process1', 'state1_2', RightsEnum.Receive, false)
+                    new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process1', 'state1_2', RightEnum.Receive, false)
                 ],
                 userData: null
             });
@@ -194,10 +194,10 @@ describe('Notification configuration view - User interaction ', () => {
             );
             await setUserPerimeter({
                 computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process1', 'state1_2', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, false)
+                    new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process1', 'state1_2', RightEnum.Receive, true),
+                    new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, false)
                 ],
                 userData: null
             });
@@ -501,10 +501,10 @@ describe('Notification configuration view - User interaction ', () => {
             );
             await setUserPerimeter({
                 computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process1', 'state1_2', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, false)
+                    new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process1', 'state1_2', RightEnum.Receive, true),
+                    new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                    new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, false)
                 ],
                 userData: null
             });

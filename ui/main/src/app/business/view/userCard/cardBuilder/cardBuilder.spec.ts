@@ -24,7 +24,7 @@ import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {State} from '@ofServices/processes/model/Processes';
 import {HourAndMinutes, Recurrence, TimeSpan} from '@ofModel/card.model';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {I18n} from '@ofModel/i18n.model';
@@ -532,8 +532,8 @@ describe('UserCard CardBuilder', () => {
             ]);
             await setUserPerimeter({
                 computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite),
-                    new ComputedPerimeter('process1', 'state1_2', RightsEnum.ReceiveAndWrite)
+                    new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite),
+                    new ComputedPerimeter('process1', 'state1_2', RightEnum.ReceiveAndWrite)
                 ],
                 userData: {
                     login: 'test',
@@ -557,7 +557,7 @@ describe('UserCard CardBuilder', () => {
         });
         it('Should not exist if user has not permission to send it', async () => {
             await setUserPerimeter({
-                computedPerimeters: [new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive)],
+                computedPerimeters: [new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive)],
                 userData: {
                     login: 'test',
                     firstName: 'test',

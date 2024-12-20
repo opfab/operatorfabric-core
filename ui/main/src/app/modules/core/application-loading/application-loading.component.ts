@@ -24,7 +24,7 @@ import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {AngularRouterService} from '@ofServices/angularRouterService';
 import {EntitiesServer} from '@ofServices/entities/server/EntitiesServer';
 import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
-import {PerimetersServer} from 'app/business/server/perimeters.server';
+import {PerimetersServer} from '@ofServices/perimeters/server/PerimetersServer';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
 import {AdminProcessesServer} from '@ofServices/admin/server/AdminProcessesServer';

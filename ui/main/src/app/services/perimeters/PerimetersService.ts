@@ -9,10 +9,10 @@
 
 import {Observable, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
-import {Perimeter} from '@ofModel/perimeter.model';
-import {PerimetersServer} from '../../server/perimeters.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
-import {ErrorService} from '../error-service';
+import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
+import {PerimetersServer} from './server/PerimetersServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ErrorService} from '../../business/services/error-service';
 import {LoggerService} from 'app/services/logs/LoggerService';
 
 export class PerimetersService {

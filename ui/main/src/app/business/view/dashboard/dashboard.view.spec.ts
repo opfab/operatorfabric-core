@@ -10,7 +10,7 @@
 import {Dashboard} from './dashboard.view';
 import {State} from '@ofServices/processes/model/Processes';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {getOneLightCard, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
@@ -82,9 +82,9 @@ describe('Dashboard', () => {
     it('GIVEN a process list WHEN get dashboard THEN dashboard contains processes', async () => {
         await initProcesses();
         const computedPerimeters = [
-            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
         ];
 
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
@@ -108,8 +108,8 @@ describe('Dashboard', () => {
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
         await initProcesses();
         const computedPerimeters = [
-            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true)
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true)
         ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
@@ -126,9 +126,9 @@ describe('Dashboard', () => {
     it('GIVEN a process list and an action card in state1 WHEN get dashboard THEN dashboard contains 1 card in process 1 with 1 action circle ', async () => {
         await initProcesses();
         const computedPerimeters = [
-            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
         ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
@@ -169,9 +169,9 @@ describe('Dashboard', () => {
     it('GIVEN a process list and a card in state1 WHEN add some cards of every severity THEN dashboard contains 4 circles in state 1', async () => {
         await initProcesses();
         const computedPerimeters = [
-            new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state3', RightsEnum.Receive, true)
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
         ];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
@@ -244,7 +244,7 @@ describe('Dashboard', () => {
 
     it('GIVEN an acknowledged card WHEN cards get sent THEN dashboard does not contain the card', async () => {
         await initProcesses();
-        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true)];
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
@@ -271,7 +271,7 @@ describe('Dashboard', () => {
 
     it('GIVEN a card today WHEN date filter is set to the past THEN dashboard does not contain the card', async () => {
         await initProcesses();
-        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightsEnum.Receive, true)];
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 

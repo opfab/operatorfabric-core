@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Perimeter} from '@ofModel/perimeter.model';
+import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class PerimetersServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>;

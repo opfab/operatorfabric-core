@@ -11,7 +11,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {CrudService} from '@ofServices/admin/CrudService';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {PerimetersService} from 'app/business/services/users/perimeters.service';
+import {PerimetersService} from '@ofServices/perimeters/PerimetersService';
 import {CrudProcessesService} from '@ofServices/admin/CrudProcessesService';
 import {CrudUserService} from '@ofServices/admin/CrudUserService';
 import {CrudEntitiesService} from '@ofServices/admin/CrudEntitiesService';

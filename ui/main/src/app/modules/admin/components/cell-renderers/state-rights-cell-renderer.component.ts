@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {StateRight} from '@ofModel/perimeter.model';
+import {StateRight} from '@ofServices/perimeters/model/Perimeter';
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Utilities} from '../../../../business/common/utilities';

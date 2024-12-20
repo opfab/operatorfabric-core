@@ -17,7 +17,7 @@ import {OpfabAPI} from '../api/opfab.api';
 import {GlobalStyleService} from '../services/style/global-style.service';
 import {EntitiesService} from '../services/entities/EntitiesService';
 import {GroupsService} from '../services/groups/GroupsService';
-import {PerimetersService} from './services/users/perimeters.service';
+import {PerimetersService} from '../services/perimeters/PerimetersService';
 import {ProcessesService} from '../services/processes/ProcessesService';
 import {OpfabEventStreamService} from './services/events/opfabEventStream.service';
 import {AcknowledgeService} from '../services/acknowlegment/AcknowledgeService';

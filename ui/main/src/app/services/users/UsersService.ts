@@ -12,7 +12,7 @@ import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {map, takeUntil, tap} from 'rxjs/operators';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {UsersServer} from './server/UsersServer';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
@@ -23,7 +23,7 @@ export class UsersService {
     private static readonly ngUnsubscribe = new Subject<void>();
     private static _userRightsPerProcessAndState: Map<
         string,
-        {rights: RightsEnum; filteringNotificationAllowed: boolean}
+        {rights: RightEnum; filteringNotificationAllowed: boolean}
     > = new Map();
     private static readonly _receiveRightPerProcess: Map<string, number> = new Map();
     private static usersServer: UsersServer;
@@ -166,8 +166,8 @@ export class UsersService {
                 filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed
             });
             if (
-                computedPerimeter.rights === RightsEnum.Receive ||
-                computedPerimeter.rights === RightsEnum.ReceiveAndWrite
+                computedPerimeter.rights === RightEnum.Receive ||
+                computedPerimeter.rights === RightEnum.ReceiveAndWrite
             )
                 UsersService._receiveRightPerProcess.set(computedPerimeter.process, 1);
         });
@@ -177,7 +177,7 @@ export class UsersService {
         const processState = UsersService._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!processState) return false;
         const rights = processState.rights;
-        if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
+        if (rights && (rights === RightEnum.Receive || rights === RightEnum.ReceiveAndWrite)) {
             return true;
         }
         return false;
@@ -189,7 +189,7 @@ export class UsersService {
             return false;
         }
         const rights = processState.rights;
-        if (rights && rights === RightsEnum.ReceiveAndWrite) {
+        if (rights && rights === RightEnum.ReceiveAndWrite) {
             return true;
         }
         return false;

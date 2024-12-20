@@ -11,7 +11,7 @@ import {InputFieldName} from '../userCard.model';
 import {State} from '@ofServices/processes/model/Processes';
 import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessStatesForm} from './processStatesForm';
 import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -71,9 +71,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should set process list for multiselect', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
 
@@ -84,9 +84,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should not have process1 in process list if process1 has no states with receiveAndWrite permission', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive)
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive)
             ]);
             initView();
 
@@ -96,7 +96,7 @@ describe('UserCard ProcessStateForm ', () => {
         });
         it('Should show process multiselect if only one process is available for current user', async () => {
             await setProcessConfiguration(getProcessConfigWith(1, 2));
-            await setUserRights([new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true)]);
+            await setUserRights([new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true)]);
             initView();
             expect(userCardUIControlMock.inputVisibility_FctCalls[InputFieldName.Process]).toEqual(true);
             expect(userCardUIControlMock.processes[0]).toEqual({id: 'process0', label: 'process name 0'});
@@ -104,8 +104,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should show process multiselect if more than one process is visible for current user', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.inputVisibility_FctCalls[InputFieldName.Process]).toEqual(true);
@@ -120,8 +120,8 @@ describe('UserCard ProcessStateForm ', () => {
                 })
             );
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.processes[1]).toEqual({id: 'processWithNoName', label: 'processWithNoName'});
@@ -129,8 +129,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should select first process in process list', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.selectedProcess).toEqual('process0');
@@ -139,8 +139,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('Process version should be current version', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(processStateForm.getSelectedProcessState().processVersion).toEqual('v1');
@@ -151,9 +151,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should set state list for multiselect ', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.states[0]).toEqual({id: 'state0_0', label: 'State 0_0'});
@@ -164,10 +164,10 @@ describe('UserCard ProcessStateForm ', () => {
             processConfig[0].states.get('state0_1').userCard = undefined;
             await setProcessConfiguration(processConfig);
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_2', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_2', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.states.length).toEqual(2);
@@ -177,9 +177,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should select first state of first process', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.selectedState).toEqual('state0_0');
@@ -192,10 +192,10 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should not have state0_0 in list if state0_0 has not ReceiveAndWrite permission', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 3));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.Receive, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_2', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.Receive, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_2', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.states.length).toEqual(2);
@@ -210,9 +210,9 @@ describe('UserCard ProcessStateForm ', () => {
             };
             await setProcessConfiguration(processConfig);
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_2', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_2', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.states.length).toEqual(2);
@@ -227,9 +227,9 @@ describe('UserCard ProcessStateForm ', () => {
             };
             await setProcessConfiguration(processConfig);
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_2', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_2', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.states.length).toEqual(3);
@@ -241,8 +241,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should hide state multiselect if only one state is visible for current user', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.inputVisibility_FctCalls[InputFieldName.State]).toEqual(false);
@@ -251,9 +251,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should show state multiselect if more than one state is visible for current user', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite, true)
             ]);
             initView();
             expect(userCardUIControlMock.inputVisibility_FctCalls[InputFieldName.State]).toEqual(true);
@@ -277,9 +277,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.processGroups[0]).toEqual({id: 'service0', label: 'Service 0'});
@@ -301,8 +301,8 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.processGroups).toBeUndefined();
@@ -324,9 +324,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.inputVisibility_FctCalls[InputFieldName.ProcessGroup]).toEqual(true);
@@ -347,9 +347,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.selectedProcessGroup).toEqual('service0');
@@ -370,9 +370,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.processes.length).toEqual(2);
@@ -390,10 +390,10 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process3', 'state3_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process3', 'state3_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             expect(userCardUIControlMock.processGroups[0]).toEqual({id: '--', label: '--'});
@@ -407,9 +407,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should set process and state of card on edit mode when no processGroup', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)
             ]);
             initView(getOneCard({process: 'process1', state: 'state1_1'}));
             expect(userCardUIControlMock.selectedProcess).toEqual('process1');
@@ -431,10 +431,10 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite)
             ]);
             initView(getOneCard({process: 'process1', state: 'state1_1'}));
             expect(userCardUIControlMock.selectedProcessGroup).toEqual('service1');
@@ -444,9 +444,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should lock process and processGroup on edit mode', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)
             ]);
             initView(getOneCard({process: 'process1', state: 'state1_1'}));
             expect(userCardUIControlMock.processAndProcessGroupLocked).toEqual(true);
@@ -457,9 +457,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('Should select clicked state', async () => {
             await setProcessConfiguration(getProcessConfigWith(2, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClicksOnState('state0_1');
@@ -471,9 +471,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('should updated state list', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcess('process1');
@@ -485,9 +485,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('should select first state of new process', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcess('process1');
@@ -496,8 +496,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('should hide state list if only one state is available with new process for current user', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcess('process1');
@@ -506,8 +506,8 @@ describe('UserCard ProcessStateForm ', () => {
         it('should get new process and new state', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcess('process1');
@@ -520,9 +520,9 @@ describe('UserCard ProcessStateForm ', () => {
         it('should not change state list if process already selected', async () => {
             await setProcessConfiguration(getProcessConfigWith(3, 2));
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process0', 'state0_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process0', 'state0_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             userCardUIControlMock.initMock();
@@ -548,10 +548,10 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process3', 'state3_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process3', 'state3_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcessGroup('service1');
@@ -575,11 +575,11 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process3', 'state3_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process3', 'state3_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             userCardUIControlMock.initMock();
@@ -603,9 +603,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcessGroup('service1');
@@ -628,9 +628,9 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_0', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_0', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             processStateForm.userClickOnProcessGroup('service1');
@@ -656,10 +656,10 @@ describe('UserCard ProcessStateForm ', () => {
                 ]
             });
             await setUserRights([
-                new ComputedPerimeter('process0', 'state0_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process1', 'state1_0', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite),
-                new ComputedPerimeter('process3', 'state3_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process0', 'state0_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process1', 'state1_0', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite),
+                new ComputedPerimeter('process3', 'state3_1', RightEnum.ReceiveAndWrite)
             ]);
             initView();
             userCardUIControlMock.initMock();

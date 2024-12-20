@@ -18,12 +18,12 @@ export class Perimeter {
 export class StateRight {
     constructor(
         readonly state: string,
-        readonly right: RightsEnum,
+        readonly right: RightEnum,
         readonly filteringNotificationAllowed: boolean
     ) {}
 }
 
-export enum RightsEnum {
+export enum RightEnum {
     ReceiveAndWrite = 'ReceiveAndWrite',
     Receive = 'Receive'
 }

@@ -14,7 +14,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {firstValueFrom} from 'rxjs';
 import {ProcessMonitoringView} from './processmonitoring.view';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -105,9 +105,9 @@ describe('Process Monitoring view ', () => {
 
     async function setDefaultUserPerimeter() {
         await setUserPerimeter([
-            new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-            new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true)
+            new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true)
         ]);
     }
 
@@ -178,7 +178,7 @@ describe('Process Monitoring view ', () => {
 
         it(' should return process2 when the user has RECEIVE permission for process2 with state2_1', async () => {
             await initProcesses();
-            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true)]);
+            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true)]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const processList = processMonitoringView.getProcessList();
             expect(processList.length).toBe(1);
@@ -189,8 +189,8 @@ describe('Process Monitoring view ', () => {
         it(' should return process2 and process1 when the user has permission for the process1 and process2', async () => {
             await initProcesses();
             await setUserPerimeter([
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite, true)
             ]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const processList = processMonitoringView.getProcessList();
@@ -204,7 +204,7 @@ describe('Process Monitoring view ', () => {
         it('should return process with name if no process name is defined', async () => {
             await initProcesses();
             await setUserPerimeter([
-                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.Receive, true)
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.Receive, true)
             ]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const processList = processMonitoringView.getProcessList();
@@ -290,8 +290,8 @@ describe('Process Monitoring view ', () => {
         it('should return state2_1 if process2 is selected and user has no permission on state2_2', async () => {
             await initProcesses();
             await setUserPerimeter([
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite, true)
             ]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
             const statePerProcess = processMonitoringView.getStatesPerProcess(['process2']);
@@ -317,9 +317,9 @@ describe('Process Monitoring view ', () => {
         it('should return 2 process groups when user has access to process process1, process2 and processWithNoName', async () => {
             await initProcesses();
             await setUserPerimeter([
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.ReceiveAndWrite, true)
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.ReceiveAndWrite, true)
             ]);
             await initProcessGroups();
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
@@ -333,10 +333,10 @@ describe('Process Monitoring view ', () => {
             await initProcesses();
             await initProcessGroups();
             await setUserPerimeter([
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true),
-                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
-                new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true),
-                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.Receive, true)
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+                new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true),
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.Receive, true)
             ]);
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
 
@@ -350,7 +350,7 @@ describe('Process Monitoring view ', () => {
 
         it('should return process 2 if service 1 is selected and user has no permission on process 1', async () => {
             await initProcesses();
-            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true)]);
+            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true)]);
             await initProcessGroups();
             const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
 

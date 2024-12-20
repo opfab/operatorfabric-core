@@ -8,7 +8,7 @@
  */
 
 import {User} from '@ofServices/users/model/User';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserWithPerimeters {
@@ -30,18 +30,18 @@ export class ComputedPerimeter {
     public constructor(
         readonly process: string,
         readonly state: string,
-        readonly rights: RightsEnum,
+        readonly rights: RightEnum,
         readonly filteringNotificationAllowed?: boolean
     ) {}
 }
 
-export function userRight(rights: RightsEnum) {
+export function userRight(rights: RightEnum) {
     let result: number;
     switch (rights) {
-        case RightsEnum.ReceiveAndWrite:
+        case RightEnum.ReceiveAndWrite:
             result = 0;
             break;
-        case RightsEnum.Receive:
+        case RightEnum.Receive:
             result = 1;
             break;
     }

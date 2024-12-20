@@ -19,7 +19,7 @@ import {getOneCard} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {UsersService} from '../users/UsersService';
@@ -127,13 +127,13 @@ describe('AcknowledgeService testing ', () => {
             {
                 process: 'testProcess',
                 state: 'state1',
-                rights: RightsEnum.ReceiveAndWrite,
+                rights: RightEnum.ReceiveAndWrite,
                 filteringNotificationAllowed: true
             },
             {
                 process: 'testProcess',
                 state: 'state2',
-                rights: RightsEnum.ReceiveAndWrite,
+                rights: RightEnum.ReceiveAndWrite,
                 filteringNotificationAllowed: true
             }
         ]);
@@ -144,13 +144,13 @@ describe('AcknowledgeService testing ', () => {
             {
                 process: 'testProcess',
                 state: 'state1',
-                rights: RightsEnum.ReceiveAndWrite,
+                rights: RightEnum.ReceiveAndWrite,
                 filteringNotificationAllowed: true
             },
             {
                 process: 'testProcess',
                 state: 'state2',
-                rights: RightsEnum.ReceiveAndWrite,
+                rights: RightEnum.ReceiveAndWrite,
                 filteringNotificationAllowed: true
             }
         ]);
@@ -163,13 +163,13 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'state1',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 },
                 {
                     process: 'testProcess',
                     state: 'state2',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ],
@@ -181,7 +181,7 @@ describe('AcknowledgeService testing ', () => {
         statesList.set('testState', new State(null, null, null, null));
         const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+            {process: 'testProcess', state: 'testState', rights: RightEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -190,7 +190,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('process does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+            {process: 'testProcess', state: 'testState', rights: RightEnum.Receive, filteringNotificationAllowed: true}
         ]);
         const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, null);
         expect(res).toBeTrue();
@@ -200,7 +200,7 @@ describe('AcknowledgeService testing ', () => {
         statesList.set('dummyState', new State(null, null, null, null));
         const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+            {process: 'testProcess', state: 'testState', rights: RightEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -212,7 +212,7 @@ describe('AcknowledgeService testing ', () => {
         const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
 
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+            {process: 'testProcess', state: 'testState', rights: RightEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -223,7 +223,7 @@ describe('AcknowledgeService testing ', () => {
         statesList.set('testState', new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS));
         const processDefinition = getOneProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+            {process: 'testProcess', state: 'testState', rights: RightEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -249,7 +249,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Receive,
+                    rights: RightEnum.Receive,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -278,7 +278,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -307,7 +307,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -336,7 +336,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Receive,
+                    rights: RightEnum.Receive,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -365,7 +365,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -394,7 +394,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -423,7 +423,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -452,7 +452,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Receive,
+                    rights: RightEnum.Receive,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -489,7 +489,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -526,7 +526,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.ReceiveAndWrite,
+                    rights: RightEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);

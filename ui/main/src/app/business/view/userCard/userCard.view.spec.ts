@@ -16,7 +16,7 @@ import {
     setUserPerimeter
 } from '@tests/helpers';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserCardView} from './userCard.view';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
@@ -176,12 +176,12 @@ describe('UserCard view ', () => {
             }
         );
         await setCurrentUserConfiguration([
-            new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite),
-            new ComputedPerimeter('process1', 'state1_2', RightsEnum.ReceiveAndWrite),
-            new ComputedPerimeter('process2', 'state2_1', RightsEnum.ReceiveAndWrite),
-            new ComputedPerimeter('process2', 'state2_2', RightsEnum.ReceiveAndWrite),
-            new ComputedPerimeter('process3', 'state3_1', RightsEnum.ReceiveAndWrite),
-            new ComputedPerimeter('process3', 'state3_2', RightsEnum.ReceiveAndWrite)
+            new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite),
+            new ComputedPerimeter('process1', 'state1_2', RightEnum.ReceiveAndWrite),
+            new ComputedPerimeter('process2', 'state2_1', RightEnum.ReceiveAndWrite),
+            new ComputedPerimeter('process2', 'state2_2', RightEnum.ReceiveAndWrite),
+            new ComputedPerimeter('process3', 'state3_1', RightEnum.ReceiveAndWrite),
+            new ComputedPerimeter('process3', 'state3_2', RightEnum.ReceiveAndWrite)
         ]);
     }
     beforeAll(async () => {
@@ -192,20 +192,20 @@ describe('UserCard view ', () => {
     });
     describe('User allowed to send card', () => {
         it('Should set user not allowed to send card is user has no perimeter allowed to send card', async () => {
-            await setCurrentUserConfiguration([new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive)]);
+            await setCurrentUserConfiguration([new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive)]);
             await initUserCardView();
             expect(userCardUIControlMock.userNotAllowedToSendCard).toEqual(true);
         });
         it('Should set user allowed to send card if user has at least one perimeter allowed to send card', async () => {
             await setCurrentUserConfiguration([
-                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)
+                new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)
             ]);
             initUserCardView();
             expect(userCardUIControlMock.userNotAllowedToSendCard).toEqual(false);
         });
         it('Should set user not allowed to send card is user has permission readonly', async () => {
             await setCurrentUserConfiguration(
-                [new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true)],
+                [new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite, true)],
                 [PermissionEnum.READONLY]
             );
             await initUserCardView();
@@ -213,7 +213,7 @@ describe('UserCard view ', () => {
         });
         it('Should set user not allowed to send card if user is not connected to any entity', async () => {
             await setUserPerimeter({
-                computedPerimeters: [new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite)],
+                computedPerimeters: [new ComputedPerimeter('process1', 'state1_1', RightEnum.ReceiveAndWrite)],
                 userData: {
                     login: 'test',
                     firstName: 'test',

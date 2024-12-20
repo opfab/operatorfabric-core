@@ -15,7 +15,7 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {firstValueFrom} from 'rxjs';
 import {getOneCard} from '@tests/helpers';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Process, ShowAcknowledgmentFooterEnum, State} from '@ofServices/processes/model/Processes';
@@ -84,22 +84,22 @@ describe('CardBodyView', () => {
             {
                 process: 'testProcess',
                 state: 'state1',
-                rights: RightsEnum.ReceiveAndWrite
+                rights: RightEnum.ReceiveAndWrite
             },
             {
                 process: 'testProcess',
                 state: 'state2',
-                rights: RightsEnum.ReceiveAndWrite
+                rights: RightEnum.ReceiveAndWrite
             },
             {
                 process: 'testProcess',
                 state: 'state3',
-                rights: RightsEnum.ReceiveAndWrite
+                rights: RightEnum.ReceiveAndWrite
             },
             {
                 process: 'testProcess',
                 state: 'state4',
-                rights: RightsEnum.ReceiveAndWrite
+                rights: RightEnum.ReceiveAndWrite
             }
         ]);
     }

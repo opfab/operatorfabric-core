@@ -18,9 +18,9 @@ import {
 } from '@angular/forms';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
+import {Perimeter, RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {PerimetersService} from 'app/business/services/users/perimeters.service';
+import {PerimetersService} from '@ofServices/perimeters/PerimetersService';
 import {Process} from '@ofServices/processes/model/Processes';
 import {MessageLevel} from '@ofModel/message.model';
 
@@ -43,7 +43,7 @@ export class EditPerimeterModalComponent implements OnInit {
         private readonly activeModal: NgbActiveModal,
         private readonly changeDetector: ChangeDetectorRef
     ) {
-        Object.keys(RightsEnum).forEach((key) => {
+        Object.keys(RightEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
         });
     }
@@ -209,7 +209,7 @@ export class EditPerimeterModalComponent implements OnInit {
     private computeFieldsForRequest(): {
         id: string;
         process: string;
-        stateRights: {state: string; right: RightsEnum}[];
+        stateRights: {state: string; right: RightEnum}[];
     } {
         const stateRights = [];
         this.stateRightControlsIndexes.forEach((index) => {

@@ -10,7 +10,7 @@
 import {userRight, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Card} from '@ofModel/card.model';
 import {Process} from '@ofServices/processes/model/Processes';
-import {RightsEnum} from '@ofModel/perimeter.model';
+import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {User} from '@ofServices/users/model/User';
 import {LoggerService} from 'app/services/logs/LoggerService';
@@ -57,7 +57,7 @@ export class UserPermissionsService {
             if (
                 perim.process === card.process &&
                 perim.state === card.state &&
-                UserPermissionsService.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
+                UserPermissionsService.compareRightAction(perim.rights, RightEnum.ReceiveAndWrite)
             ) {
                 permission = true;
                 return true;
@@ -128,7 +128,7 @@ export class UserPermissionsService {
                 stateOfTheCard?.response &&
                 perim.process === card.process &&
                 perim.state === stateOfTheCard.response.state &&
-                UserPermissionsService.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
+                UserPermissionsService.compareRightAction(perim.rights, RightEnum.ReceiveAndWrite)
             ) {
                 permission = true;
             }
@@ -136,7 +136,7 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+    private static compareRightAction(userRights: RightEnum, rightsAction: RightEnum): boolean {
         return userRight(userRights) - userRight(rightsAction) === 0;
     }
 }

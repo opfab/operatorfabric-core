@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {PerimetersService} from '../../business/services/users/perimeters.service';
+import {PerimetersService} from '../perimeters/PerimetersService';
 
 export class CrudPerimetersService {
     getAll(): Observable<Array<any>> {

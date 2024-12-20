@@ -11,22 +11,18 @@ import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Perimeter} from '@ofModel/perimeter.model';
-import {PerimetersServer} from 'app/business/server/perimeters.server';
+import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
+import {PerimetersServer} from '@ofServices/perimeters/server/PerimetersServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularPerimetersServer extends AngularServer implements PerimetersServer {
-    readonly perimetersUrl: string;
+    private readonly perimetersUrl: string;
 
-    /**
-     * @constructor
-     * @param httpClient - Angular built-in
-     */
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.perimetersUrl = `${environment.url}users/perimeters`;
     }
