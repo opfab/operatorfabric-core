@@ -64,7 +64,9 @@ export class CardTemplateGateway {
             return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
         };
 
-        CardTemplateGateway._functionToEditCard = () => {};
+        CardTemplateGateway._functionToEditCard = () => {
+            logger.info(`EditCard method not available`);
+        };
     }
 
     public static registerFunctionToEditCard(editCard: Function) {

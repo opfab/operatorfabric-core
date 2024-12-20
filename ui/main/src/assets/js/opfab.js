@@ -53,8 +53,13 @@ opfab.multiSelect = {
 opfab.richTextEditor = {
     showRichMessage(element) {
         const delta = element.innerHTML;
-        element.innerHTML = this.getHtml(delta);
-        element.classList.add('ql-editor');
+        try {
+            element.innerHTML = this.getHtml(delta);
+            element.classList.add('ql-editor');
+        } catch (e) {
+            console.log('Impossible to convert delta to html , delta = ', delta);
+            console.error(e);
+        }
     },
 
     getHtml: function (delta) {
