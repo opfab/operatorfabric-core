@@ -36,7 +36,7 @@
         "@ng-bootstrap/ng-bootstrap": "17.0.1",
         "@ngx-translate/core": "16.0.3",
         "@popperjs/core": "2.11.8",
-        "@swimlane/ngx-charts": "21.0.0",
+        "@swimlane/ngx-charts": "21.1.2",
         "ag-grid-angular": "32.3.3",
         "ag-grid-community": "32.3.3",
         "angular-oauth2-oidc": "17.0.2",
