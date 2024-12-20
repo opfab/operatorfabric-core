@@ -7,7 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, TemplateRef, ViewChild} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
@@ -38,10 +48,11 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     standalone: true,
     imports: [NgIf, TranslateModule, UserCardComponent, SpinnerComponent]
 })
-export class CardActionsComponent implements OnChanges, OnDestroy {
+export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;
     @Input() cardState: State;
     @Input() parentModalRef: NgbModalRef;
+    @Input() templateInitialized: EventEmitter<void>;
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -62,21 +73,15 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         private readonly router: Router
     ) {}
 
-    ngOnChanges(): void {
-        // We need to register this function each time we have a change
-        // as this change can trigger a rendering of the card which in turn
-        // initialize the template gateway and unregister the function.
-        // This initialization is done in the template rendering compornent
-        // This is a temporary fix to avoid the issue
-        //
-        // TODO : find a better way to handle this as this solution works only because the ngOnchanges of
-        // the card-actions component is called after the ngOnchanges of the template-rendering Component
-        // which is not guaranteed to be the case in the future as it depends of angular change detection mechanism
-        //
-        CardTemplateGateway.registerFunctionToEditCard(() => {
-            if (this.doesTheUserHavePermissionToEditCard()) this.editCard();
-        });
+    ngOnInit(): void {
+        this.templateInitialized.subscribe(() =>
+            CardTemplateGateway.registerFunctionToEditCard(() => {
+                if (this.doesTheUserHavePermissionToEditCard()) this.editCard();
+            })
+        );
+    }
 
+    ngOnChanges(): void {
         this.setButtonsVisibility();
     }
 

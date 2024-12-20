@@ -82,6 +82,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    public templateInitialized: EventEmitter<void> = new EventEmitter<void>();
+
     public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -366,6 +368,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public afterTemplateRendering() {
         if (this.isResponseLocked) CardTemplateGateway.sendResponseLockToTemplate();
+        this.templateInitialized.emit();
         this.startRegularlyCheckLttd();
     }
 
