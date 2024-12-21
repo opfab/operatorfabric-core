@@ -10,8 +10,8 @@
 import {Card, TimeSpan} from '@ofModel/card.model';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {EditionMode, InputFieldName} from '../userCard.model';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {I18n} from '@ofModel/i18n.model';
 import {firstValueFrom} from 'rxjs';

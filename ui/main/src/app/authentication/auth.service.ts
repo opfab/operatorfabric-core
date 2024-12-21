@@ -9,7 +9,7 @@
 
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Message} from '@ofModel/message.model';
+import {Message} from '@ofServices/alerteMessage/model/Message';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

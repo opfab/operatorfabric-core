@@ -11,7 +11,7 @@ import {catchError, map, Observable, of} from 'rxjs';
 import {AuthHandler, HttpAuthInfo} from './auth-handler';
 import {HttpHeaders} from '@angular/common/http';
 import {I18n} from '@ofModel/i18n.model';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class PasswordAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {

@@ -8,8 +8,8 @@
  */
 
 import {AlertView} from './alert.view';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {loadWebUIConf, waitForAllPromises} from '@tests/helpers';

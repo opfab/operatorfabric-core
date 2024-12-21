@@ -26,8 +26,8 @@ import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

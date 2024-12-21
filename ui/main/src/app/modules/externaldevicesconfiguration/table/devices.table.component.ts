@@ -8,7 +8,7 @@
  */
 
 import {Component} from '@angular/core';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';

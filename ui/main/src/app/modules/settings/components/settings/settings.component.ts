@@ -18,8 +18,8 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ModalService} from 'app/business/services/modal.service';
 import {I18n} from '@ofModel/i18n.model';
 import {ErrorService} from 'app/business/services/error-service';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 

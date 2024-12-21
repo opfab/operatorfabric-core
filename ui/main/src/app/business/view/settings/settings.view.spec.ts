@@ -17,8 +17,8 @@ import {User} from '@ofServices/users/model/User';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
 
 describe('Settings view ', () => {

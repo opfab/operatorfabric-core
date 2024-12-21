@@ -9,7 +9,7 @@
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';
@@ -21,7 +21,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';

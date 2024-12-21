@@ -12,7 +12,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {CardAction, Severity} from '@ofModel/light-card.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
@@ -22,7 +22,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

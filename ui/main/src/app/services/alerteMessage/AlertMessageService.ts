@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Message} from '@ofModel/message.model';
+import {Message} from '@ofServices/alerteMessage/model/Message';
 import {Observable, Subject} from 'rxjs';
 
 export class AlertMessageService {

@@ -14,9 +14,9 @@ import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/oper
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';

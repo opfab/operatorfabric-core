@@ -12,7 +12,7 @@ import {CardSender} from './cardSender';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {CardService} from 'app/business/services/card/card.service';
 import {CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 

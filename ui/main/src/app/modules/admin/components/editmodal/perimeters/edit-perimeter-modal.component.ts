@@ -22,10 +22,10 @@ import {Perimeter, RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {PerimetersService} from '@ofServices/perimeters/PerimetersService';
 import {Process} from '@ofServices/processes/model/Processes';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';

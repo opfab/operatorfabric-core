@@ -9,9 +9,9 @@
 
 import {Card, CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardService} from 'app/business/services/card/card.service';
 import {firstValueFrom} from 'rxjs';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

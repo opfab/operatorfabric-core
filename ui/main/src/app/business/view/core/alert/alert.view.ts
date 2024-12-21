@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {AlertPage} from './alertPage';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

@@ -20,10 +20,10 @@ import {
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofModel/card.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';

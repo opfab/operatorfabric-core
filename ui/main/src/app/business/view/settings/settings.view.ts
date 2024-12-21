@@ -8,9 +8,9 @@
  */
 import {UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {I18n} from '@ofModel/i18n.model';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';

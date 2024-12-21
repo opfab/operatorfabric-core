@@ -11,14 +11,14 @@ import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core'
 import {CardAction, LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

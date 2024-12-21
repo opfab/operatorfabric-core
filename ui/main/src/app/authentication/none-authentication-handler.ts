@@ -10,7 +10,7 @@
 import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {UsersService} from '@ofServices/users/UsersService';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class NoneAuthenticationHandler extends AuthHandler {

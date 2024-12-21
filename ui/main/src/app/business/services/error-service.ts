@@ -8,11 +8,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {throwError} from 'rxjs';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {AlertMessageService} from './alert-message.service';
+import {AlertMessageService} from '../../services/alerteMessage/AlertMessageService';
 import {I18n} from '@ofModel/i18n.model';
 
 export class ErrorService {

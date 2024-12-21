@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AlertMessageService} from '../business/services/alert-message.service';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from '../services/alerteMessage/AlertMessageService';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {BusinessConfigAPI} from './businessconfig.api';
 import {initUserAPI} from './user.api';
 import {HandlebarsAPI} from './handlebars.api';

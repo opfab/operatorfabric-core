@@ -18,7 +18,7 @@ import {
     setUserPerimeter
 } from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../userCard.model';
-import {MessageLevel} from '@ofModel/message.model';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {State} from '@ofServices/processes/model/Processes';

@@ -14,9 +14,9 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {OpfabEventStreamService} from '../../business/services/events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {ErrorService} from '../../business/services/error-service';
-import {AlertMessageService} from '../../business/services/alert-message.service';
+import {AlertMessageService} from '../alerteMessage/AlertMessageService';
 import {I18n} from '@ofModel/i18n.model';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class BusinessDataService {
     private static readonly _cachedResources = new Map<string, string>();

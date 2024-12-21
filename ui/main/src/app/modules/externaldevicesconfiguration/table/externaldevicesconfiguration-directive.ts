@@ -10,8 +10,8 @@
 import {Directive, Injectable} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService} from '@ngx-translate/core';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';

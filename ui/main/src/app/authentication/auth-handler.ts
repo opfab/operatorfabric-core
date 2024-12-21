@@ -10,7 +10,7 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {I18n} from '@ofModel/i18n.model';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {AuthenticatedUser} from './auth.model';

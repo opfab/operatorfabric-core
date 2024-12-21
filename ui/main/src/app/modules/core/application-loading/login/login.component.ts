@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {filter} from 'rxjs/operators';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AuthService} from 'app/authentication/auth.service';
 import {NgClass, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

@@ -31,8 +31,8 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {EntitiesServerMock} from './mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {OpfabAPI} from 'app/api/opfab.api';
-import {Message} from '@ofModel/message.model';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {Message} from '@ofServices/alerteMessage/model/Message';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
