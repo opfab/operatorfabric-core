@@ -25,7 +25,7 @@ import {DateTimeFormatterService} from '../services/dateTimeFormatter/DateTimeFo
 import {AdminProcessesService} from '../services/admin/AdminProcessesService';
 import {BusinessDataService} from '../services/businessdata/businessdata.service';
 import {CardService} from './services/card/card.service';
-import {SupervisedEntitiesService} from './services/users/supervised-entities.service';
+import {SupervisedEntitiesService} from '../services/admin/SupervisedEntitiesService';
 import {SelectedCardLoaderService} from './services/card/selectedCardLoader.service';
 import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';

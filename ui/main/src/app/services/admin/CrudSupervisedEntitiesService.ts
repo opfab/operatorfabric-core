@@ -8,7 +8,7 @@
  */
 
 import {Observable, map} from 'rxjs';
-import {SupervisedEntitiesService} from '../../business/services/users/supervised-entities.service';
+import {SupervisedEntitiesService} from './SupervisedEntitiesService';
 import {CrudUtilities} from './CrudUtils';
 import {EntitiesService} from '../entities/EntitiesService';
 

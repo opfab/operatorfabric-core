@@ -13,7 +13,7 @@ import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 import {EditSupervisedEntityModalComponent} from '../editmodal/supervised-entities/edit-supervised-entity-modal.component';
-import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
+import {SupervisedEntitiesService} from '@ofServices/admin/SupervisedEntitiesService';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
