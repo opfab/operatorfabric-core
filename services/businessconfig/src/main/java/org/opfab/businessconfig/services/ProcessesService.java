@@ -273,7 +273,7 @@ public class ProcessesService implements ResourceLoaderAware {
         Process process;
         String finalVersion = version;
 
-        if ((version == null) || (version.length() == 0)) {
+        if ((version == null) || version.isEmpty()) {
             finalVersion = this.fetch(processId).version();
         }
 

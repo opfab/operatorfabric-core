@@ -126,7 +126,7 @@ public class CardValidationService {
     }
 
     void checkIsCardAChildCard(Card card) {
-        if ((card != null) && (card.getParentCardId() != null) && (card.getParentCardId().length() > 0)) {
+        if ((card != null) && (card.getParentCardId() != null) && (!card.getParentCardId().isEmpty())) {
             throw new ConstraintViolationException(
                     "The parentCardId " + card.getParentCardId() + " is a child card", null);
         }

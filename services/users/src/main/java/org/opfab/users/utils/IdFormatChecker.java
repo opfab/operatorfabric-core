@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,7 +41,7 @@ public class IdFormatChecker {
     public static IdCheckResult check(String id) {
         String errorMessage = "";
 
-        if (id.length() == 0)
+        if (id.isEmpty())
             errorMessage = ID_IS_REQUIRED_MSG;
         else {
             if (id.length() == 1)
@@ -51,7 +51,7 @@ public class IdFormatChecker {
                 errorMessage += String.format(ID_FIELD_PATTERN_MSG, id);
         }
 
-        if (errorMessage.length() > 0) return new IdCheckResult(false, errorMessage);
+        if (!errorMessage.isEmpty()) return new IdCheckResult(false, errorMessage);
         else return new IdCheckResult(true,"");
             
     }

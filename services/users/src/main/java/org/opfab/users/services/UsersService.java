@@ -70,7 +70,7 @@ public class UsersService {
 
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
         boolean formatCheckResult = false;
-        if (user.getLogin().length() >= 1)
+        if (!user.getLogin().isEmpty())
             formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
         if (formatCheckResult) {
@@ -163,7 +163,7 @@ public class UsersService {
 
     public OperationResult<User> updateOrCreateUser(User user, boolean updateEntities, boolean updateGroups) {
         boolean formatCheckResult = false;
-        if (user.getLogin().length() >= 1)
+        if (!user.getLogin().isEmpty())
             formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
 
