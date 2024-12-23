@@ -16,7 +16,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
     standalone: true
 })
 export class OpfabTitleCasePipe implements PipeTransform {
-    private titleToUppercase;
+    private readonly titleToUppercase;
 
     constructor() {
         this.titleToUppercase = ConfigService.getConfigValue('feed.card.titleUpperCase', true);

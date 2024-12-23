@@ -60,8 +60,8 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     allEntitiesSupervised: boolean;
 
     constructor(
-        private activeModal: NgbActiveModal,
-        private dataHandlingService: SharingService
+        private readonly activeModal: NgbActiveModal,
+        private readonly dataHandlingService: SharingService
     ) {}
 
     ngOnInit() {

@@ -23,7 +23,7 @@ import {UserActionLog} from '@ofModel/user-action-log.model';
 export class AngularUserActionLogsServer extends AngularServer implements UserActionLogsServer {
     readonly userActionsUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.userActionsUrl = `${environment.url}users/userActionLogs`;
     }

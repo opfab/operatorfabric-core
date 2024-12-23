@@ -139,8 +139,8 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     private intervalIdForConnectedRecipientsUpdate: any;
 
     constructor(
-        private sanitizer: DomSanitizer,
-        private element: ElementRef
+        private readonly sanitizer: DomSanitizer,
+        private readonly element: ElementRef
     ) {
         this.userCardView = new UserCardView(this);
         this.cardLoadingInProgress = true;

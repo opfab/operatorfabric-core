@@ -27,9 +27,9 @@ export class FeedSearchComponent implements OnInit {
 
     searchControl = new FormControl();
     placeholder: string;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private translateService: TranslateService) {
+    constructor(private readonly translateService: TranslateService) {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 

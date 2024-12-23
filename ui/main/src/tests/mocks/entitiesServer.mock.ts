@@ -13,7 +13,7 @@ import {EntitiesServer} from '@ofServices/entities/server/EntitiesServer';
 import {Entity} from '@ofServices/entities/model/Entity';
 
 export class EntitiesServerMock implements EntitiesServer {
-    private entitiesSubject = new ReplaySubject<ServerResponse<Entity[]>>();
+    private readonly entitiesSubject = new ReplaySubject<ServerResponse<Entity[]>>();
 
     setEntities(entities: Entity[]) {
         this.entitiesSubject.next(new ServerResponse(entities, ServerResponseStatus.OK, ''));

@@ -21,7 +21,7 @@ import {AngularServer} from '../../../server/angular.server';
 export class AngularBusinessDataServer extends AngularServer implements BusinessDataServer {
     readonly businessDataUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.businessDataUrl = `${environment.url}businessconfig/businessData`;
     }

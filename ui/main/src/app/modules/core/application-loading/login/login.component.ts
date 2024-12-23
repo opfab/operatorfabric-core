@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
     loginMessage: Message;
 
     constructor(
-        private authService: AuthService,
-        private changeDetector: ChangeDetectorRef
+        private readonly authService: AuthService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {

@@ -13,11 +13,11 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
 
 export class ProcessesServerMock implements ProcessesServer {
-    private processSubject = new ReplaySubject<ServerResponse<Process>>();
-    private processesSubject = new ReplaySubject<ServerResponse<Process[]>>();
-    private processesWithAllVersionsSubject = new ReplaySubject<ServerResponse<Process[]>>();
-    private processGroupsSubject = new ReplaySubject<ServerResponse<any>>();
-    private cssSubject = new ReplaySubject<ServerResponse<string>>();
+    private readonly processSubject = new ReplaySubject<ServerResponse<Process>>();
+    private readonly processesSubject = new ReplaySubject<ServerResponse<Process[]>>();
+    private readonly processesWithAllVersionsSubject = new ReplaySubject<ServerResponse<Process[]>>();
+    private readonly processGroupsSubject = new ReplaySubject<ServerResponse<any>>();
+    private readonly cssSubject = new ReplaySubject<ServerResponse<string>>();
 
     setResponseForProcessDefinition(process: ServerResponse<Process>) {
         this.processSubject.next(process);

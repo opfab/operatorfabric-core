@@ -17,7 +17,7 @@ import {ModalConfig} from '@ofModel/modal-config.model';
     providedIn: 'root'
 })
 export class NgbModalServer implements ModalServer {
-    constructor(private modalService: NgbModal) {}
+    constructor(private readonly modalService: NgbModal) {}
 
     openModal(modalConfig: ModalConfig): Promise<string> {
         const modalRef = this.modalService.open(OpfabNgbModalComponent, {centered: true});

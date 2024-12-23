@@ -52,7 +52,7 @@ export class ExternaldevicesModalComponent implements OnInit {
     isLoadingExternalDevices: boolean;
     isLoadingSignalMappings: boolean;
 
-    constructor(private activeModal: NgbActiveModal) {}
+    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         const uniqueDeviceIdValidator = [];

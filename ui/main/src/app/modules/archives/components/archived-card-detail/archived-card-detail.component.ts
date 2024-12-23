@@ -35,7 +35,7 @@ export class ArchivedCardDetailComponent implements OnInit {
     @Input() card: Card;
     @Input() childCards: Card[];
 
-    constructor(private translate: TranslateService) {}
+    constructor(private readonly translate: TranslateService) {}
 
     ngOnInit() {
         this.computeFromEntity();

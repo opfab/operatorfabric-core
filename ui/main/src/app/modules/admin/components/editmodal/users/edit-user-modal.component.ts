@@ -61,8 +61,8 @@ export class EditUserModalComponent implements OnInit {
     @Input() row: User;
 
     constructor(
-        private activeModal: NgbActiveModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly activeModal: NgbActiveModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {

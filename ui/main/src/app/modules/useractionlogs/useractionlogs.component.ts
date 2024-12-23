@@ -77,8 +77,8 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
 
     constructor(
         userActionLogsServer: UserActionLogsServer,
-        private modalService: NgbModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly modalService: NgbModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {
         this.userActionLogsView = new UserActionLogsView(userActionLogsServer);
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();

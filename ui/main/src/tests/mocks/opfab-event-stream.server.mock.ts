@@ -14,7 +14,7 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {Observable, of, Subject} from 'rxjs';
 
 export class OpfabEventStreamServerMock implements OpfabEventStreamServer {
-    private events = new Subject<any>();
+    private readonly events = new Subject<any>();
 
     initStream() {
         // nothing to do

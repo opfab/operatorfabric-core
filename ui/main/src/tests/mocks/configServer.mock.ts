@@ -15,12 +15,12 @@ import {RealTimeScreens} from 'app/services/config/model/RealTimeScreensConfig';
 import {ProcessMonitoringConfig} from 'app/services/config/model/ProcessMonitoringConfig';
 
 export class ConfigServerMock implements ConfigServer {
-    private webUiConf = new ReplaySubject<ServerResponse<any>>();
-    private menuConf = new ReplaySubject<ServerResponse<any>>();
-    private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>();
-    private locale = new ReplaySubject<ServerResponse<any>>();
-    private realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>();
-    private processmonitoringconfiguration = new ReplaySubject<ServerResponse<ProcessMonitoringConfig>>();
+    private readonly webUiConf = new ReplaySubject<ServerResponse<any>>();
+    private readonly menuConf = new ReplaySubject<ServerResponse<any>>();
+    private readonly monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>();
+    private readonly locale = new ReplaySubject<ServerResponse<any>>();
+    private readonly realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>();
+    private readonly processmonitoringconfiguration = new ReplaySubject<ServerResponse<ProcessMonitoringConfig>>();
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();

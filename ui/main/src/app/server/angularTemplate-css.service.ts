@@ -19,10 +19,10 @@ import {TemplateCssServer} from 'app/business/server/template-css.server';
     providedIn: 'root'
 })
 export class AngularTemplateCssServer extends AngularServer implements TemplateCssServer {
-    private processesUrl;
-    private urlCleaner: HttpUrlEncodingCodec;
+    private readonly processesUrl;
+    private readonly urlCleaner: HttpUrlEncodingCodec;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
         this.urlCleaner = new HttpUrlEncodingCodec();

@@ -42,7 +42,7 @@ export class SignalMappingsModalComponent implements OnInit {
     signalMappings: SignalMapping[];
     isLoadingSignalMappings: boolean;
 
-    constructor(private activeModal: NgbActiveModal) {}
+    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         const uniqueDeviceIdValidator = [];

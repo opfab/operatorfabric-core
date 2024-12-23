@@ -28,14 +28,14 @@ import {NgFor} from '@angular/common';
     imports: [NgFor]
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
     private initialZoomToLocation: any;
 
     constructor(
-        private translateService: TranslateService,
-        private superChangeDetector: ChangeDetectorRef,
-        private router: Router,
-        private route: ActivatedRoute
+        private readonly translateService: TranslateService,
+        private readonly superChangeDetector: ChangeDetectorRef,
+        private readonly router: Router,
+        private readonly route: ActivatedRoute
     ) {
         super(translateService, superChangeDetector);
         this.targetElementId = 'ol-map';

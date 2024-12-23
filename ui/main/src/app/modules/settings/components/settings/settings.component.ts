@@ -45,12 +45,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
     timezoneForEmailsSelectedOption = new Array();
 
     saveSettingsInProgress = false;
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
     canDeactivateSubject = new Subject<boolean>();
     pendingModification: boolean;
     constructor(
-        private translateService: TranslateService,
-        private changeDetector: ChangeDetectorRef
+        private readonly translateService: TranslateService,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {

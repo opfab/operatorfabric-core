@@ -15,9 +15,9 @@ import {PlatformLocation} from '@angular/common';
     providedIn: 'root'
 })
 export class AngularSoundServer implements SoundServer {
-    private soundFileBasePath: string;
+    private readonly soundFileBasePath: string;
 
-    constructor(private platformLocation: PlatformLocation) {
+    constructor(private readonly platformLocation: PlatformLocation) {
         const baseHref = this.platformLocation.getBaseHrefFromDOM();
         this.soundFileBasePath = (baseHref || '/') + 'assets/sounds/';
     }

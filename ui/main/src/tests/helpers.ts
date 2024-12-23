@@ -236,7 +236,7 @@ export function initOpfabAPI() {
 }
 
 export class AlertMessageReceiver {
-    private alertSubject: ReplaySubject<Message>;
+    private readonly alertSubject: ReplaySubject<Message>;
     constructor() {
         this.alertSubject = new ReplaySubject<Message>();
         this.listenForMessageReceived();

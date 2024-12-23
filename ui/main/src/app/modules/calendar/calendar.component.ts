@@ -37,7 +37,7 @@ import {CardComponent} from '../card/card.component';
     imports: [NgIf, FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-    constructor(private modalService: NgbModal) {
+    constructor(private readonly modalService: NgbModal) {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
@@ -46,7 +46,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
 
-    private unsubscribe$ = new Subject<void>();
+    private readonly unsubscribe$ = new Subject<void>();
     calendarVisible = true;
     locales = allLocales;
     calendarEvents: EventInput[] = [];

@@ -32,7 +32,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     readonly devicesConfigurationsUrl: string;
     readonly signalMappingUrl: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private readonly httpClient: HttpClient) {
         super();
         this.externalDevicesUrl = `${environment.url}externaldevices`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';

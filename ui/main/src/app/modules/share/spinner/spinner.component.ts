@@ -41,8 +41,8 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     mustDisplaySpinner = false;
 
     constructor(
-        private modalService: NgbModal,
-        private changeDetector: ChangeDetectorRef
+        private readonly modalService: NgbModal,
+        private readonly changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {

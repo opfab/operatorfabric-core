@@ -26,11 +26,11 @@ import {TranslateModule} from '@ngx-translate/core';
 export class FeedSortComponent implements OnInit, OnDestroy {
     @Input() defaultSorting: string;
 
-    private ngUnsubscribe$ = new Subject<void>();
+    private readonly ngUnsubscribe$ = new Subject<void>();
     sortForm: FormGroup<{
         sortControl: FormControl<string | null>;
     }>;
-    private filteredLightCardStore: FilteredLightCardsStore;
+    private readonly filteredLightCardStore: FilteredLightCardsStore;
 
     constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();

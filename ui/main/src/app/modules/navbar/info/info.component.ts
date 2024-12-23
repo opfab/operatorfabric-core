@@ -32,7 +32,7 @@ export class InfoComponent implements OnInit {
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.updateTime();

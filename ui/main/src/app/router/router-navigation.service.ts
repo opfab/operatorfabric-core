@@ -18,7 +18,7 @@ import {RouterStore} from 'app/business/store/router.store';
     providedIn: 'root'
 })
 export class RouterNavigationService {
-    constructor(private router: Router) {
+    constructor(private readonly router: Router) {
         this.logNavigation();
         this.updateRouterStore();
         this.clearSelectedCardWhenUserNavigateAwayFromTheFeed();

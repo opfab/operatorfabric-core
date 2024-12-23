@@ -46,9 +46,9 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
     enableGraph: boolean;
 
     constructor(
-        private translateService: TranslateService,
-        private modalService: NgbModal,
-        private superChangeDetector: ChangeDetectorRef
+        private readonly translateService: TranslateService,
+        private readonly modalService: NgbModal,
+        private readonly superChangeDetector: ChangeDetectorRef
     ) {
         super(translateService, superChangeDetector);
         this.targetElementId = 'ol-monitoring-map';
