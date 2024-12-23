@@ -15,45 +15,42 @@
 
 }
 
-.light-card-detail {
+.opfab-lightcard-detail {
     color: var(--opfab-lightcard-detail-textcolor);
     margin-right: 20px;
+    word-break: break-all;
+    box-shadow: var(--opfab-card-shadow);
+
 }
 
-.light-card-detail-selected {
+.opfab-lightcard-detail-selected {
     background-color: var(--opfab-lightcard-detail-selected-bgcolor);
     margin-left: 20px;
     margin-right: 0;
     transition: margin 0.3s;
 }
 
-.light-card-detail-unselected {
+.opfab-lightcard-detail-unselected {
     background-color: var(--opfab-lightcard-detail-bgcolor);
     cursor: pointer;
 }
 
-.light-card-detail-unread {
+.opfab-lightcard-detail-unread {
     color: var(--opfab-lightcard-detail-unread-textcolor);
     font-weight: bold;
 }
 
-.card {
-    word-break: break-all;
-    box-shadow: var(--opfab-card-shadow);
-}
-
-.card-title {
+.opfab-lightcard-title {
     font-size: 15px;
     word-break: break-all;
+    margin-bottom: 0;
     overflow-wrap: anywhere;
 }
 
-.card-subtitle {
+.opfab-lightcard-subtitle {
     font-size: small;
-}
-
-.card-text {
-    font-size: small;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
 }
 
 .opfab-lightcard-severity {

@@ -9,10 +9,10 @@
 <div
     id="opfab-feed-light-card-{{ lightCard.process }}-{{ lightCard.processInstanceId }}"
     attr.data-urlId="{{ lightCard.process }}.{{ lightCard.processInstanceId }}"
-    class="card light-card-detail"
-    [class.light-card-detail-selected]="open || groupedCardOpen"
-    [class.light-card-detail-unselected]="!open && !groupedCardOpen"
-    [class.light-card-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
+    class="opfab-lightcard-detail"
+    [class.opfab-lightcard-detail-selected]="open || groupedCardOpen"
+    [class.opfab-lightcard-detail-unselected]="!open && !groupedCardOpen"
+    [class.opfab-lightcard-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
     (click)="select($event)"
     (mouseenter)="highlightOnMap(true)"
     (mouseleave)="highlightOnMap(false)">
@@ -20,7 +20,7 @@
         <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }}"></div>
         <div style="width: 100%">
             <div style="display: grid; grid-template-columns: auto auto; margin-top: 2px">
-                <p class="card-title">
+                <p class="opfab-lightcard-title">
                     <span id="opfab-feed-list-card-title">{{ this.truncatedTitle | opfabTitleCase }}</span>
                 </p>
                 <div style="text-align: right; padding-right: 5px">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: auto auto; margin-top: 8px">
-                <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="card-subtitle">
+                <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="opfab-lightcard-subtitle">
                     ({{ this.dateToDisplay }})
                 </p>
 

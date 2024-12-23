@@ -13,12 +13,23 @@
 /* stylelint-disable-next-line scss/load-no-partial-leading-underscore */
 @import '../../node_modules/ngx-chips/core/styles/core/_core';
 
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+p {
+  margin-top: 0;
+}
+
+
+
 body {
     color: #bababa;
     padding: 80px 0 30px;
     margin: 0;
     background-color: #262f3d;
     height: 100vh;
+    line-height: 1.5;
     font-family: var(--opfab-font-family);
     font-size: 13px;
 

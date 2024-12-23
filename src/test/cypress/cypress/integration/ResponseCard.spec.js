@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {ActivityAreaCommands} from '../support/activityAreaCommands';
-import {ScriptCommands} from '../support/scriptCommands';
-import {CardCommands} from '../support/cardCommands';
-import {FeedCommands} from '../support/feedCommands';
-import {UserCardCommands} from '../support/userCardCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { ActivityAreaCommands } from '../support/activityAreaCommands';
+import { ScriptCommands } from '../support/scriptCommands';
+import { CardCommands } from '../support/cardCommands';
+import { FeedCommands } from '../support/feedCommands';
+import { UserCardCommands } from '../support/userCardCommands';
 
-describe('Response card tests', function () {
+describe('Response card tests', function() {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
@@ -22,7 +22,7 @@ describe('Response card tests', function () {
     const feed = new FeedCommands();
     const usercard = new UserCardCommands();
 
-    before('Set up configuration and clean cards', function () {
+    before('Set up configuration and clean cards', function() {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         script.resetUIConfigurationFiles();
 
@@ -35,7 +35,7 @@ describe('Response card tests', function () {
         script.sendCard('defaultProcess/question.json');
     });
 
-    it('Check card response for operator1_fr ', function () {
+    it('Check card response for operator1_fr ', function() {
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -112,7 +112,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
     });
 
-    it('Check READONLY operator1_crisisroom cannot respond ', function () {
+    it('Check READONLY operator1_crisisroom cannot respond ', function() {
         opfab.loginWithUser('operator1_crisisroom');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -127,7 +127,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check card response for operator2_fr ', function () {
+    it('Check card response for operator2_fr ', function() {
         opfab.loginWithUser('operator2_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -187,7 +187,7 @@ describe('Response card tests', function () {
 
     // operator4_fr is member of ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR and the question card sent can be responded by
     // ENTITY1_FR, ENTITY2_FR, ENTITY3_FR
-    it('Check card response for operator4_fr ', function () {
+    it('Check card response for operator4_fr ', function() {
         opfab.loginWithUser('operator4_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -327,8 +327,8 @@ describe('Response card tests', function () {
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
 
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force: true});
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({ force: true });
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({ force: true });
         activityArea.save();
         cy.waitDefaultTime();
         opfab.navigateToFeed();
@@ -363,12 +363,12 @@ describe('Response card tests', function () {
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
         opfab.navigateToActivityArea();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({ force: true });
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({ force: true });
         activityArea.save();
     });
 
-    it('Check itsupervisor1 see the card but cannot respond ', function () {
+    it('Check itsupervisor1 see the card but cannot respond ', function() {
         opfab.loginWithUser('itsupervisor1');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -410,7 +410,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function () {
+    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function() {
         script.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -449,7 +449,7 @@ describe('Response card tests', function () {
         card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
     });
 
-    it('Check response for  operator1_fr  is not present after update of card without KEEP_CHILD_CARDS action re-logging', function () {
+    it('Check response for  operator1_fr  is not present after update of card without KEEP_CHILD_CARDS action re-logging', function() {
         script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -470,7 +470,7 @@ describe('Response card tests', function () {
         card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
     });
 
-    it('Check responses in archived cards detail', function () {
+    it('Check responses in archived cards detail', function() {
         opfab.loginWithUser('operator1_fr');
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -540,7 +540,7 @@ describe('Response card tests', function () {
             .should('have.text', ' NOK ');
     });
 
-    it('Check response button is disabled while sending response', function () {
+    it('Check response button is disabled while sending response', function() {
         opfab.loginWithUser('operator1_fr');
         feed.openFirstCard();
 
@@ -693,7 +693,7 @@ describe('Response card tests', function () {
         //Check card is unread
         cy.get('of-light-card')
             .eq(0)
-            .find('.card-title, .card-title')
+            .find('.opfab-lightcard-title')
             .should('have.css', 'font-weight')
             .and('match', /700|bold/);
 

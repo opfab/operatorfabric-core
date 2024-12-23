@@ -8,7 +8,7 @@
  */
 
 
-import {OpfabCommands} from './opfabCommands';
+import { OpfabCommands } from './opfabCommands';
 
 export class FeedCommands extends OpfabCommands {
 
@@ -18,70 +18,70 @@ export class FeedCommands extends OpfabCommands {
     }
 
 
-    checkNumberOfDisplayedCardsIs= function (nb) {
+    checkNumberOfDisplayedCardsIs = function(nb) {
         cy.get('of-light-card').should('have.length', nb);
     }
 
-    openFirstCard= function () {
+    openFirstCard = function() {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-div-card-template-processed');
     }
 
-    openNthCard= function (nth) {
+    openNthCard = function(nth) {
         cy.get('of-light-card').eq(nth).click();
         cy.get('#opfab-div-card-template-processed');
     }
 
-    checkSelectedCardHasTitle= function (title) {
-        cy.get('.light-card-detail-selected .card-title').should('have.text',title.toUpperCase());
+    checkSelectedCardHasTitle = function(title) {
+        cy.get('.opfab-lightcard-detail-selected .opfab-lightcard-title').should('have.text', title.toUpperCase());
     }
 
-    checkSelectedCardHasSummary= function (summary) {
-        cy.get('#opfab-selected-card-summary').should('have.text',summary);
+    checkSelectedCardHasSummary = function(summary) {
+        cy.get('#opfab-selected-card-summary').should('have.text', summary);
     }
 
-    checkLightCardAtIndexHasTitle= function (index, title) {
-        cy.get('.card-title').eq(index).should('have.text',title.toUpperCase())
+    checkLightCardAtIndexHasTitle = function(index, title) {
+        cy.get('.opfab-lightcard-title').eq(index).should('have.text', title.toUpperCase())
     }
 
-    deleteCurrentCard= function () {
+    deleteCurrentCard = function() {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-btn-ok').click();
         cy.get('#opfab-close-alert').click();
     }
 
-    editCurrentCard= function () {
+    editCurrentCard = function() {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
     }
 
-    copyCurrentCard= function () {
+    copyCurrentCard = function() {
         cy.get('#opfab-card-create-copy').click();
         cy.get("of-usercard").should('exist');
     }
 
-    sortByUnread= function () {
+    sortByUnread = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-unread').check();
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    sortByReceptionDate= function () {
+    sortByReceptionDate = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-publication-date').check();
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    sortBySeverity= function () {
+    sortBySeverity = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-severity').check();
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    sortByStartDate= function () {
+    sortByStartDate = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-start-date').check();
@@ -89,78 +89,78 @@ export class FeedCommands extends OpfabCommands {
     }
 
 
-    sortByEndDate= function () {
+    sortByEndDate = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-end-date').check();
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    toggleFilterByPriority = function (priorities) {
+    toggleFilterByPriority = function(priorities) {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-type-filter-form').should('exist');
         priorities.forEach(priority => {
-            cy.get('#opfab-feed-filter-severity-' + priority).click({force: true});
+            cy.get('#opfab-feed-filter-severity-' + priority).click({ force: true });
         });
 
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    toggleFilterByResponse = function () {
+    toggleFilterByResponse = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-response-filter-form').should('exist');
-        cy.get('#opfab-feed-filter-response').click({force: true});
+        cy.get('#opfab-feed-filter-response').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    toggleFilterByAcknowledgementAck = function () {
+    toggleFilterByAcknowledgementAck = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-ack-filter-form').should('exist');
-        cy.get('#opfab-feed-filter-ack-ack').click({force: true});
+        cy.get('#opfab-feed-filter-ack-ack').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    toggleFilterByAcknowledgementNotAck = function () {
+    toggleFilterByAcknowledgementNotAck = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-ack-filter-form').should('exist');
-        cy.get('#opfab-feed-filter-ack-notack').click({force: true});
+        cy.get('#opfab-feed-filter-ack-notack').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    toggleApplyFilterToTimeline = function () {
+    toggleApplyFilterToTimeline = function() {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-timeline-filter-form').should('exist');
-        cy.get('#opfab-feed-filter-timeline').click({force: true});
+        cy.get('#opfab-feed-filter-timeline').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    filterByProcess = function (process) {
+    filterByProcess = function(process) {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-process-filter-form').should('exist');
-        cy.get("#opfab-process-select").find('[data-value="' + process + '"]' ).click({force: true});
+        cy.get("#opfab-process-select").find('[data-value="' + process + '"]').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    filterByState = function (state) {
+    filterByState = function(state) {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-process-filter-form').should('exist');
-        cy.get("#opfab-state-select").find('[data-value="' + state + '"]' ).click({force: true});
+        cy.get("#opfab-state-select").find('[data-value="' + state + '"]').click({ force: true });
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    checkFilterIsActive= function() {
+    checkFilterIsActive = function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-active');
     }
 
-    checkFilterIsNotActive= function() {
+    checkFilterIsNotActive = function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter');
     }
 
-    checkFilterIsOpenAndNotActive= function() {
+    checkFilterIsOpenAndNotActive = function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-open');
     }
 
-    checkFilterIsOpenAndActive= function() {
+    checkFilterIsOpenAndActive = function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-open-active');
     }
 
