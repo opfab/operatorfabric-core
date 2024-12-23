@@ -295,7 +295,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                 @WithMockOpFabUser(login = "adminUser", permissions = { PermissionEnum.ADMIN })
                 class DeleteOnlyOneProcess {
 
-                        static final String bundleName = "first";
+                        static final String BUNDLE_NAME = "first";
 
                         @BeforeEach
                         void setupEach() throws Exception {
@@ -311,24 +311,24 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteBundleByNameAndVersionWhichNotBeingDefault() throws Exception {
                                 ResultActions result = mockMvc.perform(
-                                                delete("/processes/" + bundleName + "/versions/0.1"));
+                                                delete("/processes/" + BUNDLE_NAME + "/versions/0.1"));
                                 result
                                                 .andExpect(status().isNoContent());
                                 result = mockMvc.perform(
-                                                get("/processes/" + bundleName + "?version=0.1"));
+                                                get("/processes/" + BUNDLE_NAME + "?version=0.1"));
                                 result
                                                 .andExpect(status().isNotFound());
                         }
 
                         @Test
                         void deleteBundleByNameAndVersionWhichBeingDefault() throws Exception {
-                                mockMvc.perform(delete("/processes/" + bundleName + "/versions/v1"))
+                                mockMvc.perform(delete("/processes/" + BUNDLE_NAME + "/versions/v1"))
                                                 .andExpect(status().isNoContent());
                                 ResultActions result = mockMvc.perform(
-                                                delete("/processes/" + bundleName + "/versions/0.1"));
+                                                delete("/processes/" + BUNDLE_NAME + "/versions/0.1"));
                                 result
                                                 .andExpect(status().isNoContent());
-                                result = mockMvc.perform(get("/processes/" + bundleName));
+                                result = mockMvc.perform(get("/processes/" + BUNDLE_NAME));
                                 result
                                                 .andExpect(status().isOk())
                                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -367,10 +367,10 @@ class GivenAdminUserBusinessconfigControllerShould {
                         @Test
                         void deleteGivenBundle() throws Exception {
                                 ResultActions result = mockMvc
-                                                .perform(delete("/processes/" + bundleName));
+                                                .perform(delete("/processes/" + BUNDLE_NAME));
                                 result
                                                 .andExpect(status().isNoContent());
-                                result = mockMvc.perform(get("/processes/" + bundleName));
+                                result = mockMvc.perform(get("/processes/" + BUNDLE_NAME));
                                 result
                                                 .andExpect(status().isNotFound());
                         }

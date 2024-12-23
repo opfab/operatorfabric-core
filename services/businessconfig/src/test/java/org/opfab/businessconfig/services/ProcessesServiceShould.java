@@ -227,7 +227,7 @@ class ProcessesServiceShould {
         @Nested
         class DeleteOnlyOneBusinessconfig {
 
-            static final String bundleName = "first";
+            static final String BUNDLE_NAME = "first";
 
             static final String CONFIG_FILE_NAME = "config.json";
 
@@ -244,13 +244,13 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichNotBeingDefault() throws Exception {
-                Path bundleDir = bundleDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(BUNDLE_NAME);
                 Path bundleVersionDir = bundleDir.resolve("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName, "0.1");
-                Assertions.assertNull(service.fetch(bundleName, "0.1"));
-                Process process = service.fetch(bundleName);
+                service.deleteVersion(BUNDLE_NAME, "0.1");
+                Assertions.assertNull(service.fetch(BUNDLE_NAME, "0.1"));
+                Process process = service.fetch(BUNDLE_NAME);
                 Assertions.assertNotNull(process);
                 assertThat(process.version()).isNotEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
@@ -259,8 +259,8 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
-                Path bundleDir = bundleDataDir.resolve(bundleName);
-                Process process = service.fetch(bundleName);
+                Path bundleDir = bundleDataDir.resolve(BUNDLE_NAME);
+                Process process = service.fetch(BUNDLE_NAME);
                 assertThat(process.version()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.1");
@@ -268,9 +268,9 @@ class ProcessesServiceShould {
                                                                      // modified
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName, "v1");
-                Assertions.assertNull(service.fetch(bundleName, "v1"));
-                process = service.fetch(bundleName);
+                service.deleteVersion(BUNDLE_NAME, "v1");
+                Assertions.assertNull(service.fetch(BUNDLE_NAME, "v1"));
+                process = service.fetch(BUNDLE_NAME);
                 Assertions.assertNotNull(process);
                 assertThat(process.version()).isEqualTo("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
@@ -282,8 +282,8 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichBeingDefault2() throws Exception {
-                Path bundleDir = bundleDataDir.resolve(bundleName);
-                final Process process = service.fetch(bundleName);
+                Path bundleDir = bundleDataDir.resolve(BUNDLE_NAME);
+                final Process process = service.fetch(BUNDLE_NAME);
                 assertThat(process.version()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
                 Path bundleNewDefaultVersionDir = bundleDir.resolve("0.5");
@@ -291,9 +291,9 @@ class ProcessesServiceShould {
                                                                      // modified
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
-                service.deleteVersion(bundleName, "v1");
-                Assertions.assertNull(service.fetch(bundleName, "v1"));
-                Process process05 = service.fetch(bundleName);
+                service.deleteVersion(BUNDLE_NAME, "v1");
+                Assertions.assertNull(service.fetch(BUNDLE_NAME, "v1"));
+                Process process05 = service.fetch(BUNDLE_NAME);
                 Assertions.assertNotNull(process05);
                 assertThat(process05.version()).isEqualTo("0.5");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
@@ -306,7 +306,7 @@ class ProcessesServiceShould {
             @Test
             void deleteBundleByNameAndVersionWhichNotExisting() {
                 Assertions.assertThrows(FileNotFoundException.class, () -> {
-                    service.deleteVersion(bundleName,
+                    service.deleteVersion(BUNDLE_NAME,
                             "impossible_someone_really_so_crazy_to_give_this_name_to_a_version");
                 });
             }
@@ -330,9 +330,9 @@ class ProcessesServiceShould {
 
             @Test
             void deleteGivenBundle() throws Exception {
-                Path bundleDir = bundleDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(BUNDLE_NAME);
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
-                service.delete(bundleName);
+                service.delete(BUNDLE_NAME);
                 Assertions.assertFalse(Files.isDirectory(bundleDir));
             }
 
