@@ -41,13 +41,13 @@ public class Entity {
     private Set<String> labels;
     private Set<String> parents;
     @Valid
-    private SortedSet<RolesEnum> roles;
+    private SortedSet<RoleEnum> roles;
 
     @Transient
     private Set<String> users;
 
 
-    public Entity(@NotNull String id, String name, String description, Set<String> labels, Set<String> parents, @Valid SortedSet<RolesEnum> roles) {
+    public Entity(@NotNull String id, String name, String description, Set<String> labels, Set<String> parents, @Valid SortedSet<RoleEnum> roles) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -128,12 +128,12 @@ public class Entity {
 
     }
 
-    public List<RolesEnum> getRoles(){
+    public List<RoleEnum> getRoles(){
         if (roles == null) return Collections.emptyList();
         return roles.stream().toList();
     }
 
-    public void setRoles(List<RolesEnum> roles){
+    public void setRoles(List<RoleEnum> roles){
         this.roles = new TreeSet<>();
         if(roles != null) {
             this.roles = roles.stream().collect(Collectors.toCollection(TreeSet::new));

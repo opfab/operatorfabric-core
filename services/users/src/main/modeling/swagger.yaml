@@ -129,14 +129,14 @@ definitions:
       roles: 
         type: array
         items:
-          $ref: '#/definitions/RolesEnum'
+          $ref: '#/definitions/RoleEnum'
     required:
        - id
     example:
       id: ENTITY1
       name: Control Room 1
       description: Control Room 1
-  RolesEnum:
+  RoleEnum:
     type: string
     description: |-
       Different possible roles >

@@ -28,7 +28,7 @@ import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
-import org.opfab.users.model.RolesEnum;
+import org.opfab.users.model.RoleEnum;
 import org.opfab.users.model.User;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -107,7 +107,7 @@ class EntitiesServiceShould {
 
         @Test
         void GIVEN_A_Valid_Entity_WHEN_Create_Entity_THEN_Return_Created_Entity() {
-            SortedSet<RolesEnum> roles = new TreeSet<>(Arrays.asList(RolesEnum.CARD_RECEIVER, RolesEnum.CARD_SENDER));
+            SortedSet<RoleEnum> roles = new TreeSet<>(Arrays.asList(RoleEnum.CARD_RECEIVER, RoleEnum.CARD_SENDER));
 
             Entity entity = new Entity("newEntity", "name", "myDescription", null, null, roles);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
@@ -115,8 +115,8 @@ class EntitiesServiceShould {
             assertThat(result.getResult().isUpdate()).isFalse();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newEntity");
             assertThat(result.getResult().getEntity().getName()).isEqualTo("name");
-            assertThat(result.getResult().getEntity().getRoles()).contains(RolesEnum.CARD_RECEIVER);
-            assertThat(result.getResult().getEntity().getRoles()).contains(RolesEnum.CARD_SENDER);
+            assertThat(result.getResult().getEntity().getRoles()).contains(RoleEnum.CARD_RECEIVER);
+            assertThat(result.getResult().getEntity().getRoles()).contains(RoleEnum.CARD_SENDER);
             assertThat(entityRepositoryStub.findById("newEntity").get().getName()).isEqualTo("name");
         }
 

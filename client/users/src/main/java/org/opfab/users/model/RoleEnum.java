@@ -7,11 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.model;
 
-public enum RolesEnum {
+ package org.opfab.users.model;
+
+ public enum RoleEnum {
     ACTIVITY_AREA,
     ACTIVITY_AREA_GROUP,
     CARD_RECEIVER,
     CARD_SENDER;
-}
+ }
