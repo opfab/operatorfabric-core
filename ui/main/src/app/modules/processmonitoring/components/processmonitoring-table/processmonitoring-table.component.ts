@@ -9,7 +9,7 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {ColDef, GridOptions} from 'ag-grid-community';
+import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
@@ -55,6 +55,9 @@ export class ProcessmonitoringTableComponent {
         private readonly translate: TranslateService,
         private readonly modalService: NgbModal
     ) {
+        ModuleRegistry.registerModules([AllCommunityModule]);
+        provideGlobalGridOptions({theme: 'legacy'});
+
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this

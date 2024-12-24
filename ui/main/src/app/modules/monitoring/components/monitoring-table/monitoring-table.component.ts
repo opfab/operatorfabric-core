@@ -18,7 +18,7 @@ import {MonitoringConfig} from '@ofServices/config/model/MonitoringConfig';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {Process} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {ColDef, GridOptions} from 'ag-grid-community';
+import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
@@ -85,6 +85,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ]);
 
     constructor(private readonly modalService: NgbModal) {
+        ModuleRegistry.registerModules([AllCommunityModule]);
+        provideGlobalGridOptions({theme: 'legacy'});
+
         this.monitoringConfig = ConfigService.getMonitoringConfig();
 
         this.timeColumnName = this.translateColumn('shared.result.time');

@@ -10,7 +10,7 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
-import {ColDef, GridOptions} from 'ag-grid-community';
+import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {ProcessGroupCellRendererComponent} from '../cell-renderers/process-group-cell-renderer.component';
@@ -63,6 +63,9 @@ export class LoggingTableComponent implements OnDestroy {
     readonly paginationPageSizeOptions = [10, 20, 50, 100];
 
     constructor(private readonly translate: TranslateService) {
+        ModuleRegistry.registerModules([AllCommunityModule]);
+        provideGlobalGridOptions({theme: 'legacy'});
+
         this.timeColumnName = this.translateColumn('shared.result.timeOfAction');
         this.processGroupColumnName = this.translateColumn('shared.result.processGroup');
         this.processColumnName = this.translateColumn('shared.result.process');

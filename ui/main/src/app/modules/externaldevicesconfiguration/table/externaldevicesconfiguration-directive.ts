@@ -13,7 +13,14 @@ import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
-import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
+import {
+    ColDef,
+    GridOptions,
+    ICellRendererParams,
+    AllCommunityModule,
+    ModuleRegistry,
+    provideGlobalGridOptions
+} from 'ag-grid-community';
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
@@ -49,6 +56,9 @@ export abstract class ExternalDevicesConfigurationDirective {
         protected translateService: TranslateService,
         protected modalService: NgbModal
     ) {
+        ModuleRegistry.registerModules([AllCommunityModule]);
+        provideGlobalGridOptions({theme: 'legacy'});
+
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this

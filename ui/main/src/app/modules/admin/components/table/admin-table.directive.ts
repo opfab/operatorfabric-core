@@ -9,7 +9,15 @@
  */
 
 import {ChangeDetectorRef, Directive, Injectable, OnDestroy} from '@angular/core';
-import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
+import {
+    ColDef,
+    GridOptions,
+    ICellRendererParams,
+    ValueFormatterParams,
+    AllCommunityModule,
+    ModuleRegistry,
+    provideGlobalGridOptions
+} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
@@ -99,6 +107,9 @@ export abstract class AdminTableDirective implements OnDestroy {
         protected dataHandlingService: SharingService,
         private readonly changeDetector: ChangeDetectorRef
     ) {
+        ModuleRegistry.registerModules([AllCommunityModule]);
+        provideGlobalGridOptions({theme: 'legacy'});
+
         this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
