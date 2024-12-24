@@ -136,9 +136,10 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/css"))
-                .andExpect(content().string(is(".bold {\n" +
-                        "    font-weight: bold;\n" +
-                        "}")))
+                .andExpect(content().string(is("""
+                        .bold {
+                            font-weight: bold;
+                        }""")))
         ;
         result = mockMvc.perform(
                 get("/processes/first/css/style1?version=0.1")
@@ -146,9 +147,10 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/css"))
-                .andExpect(content().string(is(".bold {\n" +
-                        "    font-weight: bolder;\n" +
-                        "}")))
+                .andExpect(content().string(is("""
+                        .bold {
+                            font-weight: bolder;
+                        }""")))
         ;
     }
 

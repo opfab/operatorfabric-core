@@ -107,25 +107,28 @@ class ProcessesServiceShould {
                 .exists()
                 .isFile()
                 .hasName("style1.css")
-                .hasContent(".bold {\n" +
-                        "    font-weight: bold;\n" +
-                        "}");
+                .hasContent("""
+                        .bold {
+                            font-weight: bold;
+                        }""");
         styleFile = service.fetchResource("first", CSS, "0.1", "style1").getFile();
         assertThat(styleFile)
                 .exists()
                 .isFile()
                 .hasName("style1.css")
-                .hasContent(".bold {\n" +
-                        "    font-weight: bolder;\n" +
-                        "}");
+                .hasContent("""
+                        .bold {
+                            font-weight: bolder;
+                        }""");
         styleFile = service.fetchResource("first", CSS, "0.1", "style1").getFile();
         assertThat(styleFile)
                 .exists()
                 .isFile()
                 .hasName("style1.css")
-                .hasContent(".bold {\n" +
-                        "    font-weight: bolder;\n" +
-                        "}");
+                .hasContent("""
+                        .bold {
+                            font-weight: bolder;
+                        }""");
     }
 
     @Test

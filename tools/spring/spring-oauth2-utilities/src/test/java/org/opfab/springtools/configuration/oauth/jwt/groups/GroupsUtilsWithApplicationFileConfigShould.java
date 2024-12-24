@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,54 +42,55 @@ class GroupsUtilsWithApplicationFileConfigShould {
 	@BeforeEach
 	public void before() {
 		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
-		String jwtBody = "{ \n" + 
-				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
-				"    \"exp\": 1571170078,\n" + 
-				"    \"nbf\": 0,\n" + 
-				"    \"iat\": 1571152078,\n" + 
-				"    \"iss\": \"http://localhost:89/auth/realms/dev\",\n" + 
-				"    \"aud\": \"account\",\n" + 
-				"    \"sub\": \"user_not_opfab\",\n" + 
-				"    \"typ\": \"Bearer\",\n" + 
-				"    \"azp\": \"opfab-client\",\n" + 
-				"    \"acr\": \"1\",\n" + 
-				"    \"roleClaim\":\"RoleClaimValue\",\n" + 
-				"    \"pathA1\": {\n" + 
-				"        \"pathA2\": {\n" + 
-				"            \"roleClaim\":\"ADMIN\"    \n" + 
-				"        }\n" + 
-				"    },\n" + 
-				"    \"pathB1\": {\n" + 
-				"        \"pathB2\": {\n" + 
-				"            \"pathB3\": {\n" + 
-				"                \"listRoleClaim\":\"RoleB1;RoleB2;RoleB3\"    \n" + 
-				"            }   \n" + 
-				"        }\n" + 
-				"    },\n" + 
-				"    \"pathC1\": {\n" + 
-				"        \"listRoleClaim\":\"RoleC1,RoleC2\"\n" + 
-				"    },\n" + 
-				"    \"pathF1\": {\n" + 
-				"        \"pathF2\": {\n" + 
-				"            \"listRoleClaim\": [\n" + 
-				"                \"F1\", \n" + 
-				"                \"F2\", \n" + 
-				"                \"F3\"\n" + 
-				"            ]\n" + 
-				"        }\n" + 
-				"    },\n" + 
-				"    \"pathD1\": {\n" + 
-				"        \"RoleClaimOptionalD1\": {\n" + 
-				"            \"othersD2\": \"Value not important\"\n" + 
-				"        }\n" + 
-				"    },\n" + 
-				"    \"pathE1\": {\n" + 
-				"        \"pathE2\": {\n" + 
-				"            \"RoleClaimOptionalE1\": \"Value not important\"\n" + 
-				"        }\n" + 
-				"    }\n" + 
-				"}";
-		
+		String jwtBody = """
+                    { 
+                        "jti": "ebf36450-e18c-490b-9a68-feef8dfab1c1",
+                        "exp": 1571170078,
+                        "nbf": 0,
+                        "iat": 1571152078,
+                        "iss": "http://localhost:89/auth/realms/dev",
+                        "aud": "account",
+                        "sub": "user_not_opfab", 
+                        "typ": "Bearer",
+                        "azp": "opfab-client", 
+                        "acr": "1",
+                        "roleClaim":"RoleClaimValue", 
+                        "pathA1": { 
+                            "pathA2": {
+                                "roleClaim":"ADMIN"     
+                            } 
+                        },
+                        "pathB1": { 
+                            "pathB2": { 
+                                "pathB3": {
+                                    "listRoleClaim":"RoleB1;RoleB2;RoleB3"     
+                                }    
+                            } 
+                        },
+                        "pathC1": {
+                            "listRoleClaim":"RoleC1,RoleC2" 
+                        },
+                        "pathF1": { 
+                            "pathF2": {
+                                "listRoleClaim": [ 
+                                    "F1",  
+                                    "F2",  
+                                    "F3" 
+                                ] 
+                            } 
+                        },
+                        "pathD1": {
+                            "RoleClaimOptionalD1": {
+                                "othersD2": "Value not important" 
+                            } 
+                        },
+                        "pathE1": { 
+                            "pathE2": {
+                                "RoleClaimOptionalE1": "Value not important" 
+                            } 
+                        }
+                    }""";
+
 		tokenEncoded = ToolsGeneratorTokenHelper.getTokenEncoded(jwtHeader, jwtBody);
 	}
 	
