@@ -24,7 +24,7 @@ public class EntityRepositoryStub implements EntityRepository {
 
     @Override
     public List<Entity> findAll() {
-        return entities.values().stream().map(entity -> cloneEntity(entity)).toList();
+        return entities.values().stream().map(this::cloneEntity).toList();
     }
 
     @Override

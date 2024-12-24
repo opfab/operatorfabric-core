@@ -65,8 +65,7 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final ServerHttpSecurity http) {
         http
                 .headers(headers -> headers
-                    .frameOptions(frameOptions -> frameOptions
-                        .disable()
+                    .frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable
                     )
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

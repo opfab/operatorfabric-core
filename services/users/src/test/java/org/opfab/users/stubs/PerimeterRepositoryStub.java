@@ -29,7 +29,7 @@ public class PerimeterRepositoryStub implements PerimeterRepository {
 
     @Override
     public List<Perimeter> findAll() {
-        return perimeters.values().stream().map(perimeter -> clonePerimeter(perimeter)).toList();
+        return perimeters.values().stream().map(this::clonePerimeter).toList();
     }
 
     @Override

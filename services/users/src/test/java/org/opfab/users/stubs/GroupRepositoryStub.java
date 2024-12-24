@@ -30,7 +30,7 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public List<Group> findAll() {
-        return groups.values().stream().map(group -> cloneGroup(group)).toList();
+        return groups.values().stream().map(this::cloneGroup).toList();
     }
 
     @Override
