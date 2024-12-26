@@ -28,8 +28,10 @@
     opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
 
     if (!opfab.currentCard.isUserAllowedToEdit()) {
+        console.log(new Date().toISOString(),"Hide edit button");
         document.getElementById("editButton").setAttribute('hidden', true);
     }
+    else console.log(new Date().toISOString(),"Do not hide edit button");
 
     function editCard() {
         opfab.currentCard.editCard();
