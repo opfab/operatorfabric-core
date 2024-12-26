@@ -29,7 +29,7 @@ import {SupervisedEntitiesService} from '../services/admin/SupervisedEntitiesSer
 import {SelectedCardLoaderService} from './services/card/selectedCardLoader.service';
 import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';
-import {TemplateCssService} from './services/card/template-css.service';
+import {TemplateCssService} from '../services/templateCss/TemplateCssService';
 import {UserSettingsService} from '../services/userSettings/UserSettingsService';
 import {RouterService} from './services/router.service';
 import {OpfabStore} from './store/opfabStore';

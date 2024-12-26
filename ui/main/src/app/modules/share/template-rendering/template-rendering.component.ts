@@ -33,7 +33,7 @@ import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofServices/users/model/User';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {DisplayContext} from '@ofModel/template.model';
-import {TemplateCssService} from 'app/business/services/card/template-css.service';
+import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UsersService} from '@ofServices/users/UsersService';

@@ -10,7 +10,7 @@
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupsService} from '@ofServices/groups/GroupsService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {TemplateCssService} from 'app/business/services/card/template-css.service';
+import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';

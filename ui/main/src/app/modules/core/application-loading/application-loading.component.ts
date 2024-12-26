@@ -32,7 +32,7 @@ import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataSe
 import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
-import {TemplateCssServer} from '../../../business/server/template-css.server';
+import {TemplateCssServer} from '../../../services/templateCss/server/TemplateCssServer';
 import {UserSettingsServer} from '../../../services/userSettings/server/UserSettingsServer';
 import {ModalServer} from 'app/business/server/modal.server';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';

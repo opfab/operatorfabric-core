@@ -35,8 +35,8 @@ import {RemoteLoggerServer} from './app/services/logs/server/RemoteLoggerServer'
 import {AngularRemoteLoggerServer} from './app/services/logs/server/AngularRemoteLoggerServer';
 import {ConfigServer} from './app/services/config/server/ConfigServer';
 import {AngularConfigServer} from './app/services/config/server/AngularConfigServer';
-import {TemplateCssServer} from './app/business/server/template-css.server';
-import {AngularTemplateCssServer} from './app/server/angularTemplate-css.service';
+import {TemplateCssServer} from './app/services/templateCss/server/TemplateCssServer';
+import {AngularTemplateCssServer} from './app/services/templateCss/server/AngularTemplateCssServer';
 import {ProcessesServer} from './app/services/processes/server/ProcessesServer';
 import {AngularProcessesServer} from './app/services/processes/server/AngularProcessesServer';
 import {BusinessDataServer} from './app/services/businessdata/server/BusinessDataServer';

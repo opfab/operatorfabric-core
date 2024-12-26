@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class TemplateCssServer {
     abstract loadCssFile(process: string, version: string, styleFileName: string): Observable<ServerResponse<any>>;

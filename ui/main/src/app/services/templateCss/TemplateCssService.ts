@@ -9,8 +9,8 @@
 
 import {map, Observable, of} from 'rxjs';
 import {Utilities} from 'app/business/common/utilities';
-import {TemplateCssServer} from '../../server/template-css.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
+import {TemplateCssServer} from './server/TemplateCssServer';
+import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class TemplateCssService {

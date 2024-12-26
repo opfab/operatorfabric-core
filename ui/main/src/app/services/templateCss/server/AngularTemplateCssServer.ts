@@ -11,9 +11,9 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpUrlEncodingCodec, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
-import {TemplateCssServer} from 'app/business/server/template-css.server';
+import {TemplateCssServer} from '@ofServices/templateCss/server/TemplateCssServer';
 
 @Injectable({
     providedIn: 'root'
