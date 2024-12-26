@@ -11,7 +11,7 @@ import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';
-import {MenuService} from 'app/business/services/menu.service';
+import {MenuService} from '@ofServices/menu/MenuService';
 
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);

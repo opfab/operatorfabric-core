@@ -8,12 +8,12 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-import {MenuService} from './menu.service';
-import {ConfigService} from '../../services/config/ConfigService';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {MenuService} from './MenuService';
+import {ConfigService} from '../config/ConfigService';
 import {firstValueFrom} from 'rxjs';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
-import {UsersService} from '../../services/users/UsersService';
+import {UsersService} from '../users/UsersService';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 
