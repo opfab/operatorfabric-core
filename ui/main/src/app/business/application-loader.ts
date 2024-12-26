@@ -39,7 +39,7 @@ import {ApplicationLoadingComponent} from './application-loading-component';
 import {ServerResponseStatus} from './server/serverResponse';
 import {Utilities} from './common/utilities';
 import {ModalService} from './services/modal.service';
-import {SessionManagerService} from './services/session-manager.service';
+import {SessionManagerService} from '../services/sessionManager/SessionManagerService';
 import {SoundNotificationService} from '../services/notifications/SoundNotificationService';
 import {I18n} from '@ofModel/i18n.model';
 import {RealTimeDomainService} from '../services/realTimeDomain/RealTimeDomainService';

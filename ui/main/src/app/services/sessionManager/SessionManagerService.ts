@@ -9,10 +9,10 @@
 
 import {AuthService} from 'app/authentication/auth.service';
 import {Observable, Subject} from 'rxjs';
-import {CurrentUserStore} from '../store/current-user.store';
-import {OpfabEventStreamService} from './events/opfabEventStream.service';
+import {CurrentUserStore} from '../../business/store/current-user.store';
+import {OpfabEventStreamService} from '../../business/services/events/opfabEventStream.service';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {SoundNotificationService} from '../../services/notifications/SoundNotificationService';
+import {SoundNotificationService} from '../notifications/SoundNotificationService';
 
 export class SessionManagerService {
     private static readonly endSessionEvent = new Subject<string>();

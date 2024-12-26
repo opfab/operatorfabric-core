@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {SessionManagerService} from 'app/business/services/session-manager.service';
+import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
 import {NavbarView} from 'app/business/view/navbar/navbar.view';
 import {NavbarMenuElement, NavbarPage} from 'app/business/view/navbar/navbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
