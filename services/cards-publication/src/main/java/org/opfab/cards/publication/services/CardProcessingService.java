@@ -159,8 +159,7 @@ public class CardProcessingService {
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
         }
 
-        if (card.getToNotify() != null) log.warn("Using deprecated field 'toNotify'. Use STORE_ONLY_IN_ARCHIVES card action instead");
-        boolean storeOnlyInArchives = isCardToBeStoredOnlyInArchives(card);        
+        boolean storeOnlyInArchives = isCardToBeStoredOnlyInArchives(card);
 
         if (!storeOnlyInArchives) {
             if (oldCard != null) {
@@ -195,7 +194,7 @@ public class CardProcessingService {
     }
 
     private boolean isCardToBeStoredOnlyInArchives(Card card) {
-        return (card.getActions() != null && card.getActions().indexOf(CardActionEnum.STORE_ONLY_IN_ARCHIVES) >= 0) || (card.getToNotify() != null && Boolean.FALSE.equals(card.getToNotify()));
+        return (card.getActions() != null && card.getActions().indexOf(CardActionEnum.STORE_ONLY_IN_ARCHIVES) >= 0);
     }
 
     private Card getExistingCard(String cardId, boolean dataFieldIncluded) {

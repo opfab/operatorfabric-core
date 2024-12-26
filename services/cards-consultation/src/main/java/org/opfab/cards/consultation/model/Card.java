@@ -125,8 +125,6 @@ public class Card {
 
     private String processStateKey;
 
-    private Boolean toNotify;
-
     @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private RRule rRule;

@@ -7,9 +7,9 @@
 
 = Migration Guide from release 4.5.X to release 4.6.0
 
-== Deprecated `toNotify` field
+== Removed field `toNotify`
 
-The card field `toNotify` is deprecated. You should use the `actions` field including "STORE_ONLY_IN_ARCHIVES" action instead.
+The card field `toNotify` has been removed. You must use the `actions` field including "STORE_ONLY_IN_ARCHIVES" action instead.
 
 == New line added between opfab fields and template in usercard form
 

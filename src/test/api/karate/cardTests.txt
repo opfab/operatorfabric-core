@@ -14,7 +14,6 @@
       cards/postCardWithNoState.feature           \
       cards/postCardWithProcessAndOrStateUnexisting.feature   \
       cards/postCardWithI18nUnexisting.feature    \
-      cards/postCardWithToNotify.feature          \
       cards/postCardWithStoreOnlyInArchives.feature \
       cards/postCardFor3Users.feature             \
       cards/postCardsEntitiesToRespond.feature \

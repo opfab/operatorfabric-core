@@ -45,6 +45,5 @@ protocol ResponseCardProtocol {
 		union {null, string} representative = null;
 		union {null, PublisherTypeEnum} representativeType = null;
 		union {null, int} secondsBeforeTimeSpanForReminder = null;
-		union {null, boolean} toNotify = null;
 	}
 }

@@ -62,7 +62,6 @@ public record ArchivedCard(
         String wktProjection,
         Integer secondsBeforeTimeSpanForReminder,
         String processStateKey,
-        Boolean toNotify,
         @Indexed Instant deletionDate,
         @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
         @JsonInclude(JsonInclude.Include.NON_EMPTY) RRule rRule,

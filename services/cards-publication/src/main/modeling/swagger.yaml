@@ -424,9 +424,6 @@ definitions:
       secondsBeforeTimeSpanForReminder:
         type: integer
         minimum: 0
-      toNotify:
-        type: boolean
-        description: Is false if the card must not be displayed in the feed and in monitoring screen
       actions:
         type: array
         items:

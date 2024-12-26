@@ -123,13 +123,6 @@ Fixes the time for remind before the event define by the card see
 ifdef::single-page-doc[<<card_reminder, Card reminder>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#card_reminder, Card reminder>>]
 
-==== ToNotify (`toNotify`)
-
-Boolean attribute. If the card must not be displayed in the feed and in monitoring screen, this field must be set to false.
-In that case, it means the card is stored only in archivedCards collection and not in cards collection.
-
-The `toNotify` field is deprecated, use the `STORE_ONLY_IN_ARCHIVES` card action instead.
-
 ==== Publisher type (`publisherType`)
 
 * EXTERNAL - The sender is an external service

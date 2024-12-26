@@ -150,8 +150,6 @@ public class Card  {
     @Min(0)
     private Integer  secondsBeforeTimeSpanForReminder;
 
-    private Boolean toNotify;
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("rRule")  
     private RRule rRule;
@@ -249,7 +247,6 @@ public class Card  {
         result.secondsBeforeTimeSpanForReminder =
                 ObjectUtils.getNotNullOrDefault(other.getSecondsBeforeTimeSpanForReminder(),
                         this.getSecondsBeforeTimeSpanForReminder());
-        result.toNotify = ObjectUtils.getNotNullOrDefault(other.getToNotify(), this.getToNotify());
         result.rRule = ObjectUtils.getNotNullOrDefault(other.getRRule(), this.getRRule());
         result.actions = ObjectUtils.getNotNullOrDefault(other.getActions(), this.getActions());
 
