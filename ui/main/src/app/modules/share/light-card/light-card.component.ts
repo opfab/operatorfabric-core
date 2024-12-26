@@ -20,11 +20,11 @@ import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLig
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RouterStore} from 'app/business/store/router.store';
 import {Utilities} from 'app/business/common/utilities';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {GeoMapStore} from 'app/business/store/GeoMapStore';
 
 @Component({
     selector: 'of-light-card',
@@ -159,7 +159,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     highlightOnMap(highlight: boolean) {
         if (this.isGeoMapEnabled) {
-            MapService.highlightOnMap(highlight, this.lightCard);
+            GeoMapStore.setHighlightedCard(this.lightCard?.id, highlight);
         }
     }
 
@@ -170,6 +170,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         if (SelectedCardStore.getSelectedCardId()) {
             SelectedCardStore.clearSelectedCardId();
             this.router.navigate(['/feed'], {queryParams: {zoomToLocation: this.lightCard.id}});
-        } else MapService.zoomToLocation(this.lightCard);
+        } else GeoMapStore.setZoomToLocation(this.lightCard?.id);
     }
 }

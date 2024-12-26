@@ -13,12 +13,12 @@ import {Severity} from '@ofModel/light-card.model';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {takeUntil} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 import {NgFor} from '@angular/common';
+import {GeoMapStore, HighlightedCard} from 'app/business/store/GeoMapStore';
 
 @Component({
     selector: 'of-map',
@@ -32,8 +32,8 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
     private initialZoomToLocation: any;
 
     constructor(
-        private readonly translateService: TranslateService,
-        private readonly superChangeDetector: ChangeDetectorRef,
+        translateService: TranslateService,
+        superChangeDetector: ChangeDetectorRef,
         private readonly router: Router,
         private readonly route: ActivatedRoute
     ) {
@@ -67,12 +67,20 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
                     }
                 });
             this.updateMapWhenGlobalStyleChange();
-            MapService.highlightCardEvent.pipe(takeUntil(this.unsubscribe$)).subscribe(({lightCardId, highLight}) => {
-                this.highlightFeature(lightCardId, highLight, this.highlightPolygonStrokeWidth);
-            });
-            MapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
-                this.zoomToLocation(lightCardId);
-            });
+            GeoMapStore.getHighlightedCard()
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((highLightedCard: HighlightedCard) => {
+                    this.highlightFeature(
+                        highLightedCard.cardId,
+                        highLightedCard.highlight,
+                        this.highlightPolygonStrokeWidth
+                    );
+                });
+            GeoMapStore.getZoomToLocation()
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((lightCardId) => {
+                    this.zoomToLocation(lightCardId);
+                });
 
             this.popupContent = ConfigService.getConfigValue('feed.geomap.popupContent', 'publishDateAndTitle');
         }
