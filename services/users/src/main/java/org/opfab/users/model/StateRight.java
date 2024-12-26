@@ -20,13 +20,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class StateRight{
     private String state;
-    private RightsEnum right;
+    private RightEnum right;
     private Boolean filteringNotificationAllowed = true;
 
     public StateRight() {
     }
     
-    public StateRight(String state, RightsEnum right, Boolean filteringNotificationAllowed) {
+    public StateRight(String state, RightEnum right, Boolean filteringNotificationAllowed) {
         this.state = state;
         this.right = right;
         this.filteringNotificationAllowed = filteringNotificationAllowed;
@@ -40,11 +40,11 @@ public class StateRight{
         this.state = state;
     }
     
-    public RightsEnum getRight() {
+    public RightEnum getRight() {
         return right;
     }
 
-    public void setRight(RightsEnum right) {
+    public void setRight(RightEnum right) {
         this.right = right;
     }
 

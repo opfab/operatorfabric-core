@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserSettings;
@@ -79,14 +79,14 @@ public class UserSettingsServiceShould {
 
                 StateRight stateRight1 = new StateRight();
                 stateRight1.setState("state1");
-                stateRight1.setRight(RightsEnum.Receive);
+                stateRight1.setRight(RightEnum.Receive);
                 StateRight stateRight2 = new StateRight();
                 stateRight2.setState("state2");
-                stateRight2.setRight(RightsEnum.ReceiveAndWrite);
+                stateRight2.setRight(RightEnum.ReceiveAndWrite);
                 stateRight2.setFilteringNotificationAllowed(true);
                 StateRight stateRightNotFilterable = new StateRight();
                 stateRightNotFilterable.setState("stateRightNotFilterable");
-                stateRightNotFilterable.setRight(RightsEnum.Receive);
+                stateRightNotFilterable.setRight(RightEnum.Receive);
                 stateRightNotFilterable.setFilteringNotificationAllowed(false);
 
                 Perimeter perimeter1 = new Perimeter();

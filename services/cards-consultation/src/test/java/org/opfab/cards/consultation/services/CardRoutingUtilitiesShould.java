@@ -17,7 +17,7 @@ import net.minidev.json.parser.ParseException;
 import org.junit.jupiter.api.Test;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 
 
@@ -53,7 +53,7 @@ class CardRoutingUtilitiesShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("Process1");
         perimeter.setState("State1");
-        perimeter.setRights(RightsEnum.Receive);
+        perimeter.setRights(RightEnum.Receive);
 
         currentUserWithPerimeters = new CurrentUserWithPerimeters();
         currentUserWithPerimeters.setUserData(user);

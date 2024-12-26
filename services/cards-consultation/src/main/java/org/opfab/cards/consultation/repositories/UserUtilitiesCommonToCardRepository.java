@@ -15,7 +15,7 @@ import org.opfab.cards.consultation.model.PublisherTypeEnum;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -135,7 +135,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter -> {
-                if ((perimeter.getRights() == RightsEnum.Receive) || (perimeter.getRights() == RightsEnum.ReceiveAndWrite))
+                if ((perimeter.getRights() == RightEnum.Receive) || (perimeter.getRights() == RightEnum.ReceiveAndWrite))
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
             });
 

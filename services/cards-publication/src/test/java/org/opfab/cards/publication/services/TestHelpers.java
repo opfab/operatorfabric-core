@@ -20,7 +20,7 @@ import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.model.TimeSpan;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -53,13 +53,13 @@ public class TestHelpers {
         ComputedPerimeter c3 = new ComputedPerimeter();
         c1.setProcess("PROCESS_CARD_USER");
         c1.setState("state1");
-        c1.setRights(RightsEnum.ReceiveAndWrite);
+        c1.setRights(RightEnum.ReceiveAndWrite);
         c2.setProcess("PROCESS_CARD_USER");
         c2.setState("state2");
-        c2.setRights(RightsEnum.Receive);
+        c2.setRights(RightEnum.Receive);
         c3.setProcess("PROCESS_CARD_USER");
         c3.setState("state3");
-        c3.setRights(RightsEnum.ReceiveAndWrite);
+        c3.setRights(RightEnum.ReceiveAndWrite);
         List<ComputedPerimeter> list = new ArrayList<>();
         list.add(c1);
         list.add(c2);

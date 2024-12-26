@@ -20,7 +20,7 @@ import org.opfab.cards.consultation.model.FilterMatchTypeEnum;
 import org.opfab.cards.consultation.model.FilterModel;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -92,7 +92,7 @@ public class ArchivedCardRepositoryShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
-        perimeter.setRights(RightsEnum.ReceiveAndWrite);
+        perimeter.setRights(RightEnum.ReceiveAndWrite);
 
         user1.setLogin(LOGIN_1);
         user1.addGroupsItem("someGroup");

@@ -127,7 +127,7 @@ public class CurrentUserWithPerimeters {
 
         // First, we build a MultiKeyMap with key is (process, state) and value is a
         // list of rights
-        MultiKeyMap<String, List<RightsEnum>> multimapOfRights = buildMultiKeyMapOfRights(perimeters);
+        MultiKeyMap<String, List<RightEnum>> multimapOfRights = buildMultiKeyMapOfRights(perimeters);
 
         // Then, we build a MultiKeyMap with key is (process, state) and value is a list
         // of filteringNotificationAllowed
@@ -136,7 +136,7 @@ public class CurrentUserWithPerimeters {
 
         // Then, for each value in MultiKeyMap, we merge the rights in only one right
         multimapOfRights.forEach((processstate, listRights) -> {
-            RightsEnum mergedRight = mergeRights(listRights);
+            RightEnum mergedRight = mergeRights(listRights);
 
             multimapOfRights.put(processstate.getKey(0), processstate.getKey(1),
                     new ArrayList<>(Arrays.asList(mergedRight)));
@@ -154,15 +154,15 @@ public class CurrentUserWithPerimeters {
         makeComputedPerimeters(multimapOfRights, multimapOfFilteringNotificationAllowed);
     }
 
-    private MultiKeyMap<String, List<RightsEnum>> buildMultiKeyMapOfRights(Set<Perimeter> perimeters) {
-        MultiKeyMap<String, List<RightsEnum>> multimapOfRights = new MultiKeyMap<>();
+    private MultiKeyMap<String, List<RightEnum>> buildMultiKeyMapOfRights(Set<Perimeter> perimeters) {
+        MultiKeyMap<String, List<RightEnum>> multimapOfRights = new MultiKeyMap<>();
 
         perimeters.forEach(perimeter -> {
 
             List<StateRight> stateRights = perimeter.getStateRights();
 
             stateRights.forEach(stateRight -> {
-                List<RightsEnum> currentList = multimapOfRights.get(perimeter.getProcess(), stateRight.getState());
+                List<RightEnum> currentList = multimapOfRights.get(perimeter.getProcess(), stateRight.getState());
 
                 if (currentList != null) {
                     currentList.add(stateRight.getRight());
@@ -201,7 +201,7 @@ public class CurrentUserWithPerimeters {
         return multimapOfFilteringNotificationAllowed;
     }
 
-    private void makeComputedPerimeters(MultiKeyMap<String, List<RightsEnum>> multimapWithOneRight,
+    private void makeComputedPerimeters(MultiKeyMap<String, List<RightEnum>> multimapWithOneRight,
             MultiKeyMap<String, List<Boolean>> multimapWithOneFilteringNotificationAllowed) {
         if (multimapWithOneRight != null) {
             multimapWithOneRight.forEach((processstate, right) -> {
@@ -222,7 +222,7 @@ public class CurrentUserWithPerimeters {
         computedPerimeters.add(c);
     }
 
-    public RightsEnum mergeRights(List<RightsEnum> rightsList) {
+    public RightEnum mergeRights(List<RightEnum> rightsList) {
         if (rightsList == null || rightsList.isEmpty())
             return null;
 
@@ -230,16 +230,16 @@ public class CurrentUserWithPerimeters {
             return rightsList.get(0);
 
         int size = rightsList.size();
-        if (rightsList.get(size - 2) == RightsEnum.ReceiveAndWrite
-                || rightsList.get(size - 1) == RightsEnum.ReceiveAndWrite)
-            return RightsEnum.ReceiveAndWrite;
+        if (rightsList.get(size - 2) == RightEnum.ReceiveAndWrite
+                || rightsList.get(size - 1) == RightEnum.ReceiveAndWrite)
+            return RightEnum.ReceiveAndWrite;
 
         if (rightsList.get(size - 2) == rightsList.get(size - 1)) {
             rightsList.remove(size - 1);
             return mergeRights(rightsList);
         }
 
-        return RightsEnum.ReceiveAndWrite;
+        return RightEnum.ReceiveAndWrite;
     }
 
     public Boolean mergeFilteringNotificationAllowed(List<Boolean> listFilteringNotificationAllowed) {

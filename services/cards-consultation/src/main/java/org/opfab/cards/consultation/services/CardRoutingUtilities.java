@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
 
 import java.util.*;
@@ -49,9 +49,9 @@ public class CardRoutingUtilities {
                 (processesStatesNotNotified.get(process).contains(state)));
     }
 
-    private static Map<String, RightsEnum> loadUserRightsPerProcessAndState(
+    private static Map<String, RightEnum> loadUserRightsPerProcessAndState(
             CurrentUserWithPerimeters currentUserWithPerimeters) {
-        Map<String, RightsEnum> userRightsPerProcessAndState = new HashMap<>();
+        Map<String, RightEnum> userRightsPerProcessAndState = new HashMap<>();
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters()
                     .forEach(perimeter -> userRightsPerProcessAndState
@@ -60,9 +60,9 @@ public class CardRoutingUtilities {
     }
 
     private static boolean isReceiveRightsForProcessAndState(String processId, String stateId,
-            Map<String, RightsEnum> userRightsPerProcessAndState) {
-        final RightsEnum rights = userRightsPerProcessAndState.get(processId + '.' + stateId);
-        return rights == RightsEnum.Receive || rights == RightsEnum.ReceiveAndWrite;
+            Map<String, RightEnum> userRightsPerProcessAndState) {
+        final RightEnum rights = userRightsPerProcessAndState.get(processId + '.' + stateId);
+        return rights == RightEnum.Receive || rights == RightEnum.ReceiveAndWrite;
     }
 
     /**
@@ -143,7 +143,7 @@ public class CardRoutingUtilities {
         // First, we check if the user has the right for receiving this card (Receive or
         // ReceiveAndWrite)
 
-        Map<String, RightsEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState(
+        Map<String, RightEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState(
                 currentUserWithPerimeters);
         if (!isReceiveRightsForProcessAndState(process, state, userRightsPerProcessAndState))
             return false;

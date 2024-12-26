@@ -12,7 +12,7 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 
 
 
@@ -83,6 +83,6 @@ public class CardPermissionControlService {
     private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, Card card) {
         Optional<ComputedPerimeter> cardPerimeter = perimeters.stream().
                 filter(x->x.getState().equalsIgnoreCase(card.getState()) && x.getProcess().equalsIgnoreCase(card.getProcess())).findFirst();
-        return cardPerimeter.isPresent() && RightsEnum.ReceiveAndWrite.equals(cardPerimeter.get().getRights());
+        return cardPerimeter.isPresent() && RightEnum.ReceiveAndWrite.equals(cardPerimeter.get().getRights());
     }
 }

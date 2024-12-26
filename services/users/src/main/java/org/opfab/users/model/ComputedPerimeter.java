@@ -26,7 +26,7 @@ public class ComputedPerimeter  {
 
     @JsonProperty("rights")
     @Valid
-    private RightsEnum rights;
+    private RightEnum rights;
 
     @JsonProperty("filteringNotificationAllowed")
     private Boolean filteringNotificationAllowed;
@@ -47,11 +47,11 @@ public class ComputedPerimeter  {
         this.state = state;
     }
 
-    public RightsEnum getRights() {
+    public RightEnum getRights() {
         return rights;
     }
 
-    public void setRights(RightsEnum rights) {
+    public void setRights(RightEnum rights) {
         this.rights = rights;
     }
 

@@ -13,7 +13,7 @@
   "singleContentTypes": false,
   "importMappings": {
     "EpochDate": "java.time.Instant",
-    "RightsEnum": "org.opfab.users.model.RightsEnum",
+    "RightEnum": "org.opfab.users.model.RightEnum",
     "RoleEnum": "org.opfab.users.model.RoleEnum",
     "GroupTypeEnum": "org.opfab.users.model.GroupTypeEnum",
     "PermissionEnum": "org.opfab.users.model.PermissionEnum"

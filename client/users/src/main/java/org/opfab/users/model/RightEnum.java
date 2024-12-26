@@ -13,7 +13,7 @@ package org.opfab.users.model;
 // This enum does not use upperCase for historical reasons
 // changing it would break the API and necessitate a database migration for production deployments
 @SuppressWarnings("squid:S115")
-public enum RightsEnum {
+public enum RightEnum {
     Receive,
     ReceiveAndWrite
 }

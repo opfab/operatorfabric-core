@@ -27,7 +27,7 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.User;
 import org.opfab.users.stubs.GroupRepositoryStub;
@@ -61,7 +61,7 @@ public class PerimetersServiceShould {
         perimeter1.setProcess("processTest");
         StateRight stateRight = new StateRight();
         stateRight.setState("state1");
-        stateRight.setRight(RightsEnum.Receive);
+        stateRight.setRight(RightEnum.Receive);
         List<StateRight> stateRights = new ArrayList<>();
         stateRights.add(stateRight);
         perimeter1.setStateRights(stateRights);
@@ -153,7 +153,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("newPerimeter");
             perimeter.setProcess("processId");
-            StateRight stateRight = new StateRight("state1", RightsEnum.Receive, true);
+            StateRight stateRight = new StateRight("state1", RightEnum.Receive, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight);
             perimeter.setStateRights(stateRights);
@@ -170,8 +170,8 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("newPerimeter");
             perimeter.setProcess("processId");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight("state2", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state2", RightEnum.ReceiveAndWrite, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
             stateRights.add(stateRight2);
@@ -190,8 +190,8 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("INVALID");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight("state1", RightsEnum.Receive, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state1", RightEnum.Receive, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
             stateRights.add(stateRight2);
@@ -209,9 +209,9 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("INVALID");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight("state2", RightsEnum.Receive, true);
-            StateRight stateRight3 = new StateRight("state1", RightsEnum.Receive, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state2", RightEnum.Receive, true);
+            StateRight stateRight3 = new StateRight("state1", RightEnum.Receive, true);
 
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
@@ -244,7 +244,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("newPerimeter");
             perimeter.setProcess("processId");
-            StateRight stateRight = new StateRight("state1", RightsEnum.Receive, true);
+            StateRight stateRight = new StateRight("state1", RightEnum.Receive, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight);
             perimeter.setStateRights(stateRights);
@@ -262,8 +262,8 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("newPerimeter");
             perimeter.setProcess("processId");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight("state2", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state2", RightEnum.ReceiveAndWrite, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
             stateRights.add(stateRight2);
@@ -282,8 +282,8 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("perimeter1");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight("state1", RightsEnum.Receive, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight("state1", RightEnum.Receive, true);
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
             stateRights.add(stateRight2);
@@ -302,7 +302,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("INVALID");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
             StateRight stateRight2 = new StateRight("state2", null, true);
 
             List<StateRight> stateRights = new ArrayList<>();
@@ -322,8 +322,8 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("INVALID");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
-            StateRight stateRight2 = new StateRight(null, RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
+            StateRight stateRight2 = new StateRight(null, RightEnum.ReceiveAndWrite, true);
 
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);
@@ -342,7 +342,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = new Perimeter();
             perimeter.setId("INVALID");
             perimeter.setProcess("process2");
-            StateRight stateRight1 = new StateRight("state1", RightsEnum.ReceiveAndWrite, true);
+            StateRight stateRight1 = new StateRight("state1", RightEnum.ReceiveAndWrite, true);
             StateRight stateRight2 = null;
             List<StateRight> stateRights = new ArrayList<>();
             stateRights.add(stateRight1);

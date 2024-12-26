@@ -30,7 +30,7 @@ import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -572,7 +572,7 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.ReceiveAndWrite);
+                cp.setRights(RightEnum.ReceiveAndWrite);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
                 caseDifferentUser.setComputedPerimeters(list);
@@ -618,7 +618,7 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.ReceiveAndWrite);
+                cp.setRights(RightEnum.ReceiveAndWrite);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
                 caseDifferentUser.setComputedPerimeters(list);
@@ -838,7 +838,7 @@ class CardProcessServiceShould {
                 ComputedPerimeter c1 = new ComputedPerimeter();
                 c1.setProcess("PROCESS_CARD_USER");
                 c1.setState("state1");
-                c1.setRights(RightsEnum.Receive);
+                c1.setRights(RightEnum.Receive);
 
                 Card card = TestHelpers.generateOneCard("dummyUser");
                 List<ComputedPerimeter> list = new ArrayList<>();
@@ -863,7 +863,7 @@ class CardProcessServiceShould {
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
                 cp.setState("state1");
-                cp.setRights(RightsEnum.ReceiveAndWrite);
+                cp.setRights(RightEnum.ReceiveAndWrite);
 
                 Card card = TestHelpers.generateOneCard("dummyUser");
                 List<ComputedPerimeter> list = new ArrayList<>();

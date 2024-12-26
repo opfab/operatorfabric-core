@@ -47,7 +47,7 @@ class GroupsServiceShould {
         notificationService = new NotificationService(userRepositoryStub, eventBusSpy);
 
         List<StateRight> states = new ArrayList<>();
-        states.add(new StateRight("perimeter1", RightsEnum.Receive, true));
+        states.add(new StateRight("perimeter1", RightEnum.Receive, true));
         perimeterRepositoryStub.insert(new Perimeter("perimeter1", "processId", states));
         perimeterRepositoryStub.insert(new Perimeter("perimeter2", "processId", states));
         perimeterRepositoryStub.insert(new Perimeter("perimeter3", "processId", states));
@@ -488,7 +488,7 @@ class GroupsServiceShould {
                 Group group1 = new Group("group1", "groupName", null, perimeters, null);
                 groupRepositoryStub.insert(group1);
                 List<StateRight> states = new ArrayList<>();
-                states.add(new StateRight("perimeter", RightsEnum.Receive, true));
+                states.add(new StateRight("perimeter", RightEnum.Receive, true));
                 perimeterRepositoryStub.insert(new Perimeter("perimeter2", "processId", states));
                 OperationResult<List<Perimeter>> result = groupsService.fetchGroupPerimeters("group1");
                 assertThat(result.isSuccess()).isTrue();

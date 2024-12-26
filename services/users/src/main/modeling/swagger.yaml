@@ -149,7 +149,7 @@ definitions:
       - ACTIVITY_AREA_GROUP
       - CARD_SENDER
       - CARD_RECEIVER
-  RightsEnum:
+  RightEnum:
     type: string
     description: |-
       Different possible rights >
@@ -164,7 +164,7 @@ definitions:
       state:
         type: string
       right:
-        $ref: '#/definitions/RightsEnum'
+        $ref: '#/definitions/RightEnum'
       filteringNotificationAllowed:
         type: boolean
         description: When set to false, the user can not unselect the state in the notification configuration screen.
@@ -373,7 +373,7 @@ definitions:
       state:
         type: string
       rights:
-        $ref: '#/definitions/RightsEnum'
+        $ref: '#/definitions/RightEnum'
       filteringNotificationAllowed:
         type: boolean
         description: When the value is false, the user can not unselect the state in the notification configuration screen.
