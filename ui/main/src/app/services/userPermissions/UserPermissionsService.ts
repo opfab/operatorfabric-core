@@ -14,7 +14,7 @@ import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {User} from '@ofServices/users/model/User';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {UsersService} from '../../services/users/UsersService';
+import {UsersService} from '../users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserPermissionsService {

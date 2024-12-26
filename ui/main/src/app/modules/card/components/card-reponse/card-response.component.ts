@@ -19,7 +19,7 @@ import {State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';

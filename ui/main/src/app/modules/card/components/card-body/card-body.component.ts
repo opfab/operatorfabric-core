@@ -28,7 +28,7 @@ import {User} from '@ofServices/users/model/User';
 import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {DisplayContext} from '@ofModel/template.model';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

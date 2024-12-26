@@ -12,7 +12,7 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Utilities} from 'app/business/common/utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 
 export class CardBodyView {
     private readonly alwaysShowAcknowledgmentFooter: boolean;

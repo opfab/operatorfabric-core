@@ -24,7 +24,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';
 import {CardService} from 'app/business/services/card/card.service';

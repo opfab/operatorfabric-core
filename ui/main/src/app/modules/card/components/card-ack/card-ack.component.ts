@@ -17,7 +17,7 @@ import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';

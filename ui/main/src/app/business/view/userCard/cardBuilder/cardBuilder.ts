@@ -18,7 +18,7 @@ import {firstValueFrom} from 'rxjs';
 import {CardService} from 'app/business/services/card/card.service';
 import {Guid} from 'guid-typescript';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 

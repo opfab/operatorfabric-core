@@ -18,7 +18,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../business/server/serverResponse';
-import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessesService} from '../processes/ProcessesService';
 import {EntitiesService} from '../entities/EntitiesService';
