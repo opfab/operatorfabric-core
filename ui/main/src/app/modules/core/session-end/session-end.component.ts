@@ -9,7 +9,7 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {I18n} from '@ofModel/i18n.model';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

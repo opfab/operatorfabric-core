@@ -15,7 +15,7 @@ import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} fr
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {ErrorService} from 'app/business/services/error-service';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';

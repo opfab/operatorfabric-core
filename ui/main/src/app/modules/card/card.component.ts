@@ -17,7 +17,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {Router} from '@angular/router';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/card-body.component';

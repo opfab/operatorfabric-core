@@ -14,7 +14,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';

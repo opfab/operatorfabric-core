@@ -38,7 +38,7 @@ import {BusinessDataService} from '@ofServices/businessdata/businessdata.service
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UsersService} from '@ofServices/users/UsersService';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 

@@ -32,7 +32,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

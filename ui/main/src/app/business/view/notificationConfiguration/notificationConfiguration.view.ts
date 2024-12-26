@@ -18,7 +18,7 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';

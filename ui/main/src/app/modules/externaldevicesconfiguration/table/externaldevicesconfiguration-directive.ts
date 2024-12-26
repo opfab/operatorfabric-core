@@ -24,7 +24,7 @@ import {
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {SignalMappingsCellRendererComponent} from 'app/modules/admin/components/cell-renderers/signal-mappings-cell-renderer.component';
 

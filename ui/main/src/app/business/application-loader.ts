@@ -38,7 +38,7 @@ import {SystemNotificationService} from '../services/notifications/SystemNotific
 import {ApplicationLoadingComponent} from './application-loading-component';
 import {ServerResponseStatus} from './server/serverResponse';
 import {Utilities} from './common/utilities';
-import {ModalService} from './services/modal.service';
+import {ModalService} from '../services/modal/ModalService';
 import {SessionManagerService} from '../services/sessionManager/SessionManagerService';
 import {SoundNotificationService} from '../services/notifications/SoundNotificationService';
 import {I18n} from '@ofModel/i18n.model';
@@ -82,7 +82,7 @@ export class ApplicationLoader {
         HandlebarsService.setHandlebarsTemplateServer(servers.handlebarsTemplateServer);
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         UserSettingsService.setUserSettingsServer(servers.userSettingsServer);
-        ModalService.setModalServer(servers.modalServer);
+        ModalService.setModalComponent(servers.modalComponent);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);
         this.opfabEventStreamServer = servers.opfabEventStreamServer;

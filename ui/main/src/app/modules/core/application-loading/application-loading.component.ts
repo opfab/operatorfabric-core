@@ -34,7 +34,7 @@ import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntit
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {UserSettingsServer} from '../../../services/userSettings/server/UserSettingsServer';
-import {ModalServer} from 'app/business/server/modal.server';
+import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 import {NgIf} from '@angular/common';
 import {LoadingInProgressComponent} from './loading-in-progress/loading-in-progress.component';
@@ -89,7 +89,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly templateCssServer: TemplateCssServer,
         private readonly handlebarsTemplateServer: HandlebarsTemplateServer,
         private readonly userSettingsServer: UserSettingsServer,
-        private readonly modalServer: ModalServer,
+        private readonly modalComponent: ModalComponent,
         private readonly soundServer: SoundServer
     ) {
         LoggerService.setLogLevel(LogLevel.DEBUG);
@@ -117,7 +117,7 @@ export class ApplicationLoadingComponent implements OnInit {
             templateCssServer: this.templateCssServer,
             handlebarsTemplateServer: this.handlebarsTemplateServer,
             userSettingsServer: this.userSettingsServer,
-            modalServer: this.modalServer,
+            modalComponent: this.modalComponent,
             authService: this.authService,
             soundServer: this.soundServer
         });

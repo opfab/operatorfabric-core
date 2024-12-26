@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ModalConfig} from '@ofModel/modal-config.model';
-import {ModalServer} from 'app/business/server/modal.server';
+import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
+import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
 
-export class ModalServerMock implements ModalServer {
+export class ModalComponentMock implements ModalComponent {
     public modalConfigReceived: ModalConfig;
     private resolveClickOnButton: (value: string) => void;
 

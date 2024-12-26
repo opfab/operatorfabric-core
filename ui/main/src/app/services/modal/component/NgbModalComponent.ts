@@ -9,14 +9,14 @@
 
 import {Injectable} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalServer} from 'app/business/server/modal.server';
-import {OpfabNgbModalComponent} from '../modules/share/modal/opfabNgbModal.component';
-import {ModalConfig} from '@ofModel/modal-config.model';
+import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
+import {OpfabNgbModalComponent} from '../../../modules/share/modal/opfabNgbModal.component';
+import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NgbModalServer implements ModalServer {
+export class NgbModalComponent implements ModalComponent {
     constructor(private readonly modalService: NgbModal) {}
 
     openModal(modalConfig: ModalConfig): Promise<string> {

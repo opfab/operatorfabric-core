@@ -18,7 +18,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {
-    getModalServerMock,
+    getModalComponentMock,
     getOneLightCard,
     setProcessConfiguration,
     setUserPerimeter,
@@ -30,7 +30,7 @@ import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
-import {ModalServerMock} from '@tests/mocks/modalServer.mock';
+import {ModalComponentMock} from '@tests/mocks/ModalComponent.mock';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
@@ -38,7 +38,7 @@ describe('Notification configuration view - User interaction ', () => {
     const translationServiceMock = new TranslationLibMock();
     let notificationConfigurationView: NotificationConfigurationView;
     let notificationConfigurationPage: NotificationConfigurationPage;
-    let modalServerMock: ModalServerMock;
+    let modalComponentMock: ModalComponentMock;
     let settingsServerMock: UserSettingsServerMock;
     let statesCheckboxActivated = '';
     let processesCheckboxActivated = '';
@@ -95,23 +95,23 @@ describe('Notification configuration view - User interaction ', () => {
                 processesStatesNotNotified: new Map<string, Array<string>>([['process1', ['state1_2', 'state1_3']]])
             });
             settingsServerMock = getSettingsServerMock();
-            modalServerMock = getModalServerMock();
+            modalComponentMock = getModalComponentMock();
             TranslationService.setTranslationLib(translationServiceMock);
             notificationConfigurationView = new NotificationConfigurationView();
         });
         it('should popup a message when filteringNotificationAllowed is false and state is not checked', async () => {
             notificationConfigurationView.manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
-            expect(modalServerMock.modalConfigReceived).toBeDefined();
-            expect(modalServerMock.modalConfigReceived.message).toContain(
+            expect(modalComponentMock.modalConfigReceived).toBeDefined();
+            expect(modalComponentMock.modalConfigReceived.message).toContain(
                 'notificationConfiguration.youAreUnsubscribedFrom'
             );
-            expect(modalServerMock.modalConfigReceived.message).toContain(
+            expect(modalComponentMock.modalConfigReceived.message).toContain(
                 'notificationConfiguration.youWillBeSubscribedAgain'
             );
             await waitForAllPromises();
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
             await waitForAllPromises();
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
         });
 
         it('should not popup a message when filteringNotificationAllowed is false and state is checked', async () => {
@@ -123,17 +123,17 @@ describe('Notification configuration view - User interaction ', () => {
                 userData: null
             });
             new NotificationConfigurationView().manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
-            expect(modalServerMock.modalConfigReceived).toBeUndefined();
+            expect(modalComponentMock.modalConfigReceived).toBeUndefined();
         });
 
         it('should popup the process/state list concerned when filteringNotificationAllowed is false and states are not checked', async () => {
             notificationConfigurationView.manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
-            expect(modalServerMock.modalConfigReceived.message).toContain('process name 1 / State 1_2');
-            expect(modalServerMock.modalConfigReceived.message).toContain('process name 1 / State 1_3');
+            expect(modalComponentMock.modalConfigReceived.message).toContain('process name 1 / State 1_2');
+            expect(modalComponentMock.modalConfigReceived.message).toContain('process name 1 / State 1_3');
             await waitForAllPromises();
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
             await waitForAllPromises();
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
         });
 
         it(' should check states where filteringNotificationAllowed is false and states are not checked', async () => {
@@ -145,16 +145,16 @@ describe('Notification configuration view - User interaction ', () => {
             // all state are activated so process checkbox shall be activated
             expect(processesCheckboxActivated).toEqual('p:process1,v:true;p:process1,v:true;');
             expect(statesCheckboxActivated).toEqual('p:process1,s:state1_2,v:true;p:process1,s:state1_3,v:true;');
-            modalServerMock.clickOnButton('ok');
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
         });
         it('should save config if filteringNotification is false and states are not checked', async () => {
             notificationConfigurationView.manageNotNotifiedStatesWithFilteringNotificationNotAllowed();
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
             await waitForAllPromises();
             expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
             expect(settingsServerMock.settingsPatch.processesStatesNotNotified).toEqual({});
-            modalServerMock.clickOnButton('ok');
+            modalComponentMock.clickOnButton('ok');
         });
     });
 
@@ -347,7 +347,7 @@ describe('Notification configuration view - User interaction ', () => {
         describe('User click on save button', () => {
             beforeEach(async () => {
                 settingsServerMock = getSettingsServerMock();
-                modalServerMock = getModalServerMock();
+                modalComponentMock = getModalComponentMock();
             });
 
             it('should save settings with processesStatesNotNotified to {}  if no state checked', async () => {
@@ -355,7 +355,7 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
                 expect(settingsServerMock.settingsPatch.processesStatesNotNotified).toEqual({});
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it('should save settings with processesStatesNotNotified process1.state1_1 if state1_1 unchecked', async () => {
@@ -364,7 +364,7 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
                 expect(settingsServerMock.settingsPatch.processesStatesNotNotified).toEqual({process1: ['state1_1']});
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it(`should save settings with processesStatesNotNotified containing process1.state1_1 and process2.state2_2  
@@ -378,7 +378,7 @@ describe('Notification configuration view - User interaction ', () => {
                     process2: ['state2_2']
                 });
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it(`should save settings with processesStatesNotifiedByEmail to {} if no state checked for email notification`, async () => {
@@ -386,7 +386,7 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
                 expect(settingsServerMock.settingsPatch.processesStatesNotifiedByEmail).toEqual({});
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it(`should save settings with processesStatesNotifiedByEmail containing process1.state1_1 and process2.state2_1
@@ -400,16 +400,16 @@ describe('Notification configuration view - User interaction ', () => {
                     process2: ['state2_1']
                 });
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it('should open information modal when saved has been done successfully', async () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
-                expect(modalServerMock.modalConfigReceived.message).toEqual(new I18n('settings.settingsSaved'));
+                expect(modalComponentMock.isOpenedModalOfInformationType()).toBeTrue();
+                expect(modalComponentMock.modalConfigReceived.message).toEqual(new I18n('settings.settingsSaved'));
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it('should open information modal with error if saved is in error', async () => {
@@ -418,12 +418,12 @@ describe('Notification configuration view - User interaction ', () => {
                 );
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                expect(modalServerMock.isOpenedModalOfInformationType()).toBeTrue();
-                expect(modalServerMock.modalConfigReceived.message).toEqual(
+                expect(modalComponentMock.isOpenedModalOfInformationType()).toBeTrue();
+                expect(modalComponentMock.modalConfigReceived.message).toEqual(
                     new I18n('shared.error.impossibleToSaveSettings')
                 );
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
             });
 
             it('should clear lightcard store if save is successful', async () => {
@@ -438,7 +438,7 @@ describe('Notification configuration view - User interaction ', () => {
                 opfabEventStreamServerMock.sendLightCard(card);
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
                 const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getLightCards());
                 expect(lightCards).toEqual([]);
             });
@@ -458,7 +458,7 @@ describe('Notification configuration view - User interaction ', () => {
                 );
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
-                modalServerMock.clickOnButton('ok');
+                modalComponentMock.clickOnButton('ok');
                 expect(usersServerMock.numberOfCallsToCurrentUserWithPerimeter).toEqual(1);
             });
         });
@@ -466,7 +466,7 @@ describe('Notification configuration view - User interaction ', () => {
 
     describe('User want to  exit', () => {
         beforeEach(async () => {
-            modalServerMock = getModalServerMock();
+            modalComponentMock = getModalComponentMock();
             await setProcessConfiguration(
                 [
                     {
@@ -517,21 +517,21 @@ describe('Notification configuration view - User interaction ', () => {
             });
             await waitForAllPromises();
             expect(canUserExit).toBeTrue();
-            expect(modalServerMock.modalConfigReceived).toBeUndefined();
+            expect(modalComponentMock.modalConfigReceived).toBeUndefined();
         });
 
         it('should open confirmation modal if configuration for notification has changed', async () => {
             notificationConfigurationView.clickOnProcess('process1');
             notificationConfigurationView.canUserExit();
-            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
-            modalServerMock.clickOnButton('cancel');
+            expect(modalComponentMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
+            modalComponentMock.clickOnButton('cancel');
         });
 
         it('should open confirmation modal if configuration for notification by email has changed', async () => {
             notificationConfigurationView.clickOnStateNotificationByEmail('process1', 'state1_1');
             notificationConfigurationView.canUserExit();
-            expect(modalServerMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
-            modalServerMock.clickOnButton('cancel');
+            expect(modalComponentMock.ispOpenedModalOfSaveBeforeExitType()).toBeTrue();
+            modalComponentMock.clickOnButton('cancel');
         });
 
         it('should not exit if user click cancel on confirmation modal', async () => {
@@ -540,7 +540,7 @@ describe('Notification configuration view - User interaction ', () => {
             notificationConfigurationView.canUserExit().then((value) => {
                 canUserExit = value;
             });
-            modalServerMock.clickOnButton('cancel');
+            modalComponentMock.clickOnButton('cancel');
             await waitForAllPromises();
             expect(canUserExit).toBeFalse();
         });
@@ -552,7 +552,7 @@ describe('Notification configuration view - User interaction ', () => {
             notificationConfigurationView.canUserExit().then((value) => {
                 canUserExit = value;
             });
-            modalServerMock.clickOnButton('doNotSave');
+            modalComponentMock.clickOnButton('doNotSave');
             await waitForAllPromises();
             expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(0);
             expect(canUserExit).toBeTrue();
@@ -565,9 +565,9 @@ describe('Notification configuration view - User interaction ', () => {
             notificationConfigurationView.canUserExit().then((value) => {
                 canUserExit = value;
             });
-            modalServerMock.clickOnButton('save');
+            modalComponentMock.clickOnButton('save');
             await waitForAllPromises();
-            modalServerMock.clickOnButton('ok'); // close information modal
+            modalComponentMock.clickOnButton('ok'); // close information modal
             await waitForAllPromises();
             expect(settingsServerMock.numberOfCallsToPatchUserSettings).toEqual(1);
             expect(canUserExit).toBeTrue();
@@ -575,7 +575,7 @@ describe('Notification configuration view - User interaction ', () => {
 
         it('should exit without confirmation if nothing to saved as configuration has not changed', async () => {
             notificationConfigurationView.canUserExit();
-            expect(modalServerMock.modalConfigReceived).toBeUndefined();
+            expect(modalComponentMock.modalConfigReceived).toBeUndefined();
         });
     });
 });

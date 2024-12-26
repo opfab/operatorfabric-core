@@ -23,8 +23,8 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesServerMock} from './mocks/processesServer.mock';
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {ModalService} from 'app/business/services/modal.service';
-import {ModalServerMock} from './mocks/modalServer.mock';
+import {ModalService} from '@ofServices/modal/ModalService';
+import {ModalComponentMock} from './mocks/ModalComponent.mock';
 import {ConfigServerMock} from './mocks/configServer.mock';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
@@ -207,10 +207,10 @@ export async function waitForAllPromises() {
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
 
-export function getModalServerMock(): ModalServerMock {
-    const modalServerMock = new ModalServerMock();
-    ModalService.setModalServer(modalServerMock);
-    return modalServerMock;
+export function getModalComponentMock(): ModalComponentMock {
+    const modalComponentMock = new ModalComponentMock();
+    ModalService.setModalComponent(modalComponentMock);
+    return modalComponentMock;
 }
 
 export async function loadWebUIConf(conf: any) {

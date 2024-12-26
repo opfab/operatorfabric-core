@@ -8,14 +8,14 @@
  */
 
 import {I18n} from '@ofModel/i18n.model';
-import {ModalServer} from '../server/modal.server';
-import {ModalConfig} from '@ofModel/modal-config.model';
+import {ModalComponent} from './component/ModalComponent';
+import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 
 export class ModalService {
-    private static modalServer: ModalServer;
+    private static modalComponent: ModalComponent;
 
-    public static setModalServer(modalServer: ModalServer) {
-        ModalService.modalServer = modalServer;
+    public static setModalComponent(modalComponent: ModalComponent) {
+        ModalService.modalComponent = modalComponent;
     }
 
     public static openInformationModal(message: string | I18n): Promise<void> {
@@ -30,7 +30,7 @@ export class ModalService {
                 }
             ]
         };
-        return this.modalServer
+        return ModalService.modalComponent
             .openModal(modalConfig)
             .then(() => undefined)
             .catch(() => undefined); // in case of modal closed via Esc key
@@ -52,7 +52,7 @@ export class ModalService {
                 }
             ]
         };
-        return this.modalServer
+        return ModalService.modalComponent
             .openModal(modalConfig)
             .then((result) => result === 'ok')
             .catch(() => false); // in case of modal closed via Esc key
@@ -78,7 +78,7 @@ export class ModalService {
                 }
             ]
         };
-        return this.modalServer
+        return ModalService.modalComponent
             .openModal(modalConfig)
             .then((result) => result)
             .catch(() => 'cancel'); // in case of modal closed via Esc key

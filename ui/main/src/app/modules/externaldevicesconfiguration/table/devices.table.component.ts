@@ -12,7 +12,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
-import {ModalService} from 'app/business/services/modal.service';
+import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';

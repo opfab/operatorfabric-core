@@ -9,7 +9,7 @@
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalConfig} from '@ofModel/modal-config.model';
+import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf, NgClass, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

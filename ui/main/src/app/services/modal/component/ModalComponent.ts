@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ModalConfig} from '@ofModel/modal-config.model';
+import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 
-export abstract class ModalServer {
+export abstract class ModalComponent {
     abstract openModal(modalConfig: ModalConfig): Promise<string>;
 }
