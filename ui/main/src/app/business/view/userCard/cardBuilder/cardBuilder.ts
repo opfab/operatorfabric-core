@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -149,10 +149,6 @@ export class CardBuilder {
             wktGeometry: this.getWktGeometry(),
             wktProjection: this.getWktProjection()
         };
-        if (this.specificCardInformation.recurrence)
-            logger.warn(
-                "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans"
-            );
         this.card = card;
         return card;
     }
@@ -302,17 +298,13 @@ export class CardBuilder {
     }
 
     private getTimeSpans(): TimeSpan[] {
-        if (this.specificCardInformation.recurrence)
-            logger.warn(
-                "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans"
-            );
         if (this.specificCardInformation.timeSpans) {
             return this.specificCardInformation.timeSpans?.map((timeSpan) => {
-                return new TimeSpan(timeSpan.startDate, timeSpan.endDate, timeSpan.recurrence);
+                return new TimeSpan(timeSpan.startDate, timeSpan.endDate);
             });
         }
         if (this.specificCardInformation.viewCardInCalendar) {
-            return [new TimeSpan(this.startDate, this.endDate, this.specificCardInformation.recurrence)];
+            return [new TimeSpan(this.startDate, this.endDate)];
         }
         return undefined;
     }

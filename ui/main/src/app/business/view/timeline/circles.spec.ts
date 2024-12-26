@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {Circles} from './circles';
 import {XAxis} from './xaxis';
 import {getOneCard} from '@tests/helpers';
 import {Frequency} from '@ofModel/light-card.model';
-import {Recurrence, TimeSpan} from '@ofModel/card.model';
+import {TimeSpan} from '@ofModel/card.model';
 import {add, startOfYear, sub} from 'date-fns';
 
 describe('Timeline Circles', () => {
@@ -216,34 +216,13 @@ describe('Timeline Circles', () => {
         expect(circles.circles.length).toEqual(12);
     });
 
-    it(' recurrence per month for 5 months  shall generate 10 circles on timeline in year mode (1 per half month)', () => {
-        const recurrence = new Recurrence(null);
-        recurrence.timeZone = 'Europe/Paris';
-        recurrence.hoursAndMinutes = {hours: 16, minutes: 30};
-        recurrence.months = [1, 2, 3, 4, 5];
-        recurrence.durationInMinutes = 60;
-
-        const card1 = getOneCard({
-            id: 'card1',
-            startDate: startDate.valueOf(),
-            endDate: endDate.valueOf(),
-            severity: 'ALARM',
-            titleTranslated: 'title1',
-            secondsBeforeTimeSpanForReminder: 5,
-            timeSpans: [new TimeSpan(startDate.valueOf(), endDate.valueOf(), recurrence)]
-        });
-
-        circles.setCardsToDrawOnTimeLine([card1]);
-        expect(circles.circles.length).toEqual(10);
-    });
-
     it('set two circle with if one card with two timespans', () => {
         const card = getOneCard({
             startDate: startDate.valueOf(),
             severity: 'ALARM',
             timeSpans: [
-                new TimeSpan(startDate.valueOf(), endDate.valueOf(), null),
-                new TimeSpan(add(startDate, {months: 2}).valueOf(), endDate.valueOf(), null)
+                new TimeSpan(startDate.valueOf(), endDate.valueOf()),
+                new TimeSpan(add(startDate, {months: 2}).valueOf(), endDate.valueOf())
             ]
         });
 

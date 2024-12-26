@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,7 +75,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("process1")
                 .state("state1")
                 .build();
@@ -88,7 +88,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("process1")
                 .state("state1")
                 .build();
@@ -102,7 +102,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("process1")
                 .state("state1")
                 .build();
@@ -116,7 +116,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("PROCESS_NOT_IN_PERIMETER")
                 .state("STATE_NOT_IN_PERIMETER")
                 .build();
@@ -130,7 +130,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("PROCESS_CARD_USER")
                 .state("STATE2")
                 .build();
@@ -144,7 +144,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
                 .build();
@@ -158,7 +158,7 @@ class CardPermissionControlServiceShould {
                 .title(new I18n("title",null))
                 .summary(new I18n("summary",null))
                 .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, null))
+                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                 .process("PROCESS_CARD_USER")
                 .state("STATE3")
                 .build();

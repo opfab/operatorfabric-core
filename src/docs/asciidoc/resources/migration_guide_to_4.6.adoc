@@ -1,4 +1,4 @@
-// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2024-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -112,3 +112,11 @@ is to be changed to
   {{#card.data.networkContingencies}}
 
 ```
+
+== Removed field `timespans.recurrence`
+The field `timespans.recurrence` has been removed. So now, to create a recurrent card, you must use the field rRule.
+There is a script to migrate existing tasks using recurrence object. After the call to this script, you have to call the
+endpoint "reset". Example :
+
+- node migration-rrule-recurrence.js <databaseURL> <databasePort> <databaseLogin> <databasePassword> <oldProcessId> <newProcessId> <oldStateId> <newStateId> <newProcessVersion>
+- curl http://localhost:2107/reset -H "Authorization:Bearer $token"

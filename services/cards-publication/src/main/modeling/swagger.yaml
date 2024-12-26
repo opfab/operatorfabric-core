@@ -206,45 +206,8 @@ definitions:
       end:
         $ref: '#/definitions/EpochDate'
         description: Span end (must be after start)
-      recurrence:
-        $ref: '#/definitions/Recurrence'
-        description : recurrence of the timeSpan
     required:
       - start
-  Recurrence: 
-    type: object 
-    description: An object to define recurrence of timeSpans
-    properties:
-      hoursAndMinutes: 
-        $ref: '#/definitions/HoursAndMinutes'
-        description: hours and minutes 
-      daysOfWeek: 
-        description: Days of the week for the recurrence (values from 1 to 7, 1 representing Monday)
-        type: array
-        items:
-          type: integer
-      months:
-        description: Months of the year for the recurrence (values from 0 to 11, 0 representing January)
-        type: array
-        items:
-          type: integer
-      timeZone:
-        description: Time zone reference for the recurrence definition
-        type: string
-      durationInMinutes:
-        description: Duration in minutes of the event
-        type: integer
-        minimum: 0
-    required:
-      - hoursAndMinutes
-  HoursAndMinutes:
-    type: object
-    description : An object to represent a time with only hours and minutes
-    properties:
-      hours:
-        type: integer
-      minutes:
-        type: integer
   CardActionEnum:
     type: string
     description: |-

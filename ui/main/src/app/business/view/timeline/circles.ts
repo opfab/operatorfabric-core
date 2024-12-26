@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getNextTimeForRepeating} from '@ofServices/reminder/ReminderUtils';
 import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from '@ofServices/reminder/RruleReminderUtils';
 import {add, format} from 'date-fns';
 
@@ -49,11 +48,7 @@ export class Circles {
                     this.computeCardWithRRuleForTimeLine(card, newCardsForTimeline);
                 } else if (card.timeSpans && card.timeSpans.length > 0) {
                     card.timeSpans.forEach((timeSpan) => {
-                        if (timeSpan.recurrence) {
-                            this.computeCardWithRecurrenceForTimeLine(card, timeSpan, newCardsForTimeline);
-                        } else {
-                            this.computeCardForTimeLine(card, timeSpan, newCardsForTimeline);
-                        }
+                        this.computeCardForTimeLine(card, timeSpan, newCardsForTimeline);
                     });
                 } else {
                     this.computeCardForTimeLine(card, null, newCardsForTimeline);
@@ -84,32 +79,6 @@ export class Circles {
             const nextDate = add(dateForReminder, {minutes: 1});
 
             dateForReminder = getNextTimeForRepeatingUsingRRule(
-                card,
-                nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-            );
-        }
-    }
-
-    private computeCardWithRecurrenceForTimeLine(card: any, timeSpan: any, newCardsForTimeline: any[]) {
-        let dateForReminder: number = getNextTimeForRepeating(
-            card,
-            this.gridTimeDomain[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-        );
-
-        while (
-            dateForReminder >= 0 &&
-            (!timeSpan.end || dateForReminder < timeSpan.end) &&
-            dateForReminder < this.gridTimeDomain[1].valueOf()
-        ) {
-            newCardsForTimeline.push({
-                date: dateForReminder,
-                id: card.id,
-                severity: card.severity,
-                titleTranslated: card.titleTranslated
-            });
-            const nextDate = add(dateForReminder, {minutes: 1});
-
-            dateForReminder = getNextTimeForRepeating(
                 card,
                 nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
             );

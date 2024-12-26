@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,10 +20,8 @@ import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
 import org.opfab.cards.publication.model.ArchivedCard;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.CardActionEnum;
-import org.opfab.cards.publication.model.HoursAndMinutes;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
-import org.opfab.cards.publication.model.Recurrence;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.model.TimeSpan;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -442,11 +440,6 @@ class CardProcessServiceShould {
                 daysOfWeek.add(3);
                 months.add(2);
                 months.add(3);
-                Integer duration = 15;
-                HoursAndMinutes hoursAndMinutes = new HoursAndMinutes(2, 10);
-                Recurrence recurrence = new Recurrence("timezone", daysOfWeek,
-                                hoursAndMinutes,
-                                duration, months);
 
                 HashMap<String, String> parameters = new HashMap<>();
                 parameters.put("arg1", "value1");
@@ -457,7 +450,7 @@ class CardProcessServiceShould {
                                 .endDate(start.plusSeconds(60)).lttd(start.minusSeconds(600))
                                 .tag("tag1").tag("tag2").data(data)
                                 .entityRecipients(entityRecipients)
-                                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null, recurrence))
+                                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
                                 .process("process1")
                                 .state("state1")
                                 .publisherType(PublisherTypeEnum.EXTERNAL)
@@ -495,7 +488,7 @@ class CardProcessServiceShould {
                                 .title(new I18n("title", null))
                                 .summary(new I18n("summary", null))
                                 .startDate(Instant.now())
-                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))
+                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null))
                                 .build();
                 Assertions.assertThatThrownBy(
                                 () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
@@ -516,7 +509,7 @@ class CardProcessServiceShould {
                                                 .title(new I18n("title", null))
                                                 .summary(new I18n("summary", null))
                                                 .startDate(Instant.now())
-                                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))
+                                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null))
                                                 .process("process1")
                                                 .state("state1")
                                                 .build());
@@ -529,7 +522,7 @@ class CardProcessServiceShould {
                                 .title(new I18n("title", null))
                                 .summary(new I18n("summary", null))
                                 .startDate(Instant.now())
-                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null, null))
+                                .timeSpan(new TimeSpan(Instant.ofEpochSecond(123l), null))
                                 .process("process2")
                                 .state("state2")
                                 .build();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,24 +90,6 @@ public class CardValidationService {
         if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start",
                     null);
-
-        if (!checkIsAllHoursAndMinutesFilled(c))
-            throw new ConstraintViolationException(
-                    "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled", null);
-
-        if (!checkDurationInMinutesIsNotNegative(c))
-            throw new ConstraintViolationException(
-                    "constraint violation : TimeSpan.Recurrence.durationInMinutes: must be greater than or equal to 0", null);
-
-
-        if (!checkIsAllDaysOfWeekValid(c))
-            throw new ConstraintViolationException(
-                    "constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7",
-                    null);
-
-        if (!checkIsAllMonthsValid(c))
-            throw new ConstraintViolationException(
-                    "constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11", null);
 
         if (!checkRRuleDurationInMinutesIsNotNegative(c))
             throw new ConstraintViolationException(
@@ -228,84 +210,11 @@ public class CardValidationService {
         return true;
     }
 
-    boolean checkIsAllHoursAndMinutesFilled(Card c) {
-        if (c.getTimeSpans() != null) {
-            for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
-
-                if ((currentTimeSpan != null) && (currentTimeSpan.recurrence() != null)) {
-                    HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.recurrence().hoursAndMinutes();
-                    if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.hours() == null)
-                            || (currentHoursAndMinutes.minutes() == null))
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
-    boolean checkDurationInMinutesIsNotNegative(Card c) {
-        if (c.getTimeSpans() != null) {
-            for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
-
-                if ((currentTimeSpan != null) && (currentTimeSpan.recurrence() != null)) {
-                    Integer durationInMinutes = currentTimeSpan.recurrence().durationInMinutes();
-                    if (durationInMinutes != null && durationInMinutes<0)
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
-
     boolean checkRRuleDurationInMinutesIsNotNegative(Card c) {
         if (c.getRRule() != null) {
             Integer durationInMinutes = c.getRRule().durationInMinutes();
             if (durationInMinutes != null && durationInMinutes<0)
                 return false;
-        }
-        return true;
-    }
-
-    boolean checkIsAllDaysOfWeekValid(Card c) {
-      
-        if (c.getTimeSpans() == null)
-            return true;
-
-        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
-
-            if ((currentTimeSpan == null) || (currentTimeSpan.recurrence() == null))
-                return true;
-
-            List<Integer> currentDaysOfWeek = currentTimeSpan.recurrence().daysOfWeek();
-
-            if (currentDaysOfWeek != null) {
-                for (Integer dayOfWeek : currentDaysOfWeek) {
-                    if ((dayOfWeek < 1) || (dayOfWeek > 7))
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    boolean checkIsAllMonthsValid(Card c) {
-        if (c.getTimeSpans() == null)
-            return true;
-
-        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
-
-            if ((currentTimeSpan == null) || (currentTimeSpan.recurrence() == null))
-                return true;
-
-            List<Integer> currentMonths = currentTimeSpan.recurrence().months();
-
-            if (currentMonths != null) {
-                for (Integer month : currentMonths) {
-                    if ((month < 0) || (month > 11))
-                        return false;
-                }
-            }
         }
         return true;
     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {CardService} from 'app/business/services/card/card.service';
 import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {State} from '@ofServices/processes/model/Processes';
-import {HourAndMinutes, Recurrence, TimeSpan} from '@ofModel/card.model';
+import {TimeSpan} from '@ofModel/card.model';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {Entity} from '@ofServices/entities/model/Entity';
@@ -462,10 +462,10 @@ describe('UserCard CardBuilder', () => {
             setSpecificCardInformation({
                 valid: true,
                 card: {},
-                timeSpans: [{startDate: 10, endDate: 20, recurrence: new Recurrence(new HourAndMinutes(1, 0))}]
+                timeSpans: [{startDate: 10, endDate: 20}]
             });
             const card = await cardBuilder.getCard();
-            expect(card.timeSpans).toEqual([new TimeSpan(10, 20, new Recurrence(new HourAndMinutes(1, 0)))]);
+            expect(card.timeSpans).toEqual([new TimeSpan(10, 20)]);
         });
         it('Should be set with startDate and endDate if viewCardInCalendar is true  ', async () => {
             setSpecificCardInformation({valid: true, card: {}, viewCardInCalendar: true});
@@ -474,31 +474,17 @@ describe('UserCard CardBuilder', () => {
             cardBuilder.setFieldVisible(InputFieldName.EndDate, true);
             cardBuilder.setEndDate(100);
             const card = await cardBuilder.getCard();
-            expect(card.timeSpans).toEqual([new TimeSpan(50, 100, undefined)]);
-        });
-        it('Should be set with recurrence if viewCardInCalendar is true and recurrence deprecated field is set ', async () => {
-            setSpecificCardInformation({
-                valid: true,
-                card: {},
-                viewCardInCalendar: true,
-                recurrence: new Recurrence(new HourAndMinutes(1, 0))
-            });
-            cardBuilder.setFieldVisible(InputFieldName.StartDate, true);
-            cardBuilder.setStartDate(50);
-            cardBuilder.setFieldVisible(InputFieldName.EndDate, true);
-            cardBuilder.setEndDate(100);
-            const card = await cardBuilder.getCard();
-            expect(card.timeSpans).toEqual([new TimeSpan(50, 100, new Recurrence(new HourAndMinutes(1, 0)))]);
+            expect(card.timeSpans).toEqual([new TimeSpan(50, 100)]);
         });
         it('Should be provided from specific card information field timeSpans if exist and ignore viewCardInCalendar', async () => {
             setSpecificCardInformation({
                 valid: true,
                 card: {},
                 viewCardInCalendar: true,
-                timeSpans: [{startDate: 10, endDate: 20, recurrence: new Recurrence(new HourAndMinutes(1, 0))}]
+                timeSpans: [{startDate: 10, endDate: 20}]
             });
             const card = await cardBuilder.getCard();
-            expect(card.timeSpans).toEqual([new TimeSpan(10, 20, new Recurrence(new HourAndMinutes(1, 0)))]);
+            expect(card.timeSpans).toEqual([new TimeSpan(10, 20)]);
         });
         it('Should be empty if not provided by template', async () => {
             setSpecificCardInformation({valid: true, card: {}});

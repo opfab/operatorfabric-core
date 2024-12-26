@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,10 +55,7 @@ class KafkaSerializeDeserializeShould {
                 .parentCardId("myParent1234")
                 .timeSpans(List.of(new TimeSpan(
                         Instant.now(),
-                        Instant.now().plus(2, ChronoUnit.HOURS),
-                        new Recurrence(null, List.of(3, 4),
-                                new HoursAndMinutes(10, 3),
-                                null, null))))
+                        Instant.now().plus(2, ChronoUnit.HOURS))))
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                 .title(new I18n("title", null))
                 .summary(new I18n("summary", null))

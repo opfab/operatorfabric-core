@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1012,32 +1012,6 @@ describe('User Card ', function () {
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
 
     });
-  })
-
-  describe('Set timeSpans from template', function () {
-
-    it('Set timeSpans from template', () => {
-      script.deleteAllCards();
-      opfab.loginWithUser('operator1_fr');
-      opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Task');
-      cy.waitDefaultTime();
-      cy.get('#Monday').check({force: true});
-      cy.get('#Tuesday').check({force: true});
-      cy.get('#Wednesday').check({force: true});
-      cy.get('#Thursday').check({force: true});
-      cy.get('#Friday').check({force: true});
-      cy.get('#Saturday').check({force: true});
-      cy.get('#Sunday').check({force: true});
-      cy.get('#time').type('08:00');
-      usercard.previewThenSendCard();
-      
-      cy.waitDefaultTime();
-      cy.get('#opfab-timeline-link-period-7D').click();
-      cy.get('ellipse').should('have.length', 7);
-
-    })
   })
 
   describe('Set initial severity from template', function () {
