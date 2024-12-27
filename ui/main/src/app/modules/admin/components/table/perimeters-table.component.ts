@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 import {Utilities} from 'app/business/common/utilities';
 import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
-import {NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {AgGridAngular} from 'ag-grid-angular';
@@ -26,7 +26,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['admin-table.directive.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, TranslateModule, FormsModule, AgGridAngular, NgbPagination]
+    imports: [NgIf, TranslateModule, FormsModule, AgGridAngular, NgbPagination, NgForOf]
 })
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PERIMETER;

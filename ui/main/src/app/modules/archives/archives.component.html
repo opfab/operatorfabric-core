@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -33,17 +33,6 @@
                 <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" />
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
-        </div>
-        <div style="float: right; margin-top: -35px">
-            <select (change)="onPageSizeChanged($event.target)" #pageSizeSelect>
-                <option
-                    *ngFor="let option of paginationPageSizeOptions"
-                    [value]="option"
-                    [attr.selected]="option === pageSize ? true : null">
-                    {{ option }}
-                </option>
-            </select>
-            <label for="opfab-page-size-select" style="font-weight: bold" translate>&nbsp;shared.pageSize</label>
         </div>
     </div>
     <div class="opfab-table">
@@ -198,6 +187,18 @@
         </div>
 
         <div class="opfab-pagination">
+            <div style="width: 200px; margin-top: 15px">
+                <select (change)="onPageSizeChanged($event.target)" id="opfab-page-size-select">
+                    <option
+                        *ngFor="let option of paginationPageSizeOptions"
+                        [value]="option"
+                        [attr.selected]="option === pageSize ? true : null">
+                        {{ option }}
+                    </option>
+                </select>
+                <label for="opfab-page-size-select" translate>&nbsp;shared.pageSize</label>
+            </div>
+
             <div style="white-space: nowrap; margin-top: 17px" id="opfab-archive-results-number">
                 <span translate> shared.resultsNumber </span> : {{ resultsNumber }}
             </div>

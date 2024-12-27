@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,6 +101,9 @@ export abstract class AdminTableDirective implements OnDestroy {
     protected crudService: CrudService;
     private readonly currentUserLogin;
 
+    public paginationPageSizeOptions = [5, 10, 25, 50, 100];
+    public paginationDefaultPageSize = 10;
+
     constructor(
         protected translateService: TranslateService,
         protected modalService: NgbModal,
@@ -161,6 +164,7 @@ export abstract class AdminTableDirective implements OnDestroy {
     }
 
     initCrudService() {
+        this.dataHandlingService.changePaginationPageSize(this.paginationDefaultPageSize);
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
     }
 
@@ -458,6 +462,12 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     hasAnyPermission(permissions: PermissionEnum[]) {
         return UsersService.hasCurrentUserAnyPermission(permissions);
+    }
+
+    onPageSizeChanged(target: EventTarget | null) {
+        // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
+        const value = (<HTMLSelectElement>target).value;
+        this.dataHandlingService.changePaginationPageSize(Number(value));
     }
 }
 
