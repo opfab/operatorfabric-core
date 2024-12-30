@@ -274,7 +274,7 @@ describe('UserCard CardBuilder', () => {
             expect(card['actions']).toEqual([]);
         });
     });
-    describe('Recipients', () => {
+    describe('entityRecipients', () => {
         it('Should be set from user if field visible', async () => {
             setSpecificCardInformation({valid: true, card: {}});
             cardBuilder.setFieldVisible(InputFieldName.Recipients, true);
@@ -308,6 +308,18 @@ describe('UserCard CardBuilder', () => {
             cardBuilder.setRecipientsForInformationSelectedByUser(['ENTITY3', 'ENTITY4']);
             const card = await cardBuilder.getCard();
             expect(card.entityRecipients).toEqual(['ENTITY1', 'ENTITY2', 'ENTITY3', 'ENTITY4']);
+        });
+    });
+    describe('groupRecipients', () => {
+        it('Should be set from template if template provides it', async () => {
+            setSpecificCardInformation({valid: true, card: {groupRecipients: ['GROUP1', 'GROUP2']}});
+            const card = await cardBuilder.getCard();
+            expect(card.groupRecipients).toEqual(['GROUP1', 'GROUP2']);
+        });
+        it('Should be empty if template does not provide it', async () => {
+            setSpecificCardInformation({valid: true, card: {}});
+            const card = await cardBuilder.getCard();
+            expect(card.groupRecipients).toEqual([]);
         });
     });
     describe('RecipientsForInformation', () => {

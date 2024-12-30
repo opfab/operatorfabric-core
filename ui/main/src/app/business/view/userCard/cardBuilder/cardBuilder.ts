@@ -112,7 +112,7 @@ export class CardBuilder {
             : actions.filter((item) => item !== CardAction.KEEP_CHILD_CARDS);
 
         const titleTranslated = await this.getTitleTranslated(this.specificCardInformation.card.title);
-        const {entityRecipients, entityRecipientsForInformation} = this.getRecipients();
+        const {entityRecipients, entityRecipientsForInformation, groupRecipients} = this.getRecipients();
         const card: Card = {
             actions: actions,
             data: this.specificCardInformation.card.data,
@@ -122,6 +122,7 @@ export class CardBuilder {
             entitiesRequiredToRespond: this.specificCardInformation.card.entitiesRequiredToRespond,
             entityRecipients,
             entityRecipientsForInformation,
+            groupRecipients,
             expirationDate: this.expirationDate,
             externalRecipients: this.specificCardInformation.card.externalRecipients,
             hasBeenAcknowledged: false,
@@ -236,16 +237,25 @@ export class CardBuilder {
         return translated.translatedField;
     }
 
-    private getRecipients(): {entityRecipients: string[]; entityRecipientsForInformation: string[]} {
+    private getRecipients(): {
+        entityRecipients: string[];
+        entityRecipientsForInformation: string[];
+        groupRecipients: string[];
+    } {
         let recipients = this.getUnionOfEntityRecipientsFromTemplateAndUserSelection();
         let recipientsForInformation = this.getUnionOfEntityRecipientsForInformationFromTemplateAndUserSelection();
+        const groupRecipients = this.getGroupRecipientsFromTemplate();
         recipientsForInformation = this.removeEntityRecipientForInformationIfPresentInEntityRecipient(
             recipients,
             recipientsForInformation
         );
         recipients = recipients.concat(recipientsForInformation);
 
-        return {entityRecipients: recipients, entityRecipientsForInformation: recipientsForInformation};
+        return {
+            entityRecipients: recipients,
+            entityRecipientsForInformation: recipientsForInformation,
+            groupRecipients: groupRecipients
+        };
     }
 
     private getUnionOfEntityRecipientsFromTemplateAndUserSelection(): string[] {
@@ -284,6 +294,19 @@ export class CardBuilder {
         entityRecipientsForInformation: string[]
     ): string[] {
         return entityRecipientsForInformation.filter((recipient) => !entityRecipients.includes(recipient));
+    }
+
+    private getGroupRecipientsFromTemplate(): string[] {
+        const groupRecipients = [];
+
+        if (this.specificCardInformation.card.groupRecipients) {
+            this.specificCardInformation.card.groupRecipients.forEach((recipient) => {
+                if (!groupRecipients.includes(recipient)) {
+                    groupRecipients.push(recipient);
+                }
+            });
+        }
+        return groupRecipients;
     }
 
     private getEntitiesAllowedToRespond(): string[] {
