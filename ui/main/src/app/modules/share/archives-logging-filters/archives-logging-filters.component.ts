@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
-
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {UsersService} from '@ofServices/users/UsersService';
@@ -120,6 +119,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     defaultPublishMinDate: Date;
 
     locale: any = {};
+    ranges: any = {};
 
     constructor(private readonly changeDetector: ChangeDetectorRef) {
         this.hasCurrentUserRightsToViewAllArchivedCards =
@@ -143,6 +143,30 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             applyLabel: TranslationService.getTranslation('datePicker.applyLabel'),
             daysOfWeek: TranslationService.getTranslation('datePicker.daysOfWeek'),
             monthNames: TranslationService.getTranslation('datePicker.monthNames')
+        };
+
+        const currentDate = new Date(),
+            y = currentDate.getFullYear(),
+            m = currentDate.getMonth();
+        const startCurrentMonth = new Date(y, m, 1);
+        const endCurrentMonth = new Date(y, m + 1, 0);
+        const startPreviousMonth = new Date(y, m - 1, 1);
+        const endPreviousMonth = new Date(y, m, 0);
+
+        const todayKey = TranslationService.getTranslation('datePicker.today');
+        const yesterdayKey = TranslationService.getTranslation('datePicker.yesterday');
+        const last7DaysKey = TranslationService.getTranslation('datePicker.last7Days');
+        const last30DaysKey = TranslationService.getTranslation('datePicker.last30Days');
+        const thisMonthKey = TranslationService.getTranslation('datePicker.thisMonth');
+        const lastMonthKey = TranslationService.getTranslation('datePicker.lastMonth');
+
+        this.ranges = {
+            [todayKey]: [new Date().setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
+            [yesterdayKey]: [sub(new Date().setHours(0, 0, 0, 0), {days: 1}), new Date().setHours(0, 0, 0, 0)],
+            [last7DaysKey]: [sub(new Date(), {days: 7}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
+            [last30DaysKey]: [sub(new Date(), {days: 30}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
+            [thisMonthKey]: [startCurrentMonth, endCurrentMonth],
+            [lastMonthKey]: [startPreviousMonth, endPreviousMonth]
         };
     }
 

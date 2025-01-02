@@ -680,7 +680,13 @@
     "datePicker": {
         "applyLabel": "Apply",
         "daysOfWeek": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-        "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "last7Days": "Last 7 Days",
+        "last30Days": "Last 30 Days",
+        "thisMonth": "This Month",
+        "lastMonth": "Last Month"
     },
     "reloadRequired": {
         "message": "Application reload required. To reload please click ",
