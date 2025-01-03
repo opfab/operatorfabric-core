@@ -30,8 +30,9 @@ jobs:
         docker pull lfeoperatorfabric/of-cards-reminder:SNAPSHOT
         docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
         docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
-    - name: Analyse card consultation 
+    - name: Analyse card consultation
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-cards-consultation
       with:
         image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
         acs-report-enable: true
@@ -39,10 +40,12 @@ jobs:
     - name: Upload Anchore Scan Report for cards-consultation
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-cards-consultation.outputs.sarif }}
+        output-file: results.sarif
         category: consultation
     - name: Analyse card publication 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-cards-publication
       with:
         image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
         acs-report-enable: true
@@ -50,10 +53,12 @@ jobs:
     - name: Upload Anchore Scan Report for cards-publication
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-cards-publication.outputs.sarif }}
+        output-file: results.sarif
         category: publication
     - name: Analyse users 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-users
       with:
         image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
         acs-report-enable: true
@@ -61,10 +66,12 @@ jobs:
     - name: Upload Anchore Scan Report for users
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-users.outputs.sarif }}
+        output-file: results.sarif
         category: users
     - name: Analyse businessConfig 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-businessconfig
       with:
         image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
         acs-report-enable: true
@@ -72,10 +79,12 @@ jobs:
     - name: Upload Anchore Scan Report for businessConfig
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-businessconfig.outputs.sarif }}
+        output-file: results.sarif
         category: businessconfig
     - name: Analyse external-devices 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-external-devices
       with:
         image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
         acs-report-enable: true
@@ -83,10 +92,12 @@ jobs:
     - name: Upload Anchore Scan Report for external devices
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-external-devices.outputs.sarif }}
+        output-file: results.sarif
         category: external-devices
     - name: Analyse web-ui
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-web-ui
       with:
         image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
         acs-report-enable: true
@@ -94,10 +105,12 @@ jobs:
     - name: Upload Anchore Scan Report for web-ui
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
+        output-file: results.sarif
         category: web-ui
     - name: Analyse external-diffusion
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-cards-external-diffusion
       with:
         image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
         acs-report-enable: true
@@ -105,10 +118,12 @@ jobs:
     - name: Upload Anchore Scan Report for external-diffusion
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-cards-external-diffusion.outputs.sarif }}
+        output-file: results.sarif
         category: external-diffusion
     - name: Analyse cards reminder 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-cards-reminder
       with:
         image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
         acs-report-enable: true
@@ -116,10 +131,12 @@ jobs:
     - name: Upload Anchore Scan Report for cards-reminder
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-cards-reminder.outputs.sarif }}
+        output-file: results.sarif
         category: cards-reminder
     - name: Analyse supervisor 
       uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342 # v6.0.0
+      id: scan-supervisor
       with:
         image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
         acs-report-enable: true
@@ -127,5 +144,6 @@ jobs:
     - name: Upload Anchore Scan Report for supervisor
       uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
       with:
-        sarif_file: results.sarif
+        sarif_file: ${{ steps.scan-supervisor.outputs.sarif }}
+        output-file: results.sarif
         category: supervisor
