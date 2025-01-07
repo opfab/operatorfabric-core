@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
-import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {LineOfMonitoringResult} from 'app/modules/monitoring/model/LineOfMonitoringResult';
 import {catchError, debounceTime, filter, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';

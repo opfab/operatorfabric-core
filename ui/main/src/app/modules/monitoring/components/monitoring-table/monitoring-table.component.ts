@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -9,7 +9,7 @@
  */
 
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
-import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {LineOfMonitoringResult} from 'app/modules/monitoring/model/LineOfMonitoringResult';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbProgressbar} from '@ng-bootstrap/ng-bootstrap';
