@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ export class SeverityForm {
 
     constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
-    public setProcessAndState(processId: string, stateId: string, card: Card = undefined) {
+    public init(processId: string, stateId: string, card: Card = undefined) {
         const state = ProcessesService.getProcess(processId).states.get(stateId);
         if (state) {
             this.severityVisible = state.userCard?.severityVisible ?? true;

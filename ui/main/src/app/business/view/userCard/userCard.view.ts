@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -155,19 +155,14 @@ export class UserCardView {
 
     private initFieldsThatNeedToBeSetAfterExecutingTemplateScripts() {
         this.datesForm.initDatesAfterTemplateScriptsExecution();
-        this.severityForm.setProcessAndState(this.currentProcessId, this.currentStateId, this.existingCard);
+        this.severityForm.init(this.currentProcessId, this.currentStateId, this.existingCard);
         this.keepChildCardsForm.setValueAndVisibility(
             this.currentProcessId,
             this.currentStateId,
             this.existingCard,
             this.editionMode
         );
-        this.publisherForm.setProcessAndState(
-            this.currentProcessId,
-            this.currentStateId,
-            this.existingCard,
-            this.editionMode
-        );
+        this.publisherForm.init(this.currentProcessId, this.currentStateId, this.existingCard, this.editionMode);
     }
 
     public async userClicksOnState(stateId: string) {

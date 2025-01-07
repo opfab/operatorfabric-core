@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,17 +80,17 @@ describe('UserCard PublisherForm', () => {
             });
             it('Should hide publisher multiselect if user has only one entity that can send the card', async () => {
                 await setUserWithEntities(['ENTITY1']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(false);
             });
             it('Should show publisher multiselect if user has more than one entity that can send the card', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(true);
             });
             it('Should set a list of 2 publishers to the userCardUIControl if user has 2 entities to send card', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'}
@@ -98,7 +98,7 @@ describe('UserCard PublisherForm', () => {
             });
             it('Should set a list of 2 publishers to the userCardUIControl if user has 2 entities to send card and one entity with no roles', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2', 'NO_ROLES_ENTITY']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'}
@@ -106,7 +106,7 @@ describe('UserCard PublisherForm', () => {
             });
             it('Should set a list of 2 publishers by alphabetical order', async () => {
                 await setUserWithEntities(['ENTITY2', 'ENTITY1']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'}
@@ -114,7 +114,7 @@ describe('UserCard PublisherForm', () => {
             });
             it('Should set entity label as entity id if entity has no name', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY_WITH_NO_NAME']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY_WITH_NO_NAME', label: 'ENTITY_WITH_NO_NAME'},
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'}
@@ -122,13 +122,13 @@ describe('UserCard PublisherForm', () => {
             });
             it('Should set the first entity as selected in the publisher multiselect', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.selectedPublisher).toBe('ENTITY1');
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY1');
             });
             it('Should set the first entity by alphabetical order as selected in the publisher multiselect', async () => {
                 await setUserWithEntities(['ENTITY2', 'ENTITY1']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.selectedPublisher).toBe('ENTITY1');
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY1');
             });
@@ -138,12 +138,12 @@ describe('UserCard PublisherForm', () => {
                 opfab.currentUserCard.listenToEntityUsedForSendingCard((entity) => {
                     entitySelectedReceiveByTemplate = entity;
                 });
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(entitySelectedReceiveByTemplate).toEqual('ENTITY1');
             });
             it('Should set the selected publisher as the entity allowed to send card if only one entity is possible', async () => {
                 await setUserWithEntities(['ENTITY1']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY1');
             });
             it('Should set the selected publisher as the entity allowed to send card to template via opfabAPI if only one entity is possible', async () => {
@@ -152,12 +152,12 @@ describe('UserCard PublisherForm', () => {
                 opfab.currentUserCard.listenToEntityUsedForSendingCard((entity) => {
                     entitySelectedReceiveByTemplate = entity;
                 });
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(entitySelectedReceiveByTemplate).toEqual('ENTITY1');
             });
             it('Should not add entity3 in the list of publishers as entity3 has no role CARD_SENDER', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2', 'ENTITY3']);
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'}
@@ -170,7 +170,7 @@ describe('UserCard PublisherForm', () => {
                 await setProcessConfigWithUserCardConfig({
                     publisherList: [new EntitiesTree('ENTITY2'), new EntitiesTree('ENTITY4')]
                 });
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'},
                     {id: 'ENTITY4', label: 'ENTITY4_NAME'}
@@ -181,7 +181,7 @@ describe('UserCard PublisherForm', () => {
                 await setProcessConfigWithUserCardConfig({
                     publisherList: [new EntitiesTree('PARENT_ENTITY', [1])]
                 });
-                publisherForm.setProcessAndState('testProcessId', 'testStateId');
+                publisherForm.init('testProcessId', 'testStateId');
                 expect(userCardUIControl.publishers).toEqual([
                     {id: 'ENTITY1', label: 'ENTITY1_NAME'},
                     {id: 'ENTITY2', label: 'ENTITY2_NAME'}
@@ -193,7 +193,7 @@ describe('UserCard PublisherForm', () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2', 'ENTITY4']);
                 await setProcessConfigWithUserCardConfig({});
                 const card = getOneCard({publisher: 'ENTITY4'});
-                publisherForm.setProcessAndState('testProcessId', 'testStateId', card, EditionMode.EDITION);
+                publisherForm.init('testProcessId', 'testStateId', card, EditionMode.EDITION);
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY4');
             });
             it('Should not select publisher of existing card in edit mode if user is not member of the publishing entity', async () => {
@@ -202,14 +202,14 @@ describe('UserCard PublisherForm', () => {
                 const card = getOneCard({
                     publisher: 'ENTITY3'
                 });
-                publisherForm.setProcessAndState('testProcessId', 'testStateId', card, EditionMode.EDITION);
+                publisherForm.init('testProcessId', 'testStateId', card, EditionMode.EDITION);
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY1');
             });
             it('Should not select publisher of existing card in copy mode if user is member of the publishing entity', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2', 'ENTITY4']);
                 await setProcessConfigWithUserCardConfig({});
                 const card = getOneCard({publisher: 'ENTITY4'});
-                publisherForm.setProcessAndState('testProcessId', 'testStateId', card, EditionMode.COPY);
+                publisherForm.init('testProcessId', 'testStateId', card, EditionMode.COPY);
                 expect(publisherForm.getSelectedPublisher()).toEqual('ENTITY1');
             });
         });
