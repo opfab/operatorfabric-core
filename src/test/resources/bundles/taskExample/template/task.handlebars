@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -11,59 +11,6 @@
 <h2> You have the following task to do  :  </h2>
 <br/>
 <br/>
-<center>
-<h3 >
-
+<h3 style="text-align: center">
 {{keepSpacesAndEndOfLine card.data.taskDescription }}
-
-
-<br/>
-Duration: {{card.data.durationInMinutes}} minutes<br/>
-<br/> 
-
-At {{card.data.hours}}:{{card.data.minutes}}
-<span id="dayOfWeeks"></span><br/>
-<br/>
-<span id="months"></span>
-
 </h3>
-</center>
-
-<script>
-
-      cardTemplate = {
-            init: function() {
-                  const daysOfWeek = "{{card.data.daysOfWeek}}";
-                  let textForDaysOfWeek ="";
-                  if (daysOfWeek.includes("1"))  textForDaysOfWeek += " Monday";
-                  if (daysOfWeek.includes("2"))  textForDaysOfWeek += " Tuesday";
-                  if (daysOfWeek.includes("3"))  textForDaysOfWeek += " Wednesday";
-                  if (daysOfWeek.includes("4"))  textForDaysOfWeek += " Thursday ";
-                  if (daysOfWeek.includes("5"))  textForDaysOfWeek += " Friday";
-                  if (daysOfWeek.includes("6"))  textForDaysOfWeek += " Saturday";
-                  if (daysOfWeek.includes("7"))  textForDaysOfWeek += " Sunday";
-                  if (textForDaysOfWeek !== "")  textForDaysOfWeek = "on" + textForDaysOfWeek;
-                  document.getElementById("dayOfWeeks").innerHTML = textForDaysOfWeek;
-
-                  const months = "{{card.data.months}}";
-                  const monthsArray = months.split(',');
-                  let textForMonths ="";
-                  if (monthsArray.includes("0"))  textForMonths += " January";
-                  if (monthsArray.includes("1"))  textForMonths += " February";
-                  if (monthsArray.includes("2"))  textForMonths += " March";
-                  if (monthsArray.includes("3"))  textForMonths += " April ";
-                  if (monthsArray.includes("4"))  textForMonths += " May";
-                  if (monthsArray.includes("5"))  textForMonths += " June";
-                  if (monthsArray.includes("6"))  textForMonths += " July";
-                  if (monthsArray.includes("7"))  textForMonths += " August";
-                  if (monthsArray.includes("8"))  textForMonths += " September";
-                  if (monthsArray.includes("9"))  textForMonths += " October";
-                  if (monthsArray.includes("10")) textForMonths += " November";
-                  if (monthsArray.includes("11")) textForMonths += " December";
-                  if (textForMonths !== "")  textForMonths = "in" + textForMonths;
-                  document.getElementById("months").innerHTML = textForMonths;
-            }
-      }
-      cardTemplate.init();
-
-</script>
