@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,8 +108,13 @@ public class CardProcessingService {
                     .status(HttpStatus.TOO_MANY_REQUESTS)
                     .message(String.format("Publisher %s has reached the card sending limit", card.getPublisher()))
                     .build());
-        // set empty user otherwise it will be processed as a usercard
-        processOneCard(card, Optional.empty(), jwt, dataFieldIncluded);
+
+        if (card.getPublisherType() == PublisherTypeEnum.USER) {
+            processOneCard(card, user, jwt, dataFieldIncluded);
+        } else {
+            // set empty user otherwise it will be processed as a usercard
+            processOneCard(card, Optional.empty(), jwt, dataFieldIncluded);
+        }
     }
 
     public void patchCard(String id, Card cardPatch, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
@@ -129,7 +134,9 @@ public class CardProcessingService {
     }
 
     public void processUserCard(Card card, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
-        card.setPublisherType(PublisherTypeEnum.ENTITY);
+        if (card.getPublisherType() != PublisherTypeEnum.USER) {
+            card.setPublisherType(PublisherTypeEnum.ENTITY);
+        }
         this.cardValidationService.validate(card);
         if (!authorizeToSendCardWithInvalidProcessState)
             this.cardValidationService.checkProcessStateExistsInBundles(card);
@@ -154,7 +161,8 @@ public class CardProcessingService {
                     card.getProcess(), card.getState()));
             }
 
-            if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
+            if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()) &&
+                !cardPermissionControlService.isCardPublisherTheUserHimself(card, user.get()))
                 // throw a runtime exception to be handled by Mono.onErrorResume()
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
         }

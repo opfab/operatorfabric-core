@@ -67,7 +67,8 @@ export enum Sound {
 
 export enum PublisherType {
     EXTERNAL,
-    ENTITY
+    ENTITY,
+    USER
 }
 
 export enum Frequency {

@@ -745,8 +745,9 @@ definitions:
     type: string
     description: |-
       Publisher type >
-      * EXTERNAL - The sender is an external service
-      * ENTITY - The sender of the card is the user on behalf of the entity
+      * EXTERNAL - The sender is an external service.
+      * ENTITY - The sender of the card is the user on behalf of the entity.
+      * USER - The sender of the card is the user himself.
     enum:
       - EXTERNAL
       - ENTITY

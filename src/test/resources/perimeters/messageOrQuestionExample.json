@@ -18,6 +18,10 @@
 		{
 			"state" : "confirmationState",
 			"right" : "ReceiveAndWrite"
+		},
+		{
+			"state" : "messageFromUserState",
+			"right" : "ReceiveAndWrite"
 		}
 		]
 	}

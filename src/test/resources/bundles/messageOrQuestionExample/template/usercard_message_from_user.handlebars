@@ -1,0 +1,44 @@
+<!-- Copyright (c) 2025, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div class="opfab-textarea">
+    <label> MESSAGE </label>
+    <opfab-richtext-editor id="message">{{card.data.richMessage}}</opfab-richtext-editor>
+</div>
+
+
+<script>
+    init();
+
+    function init() {
+
+        const quillEditor = document.getElementById('message');
+
+        opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
+
+            let summaryParameter = "Message received"
+
+            const card = {
+                summary : {key : "messageFromUser.summary"},
+                title : {key : "messageFromUser.title"},
+                data : {  richMessage: quillEditor.getContents()},
+                entitiesAllowedToEdit: ['ENTITY_FR'],
+                publisherType: 'USER'
+            }
+            if (quillEditor.isEmpty()) return { valid:false , errorMsg:'You must provide a message'}
+
+            return {
+                valid: true,
+                card: card
+            };
+
+        })
+    }
+
+</script>

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -170,7 +170,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                                 (new Criteria().orOperator
                                         (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
                         where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList),
-                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString()).andOperator(where(PUBLISHER).in(entitiesList))));
+                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString()).andOperator(where(PUBLISHER).in(entitiesList)),
+                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.USER.toString()).andOperator(where(PUBLISHER).is(login))));
     }
 
     default Criteria computeCriteriaForUserButWithoutCriteriaOnRecipients(List<String> processStateList) {

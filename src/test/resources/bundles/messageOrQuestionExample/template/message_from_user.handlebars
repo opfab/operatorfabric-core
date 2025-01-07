@@ -1,0 +1,25 @@
+<!-- Copyright (c) 2025, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<h4> Hello {{userContext.login}}, you received the following message </h4>
+
+<br/>
+
+<div class="template-style">
+    <span id="richMessage">{{card.data.richMessage}}</span>
+</div>
+
+
+<br/>
+<br/>
+<br/>
+
+
+<script>
+    opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
+</script>

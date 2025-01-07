@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,12 +9,11 @@
 package org.opfab.cards.publication.services;
 
 import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightEnum;
-
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,11 +48,16 @@ public class CardPermissionControlService {
     }
 
     boolean isCardPublisherInUserEntities(Card card, CurrentUserWithPerimeters user) {
-
-
         Optional<List<String>> entitiesUser= Optional.ofNullable(user.getUserData().getEntities());
-        //Check thah publisher is included in user entities
-        return entitiesUser.isPresent() && !entitiesUser.get().isEmpty() && entitiesUser.get().contains(card.getPublisher());
+        //Check that publisher is included in user entities
+        return entitiesUser.isPresent() &&
+                !entitiesUser.get().isEmpty() &&
+                entitiesUser.get().contains(card.getPublisher()) &&
+                card.getPublisherType() != PublisherTypeEnum.USER;
+    }
+
+    boolean isCardPublisherTheUserHimself(Card card, CurrentUserWithPerimeters user) {
+        return card.getPublisherType() == PublisherTypeEnum.USER && card.getPublisher().equals(user.getUserData().getLogin());
     }
 
     /* 

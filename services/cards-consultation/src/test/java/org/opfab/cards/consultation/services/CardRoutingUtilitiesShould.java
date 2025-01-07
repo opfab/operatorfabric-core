@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,9 @@ class CardRoutingUtilitiesShould {
     private String processStateNotInPerimeter = "\"card\":{\"process\":\"Process1\", \"state\":\"State2\", \"publisher\":\"publisher_test\", \"publisherType\":\"EXTERNAL\"";
     private String processStateInPerimeterAndPublisherIsTheEntityOfTheUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"testentity2\", \"publisherType\":\"ENTITY\"";
     private String processStateNotInPerimeterAndPublisherIsTheEntityOfTheUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State2\", \"publisher\":\"testentity2\", \"publisherType\":\"ENTITY\"";
+
+    private String processStateInPerimeterAndPublisherIsTheUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"testuser\", \"publisherType\":\"USER\"";
+    private String processStateInPerimeterAndPublisherIsAnotherUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"anotheruser\", \"publisherType\":\"USER\"";
 
     public CardRoutingUtilitiesShould(){
         User user = new User();
@@ -77,16 +80,16 @@ class CardRoutingUtilitiesShould {
         JSONObject messageBodyWithGroupOfTheUserButStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"]}}");  //true
         JSONObject messageBodyWithNoGroupOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"]}}");  //false
         JSONObject messageBodyWithGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[]}}");  //true
-        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiessList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}");  //false
-        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiessListButPublisherIsTheEntityOfUser =
+        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}");  //false
+        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser =
                 createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}");  //true
 
         Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUser, currentUserWithPerimeters)).isTrue();
         Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
         Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUser, currentUserWithPerimeters)).isFalse();
         Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiessList, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiessListButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
     }
 
     @Test
@@ -174,7 +177,21 @@ class CardRoutingUtilitiesShould {
         Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUdpateAndProcessStateInPerimeter, currentUserWithPerimeters)).isTrue();
         Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUpdateButProcessStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
         Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithAddAndProcessStateInPerimeter, currentUserWithPerimeters)).isFalse();
-     
+    }
 
+    @Test
+    void checkInCaseOfCardSentByAUser() {
+        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheUser
+                + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //true
+        JSONObject messageBodyWithNoRecipientsAndPublisherIsTheUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheUser + "}}");    //true
+
+        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsAnotherUser
+                + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //false
+        JSONObject messageBodyWithNoRecipientsAndPublisherIsAnotherUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsAnotherUser + "}}");    //false
+
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipientsAndPublisherIsTheUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipientsAndPublisherIsAnotherUser, currentUserWithPerimeters)).isFalse();
     }
 }

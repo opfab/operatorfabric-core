@@ -361,7 +361,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         return CardsService.fetchConnectedRecipients(this.lightCardPreview).pipe(
             map((connectedRecipients) => {
                 this.connectedRecipients.clear();
-                connectedRecipients.forEach((recipient) => {
+                connectedRecipients?.forEach((recipient) => {
                     this.connectedRecipients.add(recipient);
                 });
             })

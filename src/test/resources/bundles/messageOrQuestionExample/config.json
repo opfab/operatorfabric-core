@@ -82,6 +82,23 @@
             "templateName": "confirmation",
             "styles": [],
             "type": "INPROGRESS"
+        },
+        "messageFromUserState": {
+            "name": "Message From User",
+            "description": "Message From User",
+            "color": "#CC9900",
+            "userCard": {
+                "template": "usercard_message_from_user",
+                "startDateVisible": false,
+                "endDateVisible": false,
+                "recipientForInformationVisible": true
+            },
+            "templateName": "message_from_user",
+            "styles": [],
+            "acknowledgmentAllowed": "Always",
+            "showAcknowledgmentFooter": "OnlyForEmittingEntity",
+            "type": "INPROGRESS",
+            "consideredAcknowledgedForUserWhen": "AllEntitiesOfUserHaveAcknowledged"
         }
     }
 }

@@ -44,18 +44,25 @@ export class ArchivedCardDetailComponent implements OnInit {
     }
 
     private computeFromEntity() {
-        if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentativeSelectedCard = EntitiesService.getEntityName(this.card.publisher);
+        switch (this.card.publisherType) {
+            case 'ENTITY':
+                this.fromEntityOrRepresentativeSelectedCard = EntitiesService.getEntityName(this.card.publisher);
 
-            if (this.card.representativeType && this.card.representative) {
-                const representative =
-                    this.card.representativeType === 'ENTITY'
-                        ? EntitiesService.getEntityName(this.card.representative)
-                        : this.card.representative;
+                if (this.card.representativeType && this.card.representative) {
+                    const representative =
+                        this.card.representativeType === 'ENTITY'
+                            ? EntitiesService.getEntityName(this.card.representative)
+                            : this.card.representative;
 
-                this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
-            }
-        } else this.fromEntityOrRepresentativeSelectedCard = null;
+                    this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
+                }
+                break;
+            case 'USER':
+                this.fromEntityOrRepresentativeSelectedCard = this.card.publisher;
+                break;
+            default:
+                this.fromEntityOrRepresentativeSelectedCard = null;
+        }
     }
 
     private computeEntityRecipientsForFooter() {

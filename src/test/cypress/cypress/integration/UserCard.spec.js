@@ -550,7 +550,7 @@ describe('User Card ', function () {
 
       opfab.navigateToUserCard();
       cy.get("of-usercard").should('exist');
-      cy.get('#message').find('div').eq(0).type('Hello')
+      cy.get('#message').find('div').eq(0).type('Hello');
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.openFirstCard(); 
@@ -695,7 +695,7 @@ describe('User Card ', function () {
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100%\n");
       feed.checkSelectedCardHasTitle("Message");
       feed.checkSelectedCardHasSummary("Message received : Message received");
-      cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR South');
+      cy.get('#opfab-from-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR South');
 
     })
 
@@ -724,7 +724,7 @@ describe('User Card ', function () {
         cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100% (updated)\n");
         feed.checkSelectedCardHasTitle("Message");
         feed.checkSelectedCardHasSummary("Message received : Message received");
-        cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR North');
+        cy.get('#opfab-from-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR North');
     })
 
     it('Disconnect operator4_fr from Control Center FR North and check card emitter when editing previous user card', () => {
@@ -1360,7 +1360,7 @@ describe('User Card ', function () {
       feed.openNthCard(5);
       card.checkCopyButtonDoesExist();
 
-      // chack "create a copy" button is not visible if user not in publisherList entities
+      // check "create a copy" button is not visible if user not in publisherList entities
       opfab.navigateToUserCard();
       usercard.selectService('Base Examples');
       usercard.selectProcess('Process example');
@@ -1414,6 +1414,42 @@ describe('User Card ', function () {
 
       //we check the emitter is not copied (emitter value should be set to the default value)
       usercard.checkEmitterIs('Control Center FR East');
+    })
+  })
+
+
+  describe('Send card on behalf of a user', function () {
+
+    it('Send card on behalf of a user', () => {
+
+      script.deleteAllCards();
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message From User');
+      cy.get('#message').find('div').eq(0).type('Hello, this is a test for sending a card on behalf of a user');
+      usercard.selectRecipient('Control Center FR South');
+      usercard.previewThenSendCard();
+      opfab.logout();
+
+      opfab.loginWithUser('operator2_fr');
+      feed.checkNumberOfDisplayedCardsIs(1);
+      feed.openFirstCard();
+      feed.checkSelectedCardHasTitle("Message");
+      feed.checkSelectedCardHasSummary("Message received");
+      cy.get('#opfab-from-entity').should('have.text', 'from\u00a0:\u00a0operator1_fr');
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n    Hello, this is a test for sending a card on behalf of a user\n");
+      cy.get('.opfab-card-received-footer').contains('from operator1_fr');
+
+      opfab.navigateToArchives();
+      // We click the search button
+      cy.get('#opfab-archives-logging-btn-search').click();
+
+      // Click on the card
+      cy.waitDefaultTime();
+      cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-alarm').first().click();
+      cy.get('.opfab-card-received-footer').contains('from operator1_fr');
     })
   })
 

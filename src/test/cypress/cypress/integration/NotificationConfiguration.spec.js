@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -267,7 +267,7 @@ describe('Feed notification configuration tests', function () {
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
+        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 36);
         cy.get('.opfab-notificationconfiguration-icon-envelope-without-slash').should('have.length', 0);
     });
 
@@ -280,7 +280,7 @@ describe('Feed notification configuration tests', function () {
         settings.clickOnSendNotificationByEmailAndSave();
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
+        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 36);
         cy.get('.opfab-notificationconfiguration-icon-envelope-without-slash').should('have.length', 0);
 
         // We subscribe to a process/state for mail notif
@@ -300,7 +300,7 @@ describe('Feed notification configuration tests', function () {
         opfab.navigateToFeed(); // we navigate to another screen
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 34);
+        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
         cy.get('.opfab-notificationconfiguration-icon-envelope-without-slash').should('have.length', 1);
 
         cy.get('@ProcessExampleMessageState')
@@ -312,7 +312,7 @@ describe('Feed notification configuration tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 34);
+        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
         cy.get('.opfab-notificationconfiguration-icon-envelope-without-slash').should('have.length', 1);
 
         cy.get('.opfab-notificationconfiguration-processlist')
@@ -350,7 +350,7 @@ describe('Feed notification configuration tests', function () {
         cy.hash().should('eq', '#/feed');
 
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 35);
+        cy.get('.opfab-notificationconfiguration-icon-envelope-with-slash').should('have.length', 36);
         cy.get('.opfab-notificationconfiguration-icon-envelope-without-slash').should('have.length', 0);
         cy.get('@ProcessExampleMessageState')
             .find('.opfab-notificationconfiguration-icon-envelope-with-slash')

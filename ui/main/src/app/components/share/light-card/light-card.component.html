@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -97,11 +97,11 @@
             <span *ngIf="open">
                 <span id="opfab-selected-card-summary">{{ lightCard.summaryTranslated }}</span>
                 <div
-                    id="opfab-form-entity"
-                    *ngIf="fromEntity"
+                    id="opfab-from-entity"
+                    *ngIf="fromEntityOrUser"
                     style="font-style: italic; text-align: right; width: 100%">
                     <span style="text-transform: capitalize" translate>feed.from</span>
-                    <span class="text-uppercase">&nbsp;:&nbsp;{{ fromEntity }}</span>
+                    <span class="text-uppercase">&nbsp;:&nbsp;{{ fromEntityOrUser }}</span>
                 </div>
             </span>
         </div>

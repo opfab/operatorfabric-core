@@ -274,6 +274,13 @@ By default, the publisher of the childCard is the publisher of the parent card. 
 set another value for the publisher of the childCard, provided that the user is a member of the entity publisher you
 want to set.
 
+== send a card on behalf of the user
+
+By default, when the user sends a card via the usercard interface, the card is sent on behalf of the entity of the user.
+If you want to send a card on behalf of the user himself, you have to set the field `publisherType` to `USER` in the
+usercard template, via the function `registerFunctionToGetSpecificCardInformation`. This way, the user will be set as
+publisher instead of his entity.
+
 == Misc
 
 When a user send a card, the card is also sent to the members of the entity that publish the card (and therefore also to

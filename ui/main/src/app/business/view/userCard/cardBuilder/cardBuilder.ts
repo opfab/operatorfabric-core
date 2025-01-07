@@ -133,9 +133,12 @@ export class CardBuilder {
             process: this.processId,
             processInstanceId: this.getProcessInstanceId(),
             processVersion: this.processVersion,
-            publisher: this.publisher,
-            publisherType: 'ENTITY',
             publishDate: null,
+            publisher:
+                this.specificCardInformation.card.publisherType === 'USER'
+                    ? UsersService.getCurrentUserWithPerimeters().userData.login
+                    : this.publisher,
+            publisherType: this.specificCardInformation.card.publisherType === 'USER' ? 'USER' : 'ENTITY',
             rRule: this.specificCardInformation.card.rRule,
             secondsBeforeTimeSpanForReminder: this.specificCardInformation.card.secondsBeforeTimeSpanForReminder,
             severity: this.severity,

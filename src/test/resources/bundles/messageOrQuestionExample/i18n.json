@@ -14,5 +14,9 @@
 	"confirmation":{
 		"title":"Confirmation ",
 		"summary":"Please confirm"
+	},
+	"messageFromUser":{
+		"title": "Message",
+		"summary": "Message received"
 	}
 }

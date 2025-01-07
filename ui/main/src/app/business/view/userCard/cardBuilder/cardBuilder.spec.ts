@@ -322,6 +322,26 @@ describe('UserCard CardBuilder', () => {
             expect(card.groupRecipients).toEqual([]);
         });
     });
+    describe('publisher', () => {
+        beforeEach(async () => {
+            await setUserPerimeter({
+                computedPerimeters: [],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['ENTITY1']
+                }
+            });
+        });
+
+        it('Should be set to USER if template provides it', async () => {
+            setSpecificCardInformation({valid: true, card: {publisherType: 'USER'}});
+            const card = await cardBuilder.getCard();
+            expect(card.publisherType).toEqual('USER');
+            expect(card.publisher).toEqual('test');
+        });
+    });
     describe('RecipientsForInformation', () => {
         it('Should be set from template if not visible', async () => {
             setSpecificCardInformation({valid: true, card: {entityRecipientsForInformation: ['ENTITY1', 'ENTITY2']}});

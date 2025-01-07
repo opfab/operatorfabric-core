@@ -41,7 +41,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     protected _i18nPrefix: string;
     dateToDisplay: string;
     truncatedTitle: string;
-    fromEntity = null;
+    fromEntityOrUser = null;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
     expirationDateToDisplay: string;
@@ -60,7 +60,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         GroupedLightCardsService.computeEvent
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
-        this.computeFromEntity();
+        this.computeFromEntityOrUser();
         this.computeDisplayedDate();
         this.computeLttdParams();
         this.computeDisplayedExpirationDate();
@@ -80,10 +80,17 @@ export class LightCardComponent implements OnInit, OnDestroy {
         });
     }
 
-    computeFromEntity() {
-        if (this.lightCard.publisherType === 'ENTITY')
-            this.fromEntity = EntitiesService.getEntityName(this.lightCard.publisher);
-        else this.fromEntity = null;
+    computeFromEntityOrUser() {
+        switch (this.lightCard.publisherType) {
+            case 'ENTITY':
+                this.fromEntityOrUser = EntitiesService.getEntityName(this.lightCard.publisher);
+                break;
+            case 'USER':
+                this.fromEntityOrUser = this.lightCard.publisher;
+                break;
+            default:
+                this.fromEntityOrUser = null;
+        }
     }
 
     computeDisplayedDate() {

@@ -187,14 +187,14 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_publisher_WHEN_sending_a_new_card_THEN_card_event_ADD_is_send_to_eventBus() {
+        void GIVEN_a_publisher_WHEN_sending_a_new_card_THEN_card_event_ADD_is_sent_to_eventBus() {
 
                 cardProcessingService.processCard(TestHelpers.generateOneCard());
                 Assertions.assertThat(eventBusSpy.getMessagesSent().get(0)[1]).contains("{\"type\":\"ADD\"");
         }
 
         @Test
-        void GIVEN_a_publisher_WHEN_sending_an_updated_card_THEN_card_event_UPDATE_is_send_to_eventBus() {
+        void GIVEN_a_publisher_WHEN_sending_an_updated_card_THEN_card_event_UPDATE_is_sent_to_eventBus() {
 
                 cardProcessingService.processCard(TestHelpers.generateOneCard());
                 cardProcessingService.processCard(TestHelpers.generateOneCard());
@@ -210,7 +210,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_with_external_recipient_WHEN_sending_the_card_THEN_card_is_send_to_external_recipient()
+        void GIVEN_a_card_with_external_recipient_WHEN_sending_the_card_THEN_card_is_sent_to_external_recipient()
                         throws URISyntaxException {
                 ArrayList<String> externalRecipients = new ArrayList<>();
                 externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
@@ -536,7 +536,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_WHEN_card_is_send_with_a_login_different_than_publisher_THEN_card_is_rejected() {
+        void GIVEN_a_card_WHEN_card_is_sent_with_a_login_different_than_publisher_THEN_card_is_rejected() {
 
                 User anotherUser = new User();
                 anotherUser.setLogin("wrongUser");
@@ -556,7 +556,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_WHEN_card_is_send_with_a_login_case_different_than_publisher_THEN_card_is_accepted() {
+        void GIVEN_a_card_WHEN_card_is_sent_with_a_login_case_different_than_publisher_THEN_card_is_accepted() {
                 User anotherUser = new User();
                 anotherUser.setLogin("DUMMYUSER");
                 CurrentUserWithPerimeters caseDifferentUser = new CurrentUserWithPerimeters();
@@ -601,7 +601,7 @@ class CardProcessServiceShould {
         }
 
         @Test
-        void GIVEN_a_card_with_representative_dummyUser_WHEN_card_is_send_with_a_login_case_different_than_representative_THEN_card_is_accepted() {
+        void GIVEN_a_card_with_representative_dummyUser_WHEN_card_is_sent_with_a_login_case_different_than_representative_THEN_card_is_accepted() {
 
                 User anotherUser = new User();
                 anotherUser.setLogin("DUMMYUSER");
@@ -936,5 +936,58 @@ class CardProcessServiceShould {
 
                 Optional<ArchivedCard> updatedArchivedCard = cardRepositoryMock.findArchivedCardByUid(newCard.getUid());
                 Assertions.assertThat(updatedArchivedCard.get().publishDate()).isEqualTo(original.getPublishDate());
+        }
+
+        @Test
+        void GIVEN_a_card_with_publisherType_is_user_and_publisher_is_the_user_WHEN_sending_card_THEN_card_is_sent() {
+                Card card = TestHelpers.generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                card.setPublisherType(PublisherTypeEnum.USER);
+
+                cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token, false);
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 1)).isTrue();
+                Assertions.assertThat(checkArchiveCount(1)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_with_publisherType_is_user_and_publisher_is_another_user_WHEN_sending_card_THEN_card_is_rejected() {
+                Card card = TestHelpers.generateOneCard("anotherUser");
+                card.setPublisherType(PublisherTypeEnum.USER);
+                Optional<CurrentUserWithPerimeters> optionalUser = Optional.of(currentUserWithPerimeters);
+
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processCard(card, optionalUser,
+                                        token, false))
+                                .isInstanceOf(IllegalArgumentException.class)
+                                .hasMessageContaining("Publisher is not valid, the card is rejected");
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
+                Assertions.assertThat(checkArchiveCount(0)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_with_publisherType_is_user_and_publisher_is_a_user_entity_WHEN_sending_card_THEN_card_is_rejected() {
+                Card card = TestHelpers.generateOneCard("entity2");
+                card.setPublisherType(PublisherTypeEnum.USER);
+                Optional<CurrentUserWithPerimeters> optionalUser = Optional.of(currentUserWithPerimeters);
+
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processCard(card, optionalUser,
+                                        token, false))
+                        .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessageContaining("Publisher is not valid, the card is rejected");
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
+                Assertions.assertThat(checkArchiveCount(0)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_with_publisherType_is_entity_and_wrong_publisher_WHEN_sending_card_THEN_card_is_rejected() {
+
+                Card card = TestHelpers.generateOneCard("PUBLISHER_X");
+                card.setPublisherType(PublisherTypeEnum.ENTITY);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                        .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessageContaining("Publisher is not valid, the card is rejected");
+                Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
+                Assertions.assertThat(checkArchiveCount(0)).isTrue();
         }
 }

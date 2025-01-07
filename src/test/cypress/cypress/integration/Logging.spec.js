@@ -59,10 +59,10 @@ describe('Logging screen tests', function () {
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
-        // We check we have 20 states
+        // We check we have 21 states
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(20);
+        archivesAndLogging.checkNumberOfStateSelectedIs(21);
 
         // We unselect all processes then we select 'Process example' process, and we check there are 8 states for this process
         archivesAndLogging.clickOnProcessSelect();
@@ -164,7 +164,7 @@ describe('Logging screen tests', function () {
         // We check we have 20 states (and 4 items for their process)
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(20);
+        archivesAndLogging.checkNumberOfStateSelectedIs(21);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();
@@ -327,7 +327,7 @@ describe('Logging screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(20);
+        archivesAndLogging.checkNumberOfStateSelectedIs(21);
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
@@ -371,7 +371,7 @@ describe('Logging screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(13);
+        archivesAndLogging.checkNumberOfStateSelectedIs(14);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();

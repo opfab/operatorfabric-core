@@ -74,18 +74,25 @@ export class CardFooterTextComponent implements OnChanges, OnInit {
     }
 
     private computeFromEntityOrRepresentative() {
-        if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentative = EntitiesService.getEntityName(this.card.publisher);
+        switch (this.card.publisherType) {
+            case 'ENTITY':
+                this.fromEntityOrRepresentative = EntitiesService.getEntityName(this.card.publisher);
 
-            if (this.card.representativeType && this.card.representative) {
-                const representative =
-                    this.card.representativeType === 'ENTITY'
-                        ? EntitiesService.getEntityName(this.card.representative)
-                        : this.card.representative;
+                if (this.card.representativeType && this.card.representative) {
+                    const representative =
+                        this.card.representativeType === 'ENTITY'
+                            ? EntitiesService.getEntityName(this.card.representative)
+                            : this.card.representative;
 
-                this.fromEntityOrRepresentative += ' (' + representative + ')';
-            }
-        } else this.fromEntityOrRepresentative = null;
+                    this.fromEntityOrRepresentative += ' (' + representative + ')';
+                }
+                break;
+            case 'USER':
+                this.fromEntityOrRepresentative = this.card.publisher;
+                break;
+            default:
+                this.fromEntityOrRepresentative = null;
+        }
     }
 
     private computeListEntitiesAcknowledged() {
