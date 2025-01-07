@@ -19,8 +19,6 @@ import {
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from '@ofServices/cards/model/Card';
-import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
-import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
 import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
 import {UserActionLogsPageDescription} from 'app/business/view/useractionlogs/userActionLogsPageDescription';
@@ -30,6 +28,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/archived-card-detail.component';
 import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
+import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/MultiSelect';
+import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 
 @Component({
     selector: 'of-useractionlogs',

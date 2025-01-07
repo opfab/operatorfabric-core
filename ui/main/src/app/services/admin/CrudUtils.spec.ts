@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from 'app/services/entities/model/Entity';
 import {firstValueFrom} from 'rxjs';
 import {CrudUtilities} from './CrudUtils';
-import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 describe('Entities multiselect options labels ', () => {

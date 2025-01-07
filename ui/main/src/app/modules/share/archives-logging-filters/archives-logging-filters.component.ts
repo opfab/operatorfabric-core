@@ -26,7 +26,7 @@ import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
-import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {UsersService} from '@ofServices/users/UsersService';

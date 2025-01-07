@@ -23,7 +23,7 @@ import {
     MultiselectItem,
     UserCardUIControl
 } from 'app/business/view/userCard/userCard.model';
-import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectConfig, MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';

@@ -13,7 +13,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card, CardForPublishing} from '@ofServices/cards/model/Card';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';

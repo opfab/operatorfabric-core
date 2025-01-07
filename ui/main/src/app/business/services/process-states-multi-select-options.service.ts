@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {Process} from '@ofServices/processes/model/Processes';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

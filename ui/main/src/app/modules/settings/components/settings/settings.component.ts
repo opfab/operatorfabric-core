@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,7 +12,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SettingsView} from 'app/business/view/settings/settings.view';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ModalService} from '@ofServices/modal/ModalService';

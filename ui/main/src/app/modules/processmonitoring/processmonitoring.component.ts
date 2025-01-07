@@ -33,7 +33,7 @@ import {CardsService} from '@ofServices/cards/CardsService';
 import {SelectedCardStore} from '../../business/store/selectedCard.store';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
-import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';

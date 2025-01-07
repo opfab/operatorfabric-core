@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {User} from '@ofServices/users/model/User';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {DeviceConfiguration, UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/spinner.component';

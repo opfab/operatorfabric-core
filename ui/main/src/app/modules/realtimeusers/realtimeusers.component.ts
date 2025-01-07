@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';

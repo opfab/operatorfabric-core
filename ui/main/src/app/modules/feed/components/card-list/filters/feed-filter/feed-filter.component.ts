@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {OpfabStore} from 'app/business/store/opfabStore';
-import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelect, MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';

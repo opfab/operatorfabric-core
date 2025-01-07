@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Filter} from '@ofModel/feed-filter.model';
-import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelect, MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {MonitoringFilterBuilder} from './monitoring-filter-builder';
 import {DEFAULT_PROCESS_GROUP_ID, MonitoringProcessList} from './monitoring-process-list';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/timeline-buttons.component';

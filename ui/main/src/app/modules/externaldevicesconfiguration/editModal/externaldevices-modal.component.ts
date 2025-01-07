@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import {
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {DeviceConfiguration} from '@ofServices/notifications/model/ExternalDevices';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {Observable, of} from 'rxjs';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

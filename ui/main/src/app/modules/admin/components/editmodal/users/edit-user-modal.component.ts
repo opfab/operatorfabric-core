@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import {GroupsService} from '@ofServices/groups/GroupsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {MultiSelectConfig, MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
