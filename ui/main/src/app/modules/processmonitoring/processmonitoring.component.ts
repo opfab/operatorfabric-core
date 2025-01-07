@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,9 +27,9 @@ import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {CardsFilter} from '@ofModel/cards-filter.model';
-import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
+import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {SelectedCardStore} from '../../business/store/selectedCard.store';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
@@ -167,7 +167,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
 
-    columnFilters: FilterModel[] = [];
+    columnFilters: Filter[] = [];
     isProcessGroupFilterVisible: boolean;
     mustViewAllCardsFeatureBeDisplayed: boolean;
     isAdminModeChecked: boolean;
@@ -417,7 +417,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(page_number, this.size);
 
-        CardService.fetchFilteredCards(filter).subscribe({
+        CardsService.fetchFilteredCards(filter).subscribe({
             next: (page: Page<any>) => {
                 this.loadingInProgress = false;
 
@@ -450,11 +450,11 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     private getFilter(pageNumber: number, pageSize: number): CardsFilter {
         const localFilters = [];
         this.filters?.forEach((values, key) => {
-            localFilters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
+            localFilters.push(new Filter(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected, set the filter to the list of process that shall be visible on the UI
         if (this.listOfProcessesForRequest.length && !this.filters?.has('process'))
-            localFilters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
+            localFilters.push(new Filter('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
         this.columnFilters.forEach((filter) => localFilters.push(filter));
 
@@ -571,7 +571,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         Object.keys(filterModel).forEach((column) => {
             const type: string = filterModel[column].type;
             this.columnFilters.push(
-                new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                new Filter(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
                     filterModel[column].filter
                 ])
             );
@@ -599,7 +599,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(0, this.resultsNumber);
 
-        CardService.fetchFilteredCards(filter).subscribe((page: Page<Object>) => {
+        CardsService.fetchFilteredCards(filter).subscribe((page: Page<Object>) => {
             const lines = page.content;
             const severityColumnName = this.translateColumn('shared.result.severity');
 

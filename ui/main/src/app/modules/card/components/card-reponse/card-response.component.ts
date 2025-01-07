@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Card, CardForPublishing} from '@ofModel/card.model';
+import {Card, CardForPublishing} from '@ofServices/cards/model/Card';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -23,7 +23,7 @@ import {UserPermissionsService} from '@ofServices/userPermissions/UserPermission
 import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
@@ -199,7 +199,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             this.sendingResponseInProgress = true;
             // Exclude card from sound and system notifications before publishing to avoid synchronization problems
             NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
-            CardService.postCard(card).subscribe((resp) => {
+            CardsService.postCard(card).subscribe((resp) => {
                 this.sendingResponseInProgress = false;
                 if (resp.status !== ServerResponseStatus.OK) {
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);

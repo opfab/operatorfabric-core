@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,10 +27,10 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {setSpecificCardInformation} from '@tests/userCardView/helpers';
-import {CardServerMock} from '@tests/mocks/cardServer.mock';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {I18n} from '@ofModel/i18n.model';
-import {CardWithChildCards} from '@ofModel/card.model';
+import {CardWithChildCards} from '@ofServices/cards/model/Card';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {HandlebarsTemplateServerMock} from '@tests/mocks/HandlebarsTemplateServer.mock';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
@@ -40,7 +40,7 @@ declare const opfab: any;
 describe('UserCard view ', () => {
     let userCardView: UserCardView;
     let userCardUIControlMock: UserCardUIControlMock;
-    let cardServerMock: CardServerMock;
+    let cardsServerMock: CardsServerMock;
 
     async function initUserCardView(cardWithChildCards?: CardWithChildCards, editionMode?: EditionMode): Promise<void> {
         userCardUIControlMock = new UserCardUIControlMock();
@@ -50,7 +50,7 @@ describe('UserCard view ', () => {
     }
 
     function setCardDataResponse(cardData: CardWithChildCards) {
-        cardServerMock.setResponseFunctionForLoadCard(() => {
+        cardsServerMock.setResponseFunctionForLoadCard(() => {
             return new ServerResponse(cardData, ServerResponseStatus.OK, '');
         });
     }
@@ -80,8 +80,8 @@ describe('UserCard view ', () => {
         initOpfabAPI();
         HandlebarsService.setHandlebarsTemplateServer(new HandlebarsTemplateServerMock());
         HandlebarsService.clearCache();
-        cardServerMock = new CardServerMock();
-        CardService.setCardServer(cardServerMock);
+        cardsServerMock = new CardsServerMock();
+        CardsService.setCardsServer(cardsServerMock);
         await setEntities([
             new Entity('ENTITY1', 'ENTITY1_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
             new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER], [], []),
@@ -852,7 +852,7 @@ describe('UserCard view ', () => {
             setSpecificCardInformation({valid: true, card: {data: 'test'}});
             await userCardView.prepareCardToSend();
             await userCardView.sendCardAncChildCard();
-            expect(cardServerMock.cardsPosted[0].data).toEqual('test');
+            expect(cardsServerMock.cardsPosted[0].data).toEqual('test');
         });
         it('Should post child card', async () => {
             await initUserCardView();
@@ -868,8 +868,8 @@ describe('UserCard view ', () => {
             setSpecificCardInformation({valid: true, card: {data: 'test'}, childCard: childCard});
             await userCardView.prepareCardToSend();
             await userCardView.sendCardAncChildCard();
-            expect(cardServerMock.cardsPosted[0].data).toEqual('test');
-            expect(cardServerMock.cardsPosted[1].data).toEqual('childData');
+            expect(cardsServerMock.cardsPosted[0].data).toEqual('test');
+            expect(cardsServerMock.cardsPosted[1].data).toEqual('childData');
         });
         it('When startDate is set to currentDate it should send card and childCard with the date when user clicks on send and not when preview has been clicked ', async () => {
             await initUserCardView();
@@ -887,8 +887,8 @@ describe('UserCard view ', () => {
             await userCardView.prepareCardToSend();
             jasmine.clock().mockDate(new Date(50000));
             await userCardView.sendCardAncChildCard();
-            expect(cardServerMock.cardsPosted[0].startDate).toEqual(50000);
-            expect(cardServerMock.cardsPosted[1].startDate).toEqual(50000);
+            expect(cardsServerMock.cardsPosted[0].startDate).toEqual(50000);
+            expect(cardsServerMock.cardsPosted[1].startDate).toEqual(50000);
         });
     });
 });

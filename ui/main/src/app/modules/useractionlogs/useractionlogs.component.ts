@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';

@@ -141,7 +141,7 @@ export class RRule {
     ) {}
 }
 
-export function fromCardToLightCard(card: Card): LightCard {
+export function convertCardToLightCard(card: Card): LightCard {
     return new LightCard(
         card.uid,
         card.id,
@@ -184,7 +184,7 @@ export function fromCardToLightCard(card: Card): LightCard {
     );
 }
 
-export function fromCardToCardForPublishing(card: Card): CardForPublishing {
+export function convertCardToCardForPublishing(card: Card): CardForPublishing {
     return new CardForPublishing(
         card.publisher,
         card.processVersion,

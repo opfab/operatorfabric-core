@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';

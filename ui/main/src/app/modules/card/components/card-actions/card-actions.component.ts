@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {State} from '@ofServices/processes/model/Processes';
@@ -27,7 +27,7 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
@@ -184,7 +184,7 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
 
     public deleteCard(): void {
         this.deleteInProgress = true;
-        CardService.deleteCard(this.card).subscribe((resp) => {
+        CardsService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {
                 this.closeDetails();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,11 @@ import {SeverityForm} from './severityForm/severityForm';
 import {KeepChildCardsForm} from './keepChildCardsForm/keepChildCardsForm';
 import {PublisherForm} from './publisherForm/publisherForm';
 import {RecipientsForm} from './recipientsForm/recipientsForm';
-import {Card, CardWithChildCards} from '@ofModel/card.model';
+import {Card, CardWithChildCards} from '@ofServices/cards/model/Card';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {CardBuilder} from './cardBuilder/cardBuilder';
 import {CardSender} from './cardSender/cardSender';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 /**
@@ -89,7 +89,7 @@ export class UserCardView {
             return;
         }
         if (existingCardId) {
-            const existingCardWithChildCards = await firstValueFrom(CardService.loadCard(existingCardId));
+            const existingCardWithChildCards = await firstValueFrom(CardsService.loadCard(existingCardId));
             this.existingCard = existingCardWithChildCards?.card;
             this.existingChildCards = existingCardWithChildCards?.childCards;
         }

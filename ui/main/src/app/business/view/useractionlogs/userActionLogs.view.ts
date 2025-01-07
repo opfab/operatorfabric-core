@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardWithChildCards} from '@ofModel/card.model';
+import {CardWithChildCards} from '@ofServices/cards/model/Card';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Page} from '@ofModel/page.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {format, sub} from 'date-fns';
@@ -182,7 +182,7 @@ export class UserActionLogsView {
     }
 
     public getCard(cardUid: string): Observable<CardWithChildCards> {
-        return CardService.loadArchivedCard(cardUid).pipe(
+        return CardsService.loadArchivedCard(cardUid).pipe(
             switchMap((card) => {
                 if (!card) {
                     AlertMessageService.sendAlertMessage({
@@ -192,7 +192,7 @@ export class UserActionLogsView {
                     return of(null);
                 }
                 if (card.card.initialParentCardUid) {
-                    return CardService.loadArchivedCard(card.card.initialParentCardUid);
+                    return CardsService.loadArchivedCard(card.card.initialParentCardUid);
                 } else {
                     return of(card);
                 }

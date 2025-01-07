@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import {AcknowledgeService} from '../services/acknowlegment/AcknowledgeService';
 import {DateTimeFormatterService} from '../services/dateTimeFormatter/DateTimeFormatterService';
 import {AdminProcessesService} from '../services/admin/AdminProcessesService';
 import {BusinessDataService} from '../services/businessdata/businessdata.service';
-import {CardService} from './services/card/card.service';
+import {CardsService} from '../services/cards/CardsService';
 import {SupervisedEntitiesService} from '../services/admin/SupervisedEntitiesService';
 import {SelectedCardLoaderService} from './services/card/selectedCardLoader.service';
 import {HandlebarsService} from '../services/handlebars/HandlebarsService';
@@ -76,7 +76,7 @@ export class ApplicationLoader {
         AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
         AdminProcessesService.setAdminProcessesServer(servers.adminProcessesServer);
         BusinessDataService.setBusinessDataServer(servers.businessDataServer);
-        CardService.setCardServer(servers.cardServer);
+        CardsService.setCardsServer(servers.cardsServer);
         SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
         HandlebarsService.setHandlebarsTemplateServer(servers.handlebarsTemplateServer);

@@ -19,10 +19,10 @@ import {
 } from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {CardService} from 'app/business/services/card/card.service';
-import {CardServerMock} from '@tests/mocks/cardServer.mock';
+import {CardsService} from '@ofServices/cards/CardsService';
+import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {State} from '@ofServices/processes/model/Processes';
-import {TimeSpan} from '@ofModel/card.model';
+import {TimeSpan} from '@ofServices/cards/model/Card';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {Entity} from '@ofServices/entities/model/Entity';
@@ -41,7 +41,7 @@ describe('UserCard CardBuilder', () => {
     beforeEach(async () => {
         initOpfabAPI();
         cardBuilder = new CardBuilder();
-        CardService.setCardServer(new CardServerMock());
+        CardsService.setCardsServer(new CardsServerMock());
         await setProcessConfiguration([
             {
                 id: 'process1',

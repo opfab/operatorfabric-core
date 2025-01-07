@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '@ofModel/card.model';
+import {Card, TimeSpan} from '@ofServices/cards/model/Card';
 import {Frequency, Weekday, RRule} from 'rrule';
 import {Frequency as OpfabFrequency} from '@ofModel/light-card.model';
 

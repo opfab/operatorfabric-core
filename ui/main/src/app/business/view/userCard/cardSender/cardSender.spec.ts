@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,27 +9,27 @@
 
 import {AlertMessageReceiver, getOneCard} from '@tests/helpers';
 import {CardSender} from './cardSender';
-import {CardServerMock} from '@tests/mocks/cardServer.mock';
-import {CardService} from 'app/business/services/card/card.service';
-import {CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
+import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
+import {CardsService} from '@ofServices/cards/CardsService';
+import {CardCreationReportData, convertCardToCardForPublishing} from '@ofServices/cards/model/Card';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 
 describe('UserCard CardSender', () => {
-    let cardServerMock: CardServerMock;
+    let cardsServerMock: CardsServerMock;
     let cardSender: CardSender;
     const card = getOneCard();
     beforeEach(() => {
-        cardServerMock = new CardServerMock();
-        CardService.setCardServer(cardServerMock);
+        cardsServerMock = new CardsServerMock();
+        CardsService.setCardsServer(cardsServerMock);
         cardSender = new CardSender();
     });
     describe('Send a card', () => {
         it('Should send to the back end', async () => {
             await cardSender.sendCardAndChildCard(card);
-            expect(cardServerMock.cardsPosted.length).toBe(1);
-            expect(cardServerMock.cardsPosted[0]).toEqual(fromCardToCardForPublishing(card));
+            expect(cardsServerMock.cardsPosted.length).toBe(1);
+            expect(cardsServerMock.cardsPosted[0]).toEqual(convertCardToCardForPublishing(card));
         });
         it('Should display a success message to user if card sent', async () => {
             const alertMessageReceiver = new AlertMessageReceiver();
@@ -39,7 +39,7 @@ describe('UserCard CardSender', () => {
             expect(alertMessage.level).toEqual(MessageLevel.INFO);
         });
         it('Should display error to user if card not sent', async () => {
-            cardServerMock.setResponseFunctionForPostCard(() => {
+            cardsServerMock.setResponseFunctionForPostCard(() => {
                 return new ServerResponse(null, ServerResponseStatus.NOT_FOUND, null);
             });
             const alertMessageReceiver = new AlertMessageReceiver();
@@ -63,15 +63,15 @@ describe('UserCard CardSender', () => {
 
         it('Should send child card to the back end', async () => {
             await cardSender.sendCardAndChildCard(card, childCard);
-            expect(cardServerMock.cardsPosted.length).toBe(2);
-            expect(cardServerMock.cardsPosted[1].data).toEqual(childCard.data);
-            expect(cardServerMock.cardsPosted[1].publisher).toEqual(childCard.publisher);
-            expect(cardServerMock.cardsPosted[1].process).toEqual(childCard.process);
+            expect(cardsServerMock.cardsPosted.length).toBe(2);
+            expect(cardsServerMock.cardsPosted[1].data).toEqual(childCard.data);
+            expect(cardsServerMock.cardsPosted[1].publisher).toEqual(childCard.publisher);
+            expect(cardsServerMock.cardsPosted[1].process).toEqual(childCard.process);
         });
         it('Child card should contain child card + cards id and card uid of the parent created card', async () => {
             await cardSender.sendCardAndChildCard(card, childCard);
-            expect(cardServerMock.cardsPosted[1]).toEqual({
-                ...fromCardToCardForPublishing(childCard),
+            expect(cardsServerMock.cardsPosted[1]).toEqual({
+                ...convertCardToCardForPublishing(childCard),
                 parentCardId: 'cardCreatedId',
                 initialParentCardUid: 'cardCreatedUid'
             });
@@ -87,7 +87,7 @@ describe('UserCard CardSender', () => {
         it('Should display error to user if child card not sent', async () => {
             const alertMessageReceiver = new AlertMessageReceiver();
             let methodCallsNumber = 0;
-            cardServerMock.setResponseFunctionForPostCard(() => {
+            cardsServerMock.setResponseFunctionForPostCard(() => {
                 if (methodCallsNumber === 0) {
                     // first time respond with ok for card
                     methodCallsNumber = 1;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 import {TranslationService} from '@ofServices/translation/TranslationService';

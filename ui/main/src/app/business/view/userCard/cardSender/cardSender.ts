@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, CardCreationReportData, fromCardToCardForPublishing} from '@ofModel/card.model';
+import {Card, CardCreationReportData, convertCardToCardForPublishing} from '@ofServices/cards/model/Card';
 import {I18n} from '@ofModel/i18n.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {firstValueFrom} from 'rxjs';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 
 export class CardSender {
     public async sendCardAndChildCard(card: Card, childCard?: Card, setCurrentDateForStartDate = false) {
-        let cardForPublish = fromCardToCardForPublishing(card);
+        let cardForPublish = convertCardToCardForPublishing(card);
         if (setCurrentDateForStartDate) {
             cardForPublish = {
                 ...cardForPublish,
@@ -27,7 +27,7 @@ export class CardSender {
             };
         }
         NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
-        const responseFromCardPost = await firstValueFrom(CardService.postCard(cardForPublish));
+        const responseFromCardPost = await firstValueFrom(CardsService.postCard(cardForPublish));
         if (responseFromCardPost.status !== ServerResponseStatus.OK) {
             this.displayErrorMessageOnUI();
             logger.error(
@@ -66,7 +66,7 @@ export class CardSender {
         setCurrentDateForStartDate
     ): Promise<ServerResponse<CardCreationReportData>> {
         let cardForPublish = {
-            ...fromCardToCardForPublishing(childCard),
+            ...convertCardToCardForPublishing(childCard),
             parentCardId: responseFromCardPost.data.id,
             initialParentCardUid: responseFromCardPost.data.uid
         };
@@ -76,7 +76,7 @@ export class CardSender {
                 startDate: new Date().valueOf()
             };
         }
-        return await firstValueFrom(CardService.postCard(cardForPublish));
+        return await firstValueFrom(CardsService.postCard(cardForPublish));
     }
 
     private displaySuccessMessageOnUI() {

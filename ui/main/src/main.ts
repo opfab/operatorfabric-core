@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,8 +47,8 @@ import {OpfabEventStreamServer} from './app/business/server/opfabEventStream.ser
 import {AngularOpfabEventStreamServer} from './app/server/angularOpfabEventStream.server';
 import {ExternalDevicesServer} from './app/services/notifications/server/ExternalDevicesServer';
 import {AngularExternalDevicesServer} from './app/services/notifications/server/AngularExternalDevicesServer';
-import {CardServer} from './app/business/server/card.server';
-import {AngularCardServer} from './app/server/angularCard.server';
+import {CardsServer} from './app/services/cards/server/CardsServer';
+import {AngularCardsServer} from './app/services/cards/server/AngularCardsServer';
 import {SoundServer} from './app/services/notifications/server/SoundServer';
 import {AngularSoundServer} from './app/services/notifications/server/AngularSoundServer';
 import {TranslationLib} from './app/services/translation/lib/TranslationLib';
@@ -111,7 +111,7 @@ bootstrapApplication(AppComponent, {
         {provide: UserSettingsServer, useClass: AngularUserSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
-        {provide: CardServer, useClass: AngularCardServer},
+        {provide: CardsServer, useClass: AngularCardsServer},
         {provide: SoundServer, useClass: AngularSoundServer},
         {provide: TranslationLib, useClass: AngularTranslationLib},
         {provide: ModalComponent, useClass: NgbModalComponent},

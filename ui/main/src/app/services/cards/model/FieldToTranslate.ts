@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from './i18n.model';
+import {I18n} from '../../../business/model/i18n.model';
 
-export interface FieldToTranslate {
-    process: string;
-    processVersion: string;
-    i18nValue: I18n;
+export class FieldToTranslate {
+    constructor(
+        readonly process: string,
+        readonly processVersion: string,
+        readonly i18nValue: I18n
+    ) {}
 }

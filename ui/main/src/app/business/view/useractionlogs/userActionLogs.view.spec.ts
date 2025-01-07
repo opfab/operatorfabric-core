@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,8 @@ import {ActionTypeEnum, UserActionLog} from '@ofModel/user-action-log.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {CardService} from 'app/business/services/card/card.service';
-import {CardServerMock} from '@tests/mocks/cardServer.mock';
+import {CardsService} from '@ofServices/cards/CardsService';
+import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
@@ -36,15 +36,15 @@ describe('User action logs view ', () => {
     let usersServerMock: UsersServerMock;
     let userActionLogsServerMock: UserActionLogsServerMock;
     let entityServerMock: EntitiesServerMock;
-    let cardServerMock: CardServerMock;
+    let cardsServerMock: CardsServerMock;
 
     const user = new User('login', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
 
     beforeEach(async () => {
         ConfigService.setConfigServer(new ConfigServerMock());
         TranslationService.setTranslationLib(new TranslationLibMock());
-        cardServerMock = new CardServerMock();
-        CardService.setCardServer(cardServerMock);
+        cardsServerMock = new CardsServerMock();
+        CardsService.setCardsServer(cardsServerMock);
         await initEntityService();
         await initCurrentUserPerimeter();
         await mockUserActionLogsService();
@@ -234,7 +234,7 @@ describe('User action logs view ', () => {
 
     it('GIVEN an uid WHEN getCard THEN card is obtain from archives', async () => {
         userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
-        cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
+        cardsServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse({card: {uid: 'uidtest'}}, ServerResponseStatus.OK, '');
         });
 
@@ -244,7 +244,7 @@ describe('User action logs view ', () => {
 
     it('GIVEN a child card uid WHEN getCard THEN initial parent card is obtain from archives', async () => {
         userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
-        cardServerMock.setResponseFunctionForLoadArchivedCard((cardUid) => {
+        cardsServerMock.setResponseFunctionForLoadArchivedCard((cardUid) => {
             if (cardUid === 'childUid')
                 return new ServerResponse(
                     {card: {uid: 'childUid', initialParentCardUid: 'parentUid'}},
@@ -260,7 +260,7 @@ describe('User action logs view ', () => {
 
     it('GIVEN an unexisting uid WHEN getCard THEN alert message is send and no card is return ', async () => {
         userActionLogsView = new UserActionLogsView(userActionLogsServerMock);
-        cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
+        cardsServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse(null, ServerResponseStatus.NOT_FOUND, '');
         });
         const alertSubject = new ReplaySubject<Message>();

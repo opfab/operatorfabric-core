@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '@ofModel/card.model';
+import {Card, TimeSpan} from '@ofServices/cards/model/Card';
 import {CardAction, Severity} from '@ofModel/light-card.model';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
@@ -15,7 +15,7 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {I18n} from '@ofModel/i18n.model';
 import {firstValueFrom} from 'rxjs';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {Guid} from 'guid-typescript';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
@@ -228,7 +228,7 @@ export class CardBuilder {
     private async getTitleTranslated(i18n: I18n): Promise<string> {
         if (!i18n?.key) return '';
         const translated: any = await firstValueFrom(
-            CardService.postTranslateCardField(this.processId, this.processVersion, i18n)
+            CardsService.postTranslateCardField(this.processId, this.processVersion, i18n)
         );
         return translated.translatedField;
     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Component, OnDestroy} from '@angular/core';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';

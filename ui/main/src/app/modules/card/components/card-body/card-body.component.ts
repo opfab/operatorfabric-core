@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofServices/processes/model/Processes';
@@ -34,7 +34,7 @@ import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
@@ -175,7 +175,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private integrateOneChildCard(newChildCard: Card) {
-        CardService.loadCard(newChildCard.id).subscribe((cardData) => {
+        CardsService.loadCard(newChildCard.id).subscribe((cardData) => {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
@@ -314,13 +314,13 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     this.updateLastReadCardStatusOnFeedIfNeeded();
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
-            CardService.postUserCardRead(this.card.uid).subscribe();
+            CardsService.postUserCardRead(this.card.uid).subscribe();
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
 
         if (this.childCards) {
             this.childCards.forEach((child) => {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) && !child.hasBeenRead) {
-                    CardService.postUserCardRead(child.uid).subscribe();
+                    CardsService.postUserCardRead(child.uid).subscribe();
                 }
             });
         }

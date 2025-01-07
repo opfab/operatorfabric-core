@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,13 +27,13 @@ import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {Utilities} from 'app/business/common/utilities';
-import {Card, CardWithChildCards} from '@ofModel/card.model';
+import {Card, CardWithChildCards} from '@ofServices/cards/model/Card';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {DisplayContext} from '@ofModel/template.model';
-import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {CardsFilter} from '@ofModel/cards-filter.model';
+import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf, NgFor} from '@angular/common';
@@ -186,7 +186,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.isCollapsibleUpdatesActivated
         );
 
-        CardService.fetchFilteredArchivedCards(filter)
+        CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (page: Page<LightCard>) => {
@@ -248,7 +248,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         let isAdminMode = false;
         filtersMap.forEach((values, key) => {
             if (key === 'adminMode') isAdminMode = values[0];
-            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
+            else filters.push(new Filter(key, null, FilterMatchTypeEnum.IN, values));
         });
 
         return new CardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
@@ -291,7 +291,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         }
         const filter = this.getFilter(0, 1 + this.historySize, filters, false);
 
-        return CardService.fetchFilteredArchivedCards(filter).pipe(
+        return CardsService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
@@ -346,7 +346,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
-        CardService.fetchFilteredArchivedCards(filter)
+        CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
@@ -412,7 +412,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.cardLoadingInProgress = true;
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
-        CardService.loadArchivedCard(cardId).subscribe((card: CardWithChildCards) => {
+        CardsService.loadArchivedCard(cardId).subscribe((card: CardWithChildCards) => {
             if (card) {
                 this.selectedCard = card.card;
                 this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated, 100);

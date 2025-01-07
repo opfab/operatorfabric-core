@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
 import {AdminProcessesServer} from '@ofServices/admin/server/AdminProcessesServer';
 import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataServer';
-import {CardServer} from 'app/business/server/card.server';
+import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
 import {TemplateCssServer} from '../../../services/templateCss/server/TemplateCssServer';
@@ -83,7 +83,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly adminProcessesServer: AdminProcessesServer,
         private readonly acknowledgeServer: AcknowledgeServer,
         private readonly businessDataServer: BusinessDataServer,
-        private readonly cardServer: CardServer,
+        private readonly cardsServer: CardsServer,
         private readonly supervisedEntitiesServer: SupervisedEntitiesServer,
         private readonly externalDevicesServer: ExternalDevicesServer,
         private readonly templateCssServer: TemplateCssServer,
@@ -111,7 +111,7 @@ export class ApplicationLoadingComponent implements OnInit {
             adminProcessesServer: this.adminProcessesServer,
             acknowledgeServer: this.acknowledgeServer,
             businessDataServer: this.businessDataServer,
-            cardServer: this.cardServer,
+            cardsServer: this.cardsServer,
             supervisedEntitiesServer: this.supervisedEntitiesServer,
             externalDevicesServer: this.externalDevicesServer,
             templateCssServer: this.templateCssServer,

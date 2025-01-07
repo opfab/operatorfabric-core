@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Card, fromCardToLightCard} from '@ofModel/card.model';
+import {Card, convertCardToLightCard} from '@ofServices/cards/model/Card';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
@@ -85,7 +85,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        let lightcard = fromCardToLightCard(this.card);
+        let lightcard = convertCardToLightCard(this.card);
         if (lightcard && entitiesAcksToAdd) {
             const newentitiesAcks = lightcard.entitiesAcks
                 ? [...new Set([...lightcard.entitiesAcks, ...entitiesAcksToAdd])]
@@ -101,7 +101,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private removeAckFromSubscription(entitiesAcksToRemove: string[]) {
-        const lightcard = fromCardToLightCard(this.card);
+        const lightcard = convertCardToLightCard(this.card);
         if (lightcard?.entitiesAcks && entitiesAcksToRemove) {
             entitiesAcksToRemove.forEach((entityToRemove) => {
                 const indexToRemove = lightcard.entitiesAcks.indexOf(entityToRemove);

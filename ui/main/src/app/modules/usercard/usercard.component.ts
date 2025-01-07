@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,12 +9,12 @@
 
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Card, CardWithChildCards, fromCardToLightCard} from '@ofModel/card.model';
+import {Card, CardWithChildCards, convertCardToLightCard} from '@ofServices/cards/model/Card';
 import {Severity} from '@ofModel/light-card.model';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {map} from 'rxjs/operators';
 import {DisplayContext} from '@ofModel/template.model';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {Observable} from 'rxjs';
 import {UserCardView} from 'app/business/view/userCard/userCard.view';
 import {
@@ -358,7 +358,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     }
 
     private getConnectedRecipients(): Observable<void> {
-        return CardService.fetchConnectedRecipients(this.lightCardPreview).pipe(
+        return CardsService.fetchConnectedRecipients(this.lightCardPreview).pipe(
             map((connectedRecipients) => {
                 this.connectedRecipients.clear();
                 connectedRecipients.forEach((recipient) => {
@@ -393,7 +393,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         const hasChildCardFromCurrentUserEntity =
             cardWithChildCards.childCards?.some((child) => userEntities.includes(child.publisher)) ?? false;
-        this.lightCardPreview = {...fromCardToLightCard(this.cardPreview), hasChildCardFromCurrentUserEntity};
+        this.lightCardPreview = {...convertCardToLightCard(this.cardPreview), hasChildCardFromCurrentUserEntity};
     }
 
     public cancelPreview(): void {

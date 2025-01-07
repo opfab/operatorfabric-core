@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,31 +12,32 @@ import {
     CardCreationReportData,
     CardWithChildCards,
     CardForPublishing,
-    fromCardToLightCard
-} from '@ofModel/card.model';
+    convertCardToLightCard
+} from '@ofServices/cards/model/Card';
 import {map} from 'rxjs/operators';
 import {I18n} from '@ofModel/i18n.model';
-import {CardsFilter} from '@ofModel/cards-filter.model';
-import {CardServer} from '../../server/card.server';
-import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
-import {AcknowledgeService} from '../../../services/acknowlegment/AcknowledgeService';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
+import {CardsServer} from './server/CardsServer';
+import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {AcknowledgeService} from '../acknowlegment/AcknowledgeService';
 import {LightCard} from '@ofModel/light-card.model';
+import {FieldToTranslate} from './model/FieldToTranslate';
 
-export class CardService {
-    private static cardServer: CardServer;
+export class CardsService {
+    private static cardsServer: CardsServer;
 
-    public static setCardServer(cardServer: CardServer) {
-        CardService.cardServer = cardServer;
+    public static setCardsServer(cardsServer: CardsServer) {
+        CardsService.cardsServer = cardsServer;
     }
 
     public static loadCard(id: string): Observable<CardWithChildCards> {
-        return CardService.cardServer.loadCard(id).pipe(
+        return CardsService.cardsServer.loadCard(id).pipe(
             map((cardResponse) => {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                     const cardData = cardResponse.data;
                     cardData.card.hasBeenAcknowledged =
                         AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
-                            fromCardToLightCard(cardData.card)
+                            convertCardToLightCard(cardData.card)
                         );
                     return cardData;
                 }
@@ -45,44 +46,44 @@ export class CardService {
     }
 
     public static loadArchivedCard(id: string): Observable<CardWithChildCards> {
-        return CardService.cardServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
+        return CardsService.cardsServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
     }
 
     public static fetchFilteredArchivedCards(filter: CardsFilter) {
-        return CardService.cardServer
+        return CardsService.cardsServer
             .fetchFilteredArchivedCards(filter)
             .pipe(map((serverResponse) => serverResponse.data));
     }
 
     public static fetchFilteredCards(filter: CardsFilter) {
-        return CardService.cardServer.fetchFilteredCards(filter).pipe(map((serverResponse) => serverResponse.data));
+        return CardsService.cardsServer.fetchFilteredCards(filter).pipe(map((serverResponse) => serverResponse.data));
     }
 
     public static postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
-        return CardService.cardServer.postCard(card);
+        return CardsService.cardsServer.postCard(card);
     }
 
     public static deleteCard(card: Card): Observable<ServerResponse<void>> {
-        return CardService.cardServer.deleteCard(card);
+        return CardsService.cardsServer.deleteCard(card);
     }
 
     public static postUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
-        return CardService.cardServer.postUserCardRead(cardUid);
+        return CardsService.cardsServer.postUserCardRead(cardUid);
     }
 
     public static deleteUserCardRead(cardUid: string): Observable<ServerResponse<void>> {
-        return CardService.cardServer.deleteUserCardRead(cardUid);
+        return CardsService.cardsServer.deleteUserCardRead(cardUid);
     }
 
     public static postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
-        const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
-        return CardService.cardServer
+        const fieldToTranslate = new FieldToTranslate(processId, processVersion, i18nValue);
+        return CardsService.cardsServer
             .postTranslateCardField(fieldToTranslate)
             .pipe(map((serverResponse) => serverResponse.data));
     }
 
     public static fetchConnectedRecipients(lightcard: LightCard): Observable<string[]> {
-        return CardService.cardServer
+        return CardsService.cardsServer
             .fetchConnectedRecipients(lightcard)
             .pipe(map((serverResponse) => serverResponse.data));
     }

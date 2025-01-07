@@ -20,7 +20,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {LightCard} from '@ofModel/light-card.model';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';

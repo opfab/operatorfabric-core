@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,21 +10,21 @@
 import {ServerResponse} from 'app/business/server/serverResponse';
 
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
-import {CardServer} from 'app/business/server/card.server';
-import {CardsFilter} from '@ofModel/cards-filter.model';
-import {CardForPublishing, Card, CardWithChildCards, CardCreationReportData} from '@ofModel/card.model';
-import {FieldToTranslate} from '@ofModel/field-to-translate.model';
+import {CardsServer} from '@ofServices/cards/server/CardsServer';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
+import {CardForPublishing, Card, CardWithChildCards, CardCreationReportData} from '@ofServices/cards/model/Card';
+import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularCardServer extends AngularServer implements CardServer {
+export class AngularCardsServer extends AngularServer implements CardsServer {
     private readonly cardConsultationUrl: string;
     private readonly archivesUrl: string;
     private readonly cardPublicationUrl: string;

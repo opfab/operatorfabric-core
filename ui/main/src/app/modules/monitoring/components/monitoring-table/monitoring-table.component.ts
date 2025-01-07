@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -24,7 +24,7 @@ import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-r
 import {LightCard} from '@ofModel/light-card.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {AgGridAngular} from 'ag-grid-angular';
@@ -363,7 +363,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
-                CardService.loadCard(this.gridApi.getRowNode(lineNumber).data.cardId).subscribe((card) => {
+                CardsService.loadCard(this.gridApi.getRowNode(lineNumber).data.cardId).subscribe((card) => {
                     this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
                     this.processMonitoringForExport(++lineNumber);
                 });

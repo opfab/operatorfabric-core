@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {
     ConsideredAcknowledgedForUserWhenEnum,
     Process
 } from '@ofServices/processes/model/Processes';
-import {Card} from '@ofModel/card.model';
+import {Card} from '@ofServices/cards/model/Card';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';

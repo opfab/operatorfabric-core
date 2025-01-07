@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,14 +8,14 @@
  */
 
 import {firstValueFrom} from 'rxjs';
-import {CardService} from '../business/services/card/card.service';
+import {CardsService} from '../services/cards/CardsService';
 
 declare const opfab: any;
 
 export function initCardsAPI() {
     opfab.cards = {
         getCards: function (cardsFilters) {
-            return firstValueFrom(CardService.fetchFilteredCards(cardsFilters));
+            return firstValueFrom(CardsService.fetchFilteredCards(cardsFilters));
         }
     };
 }

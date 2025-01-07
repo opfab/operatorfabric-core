@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardForPublishing, CardCreationReportData, Card} from '@ofModel/card.model';
-import {CardsFilter} from '@ofModel/cards-filter.model';
-import {FieldToTranslate} from '@ofModel/field-to-translate.model';
+import {CardForPublishing, CardCreationReportData, Card} from '@ofServices/cards/model/Card';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
+import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {LightCard} from '@ofModel/light-card.model';
-import {CardServer} from 'app/business/server/card.server';
+import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of} from 'rxjs';
 
-export class CardServerMock implements CardServer {
+export class CardsServerMock implements CardsServer {
     private setResponseForLoadCard: Function;
     private setResponseForLoadArchivedCard: Function;
     private setResponseForPostCard: () => ServerResponse<CardCreationReportData> = () =>

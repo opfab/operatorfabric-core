@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,9 +30,9 @@ import {ExcelExport} from 'app/business/common/excel-export';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {CardsFilter} from '@ofModel/cards-filter.model';
-import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {CardService} from 'app/business/services/card/card.service';
+import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
+import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
+import {CardsService} from '@ofServices/cards/CardsService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
@@ -98,7 +98,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
 
-    columnFilters: FilterModel[] = [];
+    columnFilters: Filter[] = [];
     isProcessGroupFilterVisible: boolean;
 
     private readonly mapSeverity = new Map([
@@ -162,7 +162,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(page_number, this.pageSize, this.filtersTemplate.filters);
 
-        CardService.fetchFilteredArchivedCards(filter)
+        CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (page: Page<any>) => {
@@ -199,11 +199,11 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         let isAdminMode = false;
         filtersMap.forEach((values, key) => {
             if (key === 'adminMode') isAdminMode = values[0];
-            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
+            else filters.push(new Filter(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected , set the filter to the list of process that shall be visible on the UI
         if (this.listOfProcessesForRequest.length && !filtersMap.has('process'))
-            filters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
+            filters.push(new Filter('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
         this.columnFilters.forEach((filter) => filters.push(filter));
         return new CardsFilter(page, size, isAdminMode, true, false, filters);
@@ -252,7 +252,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         Object.keys(filterModel).forEach((column) => {
             const type: string = filterModel[column].type;
             this.columnFilters.push(
-                new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                new Filter(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
                     filterModel[column].filter
                 ])
             );
@@ -276,7 +276,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
 
-        CardService.fetchFilteredArchivedCards(filter)
+        CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
