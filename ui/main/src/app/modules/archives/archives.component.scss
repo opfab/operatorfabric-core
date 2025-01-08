@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 .opfab-archives-header {
     border-radius: 5px;
@@ -38,6 +37,11 @@
     padding-left: 5%;
 }
 
+.opfab-archives-table {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 // ADAPT MARGINS TO SCREEN SIZE
 
 @media all and (width <= 1700px) {
@@ -58,7 +62,7 @@
     width: 32px;
     margin-top: 5px;
     background: var(--opfab-text-color-stronger);
-    mask: url("../../../assets/images/icons/plus.svg");
+    mask: url('../../../assets/images/icons/plus.svg');
 }
 
 .opfab-archives-icon-minus {
@@ -67,7 +71,7 @@
     width: 32px;
     margin-top: 5px;
     background: var(--opfab-text-color-stronger);
-    mask: url("../../../assets/images/icons/minus.svg");
+    mask: url('../../../assets/images/icons/minus.svg');
 }
 
 .opfab-archives-detail-modal {
