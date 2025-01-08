@@ -149,24 +149,26 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             y = currentDate.getFullYear(),
             m = currentDate.getMonth();
         const startCurrentMonth = new Date(y, m, 1);
-        const endCurrentMonth = new Date(y, m + 1, 0);
+        const endCurrentMonth = new Date(y, m + 1, 1);
         const startPreviousMonth = new Date(y, m - 1, 1);
-        const endPreviousMonth = new Date(y, m, 0);
 
-        const todayKey = TranslationService.getTranslation('datePicker.today');
-        const yesterdayKey = TranslationService.getTranslation('datePicker.yesterday');
-        const last7DaysKey = TranslationService.getTranslation('datePicker.last7Days');
-        const last30DaysKey = TranslationService.getTranslation('datePicker.last30Days');
-        const thisMonthKey = TranslationService.getTranslation('datePicker.thisMonth');
-        const lastMonthKey = TranslationService.getTranslation('datePicker.lastMonth');
+        const todayTranslation = TranslationService.getTranslation('datePicker.today');
+        const yesterdayTranslation = TranslationService.getTranslation('datePicker.yesterday');
+        const last7DaysTranslation = TranslationService.getTranslation('datePicker.last7Days');
+        const last30DaysTranslation = TranslationService.getTranslation('datePicker.last30Days');
+        const thisMonthTranslation = TranslationService.getTranslation('datePicker.thisMonth');
+        const lastMonthTranslation = TranslationService.getTranslation('datePicker.lastMonth');
 
         this.ranges = {
-            [todayKey]: [new Date().setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
-            [yesterdayKey]: [sub(new Date().setHours(0, 0, 0, 0), {days: 1}), new Date().setHours(0, 0, 0, 0)],
-            [last7DaysKey]: [sub(new Date(), {days: 7}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
-            [last30DaysKey]: [sub(new Date(), {days: 30}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
-            [thisMonthKey]: [startCurrentMonth, endCurrentMonth],
-            [lastMonthKey]: [startPreviousMonth, endPreviousMonth]
+            [todayTranslation]: [new Date().setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
+            [yesterdayTranslation]: [sub(new Date().setHours(0, 0, 0, 0), {days: 1}), new Date().setHours(0, 0, 0, 0)],
+            [last7DaysTranslation]: [sub(new Date(), {days: 7}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
+            [last30DaysTranslation]: [
+                sub(new Date(), {days: 30}).setHours(0, 0, 0, 0),
+                new Date().setHours(24, 0, 0, 0)
+            ],
+            [thisMonthTranslation]: [startCurrentMonth, endCurrentMonth],
+            [lastMonthTranslation]: [startPreviousMonth, startCurrentMonth]
         };
     }
 

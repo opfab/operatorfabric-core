@@ -23,8 +23,8 @@
             "selectStateText": "Sélectionner un État",
             "selectTagText": "Sélectionner une Étiquette",
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
-            "publishDateRange": "PERIODE DE PUBLICATION",
-            "activeDateRange": "PERIODE D'ACTIVITE"
+            "publishDateRange": "PÉRIODE DE PUBLICATION",
+            "activeDateRange": "PÉRIODE D'ACTIVITÉ"
         },
         "result": {
             "severity": "SÉVÉRITÉ",
