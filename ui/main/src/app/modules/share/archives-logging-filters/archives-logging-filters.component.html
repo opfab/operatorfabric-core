@@ -149,10 +149,12 @@
 
             <div style="margin-left: 40px; margin-right: 40px">
                 <div
-                    class="opfab-input"
+                    class="opfab-date-range-input opfab-input"
                     style="margin-top: 28px; margin-bottom: 54px; width: 260px"
                     [formGroup]="this.parentForm">
-                    <label for="opfab-publish-date-range" translate>shared.filters.publishDateRange</label>
+                    <label class="opfab-date-range-label" for="opfab-publish-date-range" translate
+                        >shared.filters.publishDateRange</label
+                    >
                     <input
                         id="opfab-publish-date-range"
                         type="button"
@@ -166,10 +168,12 @@
                         formControlName="publishDateRange" />
                 </div>
                 <div
-                    class="opfab-input"
+                    class="opfab-date-range-input opfab-input"
                     style="margin-top: 28px; margin-bottom: 54px; width: 260px"
                     [formGroup]="this.parentForm">
-                    <label for="opfab-active-date-range" translate>shared.filters.activeDateRange</label>
+                    <label class="opfab-date-range-label" for="opfab-active-date-range" translate
+                        >shared.filters.activeDateRange</label
+                    >
                     <input
                         id="opfab-active-date-range"
                         type="button"
