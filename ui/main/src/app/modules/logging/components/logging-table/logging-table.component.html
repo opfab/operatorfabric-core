@@ -10,7 +10,8 @@
     id="opfab-logging-table"
     style="background-color: var(--opfab-bgcolor-darker); border: solid 0px var(--opfab-bgcolor-darker)">
     <ag-grid-angular
-        id="opfab-monitoring-table-grid"
+        id="opfab-logging-table-grid"
+        style="overflow-y: auto; max-height: calc(100vh - 450px)"
         aria-describedby="Logging results table"
         (gridReady)="onGridReady($event)"
         [gridOptions]="gridOptions"

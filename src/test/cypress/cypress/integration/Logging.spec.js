@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
-import {ScriptCommands} from "../support/scriptCommands";
-import {AgGridCommands} from "../support/agGridCommands";
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ArchivesAndLoggingCommands} from '../support/archivesAndLoggingCommands';
+import {ScriptCommands} from '../support/scriptCommands';
+import {AgGridCommands} from '../support/agGridCommands';
 
 describe('Logging screen tests', function () {
-
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const agGrid = new AgGridCommands();
@@ -388,7 +387,7 @@ describe('Logging screen tests', function () {
     }
 
     function checkNumberOfLineDisplayedIs(nb) {
-        agGrid.countTableRows('#opfab-monitoring-table-grid', nb);
+        agGrid.countTableRows('#opfab-logging-table-grid', nb);
     }
 
     function clickOnExportButton() {
