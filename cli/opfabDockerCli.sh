@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 
 CONFIG_FILE=$1
 if [[ ! -f "$CONFIG_FILE" ]]; then
-    docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it lfeoperatorfabric/of-opfab-cli:SNAPSHOT
+    docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it lfeoperatorfabric/of-opfab-cli:4.6.0-RC.RELEASE
     exit
 fi
 
@@ -38,4 +38,4 @@ while IFS= read -r line; do
 done < "$CONFIG_FILE"
 
 # Run the Docker command with the selected configuration
-docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it -e ENV_NAME="$ENV_NAME" -e OPFAB_URL="$OPFAB_URL" -e OPFAB_PORT="$OPFAB_PORT" -e OPFAB_LOGIN="$OPFAB_LOGIN" -e OPFAB_PASSWORD="$OPFAB_PASSWORD" lfeoperatorfabric/of-opfab-cli:SNAPSHOT
+docker run -v "$(pwd)":/opfab/host -u "$(id -u):$(id -g)" -it -e ENV_NAME="$ENV_NAME" -e OPFAB_URL="$OPFAB_URL" -e OPFAB_PORT="$OPFAB_PORT" -e OPFAB_LOGIN="$OPFAB_LOGIN" -e OPFAB_PASSWORD="$OPFAB_PASSWORD" lfeoperatorfabric/of-opfab-cli:4.6.0-RC.RELEASE
