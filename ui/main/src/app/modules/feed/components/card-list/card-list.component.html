@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -33,7 +33,7 @@
         </div>
         <div *ngIf="!isSmallscreen() || !filterOpen" style="width: 100%">
             <div id="opfab-card-list" class="opfab-card-list">
-                <div *ngFor="let currentLightCard of lightCards">
+                <div *ngFor="let currentLightCard of lightCards" style="margin-right: -10px">
                     <div style="padding-right: 20px; margin-bottom: 10px">
                         <of-light-card
                             [lightCard]="currentLightCard"
