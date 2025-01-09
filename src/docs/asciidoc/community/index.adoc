@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -64,8 +64,40 @@ Vulnerabilities can be reported publicly in the same way.
 
 include::workflow.adoc[leveloffset=+2]
 
+=== Renovate PR
+
+Renovate automates dependency upgrades, proposing PRs for updates. Before merging:
+
+Devtools:
+
+- No specific checks are generally needed.
+- Exceptions: 
+
+    * For major/minor linter upgrades (e.g., X.X.X to X.Y.X or X.X.X to Y.X.X), perform a local test to ensure the linter is still working correctly.
+    * For Anchore udpates, perform a test of the "Anchore container scan" github workflow to ensure it is still working correctly.
+    * For Scorecard udpates, perform a test of the "Scorecard supply-chain security" github workflow to ensure it is still working correctly.
 
 
+Backend Dependencies: 
+
+- No specific tests are needed due to strong test coverage.
+
+UI Dependencies:
+
+- No tests required: If the library has minimal visual impact (e.g., rxjs, date-fns).
+- Local testing required: If the library has potential visual impact (e.g., ag-grid, Bootstrap).
+
+Opfab cli dependencies:
+
+- As no automatic tests are available, local testing is required.
+
+General Guidance: 
+
+- On the days before an Opfab release, avoid merging PRs that introduce library versions released within the last few days, except for dev dependencies or critical security fixes.
+
+Post-Merge:
+
+- Update release notes if the dependency is not a dev dependency.
 
 
 
@@ -109,6 +141,7 @@ to have to maintain these mentions (since this information is tracked by git any
 include::documentation.adoc[leveloffset=+2]
 
 include::copyright.adoc[leveloffset=+2]
+
 
 == Software releases
 
