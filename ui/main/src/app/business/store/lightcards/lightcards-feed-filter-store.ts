@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import {LightCardsStore} from './lightcards-store';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 
 export class FilteredLightCardsStore {
-    private readonly filteredAndSortedLightCards = new ReplaySubject();
+    private readonly filteredAndSortedLightCards = new ReplaySubject(1);
     private readonly filteredLightCards = new Subject();
     private readonly filteredAndSearchedLightCards = new ReplaySubject(1);
     private readonly filteredLightCardsForTimeLine = new Subject();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ export class LightCardsStore {
     private readonly lightCards = new Map();
     private readonly childCards = new Map();
     private readonly lightCardsEvents = new Subject<Map<any, any>>();
-    private readonly lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>();
+    private readonly lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>(1);
     private readonly newLightCards = new Subject<LightCard>();
     private readonly newLightChildCards = new Subject<LightCard>();
     private readonly deletedLightChildCards = new Subject<any>();
