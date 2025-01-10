@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -43,7 +43,7 @@ git push --set-upstream origin X.X.release
 Create a working branch for the release candidate. This branch will be used to prepare the release candidate :
 +
 ----
-git checkout -b FE-X.X.X-RC.release.draft
+git checkout -b X.X.X-RC.release.draft
 ----
 +
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
