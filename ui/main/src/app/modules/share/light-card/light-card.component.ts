@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
-import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -21,10 +20,10 @@ import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {TranslateService} from '@ngx-translate/core';
-import {RouterStore} from 'app/business/store/router.store';
 import {Utilities} from 'app/business/common/utilities';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {GeoMapStore} from 'app/business/store/GeoMapStore';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-light-card',
@@ -54,10 +53,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
-    constructor(
-        private readonly router: Router,
-        private readonly translateService: TranslateService
-    ) {}
+    constructor(private readonly translateService: TranslateService) {}
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
@@ -140,12 +136,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         } else {
             this.groupedCardsVisible = true;
         }
-        if (this.displayContext !== DisplayContext.PREVIEW)
-            this.router.navigate([
-                '/' + RouterStore.getCurrentRoute().split('/')[1].split('?')[0],
-                'cards',
-                this.lightCard.id
-            ]);
+        if (this.displayContext !== DisplayContext.PREVIEW) NavigationService.navigateToCard(this.lightCard.id);
     }
 
     get i18nPrefix(): string {
@@ -169,7 +160,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         SoundNotificationService.clearOutstandingNotifications();
         if (SelectedCardStore.getSelectedCardId()) {
             SelectedCardStore.clearSelectedCardId();
-            this.router.navigate(['/feed'], {queryParams: {zoomToLocation: this.lightCard.id}});
+            NavigationService.navigateToGeoMapLocation(this.lightCard.id);
         } else GeoMapStore.setZoomToLocation(this.lightCard?.id);
     }
 }

@@ -21,7 +21,7 @@ import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ApplicationLoader} from 'app/business/application-loader';
 import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 import {UsersServer} from '@ofServices/users/server/UsersServer';
-import {AngularRouterService} from '@ofServices/angularRouterService';
+import {AngularApplicationRouter} from '@ofServices/navigation/router/AngularApplicationRouter';
 import {EntitiesServer} from '@ofServices/entities/server/EntitiesServer';
 import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
 import {PerimetersServer} from '@ofServices/perimeters/server/PerimetersServer';
@@ -75,7 +75,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly translationLib: TranslationLib,
         private readonly remoteLoggerServer: RemoteLoggerServer,
         private readonly usersServer: UsersServer,
-        private readonly routerService: AngularRouterService,
+        private readonly applicationRouter: AngularApplicationRouter,
         private readonly entitiesServer: EntitiesServer,
         private readonly groupsServer: GroupsServer,
         private readonly perimetersServer: PerimetersServer,
@@ -102,7 +102,7 @@ export class ApplicationLoadingComponent implements OnInit {
             remoteLoggerServer: this.remoteLoggerServer,
             translationLib: this.translationLib,
             usersServer: this.usersServer,
-            routerService: this.routerService,
+            applicationRouter: this.applicationRouter,
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,

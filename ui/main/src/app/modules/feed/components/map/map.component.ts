@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,12 @@ import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-
 import {takeUntil} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 import {NgFor} from '@angular/common';
 import {GeoMapStore, HighlightedCard} from 'app/business/store/GeoMapStore';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-map',
@@ -34,7 +35,6 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
     constructor(
         translateService: TranslateService,
         superChangeDetector: ChangeDetectorRef,
-        private readonly router: Router,
         private readonly route: ActivatedRoute
     ) {
         super(translateService, superChangeDetector);
@@ -146,7 +146,7 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
     }
 
     showCard(lightCardId): void {
-        this.router.navigate(['/feed', 'cards', lightCardId]);
+        NavigationService.navigateToCard(lightCardId);
     }
 
     ngOnDestroy() {

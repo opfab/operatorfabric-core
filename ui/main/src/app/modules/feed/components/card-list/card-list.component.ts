@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {Router} from '@angular/router';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
@@ -33,6 +32,7 @@ import {FeedFilterComponent} from './filters/feed-filter/feed-filter.component';
 import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-card-list',
@@ -67,7 +67,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private readonly router: Router) {
+    constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UsersService.getCurrentUserWithPerimeters();
     }
@@ -223,7 +223,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     confirmAckAllCards() {
         this.acknowledgeAllVisibleCardsInTheFeed();
-        this.router.navigate(['/feed']);
+        NavigationService.navigateTo('/feed');
     }
 
     isCardInGroup(selected: string, id: string) {

@@ -22,7 +22,6 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {RouterStore, PageType} from 'app/business/store/router.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from '@ofModel/light-card.model';
@@ -31,6 +30,7 @@ import {CardOperationType} from '@ofModel/card-operation.model';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -168,10 +168,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         this.showAckButton = this.card.hasBeenAcknowledged
             ? false
             : AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, this.card, this.cardProcess) &&
-              RouterStore.getCurrentPageType() !== PageType.CALENDAR;
+              NavigationService.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton =
-            this.isCancelAcknowledgmentAllowed() && RouterStore.getCurrentPageType() !== PageType.CALENDAR;
+            this.isCancelAcknowledgmentAllowed() && NavigationService.getCurrentPageType() !== PageType.CALENDAR;
     }
 
     private isCancelAcknowledgmentAllowed(): boolean {

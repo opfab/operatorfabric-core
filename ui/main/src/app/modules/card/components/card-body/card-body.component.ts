@@ -35,8 +35,6 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {RouterStore, PageType} from 'app/business/store/router.store';
-import {Router} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
 import {NgIf} from '@angular/common';
@@ -51,7 +49,7 @@ import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
 import {CardBodyView} from 'app/business/view/card/card-body.view';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
-import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
+import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-card-body',
@@ -110,7 +108,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private openNextCardOnAcknowledgment: boolean;
     private cardsLoaded: boolean;
 
-    constructor(private readonly router: Router) {
+    constructor() {
         this.userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
@@ -120,7 +118,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this.cardBodyView = new CardBodyView(this.card, this.userWithPerimeters);
         this.integrateChildCardsInRealTime();
-        const pageType = RouterStore.getCurrentPageType();
+        const pageType = NavigationService.getCurrentPageType();
         if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD)
             this.templateOffset = 35;
         if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD)
@@ -417,9 +415,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             SelectedCardStore.clearSelectedCardId();
         } else {
             SelectedCardStore.clearSelectedCardId();
-            if (nextCardId)
-                this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1] + '/cards/' + nextCardId]);
-            else this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
+            if (nextCardId) NavigationService.navigateToCard(nextCardId);
+            else NavigationService.navigateTo('/feed');
         }
     }
 

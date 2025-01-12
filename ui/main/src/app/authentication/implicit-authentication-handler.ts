@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,6 +65,15 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
                 this.oauthService.initImplicitFlow();
             }
         });
+    }
+
+    public getOpfabRouteAfterLogin(): string {
+        const route = super.getOpfabRouteAfterLogin();
+        // In implicit mode, when the URL called is '/', it uses '#state' to transmit user information.
+        // This is interpreted as an Angular route, so we need to override it in this case.
+        // If the URL is '#XXXX', it uses '&state=...', so in this case, the route is correct.
+        if (route.startsWith('state')) return '/';
+        return route;
     }
 
     // hack to update token as silent refresh updates the token in background

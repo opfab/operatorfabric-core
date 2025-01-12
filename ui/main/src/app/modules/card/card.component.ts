@@ -15,7 +15,6 @@ import {takeUntil} from 'rxjs/operators';
 import {State} from '@ofServices/processes/model/Processes';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardStore} from 'app/business/store/selectedCard.store';
-import {Router} from '@angular/router';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
@@ -24,6 +23,7 @@ import {CardBodyComponent} from './components/card-body/card-body.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-card',
@@ -46,10 +46,7 @@ export class CardComponent implements OnInit, OnDestroy {
     detailClosed: boolean;
     hallwayMode: boolean;
 
-    constructor(
-        protected modalService: NgbModal,
-        protected router: Router
-    ) {
+    constructor(protected modalService: NgbModal) {
         this.hallwayMode = ConfigService.getConfigValue('settings.hallwayMode');
     }
 
@@ -136,7 +133,7 @@ export class CardComponent implements OnInit, OnDestroy {
             SelectedCardStore.clearSelectedCardId();
         } else {
             SelectedCardStore.clearSelectedCardId();
-            if (!this.hallwayMode) this.router.navigate(['/feed']);
+            if (!this.hallwayMode) NavigationService.navigateTo('/feed');
         }
     }
 

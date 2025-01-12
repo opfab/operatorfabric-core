@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,6 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
-import {RouterNavigationService} from 'app/router/router-navigation.service';
-import {PageType, RouterStore} from './business/store/router.store';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {NgIf} from '@angular/common';
 import {AlertComponent} from './modules/core/alert/alert.component';
@@ -22,6 +20,7 @@ import {RouterOutlet} from '@angular/router';
 import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
 import {SessionEndComponent} from './modules/core/session-end/session-end.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
+import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-root',
@@ -80,13 +79,9 @@ export class AppComponent {
 
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
-        const pageType = RouterStore.getCurrentPageType();
+        const pageType = NavigationService.getCurrentPageType();
         if (pageType === PageType.FEED) SoundNotificationService.clearOutstandingNotifications();
     }
-
-    constructor(
-        private readonly routerNavigationService: RouterNavigationService // put it here to have it injected and started a startup
-    ) {}
 
     onApplicationLoaded() {
         this.applicationLoaded = true;

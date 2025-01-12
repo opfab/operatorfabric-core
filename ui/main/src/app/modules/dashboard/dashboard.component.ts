@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,12 @@ import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
-import {Router} from '@angular/router';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-buttons.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgClass} from '@angular/common';
 import {CardComponent} from '../card/card.component';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 declare const opfab: any;
 
@@ -41,10 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private hideStateFilter: boolean;
     private processStateRedirects: any;
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly router: Router
-    ) {
+    constructor(private readonly modalService: NgbModal) {
         this.dashboard = new Dashboard();
     }
 
@@ -105,7 +102,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     onProcessClick(processId: string) {
-        if (!this.hideProcessFilter) this.router.navigate(['/feed'], {queryParams: {processFilter: processId}});
+        if (!this.hideProcessFilter) NavigationService.navigateToFeedWithProcessStateFilter(processId, undefined);
     }
 
     onStateClick(processId: string, stateId: string) {
@@ -116,7 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (redirect?.length > 0) {
             opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
         } else if (!this.hideProcessFilter && !this.hideStateFilter) {
-            this.router.navigate(['/feed'], {queryParams: {processFilter: processId, stateFilter: stateId}});
+            NavigationService.navigateToFeedWithProcessStateFilter(processId, stateId);
         }
     }
 }

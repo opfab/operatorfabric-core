@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
 import {NavbarView} from 'app/business/view/navbar/navbar.view';
@@ -21,7 +20,7 @@ import {InfoComponent} from './info/info.component';
 import {UserCardComponent} from '../usercard/usercard.component';
 import {AboutComponent} from '../core/about/about.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
-import {RouterService} from 'app/business/services/router.service';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-navbar',
@@ -57,7 +56,6 @@ export class NavbarComponent {
     rightMenuCollapsedElements: NavbarMenuElement[];
 
     constructor(
-        private readonly router: Router,
         private readonly modalService: NgbModal,
         private readonly domSanitizationService: DomSanitizer,
         private readonly changeDetector: ChangeDetectorRef
@@ -103,7 +101,7 @@ export class NavbarComponent {
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
 */
-        if (this.currentMenuId === 'feed') this.router.navigate(['/feed']);
+        if (this.currentMenuId === 'feed') NavigationService.navigateTo('/feed');
 
         const options: NgbModalOptions = {
             size: 'usercard',
@@ -113,7 +111,7 @@ export class NavbarComponent {
     }
 
     public goToCoreMenu(menuId: string) {
-        RouterService.navigateTo(menuId);
+        NavigationService.navigateTo(menuId);
     }
 
     public clickOnMenu(menu: NavbarMenuElement, openInNewTab: boolean = false): void {

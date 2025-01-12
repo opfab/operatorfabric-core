@@ -29,8 +29,6 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {PageType, RouterStore} from 'app/business/store/router.store';
-import {Router} from '@angular/router';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
@@ -40,6 +38,7 @@ import {UserCardComponent} from '../../../usercard/usercard.component';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
+import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-card-actions',
@@ -68,10 +67,7 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
 
     private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly router: Router
-    ) {}
+    constructor(private readonly modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.templateInitialized.subscribe(() =>
@@ -155,17 +151,17 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
 
     private reopenCardDetailOnceEditionIsFinished() {
         if (
-            RouterStore.getCurrentPageType() !== PageType.CALENDAR &&
-            RouterStore.getCurrentPageType() !== PageType.MONITORING &&
-            RouterStore.getCurrentPageType() !== PageType.DASHBOARD
+            NavigationService.getCurrentPageType() !== PageType.CALENDAR &&
+            NavigationService.getCurrentPageType() !== PageType.MONITORING &&
+            NavigationService.getCurrentPageType() !== PageType.DASHBOARD
         ) {
             this.editModal.result.then(
                 () => {
                     // If modal is closed
-                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
+                    NavigationService.navigateToCard(this.card.id);
                 },
                 () => {
-                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
+                    NavigationService.navigateToCard(this.card.id);
                 }
             );
         }

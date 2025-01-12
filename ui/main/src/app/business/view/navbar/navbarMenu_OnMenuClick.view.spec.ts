@@ -1,4 +1,4 @@
-/* Copyright (c) 2024 RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025 RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import {NavbarMenuElement} from './navbarPage';
 import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
-import {RouterService} from 'app/business/services/router.service';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
@@ -230,7 +230,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
 
     function mockRouter() {
         applicationRouterMock = new ApplicationRouterMock();
-        RouterService.setApplicationRouter(applicationRouterMock);
+        NavigationService.setApplicationRouter(applicationRouterMock);
     }
 
     function checkNightDayModeMenuText(navbarMenuView: NavbarMenuView, text: string) {

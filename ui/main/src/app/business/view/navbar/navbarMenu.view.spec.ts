@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,9 +19,10 @@ import {NavbarMenuView} from './navbarMenu.view';
 import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
-import {RouterStore} from 'app/business/store/router.store';
 import {setUserPerimeter} from '@tests/helpers';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
+import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 
 declare const opfabStyle;
 
@@ -626,8 +627,12 @@ describe('NavbarMenuView', () => {
         });
     });
     describe('Current selected menu', () => {
+        beforeEach(() => {
+            NavigationService.setApplicationRouter(new ApplicationRouterMock());
+        });
+
         it('should be core menu feed if current route is /', async () => {
-            RouterStore.setCurrentRoute('/');
+            NavigationService.navigateTo('/');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
@@ -636,7 +641,7 @@ describe('NavbarMenuView', () => {
             navBarView.destroy();
         });
         it('should be core menu feed if current route is feed', async () => {
-            RouterStore.setCurrentRoute('/feed');
+            NavigationService.navigateTo('/feed');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
@@ -645,7 +650,7 @@ describe('NavbarMenuView', () => {
             navBarView.destroy();
         });
         it('should be core menu feed if current route is a card in feed : /feed/cards/cardId', async () => {
-            RouterStore.setCurrentRoute('/feed/cards/cardId');
+            NavigationService.navigateTo('/feed/cards/cardId');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
@@ -654,7 +659,7 @@ describe('NavbarMenuView', () => {
             navBarView.destroy();
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id', async () => {
-            RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id');
+            NavigationService.navigateTo('/businessconfigparty/custom_menu_id');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
@@ -663,7 +668,7 @@ describe('NavbarMenuView', () => {
             navBarView.destroy();
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id/customUrlElement', async () => {
-            RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id/customUrlElement');
+            NavigationService.navigateTo('/businessconfigparty/custom_menu_id/customUrlElement');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {
@@ -672,7 +677,7 @@ describe('NavbarMenuView', () => {
             navBarView.destroy();
         });
         it('should be custom_menu id if current route is /businessconfigparty/custom_menu_id?customUrlParam=test', async () => {
-            RouterStore.setCurrentRoute('/businessconfigparty/custom_menu_id?customUrlParam=test');
+            NavigationService.navigateTo('/businessconfigparty/custom_menu_id?customUrlParam=test');
             await stubMenuConfigLoading({});
             const navBarView = new NavbarMenuView();
             navBarView.setCurrentSelectedMenuEntryListener((currentSelectedMenuId) => {

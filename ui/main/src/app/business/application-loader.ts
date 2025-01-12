@@ -31,7 +31,7 @@ import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';
 import {TemplateCssService} from '../services/templateCss/TemplateCssService';
 import {UserSettingsService} from '../services/userSettings/UserSettingsService';
-import {RouterService} from './services/router.service';
+import {NavigationService} from '../services/navigation/NavigationService';
 import {OpfabStore} from './store/opfabStore';
 import {ApplicationUpdateService} from './services/events/application-update.service';
 import {SystemNotificationService} from '../services/notifications/SystemNotificationService';
@@ -67,7 +67,7 @@ export class ApplicationLoader {
         TranslationService.setConfigServer(servers.configServer);
         TranslationService.setTranslationLib(servers.translationLib);
         UsersService.setUsersServer(servers.usersServer);
-        RouterService.setApplicationRouter(servers.routerService);
+        NavigationService.setApplicationRouter(servers.applicationRouter);
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
@@ -301,9 +301,9 @@ export class ApplicationLoader {
     }
 
     private goToEntryPage() {
-        if (RouterService.getCurrentRoute() === '/') {
+        if (NavigationService.getCurrentRoute() === '/') {
             const defaultEntryPage = ConfigService.getConfigValue('defaultEntryPage', 'feed');
-            RouterService.navigateTo(defaultEntryPage);
+            NavigationService.navigateTo(defaultEntryPage);
         }
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,8 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {RouterService} from 'app/business/services/router.service';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
-import {RouterStore} from 'app/business/store/router.store';
 import {Subject, skip, takeUntil} from 'rxjs';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
@@ -156,7 +155,7 @@ export class NavbarMenuView {
     }
 
     public setCurrentSelectedMenuEntryListener(func: Function): void {
-        RouterStore.getCurrentRouteEvent()
+        NavigationService.getCurrentRouteEvent()
             .pipe(takeUntil(this.destroy$))
             .subscribe((route) => {
                 const currentRouteWithoutParams = route.split('?')[0];
@@ -195,12 +194,12 @@ export class NavbarMenuView {
                     GlobalStyleService.switchToDayMode();
                 }
                 this.changeTitleForNightDayModeMenu();
-            } else RouterService.navigateTo(navbarMenuElement.id);
+            } else NavigationService.navigateTo(navbarMenuElement.id);
         } else if (navbarMenuElement.linkType === 'TAB' || isClickOnNewTabIcon) {
             const openedWindow = window.open(this.addOpfabThemeParamToUrl(navbarMenuElement.url), '_blank');
             openedWindow.opener = null;
         } else
-            RouterService.navigateTo(
+            NavigationService.navigateTo(
                 'businessconfigparty/' + encodeURIComponent(encodeURIComponent(navbarMenuElement.id)) + '/'
             );
     }

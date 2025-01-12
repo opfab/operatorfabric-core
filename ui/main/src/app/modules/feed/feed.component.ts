@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,13 +13,14 @@ import {LightCard} from '@ofModel/light-card.model';
 import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {SelectedCardStore} from 'app/business/store/selectedCard.store';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
 import {CardListComponent} from './components/card-list/card-list.component';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-cards',
@@ -42,10 +43,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     filtersVisible = false;
     private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private readonly router: Router,
-        private readonly route: ActivatedRoute
-    ) {
+    constructor(private readonly route: ActivatedRoute) {
         this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.processFilter = params.processFilter;
             this.stateFilter = params.stateFilter;
@@ -66,10 +64,10 @@ export class FeedComponent implements OnInit, OnDestroy {
                 if (this.hallwayMode) {
                     if (cards.length > 0) {
                         if (this.hallwayModeSelectedCardUid !== cards[0].uid) {
-                            this.router.navigate(['/feed', 'cards', cards[0].id]);
+                            NavigationService.navigateToCard(cards[0].id);
                             this.hallwayModeSelectedCardUid = cards[0].uid;
                         }
-                    } else this.router.navigate(['/feed']);
+                    } else NavigationService.navigateTo('/feed');
                 }
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })

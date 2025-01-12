@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,10 @@
  */
 
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
-import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';
 import {MenuService} from '@ofServices/menu/MenuService';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
@@ -24,7 +24,7 @@ export class ExternalAppIFrameView {
     }
 
     private listenForExternalAppRoute() {
-        RouterStore.getCurrentRouteEvent()
+        NavigationService.getCurrentRouteEvent()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((route) => {
                 if (route.startsWith('/businessconfigparty')) {
@@ -83,7 +83,7 @@ export class ExternalAppIFrameView {
     private reloadIframeWhenGlobalStyleChange() {
         GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));
+            .subscribe(() => this.computeURL(NavigationService.getCurrentRoute()));
     }
 
     public getExternalAppUrl(): Observable<string> {

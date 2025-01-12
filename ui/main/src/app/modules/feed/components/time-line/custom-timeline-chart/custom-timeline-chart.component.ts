@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -34,13 +34,13 @@ import {
     ChartCommonModule,
     AxesModule
 } from '@swimlane/ngx-charts';
-import {Router} from '@angular/router';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/business/view/timeline/timeline.view';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {NgFor, NgIf, AsyncPipe} from '@angular/common';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-custom-timeline-chart',
@@ -84,13 +84,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
     public circles$: Observable<any>;
 
-    constructor(
-        chartElement: ElementRef,
-        zone: NgZone,
-        cd: ChangeDetectorRef,
-        private readonly router: Router,
-        @Inject(PLATFORM_ID) platformId: any
-    ) {
+    constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: any) {
         super(chartElement, zone, cd, platformId);
         this.timeLineView = new TimelineView();
         this.changeDetectorRef = cd;
@@ -161,7 +155,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (this.openPopover) {
             this.openPopover.close();
         }
-        this.router.navigate(['/feed', 'cards', cardId]);
+        NavigationService.navigateToCard(cardId);
         this.scrollToSelectedCard();
     }
 

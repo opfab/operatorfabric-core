@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,12 +11,12 @@ import {OnInit, Component, OnDestroy} from '@angular/core';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import {Router} from '@angular/router';
 import {Utilities} from 'app/business/common/utilities';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {NgFor, NgIf, LowerCasePipe} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
+import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-pinned-cards',
@@ -34,8 +34,6 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     maxVisiblePinnedCards = 6;
 
     maxHiddenPinnedCards = 20;
-
-    constructor(private readonly router: Router) {}
 
     ngOnInit(): void {
         this.pinnedCards = [];
@@ -106,7 +104,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     }
 
     public select(id) {
-        this.router.navigate(['/feed', 'cards', id]);
+        NavigationService.navigateToCard(id);
     }
 
     ngOnDestroy(): void {
