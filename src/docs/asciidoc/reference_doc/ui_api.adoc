@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -15,6 +15,7 @@ The frontend API is intended to provide a way for template to communicate with t
 - Navigate API : API to ask opfab to navigate to a specific view
 - CurrentCard API : API to get information regarding the current card 
 - CurrentUserCard API : API to get information regarding the current user card (card in creation or edition)
+- Cards API : API to get or send cards
 - Utils API : utilities functions
 
 == Users API 
@@ -713,6 +714,31 @@ FilterModel object has the following fields:
 - columnName: card field to be tested
 - matchType: one of BLANK,CONTAINS,ENDSWITH,EQUALS,GREATERTHAN,IN,LESSTHAN,NOTBLANK,NOTCONTAINS,NOTEQUAL,STARTSWITH
 - filter: list of string values to be matched, for match types that need a single argument pass an array with one value
+
+
+=== Function sendResponseCard 
+
+It is possible to respond to a card from the template by calling the following function (instead of using the "send response" button) : 
+
+```
+opfab.cards.sendResponseCard(parentCard,responseData).then(...);
+```
+The function returns a `Promise<void>`. The promise will be resolved when the response is sent and rejected with an error message if an error occurs.
+
+The `parentCard` parameter is the parent card object (can be obtained from the current card object).
+
+The `responseData` object has the following fields:
+
+- `responseCardData`: The data field to include in the response card.
+- `actions`: The actions field value for the response card. This field is optional.
+- `responseState`: The state field value for the response card. This field is optional (default value is defined in the state process definition).
+- `publisher`: The publisher field value for the response card. This field is optional (default value is the first current user entity that is allowed to respond).
+
+
+
+
+
+
 
 
 

@@ -102,7 +102,7 @@ export class CardTemplateGateway {
     }
 
     public static getUserResponseFromTemplate(emitter: string) {
-        return CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter);
+        return Utilities.cloneObj(CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter));
     }
 
     public static hideLoadingSpinner() {

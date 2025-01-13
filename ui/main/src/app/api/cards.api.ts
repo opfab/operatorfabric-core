@@ -9,6 +9,7 @@
 
 import {firstValueFrom} from 'rxjs';
 import {CardsService} from '../services/cards/CardsService';
+import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
 
 declare const opfab: any;
 
@@ -16,6 +17,9 @@ export function initCardsAPI() {
     opfab.cards = {
         getCards: function (cardsFilters) {
             return firstValueFrom(CardsService.fetchFilteredCards(cardsFilters));
+        },
+        sendResponseCard: function (parentCard, responseData) {
+            return CardResponseService.sendResponse(parentCard, responseData);
         }
     };
 }

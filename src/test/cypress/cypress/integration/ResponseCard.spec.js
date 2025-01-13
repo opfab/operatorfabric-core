@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -127,7 +127,7 @@ describe('Response card tests', function() {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check card response for operator2_fr ', function() {
+    it('Check card response for operator2_fr (using frontend API method opfab.cards.sendResponseCard)', function() {
         opfab.loginWithUser('operator2_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -158,7 +158,9 @@ describe('Response card tests', function() {
 
         // Respond to the card
         cy.get('#question-choice2').click();
-        card.sendResponse();
+
+        //Send response via frontend API 
+        cy.get('#opfab-api-responselink').click();
 
         // See in the feed the fact that user has responded (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');

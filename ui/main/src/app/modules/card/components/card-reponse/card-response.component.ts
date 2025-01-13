@@ -10,8 +10,8 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Card, CardForPublishing} from '@ofServices/cards/model/Card';
-import {CardAction, Severity} from '@ofModel/light-card.model';
+import {Card} from '@ofServices/cards/model/Card';
+import {CardAction} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from 'app/modules/share/multi-select/model/MultiSelect';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -23,14 +23,12 @@ import {UserPermissionsService} from '@ofServices/userPermissions/UserPermission
 import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {CardsService} from '@ofServices/cards/CardsService';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
+import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
 
 class FormResult {
     valid: boolean;
@@ -164,65 +162,25 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
-
-            if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
-                logger.error('Response card publisher not allowed : ' + JSON.stringify(publisherEntity));
-                this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                return;
-            }
-
-            const entityRecipients = [...this.card.entityRecipients];
-            this.addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients);
-
-            const card: CardForPublishing = {
-                publisher: publisherEntity,
-                publisherType: 'ENTITY',
-                processVersion: this.card.processVersion,
-                process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${publisherEntity}`,
-                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
-                startDate: this.card.startDate,
-                endDate: this.card.endDate,
-                expirationDate: this.card.expirationDate,
-                severity: Severity.INFORMATION,
-                entityRecipients: entityRecipients,
-                userRecipients: this.card.userRecipients,
-                groupRecipients: this.card.groupRecipients,
-                externalRecipients: this.cardState.response.externalRecipients,
-                title: this.card.title,
-                summary: this.card.summary,
-                data: responseData.responseCardData,
-                parentCardId: this.card.id,
-                initialParentCardUid: this.card.uid,
-                actions: responseData.actions
-            };
+            responseData.publisher = publisherEntity;
             this.sendingResponseInProgress = true;
-            // Exclude card from sound and system notifications before publishing to avoid synchronization problems
-            NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
-            CardsService.postCard(card).subscribe((resp) => {
-                this.sendingResponseInProgress = false;
-                if (resp.status !== ServerResponseStatus.OK) {
-                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                    logger.error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage);
-                } else {
+            CardResponseService.sendResponse(this.card, responseData)
+                .then(() => {
+                    this.sendingResponseInProgress = false;
                     this.isResponseLocked = true;
-                    CardTemplateGateway.sendResponseLockToTemplate();
                     this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                }
-            });
+                })
+                .catch((error) => {
+                    this.sendingResponseInProgress = false;
+                    logger.error(error);
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                });
         } else {
             responseData.errorMsg && responseData.errorMsg !== ''
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
-
-    private addPublisherToEntityRecipientsIfNotAlreadyPresent(entityRecipients: Array<string>) {
-        if (this.card.publisherType === 'ENTITY' && !entityRecipients?.includes(this.card.publisher)) {
-            entityRecipients.push(this.card.publisher);
-        }
-    }
-
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }

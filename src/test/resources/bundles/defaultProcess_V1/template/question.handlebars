@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,148 +8,169 @@
 
 
 <form id='question-form'>
-   <div class="form-group">
-      <h4>  Outage needed for 2 hours on the France-England HVDC line</h4>
-      <br/>
-       Could you please confirm the time frames that are ok for you ?  <br/> <br/>
-       <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date1"></span> between 8AM and 10AM <input type="checkbox" id="choice1" name="choice1" >  <span id="question-choice1"  class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date2"></span> between 10AM and 12PM <input  type="checkbox" id="choice2" name="choice2" >  <span id="question-choice2" class="opfab-checkbox-checkmark"> </span> </label>
-       <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date3"></span> between 8AM and 10AM <input  type="checkbox" id="choice3" name="choice3" >  <span id="question-choice3" class="opfab-checkbox-checkmark"> </span> </label>
+    <div class="form-group">
+        <h4> Outage needed for 2 hours on the France-England HVDC line</h4>
+        <br />
+        Could you please confirm the time frames that are ok for you ? <br /> <br />
+        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date1"></span> between 8AM and 10AM <input
+                type="checkbox" id="choice1" name="choice1"> <span id="question-choice1"
+                class="opfab-checkbox-checkmark"> </span> </label>
+        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date2"></span> between 10AM and 12PM
+            <input type="checkbox" id="choice2" name="choice2"> <span id="question-choice2"
+                class="opfab-checkbox-checkmark"> </span> </label>
+        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date3"></span> between 8AM and 10AM <input
+                type="checkbox" id="choice3" name="choice3"> <span id="question-choice3"
+                class="opfab-checkbox-checkmark"> </span> </label>
     </div>
     <div id="responseRequired"></div>
     <div id="responseDisabled" class="opfab-color-danger"></div>
-</form> 
+</form>
 
-<br/>
-<br/>
+<br />
+<br />
 
+<a id="opfab-api-responselink" href="javascript:alternativeResponse()"> Respond via this link (Frontend API test) </a>
 
 <div id="childs-div"></div>
 
 <script>
-  init();
+    init();
 
-  function init() {
+    function init() {
 
-    let today = new Date();
-    let tomorrow = new Date(today.getTime() + 24 * 3600 * 1000);
-    let dayAfterTomorrow = new Date(today.getTime() + 48 * 3600 * 1000);
+        let today = new Date();
+        let tomorrow = new Date(today.getTime() + 24 * 3600 * 1000);
+        let dayAfterTomorrow = new Date(today.getTime() + 48 * 3600 * 1000);
 
-    let date1 = Intl.DateTimeFormat('en-GB').format(tomorrow);
-    let date2 = Intl.DateTimeFormat('en-GB').format(dayAfterTomorrow);
+        let date1 = Intl.DateTimeFormat('en-GB').format(tomorrow);
+        let date2 = Intl.DateTimeFormat('en-GB').format(dayAfterTomorrow);
 
-    document.getElementById('date1').innerHTML = date1;
-    document.getElementById('date2').innerHTML = date1;
-    document.getElementById('date3').innerHTML = date2;
-
-
-
-  opfab.currentCard.listenToChildCards((childCards) => {
-    let childsDiv = document.getElementById("childs-div");
-
-    if (childCards[0])
-    {
-      let responses  = '<center> <h4>Responses received </h4> <br/>';
-      responses += ' <table width="100%""> <tr> <th> Entity </th>';
-      responses += ' <th> ' + date1 + ' 8AM-10AM </th>';
-      responses += ' <th> ' + date1 + ' 10AM-12PM </th>';
-      responses += ' <th> ' + date2 + ' 8AM-10AM </th>';
-      responses += ' </tr>';
-      
-      childCards.forEach( (c, i) => {
-        const entityName = opfab.users.entities.getEntityName(c.publisher);
-        responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
-        if (c.data.choice1) responses += "<td> OK </td>";
-        else responses  += "<td> NOK </td>";
-        if (c.data.choice2) responses += "<td> OK </td>";
-        else responses += "<td> NOK </td>";
-        if (c.data.choice3) responses += "<td> OK </td>";
-        else responses += "<td> NOK </td>";
-        responses += "</tr>";
-      }); 
-
-      responses += '</table> </center> <br/> <br/>';
+        document.getElementById('date1').innerHTML = date1;
+        document.getElementById('date2').innerHTML = date1;
+        document.getElementById('date3').innerHTML = date2;
 
 
-      childsDiv.innerHTML = responses ;
-    } else {
-      childsDiv.innerHTML = '';
-    }
-  });
 
-  // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
-  // documentation, it should not be used in actual templates.
-  //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
-  opfab.currentCard.registerFunctionToGetUserResponse(() => {
+        opfab.currentCard.listenToChildCards((childCards) => {
+            let childsDiv = document.getElementById("childs-div");
 
-    const responseCardData = {};
-    const formElement = document.getElementById('question-form');
-    for (const [key, value] of [... new FormData(formElement)]) {
-        (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
-    }
+            if (childCards[0]) {
+                let responses = '<center> <h4>Responses received </h4> <br/>';
+                responses += ' <table width="100%""> <tr> <th> Entity </th>';
+                responses += ' <th> ' + date1 + ' 8AM-10AM </th>';
+                responses += ' <th> ' + date1 + ' 10AM-12PM </th>';
+                responses += ' <th> ' + date2 + ' 8AM-10AM </th>';
+                responses += ' </tr>';
 
-    const result = {
-        valid: true,
-        responseCardData: responseCardData
-    };
+                childCards.forEach((c, i) => {
+                    const entityName = opfab.users.entities.getEntityName(c.publisher);
+                    responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
+                    if (c.data.choice1) responses += "<td> OK </td>";
+                    else responses += "<td> NOK </td>";
+                    if (c.data.choice2) responses += "<td> OK </td>";
+                    else responses += "<td> NOK </td>";
+                    if (c.data.choice3) responses += "<td> OK </td>";
+                    else responses += "<td> NOK </td>";
+                    responses += "</tr>";
+                });
 
-      // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
-    const choiceRequiresFollowUp = Object.entries(responseCardData).length>1;
-    if(choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
+                responses += '</table> </center> <br/> <br/>';
 
-    return result;
 
-    });
-  //end::opfab.currentCard.registerFunctionToGetUserResponse_example[]
-
-  opfab.currentCard.listenToResponseLock(() => {
-      document.getElementById('choice1').disabled = true;
-      document.getElementById('choice2').disabled = true;
-      document.getElementById('choice3').disabled = true;
-  });
-
-  opfab.currentCard.listenToResponseUnlock(() => {
-      document.getElementById('choice1').disabled = false;
-      document.getElementById('choice2').disabled = false;
-      document.getElementById('choice3').disabled = false;
-
-  });
-
-  opfab.currentCard.listenToLttdExpired((expired) => {
-      const responseEnabled = document.getElementById('responseDisabled');
-      if (responseEnabled != null) {
-        if (expired) {
-            const responseRequired = document.getElementById('responseRequired');
-            if (responseRequired != null) {
-              responseRequired.innerHTML="";
+                childsDiv.innerHTML = responses;
+            } else {
+                childsDiv.innerHTML = '';
             }
-            responseEnabled.innerHTML="Response time has expired";
+        });
+
+        // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
+        // documentation, it should not be used in actual templates.
+        //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
+        opfab.currentCard.registerFunctionToGetUserResponse(() => {
+
+            const responseCardData = {};
+            const formElement = document.getElementById('question-form');
+            for (const [key, value] of [... new FormData(formElement)]) {
+                (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
+            }
+
+            const result = {
+                valid: true,
+                responseCardData: responseCardData
+            };
+
+            // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
+            const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
+            if (choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
+
+            return result;
+
+        });
+        //end::opfab.currentCard.registerFunctionToGetUserResponse_example[]
+
+        opfab.currentCard.listenToResponseLock(() => {
             document.getElementById('choice1').disabled = true;
             document.getElementById('choice2').disabled = true;
             document.getElementById('choice3').disabled = true;
-        } else {
-            responseEnabled.innerHTML="";
+        });
+
+        opfab.currentCard.listenToResponseUnlock(() => {
             document.getElementById('choice1').disabled = false;
             document.getElementById('choice2').disabled = false;
             document.getElementById('choice3').disabled = false;
-      }
+
+        });
+
+        opfab.currentCard.listenToLttdExpired((expired) => {
+            const responseEnabled = document.getElementById('responseDisabled');
+            if (responseEnabled != null) {
+                if (expired) {
+                    const responseRequired = document.getElementById('responseRequired');
+                    if (responseRequired != null) {
+                        responseRequired.innerHTML = "";
+                    }
+                    responseEnabled.innerHTML = "Response time has expired";
+                    document.getElementById('choice1').disabled = true;
+                    document.getElementById('choice2').disabled = true;
+                    document.getElementById('choice3').disabled = true;
+                } else {
+                    responseEnabled.innerHTML = "";
+                    document.getElementById('choice1').disabled = false;
+                    document.getElementById('choice2').disabled = false;
+                    document.getElementById('choice3').disabled = false;
+                }
+            }
+        });
+
+
+        if (opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()) {
+
+            const responseRequired = document.getElementById('responseRequired');
+            if (responseRequired != null) {
+                responseRequired.innerHTML = "Your response is required";
+            }
+        } else {
+            if (responseRequired != null) {
+                responseRequired.innerHTML = "";
+            }
+        }
     }
-  });
+    function alternativeResponse() {
+        const responseCardData = {};
+        const formElement = document.getElementById('question-form');
+        for (const [key, value] of [... new FormData(formElement)]) {
+            (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
+        }
+
+        const result = {
+            responseCardData: responseCardData
+        };
+
+        // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
+        const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
+        if (choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
 
 
-  if (opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()) {
-
-      const responseRequired = document.getElementById('responseRequired');
-      if (responseRequired != null) {
-        responseRequired.innerHTML="Your response is required";
-      }
-  } else {
-      if (responseRequired != null) {
-        responseRequired.innerHTML="";
-      }
-  }
+        opfab.cards.sendResponseCard(opfab.currentCard.getCard(), result);
     }
-
 </script>
-
-
