@@ -25,7 +25,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
-import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
+import {ProcessStatesMultiSelectOptionsService} from '@ofServices/processStatesMultiSelectOptions/ProcessStatesMultiSelectOptionsService';
 import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
