@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ current_year=$(date +"%Y")
 
 year_regex="([0-9]{4})(-[0-9]{4})?"
 
-modified_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.java$|\.ts$|\.html$|\.scss$|\.css$|\.adoc$')
+modified_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.java$|\.js$|\.ts$|\.html$|\.handlebars$|\.scss$|\.css$|\.adoc$')
 
 for file in $modified_files; do
   # Check if the file contains the copyright header
