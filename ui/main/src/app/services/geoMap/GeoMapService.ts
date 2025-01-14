@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,34 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 import {Observable, ReplaySubject} from 'rxjs';
+import {HighlightedCard} from './model/HighlightedCard';
 
-export class GeoMapStore {
+export class GeoMapService {
     private static readonly zoomToLocation = new ReplaySubject<string>(1);
     private static readonly highlightedCard = new ReplaySubject<HighlightedCard>(1);
 
     public static getZoomToLocation(): Observable<string> {
-        return GeoMapStore.zoomToLocation.asObservable();
+        return GeoMapService.zoomToLocation.asObservable();
     }
 
     public static getHighlightedCard(): Observable<HighlightedCard> {
-        return GeoMapStore.highlightedCard.asObservable();
+        return GeoMapService.highlightedCard.asObservable();
     }
 
     public static setZoomToLocation(cardId: string): void {
-        GeoMapStore.zoomToLocation.next(cardId);
+        GeoMapService.zoomToLocation.next(cardId);
     }
 
     public static setHighlightedCard(cardId: string, highLight: boolean): void {
-        GeoMapStore.highlightedCard.next(new HighlightedCard(cardId, highLight));
-    }
-}
-
-export class HighlightedCard {
-    public readonly cardId: string;
-    public readonly highlight: boolean;
-
-    constructor(cardId: string, highLight: boolean) {
-        this.cardId = cardId;
-        this.highlight = highLight;
+        GeoMapService.highlightedCard.next(new HighlightedCard(cardId, highLight));
     }
 }

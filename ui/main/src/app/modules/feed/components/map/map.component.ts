@@ -18,7 +18,8 @@ import {ActivatedRoute} from '@angular/router';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 import {NgFor} from '@angular/common';
-import {GeoMapStore, HighlightedCard} from 'app/business/store/GeoMapStore';
+import {GeoMapService} from '@ofServices/geoMap/GeoMapService';
+import {HighlightedCard} from '@ofServices/geoMap/model/HighlightedCard';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
@@ -67,7 +68,7 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
                     }
                 });
             this.updateMapWhenGlobalStyleChange();
-            GeoMapStore.getHighlightedCard()
+            GeoMapService.getHighlightedCard()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((highLightedCard: HighlightedCard) => {
                     this.highlightFeature(
@@ -76,7 +77,7 @@ export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterVi
                         this.highlightPolygonStrokeWidth
                     );
                 });
-            GeoMapStore.getZoomToLocation()
+            GeoMapService.getZoomToLocation()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((lightCardId) => {
                     this.zoomToLocation(lightCardId);

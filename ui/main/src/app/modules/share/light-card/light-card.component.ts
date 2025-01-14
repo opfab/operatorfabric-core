@@ -22,7 +22,7 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from 'app/business/common/utilities';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {GeoMapStore} from 'app/business/store/GeoMapStore';
+import {GeoMapService} from '@ofServices/geoMap/GeoMapService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
@@ -150,7 +150,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     highlightOnMap(highlight: boolean) {
         if (this.isGeoMapEnabled) {
-            GeoMapStore.setHighlightedCard(this.lightCard?.id, highlight);
+            GeoMapService.setHighlightedCard(this.lightCard?.id, highlight);
         }
     }
 
@@ -161,6 +161,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         if (SelectedCardService.getSelectedCardId()) {
             SelectedCardService.clearSelectedCardId();
             NavigationService.navigateToGeoMapLocation(this.lightCard.id);
-        } else GeoMapStore.setZoomToLocation(this.lightCard?.id);
+        } else GeoMapService.setZoomToLocation(this.lightCard?.id);
     }
 }
