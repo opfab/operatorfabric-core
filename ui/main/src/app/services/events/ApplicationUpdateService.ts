@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,12 +14,12 @@ import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
-import {Utilities} from '../../common/utilities';
-import {ApplicationEventsService} from './application-events.service';
-import {OpfabEventStreamService} from './opfabEventStream.service';
-import {ProcessesService} from '../../../services/processes/ProcessesService';
-import {BusinessDataService} from '../../../services/businessdata/businessdata.service';
-import {ConfigService} from '../../../services/config/ConfigService';
+import {Utilities} from '../../business/common/utilities';
+import {ApplicationEventsService} from './ApplicationEventsService';
+import {OpfabEventStreamService} from './OpfabEventStreamService';
+import {ProcessesService} from '../processes/ProcessesService';
+import {BusinessDataService} from '../businessdata/businessdata.service';
+import {ConfigService} from '../config/ConfigService';
 
 export class ApplicationUpdateService {
     public static init() {

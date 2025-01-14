@@ -43,8 +43,8 @@ import {BusinessDataServer} from './app/services/businessdata/server/BusinessDat
 import {AngularBusinessDataServer} from './app/services/businessdata/server/AngularBusinessData.server';
 import {UserSettingsServer} from './app/services/userSettings/server/UserSettingsServer';
 import {AngularUserSettingsServer} from './app/services/userSettings/server/AngularUserSettingsServer';
-import {OpfabEventStreamServer} from './app/business/server/opfabEventStream.server';
-import {AngularOpfabEventStreamServer} from './app/server/angularOpfabEventStream.server';
+import {OpfabEventStreamServer} from './app/services/events/server/OpfabEventStreamServer';
+import {AngularOpfabEventStreamServer} from './app/services/events/server/AngularOpfabEventStreamServer';
 import {ExternalDevicesServer} from './app/services/notifications/server/ExternalDevicesServer';
 import {AngularExternalDevicesServer} from './app/services/notifications/server/AngularExternalDevicesServer';
 import {CardsServer} from './app/services/cards/server/CardsServer';

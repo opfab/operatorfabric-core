@@ -16,7 +16,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {LightCardsTextFilter} from './lightcards-text-filter';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
-import {OpfabEventStreamService} from '../../services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '../../../services/events/OpfabEventStreamService';
 import {LightCardsStore} from './lightcards-store';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 

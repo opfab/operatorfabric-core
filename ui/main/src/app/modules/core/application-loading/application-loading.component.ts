@@ -12,7 +12,7 @@ import {LogLevel, LoggerService, LoggerService as logger} from 'app/services/log
 import {firstValueFrom, Subject, tap} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
-import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from './server/BusinessDataServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {OpfabEventStreamService} from '../../business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import * as _ from 'lodash-es';
 import {ErrorService} from '../../business/services/error-service';
 import {AlertMessageService} from '../alerteMessage/AlertMessageService';

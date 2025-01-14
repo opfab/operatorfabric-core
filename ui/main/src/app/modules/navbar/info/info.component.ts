@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
+import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 import * as _ from 'lodash-es';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {NgIf, NgFor} from '@angular/common';

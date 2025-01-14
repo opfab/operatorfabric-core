@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardOperation} from '@ofModel/card-operation.model';
+import {CardOperation} from '@ofServices/events/model/CardOperation';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {filter, map, Observable, Subject} from 'rxjs';
-import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
+import {OpfabEventStreamServer} from './server/OpfabEventStreamServer';
 
 export class OpfabEventStreamService {
     private static opfabEventStreamServer: OpfabEventStreamServer;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {UrlLockService} from './url-lock.service';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {ModalService} from '../../../../services/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
 import {NgIf} from '@angular/common';

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {getOneLightCard} from '@tests/helpers';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabStore} from 'app/business/store/opfabStore';

@@ -26,7 +26,7 @@ import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from '@ofModel/light-card.model';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {CardOperationType} from '@ofModel/card-operation.model';
+import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';

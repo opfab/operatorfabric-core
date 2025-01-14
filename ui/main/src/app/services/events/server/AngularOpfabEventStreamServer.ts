@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,12 +11,12 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {Observable, Subject} from 'rxjs';
-import packageInfo from '../../../package.json';
-import {AngularServer} from './angular.server';
+import packageInfo from '../../../../../package.json';
+import {AngularServer} from '../../../server/angular.server';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Guid} from 'guid-typescript';

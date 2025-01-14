@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {AuthService} from 'app/authentication/auth.service';
 import {Observable, Subject} from 'rxjs';
 import {CurrentUserStore} from '../../business/store/current-user.store';
-import {OpfabEventStreamService} from '../../business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {SoundNotificationService} from '../notifications/SoundNotificationService';
 

@@ -15,10 +15,10 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {CardOperationType} from '@ofModel/card-operation.model';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {CardOperationType} from '@ofServices/events/model/CardOperation';
 
 @Component({
     selector: 'of-card-acks-footer',

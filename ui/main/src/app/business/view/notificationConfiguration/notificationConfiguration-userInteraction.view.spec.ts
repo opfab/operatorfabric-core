@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ import {
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
 import {ModalComponentMock} from '@tests/mocks/ModalComponent.mock';

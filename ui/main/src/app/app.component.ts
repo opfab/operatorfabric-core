@@ -11,7 +11,7 @@ import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
-import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
+import {OpfabEventStreamService} from './services/events/OpfabEventStreamService';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {NgIf} from '@angular/common';
 import {AlertComponent} from './modules/core/alert/alert.component';
