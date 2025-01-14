@@ -11,7 +11,7 @@ import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-buttons.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     selectCard(info) {
         this.openPopover?.close();
-        SelectedCardStore.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -70,7 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ApplicationRouter} from './router/ApplicationRouter';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {Observable, ReplaySubject} from 'rxjs';
@@ -57,7 +57,7 @@ export class NavigationService {
         NavigationService.router.listenForNavigationEnd((route: string) => {
             if (route.startsWith('/feed/cards/')) {
                 const cardId = route.split('cards/')[1];
-                SelectedCardStore.setSelectedCardId(decodeURI(cardId));
+                SelectedCardService.setSelectedCardId(decodeURI(cardId));
             }
         });
     }
@@ -65,7 +65,7 @@ export class NavigationService {
     private static clearSelectedCardWhenUserNavigatesAwayFromTheFeed() {
         NavigationService.router.listenForNavigationEnd((route: string) => {
             if (!route.startsWith('/feed/cards')) {
-                SelectedCardStore.clearSelectedCardId();
+                SelectedCardService.clearSelectedCardId();
             }
         });
     }

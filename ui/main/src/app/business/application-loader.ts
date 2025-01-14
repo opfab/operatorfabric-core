@@ -26,7 +26,6 @@ import {AdminProcessesService} from '../services/admin/AdminProcessesService';
 import {BusinessDataService} from '../services/businessdata/businessdata.service';
 import {CardsService} from '../services/cards/CardsService';
 import {SupervisedEntitiesService} from '../services/admin/SupervisedEntitiesService';
-import {SelectedCardLoaderService} from './services/card/selectedCardLoader.service';
 import {HandlebarsService} from '../services/handlebars/HandlebarsService';
 import {ExternalDevicesService} from '../services/notifications/ExternalDevicesService';
 import {TemplateCssService} from '../services/templateCss/TemplateCssService';
@@ -46,6 +45,7 @@ import {RealTimeDomainService} from '../services/realTimeDomain/RealTimeDomainSe
 import {NotificationDecision} from '../services/notifications/NotificationDecision';
 import {CardTemplateGateway} from '../services/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '../services/templateGateway/UserCardTemplateGateway';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;
@@ -287,7 +287,7 @@ export class ApplicationLoader {
         SystemNotificationService.initSystemNotificationService();
         SoundNotificationService.initSoundService();
         HandlebarsService.init();
-        SelectedCardLoaderService.init();
+        SelectedCardService.init();
     }
 
     private async waitForStreamInitDone(): Promise<void> {

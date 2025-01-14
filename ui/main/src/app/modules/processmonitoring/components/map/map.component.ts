@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import {
 import {LightCard} from '@ofModel/light-card.model';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {OpfabMap} from 'app/modules/share/map/opfab-map';
 import {NgFor} from '@angular/common';
@@ -99,7 +99,7 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
     }
 
     showCard(lightCardId) {
-        SelectedCardStore.setSelectedCardId(lightCardId);
+        SelectedCardService.setSelectedCardId(lightCardId);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -108,7 +108,7 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 

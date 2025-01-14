@@ -14,7 +14,7 @@ import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ActivatedRoute, RouterOutlet} from '@angular/router';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {NgIf, AsyncPipe} from '@angular/common';
@@ -54,7 +54,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.selection$ = SelectedCardStore.getSelectCardIdChanges();
+        this.selection$ = SelectedCardService.getSelectedCardIdChanges();
 
         this.lightCards$ = this.filteredLightCardStore.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/

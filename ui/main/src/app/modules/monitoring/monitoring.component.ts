@@ -18,7 +18,7 @@ import {Process, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Filter} from '@ofModel/feed-filter.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
@@ -97,7 +97,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = this.hasStatesToDisplay();
 
-        SelectedCardStore.getSelectCardIdChanges().subscribe(
+        SelectedCardService.getSelectedCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
     }

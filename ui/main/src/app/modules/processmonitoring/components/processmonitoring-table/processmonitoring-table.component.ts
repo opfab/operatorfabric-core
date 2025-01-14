@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCardStore} from '../../../../business/store/selectedCard.store';
+import {SelectedCardService} from '../../../../services/selectedCard/SelectedCardService';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/card.component';
@@ -181,7 +181,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     selectCard(info) {
-        SelectedCardStore.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -190,7 +190,7 @@ export class ProcessmonitoringTableComponent {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 }

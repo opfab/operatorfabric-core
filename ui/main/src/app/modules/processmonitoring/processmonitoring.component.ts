@@ -30,7 +30,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {SelectedCardStore} from '../../business/store/selectedCard.store';
+import {SelectedCardService} from '../../services/selectedCard/SelectedCardService';
 import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
 import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
 import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
@@ -290,7 +290,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.page = 1;
         this.results = [];
 
-        SelectedCardStore.getSelectCardIdChanges().subscribe(
+        SelectedCardService.getSelectedCardIdChanges().subscribe(
             (selectedCardId) => (this.selectedCardId = selectedCardId)
         );
 

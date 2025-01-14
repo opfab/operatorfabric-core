@@ -21,7 +21,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {NgIf} from '@angular/common';
@@ -145,7 +145,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
 
     selectCard(info) {
-        SelectedCardStore.setSelectedCardId(info.event.id);
+        SelectedCardService.setSelectedCardId(info.event.id);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -154,7 +154,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 

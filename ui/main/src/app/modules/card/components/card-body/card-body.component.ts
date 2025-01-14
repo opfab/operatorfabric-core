@@ -33,7 +33,7 @@ import {DisplayContext} from '@ofModel/template.model';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {OpfabStore} from 'app/business/store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
@@ -412,9 +412,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         } else {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
             if (nextCardId) NavigationService.navigateToCard(nextCardId);
             else NavigationService.navigateTo('/feed');
         }

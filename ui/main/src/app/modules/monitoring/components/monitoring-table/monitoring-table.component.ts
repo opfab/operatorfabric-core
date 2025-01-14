@@ -23,7 +23,7 @@ import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-rendere
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {OpfabStore} from 'app/business/store/opfabStore';
@@ -418,7 +418,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     selectCard(info) {
-        SelectedCardStore.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -427,7 +427,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            SelectedCardStore.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 }

@@ -21,7 +21,7 @@ import {SoundNotificationService} from '@ofServices/notifications/SoundNotificat
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from 'app/business/common/utilities';
-import {SelectedCardStore} from 'app/business/store/selectedCard.store';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {GeoMapStore} from 'app/business/store/GeoMapStore';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
@@ -158,8 +158,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         SoundNotificationService.clearOutstandingNotifications();
-        if (SelectedCardStore.getSelectedCardId()) {
-            SelectedCardStore.clearSelectedCardId();
+        if (SelectedCardService.getSelectedCardId()) {
+            SelectedCardService.clearSelectedCardId();
             NavigationService.navigateToGeoMapLocation(this.lightCard.id);
         } else GeoMapStore.setZoomToLocation(this.lightCard?.id);
     }
