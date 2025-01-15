@@ -20,7 +20,7 @@ import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {TranslateService} from '@ngx-translate/core';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../utils/utilities';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {GeoMapService} from '@ofServices/geoMap/GeoMapService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';

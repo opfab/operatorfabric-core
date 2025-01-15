@@ -8,7 +8,7 @@
  */
 
 import {map, Observable, of} from 'rxjs';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../utils/utilities';
 import {TemplateCssServer} from './server/TemplateCssServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

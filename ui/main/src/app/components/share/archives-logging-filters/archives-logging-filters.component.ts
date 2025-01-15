@@ -27,7 +27,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/processStatesMultiSelectOptions/ProcessStatesMultiSelectOptionsService';
 import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../utils/utilities';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';

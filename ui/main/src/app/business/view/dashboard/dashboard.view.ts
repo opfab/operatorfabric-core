@@ -8,7 +8,7 @@
  */
 
 import {Severity} from '@ofModel/light-card.model';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../utils/utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';

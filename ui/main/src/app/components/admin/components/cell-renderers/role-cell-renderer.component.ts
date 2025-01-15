@@ -13,7 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 import {AdminItemType} from '../../services/sharing.service';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {NgFor} from '@angular/common';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

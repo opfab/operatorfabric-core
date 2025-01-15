@@ -22,7 +22,7 @@ import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './userActionLogLine';
 import {UserActionLogsResult} from './userActionLogsResult';
 import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
-import {ExcelExport} from '../../common/excel-export';
+import {ExcelExport} from '../../../utils/excel-export';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class UserActionLogsView {

@@ -26,7 +26,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {ExcelExport} from 'app/business/common/excel-export';
+import {ExcelExport} from '../../utils/excel-export';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../utils/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';

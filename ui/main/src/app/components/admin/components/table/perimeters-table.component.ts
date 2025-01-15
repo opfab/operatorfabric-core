@@ -12,7 +12,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

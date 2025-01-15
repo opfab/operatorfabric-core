@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofServices/cards/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/opfabStore';

@@ -36,7 +36,7 @@ import {ApplicationUpdateService} from '../services/events/ApplicationUpdateServ
 import {SystemNotificationService} from '../services/notifications/SystemNotificationService';
 import {ApplicationLoadingComponent} from './application-loading-component';
 import {ServerResponseStatus} from './server/serverResponse';
-import {Utilities} from './common/utilities';
+import {Utilities} from '../utils/utilities';
 import {ModalService} from '../services/modal/ModalService';
 import {SessionManagerService} from '../services/sessionManager/SessionManagerService';
 import {SoundNotificationService} from '../services/notifications/SoundNotificationService';

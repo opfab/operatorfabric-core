@@ -13,7 +13,7 @@ import {User} from '@ofServices/users/model/User';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/opfabStore';

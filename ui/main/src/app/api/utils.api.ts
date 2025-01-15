@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../utils/utilities';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 declare const opfab: any;

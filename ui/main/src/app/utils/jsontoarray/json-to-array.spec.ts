@@ -8,7 +8,7 @@
  */
 
 import {JsonToArray} from './json-to-array';
-import {LoggerService as logger} from 'app/services/logs/LoggerService';
+import {LoggerService as logger} from '@ofServices/logs/LoggerService';
 
 describe('set array columns ', () => {
     it('set two field in rules   ', () => {

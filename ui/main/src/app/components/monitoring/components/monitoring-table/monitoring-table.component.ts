@@ -10,12 +10,12 @@
 
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from 'app/components/monitoring/model/LineOfMonitoringResult';
-import {ExcelExport} from 'app/business/common/excel-export';
+import {ExcelExport} from '../../../../utils/excel-export';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbProgressbar} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {MonitoringConfig} from '@ofServices/config/model/MonitoringConfig';
-import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
+import {JsonToArray} from '../../../../utils/jsontoarray/json-to-array';
 import {Process} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';

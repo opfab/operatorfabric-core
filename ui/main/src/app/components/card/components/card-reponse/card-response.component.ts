@@ -21,7 +21,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {Utilities} from 'app/business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';

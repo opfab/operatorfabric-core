@@ -32,7 +32,7 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {GroupsService} from '@ofServices/groups/GroupsService';
 import {Group} from '@ofServices/groups/model/Group';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {ExcelExport} from 'app/business/common/excel-export';
+import {ExcelExport} from '../../../../utils/excel-export';
 import {saveAs} from 'file-saver-es';
 import {BusinessDataService} from '@ofServices/businessdata/businessdata.service';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

@@ -13,7 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofServices/perimeters/model/Perimeter';
 import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {Utilities} from '../../../../business/common/utilities';
+import {Utilities} from '../../../../utils/utilities';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgFor, LowerCasePipe} from '@angular/common';
 
