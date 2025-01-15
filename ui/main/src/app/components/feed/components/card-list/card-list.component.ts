@@ -22,8 +22,8 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';

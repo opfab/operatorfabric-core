@@ -12,11 +12,11 @@ import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsFilter} from './lightcards-filter';
 import {LightCardsSorter} from './lightcards-sorter';
-import {ConfigService} from 'app/services/config/ConfigService';
-import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
+import {ConfigService} from '@ofServices/config/ConfigService';
+import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {LightCardsTextFilter} from './lightcards-text-filter';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
-import {OpfabEventStreamService} from '../../../services/events/OpfabEventStreamService';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {LightCardsStore} from './lightcards-store';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 

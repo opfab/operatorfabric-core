@@ -13,8 +13,8 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../../store/opfabStore';
 import {format} from 'date-fns';
 
 export class Dashboard {

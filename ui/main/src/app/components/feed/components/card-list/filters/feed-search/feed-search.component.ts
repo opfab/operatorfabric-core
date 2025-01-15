@@ -11,8 +11,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../../../../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../../../../../store/opfabStore';
 import {NgIf} from '@angular/common';
 
 @Component({

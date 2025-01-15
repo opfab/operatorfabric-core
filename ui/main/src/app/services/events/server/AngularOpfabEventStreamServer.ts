@@ -17,7 +17,7 @@ import {EventSourcePolyfill} from 'ng-event-source';
 import {Observable, Subject} from 'rxjs';
 import packageInfo from '../../../../../package.json';
 import {AngularServer} from '../../../server/angular.server';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {CurrentUserStore} from '../../../store/current-user.store';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Guid} from 'guid-typescript';
 

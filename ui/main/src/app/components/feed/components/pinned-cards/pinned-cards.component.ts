@@ -12,7 +12,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {NgFor, NgIf, LowerCasePipe} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';

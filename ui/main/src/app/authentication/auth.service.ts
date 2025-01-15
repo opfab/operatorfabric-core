@@ -13,7 +13,7 @@ import {Message} from '@ofServices/alerteMessage/model/Message';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {CurrentUserStore} from '../store/current-user.store';
 import {Observable, Subject} from 'rxjs';
 import {AuthHandler} from './auth-handler';
 import {AuthenticatedUser, AuthenticationMode} from './auth.model';

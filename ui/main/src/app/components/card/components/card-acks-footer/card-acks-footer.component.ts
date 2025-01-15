@@ -13,7 +13,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';

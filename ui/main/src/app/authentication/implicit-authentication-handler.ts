@@ -11,7 +11,7 @@ import {AuthConfig, EventType as OAuthType, JwksValidationHandler, OAuthEvent, O
 import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {CurrentUserStore} from '../store/current-user.store';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ConfigService} from 'app/services/config/ConfigService';
 

@@ -24,9 +24,9 @@ import {
 } from 'rxjs';
 import {UsersService} from '@ofServices/users/UsersService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
+import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {AcknowledgeService} from '../../../services/acknowlegment/AcknowledgeService';
+import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 
 /**

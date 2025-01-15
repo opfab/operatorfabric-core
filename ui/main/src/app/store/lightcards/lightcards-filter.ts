@@ -9,7 +9,7 @@
 
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
+import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
 
 export class LightCardsFilter {

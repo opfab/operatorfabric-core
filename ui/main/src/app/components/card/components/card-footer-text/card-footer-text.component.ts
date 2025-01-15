@@ -16,7 +16,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';

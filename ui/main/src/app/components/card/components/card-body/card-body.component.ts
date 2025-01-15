@@ -35,7 +35,7 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {CardAction} from '@ofModel/light-card.model';
 import {NgIf} from '@angular/common';
 import {CardActionsComponent} from '../card-actions/card-actions.component';

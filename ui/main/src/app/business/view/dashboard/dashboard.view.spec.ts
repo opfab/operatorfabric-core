@@ -18,8 +18,8 @@ import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../../store/opfabStore';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;

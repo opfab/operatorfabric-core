@@ -19,7 +19,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Filter} from '@ofModel/feed-filter.model';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../store/opfabStore';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';

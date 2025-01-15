@@ -15,7 +15,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../store/opfabStore';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 

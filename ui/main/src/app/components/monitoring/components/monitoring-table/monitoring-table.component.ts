@@ -26,7 +26,7 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../../store/opfabStore';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';

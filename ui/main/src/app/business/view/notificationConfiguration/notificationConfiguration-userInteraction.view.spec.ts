@@ -28,7 +28,7 @@ import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {Severity} from '@ofModel/light-card.model';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../store/opfabStore';
 import {NotificationConfigurationPage} from './notificationConfigurationPage';
 import {ModalComponentMock} from '@tests/mocks/ModalComponent.mock';
 import {I18n} from '@ofModel/i18n.model';

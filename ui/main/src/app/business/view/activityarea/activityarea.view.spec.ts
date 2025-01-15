@@ -17,14 +17,14 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {CurrentUserStore} from '../../../store/current-user.store';
 import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {getOneLightCard} from '@tests/helpers';
 import {Severity} from '@ofModel/light-card.model';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {OpfabStore} from '../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('ActivityAreaView', () => {

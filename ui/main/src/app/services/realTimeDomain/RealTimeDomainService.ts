@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FilteredLightCardsStore} from '../../business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from '../../business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../store/opfabStore';
 import {UserPreferencesService} from '../userPreferences/UserPreferencesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {FilterType} from '@ofModel/feed-filter.model';

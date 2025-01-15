@@ -31,7 +31,7 @@ import {ExternalDevicesService} from '../services/notifications/ExternalDevicesS
 import {TemplateCssService} from '../services/templateCss/TemplateCssService';
 import {UserSettingsService} from '../services/userSettings/UserSettingsService';
 import {NavigationService} from '../services/navigation/NavigationService';
-import {OpfabStore} from './store/opfabStore';
+import {OpfabStore} from '../store/opfabStore';
 import {ApplicationUpdateService} from '../services/events/ApplicationUpdateService';
 import {SystemNotificationService} from '../services/notifications/SystemNotificationService';
 import {ApplicationLoadingComponent} from './application-loading-component';

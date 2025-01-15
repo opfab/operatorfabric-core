@@ -12,8 +12,8 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from 'app/business/store/opfabStore';
+import {FilteredLightCardsStore} from '../../../../../../store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from '../../../../../../store/opfabStore';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
