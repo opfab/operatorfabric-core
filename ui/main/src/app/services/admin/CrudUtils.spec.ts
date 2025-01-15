@@ -11,7 +11,7 @@ import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from 'app/services/entities/model/Entity';
 import {firstValueFrom} from 'rxjs';
 import {CrudUtilities} from './CrudUtils';
-import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
+import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 describe('Entities multiselect options labels ', () => {

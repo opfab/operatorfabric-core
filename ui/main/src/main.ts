@@ -55,7 +55,7 @@ import {TranslationLib} from './app/services/translation/lib/TranslationLib';
 import {AngularTranslationLib} from '@ofServices/translation/lib/AngularTranslationLib';
 import {ModalComponent} from './app/services/modal/component/ModalComponent';
 import {NgbModalComponent} from './app/services/modal/component/NgbModalComponent';
-import {SharingService} from './app/modules/admin/services/sharing.service';
+import {SharingService} from './app/components/admin/services/sharing.service';
 import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';

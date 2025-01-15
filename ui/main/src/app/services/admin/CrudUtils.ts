@@ -8,7 +8,7 @@
  */
 
 import {Utilities} from 'app/business/common/utilities';
-import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
+import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {EntitiesService} from '../entities/EntitiesService';
 import {GroupsService} from '../groups/GroupsService';
 

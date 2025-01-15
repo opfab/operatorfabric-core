@@ -9,11 +9,11 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from '../../../modules/core/application-loading/login/login.component';
-import {FeedComponent} from 'app/modules/feed/feed.component';
-import {CardComponent} from 'app/modules/card/card.component';
-import {CardBodyComponent} from 'app/modules/card/components/card-body/card-body.component';
-import {MapComponent} from 'app/modules/feed/components/map/map.component';
+import {LoginComponent} from '../../../components/core/application-loading/login/login.component';
+import {FeedComponent} from 'app/components/feed/feed.component';
+import {CardComponent} from 'app/components/card/card.component';
+import {CardBodyComponent} from 'app/components/card/components/card-body/card-body.component';
+import {MapComponent} from 'app/components/feed/components/map/map.component';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -22,7 +22,7 @@ import {MapComponent} from 'app/modules/feed/components/map/map.component';
 const routes: Routes = [
     {
         // Avoid lazy loading otherwise it may cause issues when accessing
-        // a card direclty via the url (e.g. /feed/cards/1234)
+        // a card directly via the url (e.g. /feed/cards/1234)
         // see issue #7632
         path: 'feed',
         component: FeedComponent,
@@ -54,39 +54,40 @@ const routes: Routes = [
     },
     {
         path: 'archives',
-        loadComponent: () => import('../../../modules/archives/archives.component').then((m) => m.ArchivesComponent)
+        loadComponent: () => import('../../../components/archives/archives.component').then((m) => m.ArchivesComponent)
     },
     {
         path: 'monitoring',
         loadComponent: () =>
-            import('../../../modules/monitoring/monitoring.component').then((m) => m.MonitoringComponent)
+            import('../../../components/monitoring/monitoring.component').then((m) => m.MonitoringComponent)
     },
     {
         path: 'dashboard',
-        loadComponent: () => import('../../../modules/dashboard/dashboard.component').then((m) => m.DashboardComponent)
+        loadComponent: () =>
+            import('../../../components/dashboard/dashboard.component').then((m) => m.DashboardComponent)
     },
     {
         path: 'logging',
-        loadComponent: () => import('../../../modules/logging/logging.component').then((m) => m.LoggingComponent)
+        loadComponent: () => import('../../../components/logging/logging.component').then((m) => m.LoggingComponent)
     },
     {
         path: 'processmonitoring',
         loadComponent: () =>
-            import('../../../modules/processmonitoring/processmonitoring.component').then(
+            import('../../../components/processmonitoring/processmonitoring.component').then(
                 (m) => m.ProcessMonitoringComponent
             )
     },
     {
         path: 'calendar',
-        loadComponent: () => import('../../../modules/calendar/calendar.component').then((m) => m.CalendarComponent)
+        loadComponent: () => import('../../../components/calendar/calendar.component').then((m) => m.CalendarComponent)
     },
     {
         path: 'businessconfigparty',
-        loadChildren: () => import('../../../modules/businessconfigparty/businessconfigparty-routing')
+        loadChildren: () => import('../../../components/businessconfigparty/businessconfigparty-routing')
     },
     {
         path: 'settings',
-        loadChildren: () => import('../../../modules/settings/settings-routing')
+        loadChildren: () => import('../../../components/settings/settings-routing')
     },
     {
         path: 'navbar',
@@ -94,39 +95,40 @@ const routes: Routes = [
     },
     {
         path: 'admin',
-        loadChildren: () => import('../../../modules/admin/admin-routing')
+        loadChildren: () => import('../../../components/admin/admin-routing')
     },
     {
         path: 'realtimeusers',
         loadComponent: () =>
-            import('../../../modules/realtimeusers/realtimeusers.component').then((m) => m.RealtimeusersComponent)
+            import('../../../components/realtimeusers/realtimeusers.component').then((m) => m.RealtimeusersComponent)
     },
     {
         path: 'activityarea',
-        loadChildren: () => import('../../../modules/activityarea/activityarea-routing')
+        loadChildren: () => import('../../../components/activityarea/activityarea-routing')
     },
     {
         path: 'feedconfiguration',
-        loadChildren: () => import('../../../modules/notificationconfiguration/notificationconfiguration-routing')
+        loadChildren: () => import('../../../components/notificationconfiguration/notificationconfiguration-routing')
     },
     {
         path: 'changepassword',
         loadComponent: () =>
-            import('../../../modules/changepassword/changepassword.component').then((m) => m.ChangepasswordComponent)
+            import('../../../components/changepassword/changepassword.component').then((m) => m.ChangepasswordComponent)
     },
     {
         path: 'externaldevicesconfiguration',
-        loadChildren: () => import('../../../modules/externaldevicesconfiguration/externaldevicesconfiguration-routing')
+        loadChildren: () =>
+            import('../../../components/externaldevicesconfiguration/externaldevicesconfiguration-routing')
     },
     {
         path: 'useractionlogs',
         loadComponent: () =>
-            import('../../../modules/useractionlogs/useractionlogs.component').then((m) => m.UserActionLogsComponent)
+            import('../../../components/useractionlogs/useractionlogs.component').then((m) => m.UserActionLogsComponent)
     },
     {
         path: 'devtools/richtext',
         loadComponent: () =>
-            import('../../../modules/devtools/richtext/richtext.component').then((m) => m.RichTextComponent)
+            import('../../../components/devtools/richtext/richtext.component').then((m) => m.RichTextComponent)
     }
 ];
 const startIndex = 0;

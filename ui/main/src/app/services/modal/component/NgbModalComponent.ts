@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
-import {OpfabNgbModalComponent} from '../../../modules/share/modal/opfabNgbModal.component';
+import {OpfabNgbModalComponent} from '../../../components/share/modal/opfabNgbModal.component';
 import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 
 @Injectable({

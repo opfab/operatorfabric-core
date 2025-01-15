@@ -12,14 +12,14 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from './services/events/OpfabEventStreamService';
-import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
+import {ApplicationLoadingComponent} from './components/core/application-loading/application-loading.component';
 import {NgIf} from '@angular/common';
-import {AlertComponent} from './modules/core/alert/alert.component';
-import {NavbarComponent} from './modules/navbar/navbar.component';
+import {AlertComponent} from './components/core/alert/alert.component';
+import {NavbarComponent} from './components/navbar/navbar.component';
 import {RouterOutlet} from '@angular/router';
-import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
-import {SessionEndComponent} from './modules/core/session-end/session-end.component';
-import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
+import {ConnectionLostComponent} from './components/core/connection-lost/connection-lost.component';
+import {SessionEndComponent} from './components/core/session-end/session-end.component';
+import {ReloadRequiredComponent} from './components/core/reload-required/reload-required.component';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 
 @Component({

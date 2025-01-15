@@ -9,7 +9,7 @@
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {MultiSelectOption} from 'app/modules/share/multi-select/model/MultiSelect';
+import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {Process} from '@ofServices/processes/model/Processes';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
