@@ -17,7 +17,6 @@ import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from '@ofModel/i18n.model';
-import {ErrorService} from 'app/business/services/error-service';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {NgIf} from '@angular/common';
@@ -168,9 +167,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 ModalService.openInformationModal(new I18n('settings.settingsSaved')).then(() => {
                     this.canDeactivateSubject.next(true);
                 });
-            else {
-                ErrorService.handleServerResponseError(result);
-            }
         });
     }
 
