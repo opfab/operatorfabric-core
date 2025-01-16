@@ -12,7 +12,6 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Page} from '@ofModel/page.model';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
@@ -24,6 +23,7 @@ import {UserActionLogsResult} from './userActionLogsResult';
 import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
 import {ExcelExport} from '../../../utils/excel-export';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {UserActionLogsService} from '@ofServices/userActionLogs/UserActionLogsService';
 
 export class UserActionLogsView {
     private readonly userActionLogPage = new UserActionLogsPageDescription();
@@ -33,7 +33,7 @@ export class UserActionLogsView {
     private dateTo = 0;
     private pageNumber = 0;
 
-    constructor(private readonly userActionLogsServer: UserActionLogsServer) {
+    constructor() {
         this.initPage();
     }
 
@@ -99,7 +99,7 @@ export class UserActionLogsView {
         }
 
         const filters = this.getFiltersForRequest(isForExport);
-        return this.userActionLogsServer.queryUserActionLogs(filters).pipe(
+        return UserActionLogsService.queryUserActionLogs(filters).pipe(
             map((serverResponse) => {
                 return this.buildUserActionLogsResult(serverResponse);
             })

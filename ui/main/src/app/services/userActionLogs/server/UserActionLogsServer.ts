@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,9 @@
  */
 
 import {Page} from '@ofModel/page.model';
-import {UserActionLog} from '@ofModel/user-action-log.model';
+import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 import {Observable} from 'rxjs';
-import {ServerResponse} from './serverResponse';
+import {ServerResponse} from '../../../business/server/serverResponse';
 
 export abstract class UserActionLogsServer {
     abstract queryUserActionLogs(filters: Map<string, string[]>): Observable<ServerResponse<Page<UserActionLog>>>;

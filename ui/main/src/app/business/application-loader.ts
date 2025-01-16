@@ -46,6 +46,7 @@ import {NotificationDecision} from '../services/notifications/NotificationDecisi
 import {CardTemplateGateway} from '../services/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '../services/templateGateway/UserCardTemplateGateway';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
+import {UserActionLogsService} from '@ofServices/userActionLogs/UserActionLogsService';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;
@@ -85,6 +86,7 @@ export class ApplicationLoader {
         ModalService.setModalComponent(servers.modalComponent);
         SessionManagerService.init(servers.authService);
         SoundNotificationService.setSoundServer(servers.soundServer);
+        UserActionLogsService.setUserActionLogsServer(servers.userActionLogsServer);
         this.opfabEventStreamServer = servers.opfabEventStreamServer;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,9 @@
 
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
-import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
+import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
 import {Page} from '@ofModel/page.model';
-import {UserActionLog} from '@ofModel/user-action-log.model';
+import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 
 export class UserActionLogsServerMock implements UserActionLogsServer {
     private logsSubject: ReplaySubject<ServerResponse<any>>;

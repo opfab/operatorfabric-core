@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,13 +9,13 @@
 
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable} from 'rxjs';
-import {AngularServer} from './angular.server';
+import {AngularServer} from '../../../server/angular.server';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
-import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
+import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
 import {Page} from '@ofModel/page.model';
-import {UserActionLog} from '@ofModel/user-action-log.model';
+import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 
 @Injectable({
     providedIn: 'root'

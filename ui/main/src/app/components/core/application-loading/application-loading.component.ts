@@ -42,6 +42,7 @@ import {LoginComponent} from './login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {loadBuiltInTemplates} from 'app/builtInTemplates/templatesLoader';
 import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';
+import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
 
 @Component({
     selector: 'of-application-loading',
@@ -90,7 +91,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private readonly handlebarsTemplateServer: HandlebarsTemplateServer,
         private readonly userSettingsServer: UserSettingsServer,
         private readonly modalComponent: ModalComponent,
-        private readonly soundServer: SoundServer
+        private readonly soundServer: SoundServer,
+        private readonly userActionLogsServer: UserActionLogsServer
     ) {
         LoggerService.setLogLevel(LogLevel.DEBUG);
     }
@@ -119,7 +121,8 @@ export class ApplicationLoadingComponent implements OnInit {
             userSettingsServer: this.userSettingsServer,
             modalComponent: this.modalComponent,
             authService: this.authService,
-            soundServer: this.soundServer
+            soundServer: this.soundServer,
+            userActionLogsServer: this.userActionLogsServer
         });
         setTimeout(() => this.loadApplication(), 0);
     }

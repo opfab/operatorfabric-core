@@ -29,7 +29,6 @@ import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/archived-card-detail.component';
 import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
 import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/MultiSelect';
-import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
 
 @Component({
     selector: 'of-useractionlogs',
@@ -76,11 +75,10 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     selectedChildCards: Card[];
 
     constructor(
-        userActionLogsServer: UserActionLogsServer,
         private readonly modalService: NgbModal,
         private readonly changeDetector: ChangeDetectorRef
     ) {
-        this.userActionLogsView = new UserActionLogsView(userActionLogsServer);
+        this.userActionLogsView = new UserActionLogsView();
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }
 
