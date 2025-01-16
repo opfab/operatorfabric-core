@@ -582,6 +582,13 @@
             "processes": "Processes Management",
             "businessData": "Business Data Management",
             "supervisedEntities": "Supervised Entities"
+        },
+        "errors" : {
+            "supervisedEntity": {
+                "deleteEntity": "Impossible to delete supervised entity",
+                "gettingEntities" : "Impossible to get supervised entities",
+                "updateEntity": "Impossible to update supervised entity"
+            }
         }
     },
     "processGroup": {

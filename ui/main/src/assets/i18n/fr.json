@@ -582,6 +582,14 @@
             "processes": "Gestion des processus",
             "businessData": "Données métier",
             "supervisedEntities": "Entités Supervisées"
+        },
+        "errors": {
+                "supervisedEntity": {
+                    "deleteEntity": "Impossible de supprimer l'entité supervisée",
+                    "gettingEntities" : "Impossible de récupérer les entités supervisées",
+                    "updateEntity": "Impossible de mettre à jour l'entité supervisée"
+                }
+
         }
     },
     "processGroup": {

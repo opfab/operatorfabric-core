@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,10 +10,11 @@
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
-import {ErrorService} from '../../business/services/error-service';
 import {SupervisedEntity} from '@ofServices/admin/model/SupervisedEntity';
 import {SupervisedEntitiesServer} from '@ofServices/admin/server/SupervisedEntitiesServer';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class SupervisedEntitiesService {
     protected static _entities: SupervisedEntity[];
@@ -30,7 +31,12 @@ export class SupervisedEntitiesService {
                 if (entitiesResponse.status === ServerResponseStatus.OK) {
                     SupervisedEntitiesService.deleteFromCachedEntities(id);
                 } else {
-                    ErrorService.handleServerResponseError(entitiesResponse);
+                    logger.error(`Error while deleting entity ${id} :  ${entitiesResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'admin.errors.supervisedEntity.deleteEntity'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );
@@ -48,7 +54,12 @@ export class SupervisedEntitiesService {
                 if (entitiesResponse.status === ServerResponseStatus.OK) {
                     return entitiesResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(entitiesResponse);
+                    logger.error(`Error while getting entities :  ${entitiesResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'admin.errors.supervisedEntity.gettingEntities'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -63,7 +74,14 @@ export class SupervisedEntitiesService {
 
                     return responseEntities.data;
                 } else {
-                    ErrorService.handleServerResponseError(responseEntities);
+                    logger.error(
+                        `Error while updating entity ${entityData.entityId} :  ${responseEntities.statusMessage}`
+                    );
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'admin.errors.supervisedEntity.updateEntity'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })

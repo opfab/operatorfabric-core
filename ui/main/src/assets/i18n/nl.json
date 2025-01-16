@@ -582,6 +582,13 @@
             "processes": "Processen Beheer",
             "businessData": "Zakelijke gegevens",
             "supervisedEntities": "Entiteiten onder toezicht"
+        },
+        "errors": {
+            "supervisedEntity": {
+                    "deleteEntity": "Het is niet mogelijk om de gecontroleerde entiteit te verwijderen",
+                    "gettingEntities" : "Het is niet mogelijk om gecontroleerde entiteiten op te halen",
+                    "updateEntity": "Het is niet mogelijk om de gecontroleerde entiteit bij te werken"
+            }
         }
     },
     "processGroup": {
