@@ -11,7 +11,7 @@ import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UrlLockService} from './url-lock.service';
 import {UsersService} from '@ofServices/users/UsersService';
-import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
+import {ApplicationLoadingComponent} from '../../../../services/applicationLoader/ApplicationLoadingComponent';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {ModalService} from '../../../../services/modal/ModalService';

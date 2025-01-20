@@ -18,7 +18,7 @@ import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
 import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
-import {ApplicationLoader} from 'app/business/application-loader';
+import {ApplicationLoader} from '@ofServices/applicationLoader/ApplicationLoader';
 import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {AngularApplicationRouter} from '@ofServices/navigation/router/AngularApplicationRouter';

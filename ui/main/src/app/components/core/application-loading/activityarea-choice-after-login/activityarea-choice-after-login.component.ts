@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {ApplicationLoadingComponent} from '../../../../business/application-loading-component';
+import {ApplicationLoadingComponent} from '../../../../services/applicationLoader/ApplicationLoadingComponent';
 import {ActivityareaComponent} from '../../../activityarea/activityarea.component';
 
 @Component({
