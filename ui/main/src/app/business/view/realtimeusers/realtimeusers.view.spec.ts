@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -153,6 +153,21 @@ describe('Realtimeusers', () => {
         clock.tick(2500);
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, user2');
+    });
+
+    it('If a user with first name and last name connects, they should be displayed instead of his login', () => {
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(1);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1');
+
+        const connectedUsers = [
+            {login: 'user1', entitiesConnected: ['IT_SUPERVISOR_ENTITY']},
+            {login: 'user2', firstName: 'John', lastName: 'Smith', entitiesConnected: ['IT_SUPERVISOR_ENTITY']}
+        ];
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
+
+        clock.tick(2500);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, John Smith');
     });
 
     const realtimeScreensTestConfig = {

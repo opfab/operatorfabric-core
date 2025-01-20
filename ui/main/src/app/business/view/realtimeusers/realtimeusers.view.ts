@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,6 +87,8 @@ export class RealtimeUsersView {
     }
 
     private updateConnectedUsers() {
+        let connectedUserName = '';
+
         UsersService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
 
@@ -96,8 +98,14 @@ export class RealtimeUsersView {
                     connectedUser.entitiesConnected.forEach((entityConnected) => {
                         const connectedUsersToEntity = this.connectedUsersPerEntity.get(entityConnected) ?? [];
 
-                        if (!connectedUsersToEntity.includes(connectedUser.login)) {
-                            connectedUsersToEntity.push(connectedUser.login);
+                        if (connectedUser.firstName && connectedUser.lastName) {
+                            connectedUserName = connectedUser.firstName + ' ' + connectedUser.lastName;
+                        } else {
+                            connectedUserName = connectedUser.login;
+                        }
+
+                        if (!connectedUsersToEntity.includes(connectedUserName)) {
+                            connectedUsersToEntity.push(connectedUserName);
                             this.connectedUsersPerEntity.set(entityConnected, connectedUsersToEntity);
                         }
                     });
@@ -128,14 +136,18 @@ export class RealtimeUsersView {
         const usersFiltered = [];
 
         const usersUnfiltered = this.connectedUsersPerEntity.get(entity) ?? [];
-        if (displayedGroups.length === 0 || usersUnfiltered.length === 0) return usersUnfiltered;
+        if (displayedGroups.length === 0 || usersUnfiltered.length === 0) {
+            return usersUnfiltered;
+        }
 
         usersUnfiltered.forEach((userUnfiltered) => {
             const userGroups = this.connectedUsersGroups.get(userUnfiltered);
-            for (const userGroup of userGroups) {
-                if (displayedGroups.includes(userGroup)) {
-                    usersFiltered.push(userUnfiltered);
-                    break;
+            if (userGroups) {
+                for (const userGroup of userGroups) {
+                    if (displayedGroups.includes(userGroup)) {
+                        usersFiltered.push(userUnfiltered);
+                        break;
+                    }
                 }
             }
         });
