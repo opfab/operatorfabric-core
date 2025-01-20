@@ -164,6 +164,28 @@ describe('UserCard PublisherForm', () => {
                 ]);
             });
         });
+
+        describe('Visibility of publisher multiselect depending on state configuration when user has more than one entity ', () => {
+            beforeEach(async () => {
+                await setUserWithEntities(['ENTITY1', 'ENTITY2']);
+            });
+            it(`Should be set to true if publisher visibility set visible in state configuration`, async () => {
+                await setProcessConfigWithUserCardConfig({publisherVisible: true});
+                publisherForm.init('testProcessId', 'testStateId');
+                expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(true);
+            });
+            it(`Should be set to false if publisher visibility set invisible in state configuration`, async () => {
+                await setProcessConfigWithUserCardConfig({publisherVisible: false});
+                publisherForm.init('testProcessId', 'testStateId');
+                expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(false);
+            });
+            it(`Should be set to true if publisher visibility is not defined in state configuration`, async () => {
+                await setProcessConfigWithUserCardConfig({});
+                publisherForm.init('testProcessId', 'testStateId');
+                expect(userCardUIControl.inputVisibility_FctCalls[InputFieldName.Publisher]).toBe(true);
+            });
+        });
+
         describe('With restriction on publisher list in state definition (userCard.publisherList field)', () => {
             it('Should not have ENTITY1 in the list of publishers as it is not in state definition publisher list', async () => {
                 await setUserWithEntities(['ENTITY1', 'ENTITY2', 'ENTITY4']);

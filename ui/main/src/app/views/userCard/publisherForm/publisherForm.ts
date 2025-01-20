@@ -18,6 +18,7 @@ import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTempl
 export class PublisherForm {
     private selectedPublisher: string;
     private editionMode: EditionMode;
+    private publisherVisible = true;
 
     constructor(private readonly userCardUIControl: UserCardUIControl) {}
 
@@ -30,7 +31,11 @@ export class PublisherForm {
             stateId
         );
 
-        const isPublisherVisible = entitiesAllowedToSendCard.length > 1;
+        const state = ProcessesService.getProcess(processId).states.get(stateId);
+        if (state) {
+            this.publisherVisible = state.userCard?.publisherVisible ?? true;
+        }
+        const isPublisherVisible = entitiesAllowedToSendCard.length > 1 && this.publisherVisible;
         this.userCardUIControl.setInputVisibility(InputFieldName.Publisher, isPublisherVisible);
 
         const publishers = this.buildPublisherMultiselectList(entitiesAllowedToSendCard);
@@ -95,5 +100,9 @@ export class PublisherForm {
     public userSelectsPublisher(publisher: string) {
         if (!publisher || publisher === '') return;
         this.selectPublisher(publisher);
+    }
+
+    public isPublisherVisible(): boolean {
+        return this.publisherVisible;
     }
 }

@@ -242,6 +242,7 @@ export class UserCardView {
             InputFieldName.RecipientsForInformation,
             this.recipientsForm.isRecipientForInformationVisible()
         );
+        cardBuilder.setFieldVisible(InputFieldName.Publisher, this.publisherForm.isPublisherVisible());
         cardBuilder.setRecipientsSelectedByUser(this.recipientsForm.getSelectedRecipients());
         cardBuilder.setRecipientsForInformationSelectedByUser(
             this.recipientsForm.getSelectedRecipientsForInformation()

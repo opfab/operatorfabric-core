@@ -280,6 +280,8 @@ By default, when the user sends a card via the usercard interface, the card is s
 If you want to send a card on behalf of the user himself, you have to set the field `publisherType` to `USER` in the
 usercard template, via the function `registerFunctionToGetSpecificCardInformation`. This way, the user will be set as
 publisher instead of his entity.
+In order to prevent the user from seeing the publisher entity multiselect, you should set the field publisherVisible to
+false in the state configuration, in the file `config.json` of the corresponding bundle.
 
 == Misc
 

@@ -91,7 +91,8 @@
                 "template": "usercard_message_from_user",
                 "startDateVisible": false,
                 "endDateVisible": false,
-                "recipientForInformationVisible": true
+                "recipientForInformationVisible": true,
+                "publisherVisible": false
             },
             "templateName": "message_from_user",
             "styles": [],
