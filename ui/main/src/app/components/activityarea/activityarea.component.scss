@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@
 .opfab-activityarea-checkbox {
     width: auto;
     font-weight: bold; 
-    margin-left: 30px; 
+    margin-left: 15px;
     overflow-x: hidden; 
     text-overflow: ellipsis; 
     white-space: nowrap; 
@@ -98,7 +98,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    max-width: 180px;
+    width: 140px;
     display: inline-block;
     vertical-align: middle;
 }

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -27,7 +27,7 @@
                 >
                 <table class="opfab-activityarea-table" aria-describedby="activity area table">
                     <tr *ngFor="let line of cluster.lines">
-                        <th class="opfab-table-line">
+                        <th class="opfab-table-line" style="width: 60%">
                             <label class="opfab-checkbox opfab-activityarea-checkbox">
                                 <input type="checkbox" [formControlName]="line.entityId" [checked]="true" />{{
                                     line.entityName
@@ -37,8 +37,10 @@
                         </th>
                         <td>
                             <ng-template #connected>
-                                <div class="opfab-tooltip">
-                                    <span class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge"
+                                <div class="opfab-tooltip" style="float: left; margin-top: -12px">
+                                    <span
+                                        class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge"
+                                        style="display: inline"
                                         >{{ line.connectedUsers.length }} </span
                                     >&nbsp;&nbsp;<span
                                         [id]="'table-line-' + line.entityId"
