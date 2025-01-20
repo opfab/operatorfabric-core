@@ -9,13 +9,13 @@
 
 import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {LightCardsFilter} from './lightcards-filter';
 import {LightCardsSorter} from './lightcards-sorter';
 import {ConfigService} from '@ofServices/config/ConfigService';
 import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {LightCardsTextFilter} from './lightcards-text-filter';
-import {Filter, FilterType} from '@ofModel/feed-filter.model';
+import {Filter, FilterType} from '@ofStore/lightcards/model/Filter';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {LightCardsStore} from './lightcards-store';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';

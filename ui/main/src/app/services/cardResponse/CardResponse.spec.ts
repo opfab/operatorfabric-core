@@ -1,4 +1,4 @@
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 /* Copyright (c) 2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -21,7 +21,7 @@ import {CardsService} from '@ofServices/cards/CardsService';
 import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {NotificationDecision} from '@ofServices/notifications/NotificationDecision';
-import {CardAction} from '@ofModel/light-card.model';
+import {CardAction} from 'app/model/CardAction';
 
 describe('Card response service', () => {
     let card: Card;

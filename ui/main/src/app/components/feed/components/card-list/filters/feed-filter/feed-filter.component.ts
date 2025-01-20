@@ -12,7 +12,7 @@ import {Subject, timer} from 'rxjs';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import {FilterType} from '@ofModel/feed-filter.model';
+import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {FilteredLightCardsStore} from '../../../../../../store/lightcards/lightcards-feed-filter-store';

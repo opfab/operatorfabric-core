@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {OpfabStore} from '../../../store/opfabStore';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {firstValueFrom} from 'rxjs';

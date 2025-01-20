@@ -10,7 +10,7 @@
 import {State} from '@ofServices/processes/model/Processes';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class DatesForm {

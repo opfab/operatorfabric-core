@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,8 @@ import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
+import {Severity} from 'app/model/Severity';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';

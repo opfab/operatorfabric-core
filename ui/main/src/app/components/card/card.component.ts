@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -18,7 +18,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {SelectedCard} from '@ofServices/selectedCard/model/SelectedCard';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/card-body.component';
 import {SpinnerComponent} from '../share/spinner/spinner.component';

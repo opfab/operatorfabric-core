@@ -7,8 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from '@ofModel/i18n.model';
-import {RRule, TimeSpan} from '../../services/cards/model/Card';
+import {I18n} from 'app/model/I18n';
+import {TimeSpan} from 'app/model/TimeSpan';
+import {RRule} from 'app/model/RRule';
+import {Severity} from './Severity';
+import {CardAction} from './CardAction';
+import {PublisherType} from './PublisherType';
 
 export class LightCard {
     constructor(
@@ -51,50 +55,4 @@ export class LightCard {
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly actions?: CardAction[]
     ) {}
-}
-
-export enum Severity {
-    ALARM = 'ALARM',
-    ACTION = 'ACTION',
-    COMPLIANT = 'COMPLIANT',
-    INFORMATION = 'INFORMATION'
-}
-
-export enum Sound {
-    INFORMATION,
-    COMPLIANT
-}
-
-export enum PublisherType {
-    EXTERNAL,
-    ENTITY,
-    USER
-}
-
-export enum Frequency {
-    YEARLY = 'YEARLY',
-    MONTHLY = 'MONTHLY',
-    WEEKLY = 'WEEKLY',
-    DAILY = 'DAILY',
-    HOURLY = 'HOURLY',
-    MINUTELY = 'MINUTELY',
-    SECONDLY = 'SECONDLY'
-}
-
-export enum Day {
-    MO = 'MO',
-    TU = 'TU',
-    WE = 'WE',
-    TH = 'TH',
-    FR = 'FR',
-    SA = 'SA',
-    SU = 'SU'
-}
-
-export enum CardAction {
-    PROPAGATE_READ_ACK_TO_PARENT_CARD = 'PROPAGATE_READ_ACK_TO_PARENT_CARD',
-    KEEP_CHILD_CARDS = 'KEEP_CHILD_CARDS',
-    KEEP_EXISTING_ACKS_AND_READS = 'KEEP_EXISTING_ACKS_AND_READS',
-    KEEP_EXISTING_PUBLISH_DATE = 'KEEP_EXISTING_PUBLISH_DATE',
-    STORE_ONLY_IN_ARCHIVES = 'STORE_ONLY_IN_ARCHIVES'
 }

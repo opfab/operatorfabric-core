@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardAction, LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
+import {CardAction} from 'app/model/CardAction';
 import {
     catchError,
     debounceTime,

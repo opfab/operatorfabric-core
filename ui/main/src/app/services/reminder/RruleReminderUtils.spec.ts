@@ -7,10 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {TimeSpan} from 'app/model/TimeSpan';
 import {getOneCard} from '@tests/helpers';
 import {getNextTimeForRepeating} from './RruleReminderUtils';
-import {Day, Frequency} from '@ofModel/light-card.model';
+import {Day, Frequency} from 'app/model/RRule';
 import {fromZonedTime} from 'date-fns-tz';
 
 describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {

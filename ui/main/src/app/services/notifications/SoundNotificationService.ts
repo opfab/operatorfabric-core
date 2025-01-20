@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
+import {Severity} from 'app/model/Severity';
 import {Notification} from '@ofServices/notifications/model/ExternalDevices';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
@@ -20,7 +21,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 import {OpfabStore} from '../../store/opfabStore';
 import {ModalService} from '../modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {NotificationDecision} from './NotificationDecision';
 
 @Injectable({

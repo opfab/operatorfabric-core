@@ -11,7 +11,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {InputFieldName, UserCardUIControl} from '../userCard.model';
 import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 
 class ProcessGroupForUserCard {
     constructor(

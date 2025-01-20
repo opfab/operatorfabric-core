@@ -11,7 +11,7 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {UserActionLogsServer} from './server/UserActionLogsServer';
 import {Observable} from 'rxjs';
 import {UserActionLog} from './model/UserActionLog';
-import {Page} from '@ofModel/page.model';
+import {Page} from 'app/model/Page';
 
 export class UserActionLogsService {
     private static userActionLogsServer: UserActionLogsServer;

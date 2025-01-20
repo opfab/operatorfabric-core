@@ -16,7 +16,7 @@ import {NavbarMenu, NavbarMenuElement} from './navbarPage';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {NavbarMenuView} from './navbarMenu.view';
-import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {MenuEntryLinkType} from 'app/model/MenuEntryLinkType';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {setUserPerimeter} from '@tests/helpers';
@@ -155,13 +155,13 @@ describe('NavbarMenuView', () => {
                         customMenuId: 'customMenu1',
                         label: 'customMenu1Label_translation_key',
                         url: 'url1',
-                        linkType: MenuEntryLinkTypeEnum.TAB
+                        linkType: MenuEntryLinkType.TAB
                     },
                     {
                         customMenuId: 'customMenu2',
                         label: 'customMenu2Label_translation_key',
                         url: 'url2',
-                        linkType: MenuEntryLinkTypeEnum.BOTH
+                        linkType: MenuEntryLinkType.BOTH
                     }
                 ]
             });
@@ -169,10 +169,10 @@ describe('NavbarMenuView', () => {
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('customMenu1');
             expect(navBarMenuElements[0].url).toEqual('url1');
-            expect(navBarMenuElements[0].linkType).toEqual(MenuEntryLinkTypeEnum.TAB);
+            expect(navBarMenuElements[0].linkType).toEqual(MenuEntryLinkType.TAB);
             expect(navBarMenuElements[1].id).toEqual('customMenu2');
             expect(navBarMenuElements[1].url).toEqual('url2');
-            expect(navBarMenuElements[1].linkType).toEqual(MenuEntryLinkTypeEnum.BOTH);
+            expect(navBarMenuElements[1].linkType).toEqual(MenuEntryLinkType.BOTH);
         });
 
         it('should get menu translations in labels', async () => {

@@ -8,7 +8,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
+import {Severity} from 'app/model/Severity';
 import {merge, Subject} from 'rxjs';
 import {ConfigService} from '../config/ConfigService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';

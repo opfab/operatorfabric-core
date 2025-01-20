@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {ProcessGroupCellRendererComponent} from '../cell-renderers/process-group-cell-renderer.component';
 import {StateCellRendererComponent} from '../cell-renderers/state-cell-renderer.component';

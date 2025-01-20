@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {NgIf} from '@angular/common';

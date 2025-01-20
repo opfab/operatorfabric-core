@@ -19,7 +19,7 @@ import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {getProcessConfigWith} from '@tests/userCardView/helpers';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 describe('UserCard ProcessStateForm ', () => {

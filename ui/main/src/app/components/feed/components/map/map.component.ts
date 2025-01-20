@@ -9,7 +9,7 @@
  */
 
 import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Severity} from '@ofModel/light-card.model';
+import {Severity} from 'app/model/Severity';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
 import {takeUntil} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';

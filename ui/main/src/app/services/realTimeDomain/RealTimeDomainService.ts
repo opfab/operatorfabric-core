@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-fi
 import {OpfabStore} from '../../store/opfabStore';
 import {UserPreferencesService} from '../userPreferences/UserPreferencesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {FilterType} from '@ofModel/feed-filter.model';
+import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
 import {DateTimeFormatterService} from '../dateTimeFormatter/DateTimeFormatterService';
 import {ConfigService} from '../config/ConfigService';

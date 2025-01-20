@@ -9,11 +9,13 @@
 
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Card, CardWithChildCards, convertCardToLightCard} from '@ofServices/cards/model/Card';
-import {Severity} from '@ofModel/light-card.model';
+import {Card} from 'app/model/Card';
+import {convertCardToLightCard} from '@ofServices/cards/CardConverter';
+import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
+import {Severity} from 'app/model/Severity';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {map} from 'rxjs/operators';
-import {DisplayContext} from '@ofModel/template.model';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {Observable} from 'rxjs';
 import {UserCardView} from 'app/business/view/userCard/userCard.view';

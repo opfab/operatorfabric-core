@@ -22,7 +22,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {HandlebarsService} from '../../../services/handlebars/HandlebarsService';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofServices/processes/model/Processes';
@@ -32,7 +32,7 @@ import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofServices/users/model/User';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {DisplayContext} from '@ofModel/template.model';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {CurrentUserStore} from '../../../store/current-user.store';

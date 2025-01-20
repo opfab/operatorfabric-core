@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../utils/utilities';
 import {Subject} from 'rxjs';

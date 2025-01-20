@@ -9,8 +9,8 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {Card} from '@ofServices/cards/model/Card';
-import {DisplayContext} from '@ofModel/template.model';
+import {Card} from 'app/model/Card';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../utils/utilities';

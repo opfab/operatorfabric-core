@@ -10,8 +10,8 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Card} from '@ofServices/cards/model/Card';
-import {CardAction} from '@ofModel/light-card.model';
+import {Card} from 'app/model/Card';
+import {CardAction} from 'app/model/CardAction';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';

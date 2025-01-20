@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Filter} from '@ofModel/feed-filter.model';
-import {LightCard} from '@ofModel/light-card.model';
+import {Filter} from '@ofStore/lightcards/model/Filter';
+import {LightCard} from 'app/model/LightCard';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../../../../store/opfabStore';

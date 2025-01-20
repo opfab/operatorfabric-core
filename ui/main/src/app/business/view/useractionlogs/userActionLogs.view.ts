@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardWithChildCards} from '@ofServices/cards/model/Card';
+import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {Page} from '@ofModel/page.model';
+import {Page} from 'app/model/Page';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';

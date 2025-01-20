@@ -7,9 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {TimeSpan} from 'app/model/TimeSpan';
 import {Frequency, Weekday, RRule} from 'rrule';
-import {Frequency as OpfabFrequency} from '@ofModel/light-card.model';
+import {Frequency as OpfabFrequency} from 'app/model/RRule';
 
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute

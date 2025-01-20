@@ -8,7 +8,8 @@
  */
 
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
-import {CardAction, LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
+import {CardAction} from 'app/model/CardAction';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
@@ -26,7 +27,7 @@ import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-f
 import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {FiltersComponent} from './filters/filters.component';
 import {FeedFilterComponent} from './filters/feed-filter/feed-filter.component';
 import {NgIf, NgFor, AsyncPipe} from '@angular/common';

@@ -15,7 +15,7 @@ import {ApplicationLoadingComponent} from '../../../../services/applicationLoade
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {ModalService} from '../../../../services/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 

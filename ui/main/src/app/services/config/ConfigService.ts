@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,8 @@
 import {filter, map, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject} from 'rxjs';
-import {Locale, UIMenuFile} from '@ofModel/menu.model';
+import {Locale} from '@ofServices/config/model/Locale';
+import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
 import {ConfigServer} from './server/ConfigServer';
 import {MonitoringConfig} from './model/MonitoringConfig';
 import {ServerResponseStatus} from '../../business/server/serverResponse';

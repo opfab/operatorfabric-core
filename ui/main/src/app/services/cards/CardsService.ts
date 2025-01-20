@@ -7,20 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 import {Observable} from 'rxjs';
-import {
-    Card,
-    CardCreationReportData,
-    CardWithChildCards,
-    CardForPublishing,
-    convertCardToLightCard
-} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {convertCardToLightCard} from './CardConverter';
+import {CardForPublishing} from './model/CardForPublishing';
+import {CardWithChildCards} from './model/CardWithChildCards';
+import {CardCreationReportData} from './model/CardCreationReportData';
 import {map} from 'rxjs/operators';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {CardsServer} from './server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {AcknowledgeService} from '../acknowlegment/AcknowledgeService';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {FieldToTranslate} from './model/FieldToTranslate';
 
 export class CardsService {

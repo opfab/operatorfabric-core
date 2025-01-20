@@ -16,7 +16,7 @@ import {
     State
 } from '@ofServices/processes/model/Processes';
 import {getOneCard} from '@tests/helpers';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';

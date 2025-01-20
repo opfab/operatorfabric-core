@@ -23,7 +23,7 @@ import {ActivityAreaView} from './activityarea.view';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {getOneLightCard} from '@tests/helpers';
-import {Severity} from '@ofModel/light-card.model';
+import {Severity} from 'app/model/Severity';
 import {OpfabStore} from '../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 

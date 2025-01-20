@@ -16,7 +16,7 @@ import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSe
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {NgIf} from '@angular/common';

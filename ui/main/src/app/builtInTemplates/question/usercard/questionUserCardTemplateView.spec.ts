@@ -9,7 +9,7 @@
 
 import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 import {TranslationService} from '@ofServices/translation/TranslationService';

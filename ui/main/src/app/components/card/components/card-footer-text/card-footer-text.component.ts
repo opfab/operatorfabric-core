@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {User} from '@ofServices/users/model/User';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

@@ -39,7 +39,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 
 export class ActionColumn {

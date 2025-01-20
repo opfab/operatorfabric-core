@@ -8,11 +8,13 @@
  */
 
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
-import {CardForPublishing, Card, CardCreationReportData} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {CardForPublishing} from '../model/CardForPublishing';
+import {CardCreationReportData} from '../model/CardCreationReportData';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {Observable} from 'rxjs';
 import {ServerResponse} from '../../../business/server/serverResponse';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 
 export abstract class CardsServer {
     abstract loadCard(id: string): Observable<ServerResponse<any>>;

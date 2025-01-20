@@ -7,9 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard, Severity} from '@ofModel/light-card.model';
-import {Card} from '@ofServices/cards/model/Card';
-import {I18n} from '@ofModel/i18n.model';
+import {LightCard} from 'app/model/LightCard';
+import {Severity} from 'app/model/Severity';
+import {Card} from 'app/model/Card';
+import {I18n} from 'app/model/I18n';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, ReplaySubject, firstValueFrom, of} from 'rxjs';
 import {Type} from '@angular/core';

@@ -11,7 +11,7 @@ import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 import {initOpfabAPI} from '@tests/helpers';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 describe('Task UserCard Template View', () => {

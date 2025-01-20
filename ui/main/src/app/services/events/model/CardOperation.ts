@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from '../../../business/model/light-card.model';
+import {LightCard} from '../../../model/LightCard';
 
 export class CardOperation implements CardOperation {
     constructor(

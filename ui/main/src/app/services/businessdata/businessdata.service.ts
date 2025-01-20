@@ -14,7 +14,7 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import * as _ from 'lodash-es';
 import {AlertMessageService} from '../alerteMessage/AlertMessageService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class BusinessDataService {

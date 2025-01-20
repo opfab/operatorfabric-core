@@ -10,7 +10,7 @@
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
 import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
-import {Page} from '@ofModel/page.model';
+import {Page} from 'app/model/Page';
 import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 
 export class UserActionLogsServerMock implements UserActionLogsServer {

@@ -7,10 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardForPublishing, CardCreationReportData, Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {CardForPublishing} from '@ofServices/cards/model/CardForPublishing';
+import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReportData';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of} from 'rxjs';

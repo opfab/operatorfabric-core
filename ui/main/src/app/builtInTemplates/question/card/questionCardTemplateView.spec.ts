@@ -11,7 +11,7 @@ import {QuestionCardTemplateView} from './questionCardTemplateView';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
 describe('Question Card template', () => {

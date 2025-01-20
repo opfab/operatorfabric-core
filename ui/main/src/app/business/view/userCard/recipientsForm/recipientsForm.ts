@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {InputFieldName, MultiselectItem, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

@@ -7,10 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {EditionMode, InputFieldName, UserCardUIControl} from '../userCard.model';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {CardAction} from '@ofModel/light-card.model';
+import {CardAction} from 'app/model/CardAction';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class KeepChildCardsForm {

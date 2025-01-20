@@ -8,7 +8,8 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Card, convertCardToLightCard} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {convertCardToLightCard} from '@ofServices/cards/CardConverter';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
@@ -24,7 +25,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {CardAction} from '@ofModel/light-card.model';
+import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {NgIf} from '@angular/common';

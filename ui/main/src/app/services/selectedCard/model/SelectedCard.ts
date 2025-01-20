@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 
 export class SelectedCard {
     public readonly card: Card;

@@ -8,7 +8,7 @@
  */
 
 import {userRight, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {Process} from '@ofServices/processes/model/Processes';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

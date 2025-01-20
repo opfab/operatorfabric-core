@@ -8,7 +8,7 @@
  */
 import {Observable, ReplaySubject, Subject, catchError, filter, map, switchMap} from 'rxjs';
 import {CardsService} from '../cards/CardsService';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {SelectedCard} from './model/SelectedCard';
 
 export class SelectedCardService {

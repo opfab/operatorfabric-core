@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 
 export interface LineOfMonitoringResult {

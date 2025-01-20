@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
 import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
 import {UserActionLogsPageDescription} from 'app/business/view/useractionlogs/userActionLogsPageDescription';

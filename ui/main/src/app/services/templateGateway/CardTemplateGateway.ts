@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {Utilities} from '../../utils/utilities';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 

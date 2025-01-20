@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-export class Page<T> {
-    constructor(
-        readonly totalPages: number,
-        readonly totalElements: number,
-        readonly content: T[]
-    ) {}
+export enum MenuEntryLinkType {
+    TAB = 'TAB',
+    IFRAME = 'IFRAME',
+    BOTH = 'BOTH'
 }
-
-export const emptyPage: Page<any> = new Page(1, 0, []);

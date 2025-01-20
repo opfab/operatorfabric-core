@@ -11,7 +11,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
-import {Filter} from '@ofModel/feed-filter.model';
+import {Filter} from '@ofStore/lightcards/model/Filter';
 import {MultiSelect, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {MonitoringFilterBuilder} from './monitoring-filter-builder';
 import {DEFAULT_PROCESS_GROUP_ID, MonitoringProcessList} from './monitoring-process-list';

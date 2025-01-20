@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';

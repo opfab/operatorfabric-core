@@ -7,8 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, CardCreationReportData, convertCardToCardForPublishing} from '@ofServices/cards/model/Card';
-import {I18n} from '@ofModel/i18n.model';
+import {Card} from 'app/model/Card';
+import {convertCardToCardForPublishing} from '@ofServices/cards/CardConverter';
+import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReportData';
+import {I18n} from 'app/model/I18n';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';

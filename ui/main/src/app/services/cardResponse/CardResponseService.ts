@@ -7,8 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Severity} from '@ofModel/light-card.model';
-import {Card, CardForPublishing} from '@ofServices/cards/model/Card';
+import {Severity} from 'app/model/Severity';
+import {Card} from 'app/model/Card';
+import {CardForPublishing} from '@ofServices/cards/model/CardForPublishing';
 import {NotificationDecision} from '@ofServices/notifications/NotificationDecision';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';

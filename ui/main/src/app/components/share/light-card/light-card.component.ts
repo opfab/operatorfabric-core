@@ -8,13 +8,13 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {DisplayContext} from '@ofModel/template.model';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';

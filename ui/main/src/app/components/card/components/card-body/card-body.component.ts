@@ -18,7 +18,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofServices/processes/model/Processes';
@@ -29,14 +29,14 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
-import {DisplayContext} from '@ofModel/template.model';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {OpfabStore} from '../../../../store/opfabStore';
-import {CardAction} from '@ofModel/light-card.model';
+import {CardAction} from 'app/model/CardAction';
 import {NgIf} from '@angular/common';
 import {CardActionsComponent} from '../card-actions/card-actions.component';
 import {CardHeaderComponent} from '../card-header/card-header.component';

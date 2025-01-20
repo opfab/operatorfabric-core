@@ -19,7 +19,7 @@ import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {User} from '@ofServices/users/model/User';
 import {firstValueFrom, ReplaySubject} from 'rxjs';
 import {UserActionLogsServerMock} from '@tests/mocks/userActionLogsServer.mock';
-import {Page} from '@ofModel/page.model';
+import {Page} from 'app/model/Page';
 import {ActionTypeEnum, UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';

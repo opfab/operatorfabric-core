@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardAction, Severity} from '@ofModel/light-card.model';
+import {CardAction} from 'app/model/CardAction';
+import {Severity} from 'app/model/Severity';
 import {CardBuilder} from './cardBuilder';
 import {
     AlertMessageReceiver,
@@ -22,12 +23,12 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {State} from '@ofServices/processes/model/Processes';
-import {TimeSpan} from '@ofServices/cards/model/Card';
+import {TimeSpan} from 'app/model/TimeSpan';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {setSpecificCardInformation} from '@tests/userCardView/helpers';
 
 declare const opfab: any;

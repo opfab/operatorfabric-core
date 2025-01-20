@@ -40,13 +40,13 @@ import {Utilities} from '../../utils/utilities';
 import {ModalService} from '../modal/ModalService';
 import {SessionManagerService} from '../sessionManager/SessionManagerService';
 import {SoundNotificationService} from '../notifications/SoundNotificationService';
-import {I18n} from '@ofModel/i18n.model';
 import {RealTimeDomainService} from '../realTimeDomain/RealTimeDomainService';
 import {NotificationDecision} from '../notifications/NotificationDecision';
 import {CardTemplateGateway} from '../templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '../templateGateway/UserCardTemplateGateway';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {UserActionLogsService} from '@ofServices/userActionLogs/UserActionLogsService';
+import {I18n} from 'app/model/I18n';
 
 export class ApplicationLoader {
     public displayEnvironmentName = false;

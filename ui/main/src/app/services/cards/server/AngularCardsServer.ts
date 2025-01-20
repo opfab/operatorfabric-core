@@ -16,10 +16,13 @@ import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
-import {CardForPublishing, Card, CardWithChildCards, CardCreationReportData} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
+import {CardForPublishing} from '../model/CardForPublishing';
+import {CardWithChildCards} from '../model/CardWithChildCards';
+import {CardCreationReportData} from '../model/CardCreationReportData';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
-import {LightCard} from '@ofModel/light-card.model';
-import {Page} from '@ofModel/page.model';
+import {LightCard} from 'app/model/LightCard';
+import {Page} from 'app/model/Page';
 
 @Injectable({
     providedIn: 'root'

@@ -19,7 +19,7 @@ import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessesServerMock} from '@tests/mocks/processesServer.mock';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Process, ShowAcknowledgmentFooterEnum, State} from '@ofServices/processes/model/Processes';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 

@@ -8,7 +8,7 @@
  */
 
 import {CardOperation} from '@ofServices/events/model/CardOperation';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of, Subject} from 'rxjs';

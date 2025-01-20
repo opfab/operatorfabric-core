@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';

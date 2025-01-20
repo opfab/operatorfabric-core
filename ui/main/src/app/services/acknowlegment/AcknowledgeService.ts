@@ -12,9 +12,9 @@ import {
     ConsideredAcknowledgedForUserWhenEnum,
     Process
 } from '@ofServices/processes/model/Processes';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../business/server/serverResponse';

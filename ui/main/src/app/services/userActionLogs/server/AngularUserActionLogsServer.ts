@@ -14,7 +14,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
 import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
-import {Page} from '@ofModel/page.model';
+import {Page} from 'app/model/Page';
 import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 
 @Injectable({

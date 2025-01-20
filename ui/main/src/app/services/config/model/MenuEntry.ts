@@ -1,4 +1,6 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+import {MenuEntryLinkType} from '../../../model/MenuEntryLinkType';
+
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +9,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from './i18n.model';
-
 export class MenuEntry {
-    linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
+    linkType: MenuEntryLinkType = MenuEntryLinkType.BOTH;
     showOnlyForGroups: string[];
 
     constructor(
@@ -21,30 +21,7 @@ export class MenuEntry {
         public readonly url: string,
         public readonly visible: boolean,
         public readonly entries: MenuEntry[],
-        linkType?: MenuEntryLinkTypeEnum,
+        linkType?: MenuEntryLinkType,
         showOnlyForGroups?: string[]
-    ) {}
-}
-
-export enum MenuEntryLinkTypeEnum {
-    TAB = 'TAB',
-    IFRAME = 'IFRAME',
-    BOTH = 'BOTH'
-}
-
-export class Locale {
-    constructor(
-        readonly language: string,
-        readonly i18n: I18n
-    ) {}
-}
-
-export class UIMenuFile {
-    constructor(
-        readonly navigationBar: MenuEntry[],
-        readonly topRightIconMenus: MenuEntry[],
-        readonly topRightMenus: MenuEntry[],
-        readonly locales: Locale[],
-        readonly showDropdownMenuEvenIfOnlyOneEntry: boolean
     ) {}
 }

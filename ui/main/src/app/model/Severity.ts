@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-export enum DisplayContext {
-    REALTIME = 'realtime',
-    ARCHIVE = 'archive',
-    PREVIEW = 'preview'
+export enum Severity {
+    ALARM = 'ALARM',
+    ACTION = 'ACTION',
+    COMPLIANT = 'COMPLIANT',
+    INFORMATION = 'INFORMATION'
 }

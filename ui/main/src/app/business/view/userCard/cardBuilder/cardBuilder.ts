@@ -7,13 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card, TimeSpan} from '@ofServices/cards/model/Card';
-import {CardAction, Severity} from '@ofModel/light-card.model';
+import {Card} from 'app/model/Card';
+import {TimeSpan} from 'app/model/TimeSpan';
+import {CardAction} from 'app/model/CardAction';
+import {Severity} from 'app/model/Severity';
 import {EditionMode, InputFieldName} from '../userCard.model';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {I18n} from '@ofModel/i18n.model';
+import {I18n} from 'app/model/I18n';
 import {firstValueFrom} from 'rxjs';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {Guid} from 'guid-typescript';

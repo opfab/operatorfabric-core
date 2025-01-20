@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/services/config/ConfigService';

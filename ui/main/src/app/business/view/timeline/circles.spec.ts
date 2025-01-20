@@ -10,8 +10,8 @@
 import {Circles} from './circles';
 import {XAxis} from './xaxis';
 import {getOneCard} from '@tests/helpers';
-import {Frequency} from '@ofModel/light-card.model';
-import {TimeSpan} from '@ofServices/cards/model/Card';
+import {Frequency} from 'app/model/RRule';
+import {TimeSpan} from 'app/model/TimeSpan';
 import {add, startOfYear, sub} from 'date-fns';
 
 describe('Timeline Circles', () => {

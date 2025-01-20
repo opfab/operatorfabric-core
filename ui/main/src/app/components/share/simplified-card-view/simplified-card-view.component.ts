@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -16,7 +16,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {User} from '@ofServices/users/model/User';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {State} from '@ofServices/processes/model/Processes';
-import {DisplayContext} from '@ofModel/template.model';
+import {DisplayContext} from 'app/model/DisplayContext';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';

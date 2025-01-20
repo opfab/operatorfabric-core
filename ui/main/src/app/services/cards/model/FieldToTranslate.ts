@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from '../../../business/model/i18n.model';
+import {I18n} from '../../../model/I18n';
 
 export class FieldToTranslate {
     constructor(

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * this file is part of the OperatorFabric project.
  */
 
-import {Severity} from '@ofModel/light-card.model';
+import {Severity} from 'app/model/Severity';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class UserCardTemplateGateway {

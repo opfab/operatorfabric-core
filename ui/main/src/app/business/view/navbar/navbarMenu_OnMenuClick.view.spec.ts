@@ -14,7 +14,7 @@ import {firstValueFrom} from 'rxjs';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {NavbarMenuElement} from './navbarPage';
 import {NavbarMenuView} from './navbarMenu.view';
-import {MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {MenuEntryLinkType} from 'app/model/MenuEntryLinkType';
 import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
@@ -95,7 +95,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
 
         it('open in new tab if linkType is TAB ', async () => {
             clickOnMenu({
-                linkType: MenuEntryLinkTypeEnum.TAB,
+                linkType: MenuEntryLinkType.TAB,
                 url: 'https://customMenuUrl/'
             });
             expect(mockedWindowAPIUrlCalled).toContain('https://customMenuUrl/');
@@ -122,7 +122,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
             GlobalStyleService.init();
             GlobalStyleService.switchToNightMode();
             clickOnMenu({
-                linkType: MenuEntryLinkTypeEnum.TAB,
+                linkType: MenuEntryLinkType.TAB,
                 url: 'https://customMenuUrl/'
             });
             expect(mockedWindowAPIUrlCalled).toEqual('https://customMenuUrl/?opfab_theme=NIGHT');
@@ -132,7 +132,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
             GlobalStyleService.init();
             GlobalStyleService.switchToDayMode();
             clickOnMenu({
-                linkType: MenuEntryLinkTypeEnum.TAB,
+                linkType: MenuEntryLinkType.TAB,
                 url: 'https://customMenuUrl/'
             });
             expect(mockedWindowAPIUrlCalled).toEqual('https://customMenuUrl/?opfab_theme=DAY');
@@ -142,7 +142,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
             GlobalStyleService.init();
             GlobalStyleService.switchToDayMode();
             clickOnMenu({
-                linkType: MenuEntryLinkTypeEnum.TAB,
+                linkType: MenuEntryLinkType.TAB,
                 url: 'https://customMenuUrl/test?param1=value1'
             });
             expect(mockedWindowAPIUrlCalled).toEqual('https://customMenuUrl/test?param1=value1&opfab_theme=DAY');
@@ -206,7 +206,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
     function clickOnMenu({
         menuId = 'MyMenuId',
         isCoreMenu = false,
-        linkType = MenuEntryLinkTypeEnum.IFRAME,
+        linkType = MenuEntryLinkType.IFRAME,
         url = '',
         openInNewTab = false
     }): NavbarMenuView {

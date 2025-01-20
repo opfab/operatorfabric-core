@@ -8,7 +8,7 @@
  */
 
 import {Component, OnDestroy} from '@angular/core';
-import {Card} from '@ofServices/cards/model/Card';
+import {Card} from 'app/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';

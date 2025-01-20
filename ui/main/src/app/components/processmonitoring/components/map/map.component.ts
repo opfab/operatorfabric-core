@@ -21,7 +21,7 @@ import {
     ViewChild
 } from '@angular/core';
 
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard} from 'app/model/LightCard';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
