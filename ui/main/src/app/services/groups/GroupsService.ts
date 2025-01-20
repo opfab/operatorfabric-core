@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,9 @@ import {Group} from '@ofServices/groups/model/Group';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {GroupsServer} from './server/GroupsServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
-import {ErrorService} from '../../business/services/error-service';
 import {LoggerService} from 'app/services/logs/LoggerService';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class GroupsService {
     private static _groups: Group[];
@@ -31,7 +32,12 @@ export class GroupsService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     GroupsService.deleteFromCachedGroups(id);
                 } else {
-                    ErrorService.handleServerResponseError(groupsResponse);
+                    LoggerService.error(`Error while deleting group ${id} :  ${groupsResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.group.deleteGroup'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );
@@ -53,7 +59,12 @@ export class GroupsService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     return groupsResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(groupsResponse);
+                    LoggerService.error(`Error while getting groups :  ${groupsResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.group.gettingGroups'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -95,7 +106,14 @@ export class GroupsService {
                     GroupsService.updateCachedGroups(groupData);
                     return groupsResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(groupsResponse);
+                    LoggerService.error(
+                        `Error while updating group ${groupData.id} :  ${groupsResponse.statusMessage}`
+                    );
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.group.updateGroup'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })

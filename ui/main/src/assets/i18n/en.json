@@ -70,7 +70,47 @@
         "error": {
             "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
             "incorrectSubmission": "Incorrect submission",
-            "technicalError": "Technical error"
+            "technicalError": "Technical error",
+            "businessData": {
+                "deleteBusinessData": "Impossible to delete business data",
+                "gettingBusinessData" : "Impossible to get business data",
+                "updateBusinessData": "Impossible to update business data"
+            },
+            "entity": {
+                "deleteEntity": "Impossible to delete entity",
+                "gettingEntities" : "Impossible to get entities",
+                "updateEntity": "Impossible to update entity"
+            },
+            "externalDevice": {
+                "deleteDevicesForUser": "Impossible to delete devices for user",
+                "updateUserConfiguration": "Impossible to update user configuration" 
+            },
+            "user": {
+                "deleteUser": "Impossible to delete user",
+                "gettingUsers" : "Impossible to get users",
+                "gettingUser" : "Impossible to get user",
+                "updateUser": "Impossible to update user"
+            },
+            "group": {
+                "deleteGroup": "Impossible to delete group",
+                "gettingGroups" : "Impossible to get groups",
+                "updateGroup": "Impossible to update group"
+            },
+            "perimeter": {
+                "deletePerimeter": "Impossible to delete perimeter",
+                "gettingPerimeters" : "Impossible to get perimeters",
+                "updatePerimeter": "Impossible to update perimeter",
+                "createPerimeter": "Impossible to create perimeter"
+            },
+            "process": {
+                "deleteProcess": "Impossible to delete process",
+                "gettingProcesses" : "Impossible to get processes"
+            },
+            "supervisedEntity": {
+                "deleteEntity": "Impossible to delete supervised entity",
+                "gettingEntities" : "Impossible to get supervised entities",
+                "updateEntity": "Impossible to update supervised entity"
+            }
         },
         "calendar": {
             "monday": "Monday",
@@ -582,13 +622,6 @@
             "processes": "Processes Management",
             "businessData": "Business Data Management",
             "supervisedEntities": "Supervised Entities"
-        },
-        "errors" : {
-            "supervisedEntity": {
-                "deleteEntity": "Impossible to delete supervised entity",
-                "gettingEntities" : "Impossible to get supervised entities",
-                "updateEntity": "Impossible to update supervised entity"
-            }
         }
     },
     "processGroup": {

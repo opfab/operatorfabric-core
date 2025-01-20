@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,8 @@ import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {UsersServer} from './server/UsersServer';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ErrorService} from '../../business/services/error-service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class UsersService {
     private static _userWithPerimeters: UserWithPerimeters;
@@ -38,8 +39,12 @@ export class UsersService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(userResponse);
-                    return null;
+                    logger.error(`Error while deleting user ${login} :  ${userResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.user.deleteUser'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );
@@ -51,7 +56,12 @@ export class UsersService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(userResponse);
+                    logger.error(`Error while getting user ${user}:  ${userResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.user.gettingUser'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })
@@ -90,7 +100,12 @@ export class UsersService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(userResponse);
+                    logger.error(`Error while getting users :  ${userResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.user.gettingUsers'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -107,7 +122,12 @@ export class UsersService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(userResponse);
+                    logger.error(`Error while updating user ${userData.login} :  ${userResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.user.updateUser'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })
@@ -222,7 +242,12 @@ export class UsersService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(userResponse);
+                    logger.error(`Error while getting connected users :  ${userResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'admin.errors.user.gettingConnectingUsers'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })

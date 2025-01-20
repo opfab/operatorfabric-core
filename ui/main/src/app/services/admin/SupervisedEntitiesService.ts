@@ -34,7 +34,7 @@ export class SupervisedEntitiesService {
                     logger.error(`Error while deleting entity ${id} :  ${entitiesResponse.statusMessage}`);
                     AlertMessageService.sendAlertMessage({
                         message: '',
-                        i18n: {key: 'admin.errors.supervisedEntity.deleteEntity'},
+                        i18n: {key: 'shared.error.supervisedEntity.deleteEntity'},
                         level: MessageLevel.ERROR
                     });
                 }
@@ -57,7 +57,7 @@ export class SupervisedEntitiesService {
                     logger.error(`Error while getting entities :  ${entitiesResponse.statusMessage}`);
                     AlertMessageService.sendAlertMessage({
                         message: '',
-                        i18n: {key: 'admin.errors.supervisedEntity.gettingEntities'},
+                        i18n: {key: 'shared.error.supervisedEntity.gettingEntities'},
                         level: MessageLevel.ERROR
                     });
                     return [];
@@ -79,7 +79,7 @@ export class SupervisedEntitiesService {
                     );
                     AlertMessageService.sendAlertMessage({
                         message: '',
-                        i18n: {key: 'admin.errors.supervisedEntity.updateEntity'},
+                        i18n: {key: 'shared.error.supervisedEntity.updateEntity'},
                         level: MessageLevel.ERROR
                     });
                     return null;

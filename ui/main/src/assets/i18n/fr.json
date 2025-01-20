@@ -70,7 +70,48 @@
         "error": {
             "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
             "incorrectSubmission": "Saisie incorrecte",
-            "technicalError": "Erreur technique"
+            "technicalError": "Erreur technique",
+            "businessData": {
+                "deleteBusinessData": "Impossible de supprimer les données métier",
+                "gettingBusinessData" : "Impossible de récupérer les données métier",
+                "updateBusinessData": "Impossible de mettre à jour les données métier"
+            },
+            "entity": {
+                "deleteEntity": "Impossible de supprimer l'entité",
+                "gettingEntities" : "Impossible de récupérer les entités",
+                "updateEntity": "Impossible de mettre à jour l'entité"
+            },
+            "externalDevice": {
+                "deleteDevicesForUser": "Impossible de supprimer les périphériques pour l'utilisateur",
+                "updateUserConfiguration": "Impossible de mettre à jour la configuration de l'utilisateur"
+            },
+            "user": {
+                "deleteUser": "Impossible de supprimer l'utilisateur",
+                "gettingUsers" : "Impossible de récupérer les utilisateurs",
+                "gettingUser" : "Impossible de récupérer l'utilisateur",
+                "updateUser": "Impossible de mettre à jour l'utilisateur"
+            },
+            "group": {
+                "deleteGroup": "Impossible de supprimer le groupe",
+                "gettingGroups" : "Impossible de récupérer les groupes",
+                "updateGroup": "Impossible de mettre à jour le groupe"
+            },
+            "perimeter": {
+                "deletePerimeter": "Impossible de supprimer le périmètre",
+                "gettingPerimeters" : "Impossible de récupérer les périmètres",
+                "updatePerimeter": "Impossible de mettre à jour le périmètre",
+                "createPerimeter": "Impossible de créer le périmètre"
+            },
+            "process": {
+                "deleteProcess": "Impossible de supprimer le processus",
+                "gettingProcesses" : "Impossible de récupérer les processus"
+            },
+            "supervisedEntity": {
+                "deleteEntity": "Impossible de supprimer l'entité supervisée",
+                "gettingEntities" : "Impossible de récupérer les entités supervisées",
+                "updateEntity": "Impossible de mettre à jour l'entité supervisée"
+            }
+
         },
         "calendar": {
             "monday": "lundi",
@@ -582,15 +623,7 @@
             "processes": "Gestion des processus",
             "businessData": "Données métier",
             "supervisedEntities": "Entités Supervisées"
-        },
-        "errors": {
-                "supervisedEntity": {
-                    "deleteEntity": "Impossible de supprimer l'entité supervisée",
-                    "gettingEntities" : "Impossible de récupérer les entités supervisées",
-                    "updateEntity": "Impossible de mettre à jour l'entité supervisée"
-                }
-
-        }
+        } 
     },
     "processGroup": {
         "defaultLabel": "--"

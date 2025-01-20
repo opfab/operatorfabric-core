@@ -70,7 +70,47 @@
         "error": {
             "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
             "incorrectSubmission": "Onjuiste invoer",
-            "technicalError": "Technische fout"
+            "technicalError": "Technische fout",
+            "businessData": {
+                "deleteBusinessData": "Het is niet mogelijk om de zakelijke gegevens te verwijderen",
+                "gettingBusinessData" : "Het is niet mogelijk om zakelijke gegevens op te halen",
+                "updateBusinessData": "Het is niet mogelijk om de zakelijke gegevens bij te werken"
+            },
+            "entity": {
+                "deleteEntity": "Het is niet mogelijk om de entiteit te verwijderen",
+                "gettingEntities" : "Het is niet mogelijk om entiteiten op te halen",
+                "updateEntity": "Het is niet mogelijk om de entiteit bij te werken"
+            },
+            "externalDevice": {
+                "deleteDevicesForUser": "Het is niet mogelijk om de apparaten voor de gebruiker te verwijderen",
+                "updateUserConfiguration" : "Het is niet mogelijk om de gebruikersconfiguratie bij te werken"
+            },
+            "user": {
+                "deleteUser": "Het is niet mogelijk om de gebruiker te verwijderen",
+                "gettingUsers" : "Het is niet mogelijk om gebruikers op te halen",
+                "gettingUser" : "Het is niet mogelijk om de gebruiker op te halen",
+                "updateUser": "Het is niet mogelijk om de gebruiker bij te werken"
+            },
+            "group": {
+                "deleteGroup": "Het is niet mogelijk om de groep te verwijderen",
+                "gettingGroups" : "Het is niet mogelijk om groepen op te halen",
+                "updateGroup": "Het is niet mogelijk om de groep bij te werken"
+            },
+            "perimeter": {
+                "deletePerimeter": "Het is niet mogelijk om de perimeter te verwijderen",
+                "gettingPerimeters" : "Het is niet mogelijk om perimeters op te halen",
+                "updatePerimeter": "Het is niet mogelijk om de perimeter bij te werken",
+                "createPerimeter": "Het is niet mogelijk om de perimeter te maken"
+            },
+            "process": {
+                "deleteProcess": "Het is niet mogelijk om het proces te verwijderen",
+                "gettingProcesses" : "Het is niet mogelijk om processen op te halen"
+            },
+            "supervisedEntity": {
+                "deleteEntity": "Het is niet mogelijk om de gecontroleerde entiteit te verwijderen",
+                "gettingEntities" : "Het is niet mogelijk om gecontroleerde entiteiten op te halen",
+                "updateEntity": "Het is niet mogelijk om de gecontroleerde entiteit bij te werken"
+            }
         },
         "calendar": {
             "monday": "Maandag",
@@ -582,13 +622,6 @@
             "processes": "Processen Beheer",
             "businessData": "Zakelijke gegevens",
             "supervisedEntities": "Entiteiten onder toezicht"
-        },
-        "errors": {
-            "supervisedEntity": {
-                    "deleteEntity": "Het is niet mogelijk om de gecontroleerde entiteit te verwijderen",
-                    "gettingEntities" : "Het is niet mogelijk om gecontroleerde entiteiten op te halen",
-                    "updateEntity": "Het is niet mogelijk om de gecontroleerde entiteit bij te werken"
-            }
         }
     },
     "processGroup": {

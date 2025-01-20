@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,9 @@ import {map} from 'rxjs/operators';
 import {Process} from '@ofServices/processes/model/Processes';
 import {AdminProcessesServer} from './server/AdminProcessesServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
-import {ErrorService} from '../../business/services/error-service';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
+import {LoggerService} from '@ofServices/logs/LoggerService';
 
 export class AdminProcessesService {
     private static readonly processes: Process[];
@@ -38,7 +40,12 @@ export class AdminProcessesService {
                 if (adminProcessesResponse.status === ServerResponseStatus.OK) {
                     return adminProcessesResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(adminProcessesResponse);
+                    LoggerService.error(`Error when getting processes :  ${adminProcessesResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.process.gettingProcesses'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -53,7 +60,14 @@ export class AdminProcessesService {
         return AdminProcessesService.adminProcessesServer.deleteById(id).pipe(
             map((adminProcessesResponse) => {
                 if (adminProcessesResponse.status !== ServerResponseStatus.OK) {
-                    ErrorService.handleServerResponseError(adminProcessesResponse);
+                    LoggerService.error(
+                        `Error when deleting processes ${id} :  ${adminProcessesResponse.statusMessage}`
+                    );
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.process.deleteProcess'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );

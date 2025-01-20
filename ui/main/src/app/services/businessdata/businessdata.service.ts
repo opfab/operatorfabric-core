@@ -13,7 +13,6 @@ import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import * as _ from 'lodash-es';
-import {ErrorService} from '../../business/services/error-service';
 import {AlertMessageService} from '../alerteMessage/AlertMessageService';
 import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
@@ -85,7 +84,12 @@ export class BusinessDataService {
                 if (response.status === ServerResponseStatus.OK) {
                     return response.data;
                 } else {
-                    ErrorService.handleServerResponseError(response);
+                    logger.error(`Error while getting businessData :  ${response.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.businessData.gettingBusinessData'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -105,7 +109,14 @@ export class BusinessDataService {
                     );
                     return responseBusinessData.data;
                 } else {
-                    ErrorService.handleServerResponseError(responseBusinessData);
+                    logger.error(
+                        `Error while updating businessData ${resourceName} :  ${responseBusinessData.statusMessage}`
+                    );
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.businessData.updateBusinessData'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })
@@ -116,8 +127,12 @@ export class BusinessDataService {
         return BusinessDataService.businessDataServer.deleteById(id).pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
-                    BusinessDataService.emptyCache();
-                    ErrorService.handleServerResponseError(response);
+                    logger.error(`Error while deleting businessdata ${id} :  ${response.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.businessData.deleteBusinessData'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );

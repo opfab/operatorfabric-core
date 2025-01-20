@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,9 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
 import {PerimetersServer} from './server/PerimetersServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
-import {ErrorService} from '../../business/services/error-service';
 import {LoggerService} from 'app/services/logs/LoggerService';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class PerimetersService {
     private static perimeterServer: PerimetersServer;
@@ -31,7 +32,12 @@ export class PerimetersService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     PerimetersService.deleteFromCachedPerimeters(id);
                 } else {
-                    ErrorService.handleServerResponseError(perimetersResponse);
+                    LoggerService.error(`Error while deleting perimeter ${id} :  ${perimetersResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.perimeter.deletePerimeter'},
+                        level: MessageLevel.ERROR
+                    });
                 }
             })
         );
@@ -55,7 +61,12 @@ export class PerimetersService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     return perimetersResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(perimetersResponse);
+                    LoggerService.error(`Error while getting perimeters :  ${perimetersResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.perimeter.gettingPerimeters'},
+                        level: MessageLevel.ERROR
+                    });
                     return [];
                 }
             })
@@ -92,7 +103,12 @@ export class PerimetersService {
                     PerimetersService.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(perimetersResponse);
+                    LoggerService.error(`Error while creating perimeter :  ${perimetersResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.perimeter.createPerimeter'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })
@@ -106,7 +122,12 @@ export class PerimetersService {
                     PerimetersService.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    ErrorService.handleServerResponseError(perimetersResponse);
+                    LoggerService.error(`Error while updating perimeter :  ${perimetersResponse.statusMessage}`);
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.perimeter.updatePerimeter'},
+                        level: MessageLevel.ERROR
+                    });
                     return null;
                 }
             })
