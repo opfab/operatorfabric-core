@@ -13,7 +13,7 @@ import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -38,7 +38,7 @@ export abstract class OpfabMap {
     map: OpenLayersMap;
     vectorLayer: VectorLayer<VectorSource<any>>;
     graphChart = null;
-    public lightCardsToDisplay: LightCard[] = [];
+    public lightCardsToDisplay: Card[] = [];
     popupContent: string;
     targetElementId: string;
 
@@ -141,7 +141,7 @@ export abstract class OpfabMap {
         }
     }
 
-    updateMap(cards: LightCard[], maxZoom: number, initialZoomToLocation?: string) {
+    updateMap(cards: Card[], maxZoom: number, initialZoomToLocation?: string) {
         if (this.map) {
             const featureArray = [];
             this.map.removeLayer(this.vectorLayer);
@@ -264,7 +264,7 @@ export abstract class OpfabMap {
 
     abstract showCard(lightCardId);
 
-    displayCardDetailsOnButton(lightCard: LightCard): string {
+    displayCardDetailsOnButton(lightCard: Card): string {
         if (this.popupContent === 'summary') {
             return `${lightCard.summaryTranslated}`;
         } else {
@@ -327,7 +327,7 @@ export abstract class OpfabMap {
         }
     }
 
-    updateGraph(lightCards: LightCard[]) {
+    updateGraph(lightCards: Card[]) {
         let countAlarm = 0;
         let countAction = 0;
         let countCompliant = 0;

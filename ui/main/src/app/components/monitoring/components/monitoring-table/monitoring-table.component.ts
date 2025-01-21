@@ -21,7 +21,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
@@ -286,7 +286,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         );
     }
 
-    getEntitiesResponses(childCards: LightCard[], entities: string[]) {
+    getEntitiesResponses(childCards: Card[], entities: string[]) {
         if (childCards)
             return entities.filter((entity) => childCards.some((childCard) => childCard.publisher === entity));
         else return [];

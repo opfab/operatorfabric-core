@@ -10,7 +10,6 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Card} from 'app/model/Card';
-import {convertCardToLightCard} from '@ofServices/cards/CardConverter';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
 import {Severity} from 'app/model/Severity';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -390,7 +389,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         const hasChildCardFromCurrentUserEntity =
             cardWithChildCards.childCards?.some((child) => userEntities.includes(child.publisher)) ?? false;
-        this.lightCardPreview = {...convertCardToLightCard(this.cardPreview), hasChildCardFromCurrentUserEntity};
+        this.lightCardPreview = {...this.cardPreview, hasChildCardFromCurrentUserEntity};
     }
 
     public cancelPreview(): void {

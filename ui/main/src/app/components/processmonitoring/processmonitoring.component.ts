@@ -22,7 +22,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Page} from 'app/model/Page';
 import {ExcelExport} from '../../utils/excel-export';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
@@ -140,7 +140,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     activeMinDate: {year: number; month: number; day: number} = null;
     activeMaxDate: {year: number; month: number; day: number} = null;
 
-    results: LightCard[];
+    results: Card[];
     currentPage = 0;
 
     totalElements: number;

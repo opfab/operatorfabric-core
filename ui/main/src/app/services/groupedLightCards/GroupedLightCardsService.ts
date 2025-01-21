@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {BehaviorSubject} from 'rxjs';
 
 export class GroupedLightCardsService {
-    private static groupedChildCards: LightCard[] = [];
-    private static parentsOfGroupedCards: LightCard[] = [];
-    private static readonly tagsMap: Map<string, LightCard[]> = new Map();
+    private static groupedChildCards: Card[] = [];
+    private static parentsOfGroupedCards: Card[] = [];
+    private static readonly tagsMap: Map<string, Card[]> = new Map();
 
     static readonly computeEvent = new BehaviorSubject(null);
 
@@ -21,7 +21,7 @@ export class GroupedLightCardsService {
         return tags ? JSON.stringify([...tags].sort((a, b) => a.localeCompare(b))) : '';
     }
 
-    static computeGroupedCards(lightCards: LightCard[]) {
+    static computeGroupedCards(lightCards: Card[]) {
         GroupedLightCardsService.tagsMap.clear();
         GroupedLightCardsService.groupedChildCards = [];
         GroupedLightCardsService.parentsOfGroupedCards = [];
@@ -45,15 +45,15 @@ export class GroupedLightCardsService {
         GroupedLightCardsService.computeEvent.next(null);
     }
 
-    static filterGroupedChilds(lightCards: LightCard[]): LightCard[] {
+    static filterGroupedChilds(lightCards: Card[]): Card[] {
         return lightCards.filter((element) => !GroupedLightCardsService.groupedChildCards.includes(element));
     }
 
-    static isParentGroupCard(lightCard: LightCard): boolean {
+    static isParentGroupCard(lightCard: Card): boolean {
         return GroupedLightCardsService.parentsOfGroupedCards.indexOf(lightCard) !== -1;
     }
 
-    static getChildCardsByTags(tags: string[]): LightCard[] {
+    static getChildCardsByTags(tags: string[]): Card[] {
         const tagString = GroupedLightCardsService.tagsAsString(tags);
         const groupedChildCardsByTags = GroupedLightCardsService.tagsMap.get(tagString);
         return groupedChildCardsByTags ?? [];

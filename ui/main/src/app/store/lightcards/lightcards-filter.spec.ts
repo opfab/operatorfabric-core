@@ -8,7 +8,7 @@
  */
 
 import {FilterType} from '@ofStore/lightcards/model/Filter';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {getSeveralLightCards} from '@tests/helpers';
 import {LightCardsFilter} from './lightcards-filter';
@@ -22,7 +22,7 @@ describe('NewFilterService ', () => {
     });
 
     function getFourCards() {
-        let cards: LightCard[] = new Array();
+        let cards: Card[] = new Array();
         cards = cards.concat(
             getSeveralLightCards(1, {
                 process: 'process1',
@@ -113,7 +113,7 @@ describe('NewFilterService ', () => {
 
     describe('ack filter', () => {
         it('filter 0 cards shall return 0 cards ', () => {
-            const cards: LightCard[] = new Array();
+            const cards: Card[] = new Array();
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(0);
         });

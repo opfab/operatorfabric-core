@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 import {Observable} from 'rxjs';
-import {Card} from 'app/model/Card';
-import {convertCardToLightCard} from './CardConverter';
 import {CardForPublishing} from './model/CardForPublishing';
 import {CardWithChildCards} from './model/CardWithChildCards';
 import {CardCreationReportData} from './model/CardCreationReportData';
@@ -18,7 +16,7 @@ import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {CardsServer} from './server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
 import {AcknowledgeService} from '../acknowlegment/AcknowledgeService';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {FieldToTranslate} from './model/FieldToTranslate';
 
 export class CardsService {
@@ -34,9 +32,7 @@ export class CardsService {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                     const cardData = cardResponse.data;
                     cardData.card.hasBeenAcknowledged =
-                        AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
-                            convertCardToLightCard(cardData.card)
-                        );
+                        AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardData.card);
                     return cardData;
                 }
             })
@@ -80,7 +76,7 @@ export class CardsService {
             .pipe(map((serverResponse) => serverResponse.data));
     }
 
-    public static fetchConnectedRecipients(lightcard: LightCard): Observable<string[]> {
+    public static fetchConnectedRecipients(lightcard: Card): Observable<string[]> {
         return CardsService.cardsServer
             .fetchConnectedRecipients(lightcard)
             .pipe(map((serverResponse) => serverResponse.data));

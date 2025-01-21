@@ -8,7 +8,7 @@
  */
 
 import {CardOperation} from '@ofServices/events/model/CardOperation';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of, Subject} from 'rxjs';
@@ -30,7 +30,7 @@ export class OpfabEventStreamServerMock implements OpfabEventStreamServer {
         this.events.next(event);
     }
 
-    sendLightCard(card: LightCard) {
+    sendLightCard(card: Card) {
         const cardOperation = new CardOperation(1, 1, 0, card);
         this.events.next({data: JSON.stringify(cardOperation, this.convertEnumToType)});
     }

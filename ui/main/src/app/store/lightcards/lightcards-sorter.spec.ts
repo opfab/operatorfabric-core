@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {getSeveralLightCards} from '@tests/helpers';
 import {LightCardsSorter} from './lightcards-sorter';
@@ -21,7 +21,7 @@ describe('Lightcards sorter ', () => {
     });
 
     function getFourCard() {
-        let cards: LightCard[] = new Array();
+        let cards: Card[] = new Array();
         cards = cards.concat(
             getSeveralLightCards(1, {
                 startDate: new Date().valueOf(),

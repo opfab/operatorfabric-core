@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {merge, Subject} from 'rxjs';
 import {ConfigService} from '../config/ConfigService';
@@ -71,11 +71,11 @@ export class SystemNotificationService {
             .subscribe((card) => this.handleLoadedChildCard(card));
     }
 
-    public static handleLoadedCard(lightCard: LightCard) {
+    public static handleLoadedCard(lightCard: Card) {
         if (NotificationDecision.isSystemNotificationToBeShownForCard(lightCard)) this.incomingCard.next(lightCard);
     }
 
-    public static handleLoadedChildCard(lightCard: LightCard) {
+    public static handleLoadedChildCard(lightCard: Card) {
         if (NotificationDecision.isNotificationNeededForChildCard(lightCard)) {
             const parentCard = OpfabStore.getLightCardStore().getLightCard(lightCard.parentCardId);
             this.incomingCard.next(parentCard);
@@ -83,14 +83,12 @@ export class SystemNotificationService {
     }
 
     private static initSystemNotificationForSeverity(severity: Severity) {
-        merge(this.incomingCard.pipe(filter((card: LightCard) => card.severity === severity))).subscribe(
-            (lightCard) => {
-                this.notifyIfSeverityEnabled(severity, lightCard);
-            }
-        );
+        merge(this.incomingCard.pipe(filter((card: Card) => card.severity === severity))).subscribe((lightCard) => {
+            this.notifyIfSeverityEnabled(severity, lightCard);
+        });
     }
 
-    private static notifyIfSeverityEnabled(severity: Severity, lightCard: LightCard) {
+    private static notifyIfSeverityEnabled(severity: Severity, lightCard: Card) {
         if (NotificationDecision.isSystemNotificationEnabledForSeverity(severity)) {
             logger.debug(new Date().toISOString() + ' Send system notification');
             this.sendSystemNotificationMessage(lightCard);
@@ -104,7 +102,7 @@ export class SystemNotificationService {
         }
     }
 
-    static sendSystemNotificationMessage(lightCard: LightCard) {
+    static sendSystemNotificationMessage(lightCard: Card) {
         const severity = lightCard.severity.toString();
         const systemNotificationOptions = {
             body: `${lightCard.titleTranslated.toUpperCase()} \n ${lightCard.summaryTranslated}`

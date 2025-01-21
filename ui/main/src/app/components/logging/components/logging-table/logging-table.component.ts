@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {ProcessGroupCellRendererComponent} from '../cell-renderers/process-group-cell-renderer.component';
 import {StateCellRendererComponent} from '../cell-renderers/state-cell-renderer.component';
@@ -29,7 +29,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     imports: [AgGridAngular, NgIf, NgFor, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
-    @Input() result: LightCard[];
+    @Input() result: Card[];
     @Input() processGroupVisible: boolean;
     @Input() totalElements: number;
     @Input() totalPages: number;

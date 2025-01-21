@@ -8,7 +8,7 @@
  */
 
 import {Filter, FilterType} from '@ofStore/lightcards/model/Filter';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
@@ -59,15 +59,15 @@ export class LightCardsFilter {
         this.filterChanges.next(true);
     }
 
-    public filterLightCards(cards: LightCard[]) {
+    public filterLightCards(cards: Card[]) {
         return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter, ...this.filters]));
     }
 
-    public filterLightCardsOnlyByBusinessDate(cards: LightCard[]) {
+    public filterLightCardsOnlyByBusinessDate(cards: Card[]) {
         return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter]));
     }
 
-    public filterLightCardsWithoutBusinessDate(cards: LightCard[]) {
+    public filterLightCardsWithoutBusinessDate(cards: Card[]) {
         return cards.filter((card) => Filter.chainFilter(card, this.filters));
     }
 
@@ -113,7 +113,7 @@ export class LightCardsFilter {
 
     private initBusinessDateFilter() {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 if (status.start && status.end) {
                     return this.checkCardVisibilityinRange(card, status.start, status.end);
                 } else if (status.start) {
@@ -136,7 +136,7 @@ export class LightCardsFilter {
         );
     }
 
-    private checkCardVisibilityinRange(card: LightCard, start, end) {
+    private checkCardVisibilityinRange(card: Card, start, end) {
         if (start <= card.publishDate && card.publishDate <= end) {
             return true;
         }
@@ -152,7 +152,7 @@ export class LightCardsFilter {
 
     private initPublishDateFilter(): Filter {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 if (status.start && status.end) {
                     return status.start <= card.publishDate && card.publishDate <= status.end;
                 } else if (status.start) {
@@ -169,7 +169,7 @@ export class LightCardsFilter {
 
     private initAcknowledgementFilter(): Filter {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 if (status == null) return false;
                 return (status && card.hasBeenAcknowledged) || (!status && !card.hasBeenAcknowledged);
             },
@@ -180,7 +180,7 @@ export class LightCardsFilter {
 
     private initResponseFilter(): Filter {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 return status || (!status && !card.hasChildCardFromCurrentUserEntity);
             },
             false,
@@ -190,7 +190,7 @@ export class LightCardsFilter {
 
     private initProcessFilter(): Filter {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 if (status.process && status.state) {
                     return status.process === card.process && status.state === card.process + '.' + card.state;
                 } else if (status.process) {

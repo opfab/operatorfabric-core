@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {CardAction} from 'app/model/CardAction';
 import {
     catchError,
@@ -51,8 +51,8 @@ export class LightCardsStore {
     private readonly childCards = new Map();
     private readonly lightCardsEvents = new Subject<Map<any, any>>();
     private readonly lightCardsEventsWithLimitedUpdateRate = new ReplaySubject<Array<any>>(1);
-    private readonly newLightCards = new Subject<LightCard>();
-    private readonly newLightChildCards = new Subject<LightCard>();
+    private readonly newLightCards = new Subject<Card>();
+    private readonly newLightChildCards = new Subject<Card>();
     private readonly deletedLightChildCards = new Subject<any>();
 
     private readonly orphanedLightChildCardsFromCurrentEntity: Set<string> = new Set();
@@ -250,13 +250,13 @@ export class LightCardsStore {
     }
 
     public isLightCardHasBeenAcknowledged(card) {
-        let hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+        let hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
         const children = this.getChildCards(card.id);
         if (hasBeenAcknowledged && children) {
             for (const child of children) {
                 if (
                     child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) &&
-                    !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(child)
+                    !AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(child)
                 ) {
                     hasBeenAcknowledged = false;
                     break;
@@ -280,7 +280,7 @@ export class LightCardsStore {
         return hasBeenRead;
     }
 
-    private addChildCard(card: LightCard) {
+    private addChildCard(card: Card) {
         if (card.parentCardId) {
             const children = this.childCards.get(card.parentCardId);
             if (children) {
@@ -295,7 +295,7 @@ export class LightCardsStore {
         }
     }
 
-    private unreadAndUnackParentCardIfNeeded(card: LightCard) {
+    private unreadAndUnackParentCardIfNeeded(card: Card) {
         if (card.parentCardId) {
             const parent = this.lightCards.get(card.parentCardId);
 
@@ -305,7 +305,7 @@ export class LightCardsStore {
                 }
                 if (
                     parent.hasBeenAcknowledged &&
-                    !AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card)
+                    !AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card)
                 ) {
                     this.setLightCardAcknowledgment(parent.id, false);
                 }
@@ -379,7 +379,7 @@ export class LightCardsStore {
         });
     }
 
-    private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
+    private getChildCardsFromCurrentUserEntity(children: Card[]) {
         const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
         return children.filter((c) => userEntities.includes(c.publisher));
     }
@@ -391,7 +391,7 @@ export class LightCardsStore {
             card.entitiesAcks = card.entitiesAcks
                 ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
-            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -404,7 +404,7 @@ export class LightCardsStore {
                 const indexToRemove = card.entitiesAcks.indexOf(entityToRemove);
                 if (indexToRemove >= 0) card.entitiesAcks.splice(indexToRemove, 1);
             });
-            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -417,11 +417,11 @@ export class LightCardsStore {
         return this.lightCards.get(cardId);
     }
 
-    public getNewLightCards(): Observable<LightCard> {
+    public getNewLightCards(): Observable<Card> {
         return this.newLightCards;
     }
 
-    public getNewLightChildCards(): Observable<LightCard> {
+    public getNewLightChildCards(): Observable<Card> {
         return this.newLightChildCards;
     }
 
@@ -430,7 +430,7 @@ export class LightCardsStore {
     }
 
     // for observable subscribe after the events are emitted we use replaySubject
-    public getLightCards(): Observable<LightCard[]> {
+    public getLightCards(): Observable<Card[]> {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
     }
 
@@ -462,7 +462,7 @@ export class LightCardsStore {
             card.hasBeenAcknowledged = ack;
 
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks
-            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }

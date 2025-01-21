@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
 import {Severity} from 'app/model/Severity';
 import {Card} from 'app/model/Card';
 import {I18n} from 'app/model/I18n';
@@ -40,11 +39,11 @@ import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTempl
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
 
-export function getOneLightCard(lightCardTemplate?: any): LightCard {
+export function getOneLightCard(lightCardTemplate?: any): Card {
     lightCardTemplate = lightCardTemplate ?? {};
     const today = new Date().getTime();
     const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
-    return new LightCard(
+    return new Card(
         Guid.create().toString(),
         lightCardTemplate.id ?? 'testId',
         lightCardTemplate.publisher ?? 'testPublisher',
@@ -57,31 +56,36 @@ export function getOneLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.hasBeenAcknowledged ?? false,
         lightCardTemplate.hasBeenRead ?? false,
         lightCardTemplate.hasChildCardFromCurrentUserEntity ?? false,
+        lightCardTemplate.process ?? 'testProcess',
         'testProcessInstanceId',
+        lightCardTemplate.state ?? 'testState',
         lightCardTemplate.lttd ?? 5000,
         getI18nData('testTitle'),
         getI18nData('testSummary'),
         'testTitleTranslated',
         'testSummaryTranslated',
-        lightCardTemplate.tags ?? null,
-        lightCardTemplate.timeSpans ?? null,
-        lightCardTemplate.rrule ?? null,
-        lightCardTemplate.process ?? 'testProcess',
-        lightCardTemplate.state ?? 'testState',
-        lightCardTemplate.parentCardId ?? null,
-        lightCardTemplate.initialParentCardUid ?? null,
-        lightCardTemplate.representative ?? null,
-        lightCardTemplate.representativeType ?? null,
-        lightCardTemplate.wktGeometry ?? null,
-        lightCardTemplate.wktProjection ?? null,
-        lightCardTemplate.entitiesAcks ?? null,
+        null,
+        null,
+        null,
         lightCardTemplate.entityRecipients ?? null,
         lightCardTemplate.entityRecipientsForInformation ?? null,
+        null,
         lightCardTemplate.entitiesAllowedToRespond ?? null,
         lightCardTemplate.entitiesRequiredToRespond ?? null,
         lightCardTemplate.entitiesAllowedToEdit ?? null,
+        lightCardTemplate.parentCardId ?? null,
+        lightCardTemplate.initialParentCardUid ?? null,
         lightCardTemplate.publisherType ?? null,
+        lightCardTemplate.representative ?? null,
+        lightCardTemplate.representativeType ?? null,
+        lightCardTemplate.tags ?? null,
+        lightCardTemplate.wktGeometry ?? null,
+        lightCardTemplate.wktProjection ?? null,
         lightCardTemplate.secondsBeforeTimeSpanForReminder ?? null,
+        lightCardTemplate.timeSpans ?? null,
+        lightCardTemplate.entitiesAcks ?? null,
+        null,
+        lightCardTemplate.rrule ?? null,
         lightCardTemplate.actions ?? null
     );
 }
@@ -137,9 +141,9 @@ export function getOneCard(cardTemplate?: any): Card {
     );
 }
 
-export function getSeveralLightCards(numberOfCards = 1, cardTemplate?: any): LightCard[] {
+export function getSeveralLightCards(numberOfCards = 1, cardTemplate?: any): Card[] {
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
-    const lightCards: LightCard[] = new Array(finalNumberOfCards);
+    const lightCards: Card[] = new Array(finalNumberOfCards);
     for (let i = 0; i < finalNumberOfCards; ++i) {
         lightCards[i] = getOneLightCard(cardTemplate);
     }

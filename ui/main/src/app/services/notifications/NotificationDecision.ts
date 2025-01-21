@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {CardAction} from 'app/model/CardAction';
 import {Severity} from 'app/model/Severity';
 
@@ -71,7 +71,7 @@ export class NotificationDecision {
         return this.playSoundWhenSessionEnd;
     }
 
-    public static isSoundToBePlayedForCard(card: LightCard) {
+    public static isSoundToBePlayedForCard(card: Card) {
         if (this.lastSentCards.get(card.id) && !this.checkSentCardIsRecentlyPublished(card))
             return false; // no sound as the card was sent by the current user
         else {
@@ -83,14 +83,14 @@ export class NotificationDecision {
         }
     }
 
-    public static isNotificationNeededForChildCard(card: LightCard) {
+    public static isNotificationNeededForChildCard(card: Card) {
         return (
             card.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) &&
             (!this.lastSentCards.get(card.id) || this.checkSentCardIsRecentlyPublished(card))
         );
     }
 
-    public static isSystemNotificationToBeShownForCard(card: LightCard) {
+    public static isSystemNotificationToBeShownForCard(card: Card) {
         if (this.lastSentCards.get(card.id) && !this.checkSentCardIsRecentlyPublished(card))
             return false; // no sound as the card was sent by the current user
         else {
@@ -127,15 +127,15 @@ export class NotificationDecision {
         return false;
     }
 
-    private static checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
+    private static checkCardHasBeenPublishAfterLastUserAction(card: Card) {
         return card.publishDate + NotificationDecision.ERROR_MARGIN - NotificationDecision.lastUserAction > 0;
     }
 
-    private static checkCardIsRecent(card: LightCard): boolean {
+    private static checkCardIsRecent(card: Card): boolean {
         return new Date().getTime() - card.publishDate <= NotificationDecision.RECENT_THRESHOLD;
     }
 
-    private static checkSentCardIsRecentlyPublished(card: LightCard): boolean {
+    private static checkSentCardIsRecentlyPublished(card: Card): boolean {
         return card.publishDate > this.lastSentCards.get(card.id) + NotificationDecision.ERROR_MARGIN;
     }
 

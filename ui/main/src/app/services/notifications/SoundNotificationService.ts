@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {Notification} from '@ofServices/notifications/model/ExternalDevices';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
@@ -148,7 +148,7 @@ export class SoundNotificationService {
         NotificationDecision.setLastUserAction(new Date().valueOf());
     }
 
-    public static handleLoadedCard(card: LightCard) {
+    public static handleLoadedCard(card: Card) {
         if (NotificationDecision.isSoundToBePlayedForCard(card)) {
             this.incomingCard.next(card);
             if (
@@ -163,7 +163,7 @@ export class SoundNotificationService {
         }
     }
 
-    public static handleLoadedChildCard(lightCard: LightCard) {
+    public static handleLoadedChildCard(lightCard: Card) {
         if (NotificationDecision.isNotificationNeededForChildCard(lightCard)) {
             const parentCard = OpfabStore.getLightCardStore().getLightCard(lightCard.parentCardId);
             this.incomingCard.next(parentCard);
@@ -216,7 +216,7 @@ export class SoundNotificationService {
     private static initSoundPlayingForSeverity(severity: Severity) {
         merge(
             this.incomingCard.pipe(
-                filter((card: LightCard) => card.severity === severity),
+                filter((card: Card) => card.severity === severity),
                 map((x) => SignalType.NOTIFICATION)
             ),
             this.clearSignal.pipe(map((x) => SignalType.CLEAR))

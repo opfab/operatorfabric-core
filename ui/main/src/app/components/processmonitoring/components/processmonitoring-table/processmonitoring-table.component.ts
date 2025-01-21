@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/co
 })
 export class ProcessmonitoringTableComponent {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
-    @Input() result: LightCard[];
+    @Input() result: Card[];
     @Input() processGroupVisible: boolean;
     @Input() totalElements: number;
     @Input() totalPages: number;

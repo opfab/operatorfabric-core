@@ -9,7 +9,7 @@
 
 import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {LightCardsFilter} from './lightcards-filter';
 import {LightCardsSorter} from './lightcards-sorter';
 import {ConfigService} from '@ofServices/config/ConfigService';
@@ -119,7 +119,7 @@ export class FilteredLightCardsStore {
         return ConfigService.getConfigValue('feed.enableGroupedCards', false);
     }
 
-    public isCardVisibleInFeed(card: LightCard) {
+    public isCardVisibleInFeed(card: Card) {
         return this.lightCardTextFilter.searchLightCards(this.lightCardFilter.filterLightCards([card])).length > 0;
     }
 

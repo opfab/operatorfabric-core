@@ -10,7 +10,7 @@
 import {OnInit, Component, OnDestroy} from '@angular/core';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject, takeUntil, timer} from 'rxjs';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Utilities} from '../../../../utils/utilities';
 import {OpfabStore} from '../../../../store/opfabStore';
 import {NgFor, NgIf, LowerCasePipe} from '@angular/common';
@@ -27,9 +27,9 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
-    pinnedCards: LightCard[];
-    visiblePinnedCards: LightCard[];
-    hiddenPinnedCards: LightCard[];
+    pinnedCards: Card[];
+    visiblePinnedCards: Card[];
+    hiddenPinnedCards: Card[];
 
     maxVisiblePinnedCards = 6;
 
@@ -47,7 +47,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
             .subscribe((t) => this.checkPinnedCardsEndDate());
     }
 
-    private setPinnedCards(cards: LightCard[]) {
+    private setPinnedCards(cards: Card[]) {
         this.pinnedCards = [];
 
         if (cards?.length > 0) {
@@ -70,7 +70,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getPinnedCards(cards: LightCard[]) {
+    private getPinnedCards(cards: Card[]) {
         return cards
             .filter((card) => {
                 const processDefinition = ProcessesService.getProcess(card.process);

@@ -16,12 +16,11 @@ import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
-import {Card} from 'app/model/Card';
 import {CardForPublishing} from '../model/CardForPublishing';
 import {CardWithChildCards} from '../model/CardWithChildCards';
 import {CardCreationReportData} from '../model/CardCreationReportData';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Page} from 'app/model/Page';
 
 @Injectable({
@@ -52,7 +51,7 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}`, filter));
+        return this.processHttpResponse(this.httpClient.post<Page<Card>>(`${this.archivesUrl}`, filter));
     }
 
     fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>> {
@@ -83,7 +82,7 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
         );
     }
 
-    fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>> {
+    fetchConnectedRecipients(lightcard: Card): Observable<ServerResponse<string[]>> {
         return this.processHttpResponse(
             this.httpClient.post<string[]>(`${this.cardConsultationUrl}/connectedRecipientsPreview`, lightcard)
         );

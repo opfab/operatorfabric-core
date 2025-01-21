@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -34,7 +34,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     @Input() public open = false;
     @Input() public groupedCardOpen = false;
     @Input() public selection: Observable<string>;
-    @Input() public lightCard: LightCard;
+    @Input() public lightCard: Card;
     @Input() public displayUnreadIcon = true;
     @Input() displayContext: any = DisplayContext.REALTIME;
 

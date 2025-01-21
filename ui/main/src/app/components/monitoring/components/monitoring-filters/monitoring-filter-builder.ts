@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {Filter} from '@ofStore/lightcards/model/Filter';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../../../../store/opfabStore';
@@ -36,7 +36,7 @@ export class MonitoringFilterBuilder {
 
     private getProcessFilter(active, selectedStatus) {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 const processList = status.processes;
                 if (processList) {
                     return processList.includes(card.process);
@@ -62,7 +62,7 @@ export class MonitoringFilterBuilder {
 
     private getTypeOfStateFilter(active, selectedStatus) {
         return new Filter(
-            (card: LightCard, status) => {
+            (card: Card, status) => {
                 const typeOfStatesList = status.typeOfStates;
                 if (typeOfStatesList) {
                     const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);

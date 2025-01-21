@@ -8,13 +8,12 @@
  */
 
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
-import {Card} from 'app/model/Card';
 import {CardForPublishing} from '../model/CardForPublishing';
 import {CardCreationReportData} from '../model/CardCreationReportData';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {Observable} from 'rxjs';
 import {ServerResponse} from '../../../business/server/serverResponse';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 
 export abstract class CardsServer {
     abstract loadCard(id: string): Observable<ServerResponse<any>>;
@@ -26,5 +25,5 @@ export abstract class CardsServer {
     abstract postUserCardRead(cardUid: string): Observable<ServerResponse<any>>;
     abstract deleteUserCardRead(cardUid: string): Observable<ServerResponse<any>>;
     abstract postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>>;
-    abstract fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>>;
+    abstract fetchConnectedRecipients(lightcard: Card): Observable<ServerResponse<string[]>>;
 }

@@ -21,7 +21,6 @@ import {
 } from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Card} from 'app/model/Card';
-import {LightCard} from 'app/model/LightCard';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
@@ -55,7 +54,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     ]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() public card: Card | LightCard;
+    @Input() public card: Card;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;

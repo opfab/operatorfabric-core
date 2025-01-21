@@ -16,7 +16,6 @@ import {
     TypeOfStateEnum
 } from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
-import {LightCard} from 'app/model/LightCard';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
 import {ServerResponseStatus} from '../../business/server/serverResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
@@ -280,7 +279,7 @@ export class ProcessesService {
     }
 
     public static getConsideredAcknowledgedForUserWhenForALightCard(
-        lightCard: LightCard
+        lightCard: Card
     ): ConsideredAcknowledgedForUserWhenEnum {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 

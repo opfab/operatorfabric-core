@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from '../../../model/LightCard';
+import {Card} from '../../../model/Card';
 
 export class CardOperation implements CardOperation {
     constructor(
         readonly number: number,
         readonly publicationDate: number,
         readonly type: CardOperationType,
-        readonly card?: LightCard,
+        readonly card?: Card,
         readonly cardId?: string,
         readonly cardUid?: string,
         readonly entitiesAcks?: string[]

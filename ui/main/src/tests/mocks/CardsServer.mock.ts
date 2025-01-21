@@ -7,12 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from 'app/model/Card';
 import {CardForPublishing} from '@ofServices/cards/model/CardForPublishing';
 import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReportData';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Observable, of} from 'rxjs';
@@ -77,7 +76,7 @@ export class CardsServerMock implements CardsServer {
     fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');
     }
-    fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>> {
+    fetchConnectedRecipients(lightcard: Card): Observable<ServerResponse<string[]>> {
         throw new Error('Method not implemented.');
     }
 }

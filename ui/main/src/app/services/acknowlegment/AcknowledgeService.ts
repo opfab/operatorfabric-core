@@ -12,9 +12,8 @@ import {
     ConsideredAcknowledgedForUserWhenEnum,
     Process
 } from '@ofServices/processes/model/Processes';
-import {Card} from 'app/model/Card';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../business/server/serverResponse';
@@ -39,11 +38,7 @@ export class AcknowledgeService {
         return AcknowledgeService.acknowledgeServer.deleteUserAcknowledgement(cardUid, entitiesAcks);
     }
 
-    public static isAcknowledgmentAllowed(
-        user: UserWithPerimeters,
-        card: Card | LightCard,
-        processDefinition: Process
-    ): boolean {
+    public static isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (!processDefinition) return true;
         const state = processDefinition.states.get(card.state);
 
@@ -64,14 +59,14 @@ export class AcknowledgeService {
         return card.lttd != null && card.lttd - new Date().getTime() <= 0;
     }
 
-    public static isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightCard: LightCard): boolean {
+    public static hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightCard: Card): boolean {
         const consideredAcknowledgedForUserWhen =
             ProcessesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
 
         if (AcknowledgeService.areWeInModeUserHasAcknowledged(lightCard, consideredAcknowledgedForUserWhen)) {
             return lightCard.hasBeenAcknowledged;
         } else {
-            return AcknowledgeService.isLightCardHasBeenAcknowledgedByUserEntity(
+            return AcknowledgeService.hasLightCardBeenAcknowledgedByUserEntity(
                 lightCard,
                 consideredAcknowledgedForUserWhen
             );
@@ -79,7 +74,7 @@ export class AcknowledgeService {
     }
 
     private static areWeInModeUserHasAcknowledged(
-        lightCard: LightCard,
+        lightCard: Card,
         consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum
     ): boolean {
         return (
@@ -90,7 +85,7 @@ export class AcknowledgeService {
         );
     }
 
-    private static doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard: LightCard): boolean {
+    private static doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard: Card): boolean {
         const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter((entityId) => {
             return (
                 EntitiesService.isEntityAllowedToSendCard(entityId) &&
@@ -100,8 +95,8 @@ export class AcknowledgeService {
         return entitiesOfUserThatAreRecipients.length > 0;
     }
 
-    private static isLightCardHasBeenAcknowledgedByUserEntity(
-        lightCard: LightCard,
+    private static hasLightCardBeenAcknowledgedByUserEntity(
+        lightCard: Card,
         consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum
     ): boolean {
         const listEntitiesToAck = AcknowledgeService.computeListEntitiesToAck(lightCard);
@@ -125,7 +120,7 @@ export class AcknowledgeService {
 
     private static checkIsAcknowledgedForTheCaseOfAllEntitiesMustAckTheCard(
         consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum,
-        lightCard: LightCard,
+        lightCard: Card,
         listEntitiesToAck: string[]
     ): boolean {
         if (
@@ -148,7 +143,7 @@ export class AcknowledgeService {
         } else return false;
     }
 
-    private static isMemberOfEntityThatPublishedTheCard(lightCard: LightCard): boolean {
+    private static isMemberOfEntityThatPublishedTheCard(lightCard: Card): boolean {
         if (
             lightCard.publisherType === 'ENTITY' &&
             UsersService.getCurrentUserWithPerimeters().userData.entities?.includes(lightCard.publisher)
@@ -159,7 +154,7 @@ export class AcknowledgeService {
         }
     }
 
-    private static computeListEntitiesToAck(lightCard: LightCard): string[] {
+    private static computeListEntitiesToAck(lightCard: Card): string[] {
         const listEntitiesToAck = [];
 
         if (lightCard.entityRecipients) {

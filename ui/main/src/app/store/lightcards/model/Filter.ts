@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 
 export class Filter {
     constructor(
-        readonly filteringFunction: (LightCard, any) => boolean,
+        readonly filteringFunction: (Card, any) => boolean,
         public active: boolean,
         public status: any
     ) {}
 
-    static chainFilter(card: LightCard, next: Filter[]): boolean {
+    static chainFilter(card: Card, next: Filter[]): boolean {
         return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
     }
 
@@ -24,7 +24,7 @@ export class Filter {
      * Apply this filter to a card, then a chain of filter recursively.
      * The recursion stops when the card is filtered out
      */
-    chainFilter(card: LightCard, next: Filter[]): boolean {
+    chainFilter(card: Card, next: Filter[]): boolean {
         if (this.applyFilter(card)) {
             return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
         }
@@ -34,7 +34,7 @@ export class Filter {
     /**
      * Returns true if the card passes the filter, false otherwise
      */
-    applyFilter(card: LightCard): boolean {
+    applyFilter(card: Card): boolean {
         if (this.active) {
             return this.filteringFunction(card, this.status);
         }

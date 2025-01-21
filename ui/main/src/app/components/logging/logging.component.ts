@@ -24,7 +24,7 @@ import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Page} from 'app/model/Page';
 import {ExcelExport} from '../../utils/excel-export';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
@@ -70,7 +70,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         activeDateRange: new FormControl({})
     });
 
-    results: LightCard[];
+    results: Card[];
     currentPage = 0;
 
     totalElements: number;
@@ -278,7 +278,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((page: Page<LightCard>) => {
+            .subscribe((page: Page<Card>) => {
                 const lines = page.content;
 
                 const severityColumnName = this.translateColumn('shared.result.severity');

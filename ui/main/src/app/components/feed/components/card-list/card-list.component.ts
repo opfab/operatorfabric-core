@@ -8,7 +8,7 @@
  */
 
 import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {CardAction} from 'app/model/CardAction';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -43,7 +43,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     imports: [FiltersComponent, FeedFilterComponent, NgIf, NgFor, LightCardModule, TranslateModule, AsyncPipe]
 })
 export class CardListComponent implements AfterViewChecked, OnInit {
-    @Input() public lightCards: LightCard[];
+    @Input() public lightCards: Card[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
     @Input() processFilter: string;
@@ -161,7 +161,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         });
     }
 
-    private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
+    private acknowledgeVisibleCardInTheFeed(lightCard: Card): void {
         const processDefinition = ProcessesService.getProcess(lightCard.process);
         if (
             !lightCard.hasBeenAcknowledged &&
@@ -204,7 +204,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         }
     }
 
-    isCardPublishedBeforeAckDemand(lightCard: LightCard): boolean {
+    isCardPublishedBeforeAckDemand(lightCard: Card): boolean {
         return lightCard.publishDate < this.ackAllCardsDemandTimestamp;
     }
 

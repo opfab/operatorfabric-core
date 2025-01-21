@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -18,11 +18,11 @@ import {Observable} from 'rxjs';
     styleUrls: ['./grouped-card-list.component.scss']
 })
 export class GroupedCardListComponent implements OnInit {
-    @Input() public lightCards: LightCard[];
+    @Input() public lightCards: Card[];
     @Input() public selection: Observable<string>;
 
     maxVisibleCards = 100;
-    visibleCards: LightCard[];
+    visibleCards: Card[];
 
     ngOnInit(): void {
         this.setVisibleGroupedCards();

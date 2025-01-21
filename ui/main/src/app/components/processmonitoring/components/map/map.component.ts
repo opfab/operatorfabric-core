@@ -21,7 +21,7 @@ import {
     ViewChild
 } from '@angular/core';
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
@@ -38,7 +38,7 @@ import {CardComponent} from '../../../card/card.component';
     imports: [NgFor, CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
-    @Input() result: LightCard[];
+    @Input() result: Card[];
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
     modalRef: NgbModalRef;

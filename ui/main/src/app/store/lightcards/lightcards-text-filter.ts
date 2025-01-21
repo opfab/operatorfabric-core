@@ -9,7 +9,7 @@
  */
 
 import {Observable, Subject} from 'rxjs';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 
 export class LightCardsTextFilter {
     private readonly searchChanges = new Subject();
@@ -24,7 +24,7 @@ export class LightCardsTextFilter {
         this.searchChanges.next(this.searchTerm);
     }
 
-    public searchLightCards(cards: LightCard[]): LightCard[] {
+    public searchLightCards(cards: Card[]): Card[] {
         if (!this.searchTerm || this.searchTerm.length === 0) {
             return cards;
         } else {

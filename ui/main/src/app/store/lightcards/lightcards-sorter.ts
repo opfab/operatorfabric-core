@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {Subject, Observable} from 'rxjs';
 
@@ -67,19 +67,19 @@ export function readOrdinal(flag: boolean) {
     return flag ? 1 : 0;
 }
 
-export function compareBySeverity(card1: LightCard, card2: LightCard) {
+export function compareBySeverity(card1: Card, card2: Card) {
     return severityOrdinal(card1.severity) - severityOrdinal(card2.severity);
 }
 
-export function compareByPublishDate(card1: LightCard, card2: LightCard) {
+export function compareByPublishDate(card1: Card, card2: Card) {
     return card2.publishDate - card1.publishDate;
 }
 
-export function compareByRead(card1: LightCard, card2: LightCard) {
+export function compareByRead(card1: Card, card2: Card) {
     return readOrdinal(card1.hasBeenRead) - readOrdinal(card2.hasBeenRead);
 }
 
-export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard) {
+export function compareBySeverityPublishDate(card1: Card, card2: Card) {
     let result = compareBySeverity(card1, card2);
     if (result === 0) {
         result = compareByPublishDate(card1, card2);
@@ -87,7 +87,7 @@ export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard)
     return result;
 }
 
-export function compareByReadPublishDate(card1: LightCard, card2: LightCard) {
+export function compareByReadPublishDate(card1: Card, card2: Card) {
     let result = compareByRead(card1, card2);
     if (result === 0) {
         result = compareByPublishDate(card1, card2);
@@ -95,11 +95,11 @@ export function compareByReadPublishDate(card1: LightCard, card2: LightCard) {
     return result;
 }
 
-export function compareByStartDate(card1: LightCard, card2: LightCard) {
+export function compareByStartDate(card1: Card, card2: Card) {
     return card1.startDate - card2.startDate;
 }
 
-export function compareByEndDate(card1: LightCard, card2: LightCard) {
+export function compareByEndDate(card1: Card, card2: Card) {
     const date1 = card1.endDate ? card1.endDate : card1.startDate;
     const date2 = card2.endDate ? card2.endDate : card2.startDate;
     return date1 - date2;

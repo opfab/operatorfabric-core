@@ -551,7 +551,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -570,7 +570,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -589,7 +589,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY2']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -608,7 +608,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -628,7 +628,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -651,7 +651,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -674,7 +674,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY2']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -697,7 +697,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -720,7 +720,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -743,7 +743,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -768,7 +768,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -793,7 +793,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -818,7 +818,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -843,7 +843,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -868,7 +868,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -893,7 +893,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -918,7 +918,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -943,7 +943,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -969,7 +969,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -995,7 +995,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ['ENTITY1', 'ENTITY2', 'ENTITY3']
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -1019,7 +1019,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );

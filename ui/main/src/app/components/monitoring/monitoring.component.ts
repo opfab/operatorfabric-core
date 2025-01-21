@@ -11,7 +11,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from 'app/components/monitoring/model/LineOfMonitoringResult';
 import {catchError, debounceTime, filter, map, takeUntil} from 'rxjs/operators';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {I18n} from 'app/model/I18n';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
@@ -126,12 +126,12 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    prefixI18nKey(card: LightCard, key: string): I18n {
+    prefixI18nKey(card: Card, key: string): I18n {
         const currentI18n = card[key] as I18n;
         return new I18n(this.prefixForTranslation(card, currentI18n.key), currentI18n.parameters);
     }
 
-    prefixForTranslation(card: LightCard, key: string): string {
+    prefixForTranslation(card: Card, key: string): string {
         return `${card.process}.${card.processVersion}.${key}`;
     }
 
@@ -139,7 +139,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringFilters$.next(filters);
     }
 
-    private getEmitter(card: LightCard): string {
+    private getEmitter(card: Card): string {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
         const sender = isThirdPartyPublisher ? card.publisher : EntitiesService.getEntityName(card.publisher);
 
@@ -154,7 +154,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         return !representative.length ? sender : sender + ' (' + representative + ')';
     }
 
-    private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card: LightCard) {
+    private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card: Card) {
         let entityIdsAllowedOrRequiredToRespond = [];
         if (card.entitiesAllowedToRespond)
             entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
@@ -174,13 +174,13 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         );
     }
 
-    private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
+    private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: Card) {
         if (!card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
         return EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map((entity) => entity.id);
     }
 
-    private cardToResult(card: LightCard): LineOfMonitoringResult {
+    private cardToResult(card: Card): LineOfMonitoringResult {
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
 
@@ -220,7 +220,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     private applyResponseFilter() {
         this.responseFilter$.next(
-            new Filter((card: LightCard) => !card.hasChildCardFromCurrentUserEntity, !this.responseFilterValue, null)
+            new Filter((card: Card) => !card.hasChildCardFromCurrentUserEntity, !this.responseFilterValue, null)
         );
     }
 }

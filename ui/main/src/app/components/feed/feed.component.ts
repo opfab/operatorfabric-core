@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {LightCard} from 'app/model/LightCard';
+import {Card} from 'app/model/Card';
 import {delay, map, takeUntil} from 'rxjs/operators';
 import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -33,7 +33,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     processFilter: string;
     stateFilter: string;
 
-    lightCards$: Observable<LightCard[]>;
+    lightCards$: Observable<Card[]>;
     selection$: Observable<string>;
     hallwayModeSelectedCardUid: string;
     totalNumberOfLightsCards = 0;

@@ -22,7 +22,6 @@ import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {LightCard} from 'app/model/LightCard';
 import {Page} from 'app/model/Page';
 import {ExcelExport} from '../../utils/excel-export';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
@@ -83,10 +82,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         activeDateRange: new FormControl({})
     });
 
-    results: LightCard[];
+    results: Card[];
     updatesByCardId: {
-        mostRecent: LightCard;
-        cardHistories: LightCard[];
+        mostRecent: Card;
+        cardHistories: Card[];
         displayHistory: boolean;
         tooManyRows: boolean;
     }[];
@@ -190,7 +189,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
-                next: (page: Page<LightCard>) => {
+                next: (page: Page<Card>) => {
                     if (page) {
                         this.resultsNumber = page.totalElements;
                         this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
@@ -278,11 +277,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     private fetchUpdatesByCardId(
-        lightCard: LightCard,
+        lightCard: Card,
         index: number,
         requestID: number,
         isAdminModeChecked: boolean
-    ): Observable<Page<LightCard>> {
+    ): Observable<Page<Card>> {
         const filters: Map<string, string[]> = new Map();
         filters.set('process', [lightCard.process]);
         filters.set('processInstanceId', [lightCard.processInstanceId]);
@@ -295,7 +294,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return CardsService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
             tap({
-                next: (page: Page<LightCard>) => {
+                next: (page: Page<Card>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
                     // log to debug CI/CD Failures
                     logger.debug('Archives : receive card update');
@@ -312,17 +311,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         );
     }
 
-    removeMostRecentCardFromHistories(mostRecentId: string, histories: LightCard[]) {
+    removeMostRecentCardFromHistories(mostRecentId: string, histories: Card[]) {
         histories.forEach((lightCard, index) => {
             if (lightCard.id === mostRecentId) histories.splice(index, 1);
         });
     }
 
-    displayHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {
+    displayHistoryOfACard(card: {mostRecent: Card; cardHistories: Card[]; displayHistory: boolean}) {
         card.displayHistory = true;
     }
 
-    hideHistoryOfACard(card: {mostRecent: LightCard; cardHistories: LightCard[]; displayHistory: boolean}) {
+    hideHistoryOfACard(card: {mostRecent: Card; cardHistories: Card[]; displayHistory: boolean}) {
         card.displayHistory = false;
     }
 
@@ -349,7 +348,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
         CardsService.fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((page: Page<LightCard>) => {
+            .subscribe((page: Page<Card>) => {
                 const lines = page.content;
 
                 const severityColumnName = this.translateColumn('shared.result.severity');
@@ -361,7 +360,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 const processGroupColumnName = this.translateColumn('shared.result.processGroup');
                 const processColumnName = this.translateColumn('shared.result.process');
 
-                lines.forEach((card: LightCard) => {
+                lines.forEach((card: Card) => {
                     if (card) {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({

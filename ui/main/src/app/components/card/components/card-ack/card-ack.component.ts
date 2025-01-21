@@ -9,7 +9,6 @@
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Card} from 'app/model/Card';
-import {convertCardToLightCard} from '@ofServices/cards/CardConverter';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
@@ -86,23 +85,23 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        let lightcard = convertCardToLightCard(this.card);
+        let lightcard = this.card;
         if (lightcard && entitiesAcksToAdd) {
-            const newentitiesAcks = lightcard.entitiesAcks
+            const newEntitiesAcks = lightcard.entitiesAcks
                 ? [...new Set([...lightcard.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
-            lightcard = {...lightcard, entitiesAcks: newentitiesAcks};
+            lightcard = {...lightcard, entitiesAcks: newEntitiesAcks};
         }
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
 
     private removeAckFromSubscription(entitiesAcksToRemove: string[]) {
-        const lightcard = convertCardToLightCard(this.card);
+        const lightcard = this.card;
         if (lightcard?.entitiesAcks && entitiesAcksToRemove) {
             entitiesAcksToRemove.forEach((entityToRemove) => {
                 const indexToRemove = lightcard.entitiesAcks.indexOf(entityToRemove);
@@ -111,7 +110,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
