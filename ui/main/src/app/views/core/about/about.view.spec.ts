@@ -8,7 +8,7 @@
  */
 
 import {AboutView} from './about.view';
-import packageInfo from '../../../../../../package.json';
+import packageInfo from '../../../../../package.json';
 import {loadWebUIConf} from '@tests/helpers';
 
 describe('About view ', () => {

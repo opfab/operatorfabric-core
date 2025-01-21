@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Utilities} from '../../../utils/utilities';
+import {Utilities} from '../../utils/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
@@ -15,7 +15,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaEntityCluster, ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {OpfabStore} from '../../../store/opfabStore';
+import {OpfabStore} from '../../store/opfabStore';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 

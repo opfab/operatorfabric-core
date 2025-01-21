@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {Card} from 'app/model/Card';
+import {Card} from '../../model/Card';
 import {ShowAcknowledgmentFooterEnum} from '@ofServices/processes/model/Processes';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {Utilities} from '../../../utils/utilities';
+import {Utilities} from '../../utils/utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';

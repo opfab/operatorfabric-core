@@ -10,10 +10,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
-import {NavbarView} from 'app/business/view/navbar/navbar.view';
-import {NavbarMenuElement, NavbarPage} from 'app/business/view/navbar/navbarPage';
+import {NavbarView} from 'app/views/navbar/navbar.view';
+import {NavbarMenuElement, NavbarPage} from 'app/views/navbar/navbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {NavbarMenuView} from 'app/business/view/navbar/navbarMenu.view';
+import {NavbarMenuView} from 'app/views/navbar/navbarMenu.view';
 import {NgClass, NgTemplateOutlet, NgFor, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InfoComponent} from './info/info.component';

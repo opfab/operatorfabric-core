@@ -9,8 +9,8 @@
  */
 
 import {Component} from '@angular/core';
-import {AlertView} from 'app/business/view/core/alert/alert.view';
-import {AlertPage} from 'app/business/view/core/alert/alertPage';
+import {AlertView} from 'app/views/core/alert/alert.view';
+import {AlertPage} from 'app/views/core/alert/alertPage';
 import {NgIf} from '@angular/common';
 
 @Component({

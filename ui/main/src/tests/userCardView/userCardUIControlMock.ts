@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 import {Severity} from 'app/model/Severity';
-import {UserCardUIControl, MultiselectItem, InputFieldName} from 'app/business/view/userCard/userCard.model';
+import {UserCardUIControl, MultiselectItem, InputFieldName} from 'app/views/userCard/userCard.model';
 
 export class UserCardUIControlMock implements UserCardUIControl {
     inputVisibility_FctCalls: {[key: string]: boolean} = {};

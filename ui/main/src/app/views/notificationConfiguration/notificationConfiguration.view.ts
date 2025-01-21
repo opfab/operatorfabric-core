@@ -20,7 +20,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
-import {OpfabStore} from '../../../store/opfabStore';
+import {OpfabStore} from '../../store/opfabStore';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {firstValueFrom} from 'rxjs';
 import _ from 'lodash';

@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externalAppIFrame.view';
+import {ExternalAppIFrameView} from 'app/views/externalAppIframe/externalAppIFrame.view';
 
 @Component({
     selector: 'of-iframedisplay',

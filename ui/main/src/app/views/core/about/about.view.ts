@@ -8,7 +8,7 @@
  */
 import {ConfigService} from 'app/services/config/ConfigService';
 import _ from 'lodash-es';
-import packageInfo from '../../../../../../package.json';
+import packageInfo from '../../../../../package.json';
 
 export class AboutView {
     aboutElements = [];
