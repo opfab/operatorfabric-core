@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,28 +32,34 @@
 
 .opfab-notificationconfiguration-process {
     margin-right: 20px;
+    max-width: 300px;
 }
 
 .opfab-notificationconfiguration-icon-envelope-without-slash {
     height: 17px;
     width: 17px;
     background: var(--opfab-text-color);
-    mask: url("../../../assets/images/icons/envelope-regular.svg");
-    transform: translateX(-7px) translateY(-5px);
+    mask: url('../../../assets/images/icons/envelope-regular.svg');
+    transform: translateX(-4px) translateY(-7px);
 }
 
 .opfab-notificationconfiguration-icon-envelope-with-slash {
     height: 17px;
     width: 17px;
     background: var(--opfab-text-color);
-    mask: url("../../../assets/images/icons/envelope-regular.svg");
+    mask: url('../../../assets/images/icons/envelope-regular.svg');
     transform: rotate(35deg) translateX(-11px) translateY(-3px);
 }
 
 .opfab-notificationconfiguration-slash {
-    width: 28px;
     height: 1px;
-    transform: rotate(-35deg) translateY(1px);
+    transform: rotate(-35deg) translateY(3px) translateX(2px);
     display: inline-block;
     background: red;
+}
+
+.opfab-notificationconfiguration-state-label {
+    max-width: 250px;
+    overflow-wrap: break-word;
+    width: fit-content;
 }

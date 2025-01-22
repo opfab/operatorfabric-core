@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -63,7 +63,7 @@
 <ng-template #processTemplate let-process="process">
     <div class="opfab-notificationconfiguration-process">
         <p class="font-weight-bold">
-            <label style="font-weight: bold; width: auto" class="opfab-checkbox"
+            <label style="font-weight: bold; width: auto; overflow-wrap: break-word" class="opfab-checkbox"
                 >{{ process.label }}
                 <input
                     [id]="'opfab_notification_process_' + process.id"
@@ -76,27 +76,28 @@
         </p>
         <table style="margin-left: 15px" aria-label="Table of states and email icon">
             <th scope="col" hidden>state</th>
-            <th scope="col" hidden>notified by email or not</th>
             <tr *ngFor="let state of process.states">
-                <td>
-                    <label class="opfab-checkbox"
-                        >{{ state.label }}
-                        <input
-                            type="checkbox"
-                            [checked]="state.checked"
-                            [id]="'opfab_notification_state_' + process.id + '.' + state.id"
-                            (click)="notificationConfigurationView.clickOnState(process.id, state.id)"
-                            [disabled]="!state.filteringNotificationAllowed" />
-                        <span class="opfab-checkbox-checkmark"></span>
-                    </label>
-                </td>
-                <td
-                    *ngIf="notificationConfigurationPage.isEmailEnabled"
-                    [id]="'opfab_email_notification_state_td_' + process.id + '.' + state.id"
-                    (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
-                    style="padding-left: 13px"
-                    class="opfab-notificationconfiguration-slash">
-                    <div [id]="'opfab_email_notification_state_div_' + process.id + '.' + state.id"></div>
+                <td style="display: inline-flex; width: 100%">
+                    <div style="float: left; width: 100%; max-width: 240px">
+                        <label class="opfab-checkbox opfab-notificationconfiguration-state-label"
+                            >{{ state.label }}
+                            <input
+                                type="checkbox"
+                                [checked]="state.checked"
+                                [id]="'opfab_notification_state_' + process.id + '.' + state.id"
+                                (click)="notificationConfigurationView.clickOnState(process.id, state.id)"
+                                [disabled]="!state.filteringNotificationAllowed" />
+                            <span class="opfab-checkbox-checkmark"></span>
+                        </label>
+                    </div>
+                    <div
+                        *ngIf="notificationConfigurationPage.isEmailEnabled"
+                        [id]="'opfab_email_notification_state_td_' + process.id + '.' + state.id"
+                        (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
+                        style="padding-left: 15px; float: right; margin-top: 5px"
+                        class="opfab-notificationconfiguration-slash">
+                        <div [id]="'opfab_email_notification_state_div_' + process.id + '.' + state.id"></div>
+                    </div>
                 </td>
             </tr>
         </table>
