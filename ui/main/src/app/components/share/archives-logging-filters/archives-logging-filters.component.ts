@@ -35,7 +35,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../multi-select/multi-select.component';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {TranslationService} from '@ofServices/translation/TranslationService';
+import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 
 @Component({
     selector: 'of-archives-logging-filters',
@@ -137,38 +137,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
                 this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
             seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
 
-        this.locale = {
-            format: 'YYYY-MM-DD HH:mm',
-            applyLabel: TranslationService.getTranslation('datePicker.applyLabel'),
-            daysOfWeek: TranslationService.getTranslation('datePicker.daysOfWeek'),
-            monthNames: TranslationService.getTranslation('datePicker.monthNames')
-        };
-
-        const currentDate = new Date(),
-            y = currentDate.getFullYear(),
-            m = currentDate.getMonth();
-        const startCurrentMonth = new Date(y, m, 1);
-        const endCurrentMonth = new Date(y, m + 1, 1);
-        const startPreviousMonth = new Date(y, m - 1, 1);
-
-        const todayTranslation = TranslationService.getTranslation('datePicker.today');
-        const yesterdayTranslation = TranslationService.getTranslation('datePicker.yesterday');
-        const last7DaysTranslation = TranslationService.getTranslation('datePicker.last7Days');
-        const last30DaysTranslation = TranslationService.getTranslation('datePicker.last30Days');
-        const thisMonthTranslation = TranslationService.getTranslation('datePicker.thisMonth');
-        const lastMonthTranslation = TranslationService.getTranslation('datePicker.lastMonth');
-
-        this.ranges = {
-            [todayTranslation]: [new Date().setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
-            [yesterdayTranslation]: [sub(new Date().setHours(0, 0, 0, 0), {days: 1}), new Date().setHours(0, 0, 0, 0)],
-            [last7DaysTranslation]: [sub(new Date(), {days: 7}).setHours(0, 0, 0, 0), new Date().setHours(24, 0, 0, 0)],
-            [last30DaysTranslation]: [
-                sub(new Date(), {days: 30}).setHours(0, 0, 0, 0),
-                new Date().setHours(24, 0, 0, 0)
-            ],
-            [thisMonthTranslation]: [startCurrentMonth, endCurrentMonth],
-            [lastMonthTranslation]: [startPreviousMonth, startCurrentMonth]
-        };
+        this.locale = DateRangePickerConfig.getLocale();
+        this.ranges = DateRangePickerConfig.getCustomRanges();
     }
 
     ngOnChanges(changes: SimpleChanges): void {

@@ -23,6 +23,7 @@
             "selectStateText": "Sélectionner un État",
             "selectTagText": "Sélectionner une Étiquette",
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
+            "businessDateRange": "PÉRIODE MÉTIER",
             "publishDateRange": "PÉRIODE DE PUBLICATION",
             "activeDateRange": "PÉRIODE D'ACTIVITÉ"
         },

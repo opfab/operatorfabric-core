@@ -23,7 +23,8 @@
             "selectStateText": "Select a State",
             "selectTagText": "Select a Tag",
             "toDateBeforeFromDate": "'To' date must be after 'From' date.",
-            "publishDateRange": "PUBLISH DATE RANGE",
+            "businessDateRange": "BUSINESS DATE RANGE",
+            "publishDateRange":"PUBLISH DATE RANGE",
             "activeDateRange": "ACTIVE DATE RANGE"
         },
         "result": {

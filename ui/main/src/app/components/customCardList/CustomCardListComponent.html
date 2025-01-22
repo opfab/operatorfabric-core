@@ -1,0 +1,106 @@
+<!-- Copyright (c) 2025, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div *ngIf="!isCustomScreenDefinitionExist">
+    <h1>Custom Screen {{id}} does not exist</h1>
+</div>
+
+<div *ngIf="isCustomScreenDefinitionExist">
+    <div class="opfab-custom-screen-header">
+        <div style="display: flex">
+            <form
+                class="opfab-date-range-input opfab-input"
+                style="margin-top: 28px; margin-bottom: 28px; width: 260px"
+                [formGroup]="headerForm">
+                <label class="opfab-date-range-label" for="opfab-publish-date-range" translate
+                    >shared.filters.businessDateRange</label
+                >
+                <input
+                    id="opfab-business-date-range"
+                    type="button"
+                    ngxDaterangepickerMd
+                    [locale]="dateRangePickerLocale"
+                    [ranges]="dateRangePickerCustomRanges"
+                    [alwaysShowCalendars]="true"
+                    [timePicker]="true"
+                    [timePicker24Hour]="true"
+                    [timePickerIncrement]="1"
+                    formControlName="businessDateRangesForm" />
+            </form>
+
+            <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 60px; min-width: 320px">
+                <div class="form-group">
+                    <div class="opfab-buttons">
+                        <button id="opfab-monitoring-btn-search" class="opfab-btn" (click)="sendQuery()" translate>
+                            button.search
+                        </button>
+                        <button
+                            id="opfab-monitoring-btn-reset"
+                            class="opfab-btn-cancel"
+                            (click)="resetForm()"
+                            translate>
+                            button.reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        style="
+            background-color: var(--opfab-bgcolor-darker);
+            border: solid 0px var(--opfab-bgcolor-darker);
+            margin-left: 5%;
+            margin-right: 5%;
+        ">
+        <ag-grid-angular
+            [rowData]="rowData$ | async"
+            [gridOptions]="gridOptions"
+            (gridReady)="onGridReady($event)"
+            (rowClicked)="selectCard($event.data.cardId)"
+            class="ag-theme-opfab">
+        </ag-grid-angular>
+
+        <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+            <div style="white-space: nowrap; margin-top: 17px">
+                <span translate> shared.resultsNumber </span> : {{ gridApi.paginationGetRowCount() }}
+            </div>
+            <div style="width: 40%; margin-top: 5px">
+                <ngb-pagination
+                    *ngIf="gridApi.paginationGetRowCount() > 10"
+                    [collectionSize]="gridApi.paginationGetRowCount()"
+                    [page]="page"
+                    [pageSize]="gridApi.paginationGetPageSize()"
+                    (pageChange)="updateResultPage($event)"
+                    [maxSize]="3"
+                    [rotate]="true">
+                </ngb-pagination>
+            </div>
+            <div class="opfab-custom-card-list-export-div">
+                <div
+                    id="opfab-monitoring-btn-exportToExcel"
+                    class="opfab-custom-card-list-export-btn"
+                    style="cursor: pointer"
+                    (click)="export()"
+                    fileName="monitoringResults">
+                    <span class="opfab-icon-export-data"></span>
+                    <span style="font-weight: bold" translate> shared.exportToExcel </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #cardDetail let-modal>
+    <div class="modal-body modal-body-squared">
+        <div>
+            <of-card [parentModalRef]="modalRef" [screenSize]="'lg'"> </of-card>
+        </div>
+    </div>
+</ng-template>

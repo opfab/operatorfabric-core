@@ -15,6 +15,7 @@ import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {add, addMilliseconds, startOfDay, startOfHour, startOfMonth, startOfWeek, startOfYear, sub} from 'date-fns';
 import {DateTimeFormatterService} from '../dateTimeFormatter/DateTimeFormatterService';
 import {ConfigService} from '../config/ConfigService';
+import {NearestDomainId} from './NearestDomainId';
 
 export class RealTimeDomainService {
     private static readonly OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
@@ -24,6 +25,7 @@ export class RealTimeDomainService {
     private static filteredLightCardStore: FilteredLightCardsStore;
     private static overlap = 0;
     private static followClockTick: boolean = true;
+    private static domains = [];
 
     public static init() {
         RealTimeDomainService.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -32,6 +34,14 @@ export class RealTimeDomainService {
         if (UserPreferencesService.getPreference('opfab.timeLine.domain') === 'TR') {
             UserPreferencesService.setPreference('opfab.timeLine.domain', 'RT');
         }
+        RealTimeDomainService.domains = ConfigService.getConfigValue('feed.timeline.domains', [
+            'RT',
+            'J',
+            '7D',
+            'W',
+            'M',
+            'Y'
+        ]);
 
         RealTimeDomainService.currentDomainId =
             UserPreferencesService.getPreference('opfab.timeLine.domain') ?? RealTimeDomainService.getDefaultDomainId();
@@ -40,8 +50,7 @@ export class RealTimeDomainService {
     }
 
     public static getDefaultDomainId() {
-        const domains = ConfigService.getConfigValue('feed.timeline.domains', ['RT', 'J', '7D', 'W', 'M', 'Y']);
-        return domains[0];
+        return RealTimeDomainService.domains[0];
     }
 
     public static getDomainId() {
@@ -127,6 +136,19 @@ export class RealTimeDomainService {
     public static setStartAndEndPeriod(startPeriod: number, endPeriod: number) {
         RealTimeDomainService.currentDomainId = undefined;
         RealTimeDomainService.setStartAndEndDomain(startPeriod, endPeriod);
+    }
+
+    public static saveUserPreferenceAsNearestDomain() {
+        const nearestDomainId = new NearestDomainId();
+        nearestDomainId.setDomainList(RealTimeDomainService.domains);
+
+        UserPreferencesService.setPreference(
+            'opfab.timeLine.domain',
+            nearestDomainId.getNearestDomainId(
+                RealTimeDomainService.currentDomain.startDate,
+                RealTimeDomainService.currentDomain.endDate
+            )
+        );
     }
 
     private static setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false) {

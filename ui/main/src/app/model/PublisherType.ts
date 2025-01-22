@@ -8,7 +8,7 @@
  */
 
 export enum PublisherType {
-    EXTERNAL,
-    ENTITY,
-    USER
+    EXTERNAL = 'EXTERNAL',
+    ENTITY = 'ENTITY',
+    USER = 'USER'
 }

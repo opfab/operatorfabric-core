@@ -438,6 +438,10 @@ export class LightCardsStore {
         return this.childCards.get(parentCardId);
     }
 
+    public getAllChildCards() {
+        return new Map(this.childCards);
+    }
+
     public getLoadingInProgress() {
         return this.loadingInProgress.asObservable();
     }

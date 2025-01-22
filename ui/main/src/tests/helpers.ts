@@ -50,7 +50,7 @@ export function getOneLightCard(lightCardTemplate?: any): Card {
         lightCardTemplate.publisherVersion ?? 'testPublisherVersion',
         lightCardTemplate.publishDate ?? today,
         lightCardTemplate.startDate ?? startTime,
-        lightCardTemplate.endDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
+        lightCardTemplate.endDate ?? null,
         lightCardTemplate.expirationDate ?? startTime + 1 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND,
         lightCardTemplate.severity ?? Severity.ALARM,
         lightCardTemplate.hasBeenAcknowledged ?? false,

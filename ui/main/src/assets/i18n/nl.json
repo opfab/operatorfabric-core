@@ -23,6 +23,7 @@
             "selectStateText": "Selecteer een Status",
             "selectTagText": "Selecteer een Label",
             "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen.",
+            "businessDateRange": "BEDRIJFSDATUMBEREIK",
             "publishDateRange": "PUBLICATIEDATUMBEREIK",
             "activeDateRange": "ACTIEVE DATUMBEREIK"
         },

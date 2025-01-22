@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,6 +8,7 @@
  */
 
 import {BusinessDataService} from '@ofServices/businessdata/businessdata.service';
+import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 
 declare const opfab: any;
@@ -32,6 +33,13 @@ export class BusinessConfigAPI {
                 }
                 BusinessConfigAPI.getTags = getTagsFunction;
                 logger.info('Registered function to get tags', LogOption.LOCAL_AND_REMOTE);
+            },
+            registerCustomScreen: function (customScreen) {
+                if (typeof customScreen !== 'object') {
+                    throw new TypeError('registerCustomScreen : the provided object is not an object');
+                }
+                CustomScreenService.addCustomScreenDefinition(customScreen);
+                logger.info('Registered custom screen', LogOption.LOCAL_AND_REMOTE);
             }
         };
         // prevent unwanted modifications from templates code or custom scripts
