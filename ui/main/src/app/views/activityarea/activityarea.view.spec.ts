@@ -222,8 +222,8 @@ describe('ActivityAreaView', () => {
         mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
-            {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
-            {login: 'currentUser', entitiesConnected: ['ENTITY1']}
+            {login: 'anotherUser', firstName: 'John', lastName: 'Smith', entitiesConnected: ['ENTITY1']},
+            {login: 'currentUser', firstName: 'James', entitiesConnected: ['ENTITY1']}
         ];
         usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
@@ -231,10 +231,7 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
-            'anotherUser',
-            'currentUser'
-        ]);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['John Smith', 'currentUser']);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });

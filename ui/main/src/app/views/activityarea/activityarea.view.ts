@@ -113,7 +113,13 @@ export class ActivityAreaView {
                             this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
                                 cluster.lines.forEach((line) => {
                                     if (line.entityId === entityId) {
-                                        line.connectedUsers.push(connectedUser.login);
+                                        if (connectedUser.firstName && connectedUser.lastName) {
+                                            line.connectedUsers.push(
+                                                connectedUser.firstName + ' ' + connectedUser.lastName
+                                            );
+                                        } else {
+                                            line.connectedUsers.push(connectedUser.login);
+                                        }
                                     }
                                 });
                             });
