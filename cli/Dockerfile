@@ -1,4 +1,4 @@
-FROM node:22.13.0-alpine@sha256:f2dc6eea95f787e25f173ba9904c9d0647ab2506178c7b5b7c5a3d02bc4af145
+FROM node:22.13.1-alpine@sha256:e2b39f7b64281324929257d0f8004fb6cb4bf0fdfb9aa8cedb235a766aec31da
 RUN apk add --no-cache bash bash-completion
 WORKDIR /usr/app
 RUN chown node:node /usr/app && mkdir /usr/app/opfab-cli
