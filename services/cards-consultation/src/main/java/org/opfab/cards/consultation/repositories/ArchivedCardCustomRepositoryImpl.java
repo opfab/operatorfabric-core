@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,10 +10,8 @@
 package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.consultation.model.ArchivedCard;
-import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.cards.consultation.model.LatestUpdateOnlyArchivedLightCard;
-import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
@@ -75,7 +73,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     }
 
     @Override
-    public Mono<Page<LightCard>> findWithUserAndFilter(Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
+    public Mono<Page<Card>> findWithUserAndFilter(Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
         CardsFilter queryFilter = filter.getT2();
         log.debug("findWithUserAndFilter {}", queryFilter);
 
@@ -113,7 +111,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                                 PaginationUtils.getCountFromJson(tuple.getT2())));
 
             } else
-                return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCard.class)
+                return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, Card.class)
                         .collectList()
                         .zipWith(template.aggregate(countAgg, ARCHIVED_CARDS_COLLECTION, String.class)
                                 .defaultIfEmpty("{\"count\":0}")
@@ -127,7 +125,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                         .collectList()
                         .map(PageImpl::new);
             } else
-                return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LightCard.class)
+                return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, Card.class)
                         .collectList()
                         .map(PageImpl::new);
         }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.opfab.cards.consultation.model.LightCard;
+import org.opfab.cards.consultation.model.Card;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class ConnectedRecipientsPreviewService {
         this.cardSubscriptionService = cardSubscriptionService;
     }
 
-    public List<String> getConnectedRecipients(LightCard lightcard) {
+    public List<String> getConnectedRecipients(Card lightcard) {
         List<String> connectedRecipients = new ArrayList<>();
 
         List<String> cardRecipients = lightcard.getEntityRecipients();

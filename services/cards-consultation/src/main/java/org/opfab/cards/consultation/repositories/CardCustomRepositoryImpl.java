@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardOperationTypeEnum;
 import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
@@ -76,7 +75,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	CurrentUserWithPerimeters currentUserWithPerimeters)
 	{
 		return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard ->
-			new CardOperation(CardOperationTypeEnum.ADD, null, LightCard.copy(lightCard))
+			new CardOperation(CardOperationTypeEnum.ADD, null, lightCard)
 		);
 	}
 	
@@ -190,14 +189,14 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
 
         if (pageableRequest.isPaged()) {
-            return template.aggregate(agg, CARDS_COLLECTION, LightCard.class)
+            return template.aggregate(agg, CARDS_COLLECTION, Card.class)
                     .cast(Object.class).collectList()
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
         } else {
-            return template.aggregate(agg, CARDS_COLLECTION, LightCard.class)
+            return template.aggregate(agg, CARDS_COLLECTION, Card.class)
                     .cast(Object.class).collectList()
                     .map(PageImpl::new);
         }

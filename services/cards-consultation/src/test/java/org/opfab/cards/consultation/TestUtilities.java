@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -266,7 +266,7 @@ public class TestUtilities {
     }
 
 
-    public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
+    public static boolean checkIfCardActiveInRange(Card card, Instant rangeStart, Instant rangeEnd) {
 
         Instant cardStart = card.getStartDate();
         Instant cardEnd = card.getEndDate();
@@ -289,7 +289,7 @@ public class TestUtilities {
         return result;
     }
 
-    public static boolean checkIfPageIsSorted(Page<LightCard> page) {
+    public static boolean checkIfPageIsSorted(Page<Card> page) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -305,7 +305,7 @@ public class TestUtilities {
         }
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCard> page, Predicate<LightCard> criteria) {
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<Card> page, Predicate<Card> criteria) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;

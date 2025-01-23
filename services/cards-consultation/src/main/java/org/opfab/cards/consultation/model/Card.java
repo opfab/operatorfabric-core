@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -103,12 +103,12 @@ public class Card {
     private List<TimeSpan> timeSpans;
 
     @JsonIgnore
-    private List<String> usersAcks;
+    private List<String> usersAcks; // information not needed in the front
 
     private List<String> entitiesAcks;
 
     @JsonIgnore
-    private List<String> usersReads;
+    private List<String> usersReads; // information not needed in the front
 
     @Transient
     private Boolean hasBeenAcknowledged;
