@@ -11,7 +11,7 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from './model/Entity';
 import {EntitiesServer} from './server/EntitiesServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RoleEnum} from './model/RoleEnum';
 import {EntitiesTree} from './model/EntitiesTree';

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse} from 'app/server/ServerResponse';
 
 export abstract class HandlebarsTemplateServer {
     abstract getTemplate(

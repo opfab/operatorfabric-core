@@ -13,10 +13,10 @@ import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
 import {MonitoringConfig} from '../model/MonitoringConfig';
 import {RealTimeScreens} from '../model/RealTimeScreensConfig';
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse} from 'app/server/ServerResponse';
 import {map, Observable} from 'rxjs';
 import {ConfigServer} from './ConfigServer';
-import {AngularServer} from 'app/server/angular.server';
+import {AngularServer} from 'app/server/AngularServer';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessMonitoringConfig} from '../model/ProcessMonitoringConfig';
 

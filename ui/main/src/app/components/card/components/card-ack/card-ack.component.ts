@@ -20,7 +20,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';

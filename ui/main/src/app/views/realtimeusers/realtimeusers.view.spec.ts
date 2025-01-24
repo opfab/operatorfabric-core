@@ -12,7 +12,7 @@ import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RealtimeUsersView} from './realtimeusers.view';
 import {RealtimePage} from './realtimePage';

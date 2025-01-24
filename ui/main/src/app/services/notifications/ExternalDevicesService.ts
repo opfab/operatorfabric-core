@@ -11,7 +11,7 @@ import {map} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
 import {DeviceConfiguration, Notification, SignalMapping, UserConfiguration} from './model/ExternalDevices';
 import {ExternalDevicesServer} from './server/ExternalDevicesServer';
-import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LoggerService} from '@ofServices/logs/LoggerService';

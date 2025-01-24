@@ -12,7 +12,7 @@ import {convertCardToCardForPublishing} from '@ofServices/cards/CardConverter';
 import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReportData';
 import {I18n} from 'app/model/I18n';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {firstValueFrom} from 'rxjs';

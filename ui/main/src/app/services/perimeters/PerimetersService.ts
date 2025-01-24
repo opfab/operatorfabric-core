@@ -11,7 +11,7 @@ import {Observable, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
 import {PerimetersServer} from './server/PerimetersServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';

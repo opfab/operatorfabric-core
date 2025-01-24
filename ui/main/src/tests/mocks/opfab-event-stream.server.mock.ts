@@ -10,7 +10,7 @@
 import {CardOperation} from '@ofServices/events/model/CardOperation';
 import {Card} from 'app/model/Card';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {Observable, of, Subject} from 'rxjs';
 
 export class OpfabEventStreamServerMock implements OpfabEventStreamServer {

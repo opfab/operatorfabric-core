@@ -9,7 +9,7 @@
 import {UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {I18n} from 'app/model/I18n';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';

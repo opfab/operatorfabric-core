@@ -8,7 +8,7 @@
  */
 
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UsersService} from '@ofServices/users/UsersService';

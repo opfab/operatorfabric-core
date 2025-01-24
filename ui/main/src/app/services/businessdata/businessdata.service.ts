@@ -9,7 +9,7 @@
 
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from './server/BusinessDataServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import * as _ from 'lodash-es';

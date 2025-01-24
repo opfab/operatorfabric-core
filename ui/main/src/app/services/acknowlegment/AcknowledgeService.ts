@@ -16,7 +16,7 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {Card} from 'app/model/Card';
 import {Observable} from 'rxjs';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
-import {ServerResponse} from '../../business/server/serverResponse';
+import {ServerResponse} from '../../server/ServerResponse';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {ProcessesService} from '../processes/ProcessesService';

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse} from 'app/server/ServerResponse';
 import {UserActionLogsServer} from './server/UserActionLogsServer';
 import {Observable} from 'rxjs';
 import {UserActionLog} from './model/UserActionLog';

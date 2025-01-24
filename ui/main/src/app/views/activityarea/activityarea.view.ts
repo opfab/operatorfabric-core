@@ -8,7 +8,7 @@
  */
 
 import {Utilities} from '../../utils/utilities';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';

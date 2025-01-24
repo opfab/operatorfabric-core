@@ -18,7 +18,7 @@ import {Guid} from 'guid-typescript';
 import SpyObj = jasmine.SpyObj;
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {UsersServerMock} from './mocks/UsersServer.mock';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesServerMock} from './mocks/processesServer.mock';
 import {Process} from '@ofServices/processes/model/Processes';

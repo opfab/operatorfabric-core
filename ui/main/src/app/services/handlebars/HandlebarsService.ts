@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {HandlebarsHelper} from './HandlebarsHelper';
 import {HandlebarsAPI} from 'app/api/handlebars.api';
 import {HandlebarsTemplateServer} from './server/HandlebarsTemplateServer';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 
 export class HandlebarsService {
     private static templateCache: Map<string, Function> = new Map();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,9 @@ import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AngularServer} from '../../../server/angular.server';
+import {AngularServer} from '../../../server/AngularServer';
 import {UsersServer} from '@ofServices/users/server/UsersServer';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 @Injectable({
     providedIn: 'root'
 })

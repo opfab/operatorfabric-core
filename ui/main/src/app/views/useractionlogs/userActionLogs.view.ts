@@ -11,7 +11,7 @@ import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Page} from 'app/model/Page';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

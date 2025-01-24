@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,9 +11,9 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {AngularServer} from '../../../server/angular.server';
+import {AngularServer} from '../../../server/AngularServer';
 import {AcknowledgeServer} from '@ofServices/acknowlegment/server/AcknowledgeServer';
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse} from 'app/server/ServerResponse';
 
 @Injectable({
     providedIn: 'root'

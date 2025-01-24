@@ -32,7 +32,7 @@ import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {I18n} from 'app/model/I18n';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {HandlebarsTemplateServerMock} from '@tests/mocks/HandlebarsTemplateServer.mock';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 

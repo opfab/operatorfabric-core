@@ -13,7 +13,7 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';

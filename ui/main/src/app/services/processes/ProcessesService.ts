@@ -17,7 +17,7 @@ import {
 } from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class ProcessesService {

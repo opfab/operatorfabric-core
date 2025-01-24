@@ -15,7 +15,7 @@ import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesS
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {ExternaldevicesModalComponent} from '../editModal/externaldevices-modal.component';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/spinner.component';

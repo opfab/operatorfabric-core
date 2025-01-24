@@ -14,7 +14,7 @@ import {CardsService} from '@ofServices/cards/CardsService';
 import {convertCardToCardForPublishing} from '@ofServices/cards/CardConverter';
 import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReportData';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 
 describe('UserCard CardSender', () => {

@@ -14,7 +14,7 @@ import {environment} from './environments/environment';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {TokenInjector} from 'app/server/interceptors.service';
+import {TokenInjector} from 'app/server/TokenInjector';
 import {AcknowledgeServer} from './app/services/acknowlegment/server/AcknowledgeServer';
 import {AngularAcknowledgeServer} from './app/services/acknowlegment/server/AngularAcknowledgementServer';
 import {EntitiesServer} from './app/services/entities/server/EntitiesServer';

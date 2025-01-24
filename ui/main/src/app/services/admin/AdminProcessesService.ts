@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofServices/processes/model/Processes';
 import {AdminProcessesServer} from './server/AdminProcessesServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LoggerService} from '@ofServices/logs/LoggerService';

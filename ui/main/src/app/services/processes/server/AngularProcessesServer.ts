@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {map, Observable} from 'rxjs';
-import {AngularServer} from '../../../server/angular.server';
+import {AngularServer} from '../../../server/AngularServer';
 
 @Injectable({
     providedIn: 'root'

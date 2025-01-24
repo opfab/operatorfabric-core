@@ -35,7 +35,7 @@ import {OpfabStore} from '../../store/opfabStore';
 import {ApplicationUpdateService} from '../events/ApplicationUpdateService';
 import {SystemNotificationService} from '../notifications/SystemNotificationService';
 import {ApplicationLoadingComponent} from './ApplicationLoadingComponent';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {Utilities} from '../../utils/utilities';
 import {ModalService} from '../modal/ModalService';
 import {SessionManagerService} from '../sessionManager/SessionManagerService';

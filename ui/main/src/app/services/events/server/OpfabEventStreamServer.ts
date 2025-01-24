@@ -8,7 +8,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ServerResponse} from '../../../business/server/serverResponse';
+import {ServerResponse} from '../../../server/ServerResponse';
 
 export abstract class OpfabEventStreamServer {
     abstract initStream();

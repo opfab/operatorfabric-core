@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Utilities} from '../../utils/utilities';
 import {ConfigServer} from '../config/server/ConfigServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {TranslationLib} from './lib/TranslationLib';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {environment} from '@env/environment';

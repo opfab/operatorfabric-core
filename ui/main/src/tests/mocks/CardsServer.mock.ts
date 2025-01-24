@@ -13,7 +13,7 @@ import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {Card} from 'app/model/Card';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {Observable, of} from 'rxjs';
 
 export class CardsServerMock implements CardsServer {

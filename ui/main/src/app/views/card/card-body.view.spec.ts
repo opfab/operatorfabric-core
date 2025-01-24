@@ -11,7 +11,7 @@ import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {CardBodyView} from './card-body.view';
 import {User} from '@ofServices/users/model/User';
 import {UsersService} from '@ofServices/users/UsersService';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {firstValueFrom} from 'rxjs';
 import {getOneCard} from '@tests/helpers';

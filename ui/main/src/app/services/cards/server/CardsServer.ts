@@ -12,7 +12,7 @@ import {CardForPublishing} from '../model/CardForPublishing';
 import {CardCreationReportData} from '../model/CardCreationReportData';
 import {FieldToTranslate} from '@ofServices/cards/model/FieldToTranslate';
 import {Observable} from 'rxjs';
-import {ServerResponse} from '../../../business/server/serverResponse';
+import {ServerResponse} from '../../../server/ServerResponse';
 import {Card} from 'app/model/Card';
 
 export abstract class CardsServer {

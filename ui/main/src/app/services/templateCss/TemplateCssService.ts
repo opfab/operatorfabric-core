@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {map, Observable, of} from 'rxjs';
 import {Utilities} from '../../utils/utilities';
 import {TemplateCssServer} from './server/TemplateCssServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class TemplateCssService {

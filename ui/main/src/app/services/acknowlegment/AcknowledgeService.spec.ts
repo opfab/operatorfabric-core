@@ -26,7 +26,7 @@ import {UsersService} from '../users/UsersService';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
 import {ProcessesService} from '../processes/ProcessesService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';

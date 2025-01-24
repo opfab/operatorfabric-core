@@ -11,7 +11,7 @@ import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofServices/groups/model/Group';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {GroupsServer} from './server/GroupsServer';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';

@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ServerResponse} from 'app/business/server/serverResponse';
+import {ServerResponse} from 'app/server/ServerResponse';
 import {Observable} from 'rxjs';
-import {AngularServer} from '../../../server/angular.server';
+import {AngularServer} from '../../../server/AngularServer';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Injectable} from '@angular/core';

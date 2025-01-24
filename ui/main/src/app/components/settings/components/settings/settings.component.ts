@@ -14,7 +14,7 @@ import {SettingsView} from 'app/views/settings/settings.view';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {Subject, takeUntil} from 'rxjs';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';

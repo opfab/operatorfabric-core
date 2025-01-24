@@ -13,7 +13,7 @@ import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {UserActionLogsView} from './userActionLogs.view';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {User} from '@ofServices/users/model/User';

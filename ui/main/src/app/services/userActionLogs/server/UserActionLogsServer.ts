@@ -10,7 +10,7 @@
 import {Page} from 'app/model/Page';
 import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
 import {Observable} from 'rxjs';
-import {ServerResponse} from '../../../business/server/serverResponse';
+import {ServerResponse} from '../../../server/ServerResponse';
 
 export abstract class UserActionLogsServer {
     abstract queryUserActionLogs(filters: Map<string, string[]>): Observable<ServerResponse<Page<UserActionLog>>>;

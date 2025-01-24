@@ -22,7 +22,7 @@ import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLig
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
 import {OpfabStore} from '../../../../store/opfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';

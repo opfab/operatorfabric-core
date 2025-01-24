@@ -14,7 +14,7 @@ import {map} from 'rxjs/operators';
 import {I18n} from 'app/model/I18n';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {CardsServer} from './server/CardsServer';
-import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
 import {AcknowledgeService} from '../acknowlegment/AcknowledgeService';
 import {Card} from 'app/model/Card';
 import {FieldToTranslate} from './model/FieldToTranslate';

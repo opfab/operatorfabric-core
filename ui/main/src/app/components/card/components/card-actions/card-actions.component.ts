@@ -28,7 +28,7 @@ import {UserPermissionsService} from '@ofServices/userPermissions/UserPermission
 import {UsersService} from '@ofServices/users/UsersService';
 import {Subject} from 'rxjs';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';

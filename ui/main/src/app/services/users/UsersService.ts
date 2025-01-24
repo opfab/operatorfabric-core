@@ -14,7 +14,7 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {UsersServer} from './server/UsersServer';
-import {ServerResponse, ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';

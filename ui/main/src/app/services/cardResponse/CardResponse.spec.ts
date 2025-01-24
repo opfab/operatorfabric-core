@@ -15,7 +15,7 @@ import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {CardResponseService} from './CardResponseService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {CardsServerMock} from '@tests/mocks/CardsServer.mock';

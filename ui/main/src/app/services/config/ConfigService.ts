@@ -14,7 +14,7 @@ import {Locale} from '@ofServices/config/model/Locale';
 import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
 import {ConfigServer} from './server/ConfigServer';
 import {MonitoringConfig} from './model/MonitoringConfig';
-import {ServerResponseStatus} from '../../business/server/serverResponse';
+import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
 

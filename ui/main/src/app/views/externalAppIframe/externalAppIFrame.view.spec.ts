@@ -8,7 +8,7 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {firstValueFrom} from 'rxjs';
