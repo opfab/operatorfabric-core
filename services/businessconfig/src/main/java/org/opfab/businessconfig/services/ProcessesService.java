@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,6 +36,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -706,7 +707,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         ProcessMonitoring processMonitoring = objectMapper.readValue(fileContent, ProcessMonitoring.class);
 
-        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8)),
         rootPath.toString() + "/processmonitoring.json");
 
         processMonitoringCache = processMonitoring;
