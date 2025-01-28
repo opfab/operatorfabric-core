@@ -361,6 +361,7 @@
         "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified.",
         "sendCardsByEmail": "Send notification by email",
         "emailToPlainText": "Send emails in plain text",
+        "disableCardContentInEmails": "Disable card content in emails",
         "sendDailyEmail": "Send daily email to recap the cards of the day",
         "sendWeeklyEmail": "Send weekly email to recap the cards of the week",
         "email": "EMAIL",

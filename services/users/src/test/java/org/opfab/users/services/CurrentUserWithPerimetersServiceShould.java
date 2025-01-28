@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -155,6 +155,7 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setOpenNextCardOnAcknowledgment(false);
                 userSettings.setSendCardsByEmail(false);
                 userSettings.setEmailToPlainText(false);
+                userSettings.setDisableCardContentInEmails(false);
                 userSettings.setSendDailyEmail(false);
                 userSettings.setSendWeeklyEmail(false);
                 userSettings.setProcessesStatesNotNotified(processesStatesNotNotified);

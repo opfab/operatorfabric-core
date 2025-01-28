@@ -66,15 +66,18 @@ export class SettingsView {
         const sendCardsByEmail: boolean = Boolean(
             this.newSettings?.sendCardsByEmail ?? this.getSetting('sendCardsByEmail')
         );
+        const disableCardContentInEmails: boolean = Boolean(
+            this.newSettings?.disableCardContentInEmails ?? this.getSetting('disableCardContentInEmails')
+        );
 
-        return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail;
+        return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail || disableCardContentInEmails;
     }
 
     private isEmailFilled(): boolean {
         return Boolean(this.newSettings?.email ?? this.getSetting('email'));
     }
 
-    public isEmailAndEmailCheckboxesCoherent(): boolean {
+    public areEmailAndEmailCheckboxesCoherent(): boolean {
         if (this.areEmailCheckboxesTicked()) {
             if (!this.isEmailFilled()) {
                 return false;

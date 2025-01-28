@@ -291,6 +291,10 @@ definitions:
         type: boolean
         description: |-
           If this is set to true, the emails' bodies will be plain text
+      disableCardContentInEmails:
+        type: boolean
+        description: |-
+          If this is set to true, the email templates will be disabled
       sendDailyEmail:
         type: boolean
         description: |-
@@ -346,6 +350,10 @@ definitions:
         type: boolean
         description: |-
           If this is set to true, the emails' bodies will be plain text
+      disableCardContentInEmails:
+        type: boolean
+        description: |-
+          If this is set to true, the email templates will be disabled
       sendDailyEmail:
         type: boolean
         description: |-

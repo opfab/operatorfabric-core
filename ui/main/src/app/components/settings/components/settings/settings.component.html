@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -156,18 +156,6 @@
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
             </div>
-            <div id="opfab-setting-input-emailToPlainText">
-                <label class="opfab-checkbox">
-                    <span class="label-email-to-plain-text" translate> settings.emailToPlainText </span>
-                    <input type="checkbox" formControlName="emailToPlainText" />
-                    <span class="opfab-checkbox-checkmark"></span>
-                </label>
-            </div>
-        </div>
-        <div
-            class="opfab-settings-item"
-            *ngIf="settingsView.isSettingVisible('sendCardsByEmail')"
-            style="margin-top: 20px">
             <div *ngIf="settingsView.isSettingVisible('sendDailyEmail')" id="opfab-setting-input-sendDailyEmail">
                 <label class="opfab-checkbox">
                     <span class="label-send-daily-email" translate> settings.sendDailyEmail </span>
@@ -179,6 +167,29 @@
                 <label class="opfab-checkbox">
                     <span class="label-send-weekly-email" translate> settings.sendWeeklyEmail </span>
                     <input type="checkbox" formControlName="sendWeeklyEmail" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+        </div>
+        <div
+            class="opfab-settings-item"
+            *ngIf="settingsView.isSettingVisible('sendCardsByEmail')"
+            style="margin-top: 20px">
+            <div id="opfab-setting-input-emailToPlainText" *ngIf="settingsView.isSettingVisible('emailToPlainText')">
+                <label class="opfab-checkbox">
+                    <span class="label-email-to-plain-text" translate> settings.emailToPlainText </span>
+                    <input type="checkbox" formControlName="emailToPlainText" />
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+            <div
+                id="opfab-setting-input-disableCardContentInEmails"
+                *ngIf="settingsView.isSettingVisible('disableCardContentInEmails')">
+                <label class="opfab-checkbox">
+                    <span class="label-disable-card-content-in-emails" translate>
+                        settings.disableCardContentInEmails
+                    </span>
+                    <input type="checkbox" formControlName="disableCardContentInEmails" />
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
             </div>

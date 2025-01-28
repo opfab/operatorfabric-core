@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,6 +41,7 @@ public class UserSettings {
     private Boolean openNextCardOnAcknowledgment;
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
+    private Boolean disableCardContentInEmails;
     private Boolean sendDailyEmail;
     private Boolean sendWeeklyEmail;
     private String email;
@@ -72,6 +73,7 @@ public class UserSettings {
         this.openNextCardOnAcknowledgment = settings.getOpenNextCardOnAcknowledgment();
         this.sendCardsByEmail = settings.getSendCardsByEmail();
         this.emailToPlainText = settings.getEmailToPlainText();
+        this.disableCardContentInEmails = settings.getDisableCardContentInEmails();
         this.sendDailyEmail = settings.getSendDailyEmail();
         this.sendWeeklyEmail = settings.getSendWeeklyEmail();
         this.email = settings.getEmail();
@@ -245,6 +247,14 @@ public class UserSettings {
         this.emailToPlainText = emailToPlainText;
     }
 
+    public Boolean getDisableCardContentInEmails() {
+        return disableCardContentInEmails;
+    }
+
+    public void setDisableCardContentInEmails(Boolean disableCardContentInEmails) {
+        this.disableCardContentInEmails = disableCardContentInEmails;
+    }
+
     public Boolean getSendDailyEmail() {
         return sendDailyEmail;
     }
@@ -367,6 +377,8 @@ public class UserSettings {
                 this.getSendCardsByEmail());
         result.emailToPlainText = ObjectUtils.getNotNullOrDefault(other.getEmailToPlainText(),
                 this.getEmailToPlainText());
+        result.disableCardContentInEmails = ObjectUtils.getNotNullOrDefault(other.getDisableCardContentInEmails(),
+                this.getDisableCardContentInEmails());
         result.sendDailyEmail = ObjectUtils.getNotNullOrDefault(other.getSendDailyEmail(),
                 this.getSendDailyEmail());
         result.sendWeeklyEmail = ObjectUtils.getNotNullOrDefault(other.getSendWeeklyEmail(),

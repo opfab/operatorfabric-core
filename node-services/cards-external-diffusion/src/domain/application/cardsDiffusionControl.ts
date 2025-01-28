@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,6 +75,10 @@ export default class CardsDiffusionControl {
 
     protected shouldEmailBePlainText(userWithPerimeters: any): boolean {
         return userWithPerimeters?.emailToPlainText ?? false;
+    }
+
+    protected shouldEmailTemplateBeDisabled(userWithPerimeters: any): boolean {
+        return userWithPerimeters?.disableCardContentInEmails ?? false;
     }
 
     protected removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {

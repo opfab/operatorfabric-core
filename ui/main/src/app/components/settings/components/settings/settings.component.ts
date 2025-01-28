@@ -85,6 +85,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'sendWeeklyEmail',
             'email',
             'timezoneForEmails',
+            'disableCardContentInEmails',
             'hallwayMode',
             'showAcknowledgmentFooter',
             'openNextCardOnAcknowledgment',
@@ -152,7 +153,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     saveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
-        if (!this.settingsView.isEmailAndEmailCheckboxesCoherent()) {
+        if (!this.settingsView.areEmailAndEmailCheckboxesCoherent()) {
             AlertMessageService.sendAlertMessage({
                 message: '',
                 i18n: {key: 'settings.input.errors.emailAddressMissing'},

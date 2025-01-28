@@ -1,0 +1,13 @@
+// Copyright (c) 2025 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.6.X to release 4.7.0
+
+== User settings
+
+A new setting to activate or not the templating of emails has been added in the settings screen of the user.
+This setting can be hidden in the configuration file of the web-ui by the field "settings.settingsScreen.hiddenSettings" by adding the value "disableCardContentInEmails".

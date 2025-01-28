@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -180,6 +180,7 @@ a|authentication mode, available options:
 "emailToPlainText" : if present, the email option to have the emails sent as plain text will not be displayed +
 "sendDailyEmail" : if present, the email option to have the daily email recap will not be displayed +
 "sendWeeklyEmail" : if present, the email option to have the weekly email recap will not be displayed +
+"disableCardContentInEmails" : if present, the email option to activate or not the templating of emails will not be displayed +
 "timezoneForEmails" : if present, the field to choose the timezone for emails will not be displayed +
 "hallwayMode": if present, the checkbox to activate hallway mode won't be displayed +
 "openNextCardOnAcknowledgment": if present, the checkbox to automaticaly open next card after acknowledgment won't be displayed +

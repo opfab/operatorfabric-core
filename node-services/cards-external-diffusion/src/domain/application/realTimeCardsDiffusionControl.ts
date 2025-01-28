@@ -106,6 +106,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         if (resp.isValid()) {
             const userWithPerimeters: UserWithPerimeters = resp.getData();
             const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
+            const templateDisabled = this.shouldEmailTemplateBeDisabled(userWithPerimeters);
             const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
@@ -121,7 +122,8 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         cardForUser,
                         userWithPerimeters.email,
                         emailToPlainText,
-                        timezoneForEmails
+                        timezoneForEmails,
+                        templateDisabled
                     );
                 }
             }
@@ -132,14 +134,15 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         card: Card,
         userEmail: string | undefined,
         emailToPlainText: boolean,
-        timezoneForEmails: string
+        timezoneForEmails: string,
+        templateDisabled: boolean
     ): Promise<void> {
         if (userEmail == null) return;
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(card, userEmail, emailToPlainText, timezoneForEmails);
+                    await this.sendMail(card, userEmail, emailToPlainText, timezoneForEmails, templateDisabled);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
                     await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
@@ -174,7 +177,13 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return userWithPerimeters.emailToPlainText ?? false;
     }
 
-    async sendMail(card: Card, to: string, emailToPlainText: boolean, timezoneForEmails: string): Promise<void> {
+    async sendMail(
+        card: Card,
+        to: string,
+        emailToPlainText: boolean,
+        timezoneForEmails: string,
+        templateDisabled: boolean
+    ): Promise<void> {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
         let subject =
             this.subjectPrefix +
@@ -186,7 +195,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails);
         if (card.endDate != null)
             subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails);
-        const body = await this.processCardTemplate(card, timezoneForEmails);
+        const body = await this.processCardTemplate(card, timezoneForEmails, templateDisabled);
         try {
             await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
             this.registerNewSending(to);
@@ -208,7 +217,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    async processCardTemplate(card: Card, timezoneForEmails: string): Promise<string> {
+    async processCardTemplate(card: Card, timezoneForEmails: string, templateDisabled: boolean): Promise<string> {
         let cardBodyHtml =
             this.bodyPrefix +
             ' <a href=" ' +
@@ -230,7 +239,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 card.processVersion
             );
             const stateName = card.state;
-            if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null) {
+            if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null && templateDisabled === false) {
                 const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
                 if (cardContentResponse.isValid()) {
                     const cardContent = cardContentResponse.getData();
@@ -245,10 +254,10 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             }
             if (this.publisherEntityPrefix != null && card.publisher != null && card.publisherType === 'ENTITY') {
                 const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(card.publisher);
-                cardBodyHtml = cardBodyHtml + ' <br/>' + this.publisherEntityPrefix + entity.name + '.';
+                cardBodyHtml = cardBodyHtml + ' <br><br>' + this.publisherEntityPrefix + entity.name + '.';
             }
             if (this.bodyPostfix != null) {
-                cardBodyHtml = cardBodyHtml + ' <br/>' + this.bodyPostfix;
+                cardBodyHtml = cardBodyHtml + ' <br><br>' + this.bodyPostfix;
             }
         } catch (e) {
             this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);

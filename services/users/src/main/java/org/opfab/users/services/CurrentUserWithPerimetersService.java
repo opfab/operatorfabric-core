@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@ package org.opfab.users.services;
 
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
-import org.opfab.users.model.CurrentUserWithPerimeters;
 
 import java.util.*;
 import java.util.function.Function;
@@ -85,6 +84,8 @@ public class CurrentUserWithPerimetersService {
                     .setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
             userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
+            userWithPerimeterData
+                    .setDisableCardContentInEmails(operationResult.getResult().getDisableCardContentInEmails());
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setSendWeeklyEmail(operationResult.getResult().getSendWeeklyEmail());
             userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
