@@ -204,6 +204,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         }
     }
 
+    protected shouldLightcardBeNotified(lightcard: Card): boolean {
+        return (
+            !lightcard.actions?.includes(CardAction.NOT_NOTIFIED) ||
+            this.currentUserWithPerimeters.userData.entities.includes(lightcard.publisher)
+        );
+    }
+
     isCardPublishedBeforeAckDemand(lightCard: Card): boolean {
         return lightCard.publishDate < this.ackAllCardsDemandTimestamp;
     }

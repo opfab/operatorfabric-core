@@ -33,6 +33,23 @@ describe('Sound decisions', () => {
             done();
         });
 
+        it(
+            'No sound and system notification for card with action is NOT_NOTIFIED and user entities does not contains ' +
+                'card publisher entity',
+            (done) => {
+                const publishDate = new Date().getTime();
+                const card1 = getOneLightCard({
+                    publishDate: publishDate,
+                    publisher: 'ENTITY1_FR',
+                    actions: [CardAction.NOT_NOTIFIED]
+                });
+                NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
+                expect(NotificationDecision.isSoundToBePlayedForCard(card1)).toBeFalse();
+                expect(NotificationDecision.isSystemNotificationToBeShownForCard(card1)).toBeFalse();
+                done();
+            }
+        );
+
         it('No sound and system notification for cards recently sent by the user', (done) => {
             const publishDate = new Date().getTime();
             const card1 = getOneLightCard({publishDate: publishDate});

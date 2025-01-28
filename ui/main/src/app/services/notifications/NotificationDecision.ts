@@ -78,7 +78,8 @@ export class NotificationDecision {
             return (
                 !card.hasBeenRead &&
                 this.checkCardHasBeenPublishAfterLastUserAction(card) &&
-                this.checkCardIsRecent(card)
+                this.checkCardIsRecent(card) &&
+                this.shouldCardBeNotified(card)
             );
         }
     }
@@ -92,9 +93,9 @@ export class NotificationDecision {
 
     public static isSystemNotificationToBeShownForCard(card: Card) {
         if (this.lastSentCards.get(card.id) && !this.checkSentCardIsRecentlyPublished(card))
-            return false; // no sound as the card was sent by the current user
+            return false; // no system notification as the card was sent by the current user
         else {
-            return !card.hasBeenRead && this.checkCardIsRecent(card);
+            return !card.hasBeenRead && this.checkCardIsRecent(card) && this.shouldCardBeNotified(card);
         }
     }
 
@@ -149,5 +150,9 @@ export class NotificationDecision {
         setTimeout(() => {
             this.cleanSentCards();
         }, this.CLEAN_CARDS_PERIOD);
+    }
+
+    private static shouldCardBeNotified(card: Card): boolean {
+        return !card.actions?.includes(CardAction.NOT_NOTIFIED);
     }
 }

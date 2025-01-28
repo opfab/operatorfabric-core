@@ -76,6 +76,24 @@ Scenario: ResetCardsReadsAndAcks
 }
 """
 
+    * def cardWithNotNotifiedAction =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "cardWithNotNotifiedAction",
+	"state": "messageState",
+    "groupRecipients": ["Maintainer"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"actions" : ["NOT_NOTIFIED"]
+}
+"""
+
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
@@ -176,6 +194,40 @@ Scenario: ResetCardsReadsAndAcks
     Then status 200
     And match response.card.hasBeenRead == false
     And match response.card.hasBeenAcknowledged == false
+    And match response.card.uid == uid
+
+    #Send a card with action NOT_NOTIFIED and call resetReadAndAcks endpoint
+    # Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
+    And request cardWithNotNotifiedAction
+    When method post
+    Then status 201
+
+    Given url opfabUrl + 'cards-consultation/cards/api_test.cardWithNotNotifiedAction'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == false
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.actions == ["NOT_NOTIFIED"]
+    And def uid = response.card.uid
+
+    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks/' + uid
+    And header Authorization = 'Bearer ' + authTokenInternal
+    And request ''
+    When method post
+    Then status 200
+
+    #get card and check actions does not contain 'NOT_NOTIFIED' and hasBeenRead/hasBeenAcknowledged is set to false and entitiesAck is empty
+    Given url opfabUrl + 'cards-consultation/cards/api_test.cardWithNotNotifiedAction'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.card.hasBeenRead == false
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.entitiesAcks == '#notpresent'
+    And match response.card.actions == '#notpresent'
     And match response.card.uid == uid
 
   Scenario: Delete the test card

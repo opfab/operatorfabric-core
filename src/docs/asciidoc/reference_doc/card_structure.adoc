@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -166,6 +166,8 @@ A list of predetermined actions that will be executed upon receiving the card. T
 - PROPAGATE_READ_ACK_TO_PARENT_CARD : used only for response cards. When receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 - KEEP_EXISTING_ACKS_AND_READS : used to keep existing reads and acks when updating a card
 - STORE_ONLY_IN_ARCHIVES : used to store the card only in archivedCards collection and not in cards collection. No notification will be sent to UI, so the card will not be displayed in the feed and in monitoring screen.
+- NOT_NOTIFIED : when this action is set, the card is not visible in the card feed except for the publisher but it is visible in all the other screens : monitoring screen / agenda / timeline.
+The card is visible in the feed when the card will be reminded.
 
 === Business period 
 

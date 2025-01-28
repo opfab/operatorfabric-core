@@ -36,6 +36,7 @@
                 <div *ngFor="let currentLightCard of lightCards" style="margin-right: -10px">
                     <div style="padding-right: 20px; margin-bottom: 10px">
                         <of-light-card
+                            *ngIf="shouldLightcardBeNotified(currentLightCard)"
                             [lightCard]="currentLightCard"
                             [open]="
                                 currentLightCard.id === (selection | async) ||

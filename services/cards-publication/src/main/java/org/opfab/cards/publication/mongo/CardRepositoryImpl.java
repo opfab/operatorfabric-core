@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -202,7 +202,8 @@ public class CardRepositoryImpl implements CardRepository {
             .unset(USERS_READS)
             .set(ENTITIES_ACKS,new LinkedList<String>())
             .set(LAST_UPDATE, Instant.now())
-            .set("publishDate", Instant.now());
+            .set("publishDate", Instant.now())
+            .pull("actions", "NOT_NOTIFIED");
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
         log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
