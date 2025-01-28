@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -174,11 +174,12 @@ const commands = {
     },
 
     printCommandsHelp() {
-        console.log(`Usage: opfab config <set|get|list> [<key>] [<value>]
+        console.log(`Usage: opfab commands <fileName>
 
-    set  Set a configuration value
-    get  Get a configuration value
-    list List all configuration values
+    The file shall contain a list of opfab cli commands without the 'opfab' keyword.
+    One command per line and no end-of-line character. e.g. :
+            user add-to-entity entity username
+            user remove-from-entity entity username
         `);
     },
 
@@ -211,8 +212,6 @@ const commands = {
         supervisor              Manage supervising entities
         user                    Manage users
         version                 Show CLI version
-
-    
     `);
         } else {
             switch (args[0]) {
@@ -224,6 +223,9 @@ const commands = {
                     break;
                 case 'card':
                     card.printHelp();
+                    break;
+                case 'commands':
+                    this.printCommandsHelp();
                     break;
                 case 'connected-user':
                     connectedUser.printHelp();
