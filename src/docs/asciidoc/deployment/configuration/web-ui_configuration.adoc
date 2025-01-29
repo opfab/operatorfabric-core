@@ -192,6 +192,8 @@ a|authentication mode, available options:
 
 |customJsToLoad||no|List of URLs of javascript files to be loaded at startup
 
+|customCssToLoad||no|List of URLs of css files to be loaded at startup
+
 |===
 
 IMPORTANT:

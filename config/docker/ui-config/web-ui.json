@@ -153,6 +153,7 @@
     "useDescriptionFieldForEntityList": false
   },
   "customJsToLoad": ["http://localhost:2002/externalJs/handlebarsExample.js","http://localhost:2002/externalJs/loadTags.js"],
+  "customCssToLoad": ["http://localhost:2002/externalCss/externalStyle.css"],
   "dashboard": {
     "processStateRedirects": [
       {

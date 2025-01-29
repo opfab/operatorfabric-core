@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -794,7 +794,8 @@ The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric,
 
 The version of chartjs integrated in OperatorFabric is v3.7.1.
 
-== Custom javascript files
+== Custom javascript or css files
 
-It is possible to configure Opfab to load custom javascript files at startup. This allows to share common functions and business logic between templates.
+It is possible to configure Opfab to load custom javascript or css files at startup. This allows to share common functions, business logic and styling between templates.
 The list of URLs of javascript files to be loaded can be configured using `customJsToLoad` parameter in `web-ui.json` file.
+The list of URLs of css files to be loaded can be configured using `customCssToLoad` parameter in `web-ui.json` file.

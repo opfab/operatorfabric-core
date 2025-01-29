@@ -121,6 +121,7 @@ export class ApplicationLoader {
         await this.setActivityArea();
         this.initOpfabAPI();
         await this.loadCustomScripts();
+        await this.loadCustomStyles();
         this.initServices();
         await this.waitForStreamInitDone();
         logger.info('Card stream connection established');
@@ -316,6 +317,21 @@ export class ApplicationLoader {
                 await import(/* @vite-ignore */ script).catch((err) =>
                     logger.error('Error loading custom script ' + script + ' : ' + err)
                 );
+            }
+        }
+    }
+
+    private async loadCustomStyles() {
+        const customStyles = ConfigService.getConfigValue('customCssToLoad');
+        if (customStyles) {
+            for (const style of customStyles) {
+                await new Promise<void>((resolve) => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = style;
+                    link.onload = () => resolve();
+                    document.head.appendChild(link);
+                });
             }
         }
     }
