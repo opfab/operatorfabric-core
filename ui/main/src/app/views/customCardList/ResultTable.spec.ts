@@ -167,6 +167,31 @@ describe('CustomScreenView - ResultTable', () => {
         ]);
     });
 
+    it('should get nested fields defines in state screen defintion + cardId', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'nestedField',
+                    headerName: 'Test',
+                    cardField: 'data.test',
+                    fieldType: FieldType.STRING,
+                    flex: 2
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date(),
+                state: 'state1',
+                id: 'id1',
+                data: {test: 'testData'}
+            })
+        ];
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([{cardId: 'id1', nestedField: 'testData'}]);
+    });
+
     it('should get filter card by business period startDate', () => {
         const resultTable = getResultTable({
             columns: [
@@ -369,10 +394,10 @@ describe('CustomScreenView - ResultTable', () => {
         const process = [new Process('myProcess', '1', null, null, states)];
         setProcessConfiguration(process);
         const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', typeOfState: 'INPROGRESS'}]);
+        expect(dataArray).toEqual([{cardId: 'card1', typeOfState: 'IN PROGRESS'}]);
     });
     describe('If field type is Responses', () => {
-        it('Should return entity required and allowed to reponse in alphabetical order and in grey if there is no responses', () => {
+        it('Should return entities required to reponse in alphabetical order and in grey if there is no responses', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -397,12 +422,42 @@ describe('CustomScreenView - ResultTable', () => {
                     cardId: 'card1',
                     responses: [
                         {name: 'entity1 name', color: 'grey'},
+                        {name: 'entity3 name', color: 'grey'}
+                    ]
+                }
+            ]);
+        });
+        it('Should return entities allowed to reponse in alphabetical order if there is no entities required to respond', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'responses',
+                        headerName: 'Responses',
+                        fieldType: FieldType.RESPONSES
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    entitiesAllowedToRespond: ['entity3', 'entity2', 'entity1']
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    responses: [
+                        {name: 'entity1 name', color: 'grey'},
                         {name: 'entity2 name', color: 'grey'},
                         {name: 'entity3 name', color: 'grey'}
                     ]
                 }
             ]);
         });
+
         it('Should not return entity it entity not allowed to send card', () => {
             const resultTable = getResultTable({
                 columns: [

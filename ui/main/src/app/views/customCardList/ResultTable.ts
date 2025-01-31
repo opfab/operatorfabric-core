@@ -81,7 +81,9 @@ export class ResultTable {
                         data[column.field] = this.getPublisherLabel(card);
                         break;
                     case FieldType.DATE_AND_TIME:
-                        data[column.field] = DateTimeFormatterService.getFormattedDateAndTime(card[column.cardField]);
+                        data[column.field] = DateTimeFormatterService.getFormattedDateAndTime(
+                            this.getNestedField(card, column.cardField)
+                        );
                         break;
                     case FieldType.TYPE_OF_STATE:
                         data['typeOfState'] = this.getTypeOfState(card);
@@ -90,7 +92,7 @@ export class ResultTable {
                         data['responses'] = this.getResponses(card, childCards.get(card.id));
                         break;
                     default:
-                        data[column.field] = card[column.cardField];
+                        data[column.field] = this.getNestedField(card, column.cardField);
                 }
             });
             data['cardId'] = card.id;
@@ -122,22 +124,24 @@ export class ResultTable {
     }
 
     private getTypeOfState(card: Card): string {
-        return ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
+        const type = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
+        if (type === 'INPROGRESS') return 'IN PROGRESS';
+        return type;
     }
 
     private getResponses(card: Card, childCards: Array<Card>): Array<any> {
         const entities = new Array();
 
-        const entitiesAllowedOrRequiredToRespond = new Array();
-        if (card.entitiesAllowedToRespond) {
-            entitiesAllowedOrRequiredToRespond.push(...card.entitiesAllowedToRespond);
-        }
+        const entitiesForResponse = new Array();
+
         if (card.entitiesRequiredToRespond) {
-            entitiesAllowedOrRequiredToRespond.push(...card.entitiesRequiredToRespond);
+            entitiesForResponse.push(...card.entitiesRequiredToRespond);
+        } else if (card.entitiesAllowedToRespond) {
+            entitiesForResponse.push(...card.entitiesAllowedToRespond);
         }
 
         EntitiesService.resolveEntitiesAllowedToSendCards(
-            EntitiesService.getEntitiesFromIds(entitiesAllowedOrRequiredToRespond)
+            EntitiesService.getEntitiesFromIds(entitiesForResponse)
         ).forEach((entity) => {
             let color = 'grey';
             if (childCards) {
@@ -167,5 +171,9 @@ export class ResultTable {
             default:
                 return 'blue';
         }
+    }
+
+    private getNestedField(obj: any, path: string): any {
+        return path.split('.').reduce((acc, part) => acc?.[part], obj);
     }
 }

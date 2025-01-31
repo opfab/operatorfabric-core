@@ -86,7 +86,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             };
 
             const typeOfStateCellClassRules = {
-                'opfab-type-of-state-INPROGRESS': (field) => field.value === 'INPROGRESS',
+                'opfab-type-of-state-INPROGRESS': (field) => field.value === 'IN PROGRESS',
                 'opfab-type-of-state-FINISHED': (field) => field.value === 'FINISHED',
                 'opfab-type-of-state-CANCELED': (field) => field.value === 'CANCELED'
             };

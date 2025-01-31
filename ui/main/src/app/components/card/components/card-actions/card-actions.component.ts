@@ -153,7 +153,8 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
         if (
             NavigationService.getCurrentPageType() !== PageType.CALENDAR &&
             NavigationService.getCurrentPageType() !== PageType.MONITORING &&
-            NavigationService.getCurrentPageType() !== PageType.DASHBOARD
+            NavigationService.getCurrentPageType() !== PageType.DASHBOARD &&
+            NavigationService.getCurrentPageType() !== PageType.CUSTOMSCREEN
         ) {
             this.editModal.result.then(
                 () => {

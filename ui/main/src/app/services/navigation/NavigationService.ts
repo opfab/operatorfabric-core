@@ -21,7 +21,8 @@ export enum PageType {
     CALENDAR,
     MONITORING,
     USERCARD,
-    DASHBOARD
+    DASHBOARD,
+    CUSTOMSCREEN
 }
 export class NavigationService {
     private static router: ApplicationRouter;
@@ -36,7 +37,8 @@ export class NavigationService {
         ['calendar', PageType.CALENDAR],
         ['monitoring', PageType.MONITORING],
         ['usercard', PageType.USERCARD],
-        ['dashboard', PageType.DASHBOARD]
+        ['dashboard', PageType.DASHBOARD],
+        ['customscreen', PageType.CUSTOMSCREEN]
     ]);
 
     public static setApplicationRouter(router: ApplicationRouter) {

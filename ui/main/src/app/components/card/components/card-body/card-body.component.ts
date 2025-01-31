@@ -119,9 +119,19 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.cardBodyView = new CardBodyView(this.card, this.userWithPerimeters);
         this.integrateChildCardsInRealTime();
         const pageType = NavigationService.getCurrentPageType();
-        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD)
+        if (
+            pageType === PageType.CALENDAR ||
+            pageType === PageType.MONITORING ||
+            pageType === PageType.DASHBOARD ||
+            pageType === PageType.CUSTOMSCREEN
+        )
             this.templateOffset = 35;
-        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD)
+        if (
+            pageType !== PageType.CALENDAR &&
+            pageType !== PageType.MONITORING &&
+            pageType !== PageType.DASHBOARD &&
+            pageType !== PageType.CUSTOMSCREEN
+        )
             this.showMaxAndReduceButton = true;
         this.openNextCardOnAcknowledgment =
             pageType === PageType.FEED && ConfigService.getConfigValue('settings.openNextCardOnAcknowledgment', false);

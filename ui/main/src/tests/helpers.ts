@@ -64,7 +64,7 @@ export function getOneLightCard(lightCardTemplate?: any): Card {
         getI18nData('testSummary'),
         'testTitleTranslated',
         'testSummaryTranslated',
-        null,
+        lightCardTemplate.data ?? null,
         null,
         null,
         lightCardTemplate.entityRecipients ?? null,

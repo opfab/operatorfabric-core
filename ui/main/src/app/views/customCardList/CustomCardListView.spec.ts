@@ -13,13 +13,14 @@ import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService'
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabStore} from '@ofStore/opfabStore';
-import {getOneLightCard, setEntities, setUserPerimeter} from '@tests/helpers';
+import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom} from 'rxjs';
 import {FilteredLightCardsStore} from '@ofStore/lightcards/lightcards-feed-filter-store';
 import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
+import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 
 describe('CustomScreenView', () => {
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
@@ -153,32 +154,51 @@ describe('CustomScreenView', () => {
             columns: [
                 {
                     field: 'testField',
-                    headerName: 'Process header',
-                    cardField: 'process',
+                    headerName: 'TEST',
+                    cardField: 'data',
                     fieldType: FieldType.STRING,
                     flex: 2
                 },
                 {
-                    field: 'testField2',
-                    headerName: 'State header',
-                    cardField: 'state',
-                    fieldType: FieldType.STRING,
-                    flex: 1
+                    headerName: 'TYPE OF STATE',
+                    fieldType: FieldType.TYPE_OF_STATE
+                },
+                {
+                    headerName: 'ANSWERS',
+                    fieldType: FieldType.RESPONSES
                 }
             ]
         };
         CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
+
+        const states = new Map<string, State>();
+        states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
+        const process = [new Process('myProcess', '1', null, null, states)];
+        setProcessConfiguration(process);
+        setEntities([
+            {
+                id: 'entity1',
+                name: 'entity1 name',
+                roles: [RoleEnum.CARD_SENDER]
+            }
+        ]);
+
         const customScreenView = new CustomCardListView('testId');
 
         const card = getOneLightCard({
-            process: 'process1',
-            state: 'state1',
+            process: 'myProcess',
+            state: 'myState',
+            data: 'data1',
+
+            entitiesAllowedToRespond: ['entity1'],
             id: 'id1'
         });
 
         const card2 = getOneLightCard({
-            process: 'process2',
-            state: 'state2',
+            process: 'myProcess',
+            state: 'myState',
+            data: 'data2',
+            entitiesAllowedToRespond: ['entity1'],
             id: 'id2'
         });
         opfabEventStreamServerMock.sendLightCard(card);
@@ -193,8 +213,8 @@ describe('CustomScreenView', () => {
         const result = customScreenView.getDataForExport();
 
         expect(result).toEqual([
-            {'Process header': 'process1', 'State header': 'state1'},
-            {'Process header': 'process2', 'State header': 'state2'}
+            {TEST: 'data1', 'TYPE OF STATE': 'IN PROGRESS', ANSWERS: [{name: 'entity1 name', color: 'grey'}]},
+            {TEST: 'data2', 'TYPE OF STATE': 'IN PROGRESS', ANSWERS: [{name: 'entity1 name', color: 'grey'}]}
         ]);
     });
 });

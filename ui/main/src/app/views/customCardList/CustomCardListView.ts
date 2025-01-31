@@ -67,7 +67,7 @@ export class CustomCardListView {
         const result = [];
         this.results.forEach((line) => {
             const row = {};
-            this.customScreenDefinition.results.columns.forEach((column) => {
+            this.resultTable.getColumnsDefinitionForAgGrid().forEach((column) => {
                 row[column.headerName] = line[column.field];
             });
             result.push(row);

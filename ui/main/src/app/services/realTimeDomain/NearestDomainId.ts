@@ -27,9 +27,6 @@ export class NearestDomainId {
 
     public getNearestDomainId(startDate: number, endDate: number): string {
         const period = endDate - startDate;
-        if (this.domainOrderedList.length === 1) {
-            return this.domainOrderedList[0].id;
-        }
         for (const domain of this.domainOrderedList) {
             if (period <= domain.threshold) return domain.id;
         }
