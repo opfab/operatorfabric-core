@@ -37,7 +37,7 @@ jobs:
         image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for cards-consultation
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-cards-consultation.outputs.sarif }}
         category: consultation
@@ -48,7 +48,7 @@ jobs:
         image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for cards-publication
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-cards-publication.outputs.sarif }}
         category: publication
@@ -59,7 +59,7 @@ jobs:
         image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for users
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-users.outputs.sarif }}
         category: users
@@ -70,7 +70,7 @@ jobs:
         image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for businessConfig
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-businessconfig.outputs.sarif }}
         category: businessconfig
@@ -81,7 +81,7 @@ jobs:
         image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for external devices
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-external-devices.outputs.sarif }}
         category: external-devices
@@ -92,7 +92,7 @@ jobs:
         image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for web-ui
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
         category: web-ui
@@ -103,7 +103,7 @@ jobs:
         image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for external-diffusion
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-cards-external-diffusion.outputs.sarif }}
         category: external-diffusion
@@ -114,7 +114,7 @@ jobs:
         image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for cards-reminder
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-cards-reminder.outputs.sarif }}
         category: cards-reminder
@@ -125,7 +125,7 @@ jobs:
         image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
         fail-build: false
     - name: Upload Anchore Scan Report for supervisor
-      uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
+      uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
       with:
         sarif_file: ${{ steps.scan-supervisor.outputs.sarif }}
         category: supervisor
