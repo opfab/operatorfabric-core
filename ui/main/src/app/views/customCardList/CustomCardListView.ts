@@ -8,11 +8,13 @@
  */
 
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {CustomScreenDefinition} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {CustomScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
 import {OpfabStore} from '@ofStore/opfabStore';
 import {Observable, ReplaySubject, Subject, combineLatest, map, takeUntil} from 'rxjs';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {UsersService} from '@ofServices/users/UsersService';
+import {ProcessesService} from '@ofServices/processes/ProcessesService';
 
 export class CustomCardListView {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -56,6 +58,9 @@ export class CustomCardListView {
         RealTimeDomainService.setStartAndEndPeriod(startDate, endDate);
         RealTimeDomainService.saveUserPreferenceAsNearestDomain();
         this.resultTable.setBusinessDateFilter(startDate, endDate);
+    }
+
+    public search() {
         this.filter$.next();
     }
 
@@ -68,13 +73,39 @@ export class CustomCardListView {
         this.results.forEach((line) => {
             const row = {};
             this.resultTable.getColumnsDefinitionForAgGrid().forEach((column) => {
-                row[column.headerName] = line[column.field];
+                let cellValue = line[column.field];
+                if (cellValue?.text) cellValue = cellValue.text;
+                row[column.headerName] = cellValue;
             });
             result.push(row);
         });
         result.push();
 
         return result;
+    }
+
+    public isFilterVisibleInHeader(filter: HeaderFilter): boolean {
+        return this.customScreenDefinition.headerFilters?.includes(filter);
+    }
+
+    public setProcessList(processIds: string[]) {
+        this.resultTable.setProcessFilter(processIds);
+    }
+
+    public setTypesOfStateFilter(typesOfState: string[]) {
+        this.resultTable.setTypesOfStateFilter(typesOfState);
+    }
+
+    public getProcessList(): {id: string; label: string}[] {
+        const perimeters = UsersService.getCurrentUserWithPerimeters().computedPerimeters;
+
+        const processes = new Map();
+        perimeters.forEach((perimeter) => {
+            const process = ProcessesService.getProcess(perimeter.process);
+            if (process && !processes.has(process.id)) processes.set(process.id, {id: process.id, label: process.name});
+        });
+
+        return Array.from(processes.values());
     }
 
     public destroy() {

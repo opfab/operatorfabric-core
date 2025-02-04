@@ -11,9 +11,7 @@ export class CustomScreenDefinition {
     id: string;
     name: string;
     cardProcessIds: string[];
-    header: {
-        searchFields: string[];
-    };
+    headerFilters: HeaderFilter[];
     results: {
         columns: Column[];
     };
@@ -35,4 +33,9 @@ export enum FieldType {
     PUBLISHER = 'PUBLISHER',
     TYPE_OF_STATE = 'TYPE_OF_STATE',
     RESPONSES = 'RESPONSES'
+}
+
+export enum HeaderFilter {
+    PROCESS = 'PROCESS',
+    TYPE_OF_STATE = 'TYPE_OF_STATE'
 }

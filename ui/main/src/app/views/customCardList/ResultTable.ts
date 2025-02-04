@@ -11,6 +11,7 @@ import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 import {Card} from 'app/model/Card';
 import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
@@ -19,6 +20,8 @@ export class ResultTable {
     private readonly customScreenDefinition: CustomScreenDefinition;
     private startDate: number;
     private endDate: number;
+    private processIds = [];
+    private typesOfState = [];
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
@@ -70,10 +73,20 @@ export class ResultTable {
         this.endDate = endDate;
     }
 
+    public setProcessFilter(processIds: string[]) {
+        this.processIds = processIds;
+    }
+
+    public setTypesOfStateFilter(typesOfState: string[]) {
+        this.typesOfState = typesOfState;
+    }
+
     public getDataArrayFromCards(cards: Card[], childCards: Map<string, Array<Card>>): any[] {
         const dataArray = [];
         cards.forEach((card) => {
             if (!this.isCardInDateRange(card)) return;
+            if (!this.isCardInProcessIds(card)) return;
+            if (!this.isCardInTypesOfState(card)) return;
             const data = {};
             this.customScreenDefinition.results.columns.forEach((column) => {
                 switch (column.fieldType) {
@@ -110,6 +123,18 @@ export class ResultTable {
         return card.startDate >= this.startDate;
     }
 
+    private isCardInProcessIds(card: Card): boolean {
+        if (!this.processIds || this.processIds.length === 0) return true;
+        return this.processIds.includes(card.process);
+    }
+
+    private isCardInTypesOfState(card: Card): boolean {
+        if (!this.typesOfState || this.typesOfState.length === 0) return true;
+        const type = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
+        if (!type) return false;
+        return this.typesOfState.includes(type);
+    }
+
     private getPublisherLabel(card: Card): string {
         let publisherLabel = card.publisher;
         if (card.publisherType === PublisherType.ENTITY) {
@@ -123,10 +148,14 @@ export class ResultTable {
         return publisherLabel;
     }
 
-    private getTypeOfState(card: Card): string {
-        const type = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
-        if (type === 'INPROGRESS') return 'IN PROGRESS';
-        return type;
+    private getTypeOfState(card: Card): {text: string; value: string} {
+        const typeOfState = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
+        if (typeOfState)
+            return {
+                text: TranslationService.getTranslation('shared.typeOfState.' + typeOfState),
+                value: typeOfState
+            };
+        else return {text: '', value: undefined};
     }
 
     private getResponses(card: Card, childCards: Array<Card>): Array<any> {

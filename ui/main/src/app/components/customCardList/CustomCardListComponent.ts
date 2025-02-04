@@ -9,7 +9,7 @@
 
 import {AsyncPipe, NgIf} from '@angular/common';
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
@@ -24,6 +24,10 @@ import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {Observable, ReplaySubject, take} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
+import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
+import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
+import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 
 @Component({
     selector: 'of-custom-screen',
@@ -39,7 +43,8 @@ import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRende
         NgxDaterangepickerMd,
         ReactiveFormsModule,
         NgbPagination,
-        CardComponent
+        CardComponent,
+        MultiSelectComponent
     ]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {
@@ -56,21 +61,52 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     private readonly rowDataSubject = new ReplaySubject(1);
     dateRangePickerCustomRanges: any = {};
     dateRangePickerLocale: any = {};
-    headerForm: FormGroup;
+    headerForm = new FormGroup({
+        businessDateRanges: new FormControl({}),
+        processes: new FormControl([]),
+        typeOfState: new FormControl([])
+    });
     modalRef: NgbModalRef;
 
+    processFilterVisible = false;
+    processMultiSelectOptions: Array<MultiSelectOption> = [];
+    processSelected: Array<string> = [];
+    processMultiSelectConfig = {
+        labelKey: 'shared.filters.process',
+        placeholderKey: 'shared.filters.selectProcessText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+    typeOfStateFilterVisible = false;
+    typeOfStateMultiSelectOptions: Array<MultiSelectOption> = [
+        new MultiSelectOption(
+            TypeOfStateEnum.INPROGRESS,
+            TranslationService.getTranslation('shared.typeOfState.INPROGRESS')
+        ),
+        new MultiSelectOption(
+            TypeOfStateEnum.FINISHED,
+            TranslationService.getTranslation('shared.typeOfState.FINISHED')
+        ),
+        new MultiSelectOption(
+            TypeOfStateEnum.CANCELED,
+            TranslationService.getTranslation('shared.typeOfState.CANCELED')
+        )
+    ];
+    typeOfStateSelected: Array<string> = [];
+    typeOfStateMultiSelectConfig = {
+        labelKey: 'shared.typeOfState.typeOfState',
+        placeholderKey: 'monitoring.filters.typeOfState.selectTypeOfStateText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
     constructor(
         private readonly route: ActivatedRoute,
-        private readonly fb: FormBuilder,
         private readonly modalService: NgbModal
     ) {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
         this.dateRangePickerLocale = DateRangePickerConfig.getLocale();
         this.dateRangePickerCustomRanges = DateRangePickerConfig.getCustomRanges();
-        this.headerForm = this.fb.group({
-            businessDateRangesForm: []
-        });
     }
 
     ngOnInit(): void {
@@ -86,11 +122,13 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             };
 
             const typeOfStateCellClassRules = {
-                'opfab-type-of-state-INPROGRESS': (field) => field.value === 'IN PROGRESS',
-                'opfab-type-of-state-FINISHED': (field) => field.value === 'FINISHED',
-                'opfab-type-of-state-CANCELED': (field) => field.value === 'CANCELED'
+                'opfab-type-of-state-INPROGRESS': (field) => field.value.value === 'INPROGRESS',
+                'opfab-type-of-state-FINISHED': (field) => field.value.value === 'FINISHED',
+                'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
             };
             this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
+            this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
+            this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
             this.gridOptions = {
                 domLayout: 'autoHeight',
                 components: {
@@ -122,10 +160,21 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                     },
                     typeOfState: {
                         sortable: true,
-                        filter: true,
                         resizable: false,
                         wrapText: false,
-                        cellClassRules: typeOfStateCellClassRules
+                        cellClassRules: typeOfStateCellClassRules,
+                        cellRenderer: (params: any) => params.value.text,
+                        comparator: (valueA: any, valueB: any) => {
+                            if (valueA.text < valueB.text) {
+                                return -1;
+                            }
+                            if (valueA.text > valueB.text) {
+                                return 1;
+                            }
+                            return 0;
+                        },
+                        filter: true,
+                        filterValueGetter: (params: any) => params.data.typeOfState.text
                     },
                     responses: {
                         sortable: false,
@@ -151,10 +200,19 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                 this.rowData = results;
                 this.rowDataSubject.next(this.rowData);
             });
-            this.headerForm.get('businessDateRangesForm').setValue({
+            this.headerForm.get('businessDateRanges').setValue({
                 startDate: new Date(this.customCardListView.getBusinessPeriod().startDate),
                 endDate: new Date(this.customCardListView.getBusinessPeriod().endDate)
             });
+            if (this.processFilterVisible) {
+                this.headerForm.get('processes').setValue([]);
+                this.initProcessFilter();
+            }
+        });
+    }
+    private initProcessFilter(): void {
+        this.customCardListView.getProcessList().forEach((process) => {
+            this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
         });
     }
     onGridReady(params: any) {
@@ -167,14 +225,28 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     }
 
     resetForm() {
-        //TODO
+        if (this.processFilterVisible) {
+            this.processSelected = [];
+            this.typeOfStateSelected = [];
+        }
     }
 
     sendQuery() {
-        const businessDates = this.headerForm.get('businessDateRangesForm').value;
+        const businessDates = this.headerForm.get('businessDateRanges').value as {startDate: Date; endDate: Date};
         const startDate = Date.parse(businessDates.startDate?.toISOString());
         const endDate = Date.parse(businessDates.endDate?.toISOString());
         this.customCardListView.setBusinessPeriod(startDate, endDate);
+        const processIds = [];
+        this.headerForm.get('processes').value.forEach((processId: string) => {
+            processIds.push(processId);
+        });
+        this.customCardListView.setProcessList(processIds);
+        const typeOfState = [];
+        this.headerForm.get('typeOfState').value.forEach((type: string) => {
+            typeOfState.push(type);
+        });
+        this.customCardListView.setTypesOfStateFilter(typeOfState);
+        this.customCardListView.search();
     }
 
     selectCard(info: string) {

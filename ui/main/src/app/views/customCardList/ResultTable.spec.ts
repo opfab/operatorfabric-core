@@ -17,6 +17,8 @@ import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Proce
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
+import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('CustomScreenView - ResultTable', () => {
     const getResultTable = (customScreenDefintionResults: any) => {
@@ -30,6 +32,8 @@ describe('CustomScreenView - ResultTable', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();
 
     beforeAll(() => {
+        TranslationService.setTranslationLib(new TranslationLibMock());
+
         setEntities([
             {
                 id: 'entity1',
@@ -267,6 +271,100 @@ describe('CustomScreenView - ResultTable', () => {
         ]);
     });
 
+    it('should get filter card by process', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'Process',
+                    cardField: 'process',
+                    fieldType: FieldType.STRING
+                }
+            ]
+        });
+
+        resultTable.setProcessFilter(['processId1', 'processId2']);
+        const cards = [
+            getOneLightCard({
+                process: 'processId0',
+                startDate: 5,
+                id: 'id0'
+            }),
+            getOneLightCard({
+                process: 'processId1',
+                startDate: 100,
+                id: 'id1'
+            }),
+            getOneLightCard({
+                process: 'processId2',
+                startDate: 1000,
+                id: 'id2'
+            })
+        ];
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([
+            {cardId: 'id1', testField: 'processId1'},
+            {cardId: 'id2', testField: 'processId2'}
+        ]);
+    });
+    it('should get filter card by type of state', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'Process',
+                    cardField: 'process',
+                    fieldType: FieldType.STRING
+                }
+            ]
+        });
+        const states = new Map<string, State>();
+        states.set('state1.0', {type: TypeOfStateEnum.INPROGRESS});
+        states.set('state1.1', {type: TypeOfStateEnum.FINISHED});
+        const states2 = new Map<string, State>();
+        states2.set('state2.0', {type: TypeOfStateEnum.CANCELED});
+        states2.set('state2.1', {type: undefined});
+        const process = [
+            new Process('processId0', '1', null, null, states),
+            new Process('processId1', '1', null, null, states2)
+        ];
+
+        setProcessConfiguration(process);
+
+        const cards = [
+            getOneLightCard({
+                process: 'processId0',
+                state: 'state1.0',
+                startDate: 5,
+                id: 'id0'
+            }),
+            getOneLightCard({
+                process: 'processId0',
+                state: 'state1.1',
+                startDate: 100,
+                id: 'id1'
+            }),
+            getOneLightCard({
+                process: 'processId1',
+                state: 'state2.0',
+                startDate: 1000,
+                id: 'id2'
+            }),
+            getOneLightCard({
+                process: 'processId1',
+                state: 'state2.1',
+                startDate: 1000,
+                id: 'id3'
+            })
+        ];
+        resultTable.setTypesOfStateFilter(['INPROGRESS', 'FINISHED']);
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([
+            {cardId: 'id0', testField: 'processId0'},
+            {cardId: 'id1', testField: 'processId0'}
+        ]);
+    });
+
     it('should return the entity name if field type is publisher', () => {
         const resultTable = getResultTable({
             columns: [
@@ -387,14 +485,37 @@ describe('CustomScreenView - ResultTable', () => {
                 publisherType: 'ENTITY',
                 state: 'myState',
                 process: 'myProcess'
+            }),
+            getOneLightCard({
+                id: 'card2',
+                publisher: 'entity1',
+                publisherType: 'ENTITY',
+                state: 'myState2',
+                process: 'myProcess'
             })
         ];
         const states = new Map<string, State>();
         states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
+        states.set('myState2', {type: undefined});
         const process = [new Process('myProcess', '1', null, null, states)];
         setProcessConfiguration(process);
         const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', typeOfState: 'IN PROGRESS'}]);
+        expect(dataArray).toEqual([
+            {
+                cardId: 'card1',
+                typeOfState: {
+                    text: 'Translation (en) of shared.typeOfState.INPROGRESS',
+                    value: 'INPROGRESS'
+                }
+            },
+            {
+                cardId: 'card2',
+                typeOfState: {
+                    text: '',
+                    value: undefined
+                }
+            }
+        ]);
     });
     describe('If field type is Responses', () => {
         it('Should return entities required to reponse in alphabetical order and in grey if there is no responses', () => {

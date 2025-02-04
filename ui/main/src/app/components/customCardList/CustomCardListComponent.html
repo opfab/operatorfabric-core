@@ -15,7 +15,7 @@
         <div style="display: flex">
             <form
                 class="opfab-date-range-input opfab-input"
-                style="margin-top: 28px; margin-bottom: 28px; width: 260px"
+                style="margin-top: 28px; margin-bottom: 28px; width: 260px; height: 49px"
                 [formGroup]="headerForm">
                 <label class="opfab-date-range-label" for="opfab-publish-date-range" translate
                     >shared.filters.businessDateRange</label
@@ -30,8 +30,32 @@
                     [timePicker]="true"
                     [timePicker24Hour]="true"
                     [timePickerIncrement]="1"
-                    formControlName="businessDateRangesForm" />
+                    formControlName="businessDateRanges" />
             </form>
+            <div
+                *ngIf="processFilterVisible"
+                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+                <of-multi-select
+                    id="opfab-process"
+                    multiSelectId="processes"
+                    [parentForm]="headerForm"
+                    [config]="processMultiSelectConfig"
+                    [options]="processMultiSelectOptions"
+                    [selectedOptions]="processSelected">
+                </of-multi-select>
+            </div>
+            <div
+                *ngIf="typeOfStateFilterVisible"
+                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+                <of-multi-select
+                    id="opfab-type-of-state"
+                    multiSelectId="typeOfState"
+                    [parentForm]="headerForm"
+                    [config]="typeOfStateMultiSelectConfig"
+                    [options]="typeOfStateMultiSelectOptions"
+                    [selectedOptions]="typeOfStateSelected">
+                </of-multi-select>
+            </div>
 
             <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 60px; min-width: 320px">
                 <div class="form-group">
