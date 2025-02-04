@@ -85,7 +85,7 @@ Backend Dependencies:
 UI Dependencies:
 
 - No tests required: If the library has minimal visual impact (e.g., rxjs, date-fns).
-- Local testing required: If the library has potential visual impact (e.g., ag-grid, Bootstrap).
+- Local testing required: If the library has potential visual impact (e.g., ag-grid, Bootstrap) and it is not a patch release (e.g., X.X.X to X.X.Y).
 
 Opfab cli dependencies:
 
