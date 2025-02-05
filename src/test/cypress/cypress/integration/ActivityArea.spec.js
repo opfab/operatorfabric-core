@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
-import { ActivityAreaCommands } from '../support/activityAreaCommands';
-import { ScriptCommands } from '../support/scriptCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ActivityAreaCommands} from '../support/activityAreaCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('ActivityAreaPage', () => {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
 
-    before('Delete previous cards', function() {
+    before('Delete previous cards', function () {
         script.loadTestConf();
         script.deleteAllSettings();
         script.deleteAllCards();
@@ -37,8 +37,14 @@ describe('ActivityAreaPage', () => {
             .eq(1)
             .find('.opfab-lightcard-title')
             .should('have.text', 'Electricity consumption forecast'.toUpperCase());
-        cy.get('of-light-card').eq(2).find('.opfab-lightcard-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
-        cy.get('of-light-card').eq(3).find('.opfab-lightcard-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(2)
+            .find('.opfab-lightcard-title')
+            .should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(3)
+            .find('.opfab-lightcard-title')
+            .should('have.text', 'Process state (calcul)'.toUpperCase());
         cy.get('of-light-card').eq(4).find('.opfab-lightcard-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('of-light-card').eq(5).find('.opfab-lightcard-title').should('have.text', 'Message'.toUpperCase());
 
@@ -58,6 +64,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
@@ -67,8 +74,14 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-navbar-menu-feed').click();
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 4);
-        cy.get('of-light-card').eq(0).find('.opfab-lightcard-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
-        cy.get('of-light-card').eq(1).find('.opfab-lightcard-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(0)
+            .find('.opfab-lightcard-title')
+            .should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(1)
+            .find('.opfab-lightcard-title')
+            .should('have.text', 'Process state (calcul)'.toUpperCase());
         cy.get('of-light-card').eq(2).find('.opfab-lightcard-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('of-light-card').eq(3).find('.opfab-lightcard-title').should('have.text', 'Message'.toUpperCase());
 
@@ -84,18 +97,25 @@ describe('ActivityAreaPage', () => {
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         opfab.navigateToActivityArea();
-        // check every checkbox to let the time for the ui to set to true before we click
+        // To reconnect every entity we use the activity area group button
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
+
+        cy.get('.opfab-checkbox').contains('French Control Centers').click();
+
+        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
+        cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
+
         activityArea.save();
     });
 
-    it('Choose activity area on login', function() {
+    it('Choose activity area on login', function () {
         script.setPropertyInConf('selectActivityAreaOnLogin ', true);
 
         cy.visit('');
@@ -119,12 +139,13 @@ describe('ActivityAreaPage', () => {
         // We should have only one 'block'
         cy.get('.opfab-activityarea-clusters').should('have.length', 1);
 
-        // We should have 4 checkboxes corresponding to the four entities of the user
-        cy.get('.opfab-checkbox').should('have.length', 4);
-        cy.get('.opfab-checkbox').eq(0).should('have.text', 'Control Center FR East ');
-        cy.get('.opfab-checkbox').eq(1).should('have.text', 'Control Center FR North ');
-        cy.get('.opfab-checkbox').eq(2).should('have.text', 'Control Center FR South ');
-        cy.get('.opfab-checkbox').eq(3).should('have.text', 'Control Center FR West ');
+        // We should have 4 checkboxes corresponding to the four entities of the user and one for the group
+        cy.get('.opfab-checkbox').should('have.length', 5);
+        cy.get('.opfab-checkbox').eq(0).contains('French Control Centers ');
+        cy.get('.opfab-checkbox').eq(1).contains('Control Center FR East ');
+        cy.get('.opfab-checkbox').eq(2).contains('Control Center FR North ');
+        cy.get('.opfab-checkbox').eq(3).contains('Control Center FR South ');
+        cy.get('.opfab-checkbox').eq(4).contains('Control Center FR West ');
 
         // We check all the checkboxes are checked
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -169,8 +190,14 @@ describe('ActivityAreaPage', () => {
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 4);
 
-        cy.get('of-light-card').eq(0).find('.opfab-lightcard-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
-        cy.get('of-light-card').eq(1).find('.opfab-lightcard-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(0)
+            .find('.opfab-lightcard-title')
+            .should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card')
+            .eq(1)
+            .find('.opfab-lightcard-title')
+            .should('have.text', 'Process state (calcul)'.toUpperCase());
         cy.get('of-light-card').eq(2).find('.opfab-lightcard-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('of-light-card').eq(3).find('.opfab-lightcard-title').should('have.text', 'Message'.toUpperCase());
 
@@ -181,7 +208,8 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
-        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
@@ -190,7 +218,7 @@ describe('ActivityAreaPage', () => {
         script.setPropertyInConf('selectActivityAreaOnLogin ', false);
     });
 
-    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function() {
+    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
         cy.delayRequestResponse('/users/users/*');
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
@@ -199,7 +227,7 @@ describe('ActivityAreaPage', () => {
         opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 
-    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function() {
+    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function () {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
         cy.delayRequestResponse('/users/users/**');
@@ -219,7 +247,7 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
     });
 
-    it('Check message is displayed when user has no activity area', function() {
+    it('Check message is displayed when user has no activity area', function () {
         opfab.loginWithUser('opfab');
         opfab.navigateToActivityArea();
         cy.get('#opfab-no-activityarea').should('exist');

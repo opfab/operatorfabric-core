@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -148,13 +148,14 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
         opfab.navigateToActivityArea();
 
-        // We should have 4 checkboxes corresponding to the four entities of the user
-        cy.get('.opfab-checkbox').should('have.length', 4);
+        // We should have 5 checkboxes corresponding to the four entities of the user and the group of entities
+        cy.get('.opfab-checkbox').should('have.length', 5);
         // We check all the checkboxes are checked
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
 
         // We disconnect from ENTITY3_FR and ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
@@ -283,13 +284,14 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
             opfab.navigateToActivityArea();
 
-            // We should have 4 checkboxes corresponding to the four entities of the user
-            cy.get('.opfab-checkbox').should('have.length', 4);
+            // We should have 5 checkboxes corresponding to the four entities of the user and the group of entities
+            cy.get('.opfab-checkbox').should('have.length', 5);
             // We check all the checkboxes are checked
             cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
             cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
             cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
             cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+            cy.get('.opfab-checkbox').eq(4).find('input').should('be.checked');
 
             // We disconnect from ENTITY4_FR
             cy.get('.opfab-checkbox').contains('Control Center FR West').click();

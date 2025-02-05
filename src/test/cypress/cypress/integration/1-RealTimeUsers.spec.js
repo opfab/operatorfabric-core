@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -155,9 +155,10 @@ describe ('RealTimeUsersPage',()=>{
         opfab.navigateToActivityArea();
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
-        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(4).find('input').should('not.be.checked');
         activityArea.clickOnCheckbox('Control Center FR East');
         activityArea.clickOnCheckbox('Control Center FR South');
         activityArea.clickOnCheckbox('Control Center FR West');

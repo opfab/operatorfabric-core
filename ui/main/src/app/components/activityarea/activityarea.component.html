@@ -16,22 +16,32 @@
         activityArea.noAreaAvailable
     </div>
 </div>
-<div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length">
+<div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length" #opfabActivityAreaScreen>
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-container">
             <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
-                <span
-                    *ngIf="cluster.name !== ' ' || activityAreaPage?.activityAreaClusters?.length > 1"
-                    class="opfab-activityarea-cluster-name"
-                    >{{ cluster.name }} &nbsp;</span
-                >
+                <div *ngIf="cluster.name !== ' '">
+                    <label class="opfab-checkbox">
+                        <span class="opfab-activityarea-cluster-name">{{ cluster.name }} &nbsp;</span>
+                        <input
+                            [id]="'opfab_activity_area_cluster_' + cluster.id"
+                            type="checkbox"
+                            (click)="activityAreaView.clickOnCluster(cluster.id)"
+                            [checked]="cluster.checked" />
+                        <span class="opfab-checkbox-checkmark" style="margin-top: 6px; margin-left: 6px"></span>
+                    </label>
+                </div>
+
                 <table class="opfab-activityarea-table" aria-describedby="activity area table">
                     <tr *ngFor="let line of cluster.lines">
                         <th class="opfab-table-line" style="width: 60%">
                             <label class="opfab-checkbox opfab-activityarea-checkbox">
-                                <input type="checkbox" [formControlName]="line.entityId" [checked]="true" />{{
-                                    line.entityName
-                                }}
+                                <input
+                                    [id]="'opfab_activity_area_line_' + cluster.id + '_' + line.entityId"
+                                    type="checkbox"
+                                    (click)="activityAreaView.clickOnLine(cluster.id, line.entityId)"
+                                    [formControlName]="line.entityId"
+                                    [checked]="line.isUserConnected" />{{ line.entityName }}
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </th>

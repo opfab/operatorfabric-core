@@ -27,6 +27,8 @@ export class ActivityAreaView {
         string,
         ActivityAreaEntityCluster
     >();
+    private setClusterLineCheckBoxValue: Function = () => {};
+    private setClusterCheckBoxValue: Function = () => {};
     private readonly currentUserLogin;
     private intervalForConnectedUsersUpdate;
     private newActivityAreas: any = new Map<string, boolean>();
@@ -35,7 +37,7 @@ export class ActivityAreaView {
         this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
         this.activityAreaClusters = new Map();
-        this.activityAreaOrphanEntitiesCluster = new ActivityAreaEntityCluster(' ', []);
+        this.activityAreaOrphanEntitiesCluster = new ActivityAreaEntityCluster('', ' ', []);
 
         UsersService.getUser(this.currentUserLogin).subscribe((user) => {
             if (user.entities) {
@@ -50,6 +52,7 @@ export class ActivityAreaView {
                         this.activityAreaOrphanEntitiesCluster
                     );
                 }
+                this.shouldClustersBeChecked();
                 this.getConnectedUsers().subscribe((connected) => {
                     this.activityAreaSubject.next(this.activityAreaPage);
                     this.activityAreaSubject.complete();
@@ -59,6 +62,23 @@ export class ActivityAreaView {
         });
     }
 
+    public setFunctionToSetClusterLineCheckBoxValue(
+        setClusterLineCheckBoxValue: (clusterId: string, entityId: string, checked: boolean) => void
+    ) {
+        this.setClusterLineCheckBoxValue = setClusterLineCheckBoxValue;
+    }
+
+    public setFunctionToSetClusterCheckBoxValue(
+        setClusterCheckBoxValue: (clusterId: string, checked: boolean) => void
+    ) {
+        this.setClusterCheckBoxValue = setClusterCheckBoxValue;
+    }
+
+    private shouldClustersBeChecked() {
+        this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+            cluster.checked = cluster.lines.every((line) => line.isUserConnected);
+        });
+    }
     private addEntityToClusters(entity: Entity) {
         const entitiesConnected = UsersService.getCurrentUserWithPerimeters().userData.entities;
         if (entity?.roles?.includes(RoleEnum.ACTIVITY_AREA)) {
@@ -71,11 +91,11 @@ export class ActivityAreaView {
                 entity.parents.forEach((parentId) => {
                     const parentEntity = EntitiesService.getEntity(parentId);
                     if (parentEntity?.roles?.includes(RoleEnum.ACTIVITY_AREA_GROUP)) {
-                        this.isEntityAlreadyACluster(parentEntity.name)
-                            ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.name), activityAreaLine)
+                        this.isEntityAlreadyACluster(parentEntity.id)
+                            ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.id), activityAreaLine)
                             : this.activityAreaClusters.set(
-                                  parentEntity.name,
-                                  new ActivityAreaEntityCluster(parentEntity.name, [activityAreaLine])
+                                  parentEntity.id,
+                                  new ActivityAreaEntityCluster(parentEntity.id, parentEntity.name, [activityAreaLine])
                               );
                     } else {
                         this.addLineToCluster(this.activityAreaOrphanEntitiesCluster, activityAreaLine);
@@ -188,6 +208,32 @@ export class ActivityAreaView {
                 })
             );
         }
+    }
+
+    public clickOnCluster(clusterId: string): void {
+        const cluster = this.activityAreaClusters.get(clusterId);
+        if (!cluster) return;
+
+        cluster.checked = !cluster.checked;
+        cluster.lines.forEach((line) => {
+            line.isUserConnected = cluster.checked;
+            this.setEntityConnected(line.entityId, line.isUserConnected);
+            this.setClusterLineCheckBoxValue(cluster.id, line.entityId, line.isUserConnected);
+        });
+    }
+
+    public clickOnLine(clusterId: string, lineEntityId: string): void {
+        const cluster = this.activityAreaClusters.get(clusterId);
+        if (!cluster) return;
+
+        const line = cluster.lines.find(({entityId}) => entityId === lineEntityId);
+        if (!line) return;
+
+        line.isUserConnected = !line.isUserConnected;
+
+        cluster.checked = cluster.lines.every(({isUserConnected}) => isUserConnected);
+
+        this.setClusterCheckBoxValue(cluster.id, cluster.checked);
     }
 
     public getActivityAreaPage(): Observable<ActivityAreaPage> {

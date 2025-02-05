@@ -33,6 +33,8 @@ describe('ActivityAreaView', () => {
     let settingsServerMock: UserSettingsServerMock;
     let user: User;
     let activityAreaView: ActivityAreaView;
+    let clusterLineCheckBoxActivated = '';
+    let clusterCheckboxActivated = '';
 
     beforeEach(() => {
         jasmine.clock().uninstall();
@@ -44,6 +46,20 @@ describe('ActivityAreaView', () => {
     function mockUsersService() {
         usersServerMock = new UsersServerMock();
         UsersService.setUsersServer(usersServerMock);
+    }
+
+    function initFunctionsToSet() {
+        clusterLineCheckBoxActivated = '';
+        clusterCheckboxActivated = '';
+        activityAreaView.setFunctionToSetClusterLineCheckBoxValue(
+            (clusterId: string, entityId: string, checked: boolean) => {
+                clusterLineCheckBoxActivated +=
+                    'cluster:' + clusterId + ',entity:' + entityId + ',checked:' + checked + ';';
+            }
+        );
+        activityAreaView.setFunctionToSetClusterCheckBoxValue((clusterId: string, checked: boolean) => {
+            clusterCheckboxActivated += 'cluster:' + clusterId + ',checked:' + checked + ';';
+        });
     }
 
     function mockEntitiesService() {
@@ -352,6 +368,39 @@ describe('ActivityAreaView', () => {
         activityAreaView.setEntityConnected('ENTITY1', true);
         activityAreaView.setEntityConnected('ENTITY1', false);
         expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeFalsy;
+    });
+
+    it('GIVEN activity area WHEN user clicks on cluster checkbox THEN all cluster lines should be selected', async () => {
+        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        initActivityAreaView();
+        initFunctionsToSet();
+
+        activityAreaView.clickOnCluster('CLUSTERING_ENTITY');
+
+        expect(clusterLineCheckBoxActivated).toContain('cluster:CLUSTERING_ENTITY,entity:ENTITY1,checked:true');
+        expect(clusterLineCheckBoxActivated).toContain('cluster:CLUSTERING_ENTITY,entity:ENTITY2,checked:true');
+    });
+
+    it('GIVEN activity area WHEN user unchecks a cluster line checkbox THEN cluster checkbox should not be selected', async () => {
+        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        initActivityAreaView();
+        initFunctionsToSet();
+
+        activityAreaView.clickOnCluster('CLUSTERING_ENTITY'); // check the cluster
+        activityAreaView.clickOnLine('CLUSTERING_ENTITY', 'ENTITY1'); // uncheck its first line
+
+        expect(clusterCheckboxActivated).toContain('cluster:CLUSTERING_ENTITY,checked:false');
+    });
+
+    it('GIVEN activity area WHEN user checks all cluster line checkboxes THEN cluster checkbox should be selected', async () => {
+        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        initActivityAreaView();
+        initFunctionsToSet();
+
+        activityAreaView.clickOnLine('CLUSTERING_ENTITY', 'ENTITY1');
+        activityAreaView.clickOnLine('CLUSTERING_ENTITY', 'ENTITY2');
+
+        expect(clusterCheckboxActivated).toContain('cluster:CLUSTERING_ENTITY,checked:true');
     });
 
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {

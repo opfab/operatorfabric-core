@@ -219,7 +219,7 @@ describe('Notification configuration view - User interaction ', () => {
                 expect(statesCheckboxActivated).toEqual('p:process1,s:state1_1,v:true;p:process1,s:state1_2,v:true;');
             });
 
-            it('should not uncheck state checkbox  with filteringNotificationAllowed = false if process checkbox is unchecked', async () => {
+            it('should not uncheck state checkbox with filteringNotificationAllowed = false if process checkbox is unchecked', async () => {
                 notificationConfigurationView.clickOnProcess('process2');
                 expect(statesCheckboxActivated).toEqual('p:process2,s:state2_1,v:false;');
             });

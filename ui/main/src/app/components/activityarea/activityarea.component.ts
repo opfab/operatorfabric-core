@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -30,6 +30,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     @Input() titleI18nKey = 'activityArea.title';
     @Input() askConfirmation = true;
     @Output() confirm = new EventEmitter();
+    @ViewChild('opfabActivityAreaScreen') rootElement: ElementRef;
 
     activityAreaForm: FormGroup<{}>;
     saveSettingsInProgress = false;
@@ -49,12 +50,27 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView();
+        this.activityAreaView.setFunctionToSetClusterLineCheckBoxValue(
+            (clusterId: string, entityId: string, checked: boolean) => {
+                this.setCheckboxInputValue('opfab_activity_area_line_' + clusterId + '_' + entityId, checked);
+            }
+        );
+        this.activityAreaView.setFunctionToSetClusterCheckBoxValue((clusterId: string, checked: boolean) => {
+            this.setCheckboxInputValue('opfab_activity_area_cluster_' + clusterId, checked);
+        });
         this.activityAreaView.getActivityAreaPage().subscribe((page) => {
             this.activityAreaPage = page;
             this.initForm();
             this.isScreenLoaded = true;
             this.listenToFormChanges();
         });
+    }
+
+    private setCheckboxInputValue(elementId: string, checked: boolean) {
+        const element = this.rootElement.nativeElement.querySelector('#' + elementId);
+        if (element) {
+            element.checked = checked;
+        }
     }
 
     private initForm() {
