@@ -111,6 +111,8 @@ export class ApplicationLoader {
         this.setLoggerConfiguration();
         this.loadTranslations();
         this.setEnvironmentNameAndColor();
+        this.loadCustomStyles(); // could be done in parallel as soon as possible
+
         if (await this.isLoadingToBeStoppedBecauseAppLoadedInAnotherTab()) return false;
         await this.authenticate();
         await this.loadSettings();
@@ -121,7 +123,6 @@ export class ApplicationLoader {
         await this.setActivityArea();
         this.initOpfabAPI();
         await this.loadCustomScripts();
-        await this.loadCustomStyles();
         this.initServices();
         await this.waitForStreamInitDone();
         logger.info('Card stream connection established');
@@ -321,17 +322,14 @@ export class ApplicationLoader {
         }
     }
 
-    private async loadCustomStyles() {
+    private loadCustomStyles() {
         const customStyles = ConfigService.getConfigValue('customCssToLoad');
         if (customStyles) {
             for (const style of customStyles) {
-                await new Promise<void>((resolve) => {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = style;
-                    link.onload = () => resolve();
-                    document.head.appendChild(link);
-                });
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = style;
+                document.head.appendChild(link);
             }
         }
     }
