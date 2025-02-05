@@ -25,6 +25,9 @@ import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
+import {ConfigService} from '@ofServices/config/ConfigService';
+import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('CustomScreenView', () => {
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
@@ -39,6 +42,8 @@ describe('CustomScreenView', () => {
 
     beforeAll(() => {
         TranslationService.setTranslationLib(new TranslationLibMock());
+        ConfigService.setConfigServer(new ConfigServerMock());
+        DateTimeFormatterService.init();
     });
 
     beforeEach(() => {
