@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -253,7 +253,7 @@ the i18n translations in English and French.
     {
       "opfabCoreMenuId": "changepassword",
       "visible": true
-    },
+    }, 
     {
       "opfabCoreMenuId": "logout",
       "visible": true
@@ -293,3 +293,85 @@ the i18n translations in English and French.
 NOTE: For iframes opened from menu, the associated request uses an extra parameter containing the current theme information.
 Named `opfab_theme`, this parameter has a value corresponding to the current theme: `DAY` or `NIGHT`. For example:
 `http://mysite.com/index.htm?opfab_theme=NIGHT`. Switching theme will trigger reload of open iframes.
+
+
+== Card List Custom Screen
+
+You can define a custom screen containing a search header and a list of cards.
+
+To do this, register the custom screen via a JavaScript script loaded on startup (To be loaded on startup, add your script to the `customJsToLoad` array in the `web-ui.json` file).
+
+Here is an example of a custom screen registration:
+
+----
+const customScreenExample = {
+    id: 'testId',
+    name: 'testName',
+    headerFilters: ['PROCESS', 'TYPE_OF_STATE'],
+    results: {
+        columns: [
+            {
+                field: 'severity',
+                cardField: 'severity',
+                fieldType: 'SEVERITY',
+            },
+            {
+                field: 'TIME',
+                cardField: 'publishDate',
+                fieldType: 'DATE_AND_TIME'
+            },
+            {
+                field: 'testField',
+                headerName: 'TITLE',
+                cardField: 'titleTranslated',
+                fieldType: 'STRING',
+                flex: 1
+            },
+            {
+                field: 'testField2',
+                headerName: 'SUMMARY',
+                cardField: 'summaryTranslated',
+                fieldType: 'STRING',
+                flex: 2
+            },
+            {
+                fieldType: 'TYPE_OF_STATE',
+                headerName: 'STATUS'
+            },
+            {
+                field: 'publisher',
+                headerName: 'EMITTER',
+                cardField: 'publisher',
+                fieldType: 'PUBLISHER'
+            },
+            {
+                headerName: 'ANSWERS',
+                fieldType: 'RESPONSES',
+                flex: 2
+            }
+        ]
+    }
+}
+
+opfab.businessconfig.registerCustomScreen(customScreenExample);
+----
+
+In this example, the custom screen is accessible via the URL `#/customScreen/testId`.
+
+You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`.
+
+For each field you want to display in the result table, define a column object. The following field types are available:
+
+- `SEVERITY`: Displays the severity as a color rectangle.
+- `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
+- `STRING`: Displays a string value.
+- `TYPE_OF_STATE`: Displays the type of state value: `INPROGRESS`, `FINISHED`, `CANCELLED`.
+- `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
+- `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
+
+You can define the column header text using the `headerName` field.
+
+The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `SEVERITY`, `TYPE_OF_STATE`, and `RESPONSES`.
+
+The `flex` field sets the CSS flex property for the column.
+
