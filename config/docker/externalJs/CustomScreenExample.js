@@ -51,6 +51,16 @@
                     fieldType: 'PUBLISHER'
                 },
                 {
+                    field: 'urgency',
+                    headerName: 'URGENCY',
+                    fieldType: 'COLORED_CIRCLE',
+                    getValue: (card) => {
+                        if (card.severity === 'ALARM') return "red"
+                        return "green"
+                    },
+                    flex: 0.5
+                },
+                {
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
                     flex: 2

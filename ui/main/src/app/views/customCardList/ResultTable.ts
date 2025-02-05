@@ -55,6 +55,14 @@ export class ResultTable {
                             flex: column.flex
                         });
                         break;
+                    case FieldType.COLORED_CIRCLE:
+                        agGridColumns.push({
+                            field: column.field,
+                            headerName: column.headerName,
+                            type: 'coloredCircle',
+                            flex: column.flex
+                        });
+                        break;
                     default:
                         agGridColumns.push({
                             field: column.field,
@@ -103,6 +111,9 @@ export class ResultTable {
                         break;
                     case FieldType.RESPONSES:
                         data['responses'] = this.getResponses(card, childCards.get(card.id));
+                        break;
+                    case FieldType.COLORED_CIRCLE:
+                        data[column.field] = this.getColoredCircleValue(card, column.field);
                         break;
                     default:
                         data[column.field] = this.getNestedField(card, column.cardField);
@@ -204,5 +215,9 @@ export class ResultTable {
 
     private getNestedField(obj: any, path: string): any {
         return path.split('.').reduce((acc, part) => acc?.[part], obj);
+    }
+
+    private getColoredCircleValue(card: Card, field: string): string {
+        return this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
     }
 }

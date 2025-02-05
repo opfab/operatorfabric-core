@@ -92,13 +92,19 @@ describe('CustomScreenView - ResultTable', () => {
                     headerName: 'Responses',
                     fieldType: FieldType.RESPONSES,
                     flex: 2
+                },
+                {
+                    field: 'coloredCircleTest',
+                    headerName: 'circle',
+                    fieldType: FieldType.COLORED_CIRCLE
                 }
             ]
         });
         expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
             {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
             {field: 'testField2', headerName: 'Start Date', type: 'default', flex: 1},
-            {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2}
+            {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
+            {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined}
         ]);
     });
 
@@ -515,6 +521,35 @@ describe('CustomScreenView - ResultTable', () => {
                     value: undefined
                 }
             }
+        ]);
+    });
+    it('should return the color using cutom method getValue() if field type is COLORED_CIRCLE', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'myfield',
+                    fieldType: FieldType.COLORED_CIRCLE,
+                    getValue: (card: Card) => {
+                        if (card.severity === Severity.ALARM) return 'red';
+                        return 'blue';
+                    }
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                id: 'card1',
+                severity: Severity.ALARM
+            }),
+            getOneLightCard({
+                id: 'card2',
+                severity: Severity.ACTION
+            })
+        ];
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([
+            {cardId: 'card1', myfield: 'red'},
+            {cardId: 'card2', myfield: 'blue'}
         ]);
     });
     describe('If field type is Responses', () => {

@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {Card} from 'app/model/Card';
+
 export class CustomScreenDefinition {
     id: string;
     name: string;
@@ -23,6 +25,7 @@ export class Column {
     cardField?: string;
     fieldType: FieldType;
     flex?: number;
+    getValue?: (card: Card) => string;
 }
 
 export enum FieldType {
@@ -32,7 +35,8 @@ export enum FieldType {
     SEVERITY = 'SEVERITY',
     PUBLISHER = 'PUBLISHER',
     TYPE_OF_STATE = 'TYPE_OF_STATE',
-    RESPONSES = 'RESPONSES'
+    RESPONSES = 'RESPONSES',
+    COLORED_CIRCLE = 'COLORED_CIRCLE'
 }
 
 export enum HeaderFilter {

@@ -182,6 +182,20 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                         resizable: false,
                         wrapText: false,
                         cellRenderer: 'responsesCellRenderer'
+                    },
+                    coloredCircle: {
+                        sortable: false,
+                        filter: false,
+                        resizable: false,
+                        wrapText: false,
+                        cellStyle: {display: 'flex', 'justify-content': 'center', alignItems: 'center'},
+                        cellRenderer: (params: any) => {
+                            return (
+                                '<div style="width: 20px; height: 20px;border-radius: 50%;background-color:' +
+                                params.value +
+                                '"></div>'
+                            );
+                        }
                     }
                 },
                 ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
