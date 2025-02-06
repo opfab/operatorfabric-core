@@ -22,7 +22,7 @@ import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/excel-export';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {Observable, ReplaySubject, take} from 'rxjs';
+import {Observable, ReplaySubject, Subject, take, takeUntil} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
 import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
@@ -99,6 +99,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         sortOptions: true,
         nbOfDisplayValues: 1
     };
+    private readonly ngUnsubscribe$ = new Subject<void>();
+
     constructor(
         private readonly route: ActivatedRoute,
         private readonly modalService: NgbModal
@@ -228,6 +230,9 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         this.customCardListView.getProcessList().forEach((process) => {
             this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
         });
+        this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
+            this.sendQuery();
+        });
     }
     onGridReady(params: any) {
         this.gridApi = params.api;
@@ -242,6 +247,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         if (this.processFilterVisible) {
             this.processSelected = [];
             this.typeOfStateSelected = [];
+            this.sendQuery();
         }
     }
 
@@ -283,5 +289,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.customCardListView.destroy();
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
     }
 }

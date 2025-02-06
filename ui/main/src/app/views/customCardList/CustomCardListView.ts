@@ -15,6 +15,7 @@ import {Observable, ReplaySubject, Subject, combineLatest, map, takeUntil} from 
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
+import {LoggerService} from '@ofServices/logs/LoggerService';
 
 export class CustomCardListView {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -45,10 +46,13 @@ export class CustomCardListView {
         return combineLatest([OpfabStore.getLightCardStore().getLightCards(), this.filter$]).pipe(
             takeUntil(this.unsubscribe$),
             map((result) => {
+                const startTimer = Date.now();
                 this.results = this.resultTable.getDataArrayFromCards(
                     result[0],
                     OpfabStore.getLightCardStore().getAllChildCards()
                 );
+                const endTimer = Date.now();
+                LoggerService.info(`Custom card list - Time to process data: ${endTimer - startTimer}ms`);
                 return this.results;
             })
         );

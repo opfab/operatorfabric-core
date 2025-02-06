@@ -10,6 +10,7 @@
 import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
+import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {Card} from 'app/model/Card';
@@ -18,6 +19,8 @@ import {Severity} from 'app/model/Severity';
 
 export class ResultTable {
     private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly typeOfStateData = new Map<string, {text: string; value: string}>();
+
     private startDate: number;
     private endDate: number;
     private processIds = [];
@@ -25,6 +28,21 @@ export class ResultTable {
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
+
+        // for performance reasons, we store the translation of the type of state in a map
+        // this is to avoid calling the translation service for each row in the table
+        this.typeOfStateData.set(TypeOfStateEnum.CANCELED, {
+            value: TypeOfStateEnum.CANCELED,
+            text: TranslationService.getTranslation('shared.typeOfState.CANCELED')
+        });
+        this.typeOfStateData.set(TypeOfStateEnum.FINISHED, {
+            value: TypeOfStateEnum.FINISHED,
+            text: TranslationService.getTranslation('shared.typeOfState.FINISHED')
+        });
+        this.typeOfStateData.set(TypeOfStateEnum.INPROGRESS, {
+            value: TypeOfStateEnum.INPROGRESS,
+            text: TranslationService.getTranslation('shared.typeOfState.INPROGRESS')
+        });
     }
 
     public getColumnsDefinitionForAgGrid(): any[] {
@@ -161,17 +179,12 @@ export class ResultTable {
 
     private getTypeOfState(card: Card): {text: string; value: string} {
         const typeOfState = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
-        if (typeOfState)
-            return {
-                text: TranslationService.getTranslation('shared.typeOfState.' + typeOfState),
-                value: typeOfState
-            };
+        if (typeOfState) return this.typeOfStateData.get(typeOfState) as {text: string; value: string};
         else return {text: '', value: undefined};
     }
 
     private getResponses(card: Card, childCards: Array<Card>): Array<any> {
         const entities = new Array();
-
         const entitiesForResponse = new Array();
 
         if (card.entitiesRequiredToRespond) {

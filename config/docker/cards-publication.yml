@@ -37,5 +37,5 @@ operatorfabric:
         - id: "connectionRefusedExternalRecipient"
           url: "http://ext-app:8091/test"
           propagateUserToken: true
-
+#operatorfabric.cards-publication.activateCardSendingLimiter: false
 #logging.level.org.opfab: debug
