@@ -245,7 +245,7 @@ export class UsersService {
                     logger.error(`Error while getting connected users :  ${userResponse.statusMessage}`);
                     AlertMessageService.sendAlertMessage({
                         message: '',
-                        i18n: {key: 'admin.errors.user.gettingConnectingUsers'},
+                        i18n: {key: 'shared.error.user.gettingConnectedUsers'},
                         level: MessageLevel.ERROR
                     });
                     return [];

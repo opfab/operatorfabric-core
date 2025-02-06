@@ -88,6 +88,7 @@
             },
             "user": {
                 "deleteUser": "Het is niet mogelijk om de gebruiker te verwijderen",
+                "gettingConnectedUsers": "Fout bij het ophalen van verbonden gebruikers",
                 "gettingUsers" : "Het is niet mogelijk om gebruikers op te halen",
                 "gettingUser" : "Het is niet mogelijk om de gebruiker op te halen",
                 "updateUser": "Het is niet mogelijk om de gebruiker bij te werken"

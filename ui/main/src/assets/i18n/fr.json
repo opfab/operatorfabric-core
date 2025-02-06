@@ -88,6 +88,7 @@
             },
             "user": {
                 "deleteUser": "Impossible de supprimer l'utilisateur",
+                "gettingConnectedUsers": "Erreur lors de la récupération des utilisateurs connectés",
                 "gettingUsers" : "Impossible de récupérer les utilisateurs",
                 "gettingUser" : "Impossible de récupérer l'utilisateur",
                 "updateUser": "Impossible de mettre à jour l'utilisateur"
