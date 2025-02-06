@@ -73,6 +73,13 @@ export class ResultTable {
                             flex: column.flex
                         });
                         break;
+                    case FieldType.RESPONSE_FROM_MY_ENTITIES:
+                        agGridColumns.push({
+                            field: 'responseFromMyEntities',
+                            headerName: '',
+                            type: 'responseFromMyEntities'
+                        });
+                        break;
                     case FieldType.COLORED_CIRCLE:
                         agGridColumns.push({
                             field: column.field,
@@ -132,6 +139,9 @@ export class ResultTable {
                         break;
                     case FieldType.COLORED_CIRCLE:
                         data[column.field] = this.getColoredCircleValue(card, column.field);
+                        break;
+                    case FieldType.RESPONSE_FROM_MY_ENTITIES:
+                        data['responseFromMyEntities'] = card.hasChildCardFromCurrentUserEntity;
                         break;
                     default:
                         data[column.field] = this.getNestedField(card, column.cardField);

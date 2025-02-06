@@ -55,7 +55,7 @@ describe('CustomScreenView', () => {
         RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
         filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     });
-    describe('custom screen configuration', () => {
+    describe('Custom screen configuration', () => {
         it('should return false if custom screen definition does not exist', () => {
             const customScreenView = new CustomCardListView('unexistingId');
             expect(customScreenView.isCustomScreenDefinitionExist()).toEqual(false);
@@ -65,14 +65,14 @@ describe('CustomScreenView', () => {
             const customScreenView = new CustomCardListView('testId');
             expect(customScreenView.isCustomScreenDefinitionExist()).toEqual(true);
         });
-        it('should return true if custom screen header filter PROCESS is define visible in customScreenDefinition', () => {
+        it('filter visibility should be true if custom screen header filter PROCESS is define visible in customScreenDefinition', () => {
             const customScreenDefinition = getCustomScreenDefintion();
             customScreenDefinition.headerFilters = [HeaderFilter.PROCESS];
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
             const customScreenView = new CustomCardListView('testId');
             expect(customScreenView.isFilterVisibleInHeader(HeaderFilter.PROCESS)).toEqual(true);
         });
-        it('should return false if custom screen header filter  PROCESS is not define visible in customScreenDefinition', () => {
+        it('filter visibility should be false if custom screen header filter  PROCESS is not define visible in customScreenDefinition', () => {
             const customScreenDefinition = getCustomScreenDefintion();
             customScreenDefinition.headerFilters = [HeaderFilter.TYPE_OF_STATE];
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
@@ -108,7 +108,7 @@ describe('CustomScreenView', () => {
             ]);
         });
     });
-    describe('processes', () => {
+    describe('Shoud get processe list', () => {
         beforeEach(() => {
             const process = [
                 new Process('myProcess', '1', 'my process label', null, new Map<string, State>()),
@@ -117,7 +117,7 @@ describe('CustomScreenView', () => {
             setProcessConfiguration(process);
         });
 
-        it('should return one process from user perimeter if user has one process state visible', async () => {
+        it('with one process from user perimeter if user has one process state visible', async () => {
             const customScreenDefinition = getCustomScreenDefintion();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
             const customScreenView = new CustomCardListView('testId');
@@ -134,7 +134,7 @@ describe('CustomScreenView', () => {
             const result = customScreenView.getProcessList();
             expect(result).toEqual([{id: 'myProcess', label: 'my process label'}]);
         });
-        it('should return one process form user perimeter if user has one process with 2 states visible', async () => {
+        it('with one process form user perimeter if user has one process with 2 states visible', async () => {
             const customScreenDefinition = getCustomScreenDefintion();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
             const customScreenView = new CustomCardListView('testId');
@@ -155,7 +155,7 @@ describe('CustomScreenView', () => {
             expect(result).toEqual([{id: 'myProcess', label: 'my process label'}]);
         });
     });
-    describe(' custom screen data', () => {
+    describe('Should return custom screen data', () => {
         beforeEach(() => {
             setEntities([
                 {
@@ -166,7 +166,7 @@ describe('CustomScreenView', () => {
             ]);
         });
 
-        it('should return data array from light cards store', async () => {
+        it('from light cards store', async () => {
             // this is necessary to set the user perimeter for child card
             // to be processed correctly by the ligthcard store
             await setUserPerimeter({
@@ -225,7 +225,7 @@ describe('CustomScreenView', () => {
             ]);
         });
 
-        it('should return data array filtered from light cards store', async () => {
+        it('filtered from light cards store', async () => {
             // this is necessary to set the user perimeter for child card
             // to be processed correctly by the ligthcard store
             await setUserPerimeter({
@@ -276,7 +276,7 @@ describe('CustomScreenView', () => {
             ]);
         });
 
-        it('should convert data for export', async () => {
+        it('converted for export', async () => {
             const customScreenDefinition = getCustomScreenDefintion();
             customScreenDefinition.results = {
                 columns: [

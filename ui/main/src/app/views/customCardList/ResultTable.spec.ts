@@ -70,490 +70,497 @@ describe('CustomScreenView - ResultTable', () => {
         ConfigService.setConfigServer(new ConfigServerMock());
         DateTimeFormatterService.init();
     });
+    describe('Shoud get columns definition for ag-grid', () => {
+        it('columDefinitions', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'processId',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    },
+                    {
+                        field: 'testField2',
+                        headerName: 'Start Date',
+                        cardField: 'startDate',
+                        fieldType: FieldType.DATE_AND_TIME,
+                        flex: 1
+                    },
+                    {
+                        headerName: 'Responses',
+                        fieldType: FieldType.RESPONSES,
+                        flex: 2
+                    },
+                    {
+                        fieldType: FieldType.RESPONSE_FROM_MY_ENTITIES
+                    },
+                    {
+                        field: 'coloredCircleTest',
+                        headerName: 'circle',
+                        fieldType: FieldType.COLORED_CIRCLE
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
+                {field: 'testField2', headerName: 'Start Date', type: 'default', flex: 1},
+                {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
+                {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
+                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined}
+            ]);
+        });
 
-    it('should return columDefinition for agGrid', () => {
-        const resultTable = getResultTable({
-            columns: [
+        it('specific columDefinition with severity', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'severity',
+                        cardField: 'processId',
+                        fieldType: FieldType.SEVERITY
+                    }
+                ]
+            });
+
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'severity', headerName: '', type: 'severity'}
+            ]);
+        });
+        it('specific columDefinition with type_of_state', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        headerName: 'Status',
+                        fieldType: FieldType.TYPE_OF_STATE
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', flex: undefined}
+            ]);
+        });
+    });
+    describe('Should get data array from cards', () => {
+        it('with only card fields defines in state screen defintion + cardId', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    },
+                    {
+                        field: 'testField2',
+                        headerName: 'State',
+                        cardField: 'state',
+                        fieldType: FieldType.STRING,
+                        flex: 1
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: new Date(),
+                    state: 'state1',
+                    id: 'id1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    startDate: new Date(),
+                    state: 'state2',
+                    id: 'id2'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'id1', testField: 'processId1', testField2: 'state1'},
+                {cardId: 'id2', testField: 'processId2', testField2: 'state2'}
+            ]);
+        });
+
+        it('with nested fields defines in state screen defintion + cardId', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'nestedField',
+                        headerName: 'Test',
+                        cardField: 'data.test',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: new Date(),
+                    state: 'state1',
+                    id: 'id1',
+                    data: {test: 'testData'}
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', nestedField: 'testData'}]);
+        });
+        it('with the entity name if field type is publisher', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'publisher',
+                        cardField: 'publisher',
+                        fieldType: FieldType.PUBLISHER
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name'}]);
+        });
+        it('with the publisher field if field type is publisher and publisher type is not ENTITY', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'publisher',
+                        cardField: 'publisher',
+                        fieldType: FieldType.PUBLISHER
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'EXTERNAL'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1'}]);
+        });
+        it('with the representative user if representative user is defined', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'publisher',
+                        cardField: 'publisher',
+                        fieldType: FieldType.PUBLISHER
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    representative: 'user1'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name (user1)'}]);
+        });
+
+        it('with the representative entity if representative entity is defined', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'publisher',
+                        cardField: 'publisher',
+                        fieldType: FieldType.PUBLISHER
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    representative: 'entity2',
+                    representativeType: 'ENTITY'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name (entity2 name)'}]);
+        });
+        it('with formatted date if field type is DATE_AND_TIME', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'date',
+                        cardField: 'startDate',
+                        fieldType: FieldType.DATE_AND_TIME
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    startDate: new Date('2021-01-01T02:00')
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', date: '01/01/2021 2:00 AM'}]);
+        });
+
+        it('with the type of state if field type is type_of_state', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        headerName: 'Status',
+                        fieldType: FieldType.TYPE_OF_STATE
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    state: 'myState',
+                    process: 'myProcess'
+                }),
+                getOneLightCard({
+                    id: 'card2',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    state: 'myState2',
+                    process: 'myProcess'
+                })
+            ];
+            const states = new Map<string, State>();
+            states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
+            states.set('myState2', {type: undefined});
+            const process = [new Process('myProcess', '1', null, null, states)];
+            setProcessConfiguration(process);
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
                 {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'processId',
-                    fieldType: FieldType.STRING,
-                    flex: 2
+                    cardId: 'card1',
+                    typeOfState: {
+                        text: 'Translation (en) of shared.typeOfState.INPROGRESS',
+                        value: 'INPROGRESS'
+                    }
                 },
                 {
-                    field: 'testField2',
-                    headerName: 'Start Date',
-                    cardField: 'startDate',
-                    fieldType: FieldType.DATE_AND_TIME,
-                    flex: 1
-                },
-                {
-                    headerName: 'Responses',
-                    fieldType: FieldType.RESPONSES,
-                    flex: 2
-                },
-                {
-                    field: 'coloredCircleTest',
-                    headerName: 'circle',
-                    fieldType: FieldType.COLORED_CIRCLE
-                }
-            ]
-        });
-        expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-            {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
-            {field: 'testField2', headerName: 'Start Date', type: 'default', flex: 1},
-            {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
-            {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined}
-        ]);
-    });
-
-    it('should return specific columDefinition for agGrid with severity', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'severity',
-                    cardField: 'processId',
-                    fieldType: FieldType.SEVERITY
-                }
-            ]
-        });
-
-        expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-            {field: 'severity', headerName: '', type: 'severity'}
-        ]);
-    });
-    it('should return specific columDefinition for agGrid with type_of_state', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    headerName: 'Status',
-                    fieldType: FieldType.TYPE_OF_STATE
-                }
-            ]
-        });
-        expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-            {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', flex: undefined}
-        ]);
-    });
-
-    it('should get only card fields defines in state screen defintion + cardId', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'process',
-                    fieldType: FieldType.STRING,
-                    flex: 2
-                },
-                {
-                    field: 'testField2',
-                    headerName: 'State',
-                    cardField: 'state',
-                    fieldType: FieldType.STRING,
-                    flex: 1
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                process: 'processId1',
-                startDate: new Date(),
-                state: 'state1',
-                id: 'id1'
-            }),
-            getOneLightCard({
-                process: 'processId2',
-                startDate: new Date(),
-                state: 'state2',
-                id: 'id2'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {cardId: 'id1', testField: 'processId1', testField2: 'state1'},
-            {cardId: 'id2', testField: 'processId2', testField2: 'state2'}
-        ]);
-    });
-
-    it('should get nested fields defines in state screen defintion + cardId', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'nestedField',
-                    headerName: 'Test',
-                    cardField: 'data.test',
-                    fieldType: FieldType.STRING,
-                    flex: 2
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                process: 'processId1',
-                startDate: new Date(),
-                state: 'state1',
-                id: 'id1',
-                data: {test: 'testData'}
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'id1', nestedField: 'testData'}]);
-    });
-
-    it('should get filter card by business period startDate', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'process',
-                    fieldType: FieldType.STRING,
-                    flex: 2
-                }
-            ]
-        });
-
-        resultTable.setBusinessDateFilter(10, 200);
-        const cards = [
-            getOneLightCard({
-                process: 'processId0',
-                startDate: 5,
-                id: 'id0'
-            }),
-            getOneLightCard({
-                process: 'processId1',
-                startDate: 100,
-                id: 'id1'
-            }),
-            getOneLightCard({
-                process: 'processId2',
-                startDate: 1000,
-                id: 'id2'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1'}]);
-    });
-
-    it('should get filter card by business period startDate and endDate', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'process',
-                    fieldType: FieldType.STRING,
-                    flex: 2
-                }
-            ]
-        });
-        resultTable.setBusinessDateFilter(10, 200);
-        const cards = [
-            getOneLightCard({
-                process: 'processId0',
-                startDate: 5,
-                endDate: 50,
-                id: 'id0'
-            }),
-            getOneLightCard({
-                process: 'processId1',
-                startDate: 5,
-                endDate: 8,
-                id: 'id1'
-            }),
-            getOneLightCard({
-                process: 'processId2',
-                startDate: 5,
-                endDate: 2000,
-                id: 'id2'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {cardId: 'id0', testField: 'processId0'},
-            {cardId: 'id2', testField: 'processId2'}
-        ]);
-    });
-
-    it('should get filter card by process', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'process',
-                    fieldType: FieldType.STRING
-                }
-            ]
-        });
-
-        resultTable.setProcessFilter(['processId1', 'processId2']);
-        const cards = [
-            getOneLightCard({
-                process: 'processId0',
-                startDate: 5,
-                id: 'id0'
-            }),
-            getOneLightCard({
-                process: 'processId1',
-                startDate: 100,
-                id: 'id1'
-            }),
-            getOneLightCard({
-                process: 'processId2',
-                startDate: 1000,
-                id: 'id2'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {cardId: 'id1', testField: 'processId1'},
-            {cardId: 'id2', testField: 'processId2'}
-        ]);
-    });
-    it('should get filter card by type of state', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'testField',
-                    headerName: 'Process',
-                    cardField: 'process',
-                    fieldType: FieldType.STRING
-                }
-            ]
-        });
-        const states = new Map<string, State>();
-        states.set('state1.0', {type: TypeOfStateEnum.INPROGRESS});
-        states.set('state1.1', {type: TypeOfStateEnum.FINISHED});
-        const states2 = new Map<string, State>();
-        states2.set('state2.0', {type: TypeOfStateEnum.CANCELED});
-        states2.set('state2.1', {type: undefined});
-        const process = [
-            new Process('processId0', '1', null, null, states),
-            new Process('processId1', '1', null, null, states2)
-        ];
-
-        setProcessConfiguration(process);
-
-        const cards = [
-            getOneLightCard({
-                process: 'processId0',
-                state: 'state1.0',
-                startDate: 5,
-                id: 'id0'
-            }),
-            getOneLightCard({
-                process: 'processId0',
-                state: 'state1.1',
-                startDate: 100,
-                id: 'id1'
-            }),
-            getOneLightCard({
-                process: 'processId1',
-                state: 'state2.0',
-                startDate: 1000,
-                id: 'id2'
-            }),
-            getOneLightCard({
-                process: 'processId1',
-                state: 'state2.1',
-                startDate: 1000,
-                id: 'id3'
-            })
-        ];
-        resultTable.setTypesOfStateFilter(['INPROGRESS', 'FINISHED']);
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {cardId: 'id0', testField: 'processId0'},
-            {cardId: 'id1', testField: 'processId0'}
-        ]);
-    });
-
-    it('should return the entity name if field type is publisher', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'publisher',
-                    cardField: 'publisher',
-                    fieldType: FieldType.PUBLISHER
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                publisher: 'entity1',
-                publisherType: 'ENTITY'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name'}]);
-    });
-    it('Should return the publisher field if field type is publisher and publisher type is not ENTITY', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'publisher',
-                    cardField: 'publisher',
-                    fieldType: FieldType.PUBLISHER
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                publisher: 'entity1',
-                publisherType: 'EXTERNAL'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1'}]);
-    });
-    it('Should return the representative user if representative user is defined', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'publisher',
-                    cardField: 'publisher',
-                    fieldType: FieldType.PUBLISHER
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                publisher: 'entity1',
-                publisherType: 'ENTITY',
-                representative: 'user1'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name (user1)'}]);
-    });
-
-    it('Should return the representative entity if representative entity is defined', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'publisher',
-                    cardField: 'publisher',
-                    fieldType: FieldType.PUBLISHER
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                publisher: 'entity1',
-                publisherType: 'ENTITY',
-                representative: 'entity2',
-                representativeType: 'ENTITY'
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name (entity2 name)'}]);
-    });
-    it('Should return formatted date if field type is DATE_AND_TIME', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'date',
-                    cardField: 'startDate',
-                    fieldType: FieldType.DATE_AND_TIME
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                startDate: new Date('2021-01-01T02:00')
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'card1', date: '01/01/2021 2:00 AM'}]);
-    });
-
-    it('should return the type of state if field type is type_of_state', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    headerName: 'Status',
-                    fieldType: FieldType.TYPE_OF_STATE
-                }
-            ]
-        });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                publisher: 'entity1',
-                publisherType: 'ENTITY',
-                state: 'myState',
-                process: 'myProcess'
-            }),
-            getOneLightCard({
-                id: 'card2',
-                publisher: 'entity1',
-                publisherType: 'ENTITY',
-                state: 'myState2',
-                process: 'myProcess'
-            })
-        ];
-        const states = new Map<string, State>();
-        states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
-        states.set('myState2', {type: undefined});
-        const process = [new Process('myProcess', '1', null, null, states)];
-        setProcessConfiguration(process);
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {
-                cardId: 'card1',
-                typeOfState: {
-                    text: 'Translation (en) of shared.typeOfState.INPROGRESS',
-                    value: 'INPROGRESS'
-                }
-            },
-            {
-                cardId: 'card2',
-                typeOfState: {
-                    text: '',
-                    value: undefined
-                }
-            }
-        ]);
-    });
-    it('should return the color using cutom method getValue() if field type is COLORED_CIRCLE', () => {
-        const resultTable = getResultTable({
-            columns: [
-                {
-                    field: 'myfield',
-                    fieldType: FieldType.COLORED_CIRCLE,
-                    getValue: (card: Card) => {
-                        if (card.severity === Severity.ALARM) return 'red';
-                        return 'blue';
+                    cardId: 'card2',
+                    typeOfState: {
+                        text: '',
+                        value: undefined
                     }
                 }
-            ]
+            ]);
         });
-        const cards = [
-            getOneLightCard({
-                id: 'card1',
-                severity: Severity.ALARM
-            }),
-            getOneLightCard({
-                id: 'card2',
-                severity: Severity.ACTION
-            })
-        ];
-        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-        expect(dataArray).toEqual([
-            {cardId: 'card1', myfield: 'red'},
-            {cardId: 'card2', myfield: 'blue'}
-        ]);
+        it('with the color using custom method getValue() if field type is COLORED_CIRCLE', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'myfield',
+                        fieldType: FieldType.COLORED_CIRCLE,
+                        getValue: (card: Card) => {
+                            if (card.severity === Severity.ALARM) return 'red';
+                            return 'blue';
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    severity: Severity.ALARM
+                }),
+                getOneLightCard({
+                    id: 'card2',
+                    severity: Severity.ACTION
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'card1', myfield: 'red'},
+                {cardId: 'card2', myfield: 'blue'}
+            ]);
+        });
     });
-    describe('If field type is Responses', () => {
-        it('Should return entities required to reponse in alphabetical order and in grey if there is no responses', () => {
+    describe('Should filter card', () => {
+        it('by business period startDate', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    }
+                ]
+            });
+
+            resultTable.setBusinessDateFilter(10, 200);
+            const cards = [
+                getOneLightCard({
+                    process: 'processId0',
+                    startDate: 5,
+                    id: 'id0'
+                }),
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: 100,
+                    id: 'id1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    startDate: 1000,
+                    id: 'id2'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1'}]);
+        });
+
+        it('by business period startDate and endDate', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    }
+                ]
+            });
+            resultTable.setBusinessDateFilter(10, 200);
+            const cards = [
+                getOneLightCard({
+                    process: 'processId0',
+                    startDate: 5,
+                    endDate: 50,
+                    id: 'id0'
+                }),
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: 5,
+                    endDate: 8,
+                    id: 'id1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    startDate: 5,
+                    endDate: 2000,
+                    id: 'id2'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'id0', testField: 'processId0'},
+                {cardId: 'id2', testField: 'processId2'}
+            ]);
+        });
+
+        it('by process', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING
+                    }
+                ]
+            });
+
+            resultTable.setProcessFilter(['processId1', 'processId2']);
+            const cards = [
+                getOneLightCard({
+                    process: 'processId0',
+                    startDate: 5,
+                    id: 'id0'
+                }),
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: 100,
+                    id: 'id1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    startDate: 1000,
+                    id: 'id2'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'id1', testField: 'processId1'},
+                {cardId: 'id2', testField: 'processId2'}
+            ]);
+        });
+        it('by type of state', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING
+                    }
+                ]
+            });
+            const states = new Map<string, State>();
+            states.set('state1.0', {type: TypeOfStateEnum.INPROGRESS});
+            states.set('state1.1', {type: TypeOfStateEnum.FINISHED});
+            const states2 = new Map<string, State>();
+            states2.set('state2.0', {type: TypeOfStateEnum.CANCELED});
+            states2.set('state2.1', {type: undefined});
+            const process = [
+                new Process('processId0', '1', null, null, states),
+                new Process('processId1', '1', null, null, states2)
+            ];
+
+            setProcessConfiguration(process);
+
+            const cards = [
+                getOneLightCard({
+                    process: 'processId0',
+                    state: 'state1.0',
+                    startDate: 5,
+                    id: 'id0'
+                }),
+                getOneLightCard({
+                    process: 'processId0',
+                    state: 'state1.1',
+                    startDate: 100,
+                    id: 'id1'
+                }),
+                getOneLightCard({
+                    process: 'processId1',
+                    state: 'state2.0',
+                    startDate: 1000,
+                    id: 'id2'
+                }),
+                getOneLightCard({
+                    process: 'processId1',
+                    state: 'state2.1',
+                    startDate: 1000,
+                    id: 'id3'
+                })
+            ];
+            resultTable.setTypesOfStateFilter(['INPROGRESS', 'FINISHED']);
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'id0', testField: 'processId0'},
+                {cardId: 'id1', testField: 'processId0'}
+            ]);
+        });
+    });
+
+    describe('Should get responses in data array', () => {
+        it('with entities required to reponse in alphabetical order and in grey if there is no responses', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -583,7 +590,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
-        it('Should return entities allowed to reponse in alphabetical order if there is no entities required to respond', () => {
+        it('with entities allowed to reponse in alphabetical order if there is no entities required to respond', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -614,7 +621,7 @@ describe('CustomScreenView - ResultTable', () => {
             ]);
         });
 
-        it('Should not return entity it entity not allowed to send card', () => {
+        it('with no entity if entity not allowed to send card', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -635,7 +642,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', responses: []}]);
         });
-        it('Should include child entity if parent entity is not allowed to send card', () => {
+        it('with child entity if parent entity is not allowed to send card', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -661,7 +668,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
-        it('Should set color entity according to child card severity if child card if present for entity', () => {
+        it('with color entity according to child card severity if child card if present for entity', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -712,6 +719,39 @@ describe('CustomScreenView - ResultTable', () => {
                         {name: 'entity2 name', color: 'orange'},
                         {name: 'entity3 name', color: 'green'}
                     ]
+                }
+            ]);
+        });
+        it('with response from my entities set to true if a response from my entities exists', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    hasChildCardFromCurrentUserEntity: true,
+                    entitiesAllowedToRespond: ['entity1', 'entity2', 'entity3', 'child_entity']
+                })
+            ];
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ALARM
+                })
+            ]);
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    responseFromMyEntities: true
                 }
             ]);
         });

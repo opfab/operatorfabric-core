@@ -26,6 +26,9 @@
                     fieldType: 'DATE_AND_TIME'
                 },
                 {
+                    fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                },
+                {
                     field: 'testField',
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',

@@ -321,6 +321,9 @@ const customScreenExample = {
                 fieldType: 'DATE_AND_TIME'
             },
             {
+                fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+            },
+            {
                 field: 'testField',
                 headerName: 'TITLE',
                 cardField: 'titleTranslated',
@@ -362,16 +365,17 @@ You can define the filters to be displayed in the header of the screen by adding
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
-- `SEVERITY`: Displays the severity as a color rectangle.
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
-- `STRING`: Displays a string value.
-- `TYPE_OF_STATE`: Displays the type of state value: `INPROGRESS`, `FINISHED`, `CANCELLED`.
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
+- `RESPONSE_FROM_MY_ENTITIES`: Displays a blue arrow if one of the user's entity has responded to the card.
+- `SEVERITY`: Displays the severity as a color rectangle.
+- `STRING`: Displays a string value.
+- `TYPE_OF_STATE`: Displays the type of state value: `INPROGRESS`, `FINISHED`, `CANCELLED`.
 
 You can define the column header text using the `headerName` field.
 
-The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `SEVERITY`, `TYPE_OF_STATE`, and `RESPONSES`.
+The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
 
 The `flex` field sets the CSS flex property for the column.
 

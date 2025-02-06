@@ -28,6 +28,7 @@ import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
 import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
+import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
 
 @Component({
     selector: 'of-custom-screen',
@@ -134,7 +135,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             this.gridOptions = {
                 domLayout: 'autoHeight',
                 components: {
-                    responsesCellRenderer: ResponsesCellRendererComponent
+                    responsesCellRenderer: ResponsesCellRendererComponent,
+                    hasResponseCellRenderer: HasResponseCellRendererComponent
                 },
 
                 defaultColDef: {
@@ -198,6 +200,14 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                                 '"></div>'
                             );
                         }
+                    },
+                    responseFromMyEntities: {
+                        sortable: false,
+                        filter: false,
+                        resizable: false,
+                        width: 15,
+                        wrapText: false,
+                        cellRenderer: 'hasResponseCellRenderer'
                     }
                 },
                 ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
