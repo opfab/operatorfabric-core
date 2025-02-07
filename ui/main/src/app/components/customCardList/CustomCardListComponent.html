@@ -94,6 +94,7 @@
         <ag-grid-angular
             [rowData]="rowData$ | async"
             [gridOptions]="gridOptions"
+            [rowSelection]="rowSelection"
             (gridReady)="onGridReady($event)"
             (rowClicked)="selectCard($event.data.cardId)"
             class="ag-theme-opfab">
@@ -114,6 +115,15 @@
                     [rotate]="true">
                 </ngb-pagination>
             </div>
+            <div *ngFor="let responseButton of responseButtons" class="opfab-custom-screen-response-btn">
+                <button
+                    id="opfab-card-details-btn-unack"
+                    class="opfab-btn"
+                    (click)="clickOnResponseButton(responseButton.id)">
+                    {{ responseButton.label }}
+                </button>
+            </div>
+
             <div class="opfab-custom-card-list-export-div">
                 <div
                     id="opfab-monitoring-btn-exportToExcel"

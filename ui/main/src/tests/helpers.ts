@@ -59,7 +59,7 @@ export function getOneLightCard(lightCardTemplate?: any): Card {
         lightCardTemplate.process ?? 'testProcess',
         'testProcessInstanceId',
         lightCardTemplate.state ?? 'testState',
-        lightCardTemplate.lttd ?? 5000,
+        lightCardTemplate.lttd ?? null,
         getI18nData('testTitle'),
         getI18nData('testSummary'),
         'testTitleTranslated',

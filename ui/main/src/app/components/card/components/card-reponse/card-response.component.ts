@@ -168,6 +168,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 .then(() => {
                     this.sendingResponseInProgress = false;
                     this.isResponseLocked = true;
+                    CardTemplateGateway.sendResponseLockToTemplate();
                     this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 })
                 .catch((error) => {

@@ -17,6 +17,7 @@ export class CustomScreenDefinition {
     results: {
         columns: Column[];
     };
+    responseButtons?: ResponseButton[];
 }
 
 export class Column {
@@ -26,6 +27,18 @@ export class Column {
     fieldType: FieldType;
     flex?: number;
     getValue?: (card: Card) => string;
+}
+
+export class ResponseButton {
+    id: string;
+    label: string;
+    getUserResponses: (selectedCards: Card[]) => any;
+}
+
+export class UserResponse {
+    valid: boolean;
+    errorMsg: string;
+    responseCards: any[];
 }
 
 export enum FieldType {

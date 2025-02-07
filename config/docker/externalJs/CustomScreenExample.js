@@ -22,6 +22,7 @@
                 },
                 {
                     field: 'TIME',
+                    headerName: 'TIME',
                     cardField: 'publishDate',
                     fieldType: 'DATE_AND_TIME'
                 },
@@ -72,5 +73,73 @@
         }
     }
 
+    const customScreenExample2 = {
+        id: 'testId2',
+        name: 'testName',
+        headerFilters: ['PROCESS'],
+        results: {
+            columns: [
+                {
+                    field: 'urgency',
+                    headerName: 'URGENCY',
+                    fieldType: 'COLORED_CIRCLE',
+                    getValue: (card) => {
+                        if (card.severity === 'ALARM') return "red"
+                        return "green"
+                    },
+                    flex: 0.25
+                },
+                {
+                    field: 'TIME',
+                    headerName: 'PUBLISH DATE',
+                    cardField: 'publishDate',
+                    fieldType: 'DATE_AND_TIME'
+                },
+                {
+                    fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                },
+                {
+                    field: 'testField',
+                    headerName: 'TITLE',
+                    cardField: 'titleTranslated',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                {
+                    headerName: 'ANSWERS',
+                    fieldType: 'RESPONSES',
+                    flex: 2
+                }
+            ]
+        },
+        responseButtons: [
+            {
+                id: 'button1',
+                label: 'Accept proposals',
+                getUserResponses: (cards) => {
+                    const responseCards = [];
+                    const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
+                    cards.forEach((card) => {
+                        responseCards.push({ responseCardData: responseData });
+                    });
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            },
+            {
+                id: 'button2',
+                label: 'Refuse proposals',
+                getUserResponses: (cards) => {
+                    const responseCards = [];
+                    const responseData = {}
+                    cards.forEach((card) => {
+                        responseCards.push({ responseCardData: responseData });
+                    });
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            }
+        ]
+    }
+
     opfab.businessconfig.registerCustomScreen(customScreenExample);
+    opfab.businessconfig.registerCustomScreen(customScreenExample2);
 }

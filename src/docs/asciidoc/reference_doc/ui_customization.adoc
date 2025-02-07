@@ -359,7 +359,7 @@ const customScreenExample = {
 opfab.businessconfig.registerCustomScreen(customScreenExample);
 ----
 
-In this example, the custom screen is accessible via the URL `#/customScreen/testId`.
+In this example, the custom screen is accessible via the URL `#/customscreen/testId`.
 
 You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE` and `RESPONSE_FROM_MY_ENTITIES`.
 
@@ -379,3 +379,55 @@ The `cardField` is the field of the card that will be displayed in the result. I
 
 The `flex` field sets the CSS flex property for the column.
 
+=== Response buttons 
+
+It is possible to define custom response buttons for the custom screen, this allows the user to send multiple responses at once.
+
+To do this, add a `responseButtons` array to the custom screen object. Each button object must contain the following fields:
+
+- `id`: The button identifier.
+- `label`: The button label.
+- `getUserResponses: A function that takes an array of cards as a parameter and returns an object containing the following fields:
+  - `valid`: A boolean indicating if the action is valid.
+  - `errorMsg`: An error message to display if the action is not valid.
+  - `responseCards`: An array of response cards to send with the following structure with a `responseCardData` field containing the response card data field.
+
+ 
+
+Here is an example of a custom screen configuration with response buttons:
+
+----
+const customScreenExample = {
+        id: 'testId2',
+        name: 'testName',
+
+        .....
+     
+        responseButtons: [
+            {
+                id: 'button1',
+                label: 'Accept proposals',
+                getUserResponses: (cards) => {
+                    const responseCards = [];
+                    const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
+                    cards.forEach((card) => {
+                        responseCards.push({ responseCardData: responseData });
+                    });
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            },
+            {
+                id: 'button2',
+                label: 'Refuse proposals',
+                getUserResponses: (cards) => {
+                    const responseCards = [];
+                    const responseData = {}
+                    cards.forEach((card) => {
+                        responseCards.push({ responseCardData: responseData });
+                    });
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            }
+        ]
+
+----

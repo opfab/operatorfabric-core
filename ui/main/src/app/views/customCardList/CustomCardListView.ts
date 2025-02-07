@@ -16,10 +16,12 @@ import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainSe
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {LoggerService} from '@ofServices/logs/LoggerService';
+import {Responses} from './Responses';
 
 export class CustomCardListView {
     private readonly customScreenDefinition: CustomScreenDefinition;
     private readonly resultTable: ResultTable;
+    private readonly responses: Responses;
     private results: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     filter$: Subject<void> = new ReplaySubject<void>(1);
@@ -27,6 +29,7 @@ export class CustomCardListView {
     constructor(id: string) {
         this.customScreenDefinition = CustomScreenService.getCustomScreenDefinition(id);
         this.resultTable = new ResultTable(this.customScreenDefinition);
+        this.responses = new Responses(this.customScreenDefinition);
         this.resultTable.setBusinessDateFilter(
             RealTimeDomainService.getCurrentDomain().startDate,
             RealTimeDomainService.getCurrentDomain().endDate
@@ -118,6 +121,18 @@ export class CustomCardListView {
         });
 
         return Array.from(processes.values());
+    }
+
+    public getResponseButtons(): {id: string; label: string}[] {
+        return this.responses.getResponseButtons();
+    }
+
+    public isResponsePossibleForCard(cardId: string) {
+        return this.responses.isResponsePossibleForCard(cardId);
+    }
+
+    public async clickOnButton(buttonId: string, selectedCards: string[]) {
+        await this.responses.sendResponse(buttonId, selectedCards);
     }
 
     public destroy() {

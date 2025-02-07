@@ -12,7 +12,6 @@ import {Card} from 'app/model/Card';
 import {CardForPublishing} from '@ofServices/cards/model/CardForPublishing';
 import {NotificationDecision} from '@ofServices/notifications/NotificationDecision';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
@@ -65,7 +64,6 @@ export class CardResponseService {
                 if (resp.status !== ServerResponseStatus.OK) {
                     reject(new Error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage));
                 } else {
-                    CardTemplateGateway.sendResponseLockToTemplate();
                     resolve();
                 }
             });

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AsyncPipe, NgIf} from '@angular/common';
+import {AsyncPipe, NgFor, NgIf} from '@angular/common';
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
@@ -17,7 +17,13 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
-import {AllCommunityModule, GridOptions, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    GridOptions,
+    ModuleRegistry,
+    provideGlobalGridOptions,
+    RowSelectionOptions
+} from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/excel-export';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
@@ -38,6 +44,7 @@ import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellR
     imports: [
         TranslateModule,
         NgIf,
+        NgFor,
         AgGridAngular,
         AsyncPipe,
         FormsModule,
@@ -104,6 +111,9 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     };
 
     responseFromMyEntitiesFilterVisible = false;
+    responseButtons = [];
+    public rowSelection: RowSelectionOptions;
+
     private readonly ngUnsubscribe$ = new Subject<void>();
 
     constructor(
@@ -139,6 +149,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
                 HeaderFilter.RESPONSE_FROM_MY_ENTITIES
             );
+            this.responseButtons = this.customCardListView.getResponseButtons();
+            if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
             this.gridOptions = {
                 domLayout: 'autoHeight',
                 components: {
@@ -233,6 +245,17 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                 this.rowData = results;
                 this.rowDataSubject.next(this.rowData);
             });
+            if (this.responseButtons.length > 0) {
+                this.rowSelection = {
+                    mode: 'multiRow',
+                    selectAll: 'currentPage',
+                    hideDisabledCheckboxes: true,
+                    isRowSelectable: (node) => {
+                        return this.customCardListView.isResponsePossibleForCard(node.data.cardId);
+                    }
+                };
+            }
+
             this.headerForm.get('businessDateRanges').setValue({
                 startDate: new Date(this.customCardListView.getBusinessPeriod().startDate),
                 endDate: new Date(this.customCardListView.getBusinessPeriod().endDate)
@@ -304,6 +327,15 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         this.modalRef.dismissed.subscribe(() => {
             SelectedCardService.clearSelectedCardId();
         });
+    }
+
+    clickOnResponseButton(buttonId: string) {
+        const selectedRows = this.gridApi.getSelectedRows();
+        if (selectedRows.length === 0) {
+            return;
+        }
+        const selectedCards = selectedRows.map((row) => row.cardId);
+        this.customCardListView.clickOnButton(buttonId, selectedCards);
     }
 
     export(): void {
