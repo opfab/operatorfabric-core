@@ -10,13 +10,12 @@
     <h1>Custom Screen {{id}} does not exist</h1>
 </div>
 
-<div *ngIf="isCustomScreenDefinitionExist">
+<div *ngIf="isCustomScreenDefinitionExist" [formGroup]="headerForm">
     <div class="opfab-custom-screen-header">
         <div style="display: flex">
-            <form
+            <div
                 class="opfab-date-range-input opfab-input"
-                style="margin-top: 28px; margin-bottom: 28px; width: 260px; height: 49px"
-                [formGroup]="headerForm">
+                style="margin-top: 28px; margin-bottom: 28px; width: 260px; height: 49px">
                 <label class="opfab-date-range-label" for="opfab-publish-date-range" translate
                     >shared.filters.businessDateRange</label
                 >
@@ -31,7 +30,7 @@
                     [timePicker24Hour]="true"
                     [timePickerIncrement]="1"
                     formControlName="businessDateRanges" />
-            </form>
+            </div>
             <div
                 *ngIf="processFilterVisible"
                 style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
@@ -71,6 +70,18 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="!responseFromMyEntitiesFilterVisible" style="height: 20px"></div>
+    <div *ngIf="responseFromMyEntitiesFilterVisible" class="opfab-custom-card-list-response-checkbox">
+        <label
+            id="opfab-show-cards-with-response"
+            style="font-weight: bold; margin-left: 5px; margin-bottom: 0px"
+            class="opfab-checkbox"
+            translate
+            >feed.filters.showCardsWithResponse.label
+            <input type="checkbox" formControlName="responseFromMyEntities" />
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
     </div>
 
     <div

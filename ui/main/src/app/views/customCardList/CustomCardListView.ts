@@ -100,6 +100,14 @@ export class CustomCardListView {
         this.resultTable.setTypesOfStateFilter(typesOfState);
     }
 
+    public excludeCardsWithResponseFromMyEntities() {
+        this.resultTable.excludeCardsWithResponseFromMyEntities();
+    }
+
+    public includeCardsWithResponseFromMyEntities() {
+        this.resultTable.includeCardsWithResponseFromMyEntities();
+    }
+
     public getProcessList(): {id: string; label: string}[] {
         const perimeters = UsersService.getCurrentUserWithPerimeters().computedPerimeters;
 

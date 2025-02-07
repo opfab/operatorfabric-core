@@ -42,5 +42,6 @@ export enum FieldType {
 
 export enum HeaderFilter {
     PROCESS = 'PROCESS',
-    TYPE_OF_STATE = 'TYPE_OF_STATE'
+    TYPE_OF_STATE = 'TYPE_OF_STATE',
+    RESPONSE_FROM_MY_ENTITIES = 'RESPONSE_FROM_MY_ENTITIES'
 }

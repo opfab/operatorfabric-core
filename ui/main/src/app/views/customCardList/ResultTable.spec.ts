@@ -557,6 +557,36 @@ describe('CustomScreenView - ResultTable', () => {
                 {cardId: 'id1', testField: 'processId0'}
             ]);
         });
+        it('that have responses from my entities if excludeCardsWithResponseFromMyEntities is called', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId0',
+                    state: 'state1.0',
+                    hasChildCardFromCurrentUserEntity: true,
+                    id: 'id0'
+                }),
+                getOneLightCard({
+                    process: 'processId0',
+                    state: 'state1.1',
+                    hasChildCardFromCurrentUserEntity: false,
+                    startDate: 100,
+                    id: 'id1'
+                })
+            ];
+            resultTable.excludeCardsWithResponseFromMyEntities();
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId0'}]);
+        });
     });
 
     describe('Should get responses in data array', () => {

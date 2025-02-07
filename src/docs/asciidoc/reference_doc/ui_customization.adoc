@@ -361,7 +361,7 @@ opfab.businessconfig.registerCustomScreen(customScreenExample);
 
 In this example, the custom screen is accessible via the URL `#/customScreen/testId`.
 
-You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`.
+You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE` and `RESPONSE_FROM_MY_ENTITIES`.
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 

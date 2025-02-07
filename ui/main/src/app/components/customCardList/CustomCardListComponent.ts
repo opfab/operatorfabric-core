@@ -65,7 +65,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     headerForm = new FormGroup({
         businessDateRanges: new FormControl({}),
         processes: new FormControl([]),
-        typeOfState: new FormControl([])
+        typeOfState: new FormControl([]),
+        responseFromMyEntities: new FormControl(true)
     });
     modalRef: NgbModalRef;
 
@@ -78,6 +79,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         sortOptions: true,
         nbOfDisplayValues: 1
     };
+
     typeOfStateFilterVisible = false;
     typeOfStateMultiSelectOptions: Array<MultiSelectOption> = [
         new MultiSelectOption(
@@ -100,6 +102,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         sortOptions: true,
         nbOfDisplayValues: 1
     };
+
+    responseFromMyEntitiesFilterVisible = false;
     private readonly ngUnsubscribe$ = new Subject<void>();
 
     constructor(
@@ -132,6 +136,9 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
             this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
             this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
+            this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+                HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+            );
             this.gridOptions = {
                 domLayout: 'autoHeight',
                 components: {
@@ -276,6 +283,12 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             typeOfState.push(type);
         });
         this.customCardListView.setTypesOfStateFilter(typeOfState);
+        const responseFromMyEntities = this.headerForm.get('responseFromMyEntities').value;
+        if (responseFromMyEntities) {
+            this.customCardListView.includeCardsWithResponseFromMyEntities();
+        } else {
+            this.customCardListView.excludeCardsWithResponseFromMyEntities();
+        }
         this.customCardListView.search();
     }
 

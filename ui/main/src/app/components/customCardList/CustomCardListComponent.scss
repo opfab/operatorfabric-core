@@ -12,7 +12,7 @@
     background-color: var(--opfab-bgcolor-darker);
     margin-left: 0;
     margin-right: 0;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     padding-left: 5%;
 }
 
@@ -25,4 +25,15 @@
 .opfab-custom-card-list-export-btn {
     float: right;
     margin-right: 10px;
+}
+
+.opfab-custom-card-list-response-checkbox {
+    margin-left: 5%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    border: solid 1px var(--opfab-bgcolor);
+    text-align: center;
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-text-color);
 }

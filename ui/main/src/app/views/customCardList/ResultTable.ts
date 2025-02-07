@@ -25,6 +25,7 @@ export class ResultTable {
     private endDate: number;
     private processIds = [];
     private typesOfState = [];
+    private areCardsWithResponseFromMyEntitiesExcluded = false;
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
@@ -114,12 +115,21 @@ export class ResultTable {
         this.typesOfState = typesOfState;
     }
 
+    public excludeCardsWithResponseFromMyEntities() {
+        this.areCardsWithResponseFromMyEntitiesExcluded = true;
+    }
+
+    public includeCardsWithResponseFromMyEntities() {
+        this.areCardsWithResponseFromMyEntitiesExcluded = false;
+    }
+
     public getDataArrayFromCards(cards: Card[], childCards: Map<string, Array<Card>>): any[] {
         const dataArray = [];
         cards.forEach((card) => {
             if (!this.isCardInDateRange(card)) return;
             if (!this.isCardInProcessIds(card)) return;
             if (!this.isCardInTypesOfState(card)) return;
+            if (this.areCardsWithResponseFromMyEntitiesExcluded && card.hasChildCardFromCurrentUserEntity) return;
             const data = {};
             this.customScreenDefinition.results.columns.forEach((column) => {
                 switch (column.fieldType) {
