@@ -348,6 +348,16 @@ const customScreenExample = {
                 fieldType: 'PUBLISHER'
             },
             {
+                field: 'urgency',
+                headerName: 'URGENCY',
+                fieldType: 'COLORED_CIRCLE',
+                getValue: (card) => {
+                        if (card.severity === 'ALARM') return "red"
+                        return "green"
+                    },
+                flex: 0.5
+            },
+            {
                 headerName: 'ANSWERS',
                 fieldType: 'RESPONSES',
                 flex: 2
@@ -365,6 +375,7 @@ You can define the filters to be displayed in the header of the screen by adding
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
+- `COLORED_CIRCLE`: Displays a colored circle. The color is defined with a custom method `getValue` defined in the field definition.
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
@@ -375,7 +386,7 @@ For each field you want to display in the result table, define a column object. 
 
 You can define the column header text using the `headerName` field.
 
-The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
+The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `COLORED_CIRCLE`, `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
 
 The `flex` field sets the CSS flex property for the column.
 
