@@ -44,6 +44,7 @@ describe('CustomScreenView', () => {
         TranslationService.setTranslationLib(new TranslationLibMock());
         ConfigService.setConfigServer(new ConfigServerMock());
         DateTimeFormatterService.init();
+        ConfigService.setConfigValue('settings.locale', 'en');
     });
 
     beforeEach(() => {
@@ -104,11 +105,11 @@ describe('CustomScreenView', () => {
             const customScreenView = new CustomCardListView('testId');
             expect(customScreenView.getColumnsDefinitionForAgGrid()).toEqual([
                 {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
-                {field: 'testField2', headerName: 'Start Date', type: 'default', flex: 1}
+                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1}
             ]);
         });
     });
-    describe('Shoud get processe list', () => {
+    describe('Shoud get processes list', () => {
         beforeEach(() => {
             const process = [
                 new Process('myProcess', '1', 'my process label', null, new Map<string, State>()),

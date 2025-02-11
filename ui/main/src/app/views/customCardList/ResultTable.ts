@@ -58,6 +58,14 @@ export class ResultTable {
                             type: 'severity'
                         });
                         break;
+                    case FieldType.DATE_AND_TIME:
+                        agGridColumns.push({
+                            field: column.field,
+                            headerName: column.headerName,
+                            type: 'dateAndTime',
+                            flex: column.flex
+                        });
+                        break;
                     case FieldType.TYPE_OF_STATE:
                         agGridColumns.push({
                             field: 'typeOfState',
@@ -137,9 +145,7 @@ export class ResultTable {
                         data[column.field] = this.getPublisherLabel(card);
                         break;
                     case FieldType.DATE_AND_TIME:
-                        data[column.field] = DateTimeFormatterService.getFormattedDateAndTime(
-                            this.getNestedField(card, column.cardField)
-                        );
+                        data[column.field] = this.getDateAndTime(card, column.cardField);
                         break;
                     case FieldType.TYPE_OF_STATE:
                         data['typeOfState'] = this.getTypeOfState(card);
@@ -182,6 +188,15 @@ export class ResultTable {
         const type = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
         if (!type) return false;
         return this.typesOfState.includes(type);
+    }
+
+    private getDateAndTime(card: Card, field: string): {text: string; value: string} {
+        const dateAndTime = this.getNestedField(card, field);
+
+        return {
+            text: DateTimeFormatterService.getFormattedDateAndTime(dateAndTime),
+            value: dateAndTime.valueOf()
+        };
     }
 
     private getPublisherLabel(card: Card): string {

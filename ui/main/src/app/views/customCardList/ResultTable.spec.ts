@@ -69,6 +69,7 @@ describe('CustomScreenView - ResultTable', () => {
     beforeEach(() => {
         ConfigService.setConfigServer(new ConfigServerMock());
         DateTimeFormatterService.init();
+        ConfigService.setConfigValue('settings.locale', 'en');
     });
     describe('Shoud get columns definition for ag-grid', () => {
         it('columDefinitions', () => {
@@ -105,7 +106,7 @@ describe('CustomScreenView - ResultTable', () => {
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
                 {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
-                {field: 'testField2', headerName: 'Start Date', type: 'default', flex: 1},
+                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined}
@@ -303,11 +304,11 @@ describe('CustomScreenView - ResultTable', () => {
             const cards = [
                 getOneLightCard({
                     id: 'card1',
-                    startDate: new Date('2021-01-01T02:00')
+                    startDate: new Date('2021-01-01T02:00') // epoch: 1609462800000
                 })
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'card1', date: '01/01/2021 2:00 AM'}]);
+            expect(dataArray).toEqual([{cardId: 'card1', date: {text: '01/01/2021 2:00 AM', value: 1609462800000}}]);
         });
 
         it('with the type of state if field type is type_of_state', () => {

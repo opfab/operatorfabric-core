@@ -199,6 +199,25 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                         filter: true,
                         filterValueGetter: (params: any) => params.data.typeOfState.text
                     },
+                    dateAndTime: {
+                        sortable: true,
+                        resizable: false,
+                        wrapText: false,
+                        cellRenderer: (params: any) => params.value.text,
+                        comparator: (valueA: any, valueB: any) => {
+                            if (valueA.value < valueB.value) {
+                                return -1;
+                            }
+                            if (valueA.value > valueB.value) {
+                                return 1;
+                            }
+                            return 0;
+                        },
+                        filter: true,
+                        filterValueGetter: (params: any) => {
+                            return params.data[params.column.colId].text;
+                        }
+                    },
                     responses: {
                         sortable: false,
                         filter: false,
