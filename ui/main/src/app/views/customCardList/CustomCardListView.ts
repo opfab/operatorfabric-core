@@ -103,12 +103,20 @@ export class CustomCardListView {
         this.resultTable.setTypesOfStateFilter(typesOfState);
     }
 
-    public excludeCardsWithResponseFromMyEntities() {
-        this.resultTable.excludeCardsWithResponseFromMyEntities();
+    //We disable sonar rules typescript:S2301 here because we
+    //want the method to reflect the checkbox status
+    public setResponseFromMyEntitiesChoice(checked: boolean) {
+        // NOSONAR
+        if (checked) {
+            this.resultTable.includeCardsWithResponseFromMyEntities();
+        } else this.resultTable.excludeCardsWithResponseFromMyEntities();
     }
 
-    public includeCardsWithResponseFromMyEntities() {
-        this.resultTable.includeCardsWithResponseFromMyEntities();
+    public setResponseFromAllEntitiesChoice(checked: boolean) {
+        // NOSONAR
+        if (checked) {
+            this.resultTable.includeCardsWithResponseFromAllEntities();
+        } else this.resultTable.excludeCardsWithResponseFromAllEntities();
     }
 
     public getProcessList(): {id: string; label: string}[] {

@@ -25,7 +25,8 @@
             "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen.",
             "businessDateRange": "BEDRIJFSDATUMBEREIK",
             "publishDateRange": "PUBLICATIEDATUMBEREIK",
-            "activeDateRange": "ACTIEVE DATUMBEREIK"
+            "activeDateRange": "ACTIEVE DATUMBEREIK",
+            "showCardsWithResponseFromAllEntities": "Toon kaarten met reactie van alle entiteiten"
         },
         "result": {
             "severity": "ERNST",

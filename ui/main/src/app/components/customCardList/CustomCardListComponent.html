@@ -71,17 +71,32 @@
             </div>
         </div>
     </div>
-    <div *ngIf="!responseFromMyEntitiesFilterVisible" style="height: 20px"></div>
-    <div *ngIf="responseFromMyEntitiesFilterVisible" class="opfab-custom-card-list-response-checkbox">
-        <label
-            id="opfab-show-cards-with-response"
-            style="font-weight: bold; margin-left: 5px; margin-bottom: 0px"
-            class="opfab-checkbox"
-            translate
-            >feed.filters.showCardsWithResponse.label
-            <input type="checkbox" formControlName="responseFromMyEntities" />
-            <span class="opfab-checkbox-checkmark"></span>
-        </label>
+    <div
+        *ngIf="!responseFromMyEntitiesFilterVisible && !responseFromAllEntitiesFilterVisible"
+        style="height: 20px"></div>
+    <div class="opfab-custom-card-list-responses-checkbox">
+        <div *ngIf="responseFromMyEntitiesFilterVisible">
+            <label
+                id="opfab-show-cards-with-response"
+                style="font-weight: bold; margin-left: 5px; margin-right: 30px; margin-bottom: 0px"
+                class="opfab-checkbox"
+                translate
+                >feed.filters.showCardsWithResponse.label
+                <input type="checkbox" formControlName="responseFromMyEntities" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </div>
+        <div *ngIf="responseFromAllEntitiesFilterVisible">
+            <label
+                id="opfab-show-cards-with-all-response"
+                style="font-weight: bold; margin-left: 5px; margin-bottom: 0px"
+                class="opfab-checkbox"
+                translate
+                >shared.filters.showCardsWithResponseFromAllEntities
+                <input type="checkbox" formControlName="responseFromAllEntities" />
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+        </div>
     </div>
 
     <div

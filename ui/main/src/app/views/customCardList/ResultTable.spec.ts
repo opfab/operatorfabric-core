@@ -588,6 +588,124 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId0'}]);
         });
+        it('that have all entities entitiesRequiredToRespond responded if excludeCardsWithAllEntitiesHaveResponded is called', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    state: 'state1.0',
+                    entitiesRequiredToRespond: ['entity1', 'entity2'],
+                    id: 'card1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    state: 'state1.1',
+                    entitiesRequiredToRespond: ['entity1', 'entity2'],
+                    id: 'card2'
+                }),
+                getOneLightCard({
+                    process: 'processId3',
+                    state: 'state1.2',
+                    entitiesRequiredToRespond: [],
+                    id: 'card3'
+                })
+            ];
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ALARM
+                }),
+                getOneLightCard({
+                    publisher: 'entity2',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ACTION
+                })
+            ]);
+            childCards.set('card2', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.COMPLIANT
+                })
+            ]);
+            resultTable.excludeCardsWithResponseFromAllEntities();
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card2',
+                    testField: 'processId2'
+                },
+                {
+                    cardId: 'card3',
+                    testField: 'processId3'
+                }
+            ]);
+        });
+        it('that have all entities in entitiesAllowedToRespond responded if entitiesRequiredToRespond is empty and excludeCardsWithAllEntitiesHaveResponded is called', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    state: 'state1.0',
+                    entitiesAllowedToRespond: ['entity1', 'entity2'],
+                    id: 'card1'
+                }),
+                getOneLightCard({
+                    process: 'processId2',
+                    state: 'state1.1',
+                    entitiesAllowedToRespond: ['entity1', 'entity2'],
+                    id: 'card2'
+                })
+            ];
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ALARM
+                }),
+                getOneLightCard({
+                    publisher: 'entity2',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ACTION
+                })
+            ]);
+            childCards.set('card2', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.COMPLIANT
+                })
+            ]);
+            resultTable.excludeCardsWithResponseFromAllEntities();
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card2',
+                    testField: 'processId2'
+                }
+            ]);
+        });
     });
 
     describe('Should get responses in data array', () => {

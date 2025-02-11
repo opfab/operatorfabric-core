@@ -121,7 +121,7 @@ describe('Card response service', () => {
         expect(cardServerMock.cardsPosted[0].entityRecipients).toContain('ENTITY1');
     });
 
-    it("Should set publihser to first entity user allowed to respond if publisher isn't provided", async () => {
+    it("Should set publisher to first entity user allowed to respond if publisher isn't provided", async () => {
         await CardResponseService.sendResponse(card, {});
         expect(cardServerMock.cardsPosted[0].publisher).toBe('ENTITY1');
     });

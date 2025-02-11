@@ -12,7 +12,7 @@
     const customScreenExample = {
         id: 'testId',
         name: 'testName',
-        headerFilters: ['PROCESS', 'TYPE_OF_STATE', 'RESPONSE_FROM_MY_ENTITIES'],
+        headerFilters: ['PROCESS', 'TYPE_OF_STATE', 'RESPONSE_FROM_MY_ENTITIES', 'RESPONSE_FROM_ALL_ENTITIES'],
         results: {
             columns: [
                 {

@@ -25,7 +25,8 @@
             "toDateBeforeFromDate": "'To' date must be after 'From' date.",
             "businessDateRange": "BUSINESS DATE RANGE",
             "publishDateRange":"PUBLISH DATE RANGE",
-            "activeDateRange": "ACTIVE DATE RANGE"
+            "activeDateRange": "ACTIVE DATE RANGE",
+            "showCardsWithResponseFromAllEntities": "Cards totally answered"
         },
         "result": {
             "severity": "SEVERITY",

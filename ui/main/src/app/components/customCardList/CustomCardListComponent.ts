@@ -73,7 +73,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         businessDateRanges: new FormControl({}),
         processes: new FormControl([]),
         typeOfState: new FormControl([]),
-        responseFromMyEntities: new FormControl(true)
+        responseFromMyEntities: new FormControl(true),
+        responseFromAllEntities: new FormControl(true)
     });
     modalRef: NgbModalRef;
 
@@ -111,6 +112,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     };
 
     responseFromMyEntitiesFilterVisible = false;
+    responseFromAllEntitiesFilterVisible = false;
     responseButtons = [];
     public rowSelection: RowSelectionOptions;
 
@@ -148,6 +150,9 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
             this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
             this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
                 HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+            );
+            this.responseFromAllEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+                HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
             );
             this.responseButtons = this.customCardListView.getResponseButtons();
             if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
@@ -315,22 +320,10 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         const startDate = Date.parse(businessDates.startDate?.toISOString());
         const endDate = Date.parse(businessDates.endDate?.toISOString());
         this.customCardListView.setBusinessPeriod(startDate, endDate);
-        const processIds = [];
-        this.headerForm.get('processes').value.forEach((processId: string) => {
-            processIds.push(processId);
-        });
-        this.customCardListView.setProcessList(processIds);
-        const typeOfState = [];
-        this.headerForm.get('typeOfState').value.forEach((type: string) => {
-            typeOfState.push(type);
-        });
-        this.customCardListView.setTypesOfStateFilter(typeOfState);
-        const responseFromMyEntities = this.headerForm.get('responseFromMyEntities').value;
-        if (responseFromMyEntities) {
-            this.customCardListView.includeCardsWithResponseFromMyEntities();
-        } else {
-            this.customCardListView.excludeCardsWithResponseFromMyEntities();
-        }
+        this.customCardListView.setProcessList([...this.headerForm.get('processes').value]);
+        this.customCardListView.setTypesOfStateFilter([...this.headerForm.get('typeOfState').value]);
+        this.customCardListView.setResponseFromMyEntitiesChoice(this.headerForm.get('responseFromMyEntities').value);
+        this.customCardListView.setResponseFromAllEntitiesChoice(this.headerForm.get('responseFromAllEntities').value);
         this.customCardListView.search();
     }
 

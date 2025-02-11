@@ -25,7 +25,8 @@
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
             "businessDateRange": "PÉRIODE MÉTIER",
             "publishDateRange": "PÉRIODE DE PUBLICATION",
-            "activeDateRange": "PÉRIODE D'ACTIVITÉ"
+            "activeDateRange": "PÉRIODE D'ACTIVITÉ",
+            "showCardsWithResponseFromAllEntities": "Cartes avec réponse de toutes les entités"
         },
         "result": {
             "severity": "SÉVÉRITÉ",

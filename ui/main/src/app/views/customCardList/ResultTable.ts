@@ -26,6 +26,7 @@ export class ResultTable {
     private processIds = [];
     private typesOfState = [];
     private areCardsWithResponseFromMyEntitiesExcluded = false;
+    private areCardsWithResponseFromAllEntitiesExcluded = false;
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
@@ -131,6 +132,14 @@ export class ResultTable {
         this.areCardsWithResponseFromMyEntitiesExcluded = false;
     }
 
+    public excludeCardsWithResponseFromAllEntities() {
+        this.areCardsWithResponseFromAllEntitiesExcluded = true;
+    }
+
+    public includeCardsWithResponseFromAllEntities() {
+        this.areCardsWithResponseFromAllEntitiesExcluded = false;
+    }
+
     public getDataArrayFromCards(cards: Card[], childCards: Map<string, Array<Card>>): any[] {
         const dataArray = [];
         cards.forEach((card) => {
@@ -138,6 +147,8 @@ export class ResultTable {
             if (!this.isCardInProcessIds(card)) return;
             if (!this.isCardInTypesOfState(card)) return;
             if (this.areCardsWithResponseFromMyEntitiesExcluded && card.hasChildCardFromCurrentUserEntity) return;
+            if (this.areCardsWithResponseFromAllEntitiesExcluded && this.doesAllEntitiesHaveResponded(card, childCards))
+                return;
             const data = {};
             this.customScreenDefinition.results.columns.forEach((column) => {
                 switch (column.fieldType) {
@@ -197,6 +208,16 @@ export class ResultTable {
             text: DateTimeFormatterService.getFormattedDateAndTime(dateAndTime),
             value: dateAndTime.valueOf()
         };
+    }
+    private doesAllEntitiesHaveResponded(card: Card, childCards: Map<string, Array<Card>>): boolean {
+        const entitiesToRespond = new Set(
+            card.entitiesRequiredToRespond?.length > 0
+                ? card.entitiesRequiredToRespond
+                : (card.entitiesAllowedToRespond ?? [])
+        );
+        if (entitiesToRespond.size === 0) return false;
+        const respondedEntities = new Set(childCards.get(card.id)?.map((card) => card.publisher) ?? []);
+        return Array.from(entitiesToRespond).every((entity) => respondedEntities.has(entity));
     }
 
     private getPublisherLabel(card: Card): string {

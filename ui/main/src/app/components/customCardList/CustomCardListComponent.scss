@@ -27,12 +27,12 @@
     margin-right: 10px;
 }
 
-.opfab-custom-card-list-response-checkbox {
+.opfab-custom-card-list-responses-checkbox {
+    display: flex;
     margin-left: 5%;
     margin-top: 20px;
     margin-bottom: 10px;
     font-size: 30px;
-    border: solid 1px var(--opfab-bgcolor);
     text-align: center;
     background-color: var(--opfab-bgcolor);
     color: var(--opfab-text-color);
