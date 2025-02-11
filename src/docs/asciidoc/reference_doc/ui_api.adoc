@@ -721,17 +721,17 @@ FilterModel object has the following fields:
 It is possible to respond to a card from the template by calling the following function (instead of using the "send response" button) : 
 
 ```
-opfab.cards.sendResponseCard(parentCard,responseData).then(...);
+opfab.cards.sendResponseCard(parentCard,responseCard).then(...);
 ```
 The function returns a `Promise<void>`. The promise will be resolved when the response is sent and rejected with an error message if an error occurs.
 
 The `parentCard` parameter is the parent card object (can be obtained from the current card object).
 
-The `responseData` object has the following fields:
+The `responseCard` object has the following fields:
 
-- `responseCardData`: The data field to include in the response card.
+- `data`: The data field to include in the response card.
 - `actions`: The actions field value for the response card. This field is optional.
-- `responseState`: The state field value for the response card. This field is optional (default value is defined in the state process definition).
+- `state`: The state field value for the response card. This field is optional (default value is defined in the state process definition).
 - `publisher`: The publisher field value for the response card. This field is optional (default value is the first current user entity that is allowed to respond).
 
 

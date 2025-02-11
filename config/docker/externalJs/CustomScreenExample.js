@@ -120,7 +120,7 @@
                     const responseCards = [];
                     const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
                     cards.forEach((card) => {
-                        responseCards.push({ responseCardData: responseData });
+                        responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
@@ -132,7 +132,7 @@
                     const responseCards = [];
                     const responseData = {}
                     cards.forEach((card) => {
-                        responseCards.push({ responseCardData: responseData });
+                        responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }

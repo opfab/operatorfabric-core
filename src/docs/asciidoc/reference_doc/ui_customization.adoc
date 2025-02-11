@@ -401,7 +401,7 @@ To do this, add a `responseButtons` array to the custom screen object. Each butt
 - `getUserResponses: A function that takes an array of cards as a parameter and returns an object containing the following fields:
   - `valid`: A boolean indicating if the action is valid.
   - `errorMsg`: An error message to display if the action is not valid.
-  - `responseCards`: An array of response cards to send with the following structure with a `responseCardData` field containing the response card data field.
+  - `responseCards`: An array of response cards to send with a `data` field containing the response card data field.
 
  
 
@@ -422,7 +422,7 @@ const customScreenExample = {
                     const responseCards = [];
                     const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
                     cards.forEach((card) => {
-                        responseCards.push({ responseCardData: responseData });
+                        responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
@@ -434,7 +434,7 @@ const customScreenExample = {
                     const responseCards = [];
                     const responseData = {}
                     cards.forEach((card) => {
-                        responseCards.push({ responseCardData: responseData });
+                        responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }

@@ -96,12 +96,14 @@
 
             const result = {
                 valid: true,
-                responseCardData: responseCardData
+                responseCard:{
+                    data: responseCardData
+                } 
             };
 
             // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
             const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
-            if (choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
+            if (choiceRequiresFollowUp) result.responseCard['state'] = 'multipleOptionsResponseState';
 
             return result;
 
@@ -162,15 +164,15 @@
             (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
         }
 
-        const result = {
-            responseCardData: responseCardData
-        };
+        const responseCard= {
+                data: responseCardData
+            }
 
         // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
         const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
-        if (choiceRequiresFollowUp) result['responseState'] = 'multipleOptionsResponseState';
+        if (choiceRequiresFollowUp) responseCard['state'] = 'multipleOptionsResponseState';
 
 
-        opfab.cards.sendResponseCard(opfab.currentCard.getCard(), result);
+        opfab.cards.sendResponseCard(opfab.currentCard.getCard(), responseCard);
     }
 </script>

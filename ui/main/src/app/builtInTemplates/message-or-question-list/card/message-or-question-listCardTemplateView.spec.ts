@@ -43,7 +43,7 @@ describe('MessageOrQuestionList Card template', () => {
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
     });
-    it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCardData.comment is "my_response", responseCardData.agreement is "Yes" and response is valid', () => {
+    it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCard.data.comment is "my_response", responseCard.data.agreement is "Yes" and response is valid', () => {
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => {
             return [true, 'my response'];
@@ -51,8 +51,8 @@ describe('MessageOrQuestionList Card template', () => {
 
         const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
-        expect(userResponse.responseCardData.comment).toEqual('my response');
-        expect(userResponse.responseCardData.agreement).toEqual(true);
+        expect(userResponse.responseCard.data.comment).toEqual('my response');
+        expect(userResponse.responseCard.data.agreement).toEqual(true);
     });
 
     it('Given a question card WHEN user card is locked THEN response input is hidden', () => {

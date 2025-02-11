@@ -11,3 +11,41 @@
 
 A new setting to activate or not the templating of emails has been added in the settings screen of the user.
 This setting can be hidden in the configuration file of the web-ui by the field "settings.settingsScreen.hiddenSettings" by adding the value "disableCardContentInEmails".
+
+
+== Response card 
+
+The object that should be returned by the method registered via `opfab.currentCard.registerFunctionToGetUserResponse` is to be changed.
+
+Previously, the object was structured as follows:
+
+----
+{
+    valid: true/false,
+    errorMsg: string,
+    responseCardData: string,
+    responseState: string,
+    publisher: string,
+    actions: [string]
+}
+----
+
+Now, all elements related to the response card are encapsulated within a `responseCard` object:
+
+----
+{
+    valid: true/false,
+    errorMsg: string,
+    responseCard: {
+        data: string,
+        state: string,
+        publisher: string,
+        actions: [string]
+    }
+}
+----
+
+Note that the `responseState` field has been renamed to `state`.
+
+The old structure will be supported as a fallback for a limited time, it is recommended to update your code to use the new structure.
+`

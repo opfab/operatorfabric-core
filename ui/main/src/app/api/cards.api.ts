@@ -18,8 +18,8 @@ export function initCardsAPI() {
         getCards: function (cardsFilters) {
             return firstValueFrom(CardsService.fetchFilteredCards(cardsFilters));
         },
-        sendResponseCard: function (parentCard, responseData) {
-            return CardResponseService.sendResponse(parentCard, responseData);
+        sendResponseCard: function (parentCard, responseCard) {
+            return CardResponseService.sendResponse(parentCard, responseCard);
         }
     };
 }

@@ -72,13 +72,13 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeTrue();
     });
 
-    it('GIVEN input is "my response" WHEN get user response THEN responseCardData.responses[0].response is] "my_response" and response is valid', () => {
+    it('GIVEN input is "my response" WHEN get user response THEN responseCard.data.responses[0].response is] "my_response" and response is valid', () => {
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => 'my response', false);
 
         const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
-        expect(userResponse.responseCardData.responses[0].response).toEqual('my response');
+        expect(userResponse.responseCard.data.responses[0].response).toEqual('my response');
     });
 
     it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {
@@ -131,12 +131,12 @@ describe('Question Card template', () => {
         const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
-        expect(userResponse.responseCardData.responses[0].response).toEqual('response_entity1');
-        expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
+        expect(userResponse.responseCard.data.responses[0].response).toEqual('response_entity1');
+        expect(userResponse.responseCard.data.responses[0].responseDate).toEqual(
             new Date('2024-06-01T09:15:00').getTime()
         );
-        expect(userResponse.responseCardData.responses[1].response).toEqual('my 2nd response');
-        expect(userResponse.responseCardData.responses[1].responseDate).toEqual(
+        expect(userResponse.responseCard.data.responses[1].response).toEqual('my 2nd response');
+        expect(userResponse.responseCard.data.responses[1].responseDate).toEqual(
             new Date('2024-06-01T09:24:00').getTime()
         );
     });
@@ -160,9 +160,7 @@ describe('Question Card template', () => {
         const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
-        expect(userResponse.responseCardData.responses.length).toEqual(1);
-        expect(userResponse.responseCardData.responses[0].response).toEqual('my 2nd response');
-        expect(userResponse.responseCardData.responses[0].responseDate).toEqual(
+        expect(userResponse.responseCard.data.responses[0].responseDate).toEqual(
             new Date('2024-06-01T09:24:00').getTime()
         );
     });

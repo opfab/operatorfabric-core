@@ -29,7 +29,7 @@ import {ConfigService} from '@ofServices/config/ConfigService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
-describe('CustomScreenView', () => {
+describe('CustomCardListView', () => {
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
     let filteredLightCardStore: FilteredLightCardsStore;
 

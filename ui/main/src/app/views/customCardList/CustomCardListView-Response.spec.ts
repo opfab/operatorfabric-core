@@ -32,7 +32,7 @@ import {NotificationDecision} from '@ofServices/notifications/NotificationDecisi
 import {firstValueFrom} from 'rxjs';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
-describe('CustomScreenView - Responses', () => {
+describe('CustomCardListView - Responses', () => {
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
     let filteredLightCardStore: FilteredLightCardsStore;
 
@@ -69,7 +69,7 @@ describe('CustomScreenView - Responses', () => {
                 getUserResponses: (cards) => {
                     const responseCards = [];
                     cards.forEach((card) => {
-                        responseCards.push({responseCardData: card.id});
+                        responseCards.push({data: card.id});
                     });
                     return {valid: true, errorMsg: '', responseCards: responseCards};
                 }

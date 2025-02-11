@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -121,17 +121,18 @@ which returns an object containing the following fields :
 
 - valid (_boolean_) : true if the user input is valid
 - errorMsg (_string_) : message in case of invalid user input. If valid is true this field is not necessary.
-- responseCardData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
-- responseState : name of the response state to use. This field is not mandatory, if it is not set the state defined in
+- responseCard: 
+    * data (_any_) : the user input to send in the data field of the child card.
+    * state : name of the response state to use. This field is not mandatory, if it is not set the state defined in
 `config.json` will be used for the response.
-- publisher (_string_) : the id of the Entity to be used as publisher of the response. This field is not mandatory, if it is not set the publisher will be the user entity, in case the user belongs to a single entity, or it will be choosen by the user between his available entities.  
-- actions (_string array_) : an optional field used to define a set of predetermined actions that will be executed upon receiving the response card. The available actions include:
-      * PROPAGATE_READ_ACK_TO_PARENT_CARD : when receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
+    * publisher (_string_) : the id of the Entity to be used as publisher of the response. This field is not mandatory, if it is not set the publisher will be the user entity, in case the user belongs to a single entity, or it will be choosen by the user between his available entities.  
+    * actions (_string array_) : an optional field used to define a set of predetermined actions that will be executed upon receiving the response card. The available actions include:
+      ** PROPAGATE_READ_ACK_TO_PARENT_CARD : when receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 
 
 This method is to be registered via `opfab.currentCard.registerFunctionToGetUserResponse`, the method will be called by OperatorFabric when the user clicks on the button to send the response.
 
-In the example below, the `getUserResponse` creates a `responseCardData` object by retrieving the user's inputs from the HTML.
+In the example below, the `getUserResponse` creates a `responseCard` object by retrieving the user's inputs from the HTML.
 In addition, if the user chose several options, it overrides the response state defined in the `config.json` with another
 state.
 

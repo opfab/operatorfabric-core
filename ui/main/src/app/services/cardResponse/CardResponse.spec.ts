@@ -138,7 +138,7 @@ describe('Card response service', () => {
     });
 
     it('Should set response card state to responseData.responseState if provided', async () => {
-        await CardResponseService.sendResponse(card, {publisher: 'ENTITY1', responseState: 'state3'});
+        await CardResponseService.sendResponse(card, {publisher: 'ENTITY1', state: 'state3'});
         expect(cardServerMock.cardsPosted[0].state).toBe('state3');
     });
 
@@ -178,7 +178,7 @@ describe('Card response service', () => {
     it('Should set data and actions from responseData', async () => {
         await CardResponseService.sendResponse(card, {
             publisher: 'ENTITY1',
-            responseCardData: {test: 'data'},
+            data: {test: 'data'},
             actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
         });
         expect(cardServerMock.cardsPosted[0].data).toEqual({test: 'data'});

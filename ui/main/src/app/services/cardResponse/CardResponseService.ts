@@ -18,8 +18,8 @@ import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {CardsService} from '@ofServices/cards/CardsService';
 
 export class CardResponseService {
-    public static sendResponse(parentCard: Card, responseData: any): Promise<void> {
-        let publisherEntity = responseData.publisher;
+    public static sendResponse(parentCard: Card, responseCard: any): Promise<void> {
+        let publisherEntity = responseCard.publisher;
         if (!publisherEntity) {
             publisherEntity = this.getPublisherEntity(parentCard);
             if (!publisherEntity)
@@ -34,13 +34,13 @@ export class CardResponseService {
 
         const stateDef = ProcessesService.getProcess(parentCard.process).states.get(parentCard.state);
 
-        const responseCard: CardForPublishing = {
+        const finalResponseCard: CardForPublishing = {
             publisher: publisherEntity,
             publisherType: 'ENTITY',
             processVersion: parentCard.processVersion,
             process: parentCard.process,
             processInstanceId: `${parentCard.processInstanceId}_${publisherEntity}`,
-            state: responseData.responseState ? responseData.responseState : stateDef.response.state,
+            state: responseCard.state ? responseCard.state : stateDef.response.state,
             startDate: parentCard.startDate,
             endDate: parentCard.endDate,
             expirationDate: parentCard.expirationDate,
@@ -51,16 +51,17 @@ export class CardResponseService {
             externalRecipients: stateDef.response.externalRecipients,
             title: parentCard.title,
             summary: parentCard.summary,
-            data: responseData.responseCardData,
+            data: responseCard.data,
             parentCardId: parentCard.id,
             initialParentCardUid: parentCard.uid,
-            actions: responseData.actions
+            actions: responseCard.actions
         };
+
         // Exclude card from sound and system notifications before publishing to avoid synchronization problems
-        NotificationDecision.addSentCard(responseCard.process + '.' + responseCard.processInstanceId);
+        NotificationDecision.addSentCard(finalResponseCard.process + '.' + finalResponseCard.processInstanceId);
 
         return new Promise((resolve, reject) => {
-            CardsService.postCard(responseCard).subscribe((resp) => {
+            CardsService.postCard(finalResponseCard).subscribe((resp) => {
                 if (resp.status !== ServerResponseStatus.OK) {
                     reject(new Error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage));
                 } else {

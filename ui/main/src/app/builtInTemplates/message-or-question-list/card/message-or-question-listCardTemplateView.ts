@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ export class MessageOrQuestionListCardTemplateView {
     public setFunctionToGetResponseInput(getResponseInput: Function) {
         opfab.currentCard.registerFunctionToGetUserResponse(() => {
             const response = getResponseInput();
-            return {valid: true, responseCardData: {agreement: response[0], comment: response[1]}};
+            return {valid: true, responseCard: {data: {agreement: response[0], comment: response[1]}}};
         });
     }
 

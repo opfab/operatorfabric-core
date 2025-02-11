@@ -11,7 +11,6 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, 
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
-import {CardAction} from 'app/model/CardAction';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -29,15 +28,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
-
-class FormResult {
-    valid: boolean;
-    errorMsg: string;
-    responseCardData: any;
-    publisher?: string;
-    responseState?: string;
-    actions?: CardAction[];
-}
 
 const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
@@ -143,9 +133,10 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        const responseData: FormResult = CardTemplateGateway.getUserResponseFromTemplate(undefined);
+        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
 
-        if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
+        if (this.userEntitiesAllowedToRespond.length > 1 && !userResponse.responseCard.publisher)
+            this.displayEntitiesChoicePopup();
         else this.submitResponse();
     }
 
@@ -156,15 +147,13 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = CardTemplateGateway.getUserResponseFromTemplate(
-            this.userEntityIdToUseForResponse
-        );
+        const response = CardTemplateGateway.getUserResponseFromTemplate(this.userEntityIdToUseForResponse);
 
-        if (responseData.valid) {
-            const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
-            responseData.publisher = publisherEntity;
+        if (response.valid) {
+            const publisherEntity = response.responseCard.publisher ?? this.userEntityIdToUseForResponse;
+            response.responseCard.publisher = publisherEntity;
             this.sendingResponseInProgress = true;
-            CardResponseService.sendResponse(this.card, responseData)
+            CardResponseService.sendResponse(this.card, response.responseCard)
                 .then(() => {
                     this.sendingResponseInProgress = false;
                     this.isResponseLocked = true;
@@ -177,11 +166,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 });
         } else {
-            responseData.errorMsg && responseData.errorMsg !== ''
-                ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
+            response.errorMsg && response.errorMsg !== ''
+                ? this.displayMessage(response.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
+
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
