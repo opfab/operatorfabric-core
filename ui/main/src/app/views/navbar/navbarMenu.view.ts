@@ -102,8 +102,10 @@ export class NavbarMenuView {
 
     private setMenuElementProperties(navbarMenuElement: NavbarMenuElement, menuElementConfig: any): void {
         navbarMenuElement.dropdownMenu = [];
-        navbarMenuElement.id = menuElementConfig.opfabCoreMenuId || menuElementConfig.customMenuId;
+        navbarMenuElement.id =
+            menuElementConfig.opfabCoreMenuId || menuElementConfig.customScreenId || menuElementConfig.customMenuId;
         navbarMenuElement.isCoreMenu = !!menuElementConfig.opfabCoreMenuId;
+        navbarMenuElement.isCustomScreen = !!menuElementConfig.customScreenId;
         navbarMenuElement.label = this.getTranslation(menuElementConfig);
         navbarMenuElement.url = menuElementConfig.url;
         navbarMenuElement.linkType = menuElementConfig.linkType;
@@ -186,6 +188,10 @@ export class NavbarMenuView {
     }
 
     public onMenuClick(navbarMenuElement: NavbarMenuElement, isClickOnNewTabIcon = false): void {
+        if (navbarMenuElement.isCustomScreen) {
+            NavigationService.navigateTo('customscreen/' + navbarMenuElement.id);
+            return;
+        }
         if (navbarMenuElement.isCoreMenu) {
             if (navbarMenuElement.id === 'nightdaymode') {
                 if (GlobalStyleService.getStyle() === GlobalStyleService.DAY) {

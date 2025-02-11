@@ -54,6 +54,15 @@ describe('NavbarMenuView - OnMenuClick', () => {
             expect(applicationRouterMock.urlCalled).toEqual('businessconfigparty/customMenu1/');
         });
 
+        it('open custom screen if menu item contains custom screen id ', async () => {
+            clickOnMenu({
+                menuId: 'customMenu1',
+                isCustomScreen: true,
+                isCoreMenu: false
+            });
+            expect(applicationRouterMock.urlCalled).toEqual('customscreen/customMenu1');
+        });
+
         it('set route for custom application with double encoding if id contains a #', async () => {
             clickOnMenu({
                 menuId: 'custom#Menu1',
@@ -206,6 +215,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
     function clickOnMenu({
         menuId = 'MyMenuId',
         isCoreMenu = false,
+        isCustomScreen = false,
         linkType = MenuEntryLinkType.IFRAME,
         url = '',
         openInNewTab = false
@@ -215,6 +225,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
         const navbarMenuElement = new NavbarMenuElement();
         navbarMenuElement.id = menuId;
         navbarMenuElement.isCoreMenu = isCoreMenu;
+        navbarMenuElement.isCustomScreen = isCustomScreen;
         navbarMenuElement.linkType = linkType;
         navbarMenuElement.url = url;
         navbarMenuView.onMenuClick(navbarMenuElement, openInNewTab);

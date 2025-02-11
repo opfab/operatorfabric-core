@@ -16,6 +16,7 @@ export class MenuEntry {
     constructor(
         public readonly id: string,
         public readonly customMenuId: string,
+        public readonly customScreenId: string,
         public readonly opfabCoreMenuId: string,
         public readonly label: string,
         public readonly url: string,

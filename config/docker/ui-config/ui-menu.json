@@ -36,6 +36,11 @@
             "label": "title.multi",
             "entries": [
                 {
+                    "customMenuId": "uid_test_0",
+                    "customScreenId": "testId",
+                    "label": "entry.custom"
+                },
+                {
                     "customMenuId": "uid_test_1",
                     "url": "https://opfab.github.io/",
                     "label": "entry.entry1",
@@ -144,7 +149,8 @@
                     "entry1": "First menu entry",
                     "entry2": "Second menu entry",
                     "entry3": "External application",
-                    "admin": "Admin menu entry"
+                    "admin": "Admin menu entry",
+                    "custom": "Custom screen"
                 }
             }
         },
@@ -161,7 +167,9 @@
                     "entry1": "Premier élément",
                     "entry2": "Deuxième élément",
                     "entry3": "Application externe",
-                    "admin": "Menu admin élément"
+                    "admin": "Menu admin élément",
+                    "custom": "Écran personnalisé"
+
                 }
             }
         },
@@ -178,7 +186,8 @@
                     "entry1": "Eerste menu-item",
                     "entry2": "Tweede menu-item",
                     "entry3": "TExterne applicatie",
-                    "admin": "Admin menu-item"
+                    "admin": "Admin menu-item",
+                    "custom": "Aangepast scherm"
                 }
             }
         }

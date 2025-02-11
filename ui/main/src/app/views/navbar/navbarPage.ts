@@ -37,6 +37,7 @@ export class NavbarMenuElement {
     id: string;
     url: string;
     label: string;
+    isCustomScreen: boolean;
     linkType: MenuEntryLinkType;
     dropdownMenu: NavbarMenuElement[];
 }

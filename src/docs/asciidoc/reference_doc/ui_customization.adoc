@@ -295,6 +295,40 @@ Named `opfab_theme`, this parameter has a value corresponding to the current the
 `http://mysite.com/index.htm?opfab_theme=NIGHT`. Switching theme will trigger reload of open iframes.
 
 
+=== Custom screen menus
+
+It is possible to add menus linked to custom screens of the application. See custom screen definition link:./single_page_doc.html#card_list_custom_screen[here]. To set up such a menu, it's important to give it a customMenuId and a customScreenId. See example below :
+
+.Example
+[source, json]
+----
+{
+  "navigationBar": [
+    {
+      "opfabCoreMenuId": "feed"
+    },
+    {
+      "id": "menu1",
+      "entries": [
+        {
+            "customMenuId": "uid_test_0",
+            "customScreenId": "testId",
+            "label": "entry.custom"
+        },
+        {
+          "customMenuId": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    }
+  ],
+  [...]
+}
+----
+
+[[card_list_custom_screen]]
 == Card List Custom Screen
 
 You can define a custom screen containing a search header and a list of cards.

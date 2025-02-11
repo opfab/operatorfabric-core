@@ -37,7 +37,7 @@ The line customized in the nginx configuration file must end with à semicolon (
 [[ui_properties]]
 == UI properties
 
-The properties lie in the `web-ui.json`.The following table describes their meaning and  how to use them. An example file can be found in the config/docker directory.
+The properties lie in the `web-ui.json`. The following table describes their meaning and how to use them. An example file can be found in the config/docker directory.
 
 |===
 |name|default|mandatory?|Description

@@ -15,7 +15,7 @@ export enum PageType {
     UNKNOWN,
     FEED,
     ARCHIVE,
-    THIRPARTY,
+    THIRDPARTY,
     SETTING,
     ABOUT,
     CALENDAR,
@@ -31,7 +31,7 @@ export class NavigationService {
     private static readonly pageConf = new Map([
         ['feed', PageType.FEED],
         ['archives', PageType.ARCHIVE],
-        ['businessconfigparty', PageType.THIRPARTY],
+        ['businessconfigparty', PageType.THIRDPARTY],
         ['setting', PageType.SETTING],
         ['about', PageType.ABOUT],
         ['calendar', PageType.CALENDAR],
