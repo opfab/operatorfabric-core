@@ -10,5 +10,5 @@
 	"startDate" : 3600000,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "chartLine.title"},
-	"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000]}
+	"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000], "keywords": "chart line"}
 }

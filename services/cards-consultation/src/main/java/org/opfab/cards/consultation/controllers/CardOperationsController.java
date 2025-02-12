@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
 import org.opfab.cards.consultation.repositories.CardRepository;
@@ -37,6 +38,8 @@ import java.time.Instant;
 @Slf4j
 public class CardOperationsController {
 
+    private final CustomScreenDataFields customScreenDataFields;
+
     private final CardSubscriptionService cardSubscriptionService;
 
     private final CardRepository cardRepository;
@@ -46,11 +49,13 @@ public class CardOperationsController {
     private final String version = getClass().getPackage().getImplementationVersion();
 
     
-    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
+    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper,
+                                    CardRepository cardRepository, CustomScreenDataFields customScreenDataFields) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         this.cardRepository = cardRepository;
+        this.customScreenDataFields = customScreenDataFields;
     }
 
 
@@ -75,7 +80,7 @@ public class CardOperationsController {
                             subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), t.getUiVersion(), wrongUiVersion);
                             return subscription.getPublisher();
                         } else {
-                            return fetchOldCards(t);
+                            return fetchOldCards(t, customScreenDataFields);
                         }
                     } else {
                         log.warn("\"clientId\" is a mandatory request parameter");
@@ -97,7 +102,8 @@ public class CardOperationsController {
                         .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
                 if (oldSubscription != null) {
                     log.debug("Found subscription: {}", oldSubscription.getId());
-                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(), p.getRangeStart(), p.getRangeEnd()));
+                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(),
+                            p.getRangeStart(), p.getRangeEnd(), customScreenDataFields));
                 } else {
                     log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
@@ -117,26 +123,29 @@ public class CardOperationsController {
      * @param subscription
      * @return
      */
-    private Flux<String> fetchOldCards(CardSubscription subscription, Instant updatedFrom, Instant start, Instant end)  {
+    private Flux<String> fetchOldCards(CardSubscription subscription, Instant updatedFrom, Instant start, Instant end,
+                                       CustomScreenDataFields customScreenDataFields)  {
         
-        return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters());
+        return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters(),
+                customScreenDataFields);
     }
 
-    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
+    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters, CustomScreenDataFields customScreenDataFields) {
         Instant start = parameters.getRangeStart();
         Instant end = parameters.getRangeEnd();
         Instant updatedFrom = parameters.getUpdatedFrom();
-        return fetchOldCards0(updatedFrom, start, end, parameters.getCurrentUserWithPerimeters());
+        return fetchOldCards0(updatedFrom, start, end, parameters.getCurrentUserWithPerimeters(), customScreenDataFields);
     }
 
-    private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end,
+                                        CurrentUserWithPerimeters currentUserWithPerimeters,
+                                        CustomScreenDataFields customScreenDataFields) {
         Flux<CardOperation> oldCards;
-
-        
 
         log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}",start,end,updatedFrom);
         if ((end != null && start != null) || (updatedFrom != null)) {
-            oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters);
+            oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters,
+                    customScreenDataFields);
         } else {
             log.info("Not loading published cards as no range or no publish date is provided");
             oldCards = Flux.empty();

@@ -11,6 +11,8 @@ operatorfabric:
     # SECURITY WARNING : To set and change in production if rabbit port is open outside of docker network
     # username: guest
     # password: guest
+  customscreen:
+    dataFields: ["keywords", "nested.field"]
   mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
   internalAccount:

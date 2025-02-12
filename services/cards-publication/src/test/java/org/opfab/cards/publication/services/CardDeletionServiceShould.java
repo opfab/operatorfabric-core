@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,7 +85,7 @@ class CardDeletionServiceShould {
         @BeforeEach
         public void init() {
                 eventBusSpy = new EventBusSpy();
-                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
+                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper, null);
                 cardTranslationService = new CardTranslationService(i18NRepositoryMock);
                 CardValidationService cardValidationService = new CardValidationService(cardRepositoryMock,
                                 processRepositoryMock);

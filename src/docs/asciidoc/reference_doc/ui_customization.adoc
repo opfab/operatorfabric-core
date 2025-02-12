@@ -442,3 +442,35 @@ const customScreenExample = {
         ]
 
 ----
+
+=== Card data fields
+
+It is possible to define data fields you want to display in the custom screen. To do this, you have to define the data
+fields in the configuration file shared by all the services (for example `/config/docker/common.yml`), the variable is
+`operatorfabric.customscreen.dataFields` and it must be a list of string values, for example :
+
+----
+operatorfabric:
+  customscreen:
+    dataFields: ["keywords", "nested.field"]
+----
+
+Then you have to add the fields in the `results.columns` field in the custom screen configuration file. For example :
+----
+                ...
+                {
+                    field: 'keywords',
+                    headerName: 'keywords field',
+                    cardField: 'data.keywords',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                {
+                    field: 'nestedField',
+                    headerName: 'nested field',
+                    cardField: 'data.nested.field',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                ...
+----

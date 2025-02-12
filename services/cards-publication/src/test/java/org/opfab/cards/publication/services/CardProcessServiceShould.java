@@ -99,7 +99,7 @@ class CardProcessServiceShould {
         @BeforeEach
         public void init() {
                 eventBusSpy = new EventBusSpy();
-                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
+                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper, null);
                 cardTranslationService = new CardTranslationService(i18NRepositoryMock);
                 CardValidationService cardValidationService = new CardValidationService(cardRepositoryMock,
                                 processRepositoryMock);

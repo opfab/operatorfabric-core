@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.TestUtilities;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
+import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
@@ -44,7 +45,7 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
-   .class})
+   .class, CustomScreenDataFields.class})
 class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 

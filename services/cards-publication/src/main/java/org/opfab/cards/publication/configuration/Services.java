@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,9 @@ public class Services {
             @Value("${operatorfabric.cards-publication.cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
             @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
             @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter,
-            @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl) {
+            @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl,
+            CustomScreenDataFields customScreenDataFields) {
+
         if (!i18nRepository.isPresent()) {
             this.cardTranslationService = new CardTranslationService(
                     new I18NRepositoryImpl(eventBus, businessconfigUrl));
@@ -63,7 +65,7 @@ public class Services {
             this.cardTranslationService = new CardTranslationService(i18nRepository.get());
         }
         this.userActionLogService = userActionLogService;
-        CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
+        CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper, customScreenDataFields);
         cardValidationService = new CardValidationService(cardRepository,
                 new ProcessRepositoryImpl(businessconfigUrl, eventBus));
         cardDeletionService = new CardDeletionService(cardNotificationService, cardRepository, externalAppService,

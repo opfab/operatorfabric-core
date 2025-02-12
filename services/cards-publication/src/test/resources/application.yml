@@ -10,6 +10,8 @@ spring:
         #        class: io.confluent.kafka.serializers.KafkaAvroSerializer
         class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
 operatorfabric:
+  customScreen:
+    dataFields: ["stateName","message"]
   cards-publication:
     kafka:
       topics:

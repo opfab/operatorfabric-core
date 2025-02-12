@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.cards.publication.DataExtractor;
+import org.opfab.cards.publication.configuration.CustomScreenDataFields;
 import org.opfab.cards.publication.model.CardOperation;
 import org.opfab.cards.publication.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.Card;
@@ -26,16 +28,25 @@ public class CardNotificationService {
 
     private final EventBus eventBus;
     private final ObjectMapper mapper;
+    private final CustomScreenDataFields dataFields;
 
-    public CardNotificationService(EventBus eventBus,
-            ObjectMapper mapper) {
+    public CardNotificationService(EventBus eventBus, ObjectMapper mapper, CustomScreenDataFields customScreenDataFields) {
         this.eventBus = eventBus;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        this.dataFields = customScreenDataFields;
     }
 
     public void notifyOneCard(Card card, CardOperationTypeEnum type) {
-        CardOperation cardOperation = new CardOperation(type, card.getId(), null, new LightCard(card), null);
+        Card cardWithCustomDataFields = card.patch(card);
+        LinkedHashMap<String, Object> customDataFields = new LinkedHashMap<>();
+
+        if ((dataFields != null) && (dataFields.getDataFields() != null) && (card.getData() != null)) {
+            customDataFields = (LinkedHashMap<String, Object>) DataExtractor.extractFields(card.getData(), dataFields.getDataFields());
+        }
+        cardWithCustomDataFields.setData(customDataFields);
+
+        CardOperation cardOperation = new CardOperation(type, card.getId(), null, new LightCard(cardWithCustomDataFields), null);
 
         pushCardInEventBus(cardOperation);
     }

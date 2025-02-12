@@ -65,6 +65,20 @@
                     flex: 0.5
                 },
                 {
+                    field: 'keywords',
+                    headerName: 'keywords field',
+                    cardField: 'data.keywords',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                {
+                    field: 'nestedField',
+                    headerName: 'nested field',
+                    cardField: 'data.nested.field',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                {
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
                     flex: 2

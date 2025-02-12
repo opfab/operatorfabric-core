@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,7 +56,8 @@ public record LightCard(
         @JsonInclude(JsonInclude.Include.NON_EMPTY) 
         @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
         RRule rRule,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<CardActionEnum> actions) {
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<CardActionEnum> actions,
+        Object data) {
 
     public LightCard(Card card) {
         this(
@@ -98,7 +99,8 @@ public record LightCard(
                 card.getWktProjection(),
                 card.getSecondsBeforeTimeSpanForReminder(),
                 card.getRRule(),
-                card.getActions());
+                card.getActions(),
+                card.getData());
     }
 
 }

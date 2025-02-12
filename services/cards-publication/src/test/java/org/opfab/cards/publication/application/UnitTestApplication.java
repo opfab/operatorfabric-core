@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 
 package org.opfab.cards.publication.application;
 
+import org.opfab.cards.publication.configuration.CustomScreenDataFields;
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
@@ -36,7 +37,8 @@ import org.springframework.context.annotation.Import;
      ExternalAppService.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, JacksonConfig.class
 , Common.class , CardController.class, 
-ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EventBusSpy.class,CardRepositoryMock.class,Services.class})
+ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EventBusSpy.class,
+        CardRepositoryMock.class,Services.class, CustomScreenDataFields.class})
 public class UnitTestApplication {
 
     public static void main(String[] args) {

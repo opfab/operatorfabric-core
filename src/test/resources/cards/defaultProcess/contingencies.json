@@ -18,6 +18,10 @@
 	  "wktProjection": "EPSG:4326",
 	  "data" : 
   {
+	  "nested": {
+		  "field": "contingencies card"
+	  },
+	  "keywords": "contingencies",
 	  "detail": null,
 	  "networkContingencies": [
 		  {

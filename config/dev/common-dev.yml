@@ -1,5 +1,7 @@
 # This file contains only parameters that need to be overridden form the docker configuration
 operatorfabric:
+  customscreen:
+    dataFields: ["keywords", "nested.field"]
   rabbitmq:
     host: localhost
   mongodb:

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 package org.opfab.cards.consultation.repositories;
 
 
+import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
@@ -43,7 +44,7 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
      * Cards fetched are limited to the ones that have been published either to login or to groups or to entities
      */
     Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-    CurrentUserWithPerimeters currentUserWithPerimeters);
+    CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields);
 
 
     Mono<Page<Object>> findWithUserAndFilter(

@@ -11,6 +11,7 @@ package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardOperationTypeEnum;
@@ -48,6 +49,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	private static final String PUBLISH_DATE_FIELD = "publishDate";
 	private static final String START_DATE_FIELD = "startDate";
 	private static final String END_DATE_FIELD = "endDate";
+	private static final String SEVERITY_FIELD = "severity";
 	private static final String LAST_UPDATE_FIELD = "lastUpdate";
 
     private final ReactiveMongoTemplate template;
@@ -72,15 +74,15 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
 	@Override
 	public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd, 
-	CurrentUserWithPerimeters currentUserWithPerimeters)
+	CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields)
 	{
-		return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard ->
+		return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields).map(lightCard ->
 			new CardOperation(CardOperationTypeEnum.ADD, null, lightCard)
 		);
 	}
 	
     private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-	CurrentUserWithPerimeters currentUserWithPerimeters)
+	CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields)
 	{	
 		Criteria criteria ;
 		if (updatedFrom != null) 
@@ -97,7 +99,50 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
 
 		Query query = new Query();
-		query.fields().exclude("data");
+		query.fields()
+				.include("uid")
+				.include("id")
+				.include("publisher")
+				.include("processVersion")
+				.include(PUBLISH_DATE_FIELD)
+				.include(START_DATE_FIELD)
+				.include(END_DATE_FIELD)
+				.include("expirationDate")
+				.include(SEVERITY_FIELD)
+				.include("processInstanceId")
+				.include("lttd")
+				.include("title")
+				.include("summary")
+				.include("titleTranslated")
+				.include("summaryTranslated")
+				.include("tags")
+				.include("timeSpans")
+				.include("rRule")
+				.include("process")
+				.include("state")
+				.include("parentCardId")
+				.include("initialParentCardUid")
+				.include("representative")
+				.include("representativeType")
+				.include("wktGeometry")
+				.include("wktProjection")
+				.include("entitiesAcks")
+				.include("entityRecipients")
+				.include("entityRecipientsForInformation")
+				.include("entitiesAllowedToRespond")
+				.include("entitiesRequiredToRespond")
+				.include("entitiesAllowedToEdit")
+				.include("publisherType")
+				.include("secondsBeforeTimeSpanForReminder")
+				.include("actions")
+				.include("usersReads")
+				.include("usersAcks");
+
+		if ((customScreenDataFields != null) && (customScreenDataFields.getDataFields() != null)) {
+			customScreenDataFields.getDataFields().forEach(dataField ->
+				query.fields().include("data." + dataField)
+			);
+		}
 
 		Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(currentUserWithPerimeters);
 
@@ -174,7 +219,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         PUBLISH_DATE_FIELD,
         START_DATE_FIELD,
         END_DATE_FIELD,
-        "severity",
+		SEVERITY_FIELD,
         "publisherType",
         "representative",
         "representativeType",
@@ -209,7 +254,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.page() != null ? queryFilter.page().intValue() : null , queryFilter.size() != null ? queryFilter.size().intValue() : null);
 		List<String> fields = new ArrayList<>(List.of(
 				"uid",
-				"severity"));
+				SEVERITY_FIELD));
 
 		fields.addAll(queryFilter.selectedFields());
 		List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
