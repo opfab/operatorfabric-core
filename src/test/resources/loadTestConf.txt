@@ -1,3 +1,4 @@
+# Perimeter creation
 perimeter create perimeters/conferenceAndITIncidentExample.json
 perimeter create perimeters/cypress.json
 perimeter create perimeters/defaultProcess.json
@@ -9,6 +10,8 @@ perimeter create perimeters/questionReceiveOnly.json
 perimeter create perimeters/supervisor.json
 perimeter create perimeters/taskAdvancedExample.json
 perimeter create perimeters/taskExample.json
+
+# Adding to groups
 perimeter add-to-group question Dispatcher
 perimeter add-to-group question Planner
 perimeter add-to-group defaultProcess Dispatcher
@@ -34,6 +37,8 @@ perimeter add-to-group cypress Supervisor
 perimeter add-to-group questionReceiveOnly Supervisor
 perimeter add-to-group externalRecipient Dispatcher
 perimeter add-to-group supervisor Dispatcher
+
+# Loading files
 process-group load processGroups/processGroups.json
 process-monitoring load processMonitoring/processMonitoring.json
 realtime-screen load realTimeScreens/realTimeScreens.json

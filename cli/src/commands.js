@@ -157,7 +157,10 @@ const commands = {
         });
 
         rl.on('line', (line) => {
-            commandList.push(line);
+            // Exclude commented or empty lines
+            if (!line.trimStart().startsWith('#') && line.trim()) {
+                commandList.push(line);
+            }
         });
 
         rl.on('close', async () => {
@@ -177,7 +180,8 @@ const commands = {
         console.log(`Usage: opfab commands <fileName>
 
     The file shall contain a list of opfab cli commands without the 'opfab' keyword.
-    One command per line and no end-of-line character. e.g. :
+    One command per line and no end-of-line character. The file can contain comments with "#". e.g. :
+            # Add and remove a user from an entity
             user add-to-entity entity username
             user remove-from-entity entity username
         `);
