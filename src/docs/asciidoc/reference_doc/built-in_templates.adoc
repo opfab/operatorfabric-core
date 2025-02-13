@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -181,6 +181,10 @@ ifdef::single-page-doc[<<'built-in_templates_common_usercard_attributes,common a
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#built-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
 [[built-in_templates_common_usercard_attributes]]
+
+NOTE: If you don't want the task appears in the feed when sending the task for recipients, you have to set
+the `actions` field to value NOT_NOTIFIED. The card will appear in the feed when reminded.
+
 == Common attributes for user cards built-in templates 
 
 For each user card templates, you can set : 
