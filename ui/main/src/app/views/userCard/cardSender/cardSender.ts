@@ -18,6 +18,7 @@ import {CardsService} from '@ofServices/cards/CardsService';
 import {firstValueFrom} from 'rxjs';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
 export class CardSender {
     public async sendCardAndChildCard(card: Card, childCard?: Card, setCurrentDateForStartDate = false) {
@@ -28,6 +29,14 @@ export class CardSender {
                 startDate: new Date().valueOf()
             };
         }
+        try {
+            await UserCardTemplateGateway.callFunctionToBeCalledBeforeCardSending(cardForPublish);
+        } catch (error) {
+            AlertMessageService.sendAlertMessage(error);
+            logger.error(`Error while calling the function to be called before sending the card, error = ${error}`);
+            return;
+        }
+
         NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
         const responseFromCardPost = await firstValueFrom(CardsService.postCard(cardForPublish));
         if (responseFromCardPost.status !== ServerResponseStatus.OK) {

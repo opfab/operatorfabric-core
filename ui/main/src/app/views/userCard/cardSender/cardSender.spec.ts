@@ -16,6 +16,10 @@ import {CardCreationReportData} from '@ofServices/cards/model/CardCreationReport
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
+import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
+import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+
+declare const opfab: any;
 
 describe('UserCard CardSender', () => {
     let cardsServerMock: CardsServerMock;
@@ -25,6 +29,8 @@ describe('UserCard CardSender', () => {
         cardsServerMock = new CardsServerMock();
         CardsService.setCardsServer(cardsServerMock);
         cardSender = new CardSender();
+        CurrentUserCardAPI.init();
+        UserCardTemplateGateway.init();
     });
     describe('Send a card', () => {
         it('Should send to the back end', async () => {
@@ -57,6 +63,33 @@ describe('UserCard CardSender', () => {
         it('Should set the card id as last card sent for systemNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
             expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();
+        });
+
+        it('Should call the function registered via api.currentUserCard.registerFunctionToBeCalledBeforeCardSending before sending the card', async () => {
+            let cardSendToMethod = undefined;
+            opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending(async (cardToBeSent) => {
+                cardSendToMethod = cardToBeSent;
+            });
+            await cardSender.sendCardAndChildCard(card);
+            expect(cardSendToMethod).toEqual(convertCardToCardForPublishing(card));
+            expect(cardsServerMock.cardsPosted.length).toBe(1);
+        });
+
+        it('Should not send the card if the function registered via api.currentUserCard.registerFunctionToBeCalledBeforeCardSending throws an error ', async () => {
+            opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending(async () => {
+                throw new Error('Error in function');
+            });
+            await cardSender.sendCardAndChildCard(card);
+            expect(cardsServerMock.cardsPosted.length).toBe(0);
+        });
+        it('Shoud display the error message if the function registered via api.currentUserCard.registerFunctionToBeCalledBeforeCardSending throws an error', async () => {
+            opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending(async () => {
+                throw new Error('Error in function');
+            });
+            const alertMessageReceiver = new AlertMessageReceiver();
+            await cardSender.sendCardAndChildCard(card);
+            const alertMessage = await alertMessageReceiver.getMessageReceived();
+            expect(alertMessage.message).toEqual('Error in function');
         });
     });
     describe('send a card with a child card', () => {

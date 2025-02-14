@@ -35,6 +35,9 @@ export class CurrentUserCardAPI {
             registerFunctionToGetSpecificCardInformation: (getSpecificCardInformation) =>
                 UserCardTemplateGateway.setFunctionToGetSpecificCardInformationFromTemplate(getSpecificCardInformation),
 
+            registerFunctionToBeCalledBeforeCardSending: (beforeCardSending) =>
+                UserCardTemplateGateway.setFunctionToBeCalledBeforeCardSending(beforeCardSending),
+
             setDropdownEntityRecipientList: (recipients) =>
                 UserCardTemplateGateway.setDropdownEntityRecipientList(recipients),
 

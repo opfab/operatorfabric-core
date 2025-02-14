@@ -34,6 +34,8 @@ export class UserCardTemplateGateway {
     private static _functionToGetSpecficCardInformationFromTemplate: Function;
     private static _functionToSendEntityUsedForSendingCardToTemplate: Function;
 
+    private static _functionToBeCalledBeforeCardSending: Function;
+
     public static init() {
         UserCardTemplateGateway._editionMode = null;
         UserCardTemplateGateway._endDate = null;
@@ -53,6 +55,7 @@ export class UserCardTemplateGateway {
         UserCardTemplateGateway._functionToSetInitialSelectedRecipientsForInformation = () => {};
         UserCardTemplateGateway._functionToSetSelectedRecipients = () => {};
         UserCardTemplateGateway._functionToSetSelectedRecipientsForInformation = () => {};
+        UserCardTemplateGateway._functionToBeCalledBeforeCardSending = () => {};
     }
 
     public static initTemplateFunctions() {
@@ -140,6 +143,14 @@ export class UserCardTemplateGateway {
 
     public static setExpirationDate(value: number) {
         UserCardTemplateGateway._expirationDate = value;
+    }
+
+    public static setFunctionToBeCalledBeforeCardSending(functionToBeCalledBeforeCardSending: Function) {
+        UserCardTemplateGateway._functionToBeCalledBeforeCardSending = functionToBeCalledBeforeCardSending;
+    }
+
+    public static async callFunctionToBeCalledBeforeCardSending(cardToBeSent: any) {
+        await UserCardTemplateGateway._functionToBeCalledBeforeCardSending(cardToBeSent);
     }
 
     public static setFunctionToGetSpecificCardInformationFromTemplate(

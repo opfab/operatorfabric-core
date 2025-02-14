@@ -434,6 +434,28 @@ The template can receive the emitter entity of the card by registering a listene
         opfab.currentUserCard.listenToEntityUsedForSendingCard((entityId) => {// do some stuff with the entity id})
 ```
 
+=== Function  registerFunctionToBeCalledBeforeCardSending
+
+Before sending the card and after the preview, you can define a method to be called. This method is blocking (i.e., it is an async method awaited by the opfab code).
+
+The card to be sent is provided as a parameter.
+
+
+If the method throws an error, the error message will be shown to the user on the top screen banner and the card will not be sent.
+
+For example : 
+
+```
+    opfab.currentCard.registerFunctionToBeCalledBeforeCardSending( async(cardToBeSent) => {
+      
+      // do some stuff 
+
+      // throws error if needed 
+
+    })
+
+```
+
 === Function registerFunctionToGetSpecificCardInformation
 
 Register the template function to call to get user card specific information. This function will be called by opfab when user clicks on the "preview" button. More explanation can be found in the <<user_cards, user card chapter>>.
