@@ -123,6 +123,11 @@
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
                     flex: 2
+                },
+                {
+                    fieldType: 'INPUT',
+                    field: 'comment',
+                    headerName: 'COMMENT'
                 }
             ]
         },
@@ -130,10 +135,14 @@
             {
                 id: 'button1',
                 label: 'Accept proposals',
-                getUserResponses: (cards) => {
+                getUserResponses: (cards, responsesData) => {
                     const responseCards = [];
-                    const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
+
                     cards.forEach((card) => {
+
+                        const userInputs = responsesData.get(card.id);
+                        const comment = userInputs?.comment ?? '';
+                        const responseData = { "choice1": "on", "choice2": "on", "choice3": "on", "comment": comment }
                         responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
@@ -142,12 +151,21 @@
             {
                 id: 'button2',
                 label: 'Refuse proposals',
-                getUserResponses: (cards) => {
+                getUserResponses: (cards, responsesData) => {
                     const responseCards = [];
-                    const responseData = {}
+                    let hasAlwaysComment = true;
                     cards.forEach((card) => {
+                        const userInputs = responsesData.get(card.id);
+                        const comment = userInputs?.comment ?? '';
+                        if (comment === '') {
+                            hasAlwaysComment = false;
+                        }
+                        const responseData = { "comment": comment }
                         responseCards.push({ data: responseData });
                     });
+                    if (!hasAlwaysComment) {
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
+                    }
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             }

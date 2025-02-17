@@ -35,6 +35,7 @@ import {MultiSelectComponent} from '../share/multi-select/multi-select.component
 import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
+import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
 
 @Component({
     selector: 'of-custom-screen',
@@ -160,7 +161,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                 domLayout: 'autoHeight',
                 components: {
                     responsesCellRenderer: ResponsesCellRendererComponent,
-                    hasResponseCellRenderer: HasResponseCellRendererComponent
+                    hasResponseCellRenderer: HasResponseCellRendererComponent,
+                    inputCellRenderer: InputCellRendererComponent
                 },
 
                 defaultColDef: {
@@ -251,6 +253,12 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                         width: 15,
                         wrapText: false,
                         cellRenderer: 'hasResponseCellRenderer'
+                    },
+                    input: {
+                        cellRenderer: 'inputCellRenderer',
+                        sortable: false,
+                        filter: false,
+                        resizable: false
                     }
                 },
                 ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
@@ -261,7 +269,8 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                 columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
                 headerHeight: 70,
                 rowHeight: 45,
-                paginationPageSize: 10
+                paginationPageSize: 10,
+                onRowSelected: (event) => this.onRowSelected(event)
             };
             this.rowData$ = this.rowDataSubject.asObservable();
             this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
@@ -275,7 +284,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
                     selectAll: 'currentPage',
                     hideDisabledCheckboxes: true,
                     isRowSelectable: (node) => {
-                        return this.customCardListView.isResponsePossibleForCard(node.data.cardId);
+                        return node.data.isResponsePossible;
                     }
                 };
             }
@@ -303,6 +312,7 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     }
 
     updateResultPage(currentPage: number): void {
+        if (this.page !== currentPage) this.gridApi.deselectAll();
         this.gridApi.paginationGoToPage(currentPage - 1);
         this.page = currentPage;
     }
@@ -327,8 +337,10 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         this.customCardListView.search();
     }
 
-    selectCard(info: string) {
-        SelectedCardService.setSelectedCardId(info);
+    selectCard(event: any) {
+        // avoid opening card detail when clicking on input cells or when selecting row
+        if (!event.colDef.type || event.colDef.type === 'input') return;
+        SelectedCardService.setSelectedCardId(event.data.cardId);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -346,8 +358,47 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
         if (selectedRows.length === 0) {
             return;
         }
-        const selectedCards = selectedRows.map((row) => row.cardId);
-        this.customCardListView.clickOnButton(buttonId, selectedCards);
+        this.customCardListView.clickOnButton(buttonId, this.getResponsesData());
+    }
+
+    private getResponsesData(): Map<string, any> {
+        const responseData = new Map<string, any>();
+        const selectedRowNodes = this.gridApi.getSelectedNodes();
+        const inputColumns = this.getInputColumnIds();
+
+        selectedRowNodes.forEach((rowNode: any) => {
+            const userInputs = {};
+            const inputCellRenderers = this.gridApi.getCellRendererInstances({
+                columns: inputColumns,
+                rowNodes: [rowNode]
+            });
+            if (inputCellRenderers.length > 0)
+                inputCellRenderers.forEach((cellRenderer: any) => {
+                    userInputs[cellRenderer.params.colDef.field] = cellRenderer.getInputValue();
+                });
+            responseData.set(rowNode.data.cardId, userInputs);
+        });
+        return responseData;
+    }
+
+    private onRowSelected(event: any) {
+        const selectedRow = event.node;
+        const inputColumns = this.getInputColumnIds();
+        if (inputColumns.length === 0) return;
+
+        const param = {columns: inputColumns, rowNodes: [selectedRow]};
+        const instances = this.gridApi.getCellRendererInstances(param);
+        if (instances.length > 0)
+            instances.forEach((element) => {
+                if (event.node.isSelected()) element.activateInput();
+                else element.deactivateInput();
+            });
+    }
+
+    private getInputColumnIds(): string[] {
+        const allColumns = this.gridApi.getColumnDefs();
+        const inputColumns = allColumns.filter((col) => col.type === 'input');
+        return inputColumns.map((col) => col.field);
     }
 
     export(): void {

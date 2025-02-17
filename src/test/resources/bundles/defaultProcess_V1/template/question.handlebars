@@ -22,7 +22,12 @@
                 type="checkbox" id="choice3" name="choice3"> <span id="question-choice3"
                 class="opfab-checkbox-checkmark"> </span> </label>
     </div>
-    <div id="responseRequired"></div>
+
+      <div class="opfab-input" style="margin-top:20px;margin-bottom:10px;width:500px">
+          <label> Comment </label>
+          <input id="comment" name="comment">
+      </div>
+        <div id="responseRequired"></div>
     <div id="responseDisabled" class="opfab-color-danger"></div>
 </form>
 
@@ -60,6 +65,7 @@
                 responses += ' <th> ' + date1 + ' 8AM-10AM </th>';
                 responses += ' <th> ' + date1 + ' 10AM-12PM </th>';
                 responses += ' <th> ' + date2 + ' 8AM-10AM </th>';
+                responses += ' <th> Comment </th>';
                 responses += ' </tr>';
 
                 childCards.forEach((c, i) => {
@@ -71,6 +77,8 @@
                     else responses += "<td> NOK </td>";
                     if (c.data.choice3) responses += "<td> OK </td>";
                     else responses += "<td> NOK </td>";
+                    if (c.data.comment) responses += `<td> ${c.data.comment} </td>`;
+                    else responses += "<td>  </td>";
                     responses += "</tr>";
                 });
 
@@ -88,22 +96,29 @@
         //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
         opfab.currentCard.registerFunctionToGetUserResponse(() => {
 
-            const responseCardData = {};
-            const formElement = document.getElementById('question-form');
-            for (const [key, value] of [... new FormData(formElement)]) {
-                (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
-            }
 
+            const choice1 = document.getElementById('choice1').checked;
+            const choice2 = document.getElementById('choice2').checked;
+            const choice3 = document.getElementById('choice3').checked;
+            const comment = document.getElementById('comment').value;
             const result = {
                 valid: true,
                 responseCard:{
-                    data: responseCardData
+                    data: {
+                    choice1: choice1,
+                    choice2: choice2, 
+                    choice3: choice3,
+                    comment: comment
+                    }
                 } 
             };
 
             // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
-            const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
-            if (choiceRequiresFollowUp) result.responseCard['state'] = 'multipleOptionsResponseState';
+            let choiceOnNumber = 0;
+            if (choice1) choiceOnNumber++;
+            if (choice2) choiceOnNumber++;
+            if (choice3) choiceOnNumber++;
+            if (choiceOnNumber>1) result.responseCard['state'] = 'multipleOptionsResponseState';
 
             return result;
 
@@ -114,12 +129,14 @@
             document.getElementById('choice1').disabled = true;
             document.getElementById('choice2').disabled = true;
             document.getElementById('choice3').disabled = true;
+            document.getElementById('comment').disabled = true;
         });
 
         opfab.currentCard.listenToResponseUnlock(() => {
             document.getElementById('choice1').disabled = false;
             document.getElementById('choice2').disabled = false;
             document.getElementById('choice3').disabled = false;
+            document.getElementById('comment').disabled = false;
 
         });
 

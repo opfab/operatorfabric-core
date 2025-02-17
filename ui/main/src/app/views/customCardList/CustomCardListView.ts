@@ -56,7 +56,7 @@ export class CustomCardListView {
                 );
                 const endTimer = Date.now();
                 LoggerService.info(`Custom card list - Time to process data: ${endTimer - startTimer}ms`);
-                return this.results;
+                return this.responses.addIsResponsePossibleForCardToResults(this.results);
             })
         );
     }
@@ -135,12 +135,8 @@ export class CustomCardListView {
         return this.responses.getResponseButtons();
     }
 
-    public isResponsePossibleForCard(cardId: string) {
-        return this.responses.isResponsePossibleForCard(cardId);
-    }
-
-    public async clickOnButton(buttonId: string, selectedCards: string[]) {
-        await this.responses.sendResponse(buttonId, selectedCards);
+    public async clickOnButton(buttonId: string, responsesData: Map<string, any>) {
+        await this.responses.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
     }
 
     public destroy() {

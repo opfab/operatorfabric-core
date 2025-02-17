@@ -13,7 +13,6 @@
 		"summary" : {"key" : "message.summary"},
 		"title" : {"key" : "question.title"},
 		"data" : {"message":" Action Card"},
-		"lttd" :  180000		,
 		"timeSpans" : [
 			{"start" :  14400000}
 			]

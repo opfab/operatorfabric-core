@@ -98,6 +98,14 @@ export class ResultTable {
                             flex: column.flex
                         });
                         break;
+                    case FieldType.INPUT:
+                        agGridColumns.push({
+                            field: column.field,
+                            headerName: column.headerName,
+                            type: 'input',
+                            flex: column.flex
+                        });
+                        break;
                     default:
                         agGridColumns.push({
                             field: column.field,
@@ -283,6 +291,7 @@ export class ResultTable {
     }
 
     private getNestedField(obj: any, path: string): any {
+        if (!path) return '';
         return path.split('.').reduce((acc, part) => acc?.[part], obj);
     }
 

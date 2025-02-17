@@ -411,6 +411,7 @@ For each field you want to display in the result table, define a column object. 
 
 - `COLORED_CIRCLE`: Displays a colored circle. The color is defined with a custom method `getValue` defined in the field definition.
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
+- `INPUT`: Displays an input field. The value of the input field will be used for response cards if the custom screen has response buttons (see below).
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
 - `RESPONSE_FROM_MY_ENTITIES`: Displays a blue arrow if one of the user's entity has responded to the card.
@@ -426,16 +427,24 @@ The `flex` field sets the CSS flex property for the column.
 
 === Response buttons 
 
-It is possible to define custom response buttons for the custom screen, this allows the user to send multiple responses at once.
+It is possible to define custom response buttons for the custom screen allowing the user to send multiple responses at once.
 
 To do this, add a `responseButtons` array to the custom screen object. Each button object must contain the following fields:
 
 - `id`: The button identifier.
 - `label`: The button label.
-- `getUserResponses: A function that takes an array of cards as a parameter and returns an object containing the following fields:
-  - `valid`: A boolean indicating if the action is valid.
-  - `errorMsg`: An error message to display if the action is not valid.
-  - `responseCards`: An array of response cards to send with a `data` field containing the response card data field.
+- `getUserResponses`: a function that retrieves data for response cards.
+
+The getUserResponses function takes two parameters: 
+
+- an array of cards
+- a map of responseInput indexed by card id. The responseInput is an object containing the response input fields and their values.
+
+The method shall return an object containing the following fields:
+
+- `valid`: A boolean indicating if the action is valid.
+- `errorMsg`: An error message to display if the action is not valid.
+- `responseCards`: An array of response cards to send, each containing a `data` field containing a response card data .
 
  
 
@@ -447,15 +456,19 @@ const customScreenExample = {
         name: 'testName',
 
         .....
-     
+
         responseButtons: [
             {
                 id: 'button1',
                 label: 'Accept proposals',
-                getUserResponses: (cards) => {
+                getUserResponses: (cards, responsesData) => {
                     const responseCards = [];
-                    const responseData = { "choice1": ["on"], "choice2": ["on"], "choice3": ["on"] }
+
                     cards.forEach((card) => {
+
+                        const userInputs = responsesData.get(card.id);
+                        const comment = userInputs?.comment ?? '';
+                        const responseData = { "choice1": "on", "choice2": "on", "choice3": "on", "comment": comment }
                         responseCards.push({ data: responseData });
                     });
                     return { valid: true, errorMsg: '', responseCards: responseCards };
@@ -464,17 +477,37 @@ const customScreenExample = {
             {
                 id: 'button2',
                 label: 'Refuse proposals',
-                getUserResponses: (cards) => {
+                getUserResponses: (cards, responsesData) => {
                     const responseCards = [];
-                    const responseData = {}
+                    let hasAlwaysComment = true;
                     cards.forEach((card) => {
+                        const userInputs = responsesData.get(card.id);
+                        const comment = userInputs?.comment ?? '';
+                        if (comment === '') {
+                            hasAlwaysComment = false;
+                        }
+                        const responseData = { "comment": comment }
                         responseCards.push({ data: responseData });
                     });
+                    if (!hasAlwaysComment) {
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
+                    }
                     return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             }
         ]
 
+----
+
+The input fields are to be defined in the columns definition with fieldType set to `INPUT` , for example :  
+
+----
+{
+    field: 'comment',
+    headerName: 'Comment',
+    fieldType: 'INPUT',
+    flex: 1
+}
 ----
 
 === Card data fields
@@ -508,3 +541,5 @@ Then you have to add the fields in the `results.columns` field in the custom scr
                 },
                 ...
 ----
+
+

@@ -32,7 +32,7 @@ export class Column {
 export class ResponseButton {
     id: string;
     label: string;
-    getUserResponses: (selectedCards: Card[]) => any;
+    getUserResponses: (selectedCards: Card[], userInputs: Map<string, any>) => any;
 }
 
 export class UserResponse {
@@ -50,7 +50,8 @@ export enum FieldType {
     TYPE_OF_STATE = 'TYPE_OF_STATE',
     RESPONSES = 'RESPONSES',
     COLORED_CIRCLE = 'COLORED_CIRCLE',
-    RESPONSE_FROM_MY_ENTITIES = 'RESPONSE_FROM_MY_ENTITIES'
+    RESPONSE_FROM_MY_ENTITIES = 'RESPONSE_FROM_MY_ENTITIES',
+    INPUT = 'INPUT'
 }
 
 export enum HeaderFilter {

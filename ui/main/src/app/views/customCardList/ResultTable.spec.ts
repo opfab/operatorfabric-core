@@ -101,6 +101,11 @@ describe('CustomScreenView - ResultTable', () => {
                         field: 'coloredCircleTest',
                         headerName: 'circle',
                         fieldType: FieldType.COLORED_CIRCLE
+                    },
+                    {
+                        field: 'comment',
+                        headerName: 'Comment',
+                        fieldType: FieldType.INPUT
                     }
                 ]
             });
@@ -109,7 +114,8 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
-                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined}
+                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined},
+                {field: 'comment', headerName: 'Comment', type: 'input', flex: undefined}
             ]);
         });
 

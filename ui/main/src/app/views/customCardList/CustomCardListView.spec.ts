@@ -158,6 +158,15 @@ describe('CustomCardListView', () => {
     });
     describe('Should return custom screen data', () => {
         beforeEach(() => {
+            const myState = new State();
+            myState.response = {state: 'state1'};
+
+            const statesList = new Map();
+            statesList.set('state1', myState);
+
+            const process = [new Process('process1', '1', 'my process label', null, statesList)];
+            setProcessConfiguration(process);
+
             setEntities([
                 {
                     id: 'entity1',
@@ -221,7 +230,8 @@ describe('CustomCardListView', () => {
                 {
                     cardId: 'id1',
                     testField: 'process1',
-                    responses: [{name: 'entity1 name', color: 'green'}]
+                    responses: [{name: 'entity1 name', color: 'green'}],
+                    isResponsePossible: false
                 }
             ]);
         });
@@ -272,7 +282,8 @@ describe('CustomCardListView', () => {
             expect(result).toEqual([
                 {
                     cardId: 'id1',
-                    testField: 'process1'
+                    testField: 'process1',
+                    isResponsePossible: false
                 }
             ]);
         });

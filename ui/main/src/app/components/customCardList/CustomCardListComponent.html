@@ -111,7 +111,7 @@
             [gridOptions]="gridOptions"
             [rowSelection]="rowSelection"
             (gridReady)="onGridReady($event)"
-            (rowClicked)="selectCard($event.data.cardId)"
+            (cellClicked)="selectCard($event)"
             class="ag-theme-opfab">
         </ag-grid-angular>
 
