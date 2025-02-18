@@ -344,28 +344,10 @@ class CardProcessServiceShould {
                         cardProcessingService.processCard(card);
 
                         Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 2)).isTrue();
-                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getPublishDate());
+                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getStartDate());
                         Assertions.assertThat(childCard.getEndDate()).isEqualTo(card.getEndDate());
                 }
 
-                @Test
-                void GIVEN_a_child_card_WHEN_updating_parent_card_with_KEEP_CHILD_CARDS_action_and_startDate_before_publishDate_THEN_child_card_has_startDate_and_endDate_correctly_updated() {
-                        Assertions.assertThatCode(
-                                        () -> cardProcessingService.processUserCard(childCard,
-                                                        currentUserWithPerimeters,
-                                                        token))
-                                        .doesNotThrowAnyException();
-                        Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 2)).isTrue();
-
-                        card.setActions(List.of(CardActionEnum.KEEP_CHILD_CARDS));
-                        card.setStartDate(Instant.now().minus(1, ChronoUnit.DAYS));
-
-                        cardProcessingService.processCard(card);
-
-                        Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 2)).isTrue();
-                        Assertions.assertThat(childCard.getStartDate()).isEqualTo(card.getStartDate());
-                        Assertions.assertThat(childCard.getEndDate()).isEqualTo(card.getPublishDate());
-                }
         }
 
         @Test

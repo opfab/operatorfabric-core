@@ -217,17 +217,13 @@ public class CardProcessingService {
             if (!shouldKeepChildCards(card)) {
                 deleteCards(childCards.get(), card.getPublishDate(), jwt);
             } else {
-                cardRepository.setChildCardDates(card.getId(), getChildStartDateFromParent(card),
+                cardRepository.setChildCardDates(card.getId(),card.getStartDate(),
                         getChildEndDateFromParent(card));
             }
         }
         return null;
     }
 
-
-    private Instant getChildStartDateFromParent(Card parent) {
-        return parent.getStartDate().isBefore(parent.getPublishDate()) ? parent.getStartDate() : parent.getPublishDate();
-    }
 
     private Instant getChildEndDateFromParent(Card parent) {
         if (parent.getEndDate() != null) {
@@ -251,7 +247,7 @@ public class CardProcessingService {
     private void processChildCard(Card card) {
         if (card.getParentCardId() != null) {
             Card parentCard = getExistingCard(card.getParentCardId(), false);
-            card.setStartDate(getChildStartDateFromParent(parentCard));
+            card.setStartDate(parentCard.getStartDate());
             card.setEndDate(getChildEndDateFromParent(parentCard));
         }
     }
