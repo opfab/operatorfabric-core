@@ -9,13 +9,16 @@
 
 import {CardOperation} from '@ofServices/events/model/CardOperation';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {filter, map, Observable, Subject} from 'rxjs';
+import {filter, map, Observable, ReplaySubject, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from './server/OpfabEventStreamServer';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 
 export class OpfabEventStreamService {
     private static opfabEventStreamServer: OpfabEventStreamServer;
 
     public static readonly initSubscription = new Subject<void>();
+    public static readonly loadingInProgress = new ReplaySubject<boolean>();
+    private static numberOfLoadingInProgress = 0;
 
     private static startOfAlreadyLoadedPeriod: number;
     private static endOfAlreadyLoadedPeriod: number;
@@ -54,6 +57,10 @@ export class OpfabEventStreamService {
                     case 'RELOAD':
                         logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
                         OpfabEventStreamService.reloadRequest.next();
+                        break;
+                    case 'OLD_CARDS_LOADING_END':
+                        logger.info(`EventStreamService - OLD_CARDS_LOADING_END received`, LogOption.LOCAL_AND_REMOTE);
+                        OpfabEventStreamService.removeALoadingInProgress();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
                         OpfabEventStreamService.businessConfigChange.next();
@@ -140,18 +147,44 @@ export class OpfabEventStreamService {
             'EventStreamService - Need to load card for period ' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );
-        OpfabEventStreamService.opfabEventStreamServer.setBusinessPeriod(start, end).subscribe(() => {
-            if (
-                !OpfabEventStreamService.startOfAlreadyLoadedPeriod ||
-                start < OpfabEventStreamService.startOfAlreadyLoadedPeriod
-            )
-                OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
-            if (
-                !OpfabEventStreamService.endOfAlreadyLoadedPeriod ||
-                end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
-            )
-                OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
-        });
+        OpfabEventStreamService.addALoadingInProgress();
+        OpfabEventStreamService.opfabEventStreamServer
+            .setBusinessPeriod(start, end)
+            .subscribe((serverResponse: ServerResponse<any>) => {
+                if (serverResponse.status !== ServerResponseStatus.OK) {
+                    logger.error(
+                        'EventStreamService - Error while asking cards for period ' + serverResponse.statusMessage
+                    );
+                    OpfabEventStreamService.removeALoadingInProgress();
+                    return;
+                }
+                if (
+                    !OpfabEventStreamService.startOfAlreadyLoadedPeriod ||
+                    start < OpfabEventStreamService.startOfAlreadyLoadedPeriod
+                )
+                    OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
+                if (
+                    !OpfabEventStreamService.endOfAlreadyLoadedPeriod ||
+                    end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
+                )
+                    OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
+            });
+    }
+
+    private static addALoadingInProgress() {
+        OpfabEventStreamService.numberOfLoadingInProgress++;
+        if (OpfabEventStreamService.numberOfLoadingInProgress === 1)
+            OpfabEventStreamService.loadingInProgress.next(true);
+    }
+
+    private static removeALoadingInProgress() {
+        // It is possible that the loadingInProgress is already at 0 if the connection has been lost
+        // and reopened so a reload of cards has been done without have been triggered in this class
+        if (OpfabEventStreamService.numberOfLoadingInProgress === 0) return;
+        OpfabEventStreamService.numberOfLoadingInProgress--;
+        if (OpfabEventStreamService.numberOfLoadingInProgress === 0) {
+            OpfabEventStreamService.loadingInProgress.next(false);
+        }
     }
 
     static getReceivedDisconnectUser(): Observable<boolean> {
@@ -176,5 +209,9 @@ export class OpfabEventStreamService {
 
     static getMonitoringConfigChangeRequests(): Observable<void> {
         return OpfabEventStreamService.monitoringConfigChange.asObservable();
+    }
+
+    static getLoadingInProgress(): Observable<boolean> {
+        return OpfabEventStreamService.loadingInProgress.asObservable();
     }
 }

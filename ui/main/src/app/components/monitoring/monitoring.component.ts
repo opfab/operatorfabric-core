@@ -25,6 +25,7 @@ import {NgIf} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
 import {UsersService} from '@ofServices/users/UsersService';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 
 @Component({
     selector: 'of-monitoring',
@@ -91,10 +92,11 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         );
         this.monitoringResult$.subscribe((lines) => (this.result = lines));
         this.applyResponseFilter();
-        OpfabStore.getLightCardStore()
-            .getLoadingInProgress()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
+        OpfabEventStreamService.getLoadingInProgress()
+            .pipe(takeUntil(this.unsubscribe$), debounceTime(500))
+            .subscribe((loadingInProgress: boolean) => {
+                this.loadingInProgress = loadingInProgress;
+            });
         this.isThereProcessStateToDisplay = this.hasStatesToDisplay();
 
         SelectedCardService.getSelectedCardIdChanges().subscribe(

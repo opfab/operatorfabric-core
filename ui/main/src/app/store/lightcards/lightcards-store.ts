@@ -38,9 +38,6 @@ import {CardOperationType} from '@ofServices/events/model/CardOperation';
  *
  * Child cards are not provided along with light cards, they can be retrieved as they are received via getNewLightChildCards()
  *
- * The class provides as well an observable to get information if the loading is in progress, it is in progress when
- * there is a flow of lightCard coming from the subscription service.
- *
  * This feature was previously implemented with NGRX, but it was not fast enough, so it has been changed with a custom implementation
  *
  * This class does not hold the selected lightCard or the current loaded card.
@@ -61,8 +58,6 @@ export class LightCardsStore {
     private numberOfCardProcessedByPreviousDebounce = 0;
 
     private nbCardLoadedInHalfSecondInterval = 0;
-    private nbCardLoadedInPreviousHalfSecondInterval = 0;
-    private readonly loadingInProgress = new Subject();
     private readonly receivedAcksSubject = new Subject<{
         cardUid: string;
         entitiesAcks: string[];
@@ -123,28 +118,10 @@ export class LightCardsStore {
         );
     }
 
-    // if the flow is more than 10 cards seconds
-    // loading is considered in progress
-    private checkForLoadingInProgress() {
-        if (this.nbCardLoadedInHalfSecondInterval >= 5) {
-            if (this.nbCardLoadedInPreviousHalfSecondInterval >= 5) {
-                this.loadingInProgress.next(true);
-            } else {
-                this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
-            }
-            this.nbCardLoadedInHalfSecondInterval = 0;
-        } else {
-            if (this.nbCardLoadedInPreviousHalfSecondInterval < 5) this.loadingInProgress.next(false);
-            this.nbCardLoadedInPreviousHalfSecondInterval = this.nbCardLoadedInHalfSecondInterval;
-        }
-        setTimeout(() => this.checkForLoadingInProgress(), 500);
-    }
-
     // debounceTimeInMs is to be modify only in testing case
     // Default value must be kept for production
     public initStore() {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
-        this.checkForLoadingInProgress();
         OpfabEventStreamService.getCardOperationStream()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
@@ -440,10 +417,6 @@ export class LightCardsStore {
 
     public getAllChildCards() {
         return new Map(this.childCards);
-    }
-
-    public getLoadingInProgress() {
-        return this.loadingInProgress.asObservable();
     }
 
     public removeAllLightCards() {

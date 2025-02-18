@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -110,11 +110,10 @@ public class CardSubscription {
         if (this.messageSink != null) this.messageSink.next(message);
     }
 
-    public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
-
-        messageFlux.subscribe(next -> this.messageSink.next(next));
+    public void publishOldCardsIntoSubscription(Flux<String> messageFlux) {
+        messageFlux.doOnComplete(() -> this.messageSink.next("OLD_CARDS_LOADING_END"))
+            .subscribe(next -> this.messageSink.next(next));
     }
-
     public void setHeartbeatReceptionDate(Instant date){
         this.lastHearbeatReceptionDate = date;
     }

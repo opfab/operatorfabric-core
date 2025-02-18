@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {OpfabStore} from '../../../../../store/opfabStore';
-import {Subject} from 'rxjs';
+import {Subject, debounceTime, takeUntil} from 'rxjs';
 import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/feed-filter-and-sort-icons.component';
 import {FeedSearchComponent} from './feed-search/feed-search.component';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 
 @Component({
     selector: 'of-filters',
@@ -23,24 +23,33 @@ import {TranslateModule} from '@ngx-translate/core';
     standalone: true,
     imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule]
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent implements OnInit, OnDestroy {
     @Input() filterActive: boolean;
 
     @Output() showFiltersAndSort = new Subject<any>();
 
     showSearchFilter: boolean;
 
+    unsubscribe$: Subject<void> = new Subject<void>();
+
     loadingInProgress = false;
 
     ngOnInit() {
         this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 
-        OpfabStore.getLightCardStore()
-            .getLoadingInProgress()
-            .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
+        OpfabEventStreamService.getLoadingInProgress()
+            .pipe(takeUntil(this.unsubscribe$), debounceTime(500))
+            .subscribe((loadingInProgress: boolean) => {
+                this.loadingInProgress = loadingInProgress;
+            });
     }
 
     onShowFiltersAndSortChange(filterAndsort: any) {
         this.showFiltersAndSort.next(filterAndsort);
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }

@@ -102,7 +102,7 @@ public class CardOperationsController {
                         .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
                 if (oldSubscription != null) {
                     log.debug("Found subscription: {}", oldSubscription.getId());
-                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(),
+                    oldSubscription.publishOldCardsIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(),
                             p.getRangeStart(), p.getRangeEnd(), customScreenDataFields));
                 } else {
                     log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
