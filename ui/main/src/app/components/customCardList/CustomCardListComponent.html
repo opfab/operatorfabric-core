@@ -71,9 +71,6 @@
             </div>
         </div>
     </div>
-    <div
-        *ngIf="!responseFromMyEntitiesFilterVisible && !responseFromAllEntitiesFilterVisible"
-        style="height: 20px"></div>
     <div class="opfab-custom-card-list-responses-checkbox">
         <div *ngIf="responseFromMyEntitiesFilterVisible">
             <label
@@ -109,6 +106,7 @@
         <ag-grid-angular
             [rowData]="rowData$ | async"
             [gridOptions]="gridOptions"
+            style="overflow-y: auto; max-height: calc(100vh - 350px)"
             [rowSelection]="rowSelection"
             (gridReady)="onGridReady($event)"
             (cellClicked)="selectCard($event)"
@@ -116,6 +114,17 @@
         </ag-grid-angular>
 
         <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+            <div style="width: 200px; margin-top: 15px; flex-shrink: 0">
+                <select (change)="onPageSizeChanged($event.target)" id="opfab-page-size-select">
+                    <option
+                        *ngFor="let option of paginationPageSizeOptions"
+                        [value]="option"
+                        [attr.selected]="option === pageSize ? true : null">
+                        {{ option }}
+                    </option>
+                </select>
+                <label for="opfab-page-size-select" translate>&nbsp;shared.pageSize</label>
+            </div>
             <div style="white-space: nowrap; margin-top: 17px">
                 <span translate> shared.resultsNumber </span> : {{ gridApi.paginationGetRowCount() }}
             </div>
@@ -124,7 +133,8 @@
                     *ngIf="gridApi.paginationGetRowCount() > 10"
                     [collectionSize]="gridApi.paginationGetRowCount()"
                     [page]="page"
-                    [pageSize]="gridApi.paginationGetPageSize()"
+                    [pagination]="true"
+                    [pageSize]="pageSize"
                     (pageChange)="updateResultPage($event)"
                     [maxSize]="3"
                     [rotate]="true">

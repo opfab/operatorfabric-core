@@ -66,6 +66,9 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     gridOptions: GridOptions;
     gridApi: any;
     page = 1;
+    pageSize: number = 10;
+    readonly paginationPageSizeOptions = [10, 20, 50, 100];
+
     private rowData = [];
     rowData$: Observable<any>;
     private readonly rowDataSubject = new ReplaySubject(1);
@@ -268,7 +271,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
             headerHeight: 70,
             rowHeight: 45,
-            paginationPageSize: 10,
+            paginationPageSize: this.pageSize,
             onRowSelected: (event) => this.onRowSelected(event)
         };
         this.rowData$ = this.rowDataSubject.asObservable();
@@ -307,6 +310,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
     onGridReady(params: any) {
         this.gridApi = params.api;
+        this.gridApi.paginationSetPageSize(this.pageSize);
     }
 
     updateResultPage(currentPage: number): void {
@@ -391,6 +395,13 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 if (event.node.isSelected()) element.activateInput();
                 else element.deactivateInput();
             });
+    }
+
+    onPageSizeChanged(target: EventTarget | null) {
+        // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
+        const value = +(<HTMLSelectElement>target).value;
+        this.gridApi.setGridOption('paginationPageSize', value);
+        this.pageSize = value;
     }
 
     private getInputColumnIds(): string[] {
