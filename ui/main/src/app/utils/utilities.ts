@@ -53,7 +53,7 @@ export class Utilities {
         }
     }
 
-    public static compareObj(obj1, obj2) {
+    public static compareObj(obj1, obj2): number {
         if (typeof obj1 === 'string' && typeof obj2 === 'string') {
             obj1 = this.removeEmojis(obj1);
             obj2 = this.removeEmojis(obj2);
@@ -74,7 +74,7 @@ export class Utilities {
         //  -"77iP" which is a variation selector, which left alone is an empty character
         // When using .replace() only the first part is removed and the empty character messes up the string comparison
         // The variation selector's UTF-8 code is "%EF%B8%8F"
-        temp = temp.replace(decodeURIComponent('%EF%B8%8F'), '').trim();
+        temp = temp.replaceAll(decodeURIComponent('%EF%B8%8F'), '').trim();
         return temp;
     }
 

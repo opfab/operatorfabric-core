@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,8 +33,15 @@ describe('Utilities', () => {
         });
 
         it('should compare two strings with emojis correctly', () => {
-            const str1 = 'Hello, world! 😊';
+            const str1 = '😊 Hello, world! 😊';
             const str2 = 'Hello, world!';
+            const result = Utilities.compareObj(str1, str2);
+            expect(result).toBe(0);
+        });
+
+        it('should compare two strings with emoji ⚠️ correctly', () => {
+            const str1 = '⚠️ Network ⚠️ Contingencies ⚠️';
+            const str2 = 'Network  Contingencies';
             const result = Utilities.compareObj(str1, str2);
             expect(result).toBe(0);
         });
