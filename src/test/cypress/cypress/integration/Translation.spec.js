@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {ScriptCommands} from '../support/scriptCommands';
-import {SettingsCommands} from '../support/settingsCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { ScriptCommands } from '../support/scriptCommands';
+import { SettingsCommands } from '../support/settingsCommands';
 
-describe('Test translations', function () {
+describe('Test translations', function() {
     const ENGLISH = 'en';
     const FRENCH = 'fr';
     const DUTCH = 'nl';
@@ -63,8 +63,7 @@ describe('Test translations', function () {
         loggingTitle,
         singleMenuTitle,
         secondMenuTitle,
-        firstEntryTitle,
-        secondEntryTitle
+        opfabDocTitle,
     ) {
         cy.get('#opfab-navbar-menu-feed').should('have.text', feedTitle);
         cy.get('#opfab-navbar-menu-archives').should('have.text', archivesTitle);
@@ -75,8 +74,7 @@ describe('Test translations', function () {
 
         // Test dropdown menus titles
         cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
-        cy.get('#opfab-navbar-menu-dropdown-uid_test_1').should('have.text', firstEntryTitle);
-        cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', secondEntryTitle);
+        cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', opfabDocTitle);
     }
 
     function checkRightMenuStaticEntries(
@@ -237,12 +235,12 @@ describe('Test translations', function () {
         cy.contains('#opfab-feed-card-not-found', cardNotFoundText);
     }
 
-    before('Set up configuration and cards', function () {
+    before('Set up configuration and cards', function() {
         script.deleteAllSettings();
         script.loadTestConf();
     });
 
-    it('Check translations for menu titles', function () {
+    it('Check translations for menu titles', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
@@ -253,8 +251,7 @@ describe('Test translations', function () {
             'Logging',
             'Single menu entry',
             'Second menu',
-            'First menu entry',
-            'Second menu entry'
+            'Opfab documentation'
         );
 
         changeLanguage(FRENCH);
@@ -265,8 +262,7 @@ describe('Test translations', function () {
             'Logging',
             'Unique élément',
             'Deuxième menu',
-            'Premier élément',
-            'Deuxième élément'
+            'Documentation Opfab'
         );
 
         changeLanguage(DUTCH);
@@ -277,12 +273,11 @@ describe('Test translations', function () {
             'Logboek',
             'Enkel menu-item',
             'Tweede menu',
-            'Eerste menu-item',
-            'Tweede menu-item'
+            'Opfab documentatie'
         );
     });
 
-    it('Check translations for user dropdown menu', function () {
+    it('Check translations for user dropdown menu', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
@@ -322,7 +317,7 @@ describe('Test translations', function () {
         checkDayAndNightTitles('Dag modus', 'Nacht modus');
     });
 
-    it('Check archives screen translations', function () {
+    it('Check archives screen translations', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
@@ -373,7 +368,7 @@ describe('Test translations', function () {
         );
     });
 
-    it('Check Monitoring screen translations', function () {
+    it('Check Monitoring screen translations', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
@@ -416,7 +411,7 @@ describe('Test translations', function () {
         checkMonitoringResultTexts('Kaarten met reactie van mijn entiteit ');
     });
 
-    it('Check Business period translations', function () {
+    it('Check Business period translations', function() {
         const currentDate = new Date(2020, 11, 31, 23, 46); // Date must be in the past to avoid session close with token expiration
         opfab.loginWithClock(currentDate);
 
@@ -453,7 +448,7 @@ describe('Test translations', function () {
         cy.get('.opfab-business-period').should('have.text', 'Bedrijfsperiode : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
     });
 
-    it('Check Feed filter translations', function () {
+    it('Check Feed filter translations', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
@@ -465,7 +460,7 @@ describe('Test translations', function () {
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline ');
 
         // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
-        cy.get('#opfab-feed-filter-ack-notack').click({force: true});
+        cy.get('#opfab-feed-filter-ack-notack').click({ force: true });
         checkResetText('Reset filters');
 
         changeLanguage(FRENCH);
@@ -485,7 +480,7 @@ describe('Test translations', function () {
         checkResetText('Filters opnieuw instellen');
     });
 
-    it('Check translation for non-existent card', function () {
+    it('Check translation for non-existent card', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);

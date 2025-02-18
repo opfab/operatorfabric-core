@@ -135,13 +135,13 @@
             {
                 id: 'button1',
                 label: 'Accept proposals',
-                getUserResponses: (cards, responsesData) => {
+                getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
 
-                    cards.forEach((card) => {
+                    selectedCards.forEach((card) => {
 
-                        const userInputs = responsesData.get(card.id);
-                        const comment = userInputs?.comment ?? '';
+                        const userInput = userInputs.get(card.id);
+                        const comment = userInput?.comment ?? '';
                         const responseData = { "choice1": "on", "choice2": "on", "choice3": "on", "comment": comment }
                         responseCards.push({ data: responseData });
                     });
@@ -151,12 +151,12 @@
             {
                 id: 'button2',
                 label: 'Refuse proposals',
-                getUserResponses: (cards, responsesData) => {
+                getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
                     let hasAlwaysComment = true;
-                    cards.forEach((card) => {
-                        const userInputs = responsesData.get(card.id);
-                        const comment = userInputs?.comment ?? '';
+                    selectedCards.forEach((card) => {
+                        const userInput = userInputs.get(card.id);
+                        const comment = userInput?.comment ?? '';
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }

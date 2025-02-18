@@ -41,18 +41,17 @@
                     "label": "entry.custom"
                 },
                 {
+
                     "customMenuId": "uid_test_1",
-                    "url": "https://opfab.github.io/",
-                    "label": "entry.entry1",
-                    "linkType": "BOTH",
-                    "showOnlyForGroups": ["Maintainer", "Planner"]
+                    "customScreenId": "testId2",
+                    "label": "entry.custom2"
                 },
                 {
                     "customMenuId": "uid_test_2",
-                    "url": "https://www.wikipedia.org/",
-                    "label": "entry.entry2",
+                    "url": "https://opfab.github.io/",
+                    "label": "entry.doc",
                     "linkType": "BOTH",
-                    "showOnlyForGroups": ["Dispatcher"]
+                    "showOnlyForGroups": ["Maintainer", "Planner"]
                 },
                 {
                     "customMenuId": "uid_test_3",
@@ -146,11 +145,11 @@
                 },
                 "entry": {
                     "single": "Single menu entry",
-                    "entry1": "First menu entry",
-                    "entry2": "Second menu entry",
+                    "doc": "Opfab documentation",
                     "entry3": "External application",
                     "admin": "Admin menu entry",
-                    "custom": "Custom screen"
+                    "custom": "Custom screen",
+                    "custom2": "Custom screen 2"
                 }
             }
         },
@@ -164,11 +163,11 @@
                 },
                 "entry": {
                     "single": "Unique élément",
-                    "entry1": "Premier élément",
-                    "entry2": "Deuxième élément",
+                    "doc": "Documentation Opfab",
                     "entry3": "Application externe",
                     "admin": "Menu admin élément",
-                    "custom": "Écran personnalisé"
+                    "custom": "Écran personnalisé",
+                    "custom2": "Écran personnalisé 2"
 
                 }
             }
@@ -183,11 +182,11 @@
                 },
                 "entry": {
                     "single": "Enkel menu-item",
-                    "entry1": "Eerste menu-item",
-                    "entry2": "Tweede menu-item",
+                    "doc": "Opfab documentatie",
                     "entry3": "TExterne applicatie",
                     "admin": "Admin menu-item",
-                    "custom": "Aangepast scherm"
+                    "custom": "Aangepast scherm",
+                    "custom2": "Aangepast scherm 2"
                 }
             }
         }

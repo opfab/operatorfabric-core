@@ -128,7 +128,7 @@ const routes: Routes = [
     {
         path: 'customscreen/:id',
         loadComponent: () =>
-            import('../../../components/customCardList/CustomCardListComponent').then((m) => m.CustomScreenComponent)
+            import('../../../components/customCardList/CustomScreenComponent').then((m) => m.CustomScreenComponent)
     },
     {
         path: 'devtools/richtext',

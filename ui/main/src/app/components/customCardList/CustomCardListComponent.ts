@@ -8,7 +8,7 @@
  */
 
 import {AsyncPipe, NgFor, NgIf} from '@angular/common';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +28,7 @@ import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/excel-export';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {Observable, ReplaySubject, Subject, take, takeUntil} from 'rxjs';
+import {Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
 import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
@@ -38,7 +38,7 @@ import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellR
 import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
 
 @Component({
-    selector: 'of-custom-screen',
+    selector: 'of-custom-card-list-screen',
     templateUrl: './CustomCardListComponent.html',
     styleUrls: ['./CustomCardListComponent.scss'],
     standalone: true,
@@ -56,10 +56,11 @@ import {InputCellRendererComponent} from './cellRenderers/InputCellRendererCompo
         MultiSelectComponent
     ]
 })
-export class CustomScreenComponent implements OnInit, OnDestroy {
+export class CustomCardListComponent implements OnInit, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
-    customScreenId: string;
+    @Input() customScreenId: string;
+
     customCardListView: CustomCardListView;
     isCustomScreenDefinitionExist: boolean;
     gridOptions: GridOptions;
@@ -130,174 +131,171 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.paramMap.pipe(take(1)).subscribe((params) => {
-            this.customScreenId = params.get('id');
-            this.customCardListView = new CustomCardListView(this.customScreenId);
+        this.customCardListView = new CustomCardListView(this.customScreenId);
 
-            const severityCellClassRules = {
-                'opfab-sev-alarm': (field) => field.value === 'ALARM',
-                'opfab-sev-action': (field) => field.value === 'ACTION',
-                'opfab-sev-compliant': (field) => field.value === 'COMPLIANT',
-                'opfab-sev-information': (field) => field.value === 'INFORMATION'
-            };
+        const severityCellClassRules = {
+            'opfab-sev-alarm': (field) => field.value === 'ALARM',
+            'opfab-sev-action': (field) => field.value === 'ACTION',
+            'opfab-sev-compliant': (field) => field.value === 'COMPLIANT',
+            'opfab-sev-information': (field) => field.value === 'INFORMATION'
+        };
 
-            const typeOfStateCellClassRules = {
-                'opfab-type-of-state-INPROGRESS': (field) => field.value.value === 'INPROGRESS',
-                'opfab-type-of-state-FINISHED': (field) => field.value.value === 'FINISHED',
-                'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
-            };
-            this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
-            this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
-            this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
-            this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
-                HeaderFilter.RESPONSE_FROM_MY_ENTITIES
-            );
-            this.responseFromAllEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
-                HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
-            );
-            this.responseButtons = this.customCardListView.getResponseButtons();
-            if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
-            this.gridOptions = {
-                domLayout: 'autoHeight',
-                components: {
-                    responsesCellRenderer: ResponsesCellRendererComponent,
-                    hasResponseCellRenderer: HasResponseCellRendererComponent,
-                    inputCellRenderer: InputCellRendererComponent
+        const typeOfStateCellClassRules = {
+            'opfab-type-of-state-INPROGRESS': (field) => field.value.value === 'INPROGRESS',
+            'opfab-type-of-state-FINISHED': (field) => field.value.value === 'FINISHED',
+            'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
+        };
+        this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
+        this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
+        this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
+        this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+            HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+        );
+        this.responseFromAllEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+            HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
+        );
+        this.responseButtons = this.customCardListView.getResponseButtons();
+        if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
+        this.gridOptions = {
+            domLayout: 'autoHeight',
+            components: {
+                responsesCellRenderer: ResponsesCellRendererComponent,
+                hasResponseCellRenderer: HasResponseCellRendererComponent,
+                inputCellRenderer: InputCellRendererComponent
+            },
+
+            defaultColDef: {
+                editable: false
+            },
+            getLocaleText: function (params) {
+                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
+                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
+                return TranslationService.getTranslation('ag-grid.' + params.key);
+            },
+
+            columnTypes: {
+                default: {
+                    sortable: true,
+                    filter: true,
+                    resizable: false,
+                    wrapText: false
                 },
-
-                defaultColDef: {
-                    editable: false
+                severity: {
+                    sortable: false,
+                    resizable: false,
+                    maxWidth: 18,
+                    cellClassRules: severityCellClassRules,
+                    headerClass: 'opfab-ag-header-with-no-padding'
                 },
-                getLocaleText: function (params) {
-                    // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                    // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                    return TranslationService.getTranslation('ag-grid.' + params.key);
-                },
-
-                columnTypes: {
-                    default: {
-                        sortable: true,
-                        filter: true,
-                        resizable: false,
-                        wrapText: false
-                    },
-                    severity: {
-                        sortable: false,
-                        resizable: false,
-                        maxWidth: 18,
-                        cellClassRules: severityCellClassRules,
-                        headerClass: 'opfab-ag-header-with-no-padding'
-                    },
-                    typeOfState: {
-                        sortable: true,
-                        resizable: false,
-                        wrapText: false,
-                        cellClassRules: typeOfStateCellClassRules,
-                        cellRenderer: (params: any) => params.value.text,
-                        comparator: (valueA: any, valueB: any) => {
-                            if (valueA.text < valueB.text) {
-                                return -1;
-                            }
-                            if (valueA.text > valueB.text) {
-                                return 1;
-                            }
-                            return 0;
-                        },
-                        filter: true,
-                        filterValueGetter: (params: any) => params.data.typeOfState.text
-                    },
-                    dateAndTime: {
-                        sortable: true,
-                        resizable: false,
-                        wrapText: false,
-                        cellRenderer: (params: any) => params.value.text,
-                        comparator: (valueA: any, valueB: any) => {
-                            if (valueA.value < valueB.value) {
-                                return -1;
-                            }
-                            if (valueA.value > valueB.value) {
-                                return 1;
-                            }
-                            return 0;
-                        },
-                        filter: true,
-                        filterValueGetter: (params: any) => {
-                            return params.data[params.column.colId].text;
+                typeOfState: {
+                    sortable: true,
+                    resizable: false,
+                    wrapText: false,
+                    cellClassRules: typeOfStateCellClassRules,
+                    cellRenderer: (params: any) => params.value.text,
+                    comparator: (valueA: any, valueB: any) => {
+                        if (valueA.text < valueB.text) {
+                            return -1;
                         }
-                    },
-                    responses: {
-                        sortable: false,
-                        filter: false,
-                        resizable: false,
-                        wrapText: false,
-                        cellRenderer: 'responsesCellRenderer'
-                    },
-                    coloredCircle: {
-                        sortable: false,
-                        filter: false,
-                        resizable: false,
-                        wrapText: false,
-                        cellStyle: {display: 'flex', 'justify-content': 'center', alignItems: 'center'},
-                        cellRenderer: (params: any) => {
-                            return (
-                                '<div style="width: 20px; height: 20px;border-radius: 50%;background-color:' +
-                                params.value +
-                                '"></div>'
-                            );
+                        if (valueA.text > valueB.text) {
+                            return 1;
                         }
+                        return 0;
                     },
-                    responseFromMyEntities: {
-                        sortable: false,
-                        filter: false,
-                        resizable: false,
-                        width: 15,
-                        wrapText: false,
-                        cellRenderer: 'hasResponseCellRenderer'
+                    filter: true,
+                    filterValueGetter: (params: any) => params.data.typeOfState.text
+                },
+                dateAndTime: {
+                    sortable: true,
+                    resizable: false,
+                    wrapText: false,
+                    cellRenderer: (params: any) => params.value.text,
+                    comparator: (valueA: any, valueB: any) => {
+                        if (valueA.value < valueB.value) {
+                            return -1;
+                        }
+                        if (valueA.value > valueB.value) {
+                            return 1;
+                        }
+                        return 0;
                     },
-                    input: {
-                        cellRenderer: 'inputCellRenderer',
-                        sortable: false,
-                        filter: false,
-                        resizable: false
+                    filter: true,
+                    filterValueGetter: (params: any) => {
+                        return params.data[params.column.colId].text;
                     }
                 },
-                ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
-                pagination: true,
-                suppressCellFocus: true,
-                suppressPaginationPanel: true,
-                suppressHorizontalScroll: true,
-                columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
-                headerHeight: 70,
-                rowHeight: 45,
-                paginationPageSize: 10,
-                onRowSelected: (event) => this.onRowSelected(event)
-            };
-            this.rowData$ = this.rowDataSubject.asObservable();
-            this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
-            this.customCardListView.getResults().subscribe((results) => {
-                this.rowData = results;
-                this.rowDataSubject.next(this.rowData);
-            });
-            if (this.responseButtons.length > 0) {
-                this.rowSelection = {
-                    mode: 'multiRow',
-                    selectAll: 'currentPage',
-                    hideDisabledCheckboxes: true,
-                    isRowSelectable: (node) => {
-                        return node.data.isResponsePossible;
+                responses: {
+                    sortable: false,
+                    filter: false,
+                    resizable: false,
+                    wrapText: false,
+                    cellRenderer: 'responsesCellRenderer'
+                },
+                coloredCircle: {
+                    sortable: false,
+                    filter: false,
+                    resizable: false,
+                    wrapText: false,
+                    cellStyle: {display: 'flex', 'justify-content': 'center', alignItems: 'center'},
+                    cellRenderer: (params: any) => {
+                        return (
+                            '<div style="width: 20px; height: 20px;border-radius: 50%;background-color:' +
+                            params.value +
+                            '"></div>'
+                        );
                     }
-                };
-            }
-
-            this.headerForm.get('businessDateRanges').setValue({
-                startDate: new Date(this.customCardListView.getBusinessPeriod().startDate),
-                endDate: new Date(this.customCardListView.getBusinessPeriod().endDate)
-            });
-            if (this.processFilterVisible) {
-                this.headerForm.get('processes').setValue([]);
-                this.initProcessFilter();
-            }
+                },
+                responseFromMyEntities: {
+                    sortable: false,
+                    filter: false,
+                    resizable: false,
+                    width: 15,
+                    wrapText: false,
+                    cellRenderer: 'hasResponseCellRenderer'
+                },
+                input: {
+                    cellRenderer: 'inputCellRenderer',
+                    sortable: false,
+                    filter: false,
+                    resizable: false
+                }
+            },
+            ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
+            pagination: true,
+            suppressCellFocus: true,
+            suppressPaginationPanel: true,
+            suppressHorizontalScroll: true,
+            columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
+            headerHeight: 70,
+            rowHeight: 45,
+            paginationPageSize: 10,
+            onRowSelected: (event) => this.onRowSelected(event)
+        };
+        this.rowData$ = this.rowDataSubject.asObservable();
+        this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
+        this.customCardListView.getResults().subscribe((results) => {
+            this.rowData = results;
+            this.rowDataSubject.next(this.rowData);
         });
+        if (this.responseButtons.length > 0) {
+            this.rowSelection = {
+                mode: 'multiRow',
+                selectAll: 'currentPage',
+                hideDisabledCheckboxes: true,
+                isRowSelectable: (node) => {
+                    return node.data.isResponsePossible;
+                }
+            };
+        }
+
+        this.headerForm.get('businessDateRanges').setValue({
+            startDate: new Date(this.customCardListView.getBusinessPeriod().startDate),
+            endDate: new Date(this.customCardListView.getBusinessPeriod().endDate)
+        });
+        if (this.processFilterVisible) {
+            this.headerForm.get('processes').setValue([]);
+            this.initProcessFilter();
+        }
     }
     private initProcessFilter(): void {
         this.customCardListView.getProcessList().forEach((process) => {
