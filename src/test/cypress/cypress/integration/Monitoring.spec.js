@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -287,21 +287,20 @@ describe ('Monitoring screen tests',function () {
         // Cards should be sorted by title
         agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Electricity consumption forecast');
         agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Message');
-        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
-        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Process state (calcul)');
 
         // Sorting titles a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(3).click();
         cy.wait(500);
 
         // Cards should be sorted by title
-        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚡ Planned Outage');
-        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
         agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Message');
         agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
-
     })
 
     it('Check summary sort', function () {

@@ -32,6 +32,8 @@ import {NgIf, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardComponent} from '../../../card/card.component';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {Utilities} from '../../../../utils/utilities';
+import {Aggrid} from '../../../../utils/aggrid';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -138,6 +140,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 dataColumn: {
                     sortable: true,
                     filter: true,
+                    filterParams: {
+                        textMatcher: ({filterOption, value, filterText}) => {
+                            return Aggrid.getTextMatcherWithEmojis(filterOption, value, filterText);
+                        }
+                    },
                     wrapText: false,
                     autoHeight: false,
                     flex: 1,
@@ -208,8 +215,22 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             },
             {type: 'timeColumn', headerName: this.timeColumnName, field: 'time'},
             {type: 'answerColumn', headerName: '', field: 'answer', cellRenderer: 'answerCellRenderer'},
-            {type: 'dataColumn', headerName: this.titleColumnName, field: 'title'},
-            {type: 'dataColumn', headerName: this.summaryColumnName, field: 'summary'},
+            {
+                type: 'dataColumn',
+                headerName: this.titleColumnName,
+                field: 'title',
+                comparator: (valueA, valueB) => {
+                    return Utilities.compareObj(valueA, valueB);
+                }
+            },
+            {
+                type: 'dataColumn',
+                headerName: this.summaryColumnName,
+                field: 'summary',
+                comparator: (valueA, valueB) => {
+                    return Utilities.compareObj(valueA, valueB);
+                }
+            },
             {
                 type: 'processColumn',
                 headerName: this.typeOfStateColumnName,
