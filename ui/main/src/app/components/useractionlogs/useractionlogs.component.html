@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -75,44 +75,59 @@
         *ngIf="userActionLogsResult && !userActionLogsResult.hasError; else noResult"
         style="margin-top: 20px; margin-left: 5%; margin-right: 5%">
         <div id="opfab-useractionlogs-table" style="background-color: var(--opfab-bgcolor-darker)">
-            <div class="opfab-table">
-                <table aria-label="user actions logs" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th>{{ userActionLogsPage.columnTitle.date }}</th>
-                            <th>{{ userActionLogsPage.columnTitle.action }}</th>
-                            <th>{{ userActionLogsPage.columnTitle.login }}</th>
-                            <th>{{ userActionLogsPage.columnTitle.entities }}</th>
-                            <th>{{ userActionLogsPage.columnTitle.cardUid }}</th>
-                            <th>{{ userActionLogsPage.columnTitle.comment }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let row of userActionLogsResult.data.content"
-                            class="opfab-useractionlogs-table-line"
-                            (click)="clickOnCard(row.cardUid)">
-                            <td>{{ row.date }}</td>
-                            <td>{{ row.action }}</td>
-                            <td>{{ row.login }}</td>
-                            <td>{{ row.entities }}</td>
-                            <td>{{ row.cardUid }}</td>
-                            <td>
-                                <div *ngFor="let comment of splitOnLineBreaks(row.comment)">{{ comment }}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="opfab-useractionlogs-table opfab-table">
+                <div style="overflow-y: auto; max-height: calc(100vh - 450px); padding-right: 1px">
+                    <table aria-label="user actions logs" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>{{ userActionLogsPage.columnTitle.date }}</th>
+                                <th>{{ userActionLogsPage.columnTitle.action }}</th>
+                                <th>{{ userActionLogsPage.columnTitle.login }}</th>
+                                <th>{{ userActionLogsPage.columnTitle.entities }}</th>
+                                <th>{{ userActionLogsPage.columnTitle.cardUid }}</th>
+                                <th>{{ userActionLogsPage.columnTitle.comment }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let row of userActionLogsResult.data.content"
+                                class="opfab-useractionlogs-table-line"
+                                (click)="clickOnCard(row.cardUid)">
+                                <td>{{ row.date }}</td>
+                                <td>{{ row.action }}</td>
+                                <td>{{ row.login }}</td>
+                                <td>{{ row.entities }}</td>
+                                <td>{{ row.cardUid }}</td>
+                                <td>
+                                    <div *ngFor="let comment of splitOnLineBreaks(row.comment)">{{ comment }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="opfab-pagination" style="padding-bottom: 5px; margin-top: 5px">
-                <div style="margin-top: 12px; white-space: nowrap">
+            <div class="opfab-pagination">
+                <div style="width: 200px; margin-top: 15px">
+                    <select (change)="onPageSizeChanged($event.target)" id="opfab-page-size-select">
+                        <option
+                            *ngFor="let option of paginationPageSizeOptions"
+                            [value]="option"
+                            [attr.selected]="option === pageSize ? true : null">
+                            {{ option }}
+                        </option>
+                    </select>
+                    <label for="opfab-page-size-select" translate>&nbsp;shared.pageSize</label>
+                </div>
+
+                <div id="opfab-user-actions-logs-results-number" style="margin-top: 17px; white-space: nowrap">
                     <span translate> shared.resultsNumber </span> : {{ userActionLogsResult.data.totalElements }}
                 </div>
-                <div style="width: 40%">
+                <div style="width: 40%; margin-top: 3px">
                     <ngb-pagination
                         *ngIf="userActionLogsResult.data.totalPages > 1"
                         [collectionSize]="userActionLogsResult.data.totalElements"
                         [page]="currentResultPage"
+                        [pageSize]="pageSize"
                         (pageChange)="changePage($event)"
                         [maxSize]="3"
                         [rotate]="true">
@@ -129,33 +144,33 @@
                 </div>
             </div>
         </div>
+        <of-spinner *ngIf="loadingInProgress"></of-spinner>
+        <of-spinner *ngIf="cardLoadingInProgress" [seeInModal]="true" loadingText="archive.cardLoadingInProgress">
+        </of-spinner>
     </div>
-    <of-spinner *ngIf="loadingInProgress"></of-spinner>
-    <of-spinner *ngIf="cardLoadingInProgress" [seeInModal]="true" loadingText="archive.cardLoadingInProgress">
-    </of-spinner>
-</div>
 
-<ng-template #noResult>
-    <div
-        *ngIf="errorMessage"
-        id="opfab-useractionlogs-noResult"
-        style="text-align: center; font-size: 20px; margin-top: 20px">
-        {{ errorMessage }}
-    </div>
-</ng-template>
-
-<ng-template #cardDetail let-modal>
-    <div class="modal-header">
-        <div id="opfab-archives-card-title">{{ selectedCard.titleTranslated | opfabTitleCase }}</div>
+    <ng-template #noResult>
         <div
-            id="opfab-archives-card-detail-close"
-            class="opfab-close-modal-icon"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+            *ngIf="errorMessage"
+            id="opfab-useractionlogs-noResult"
+            style="text-align: center; font-size: 20px; margin-top: 20px">
+            {{ errorMessage }}
         </div>
-    </div>
-    <div class="modal-body modal-body-squared">
-        <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
-    </div>
-</ng-template>
+    </ng-template>
+
+    <ng-template #cardDetail let-modal>
+        <div class="modal-header">
+            <div id="opfab-archives-card-title">{{ selectedCard.titleTranslated | opfabTitleCase }}</div>
+            <div
+                id="opfab-archives-card-detail-close"
+                class="opfab-close-modal-icon"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </div>
+        </div>
+        <div class="modal-body modal-body-squared">
+            <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
+        </div>
+    </ng-template>
+</div>

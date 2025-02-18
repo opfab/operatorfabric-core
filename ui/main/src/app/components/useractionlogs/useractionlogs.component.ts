@@ -24,6 +24,7 @@ import {UserActionLogsResult} from 'app/views/useractionlogs/userActionLogsResul
 import {UserActionLogsPageDescription} from 'app/views/useractionlogs/userActionLogsPageDescription';
 import {NgIf, NgFor} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/archived-card-detail.component';
@@ -54,6 +55,10 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     userActionLogsPage: UserActionLogsPageDescription;
     userActionLogsResult: UserActionLogsResult;
 
+    pageSize: number = 10;
+
+    readonly paginationPageSizeOptions = [10, 20, 50, 100];
+
     userActionLogsForm: FormGroup;
     loginMultiSelectConfig: MultiSelectConfig;
     actionsMultiSelectConfig: MultiSelectConfig;
@@ -83,6 +88,8 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const savedPageSize = UserPreferencesService.getPreference('opfab.useractionlogs.page.size');
+        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
         this.initForm();
         this.setInitialDateFrom();
         this.initActionMultiselect();
@@ -142,6 +149,7 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
         this.loadingInProgress = true;
         this.userActionLogsResult = null;
         this.errorMessage = null;
+        this.userActionLogsView.setPageSize(this.pageSize);
         this.userActionLogsView.search().subscribe((result) => {
             if (result.hasError) {
                 this.errorMessage = result.errorMessage;
@@ -185,6 +193,14 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
 
     changePage(page) {
         this.search(page - 1);
+    }
+
+    onPageSizeChanged(target: EventTarget | null) {
+        if (target) {
+            this.pageSize = Number((<HTMLSelectElement>target).value);
+            UserPreferencesService.setPreference('opfab.useractionlogs.page.size', this.pageSize);
+            this.search(0);
+        }
     }
 
     clickOnCard(cardUid) {

@@ -32,6 +32,7 @@ export class UserActionLogsView {
     private dateFrom = 0;
     private dateTo = 0;
     private pageNumber = 0;
+    private pageSize = 10;
 
     constructor() {
         this.initPage();
@@ -93,6 +94,10 @@ export class UserActionLogsView {
         this.pageNumber = pageNumber;
     }
 
+    public setPageSize(pageSize: number) {
+        this.pageSize = pageSize;
+    }
+
     public search(isForExport: boolean = false): Observable<UserActionLogsResult> {
         if (this.isInvalidDateRange()) {
             return of(this.buildErrorResult('shared.filters.toDateBeforeFromDate'));
@@ -121,7 +126,7 @@ export class UserActionLogsView {
         const filters = new Map();
 
         if (!isForExport) {
-            filters.set('size', ['10']);
+            filters.set('size', [this.pageSize.toString()]);
         }
         if (this.selectedLogins) {
             filters.set('login', this.selectedLogins);
