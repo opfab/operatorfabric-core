@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17.0.13-jre@sha256:0cf64e4155800356f7543dd21bb8791aff1e5864daa52338e0d457a7d1d2f1b9
+FROM azul/zulu-openjdk-alpine:17.0.14-jre@sha256:887ed804e57455c5a1143bda2e0bbed423a56d0a7d30d231f25b4c838464dc6a
 VOLUME /tmp
 ARG JAR_FILE
 COPY build/libs/${JAR_FILE} app.jar
