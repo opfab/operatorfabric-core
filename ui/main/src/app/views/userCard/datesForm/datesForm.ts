@@ -71,8 +71,14 @@ export class DatesForm {
     }
 
     private getDefaultValueForDate(field: string): number {
-        if (field === 'startDate') return new Date().valueOf() + DatesForm.ONE_MINUTE;
-        else return new Date().valueOf() + DatesForm.ONE_DAY;
+        switch (field) {
+            case 'startDate':
+                return new Date().valueOf() + DatesForm.ONE_MINUTE;
+            case 'lttd':
+                return new Date().valueOf() + DatesForm.ONE_DAY - DatesForm.ONE_MINUTE;
+            default:
+                return new Date().valueOf() + DatesForm.ONE_DAY;
+        }
     }
 
     public initDatesAfterTemplateScriptsExecution() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,12 +116,11 @@ describe('UserCard DatesForm', () => {
         it('lttd =  current date + 24 hours - 60 seconds if lttd visible (end date - 60s)', async () => {
             await setProcessConfigWithUserCardConfig({lttdVisible: true});
             datesForm.initDatesBeforeTemplateScriptsExecution('process1', 'state1_1');
+            const wantedDate = new Date().valueOf() + 60000 * 60 * 24 - 60000;
 
-            expect(datesForm.getDateValue(InputFieldName.Lttd)).toEqual(new Date().valueOf() + 60000 * 60 * 24);
+            expect(datesForm.getDateValue(InputFieldName.Lttd)).toEqual(wantedDate);
             datesForm.initDatesAfterTemplateScriptsExecution();
-            expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.Lttd]).toEqual(
-                new Date().valueOf() + 60000 * 60 * 24
-            );
+            expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.Lttd]).toEqual(wantedDate);
         });
         it('lttd date = undefined if lttd not visible', async () => {
             await setProcessConfigWithUserCardConfig({lttdVisible: false});
