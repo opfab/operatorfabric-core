@@ -9,7 +9,14 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
+import {
+    ColDef,
+    GridOptions,
+    AllCommunityModule,
+    ModuleRegistry,
+    provideGlobalGridOptions,
+    FilterModel
+} from 'ag-grid-community';
 import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
@@ -40,7 +47,7 @@ export class ProcessmonitoringTableComponent {
     @Input() processMonitoringFields: ProcessMonitoringField[];
 
     @Output() pageChange = new EventEmitter<number>();
-    @Output() filterChange = new EventEmitter<number>();
+    @Output() filterChange = new EventEmitter<{filterModel: FilterModel; colId: string}>();
     @Output() export = new EventEmitter<number>();
 
     modalRef: NgbModalRef;
@@ -110,7 +117,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     onFilterChanged(ev) {
-        this.filterChange.next(this.gridApi.getFilterModel());
+        this.filterChange.next({filterModel: this.gridApi.getFilterModel(), colId: ev.columns[0]?.colId});
     }
 
     onGridReady(params) {
@@ -145,7 +152,8 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
-                        resizable: false
+                        resizable: false,
+                        colId: column.field
                     });
                 } else {
                     this.columnDefs.push({
@@ -155,7 +163,8 @@ export class ProcessmonitoringTableComponent {
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
                         flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
-                        resizable: false
+                        resizable: false,
+                        colId: column.field
                     });
                 }
             });

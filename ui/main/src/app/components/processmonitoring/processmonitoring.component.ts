@@ -566,13 +566,13 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.page = currentPage;
     }
 
-    onTableFilterChange(filterModel) {
+    onTableFilterChange(data) {
         this.columnFilters = [];
-        Object.keys(filterModel).forEach((column) => {
-            const type: string = filterModel[column].type;
+        Object.keys(data.filterModel).forEach((column) => {
+            const type: string = data.filterModel[column].type;
             this.columnFilters.push(
-                new Filter(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
-                    filterModel[column].filter
+                new Filter(data.colId, data.filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                    data.filterModel[column].filter
                 ])
             );
         });
