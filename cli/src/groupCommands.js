@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,8 @@ const groupCommands = {
                     name: 'value',
                     message: 'group action',
                     choices: [
-                        {title: 'Load a list of groups', value: 'load'},
-                        {title: 'Delete a list of groups', value: 'delete'}
+                        { title: 'Create or update a list of groups', value: 'load' },
+                        { title: 'Delete a list of groups', value: 'delete' }
                     ]
                 })
             ).value;
@@ -35,7 +35,7 @@ const groupCommands = {
             case 'load':
                 await this.loadGroupsFile(args[1]);
                 break;
-            case 'delete': 
+            case 'delete':
                 await this.deleteGroups(args.slice(1));
                 break;
             default:
@@ -68,15 +68,15 @@ const groupCommands = {
                     'users/groups',
                     'POST',
                     JSON.stringify(group),
-                    `group ${group.id} created successfully`,
-                    `Failed to create group ${group.id}`,
-                    `Failed to create group ${group.id} , not found error`
+                    `group ${group.id} created or udpated successfully`,
+                    `Failed to create or update group ${group.id}`,
+                    `Failed to create or update group ${group.id} , not found error`
                 );
             }
         } catch (error) {
             console.log(`Error reading groups file ${groupsFile}: ${error}`);
             return;
-        } 
+        }
 
     },
 
@@ -114,7 +114,7 @@ const groupCommands = {
 
             Command list :
             
-                load      load a list of groups from json file: opfab group load <groupsFileName>
+                load      create or update a list of groups from json file: opfab group load <groupsFileName>
                 delete    delete group by id : opfab group delete <groupId>...
                     
                     `);

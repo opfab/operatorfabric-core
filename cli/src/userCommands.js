@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,18 +22,18 @@ const userCommands = {
                     name: 'value',
                     message: 'User action',
                     choices: [
-                        {title: 'Add to entity', value: 'add-to-entity'},
-                        {title: 'Add to group', value: 'add-to-group'},
-                        {title: 'Load a list of users', value: 'load'},
-                        {title: 'Delete a user', value: 'delete'},
-                        {title: 'Remove from entity', value: 'remove-from-entity'},
-                        {title: 'Remove from group', value: 'remove-from-group'},
-                        {title: 'Set not notified', value: 'set-not-notified'},
-                        {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
-                        {title: 'Set activity area', value: 'set-activity-area'},
-                        {title: 'Set notified', value: 'set-notified'},
-                        {title: 'Set notified by mail', value: 'set-notified-mail'},
-                        {title: 'Unset activity area', value: 'unset-activity-area'}
+                        { title: 'Add to entity', value: 'add-to-entity' },
+                        { title: 'Add to group', value: 'add-to-group' },
+                        { title: 'Load a list of users', value: 'load' },
+                        { title: 'Delete a user', value: 'delete' },
+                        { title: 'Remove from entity', value: 'remove-from-entity' },
+                        { title: 'Remove from group', value: 'remove-from-group' },
+                        { title: 'Set not notified', value: 'set-not-notified' },
+                        { title: 'Set not notified by mail', value: 'set-not-notified-mail' },
+                        { title: 'Set activity area', value: 'set-activity-area' },
+                        { title: 'Set notified', value: 'set-notified' },
+                        { title: 'Set notified by mail', value: 'set-notified-mail' },
+                        { title: 'Unset activity area', value: 'unset-activity-area' }
                     ]
                 })
             ).value;
@@ -141,9 +141,9 @@ const userCommands = {
                 'users/users',
                 'POST',
                 JSON.stringify(user),
-                `User ${user.login} created successfully`,
-                `Failed to create user ${user.login}`,
-                `Failed to create user ${user.login} , not found error`
+                `User ${user.login} created or udpated successfully`,
+                `Failed to create or udpate user ${user.login}`,
+                `Failed to create or update user ${user.login} , not found error`
             );
         }
     },
@@ -163,7 +163,7 @@ const userCommands = {
         if (!entitiesDisconnectedResponse.ok) {
             return;
         }
-        let {entitiesDisconnected} = await entitiesDisconnectedResponse.json();
+        let { entitiesDisconnected } = await entitiesDisconnectedResponse.json();
         if (!entitiesDisconnected) {
             entitiesDisconnected = [];
         }
@@ -178,7 +178,7 @@ const userCommands = {
         await utils.sendRequest(
             `users/users/${user}/settings`,
             'PATCH',
-            JSON.stringify({login: user, entitiesDisconnected: entitiesDisconnected}),
+            JSON.stringify({ login: user, entitiesDisconnected: entitiesDisconnected }),
             `Activity area ${entity} has been ${setting ? 'set' : 'unset'} for user ${user}`,
             `Failed to change activity area ${entity} for user ${user}`,
             `Activity area ${entity} or user ${user} could not be found`
