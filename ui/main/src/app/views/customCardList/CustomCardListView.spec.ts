@@ -157,7 +157,7 @@ describe('CustomCardListView', () => {
         });
     });
     describe('Should return custom screen data', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             const myState = new State();
             myState.response = {state: 'state1'};
 
@@ -167,13 +167,26 @@ describe('CustomCardListView', () => {
             const process = [new Process('process1', '1', 'my process label', null, statesList)];
             setProcessConfiguration(process);
 
-            setEntities([
+            await setEntities([
                 {
                     id: 'entity1',
                     name: 'entity1 name',
                     roles: [RoleEnum.CARD_SENDER]
                 }
             ]);
+
+            await setUserPerimeter({
+                computedPerimeters: [
+                    new ComputedPerimeter('myProcess', 'myState', RightEnum.Receive),
+                    new ComputedPerimeter('myProcess', 'myState2', RightEnum.Receive)
+                ],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: []
+                }
+            });
         });
 
         it('from light cards store', async () => {
