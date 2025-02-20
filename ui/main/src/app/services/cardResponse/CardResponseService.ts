@@ -44,7 +44,7 @@ export class CardResponseService {
             startDate: parentCard.startDate,
             endDate: parentCard.endDate,
             expirationDate: parentCard.expirationDate,
-            severity: Severity.INFORMATION,
+            severity: responseCard.severity ? responseCard.severity : Severity.INFORMATION,
             entityRecipients: entityRecipients,
             userRecipients: parentCard.userRecipients,
             groupRecipients: parentCard.groupRecipients,

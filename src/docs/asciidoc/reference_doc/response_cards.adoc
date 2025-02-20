@@ -126,6 +126,7 @@ which returns an object containing the following fields :
     * state : name of the response state to use. This field is not mandatory, if it is not set the state defined in
 `config.json` will be used for the response.
     * publisher (_string_) : the id of the Entity to be used as publisher of the response. This field is not mandatory, if it is not set the publisher will be the user entity, in case the user belongs to a single entity, or it will be choosen by the user between his available entities.  
+    * severity (_string_) : an optional field used to define the severity of the response card. The default value is "INFORMATION".
     * actions (_string array_) : an optional field used to define a set of predetermined actions that will be executed upon receiving the response card. The available actions include:
       ** PROPAGATE_READ_ACK_TO_PARENT_CARD : when receiving the child card, the status of the parent card should be considered as 'unread' and 'not acknowledged' until the user reads or acknowledge it again.
 
@@ -133,8 +134,8 @@ which returns an object containing the following fields :
 This method is to be registered via `opfab.currentCard.registerFunctionToGetUserResponse`, the method will be called by OperatorFabric when the user clicks on the button to send the response.
 
 In the example below, the `getUserResponse` creates a `responseCard` object by retrieving the user's inputs from the HTML.
-In addition, if the user chose several options, it overrides the response state defined in the `config.json` with another
-state.
+In addition, if the user choses several options, it overrides the response state defined in the `config.json` with another
+state. It is also possible to dynamically set the severity of the response with a logic from the template. Here the severity of the response depends on the number of choices selected by the user. 
 
 .src/test/resources/bundles/defaultProcess_V1/template/question.handlebars
 [source,js]
@@ -217,11 +218,11 @@ if a user has the right to respond, OperatorFabric consider the union of the two
 
 == Integrate child cards 
 
-For each user response, a child card containing the response is emitted and stored in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrated in real time to the parent card of all the users watching the card. To do that, you need  some code in the template to process child data:
+For each user response, a child card containing the response is emitted and stored in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrated in real time to the parent card of all the users watching the card. To do that, you need some code in the template to process child data:
 
 You shall give a reference to a method for processing the child cards via _opfab.currentCard.listenToChildCards_ .
  
-The define method shall have an array of child cards as a parameter and  will be called by OperatorFabric when loading the card and every time the list of child cards changes.
+The defined method shall have an array of child cards as a parameter and will be called by OperatorFabric when loading the card and every time the list of child cards changes.
 
 ```
 opfab.currentCard.listenToChildCards( (childCards) => { // process child cards });

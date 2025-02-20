@@ -132,9 +132,14 @@ describe('Card response service', () => {
         expect(NotificationDecision.hasSentCard(cardRef)).toBeTrue();
     });
 
-    it('Should set response card severity to INFORMATION', async () => {
+    it('Should set response card severity to INFORMATION if no severity provided', async () => {
         await CardResponseService.sendResponse(card, {publisher: 'ENTITY1'});
         expect(cardServerMock.cardsPosted[0].severity).toBe('INFORMATION');
+    });
+
+    it('Should set response card severity to responseData.severity if provided', async () => {
+        await CardResponseService.sendResponse(card, {publisher: 'ENTITY1', severity: 'COMPLIANT'});
+        expect(cardServerMock.cardsPosted[0].severity).toBe('COMPLIANT');
     });
 
     it('Should set response card state to responseData.responseState if provided', async () => {

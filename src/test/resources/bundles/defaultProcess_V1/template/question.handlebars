@@ -119,7 +119,18 @@
             if (choice2) choiceOnNumber++;
             if (choice3) choiceOnNumber++;
             if (choiceOnNumber>1) result.responseCard['state'] = 'multipleOptionsResponseState';
-
+            switch( choiceOnNumber ) {
+                case 0:
+                    result.responseCard['severity'] = "ALARM"
+                    break;
+                case 1:
+                case 2:
+                    result.responseCard['severity'] = "INFORMATION"
+                    break;
+                case 3:
+                    result.responseCard['severity'] = "COMPLIANT"
+                    break;
+            }
             return result;
 
         });
