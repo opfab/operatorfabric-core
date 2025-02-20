@@ -29,7 +29,7 @@
         "jsdom": "26.0.0",
         "jwks-rsa": "3.1.0",
         "jwt-decode": "4.0.0",
-        "mongodb": "6.13.0",
+        "mongodb": "6.13.1",
         "nodemailer": "6.10.0",
         "quill": "2.0.3",
         "winston": "3.17.0",
