@@ -127,6 +127,8 @@
                 {
                     fieldType: 'INPUT',
                     field: 'comment',
+                    cardField: 'data.comment',
+                    isFieldFromCurrentUserChildCard: true,
                     headerName: 'COMMENT'
                 }
             ]

@@ -11,3 +11,5 @@
         <input [formControl]="cardInputControl" type="text" style="height: 35px; width: 80%" size="30" />
     </div>
 </div>
+
+<div *ngIf="!isInputFieldVisible" style="margin: 3px; align-items: center">{{ fieldValue }}</div>

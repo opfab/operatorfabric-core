@@ -24,6 +24,7 @@ export class Column {
     field?: string;
     headerName?: string;
     cardField?: string;
+    isFieldFromCurrentUserChildCard?: boolean;
     fieldType: FieldType;
     flex?: number;
     getValue?: (card: Card) => string;

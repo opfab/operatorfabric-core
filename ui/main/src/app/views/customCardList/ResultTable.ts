@@ -13,6 +13,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {UsersService} from '@ofServices/users/UsersService';
 import {Card} from 'app/model/Card';
 import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
@@ -159,6 +160,10 @@ export class ResultTable {
                 return;
             const data = {};
             this.customScreenDefinition.results.columns.forEach((column) => {
+                if (column.isFieldFromCurrentUserChildCard) {
+                    data[column.field] = this.getCurrentUserChildCardField(childCards.get(card.id), column.cardField);
+                    return;
+                }
                 switch (column.fieldType) {
                     case FieldType.PUBLISHER:
                         data[column.field] = this.getPublisherLabel(card);
@@ -226,6 +231,17 @@ export class ResultTable {
         if (entitiesToRespond.size === 0) return false;
         const respondedEntities = new Set(childCards.get(card.id)?.map((card) => card.publisher) ?? []);
         return Array.from(entitiesToRespond).every((entity) => respondedEntities.has(entity));
+    }
+
+    private getCurrentUserChildCardField(childCards: Card[], field: string): any {
+        if (!childCards || childCards.length === 0) return '';
+        const userEntities = UsersService.getCurrentUserWithPerimeters().userData?.entities;
+        for (const childCard of childCards) {
+            if (userEntities.includes(childCard.publisher)) {
+                return this.getNestedField(childCard, field);
+            }
+        }
+        return '';
     }
 
     private getPublisherLabel(card: Card): string {

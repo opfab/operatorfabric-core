@@ -542,4 +542,26 @@ Then you have to add the fields in the `results.columns` field in the custom scr
                 ...
 ----
 
+=== Current user child card field 
+
+
+It is possible to define a field in the custom screen that will display the field value of the child card of the current user if any.
+To do this, you have to set the value `isFieldFromCurrentUserChildCard` to true in the column definition. For example :
+
+----
+                {
+                    fieldType: 'INPUT',
+                    field: 'comment',
+                    cardField: 'data.comment',
+                    isFieldFromCurrentUserChildCard: true,
+                    headerName: 'COMMENT'
+                }
+
+----
+
+WARNING: This feature is not yet taking into account the fact that the user may be member of several entities allowed to respond to the card. In this case the field will display the value of the first child card found.
+
+
+
+
 

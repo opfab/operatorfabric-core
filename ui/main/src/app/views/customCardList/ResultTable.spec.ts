@@ -9,7 +9,7 @@
 
 import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
-import {getOneLightCard, setEntities, setProcessConfiguration} from '@tests/helpers';
+import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ConfigService} from '@ofServices/config/ConfigService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
@@ -907,6 +907,86 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     responseFromMyEntities: true
+                }
+            ]);
+        });
+    });
+
+    describe('Should get data  from current user child cards', () => {
+        let cards = [];
+        let resultTable: ResultTable;
+        beforeEach(async () => {
+            await setUserPerimeter({
+                computedPerimeters: [],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+
+            resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'childData',
+                        headerName: 'Comment',
+                        cardField: 'data.test',
+                        fieldType: FieldType.STRING,
+                        isFieldFromCurrentUserChildCard: true
+                    }
+                ]
+            });
+            cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    entitiesAllowedToRespond: ['entity1', 'entity2', 'entity3', 'child_entity']
+                })
+            ];
+        });
+        it('get custom data field', async () => {
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ALARM,
+                    data: {test: 'user comment'}
+                }),
+                getOneLightCard({
+                    publisher: 'entity2',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ACTION,
+                    data: {test: 'user comment2'}
+                })
+            ]);
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    childData: 'user comment'
+                }
+            ]);
+        });
+        it('get empty value if no child card for current user', async () => {
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity2',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ACTION,
+                    data: {test: 'user comment2'}
+                })
+            ]);
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    childData: ''
                 }
             ]);
         });

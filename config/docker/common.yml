@@ -12,7 +12,7 @@ operatorfabric:
     # username: guest
     # password: guest
   customscreen:
-    dataFields: ["keywords", "nested.field"]
+    dataFields: ["keywords", "nested.field","comment"]
   mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
   internalAccount:

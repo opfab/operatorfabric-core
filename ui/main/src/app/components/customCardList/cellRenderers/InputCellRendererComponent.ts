@@ -22,10 +22,13 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 export class InputCellRendererComponent implements ICellRendererAngularComp {
     public params: any;
     public isInputFieldVisible = false;
+    public fieldValue = '';
     cardInputControl: FormControl = new FormControl('');
 
     agInit(params: any): void {
         this.params = params;
+        this.fieldValue = params.getValue();
+        this.cardInputControl.setValue(this.fieldValue);
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
