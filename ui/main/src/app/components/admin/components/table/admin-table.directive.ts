@@ -24,7 +24,6 @@ import {Subject} from 'rxjs';
 import {CrudService} from '@ofServices/admin/CrudService';
 import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
-import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 import {RoleCellRendererComponent} from '../cell-renderers/role-cell-renderer.component';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -41,6 +40,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
+import {AgGrid} from 'app/utils/AgGrid';
 
 export class ActionColumn {
     colId: any;
@@ -116,6 +116,7 @@ export abstract class AdminTableDirective implements OnDestroy {
         this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
+            ...AgGrid.getDefaultGridOptions(),
             context: {
                 componentParent: this
             },
@@ -125,7 +126,6 @@ export abstract class AdminTableDirective implements OnDestroy {
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
                 roleCellRenderer: RoleCellRendererComponent
             },
-            domLayout: 'autoHeight',
             rowHeight: 50,
             defaultColDef: {
                 editable: false,
@@ -149,22 +149,11 @@ export abstract class AdminTableDirective implements OnDestroy {
                     flex: 4
                 }
             },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translateService.instant('ag-grid.' + params.key);
-            },
-            pagination: true,
-            suppressCellFocus: true,
-            headerHeight: 70,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             popupParent: document.querySelector('body')
         };
     }
 
     initCrudService() {
-        this.dataHandlingService.changePaginationPageSize(this.paginationDefaultPageSize);
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
     }
 
@@ -184,9 +173,7 @@ export abstract class AdminTableDirective implements OnDestroy {
         // property that is defined in the classes implementing AdminTableDirective. As such, it is still undefined when the
         // constructor from the supertype is called.
         this.gridApi.setGridOption('columnDefs', this.createColumnDefs(this.fields, this.tableType + '.'));
-        this.dataHandlingService.paginationPageSize$.pipe(takeUntil(this.unsubscribe$)).subscribe((pageSize) => {
-            this.gridApi.setGridOption('paginationPageSize', pageSize);
-        });
+        this.gridApi.setGridOption('paginationPageSize', this.paginationDefaultPageSize);
         this.groupsDefinition = GroupsService.getGroups();
         this.entitiesDefinition = EntitiesService.getEntities();
         this.refreshData();
@@ -467,7 +454,7 @@ export abstract class AdminTableDirective implements OnDestroy {
     onPageSizeChanged(target: EventTarget | null) {
         // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
         const value = (<HTMLSelectElement>target).value;
-        this.dataHandlingService.changePaginationPageSize(Number(value));
+        this.gridApi.setGridOption('paginationPageSize', Number(value));
     }
 }
 

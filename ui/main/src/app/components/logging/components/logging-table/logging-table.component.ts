@@ -21,6 +21,7 @@ import {Subject} from 'rxjs';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgFor, NgIf} from '@angular/common';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {AgGrid} from 'app/utils/AgGrid';
 
 @Component({
     selector: 'of-logging-table',
@@ -76,6 +77,7 @@ export class LoggingTableComponent implements OnDestroy {
         this.senderColumnName = this.translateColumn('shared.result.sender');
 
         this.gridOptions = <GridOptions>{
+            ...AgGrid.getDefaultGridOptions(),
             context: {
                 componentParent: this
             },
@@ -86,15 +88,9 @@ export class LoggingTableComponent implements OnDestroy {
                 stateDescriptionCellRenderer: StateDescriptionCellRendererComponent,
                 senderCellRenderer: SenderCellRendererComponent
             },
-            domLayout: 'autoHeight',
             defaultColDef: {
                 editable: false,
                 wrapHeaderText: true
-            },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translate.instant('ag-grid.' + params.key);
             },
             columnTypes: {
                 timeColumn: {
@@ -162,14 +158,7 @@ export class LoggingTableComponent implements OnDestroy {
                     resizable: false
                 }
             },
-            ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
-            pagination: true,
-            suppressCellFocus: true,
-            headerHeight: 70,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
-            rowHeight: 45,
             popupParent: document.querySelector('body')
         };
     }

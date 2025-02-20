@@ -33,7 +33,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CardComponent} from '../../../card/card.component';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {Utilities} from '../../../../utils/utilities';
-import {Aggrid} from '../../../../utils/aggrid';
+import {AgGrid} from '../../../../utils/AgGrid';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -104,6 +104,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.requiredResponsesColumnName = this.translateColumn('shared.result.requiredResponses');
 
         this.gridOptions = <GridOptions>{
+            ...AgGrid.getDefaultGridOptions(),
             context: {
                 componentParent: this
             },
@@ -111,14 +112,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 answerCellRenderer: AnswerCellRendererComponent,
                 responsesCellRenderer: ResponsesCellRendererComponent
             },
-            domLayout: 'autoHeight',
             defaultColDef: {
                 editable: false
-            },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return TranslationService.getTranslation('ag-grid.' + params.key);
             },
             columnTypes: {
                 timeColumn: {
@@ -142,7 +137,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: true,
                     filterParams: {
                         textMatcher: ({filterOption, value, filterText}) => {
-                            return Aggrid.getTextMatcherWithEmojis(filterOption, value, filterText);
+                            return AgGrid.getTextMatcherWithEmojis(filterOption, value, filterText);
                         }
                     },
                     wrapText: false,
@@ -175,14 +170,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     resizable: false
                 }
             },
-            ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
-            pagination: true,
-            suppressCellFocus: true,
-            headerHeight: 70,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
-            rowHeight: 45,
             popupParent: document.querySelector('body'),
             rowClass: 'opfab-monitoring-ag-grid-row'
         };

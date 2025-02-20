@@ -19,6 +19,7 @@ import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/card.component';
 import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/config/model/ProcessMonitoringConfig';
+import {AgGrid} from 'app/utils/AgGrid';
 
 @Component({
     selector: 'of-processmonitoring-table',
@@ -59,6 +60,7 @@ export class ProcessmonitoringTableComponent {
         provideGlobalGridOptions({theme: 'legacy'});
 
         this.gridOptions = <GridOptions>{
+            ...AgGrid.getDefaultGridOptions(),
             context: {
                 componentParent: this
             },
@@ -66,15 +68,9 @@ export class ProcessmonitoringTableComponent {
                 timeCellRenderer: TimeCellRendererComponent,
                 senderCellRenderer: SenderCellRendererComponent
             },
-            domLayout: 'autoHeight',
             defaultColDef: {
                 editable: false,
                 wrapHeaderText: true
-            },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translate.instant('ag-grid.' + params.key);
             },
             columnTypes: {
                 summaryColumn: {
@@ -97,14 +93,7 @@ export class ProcessmonitoringTableComponent {
                     resizable: false
                 }
             },
-            ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
-            pagination: true,
-            suppressCellFocus: true,
-            headerHeight: 70,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
-            rowHeight: 45,
             popupParent: document.querySelector('body')
         };
     }

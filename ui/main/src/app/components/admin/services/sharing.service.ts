@@ -9,7 +9,7 @@
 
 import {Injectable, OnDestroy} from '@angular/core';
 import {CrudService} from '@ofServices/admin/CrudService';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from '@ofServices/perimeters/PerimetersService';
 import {CrudProcessesService} from '@ofServices/admin/CrudProcessesService';
@@ -22,7 +22,6 @@ import {CrudSupervisedEntitiesService} from '@ofServices/admin/CrudSupervisedEnt
 
 @Injectable()
 export class SharingService implements OnDestroy {
-    private readonly _paginationPageSize$: ReplaySubject<number>;
     private readonly unsubscribe$: Subject<void> = new Subject<void>();
     private readonly crudUserService: CrudUserService;
     private readonly crudEntitiesService: CrudEntitiesService;
@@ -33,7 +32,6 @@ export class SharingService implements OnDestroy {
     private readonly supervisedEntitiesService: CrudSupervisedEntitiesService;
 
     constructor() {
-        this._paginationPageSize$ = new ReplaySubject<number>(1);
         this.crudUserService = new CrudUserService();
         this.crudEntitiesService = new CrudEntitiesService();
         this.crudGroupsService = new CrudGroupsService();
@@ -68,14 +66,6 @@ export class SharingService implements OnDestroy {
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }
-    }
-
-    get paginationPageSize$(): Observable<number> {
-        return this._paginationPageSize$;
-    }
-
-    changePaginationPageSize(value: number) {
-        this._paginationPageSize$.next(value);
     }
 
     ngOnDestroy() {

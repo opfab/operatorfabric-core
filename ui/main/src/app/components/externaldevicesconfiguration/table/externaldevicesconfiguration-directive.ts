@@ -27,6 +27,7 @@ import {ActionCellRendererComponent} from '../../admin/components/cell-renderers
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {SignalMappingsCellRendererComponent} from 'app/components/admin/components/cell-renderers/signal-mappings-cell-renderer.component';
+import {AgGrid} from 'app/utils/AgGrid';
 
 @Directive()
 @Injectable()
@@ -60,10 +61,10 @@ export abstract class ExternalDevicesConfigurationDirective {
         provideGlobalGridOptions({theme: 'legacy'});
 
         this.gridOptions = <GridOptions>{
+            ...AgGrid.getDefaultGridOptions(),
             context: {
                 componentParent: this
             },
-            domLayout: 'autoHeight',
             defaultColDef: {
                 editable: false,
                 headerValueGetter: this.localizeHeader.bind(this)
@@ -73,11 +74,6 @@ export abstract class ExternalDevicesConfigurationDirective {
                 checkboxCellRenderer: CheckboxCellRendererComponent,
                 signalMappingsCellRenderer: SignalMappingsCellRendererComponent
             },
-            pagination: true,
-            suppressCellFocus: true,
-            headerHeight: 70,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
             getRowHeight: this.getRowHeight,
             columnTypes: {
@@ -116,12 +112,6 @@ export abstract class ExternalDevicesConfigurationDirective {
                     cellRenderer: 'signalMappingsCellRenderer',
                     resizable: false
                 }
-            },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translateService.instant('ag-grid.' + params.key);
-                // Not this.translateService otherwise "undefined" error
             },
             popupParent: document.querySelector('body')
         };

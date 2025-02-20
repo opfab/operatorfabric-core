@@ -17,13 +17,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    GridOptions,
-    ModuleRegistry,
-    provideGlobalGridOptions,
-    RowSelectionOptions
-} from 'ag-grid-community';
+import {AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, RowSelectionOptions} from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/excel-export';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
@@ -36,6 +30,7 @@ import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinitio
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
 import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
+import {AgGrid} from 'app/utils/AgGrid';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -63,7 +58,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     customCardListView: CustomCardListView;
     isCustomScreenDefinitionExist: boolean;
-    gridOptions: GridOptions;
+    gridOptions: any;
     gridApi: any;
     page = 1;
     pageSize: number = 10;
@@ -160,7 +155,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.responseButtons = this.customCardListView.getResponseButtons();
         if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
         this.gridOptions = {
-            domLayout: 'autoHeight',
+            ...AgGrid.getDefaultGridOptions(),
             components: {
                 responsesCellRenderer: ResponsesCellRendererComponent,
                 hasResponseCellRenderer: HasResponseCellRendererComponent,
@@ -170,12 +165,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             defaultColDef: {
                 editable: false
             },
-            getLocaleText: function (params) {
-                // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
-                // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return TranslationService.getTranslation('ag-grid.' + params.key);
-            },
-
             columnTypes: {
                 default: {
                     sortable: true,
@@ -263,14 +252,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     resizable: false
                 }
             },
-            ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
-            pagination: true,
-            suppressCellFocus: true,
-            suppressPaginationPanel: true,
-            suppressHorizontalScroll: true,
             columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
-            headerHeight: 70,
-            rowHeight: 45,
             paginationPageSize: this.pageSize,
             onRowSelected: (event) => this.onRowSelected(event)
         };
