@@ -88,7 +88,7 @@
         "karma-junit-reporter": "2.0.1",
         "karma-mocha-reporter": "2.2.5",
         "prettier":"3.4.2",
-        "stylelint": "16.14.0",
+        "stylelint": "16.14.1",
         "stylelint-config-standard": "36.0.1",
         "stylelint-config-standard-scss": "14.0.0",
         "typescript": "5.4.5"
