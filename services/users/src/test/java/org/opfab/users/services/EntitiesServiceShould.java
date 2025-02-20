@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,14 +11,7 @@ package org.opfab.users.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -129,6 +122,55 @@ class EntitiesServiceShould {
             assertThat(result.getResult().getEntity().getId()).isEqualTo("entity1");
             assertThat(result.getResult().getEntity().getName()).isEqualTo("newEntityName");
             assertThat(entityRepositoryStub.findById("entity1").get().getName()).isEqualTo("newEntityName");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Entity_WHEN_Create_An_Already_Existing_Entity_With_Users_Field_THEN_Entity_Is_Updated_And_Users_Are_Updated() {
+            Entity entity = new Entity("entity1", "newEntityName", null, null, null, null);
+            entity.setUsers(Arrays.asList("user2"));
+
+            OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("entity1");
+            assertThat(result.getResult().getEntity().getUsers()).hasSize(1);
+            assertThat(result.getResult().getEntity().getUsers()).contains("user2");
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity2");
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).hasSize(2);
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).contains("entity2", "entity1");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Entity_WHEN_Create_An_Already_Existing_Entity_Without_Users_Field_THEN_Entity_Is_Updated_And_Users_Are_Not_Deleted() {
+            Entity entity = new Entity("entity1", "newEntityName", null, null, null, null);
+            entity.setUsers(null);
+
+            OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("entity1");
+            assertThat(result.getResult().getEntity().getUsers()).isNull();
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).hasSize(2);
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity1", "entity2");
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).contains("entity2");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Entity_WHEN_Create_An_Already_Existing_Entity_With_Users_Field_Empty_THEN_Entity_Is_Updated_And_Users_Are_Empty() {
+            Entity entity = new Entity("entity1", "newEntityName", null, null, null, null);
+            entity.setUsers(Collections.emptyList());
+
+            OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("entity1");
+            assertThat(result.getResult().getEntity().getUsers()).isEmpty();
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity2");
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).contains("entity2");
         }
 
         @Test

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,11 +11,7 @@ package org.opfab.users.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -149,6 +145,52 @@ class GroupsServiceShould {
             assertThat(groupRepositoryStub.findById("group1").get().getName()).isEqualTo("newGroupName");
             assertThat(groupRepositoryStub.findById("group1").get().getPerimeters().get(0)).isEqualTo("perimeter1");
             assertThat(groupRepositoryStub.findById("group1").get().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
+        }
+
+        @Test
+        void GIVEN_A_Valid_Group_WHEN_Create_An_Already_Existing_Group_With_Users_Field_THEN_Group_Is_Updated_And_Users_Are_Updated() {
+            Group group = new Group("group1", "newGroupName", null, null, null);
+            group.setUsers(Arrays.asList("user2"));
+
+            OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("group1");
+            assertThat(result.getResult().getEntity().getUsers()).hasSize(1);
+            assertThat(result.getResult().getEntity().getUsers()).contains("user2");
+            assertThat(userRepositoryStub.findById("user1").get().getGroups()).isEmpty();
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).contains("group1");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Group_WHEN_Create_An_Already_Existing_Group_Without_Users_Field_THEN_Group_Is_Updated_And_Users_Are_Not_Deleted() {
+            Group group = new Group("group1", "newGroupName", null, null, null);
+            group.setUsers(null);
+
+            OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("group1");
+            assertThat(result.getResult().getEntity().getUsers()).isNull();
+            assertThat(userRepositoryStub.findById("user1").get().getGroups()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user1").get().getGroups()).contains("group1");
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).hasSize(1);
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).contains("group1");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Group_WHEN_Create_An_Already_Existing_Group_With_Users_Field_Empty_THEN_Group_Is_Updated_And_Users_Are_Empty() {
+            Group group = new Group("group1", "newGroupName", null, null, null);
+            group.setUsers(Collections.emptyList());
+
+            OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("group1");
+            assertThat(result.getResult().getEntity().getUsers()).isEmpty();
+            assertThat(userRepositoryStub.findById("user1").get().getGroups()).isEmpty();
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).isEmpty();
         }
 
         @Test

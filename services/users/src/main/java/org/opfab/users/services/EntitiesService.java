@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,7 +65,11 @@ public class EntitiesService {
             }
             boolean isAlreadyExisting = entityRepository.findById(entity.getId()).isPresent();
             Entity newEntity = entityRepository.save(entity);
-            updateEntityUsers(newEntity.getId(), entity.getUsers());
+
+            if (entity.getUsers() != null) {
+                updateEntityUsers(newEntity.getId(), entity.getUsers());
+            }
+
             notificationService.publishUpdatedConfigMessage();
             EntityCreationReport<Entity> report = new EntityCreationReport<>(isAlreadyExisting, newEntity);
             return new OperationResult<>(report, true, null, null);

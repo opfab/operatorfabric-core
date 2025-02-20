@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -132,12 +132,17 @@ public class Group {
     }
 
     public List<String> getUsers() {
-        if (users == null)
-            return Collections.emptyList();
+        if (users == null) {
+            // we need to return null in case 'users' field is not in the post query, to differentiate with an empty
+            // array of users
+            return null;//NOSONAR
+        }
         return new ArrayList<>(users);
     }
 
     public void setUsers(List<String> users) {
-        this.users = new HashSet<>(users);
+        if (users != null) {
+            this.users = new HashSet<>(users);
+        }
     }
 }
