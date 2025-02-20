@@ -10,7 +10,6 @@
 import {AsyncPipe, NgFor, NgIf} from '@angular/common';
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
@@ -118,10 +117,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private readonly ngUnsubscribe$ = new Subject<void>();
 
-    constructor(
-        private readonly route: ActivatedRoute,
-        private readonly modalService: NgbModal
-    ) {
+    constructor(private readonly modalService: NgbModal) {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
         this.dateRangePickerLocale = DateRangePickerConfig.getLocale();
@@ -292,7 +288,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
     onGridReady(params: any) {
         this.gridApi = params.api;
-        this.gridApi.paginationSetPageSize(this.pageSize);
     }
 
     updateResultPage(currentPage: number): void {
