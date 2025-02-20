@@ -14,8 +14,8 @@ import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {CurrentUserStore} from '../../../store/current-user.store';
-import {AuthService} from 'app/authentication/auth.service';
-import {AuthenticationMode} from 'app/authentication/auth.model';
+import {AuthService} from 'app/authentication/AuthService';
+import {AuthenticationMode} from 'app/authentication/AuthModel';
 import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {ApplicationLoader} from '@ofServices/applicationLoader/ApplicationLoader';
@@ -40,9 +40,9 @@ import {NgIf} from '@angular/common';
 import {LoadingInProgressComponent} from './loading-in-progress/loading-in-progress.component';
 import {LoginComponent} from './login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {loadBuiltInTemplates} from 'app/builtInTemplates/templatesLoader';
 import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';
 import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
+import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
 
 @Component({
     selector: 'of-application-loading',

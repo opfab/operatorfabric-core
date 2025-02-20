@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageCardTemplate} from './message/messageCardTemplate';
-import {MessageUserCardTemplate} from './message/messageUserCardTemplate';
-import {QuestionCardTemplate} from './question/card/questionCardTemplate';
-import {QuestionUserCardTemplate} from './question/usercard/questionUserCardTemplate';
-import {TaskCardTemplate} from './task/card/taskCardTemplate';
-import {TaskUserCardTemplate} from './task/usercard/taskUserCardTemplate';
-import {MessageOrQuestionListCardTemplate} from './message-or-question-list/card/message-or-question-listCardTemplate';
-import {MessageOrQuestionListUserCardTemplate} from './message-or-question-list/usercard/message-or-question-listUserCardTemplate';
+import {MessageCardTemplate} from './message/MessageCardTemplate';
+import {MessageUserCardTemplate} from './message/MessageUserCardTemplate';
+import {QuestionCardTemplate} from './question/card/QuestionCardTemplate';
+import {QuestionUserCardTemplate} from './question/usercard/QuestionUserCardTemplate';
+import {TaskCardTemplate} from './task/card/TaskCardTemplate';
+import {TaskUserCardTemplate} from './task/usercard/TaskUserCardTemplate';
+import {MessageOrQuestionListCardTemplate} from './message-or-question-list/card/MessageOrQuestionListCardTemplate';
+import {MessageOrQuestionListUserCardTemplate} from './message-or-question-list/usercard/MessageOrQuestionListUserCardTemplate';
 
 export const loadBuiltInTemplates = () => {
     customElements.define('opfab-message-card', MessageCardTemplate);

@@ -15,12 +15,12 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {CurrentUserStore} from '../store/current-user.store';
 import {Observable, Subject} from 'rxjs';
-import {AuthHandler} from './auth-handler';
-import {AuthenticatedUser, AuthenticationMode} from './auth.model';
-import {CodeAuthenticationHandler} from './code-authentication-handler';
-import {ImplicitAuthenticationHandler} from './implicit-authentication-handler';
-import {NoneAuthenticationHandler} from './none-authentication-handler';
-import {PasswordAuthenticationHandler} from './password-authentication-handler';
+import {AuthHandler} from './AuthHandler';
+import {AuthenticatedUser, AuthenticationMode} from './AuthModel';
+import {CodeAuthenticationHandler} from './CodeAuthenticationHandler';
+import {ImplicitAuthenticationHandler} from './ImplicitAuthenticationHandler';
+import {NoneAuthenticationHandler} from './NoneAuthenticationHandler';
+import {PasswordAuthenticationHandler} from './PasswordAuthenticationHandler';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Injectable({

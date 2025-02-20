@@ -7,7 +7,7 @@
 //  * This file is part of the OperatorFabric project.
 //  */
 
-import {TaskUserCardTemplateView} from './taskUserCardTemplateView';
+import {TaskUserCardTemplateView} from './TaskUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 import {initOpfabAPI} from '@tests/helpers';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';

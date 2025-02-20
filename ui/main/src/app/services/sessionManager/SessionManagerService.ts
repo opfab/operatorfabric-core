@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AuthService} from 'app/authentication/auth.service';
+import {AuthService} from 'app/authentication/AuthService';
 import {Observable, Subject} from 'rxjs';
 import {CurrentUserStore} from '../../store/current-user.store';
 import {OpfabEventStreamService} from '../events/OpfabEventStreamService';

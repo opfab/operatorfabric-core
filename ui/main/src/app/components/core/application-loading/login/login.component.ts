@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {AuthService} from 'app/authentication/auth.service';
+import {AuthService} from 'app/authentication/AuthService';
 import {NgClass, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 

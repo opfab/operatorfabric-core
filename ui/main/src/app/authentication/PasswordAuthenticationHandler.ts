@@ -8,7 +8,7 @@
  */
 
 import {catchError, map, Observable, of} from 'rxjs';
-import {AuthHandler, HttpAuthInfo} from './auth-handler';
+import {AuthHandler, HttpAuthInfo} from './AuthHandler';
 import {HttpHeaders} from '@angular/common/http';
 import {I18n} from 'app/model/I18n';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';

@@ -8,8 +8,8 @@
  */
 
 import {AuthConfig, EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
-import {AuthenticatedUser} from './auth.model';
-import {AuthHandler} from './auth-handler';
+import {AuthenticatedUser} from './AuthModel';
+import {AuthHandler} from './AuthHandler';
 import {HttpClient} from '@angular/common/http';
 import {CurrentUserStore} from '../store/current-user.store';
 import {LoggerService} from 'app/services/logs/LoggerService';

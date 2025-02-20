@@ -13,7 +13,7 @@ import {I18n} from 'app/model/I18n';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {AuthenticatedUser} from './auth.model';
+import {AuthenticatedUser} from './AuthModel';
 import {jwtDecode} from 'jwt-decode';
 import {Observable, of, Subject} from 'rxjs';
 

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
+import {MessageUserCardTemplateView} from './MessageUserCardTemplateView';
 import {QuillEditorMock} from '@tests/mocks/quillEditor.mock';
 import {initOpfabAPI} from '@tests/helpers';
 import {Card} from 'app/model/Card';

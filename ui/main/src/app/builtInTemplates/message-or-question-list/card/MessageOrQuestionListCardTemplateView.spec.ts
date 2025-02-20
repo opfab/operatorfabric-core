@@ -8,7 +8,7 @@
  */
 
 import {Card} from 'app/model/Card';
-import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
+import {MessageOrQuestionListCardTemplateView} from './MessageOrQuestionListCardTemplateView';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {initOpfabAPI, setEntities} from '@tests/helpers';

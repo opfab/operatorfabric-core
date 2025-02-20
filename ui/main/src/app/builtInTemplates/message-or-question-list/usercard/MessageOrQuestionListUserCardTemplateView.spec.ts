@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageOrQuestionListUserCardTemplateView} from './message-or-question-listUserCardTemplateView';
+import {MessageOrQuestionListUserCardTemplateView} from './MessageOrQuestionListUserCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
 import {Card} from 'app/model/Card';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';

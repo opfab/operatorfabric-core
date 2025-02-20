@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {QuestionCardTemplateView} from './questionCardTemplateView';
+import {QuestionCardTemplateView} from './QuestionCardTemplateView';
 import {initOpfabAPI, setEntities} from '@tests/helpers';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Entity} from '@ofServices/entities/model/Entity';

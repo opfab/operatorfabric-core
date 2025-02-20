@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AuthenticatedUser} from './auth.model';
-import {AuthHandler} from './auth-handler';
+import {AuthenticatedUser} from './AuthModel';
+import {AuthHandler} from './AuthHandler';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';

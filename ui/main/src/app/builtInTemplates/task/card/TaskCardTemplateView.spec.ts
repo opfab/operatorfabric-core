@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TaskCardTemplateView} from './taskCardTemplateView';
+import {TaskCardTemplateView} from './TaskCardTemplateView';
 import {initOpfabAPI} from '@tests/helpers';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {Card} from 'app/model/Card';
