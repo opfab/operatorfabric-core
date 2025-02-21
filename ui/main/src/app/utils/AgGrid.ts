@@ -8,7 +8,7 @@
  */
 
 import {TranslationService} from '@ofServices/translation/TranslationService';
-import {Utilities} from './utilities';
+import {Utilities} from './Utilities';
 
 export class AgGrid {
     public static getTextMatcherWithEmojis(filterOption, value, filterText): boolean {

@@ -10,7 +10,7 @@
 import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
 import {CustomScreenDefinition, ResponseButton} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {Card} from 'app/model/Card';
-import {OpfabStore} from '@ofStore/opfabStore';
+import {OpfabStore} from '@ofStore/OpfabStore';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';

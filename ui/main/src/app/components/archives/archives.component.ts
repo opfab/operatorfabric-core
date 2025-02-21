@@ -23,9 +23,9 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Page} from 'app/model/Page';
-import {ExcelExport} from '../../utils/excel-export';
+import {ExcelExport} from '../../utils/ExcelExport';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {Utilities} from '../../utils/utilities';
+import {Utilities} from '../../utils/Utilities';
 import {Card} from 'app/model/Card';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';

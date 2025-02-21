@@ -35,7 +35,7 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
-import {CurrentUserStore} from '../../../store/current-user.store';
+import {CurrentUserStore} from '../../../store/CurrentUserStore';
 import {UsersService} from '@ofServices/users/UsersService';
 import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/spinner.component';

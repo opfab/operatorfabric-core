@@ -13,7 +13,7 @@ import {Card} from 'app/model/Card';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Utilities} from '../../../../utils/utilities';
+import {Utilities} from '../../../../utils/Utilities';
 import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/simplified-card-view.component';
 import {NgIf} from '@angular/common';
 

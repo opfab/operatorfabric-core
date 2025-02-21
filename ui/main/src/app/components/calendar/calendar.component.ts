@@ -22,7 +22,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {OpfabStore} from '../../store/opfabStore';
+import {OpfabStore} from '../../store/OpfabStore';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {NgIf} from '@angular/common';
 import {CardComponent} from '../card/card.component';

@@ -19,7 +19,7 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';
-import {OpfabStore} from '../../store/opfabStore';
+import {OpfabStore} from '../../store/OpfabStore';
 import {ModalService} from '../modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {NotificationDecision} from './NotificationDecision';

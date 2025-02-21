@@ -10,7 +10,7 @@
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {CustomScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
-import {OpfabStore} from '@ofStore/opfabStore';
+import {OpfabStore} from '@ofStore/OpfabStore';
 import {Observable, ReplaySubject, Subject, combineLatest, map, takeUntil} from 'rxjs';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {UsersService} from '@ofServices/users/UsersService';

@@ -14,7 +14,7 @@ import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
-import {Utilities} from '../../utils/utilities';
+import {Utilities} from '../../utils/Utilities';
 import {ApplicationEventsService} from './ApplicationEventsService';
 import {OpfabEventStreamService} from './OpfabEventStreamService';
 import {ProcessesService} from '../processes/ProcessesService';

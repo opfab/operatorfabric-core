@@ -16,7 +16,7 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {filter} from 'rxjs/operators';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '../alerteMessage/AlertMessageService';
-import {OpfabStore} from '../../store/opfabStore';
+import {OpfabStore} from '../../store/OpfabStore';
 import {NavigationService} from '../navigation/NavigationService';
 import {NotificationDecision} from './NotificationDecision';
 

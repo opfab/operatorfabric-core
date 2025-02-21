@@ -10,12 +10,12 @@
 
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from 'app/components/monitoring/model/LineOfMonitoringResult';
-import {ExcelExport} from '../../../../utils/excel-export';
+import {ExcelExport} from '../../../../utils/ExcelExport';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbProgressbar} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {MonitoringConfig} from '@ofServices/config/model/MonitoringConfig';
-import {JsonToArray} from '../../../../utils/jsontoarray/json-to-array';
+import {JsonToArray} from '../../../../utils/jsontoarray/JsonToArray';
 import {Process} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
@@ -26,13 +26,13 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardComponent} from '../../../card/card.component';
 import {TranslationService} from '@ofServices/translation/TranslationService';
-import {Utilities} from '../../../../utils/utilities';
+import {Utilities} from '../../../../utils/Utilities';
 import {AgGrid} from '../../../../utils/AgGrid';
 
 @Component({

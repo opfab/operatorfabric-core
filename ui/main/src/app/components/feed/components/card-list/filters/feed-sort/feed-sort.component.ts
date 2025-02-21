@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {FilteredLightCardsStore} from '../../../../../../store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from '../../../../../../store/opfabStore';
+import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
+import {OpfabStore} from '../../../../../../store/OpfabStore';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({

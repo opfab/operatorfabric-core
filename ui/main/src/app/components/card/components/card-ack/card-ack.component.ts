@@ -22,7 +22,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';

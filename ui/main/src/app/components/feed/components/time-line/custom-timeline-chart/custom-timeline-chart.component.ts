@@ -35,7 +35,7 @@ import {
     AxesModule
 } from '@swimlane/ngx-charts';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {TimelineView} from 'app/views/timeline/timeline.view';
+import {TimelineView} from 'app/views/timeline/TimelineView';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';

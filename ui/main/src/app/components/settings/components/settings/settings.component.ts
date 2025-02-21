@@ -10,7 +10,7 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {SettingsView} from 'app/views/settings/settings.view';
+import {SettingsView} from 'app/views/settings/SettingsView';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {Subject, takeUntil} from 'rxjs';

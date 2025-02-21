@@ -11,8 +11,8 @@ import {Injectable} from '@angular/core';
 import {Filter} from '@ofStore/lightcards/model/Filter';
 import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 
 @Injectable({
     providedIn: 'root'

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 import {AdminItemType} from '../../services/sharing.service';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Utilities} from '../../../../utils/utilities';
+import {Utilities} from '../../../../utils/Utilities';
 import {NgFor} from '@angular/common';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

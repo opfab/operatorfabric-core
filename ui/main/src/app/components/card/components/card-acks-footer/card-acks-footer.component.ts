@@ -10,10 +10,10 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {Utilities} from '../../../../utils/utilities';
+import {Utilities} from '../../../../utils/Utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';

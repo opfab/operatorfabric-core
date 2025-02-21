@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,8 @@
  */
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NotificationConfigurationView} from 'app/views/notificationConfiguration/notificationConfiguration.view';
-import {NotificationConfigurationPage} from 'app/views/notificationConfiguration/notificationConfigurationPage';
+import {NotificationConfigurationView} from 'app/views/notificationConfiguration/NotificationConfigurationView';
+import {NotificationConfigurationPage} from 'app/views/notificationConfiguration/NotificationConfigurationPage';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
 

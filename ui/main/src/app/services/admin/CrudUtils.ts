@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Utilities} from '../../utils/utilities';
+import {Utilities} from '../../utils/Utilities';
 import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {EntitiesService} from '../entities/EntitiesService';
 import {GroupsService} from '../groups/GroupsService';

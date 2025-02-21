@@ -9,7 +9,7 @@
 
 import {AuthService} from 'app/authentication/AuthService';
 import {Observable, Subject} from 'rxjs';
-import {CurrentUserStore} from '../../store/current-user.store';
+import {CurrentUserStore} from '../../store/CurrentUserStore';
 import {OpfabEventStreamService} from '../events/OpfabEventStreamService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {SoundNotificationService} from '../notifications/SoundNotificationService';

@@ -10,12 +10,12 @@
 
 import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Severity} from 'app/model/Severity';
-import {FilteredLightCardsStore} from '../../../../store/lightcards/lightcards-feed-filter-store';
+import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
 import {takeUntil} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 import {OpfabMap} from 'app/components/share/map/opfab-map';
 import {NgFor} from '@angular/common';
 import {GeoMapService} from '@ofServices/geoMap/GeoMapService';

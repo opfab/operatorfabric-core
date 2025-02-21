@@ -10,7 +10,7 @@
 import {Observable, Subject} from 'rxjs';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {Utilities} from '../../utils/utilities';
+import {Utilities} from '../../utils/Utilities';
 import {ConfigServer} from '../config/server/ConfigServer';
 import {ServerResponseStatus} from '../../server/ServerResponse';
 import {TranslationLib} from './lib/TranslationLib';

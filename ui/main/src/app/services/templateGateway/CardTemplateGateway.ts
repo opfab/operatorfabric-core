@@ -8,7 +8,7 @@
  */
 
 import {Card} from 'app/model/Card';
-import {Utilities} from '../../utils/utilities';
+import {Utilities} from '../../utils/Utilities';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class CardTemplateGateway {

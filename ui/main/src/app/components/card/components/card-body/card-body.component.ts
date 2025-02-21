@@ -35,7 +35,7 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {OpfabStore} from '../../../../store/opfabStore';
+import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardAction} from 'app/model/CardAction';
 import {NgIf} from '@angular/common';
 import {CardActionsComponent} from '../card-actions/card-actions.component';
@@ -46,7 +46,7 @@ import {CardFooterTextComponent} from '../card-footer-text/card-footer-text.comp
 import {CardResponseComponent} from '../card-reponse/card-response.component';
 import {CardAckComponent} from '../card-ack/card-ack.component';
 import {OpfabTitleCasePipe} from '../../../share/pipes/opfab-title-case.pipe';
-import {CardBodyView} from 'app/views/card/card-body.view';
+import {CardBodyView} from 'app/views/card/CardBodyView';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';

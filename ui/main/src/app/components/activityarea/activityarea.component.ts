@@ -11,8 +11,8 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, V
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ActivityAreaView} from 'app/views/activityarea/activityarea.view';
-import {ActivityAreaPage} from 'app/views/activityarea/activityareaPage';
+import {ActivityAreaView} from 'app/views/activityarea/ActivityAreaView';
+import {ActivityAreaPage} from 'app/views/activityarea/ActivityAreaPage';
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';

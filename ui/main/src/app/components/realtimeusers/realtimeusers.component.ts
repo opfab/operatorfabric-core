@@ -12,8 +12,8 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
-import {RealtimeUsersView} from 'app/views/realtimeusers/realtimeusers.view';
-import {RealtimePage} from 'app/views/realtimeusers/realtimePage';
+import {RealtimeUsersView} from 'app/views/realtimeusers/RealtimeUsersView';
+import {RealtimePage} from 'app/views/realtimeusers/RealtimePage';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';

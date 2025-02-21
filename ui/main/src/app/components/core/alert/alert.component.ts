@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -9,8 +9,8 @@
  */
 
 import {Component} from '@angular/core';
-import {AlertView} from 'app/views/core/alert/alert.view';
-import {AlertPage} from 'app/views/core/alert/alertPage';
+import {AlertView} from 'app/views/core/alert/AlertView';
+import {AlertPage} from 'app/views/core/alert/AlertPage';
 import {NgIf} from '@angular/common';
 
 @Component({

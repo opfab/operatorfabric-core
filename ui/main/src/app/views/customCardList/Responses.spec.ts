@@ -10,14 +10,14 @@
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {OpfabStore} from '@ofStore/opfabStore';
+import {OpfabStore} from '@ofStore/OpfabStore';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {ConfigService} from '@ofServices/config/ConfigService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {FilteredLightCardsStore} from '@ofStore/lightcards/lightcards-feed-filter-store';
+import {FilteredLightCardsStore} from '@ofStore/lightcards/FilteredLightcardsStore';
 import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';

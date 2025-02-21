@@ -18,7 +18,7 @@ import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
 import {AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, RowSelectionOptions} from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
-import {ExcelExport} from 'app/utils/excel-export';
+import {ExcelExport} from 'app/utils/ExcelExport';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';

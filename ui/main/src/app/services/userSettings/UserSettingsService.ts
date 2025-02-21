@@ -10,7 +10,7 @@
 import {Observable} from 'rxjs';
 import {UserSettingsServer} from './server/UserSettingsServer';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
-import {CurrentUserStore} from '../../store/current-user.store';
+import {CurrentUserStore} from '../../store/CurrentUserStore';
 import {ServerResponse} from 'app/server/ServerResponse';
 
 export class UserSettingsService {
