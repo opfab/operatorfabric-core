@@ -73,7 +73,9 @@ Devtools:
 - No specific checks are generally needed.
 - Exceptions: 
 
-    * For major/minor linter upgrades (e.g., X.X.X to X.Y.X or X.X.X to Y.X.X), perform a local test to ensure the linter is still working correctly.
+    * For major/minor linter upgrades (e.g., X.X.X to X.Y.X or X.X.X to Y.X.X), perform a local test to ensure the linter is still working correctly : 
+        ** for eslint: verify that console.log statements and focus test are detected
+        ** for stylelint: verify detection of CSS errors, for example, ensuring that an erroneous declaration like `padding-top: 0px` is flagged appropriately
     * For Anchore udpates, perform a test of the "Anchore container scan" github workflow to ensure it is still working correctly.
     * For Scorecard udpates, perform a test of the "Scorecard supply-chain security" github workflow to ensure it is still working correctly.
 
