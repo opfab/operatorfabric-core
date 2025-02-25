@@ -13,6 +13,13 @@
             "INPROGRESS": "WORDT UITGEVOERD",
             "CANCELED": "GEANNULEERD"
         },
+        "readAndAck": {
+            "readAndAck": "GELEZEN EN BEVESTIGD",
+            "READ": "GELEZEN",
+            "NOT_READ": "NIET GELEZEN",
+            "ACKNOWLEDGED": "BEVESTIGD",
+            "NOT_ACKNOWLEDGED": "NIET BEVESTIGD"
+        },
         "filters": {
             "processGroup": "DIENST",
             "process": "PROCES",
@@ -22,6 +29,7 @@
             "selectProcessText": "Selecteer een Proces",
             "selectStateText": "Selecteer een Status",
             "selectTagText": "Selecteer een Label",
+            "selectReadAndAckText": "Selecteer of gelezen of bevestigd",
             "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen.",
             "businessDateRange": "BEDRIJFSDATUMBEREIK",
             "publishDateRange": "PUBLICATIEDATUMBEREIK",

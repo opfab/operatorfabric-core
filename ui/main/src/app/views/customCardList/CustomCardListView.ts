@@ -103,6 +103,10 @@ export class CustomCardListView {
         this.resultTable.setTypesOfStateFilter(typesOfState);
     }
 
+    public setReadAndAckFilter(readAndAck: string[]) {
+        this.resultTable.setReadAndAckFilter(readAndAck);
+    }
+
     //We disable sonar rules typescript:S2301 here because we
     //want the method to reflect the checkbox status
     public setResponseFromMyEntitiesChoice(checked: boolean) {

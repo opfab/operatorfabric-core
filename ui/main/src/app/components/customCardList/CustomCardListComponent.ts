@@ -26,7 +26,7 @@ import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRende
 import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
 import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
-import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
+import {ReadAndAckEnum, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
 import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
@@ -72,6 +72,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         businessDateRanges: new FormControl({}),
         processes: new FormControl([]),
         typeOfState: new FormControl([]),
+        readAndAck: new FormControl([]),
         responseFromMyEntities: new FormControl(true),
         responseFromAllEntities: new FormControl(true)
     });
@@ -110,6 +111,27 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         nbOfDisplayValues: 1
     };
 
+    readAndAckSelected: Array<string> = [];
+    readAndAckFilterVisible = true;
+    readAndAckMultiSelectConfig = {
+        labelKey: 'shared.readAndAck.readAndAck',
+        placeholderKey: 'shared.filters.selectReadAndAckText',
+        sortOptions: false,
+        nbOfDisplayValues: 1
+    };
+    readAndAckMultiSelectOptions: Array<MultiSelectOption> = [
+        new MultiSelectOption(
+            ReadAndAckEnum.ACKNOWLEDGED,
+            TranslationService.getTranslation('shared.readAndAck.ACKNOWLEDGED')
+        ),
+        new MultiSelectOption(
+            ReadAndAckEnum.NOT_ACKNOWLEDGED,
+            TranslationService.getTranslation('shared.readAndAck.NOT_ACKNOWLEDGED')
+        ),
+        new MultiSelectOption(ReadAndAckEnum.READ, TranslationService.getTranslation('shared.readAndAck.READ')),
+        new MultiSelectOption(ReadAndAckEnum.NOT_READ, TranslationService.getTranslation('shared.readAndAck.NOT_READ'))
+    ];
+
     responseFromMyEntitiesFilterVisible = false;
     responseFromAllEntitiesFilterVisible = false;
     responseButtons = [];
@@ -142,6 +164,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
         this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
         this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
+        this.readAndAckFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.READ_ACK);
         this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
             HeaderFilter.RESPONSE_FROM_MY_ENTITIES
         );
@@ -300,6 +323,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         if (this.processFilterVisible) {
             this.processSelected = [];
             this.typeOfStateSelected = [];
+            this.readAndAckSelected = [];
             this.sendQuery();
         }
     }
@@ -311,6 +335,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.customCardListView.setBusinessPeriod(startDate, endDate);
         this.customCardListView.setProcessList([...this.headerForm.get('processes').value]);
         this.customCardListView.setTypesOfStateFilter([...this.headerForm.get('typeOfState').value]);
+        this.customCardListView.setReadAndAckFilter([...this.headerForm.get('readAndAck').value]);
         this.customCardListView.setResponseFromMyEntitiesChoice(this.headerForm.get('responseFromMyEntities').value);
         this.customCardListView.setResponseFromAllEntitiesChoice(this.headerForm.get('responseFromAllEntities').value);
         this.customCardListView.search();

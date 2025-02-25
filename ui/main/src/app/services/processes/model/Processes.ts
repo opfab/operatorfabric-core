@@ -92,6 +92,13 @@ export enum TypeOfStateEnum {
     CANCELED = 'CANCELED'
 }
 
+export enum ReadAndAckEnum {
+    READ = 'READ',
+    NOT_READ = 'NOT_READ',
+    ACKNOWLEDGED = 'ACKNOWLEDGED',
+    NOT_ACKNOWLEDGED = 'NOT_ACKNOWLEDGED'
+}
+
 export enum ConsideredAcknowledgedForUserWhenEnum {
     USER_HAS_ACKNOWLEDGED = 'UserHasAcknowledged',
     ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED = 'AllEntitiesOfUserHaveAcknowledged'

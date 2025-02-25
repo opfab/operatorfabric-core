@@ -56,6 +56,19 @@
                 </of-multi-select>
             </div>
 
+            <div
+                *ngIf="readAndAckFilterVisible"
+                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+                <of-multi-select
+                    id="opfab-read-and-ack"
+                    multiSelectId="readAndAck"
+                    [parentForm]="headerForm"
+                    [config]="readAndAckMultiSelectConfig"
+                    [options]="readAndAckMultiSelectOptions"
+                    [selectedOptions]="readAndAckSelected">
+                </of-multi-select>
+            </div>
+
             <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 60px; min-width: 320px">
                 <div class="form-group">
                     <div class="opfab-buttons">

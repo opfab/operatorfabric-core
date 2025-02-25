@@ -13,6 +13,13 @@
             "INPROGRESS": "EN COURS",
             "CANCELED": "ANNULÉ"
         },
+        "readAndAck": {
+            "readAndAck": "LU ET ACQUITTÉ",
+            "READ": "LU",
+            "NOT_READ": "NON LU",
+            "ACKNOWLEDGED": "ACQUITTÉ",
+            "NOT_ACKNOWLEDGED": "NON ACQUITTÉ"
+        },
         "filters": {
             "processGroup": "SERVICE",
             "process": "PROCESSUS",
@@ -22,6 +29,7 @@
             "selectProcessText": "Sélectionner un Processus",
             "selectStateText": "Sélectionner un État",
             "selectTagText": "Sélectionner une Étiquette",
+            "selectReadAndAckText": "Sélectionner si lu ou acquitté",
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
             "businessDateRange": "PÉRIODE MÉTIER",
             "publishDateRange": "PÉRIODE DE PUBLICATION",
