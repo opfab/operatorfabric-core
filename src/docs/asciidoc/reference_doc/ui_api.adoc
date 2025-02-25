@@ -446,7 +446,7 @@ If the method throws an error, the error message will be shown to the user on th
 For example : 
 
 ```
-    opfab.currentCard.registerFunctionToBeCalledBeforeCardSending( async(cardToBeSent) => {
+    opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending( async(cardToBeSent) => {
       
       // do some stuff 
 
