@@ -12,13 +12,19 @@
     const customScreenExample = {
         id: 'testId',
         name: 'testName',
-        headerFilters: ['PROCESS', 'TYPE_OF_STATE', 'RESPONSE_FROM_MY_ENTITIES', 'RESPONSE_FROM_ALL_ENTITIES'],
+        headerFilters: [
+            'PROCESS',
+            'TYPE_OF_STATE',
+            'READ_ACK',
+            'RESPONSE_FROM_MY_ENTITIES',
+            'RESPONSE_FROM_ALL_ENTITIES'
+        ],
         results: {
             columns: [
                 {
                     field: 'severity',
                     cardField: 'severity',
-                    fieldType: 'SEVERITY',
+                    fieldType: 'SEVERITY'
                 },
                 {
                     field: 'TIME',
@@ -46,7 +52,6 @@
                 {
                     fieldType: 'TYPE_OF_STATE',
                     headerName: 'STATUS'
-
                 },
                 {
                     field: 'publisher',
@@ -59,8 +64,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return "red"
-                        return "green"
+                        if (card.severity === 'ALARM') return 'red';
+                        return 'green';
                     },
                     flex: 0.5
                 },
@@ -85,7 +90,7 @@
                 }
             ]
         }
-    }
+    };
 
     const customScreenExample2 = {
         id: 'testId2',
@@ -98,8 +103,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return "red"
-                        return "green"
+                        if (card.severity === 'ALARM') return 'red';
+                        return 'green';
                     },
                     flex: 0.25
                 },
@@ -141,13 +146,12 @@
                     const responseCards = [];
 
                     selectedCards.forEach((card) => {
-
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
-                        const responseData = { "choice1": "on", "choice2": "on", "choice3": "on", "comment": comment }
-                        responseCards.push({ data: responseData });
+                        const responseData = {choice1: 'on', choice2: 'on', choice3: 'on', comment: comment};
+                        responseCards.push({data: responseData});
                     });
-                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                    return {valid: true, errorMsg: '', responseCards: responseCards};
                 }
             },
             {
@@ -162,17 +166,17 @@
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = { "comment": comment }
-                        responseCards.push({ data: responseData });
+                        const responseData = {comment: comment};
+                        responseCards.push({data: responseData});
                     });
                     if (!hasAlwaysComment) {
-                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
+                        return {valid: false, errorMsg: 'Please fill in the comment field for all cards'};
                     }
-                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                    return {valid: true, errorMsg: '', responseCards: responseCards};
                 }
             }
         ]
-    }
+    };
 
     opfab.businessconfig.registerCustomScreen(customScreenExample);
     opfab.businessconfig.registerCustomScreen(customScreenExample2);

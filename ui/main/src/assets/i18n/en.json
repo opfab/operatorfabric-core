@@ -13,6 +13,13 @@
             "INPROGRESS": "IN PROGRESS",
             "CANCELED": "CANCELED"
         },
+        "readAndAck": {
+            "readAndAck": "READ & ACK",
+            "READ": "READ",
+            "NOT_READ": "NOT READ",
+            "ACKNOWLEDGED": "ACKNOWLEDGED",
+            "NOT_ACKNOWLEDGED": "NOT ACKNOWLEDGED"
+        },
         "filters": {
             "processGroup": "SERVICE",
             "process": "PROCESS",
@@ -22,6 +29,7 @@
             "selectProcessText": "Select a Process",
             "selectStateText": "Select a State",
             "selectTagText": "Select a Tag",
+            "selectReadAndAckText": "Select if Read or Acknowledged",
             "toDateBeforeFromDate": "'To' date must be after 'From' date.",
             "businessDateRange": "BUSINESS DATE RANGE",
             "publishDateRange":"PUBLISH DATE RANGE",

@@ -13,7 +13,7 @@ import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter}
 import {ConfigService} from '@ofServices/config/ConfigService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
+import {Process, ReadAndAckEnum, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
@@ -396,6 +396,123 @@ describe('CustomScreenView - ResultTable', () => {
         });
     });
     describe('Should filter card', () => {
+        describe('by read and acknowledged', () => {
+            let cards = [];
+            let resultTable: ResultTable;
+            beforeEach(() => {
+                resultTable = getResultTable({
+                    columns: [
+                        {
+                            field: 'testField',
+                            headerName: 'Process',
+                            cardField: 'process',
+                            fieldType: FieldType.STRING
+                        }
+                    ]
+                });
+                cards = [
+                    getOneLightCard({
+                        process: 'processId0',
+                        state: 'state1.0',
+                        startDate: 5,
+                        hasBeenRead: false,
+                        hasBeenAcknowledged: false,
+                        id: 'id0'
+                    }),
+                    getOneLightCard({
+                        process: 'processId0',
+                        state: 'state1.1',
+                        startDate: 100,
+                        hasBeenRead: true,
+                        hasBeenAcknowledged: false,
+                        id: 'id1'
+                    }),
+                    getOneLightCard({
+                        process: 'processId1',
+                        state: 'state2.0',
+                        startDate: 1000,
+                        hasBeenRead: false,
+                        hasBeenAcknowledged: true,
+                        id: 'id2'
+                    }),
+                    getOneLightCard({
+                        process: 'processId1',
+                        state: 'state2.1',
+                        startDate: 1000,
+                        hasBeenRead: true,
+                        hasBeenAcknowledged: true,
+                        id: 'id3'
+                    })
+                ];
+            });
+            it('none', () => {
+                resultTable.setReadAndAckFilter([]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id0', testField: 'processId0'},
+                    {cardId: 'id1', testField: 'processId0'},
+                    {cardId: 'id2', testField: 'processId1'},
+                    {cardId: 'id3', testField: 'processId1'}
+                ]);
+            });
+            it('only read', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.READ]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id1', testField: 'processId0'},
+                    {cardId: 'id3', testField: 'processId1'}
+                ]);
+            });
+            it('only not read', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_READ]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id0', testField: 'processId0'},
+                    {cardId: 'id2', testField: 'processId1'}
+                ]);
+            });
+            it('only acknowledged', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.ACKNOWLEDGED]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id2', testField: 'processId1'},
+                    {cardId: 'id3', testField: 'processId1'}
+                ]);
+            });
+            it('only not acknowledged', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_ACKNOWLEDGED]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id0', testField: 'processId0'},
+                    {cardId: 'id1', testField: 'processId0'}
+                ]);
+            });
+            it('all', () => {
+                resultTable.setReadAndAckFilter([
+                    ReadAndAckEnum.READ,
+                    ReadAndAckEnum.NOT_READ,
+                    ReadAndAckEnum.ACKNOWLEDGED,
+                    ReadAndAckEnum.NOT_ACKNOWLEDGED
+                ]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([
+                    {cardId: 'id0', testField: 'processId0'},
+                    {cardId: 'id1', testField: 'processId0'},
+                    {cardId: 'id2', testField: 'processId1'},
+                    {cardId: 'id3', testField: 'processId1'}
+                ]);
+            });
+            it('read and acknowledged', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.READ, ReadAndAckEnum.ACKNOWLEDGED]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([{cardId: 'id3', testField: 'processId1'}]);
+            });
+            it('not read and not acknowledged', () => {
+                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_READ, ReadAndAckEnum.NOT_ACKNOWLEDGED]);
+                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+                expect(dataArray).toEqual([{cardId: 'id0', testField: 'processId0'}]);
+            });
+        });
         it('by business period startDate', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -557,7 +674,7 @@ describe('CustomScreenView - ResultTable', () => {
                     id: 'id3'
                 })
             ];
-            resultTable.setTypesOfStateFilter(['INPROGRESS', 'FINISHED']);
+            resultTable.setTypesOfStateFilter([TypeOfStateEnum.INPROGRESS, TypeOfStateEnum.FINISHED]);
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([
                 {cardId: 'id0', testField: 'processId0'},

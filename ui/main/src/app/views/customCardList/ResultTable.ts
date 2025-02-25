@@ -10,7 +10,7 @@
 import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
+import {ReadAndAckEnum, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {UsersService} from '@ofServices/users/UsersService';
@@ -26,8 +26,13 @@ export class ResultTable {
     private endDate: number;
     private processIds = [];
     private typesOfState = [];
+    private readAndAck = [];
     private areCardsWithResponseFromMyEntitiesExcluded = false;
     private areCardsWithResponseFromAllEntitiesExcluded = false;
+    private areReadCardsIncluded = false;
+    private areNotReadCardsIncluded = false;
+    private areAcknowledgedCardsIncluded = false;
+    private areNotAcknowledgedCardsIncluded = false;
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
@@ -133,6 +138,14 @@ export class ResultTable {
         this.typesOfState = typesOfState;
     }
 
+    public setReadAndAckFilter(readAndAck: string[]) {
+        this.areReadCardsIncluded = readAndAck.includes(ReadAndAckEnum.READ);
+        this.areNotReadCardsIncluded = readAndAck.includes(ReadAndAckEnum.NOT_READ);
+        this.areAcknowledgedCardsIncluded = readAndAck.includes(ReadAndAckEnum.ACKNOWLEDGED);
+        this.areNotAcknowledgedCardsIncluded = readAndAck.includes(ReadAndAckEnum.NOT_ACKNOWLEDGED);
+        this.readAndAck = readAndAck;
+    }
+
     public excludeCardsWithResponseFromMyEntities() {
         this.areCardsWithResponseFromMyEntitiesExcluded = true;
     }
@@ -155,8 +168,9 @@ export class ResultTable {
             if (!this.isCardInDateRange(card)) return;
             if (!this.isCardInProcessIds(card)) return;
             if (!this.isCardInTypesOfState(card)) return;
+            if (!this.isCardReadAndAck(card)) return;
             if (this.areCardsWithResponseFromMyEntitiesExcluded && card.hasChildCardFromCurrentUserEntity) return;
-            if (this.areCardsWithResponseFromAllEntitiesExcluded && this.doesAllEntitiesHaveResponded(card, childCards))
+            if (this.areCardsWithResponseFromAllEntitiesExcluded && this.haveAllEntitiesResponded(card, childCards))
                 return;
             const data = {};
             this.customScreenDefinition.results.columns.forEach((column) => {
@@ -214,6 +228,39 @@ export class ResultTable {
         return this.typesOfState.includes(type);
     }
 
+    private isCardReadAndAck(card: Card): boolean {
+        if (!this.readAndAck || this.readAndAck.length === 0) return true;
+        let resAcknowledge: boolean;
+        let resRead: boolean;
+
+        if (!this.areAcknowledgedCardsIncluded && !this.areNotAcknowledgedCardsIncluded) {
+            resAcknowledge = true;
+        } else {
+            resAcknowledge = this.binaryCheck(
+                [this.areAcknowledgedCardsIncluded, this.areNotAcknowledgedCardsIncluded],
+                card.hasBeenAcknowledged
+            );
+        }
+        if (!this.areReadCardsIncluded && !this.areNotReadCardsIncluded) {
+            resRead = true;
+        } else {
+            resRead = this.binaryCheck([this.areReadCardsIncluded, this.areNotReadCardsIncluded], card.hasBeenRead);
+        }
+        return resAcknowledge && resRead;
+    }
+
+    private binaryCheck(filters: Array<boolean>, property: boolean): boolean {
+        let res = false;
+        if (property) {
+            if (filters[0]) {
+                res = true;
+            }
+        } else if (filters[1]) {
+            res = true;
+        }
+        return res;
+    }
+
     private getDateAndTime(card: Card, field: string): {text: string; value: string} {
         const dateAndTime = this.getNestedField(card, field);
 
@@ -222,7 +269,7 @@ export class ResultTable {
             value: dateAndTime.valueOf()
         };
     }
-    private doesAllEntitiesHaveResponded(card: Card, childCards: Map<string, Array<Card>>): boolean {
+    private haveAllEntitiesResponded(card: Card, childCards: Map<string, Array<Card>>): boolean {
         const entitiesToRespond = new Set(
             card.entitiesRequiredToRespond?.length > 0
                 ? card.entitiesRequiredToRespond
