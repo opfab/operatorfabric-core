@@ -10,7 +10,7 @@
 import {AsyncPipe, NgFor, NgIf} from '@angular/common';
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
@@ -30,6 +30,8 @@ import {ReadAndAckEnum, TypeOfStateEnum} from '@ofServices/processes/model/Proce
 import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
 import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -47,7 +49,8 @@ import {AgGrid} from 'app/utils/AgGrid';
         ReactiveFormsModule,
         NgbPagination,
         CardComponent,
-        MultiSelectComponent
+        MultiSelectComponent,
+        NgbPopover
     ]
 })
 export class CustomCardListComponent implements OnInit, OnDestroy {
@@ -139,6 +142,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private readonly ngUnsubscribe$ = new Subject<void>();
 
+    loadingInProgress = false;
+
     constructor(private readonly modalService: NgbModal) {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
@@ -147,6 +152,12 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        OpfabEventStreamService.getLoadingInProgress()
+            .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(500))
+            .subscribe((loadingInProgress: boolean) => {
+                this.loadingInProgress = loadingInProgress;
+            });
+
         this.customCardListView = new CustomCardListView(this.customScreenId);
 
         const severityCellClassRules = {
