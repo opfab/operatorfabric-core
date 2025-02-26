@@ -130,15 +130,27 @@
             margin-right: 5%;
         ">
         <ag-grid-angular
+            *ngIf="(this.responseButtons?.length === 0) || loadingInProgress; else rowSelectionEnabled"
             id="opfab-custom-screen-table-grid"
             [rowData]="rowData$ | async"
             [gridOptions]="gridOptions"
             style="overflow-y: auto; max-height: calc(100vh - 350px)"
-            [rowSelection]="rowSelection"
             (gridReady)="onGridReady($event)"
             (cellClicked)="selectCard($event)"
             class="ag-theme-opfab">
         </ag-grid-angular>
+        <ng-template #rowSelectionEnabled>
+            <ag-grid-angular
+                id="opfab-custom-screen-table-grid"
+                [rowData]="rowData$ | async"
+                [gridOptions]="gridOptions"
+                style="overflow-y: auto; max-height: calc(100vh - 350px)"
+                [rowSelection]="rowSelection"
+                (gridReady)="onGridReady($event)"
+                (cellClicked)="selectCard($event)"
+                class="ag-theme-opfab">
+            </ag-grid-angular>
+        </ng-template>
 
         <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
             <div style="width: 200px; margin-top: 15px; flex-shrink: 0">
@@ -167,15 +179,17 @@
                     [rotate]="true">
                 </ngb-pagination>
             </div>
-            <div *ngFor="let responseButton of responseButtons" class="opfab-custom-screen-response-btn">
-                <button
-                    id="opfab-response-button-{{ responseButton.id }}"
-                    class="opfab-btn"
-                    style="width: max-content"
-                    (click)="clickOnResponseButton(responseButton.id)">
-                    {{ responseButton.label }}
-                </button>
-            </div>
+            <ng-container *ngIf="!loadingInProgress">
+                <div *ngFor="let responseButton of responseButtons" class="opfab-custom-screen-response-btn">
+                    <button
+                        id="opfab-response-button-{{ responseButton.id }}"
+                        class="opfab-btn"
+                        style="width: max-content"
+                        (click)="clickOnResponseButton(responseButton.id)">
+                        {{ responseButton.label }}
+                    </button>
+                </div>
+            </ng-container>
 
             <div class="opfab-custom-card-list-export-div">
                 <div
