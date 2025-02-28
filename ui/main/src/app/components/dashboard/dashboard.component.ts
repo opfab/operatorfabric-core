@@ -109,9 +109,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const redirect = this.processStateRedirects.filter(
             (redirect) => redirect.processId === processId && redirect.stateId === stateId
         );
-
         if (redirect?.length > 0) {
-            opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
+            if (redirect[0]?.screenId) {
+                NavigationService.navigateTo('customscreen/' + redirect[0].screenId);
+            } else if (redirect[0]?.menuId) {
+                opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
+            }
         } else if (!this.hideProcessFilter && !this.hideStateFilter) {
             NavigationService.navigateToFeedWithProcessStateFilter(processId, stateId);
         }
