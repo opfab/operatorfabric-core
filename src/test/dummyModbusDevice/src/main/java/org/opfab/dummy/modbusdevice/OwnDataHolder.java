@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,13 +12,13 @@ package org.opfab.dummy.modbusdevice;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 public class OwnDataHolder extends DataHolder {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OwnDataHolder.class);
 
     final List<ModbusEventListener> modbusEventListenerList = new ArrayList<>();
 
@@ -42,9 +42,9 @@ public class OwnDataHolder extends DataHolder {
         try {
             super.writeHoldingRegister(offset, value);
         } catch (IllegalDataAddressException e) {
-            log.error("Attempting write on register with illegal address {}",offset,e);
+            log.error("Attempting write on register with illegal address {}", offset, e);
         } catch (IllegalDataValueException e) {
-            log.error("Attempting write on register with illegal value {}",value,e);
+            log.error("Attempting write on register with illegal value {}", value, e);
         }
     }
 

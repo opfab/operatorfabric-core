@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,11 +29,11 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class RabbitEventBus implements EventBus {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RabbitEventBus.class);
 
     @Value("${spring.application.name}")
     private String appName;
@@ -120,7 +120,7 @@ public class RabbitEventBus implements EventBus {
             try {
                 channelPool.returnObject(channelFromPool);
             } catch (Exception exc) {
-                log.error("Impossible to return channel to channel pool",exc);
+                log.error("Impossible to return channel to channel pool", exc);
             }
 
     }

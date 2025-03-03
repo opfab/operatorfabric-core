@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,10 +21,10 @@ import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.I18nTranslation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class CardTranslationService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardTranslationService.class);
 
     private I18NRepository i18NRepository;
 
@@ -42,32 +42,30 @@ public class CardTranslationService {
     public void translate(Card card) throws ApiErrorException {
 
         try {
-            JsonNode i18n = i18NRepository.getI18n(card.getProcess(), card.getProcessVersion());
+            JsonNode i18n = i18NRepository.getI18n(card.process, card.processVersion);
             if (i18n == null) {
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message(String.format(NO_I18N_FILE, card.getProcess(), card.getProcessVersion(),
-                                card.getProcessInstanceId()))
-                        .build());
+                throw new ApiErrorException(
+                        new ApiError(HttpStatus.BAD_REQUEST, String.format(NO_I18N_FILE, card.process,
+                                card.processVersion, card.processInstanceId)));
             }
             I18nTranslation translation = new I18nTranslation(i18n);
 
             if (!authorizeToSendCardWithInvalidProcessState) {
-                checkI18nExists(translation, card.getTitle().key(), card.getProcess(), card.getProcessVersion(),
-                        card.getProcessInstanceId());
-                checkI18nExists(translation, card.getSummary().key(), card.getProcess(), card.getProcessVersion(),
-                        card.getProcessInstanceId());
+                checkI18nExists(translation, card.title.key(), card.process, card.processVersion,
+                        card.processInstanceId);
+                checkI18nExists(translation, card.summary.key(), card.process, card.processVersion,
+                        card.processInstanceId);
             }
 
-            card.setTitleTranslated(translation.translate(card.getTitle().key(), card.getTitle().parameters()));
-            card.setSummaryTranslated(translation.translate(card.getSummary().key(), card.getSummary().parameters()));
+            card.titleTranslated = translation.translate(card.title.key(), card.title.parameters());
+            card.summaryTranslated = translation.translate(card.summary.key(), card.summary.parameters());
         } catch (InterruptedException ex) {
             log.error("Error getting card translation (Interrupted Exception)", ex);
             Thread.currentThread().interrupt();
         } catch (IOException ex) {
             log.error("Error getting card translation", ex);
-            card.setTitleTranslated(card.getTitle().key());
-            card.setSummaryTranslated(card.getSummary().key());
+            card.titleTranslated = card.title.key();
+            card.summaryTranslated = card.summary.key();
         }
     }
 
@@ -75,11 +73,9 @@ public class CardTranslationService {
             String processInstanceId) throws ApiErrorException {
         JsonNode nodeFound = translation.findNode(key);
         if (nodeFound == null) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message(String.format(NO_I18N_FOR_KEY, key, process,
-                            processVersion, processInstanceId))
-                    .build());
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.BAD_REQUEST, String.format(NO_I18N_FOR_KEY, key, process,
+                            processVersion, processInstanceId)));
         }
     }
 

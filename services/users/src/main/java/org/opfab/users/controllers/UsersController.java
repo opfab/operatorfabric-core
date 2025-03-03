@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,7 +64,8 @@ public class UsersController implements UserExtractor {
     public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository,
             GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
             UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
-            GroupsProperties groupsProperties, @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
+            GroupsProperties groupsProperties,
+            @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
         this.jwtProperties = jwtProperties;
         this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
@@ -97,10 +98,7 @@ public class UsersController implements UserExtractor {
         if (operationResult.getErrorType().equals(OperationResult.ErrorType.BAD_REQUEST))
             status = HttpStatus.BAD_REQUEST;
         return new ApiErrorException(
-                ApiError.builder()
-                        .status(status)
-                        .message(operationResult.getErrorMessage())
-                        .build());
+                new ApiError(status, operationResult.getErrorMessage()));
     }
 
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
@@ -209,10 +207,7 @@ public class UsersController implements UserExtractor {
 
     private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
         return new ApiErrorException(
-                ApiError.builder()
-                        .status(httpStatus)
-                        .message(errorMessage)
-                        .build());
+                new ApiError(httpStatus, errorMessage));
     }
 
 }

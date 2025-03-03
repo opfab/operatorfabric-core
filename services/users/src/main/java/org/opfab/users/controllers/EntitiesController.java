@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,10 +71,7 @@ public class EntitiesController {
         if (operationResult.getErrorType().equals(OperationResult.ErrorType.BAD_REQUEST))
             status = HttpStatus.BAD_REQUEST;
         return new ApiErrorException(
-                ApiError.builder()
-                        .status(status)
-                        .message(operationResult.getErrorMessage())
-                        .build());
+                new ApiError(status, operationResult.getErrorMessage()));
     }
 
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
@@ -94,7 +91,6 @@ public class EntitiesController {
             throw createExceptionFromOperationResult(result);
     }
 
-
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PutMapping(value = "/{id}", produces = { "application/json" }, consumes = {
             "application/json" })
@@ -104,10 +100,7 @@ public class EntitiesController {
         // id from entity body parameter should match id path parameter
         if (!entity.getId().equals(id)) {
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_ENTITY_ID_MSG)
-                            .build());
+                    new ApiError(HttpStatus.BAD_REQUEST, NO_MATCHING_ENTITY_ID_MSG));
         } else {
             return createEntity(request, response, entity);
         }

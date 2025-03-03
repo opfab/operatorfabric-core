@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 package org.opfab.cards.publication.services;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
@@ -34,8 +32,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
-@Slf4j
 public class ExternalAppService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExternalAppService.class);
 
     public static final String REMOTE_404_MESSAGE = "External application endpoint not found (HTTP 404)";
     public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behavior of external application endpoint";
@@ -59,7 +58,7 @@ public class ExternalAppService {
 
     public void sendCardToExternalApplication(Card card, Optional<Jwt> jwt) {
 
-        Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
+        Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.externalRecipients);
         if (externalRecipientsFromCard.isPresent() && !externalRecipientsFromCard.get().isEmpty()) {
 
             externalRecipientsFromCard.get().stream()
@@ -67,20 +66,20 @@ public class ExternalAppService {
                         Optional<ExternalRecipients.ExternalRecipient> externalRecipient = getExternalRecipient(item);
                         if (externalRecipient.isPresent()) {
                             ExternalRecipients.ExternalRecipient recipient = externalRecipient.get();
-                            callExternalApplication(card, recipient.getUrl(),
-                                    recipient.isPropagateUserToken() ? jwt : Optional.empty());
+                            callExternalApplication(card, recipient.url(),
+                                    recipient.propagateUserToken() ? jwt : Optional.empty());
                         } else
                             throw createApiError(HttpStatus.BAD_REQUEST, INVALID_URL_MESSAGE);
 
                     });
         } else {
-            log.debug(NO_EXTERNALRECIPIENTS_MESSAGE + " {} from {}", card.getId(), card.getPublisher());
+            log.debug(NO_EXTERNALRECIPIENTS_MESSAGE + " {} from {}", card.id, card.publisher);
         }
     }
 
     public void notifyExternalApplicationThatCardIsDeleted(Card card, Optional<Jwt> jwt) {
 
-        Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
+        Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.externalRecipients);
         if (externalRecipientsFromCard.isPresent() && !externalRecipientsFromCard.get().isEmpty()) {
 
             externalRecipientsFromCard.get().stream()
@@ -89,22 +88,21 @@ public class ExternalAppService {
                         Optional<ExternalRecipients.ExternalRecipient> externalRecipient = getExternalRecipient(item);
                         if (externalRecipient.isPresent()) {
                             ExternalRecipients.ExternalRecipient recipient = externalRecipient.get();
-                            notifyExternalApplication(card, recipient.getUrl(),
-                                    recipient.isPropagateUserToken() ? jwt : Optional.empty());
+                            notifyExternalApplication(card, recipient.url(),
+                                    recipient.propagateUserToken() ? jwt : Optional.empty());
                         } else {
                             log.debug("ExternalRecipient extracted from {} is empty", item);
                         }
                     });
         } else {
-            log.debug(NO_EXTERNALRECIPIENTS_MESSAGE + " {} from {}", card.getId(), card.getPublisher());
+            log.debug(NO_EXTERNALRECIPIENTS_MESSAGE + " {} from {}", card.id, card.publisher);
         }
     }
 
     private Optional<ExternalRecipients.ExternalRecipient> getExternalRecipient(String item) {
-        return externalRecipients
-                .getRecipients()
+        return externalRecipients.getRecipients()
                 .stream()
-                .filter(x -> x.getId().equals(item))
+                .filter(x -> x.id().equals(item))
                 .findFirst();
     }
 
@@ -134,7 +132,7 @@ public class ExternalAppService {
 
     private void callExternalHttpApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         try {
-            log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
+            log.debug("Start to Send card {} To {} ", card.id, card.publisher);
             HttpHeaders headers = createRequestHeader(jwt);
             String cardJson = mapper.writeValueAsString(card);
             HttpEntity<String> requestBody = new HttpEntity<>(cardJson, headers);
@@ -155,7 +153,7 @@ public class ExternalAppService {
         try {
             HttpHeaders headers = createRequestHeader(jwt);
             HttpEntity<String> requestBody = new HttpEntity<>("", headers);
-            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody,
+            restTemplate.exchange(externalRecipientUrl + "/" + card.id, HttpMethod.DELETE, requestBody,
                     Void.class);
 
         } catch (Exception ex) {
@@ -180,10 +178,8 @@ public class ExternalAppService {
     }
 
     private ApiErrorException createApiError(HttpStatusCode httpStatus, String errorMessage) {
-        return new ApiErrorException(ApiError.builder()
-                .status(httpStatus)
-                .message(errorMessage)
-                .build());
+        return new ApiErrorException(
+                new ApiError(httpStatus, errorMessage));
     }
 
     private HttpHeaders createRequestHeader(Optional<Jwt> jwt) {

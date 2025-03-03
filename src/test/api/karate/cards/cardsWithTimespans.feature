@@ -207,7 +207,7 @@ Feature: Cards with timespans
     Then status 400
     And match response.status == "BAD_REQUEST"
     And match response.message contains "Constraint violation in the request"
-    And match response.errors[0] contains  <expectedMessage>
+    And match response.error contains  <expectedMessage>
 
     Examples:
       | cardToTestBadRequest  | expectedMessage                                                                                 |

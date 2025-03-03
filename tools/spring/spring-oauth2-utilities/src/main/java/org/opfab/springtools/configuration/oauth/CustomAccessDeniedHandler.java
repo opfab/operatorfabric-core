@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,18 +21,21 @@ import org.springframework.web.server.ServerWebExchange;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-@Slf4j
-public class CustomAccessDeniedHandler  implements AccessDeniedHandler, ServerAccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler, ServerAccessDeniedHandler {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
     private static final String ACCESS_DENIED_WARNING = "SECURITY : user {} try to access resource {} without the required authorization";
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exc) throws IOException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exc)
+            throws IOException {
 
-        log.warn(ACCESS_DENIED_WARNING, request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "unknown" , request.getRequestURI());
+        log.warn(ACCESS_DENIED_WARNING,
+                request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "unknown",
+                request.getRequestURI());
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
     }
 

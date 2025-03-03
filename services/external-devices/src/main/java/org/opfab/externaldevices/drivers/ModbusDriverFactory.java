@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,17 +13,15 @@ import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-
-
 @Component
-@Slf4j
 public class ModbusDriverFactory implements ExternalDeviceDriverFactory {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModbusDriverFactory.class);
 
     static final int RESPONSE_TIMEOUT = 10000;
 
@@ -33,22 +31,24 @@ public class ModbusDriverFactory implements ExternalDeviceDriverFactory {
         try {
             InetAddress resolvedHost = InetAddress.getByName(host);
 
-            // The ModbusMaster creation is handled here rather than in the ModbusDriver constructor so it can be mocked
+            // The ModbusMaster creation is handled here rather than in the ModbusDriver
+            // constructor so it can be mocked
             // in the tests.
             TcpParameters tcpParameters = new TcpParameters();
             tcpParameters.setHost(resolvedHost);
             tcpParameters.setPort(port);
             tcpParameters.setKeepAlive(true);
-            log.debug("Creating ModbusMaster with host {} and port {}",tcpParameters.getHost(),tcpParameters.getPort());
+            log.debug("Creating ModbusMaster with host {} and port {}", tcpParameters.getHost(),
+                    tcpParameters.getPort());
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             Modbus.setAutoIncrementTransactionId(true);
             ModbusMaster modbusMaster = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
             modbusMaster.setResponseTimeout(RESPONSE_TIMEOUT);
 
-            return new ModbusDriver(resolvedHost,port,modbusMaster);
+            return new ModbusDriver(resolvedHost, port, modbusMaster);
 
         } catch (UnknownHostException e) {
-            throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host "+ host, e);
+            throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host " + host, e);
         }
     }
 }

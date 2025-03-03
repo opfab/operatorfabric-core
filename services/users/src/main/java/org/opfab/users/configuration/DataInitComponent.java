@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,9 @@
 
 package org.opfab.users.configuration;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.opfab.users.configuration.users.UsersProperties;
 import org.opfab.users.model.*;
 import org.opfab.users.mongo.repositories.MongoEntityRepository;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
 import java.util.List;
+
 /**
  * This component solely serves as data initializer for users, groups and
  * entities, it loads users, groups and entities from properties
@@ -32,9 +35,9 @@ import java.util.List;
  *
  */
 @Component
-@Slf4j
 public class DataInitComponent {
 
+    private static final Logger log = LoggerFactory.getLogger(DataInitComponent.class);
     private static final String FAILED_INIT_MSG = "Unable to init ";
     private final UsersProperties usersProperties;
     private final MongoUserRepository userRepository;

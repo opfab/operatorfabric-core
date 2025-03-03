@@ -11,11 +11,9 @@ subprojects {
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-generator')
         swaggerUI generator.swaggerUI
-        annotationProcessor misc.lombok
-        implementation misc.lombok
         testRuntimeOnly testing_deps.junit5Engine
         testImplementation testing_deps.junit5Api
-        testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok
+        testImplementation boot.starterTest, testing_deps.assertJ
         implementation misc.jacksonAnnotations
     }
 

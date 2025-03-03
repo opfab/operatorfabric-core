@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,6 @@
 
 package org.opfab.cards.publication.kafka.command;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.Instant;
 
 import org.opfab.avro.Card;
@@ -21,12 +18,16 @@ import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 public class DeleteCardCommandHandler extends BaseCommandHandler implements CommandHandler {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DeleteCardCommandHandler.class);
+
     private final Services services;
+
+    public DeleteCardCommandHandler(Services services) {
+        this.services = services;
+    }
 
     @Override
     public CommandType getCommandType() {
@@ -41,10 +42,10 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
 
         org.opfab.cards.publication.model.Card card = buildCardPublicationData(cardCommand);
         if (card != null) {
-            if (card.getId() == null || card.getId().isEmpty()) {
-                card.prepare(card.getPublishDate());
+            if (card.id == null || card.id.isEmpty()) {
+                card.prepare(card.publishDate);
             }
-            services.getCardDeletionService().deleteCardById(card.getId(), Instant.now(), null);
+            services.getCardDeletionService().deleteCardById(card.id, Instant.now(), null);
         }
     }
 }

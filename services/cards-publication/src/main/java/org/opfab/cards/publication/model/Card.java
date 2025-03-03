@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Min;
-import lombok.*;
 import org.opfab.utilities.ObjectUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -25,136 +24,119 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Instant;
 import java.util.*;
 
-
-@Data
 @Document(collection = "cards")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Validated
-public class Card  {
+@SuppressWarnings("java:S1104") // it is just a data object , we choose to have all fields public for simplicity
+public class Card {
 
-    @Builder.Default
-    private String uid = UUID.randomUUID().toString();
+    public String uid = UUID.randomUUID().toString();
     @Id
-    private String id;
+    public String id;
 
     @Indexed
-    private String parentCardId;
+    public String parentCardId;
 
-    private String initialParentCardUid;
+    public String initialParentCardUid;
 
-    private String publisher;
-    
-    private String processVersion;
-    
-    private String process;
-    
-    private String processInstanceId;
-    
-    private String state;
-    
-    private I18n title;
-    
-    private I18n summary;
+    public String publisher;
 
-    private String titleTranslated;
+    public String processVersion;
 
-    private String summaryTranslated;
+    public String process;
+
+    public String processInstanceId;
+
+    public String state;
+
+    public I18n title;
+
+    public I18n summary;
+
+    public String titleTranslated;
+
+    public String summaryTranslated;
 
     @CreatedDate
     @Indexed
-    private Instant publishDate;
+    public Instant publishDate;
 
     @CreatedDate
     @Indexed
-    private Instant lastUpdate;
+    public Instant lastUpdate;
 
-    private Instant lttd;
-    
-    @Indexed
-    private Instant startDate;
+    public Instant lttd;
 
     @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant endDate;
+    public Instant startDate;
 
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant expirationDate;
-    
-    private SeverityEnum severity;
+    public Instant endDate;
 
-    @Singular
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> tags;
+    @Indexed
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Instant expirationDate;
 
-    @Singular
+    public SeverityEnum severity;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<TimeSpan> timeSpans;
+    public List<String> tags;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public List<TimeSpan> timeSpans;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Object data;
+    public Object data;
 
-    @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
-    private List<String> userRecipients;
+    public List<String> userRecipients;
 
-    @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
-    private List<String> groupRecipients;
+    public List<String> groupRecipients;
 
-    @Singular("entityAllowedToRespond")
-    private List<String> entitiesAllowedToRespond;
+    public List<String> entitiesAllowedToRespond;
 
-    @Singular("entityRequiredToRespond")
-    private List<String> entitiesRequiredToRespond;
+    public List<String> entitiesRequiredToRespond;
 
-    @Singular("entityAllowedToEdit")
-    private List<String> entitiesAllowedToEdit;
-
-    @Singular
-    @Indexed
-    private List<String> entityRecipients;
-
-    @Singular("entityRecipientForInformation")
-    @Indexed
-    private List<String> entityRecipientsForInformation;
-
-    @Singular
-    private List<String> externalRecipients;
-
-    @JsonIgnore
-    private List<String> usersAcks;
-
-    @JsonIgnore
-    private List<String> entitiesAcks;
-
-    @JsonIgnore
-    private List<String> usersReads;
+    public List<String> entitiesAllowedToEdit;
 
     @Indexed
-    private String processStateKey;
+    public List<String> entityRecipients;
 
-    @Builder.Default
-    private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
+    public List<String> entityRecipientsForInformation;
 
-    private String  representative;
-    private PublisherTypeEnum representativeType;
+    public List<String> externalRecipients;
 
-    private String wktGeometry;
-    private String wktProjection;
+    @JsonIgnore
+    public List<String> usersAcks;
+
+    @JsonIgnore
+    public List<String> entitiesAcks;
+
+    @JsonIgnore
+    public List<String> usersReads;
+
+    @Indexed
+    public String processStateKey;
+
+    public PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
+
+    public String representative;
+    public PublisherTypeEnum representativeType;
+
+    public String wktGeometry;
+    public String wktProjection;
 
     @Min(0)
-    private Integer  secondsBeforeTimeSpanForReminder;
+    public Integer secondsBeforeTimeSpanForReminder;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @JsonProperty("rRule")  
-    private RRule rRule;
+    @JsonProperty("rRule")
+    public RRule rRule;
 
-    private List<CardActionEnum> actions;
+    public List<CardActionEnum> actions;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
@@ -172,88 +154,85 @@ public class Card  {
         result.parentCardId = this.parentCardId;
         result.initialParentCardUid = this.initialParentCardUid;
 
-        result.publisher = ObjectUtils.getNotNullOrDefault(other.getPublisher(), this.getPublisher());
+        result.publisher = ObjectUtils.getNotNullOrDefault(other.publisher, this.publisher);
 
-        result.processVersion = ObjectUtils.getNotNullOrDefault(other.getProcessVersion(),
-                this.getProcessVersion());
+        result.processVersion = ObjectUtils.getNotNullOrDefault(other.processVersion,
+                this.processVersion);
 
         result.process = this.process;
         result.processInstanceId = this.processInstanceId;
 
-        result.state = ObjectUtils.getNotNullOrDefault(other.getState(),
-                this.getState());
-        result.title = ObjectUtils.getNotNullOrDefault(other.getTitle(),
-                this.getTitle());
-        result.summary = ObjectUtils.getNotNullOrDefault(other.getSummary(),
-                this.getSummary());
+        result.state = ObjectUtils.getNotNullOrDefault(other.state,
+                this.state);
+        result.title = ObjectUtils.getNotNullOrDefault(other.title,
+                this.title);
+        result.summary = ObjectUtils.getNotNullOrDefault(other.summary,
+                this.summary);
 
-        result.titleTranslated = ObjectUtils.getNotNullOrDefault(other.getTitleTranslated(),
-                this.getTitleTranslated());
-        result.summaryTranslated = ObjectUtils.getNotNullOrDefault(other.getSummaryTranslated(),
-                this.getSummaryTranslated());
-        result.publishDate = this.getPublishDate();
-        result.lastUpdate = this.getLastUpdate();
+        result.titleTranslated = ObjectUtils.getNotNullOrDefault(other.titleTranslated,
+                this.titleTranslated);
+        result.summaryTranslated = ObjectUtils.getNotNullOrDefault(other.summaryTranslated,
+                this.summaryTranslated);
+        result.publishDate = this.publishDate;
+        result.lastUpdate = this.lastUpdate;
 
-        result.lttd = ObjectUtils.getNotNullOrDefault(other.getLttd(),
-                this.getLttd());
-        result.startDate = ObjectUtils.getNotNullOrDefault(other.getStartDate(), this.getStartDate());
+        result.lttd = ObjectUtils.getNotNullOrDefault(other.lttd,
+                this.lttd);
+        result.startDate = ObjectUtils.getNotNullOrDefault(other.startDate, this.startDate);
 
-        result.endDate = ObjectUtils.getNotNullOrDefault(other.getEndDate(), this.getEndDate());
-        result.expirationDate = ObjectUtils.getNotNullOrDefault(other.getExpirationDate(),
-                this.getExpirationDate());
-        result.severity = ObjectUtils.getNotNullOrDefault(other.getSeverity(), this.getSeverity());
-        result.tags = ObjectUtils.getNotNullOrDefault(other.getTags(),
-                this.getTags(), ArrayList::new);
-        result.timeSpans = ObjectUtils.getNotNullOrDefault(other.getTimeSpans(),
-                this.getTimeSpans(), ArrayList::new);
+        result.endDate = ObjectUtils.getNotNullOrDefault(other.endDate, this.endDate);
+        result.expirationDate = ObjectUtils.getNotNullOrDefault(other.expirationDate,
+                this.expirationDate);
+        result.severity = ObjectUtils.getNotNullOrDefault(other.severity, this.severity);
+        result.tags = ObjectUtils.getNotNullOrDefault(other.tags,
+                this.tags, ArrayList::new);
+        result.timeSpans = ObjectUtils.getNotNullOrDefault(other.timeSpans,
+                this.timeSpans, ArrayList::new);
 
-        result.data = ObjectUtils.getNotNullOrDefault(other.getData(), this.getData());
+        result.data = ObjectUtils.getNotNullOrDefault(other.data, this.data);
 
-        result.userRecipients = ObjectUtils.getNotNullOrDefault(other.getUserRecipients(),
-                this.getUserRecipients(), ArrayList::new);
+        result.userRecipients = ObjectUtils.getNotNullOrDefault(other.userRecipients,
+                this.userRecipients, ArrayList::new);
 
-        result.groupRecipients = ObjectUtils.getNotNullOrDefault(other.getGroupRecipients(),
-                this.getGroupRecipients(), ArrayList::new);
+        result.groupRecipients = ObjectUtils.getNotNullOrDefault(other.groupRecipients,
+                this.groupRecipients, ArrayList::new);
 
-        result.entitiesAllowedToRespond = ObjectUtils.getNotNullOrDefault(other.getEntitiesAllowedToRespond(),
-                this.getEntitiesAllowedToRespond(), ArrayList::new);
+        result.entitiesAllowedToRespond = ObjectUtils.getNotNullOrDefault(other.entitiesAllowedToRespond,
+                this.entitiesAllowedToRespond, ArrayList::new);
 
-        result.entitiesRequiredToRespond = ObjectUtils.getNotNullOrDefault(other.getEntitiesRequiredToRespond(),
-                this.getEntitiesRequiredToRespond(), ArrayList::new);
+        result.entitiesRequiredToRespond = ObjectUtils.getNotNullOrDefault(other.entitiesRequiredToRespond,
+                this.entitiesRequiredToRespond, ArrayList::new);
 
-        result.entitiesAllowedToEdit = ObjectUtils.getNotNullOrDefault(other.getEntitiesAllowedToEdit(),
-                this.getEntitiesAllowedToEdit(), ArrayList::new);
+        result.entitiesAllowedToEdit = ObjectUtils.getNotNullOrDefault(other.entitiesAllowedToEdit,
+                this.entitiesAllowedToEdit, ArrayList::new);
 
-        result.entityRecipients = ObjectUtils.getNotNullOrDefault(other.getEntityRecipients(),
-                this.getEntityRecipients(), ArrayList::new);
+        result.entityRecipients = ObjectUtils.getNotNullOrDefault(other.entityRecipients,
+                this.entityRecipients, ArrayList::new);
 
-        result.entityRecipientsForInformation = ObjectUtils.getNotNullOrDefault(other.getEntityRecipientsForInformation(),
-                this.getEntityRecipientsForInformation(), ArrayList::new);
+        result.entityRecipientsForInformation = ObjectUtils.getNotNullOrDefault(other.entityRecipientsForInformation,
+                this.entityRecipientsForInformation, ArrayList::new);
 
-        result.externalRecipients = ObjectUtils.getNotNullOrDefault(other.getExternalRecipients(),
-                this.getExternalRecipients(), ArrayList::new);
+        result.externalRecipients = ObjectUtils.getNotNullOrDefault(other.externalRecipients,
+                this.externalRecipients, ArrayList::new);
 
-        result.usersAcks = this.getUsersAcks();
-        result.entitiesAcks = this.getEntitiesAcks();
-        result.usersReads = this.getUsersReads();
+        result.usersAcks = this.usersAcks;
+        result.entitiesAcks = this.entitiesAcks;
+        result.usersReads = this.usersReads;
         result.processStateKey = result.process + "." + result.state;
 
-        result.publisherType = ObjectUtils.getNotNullOrDefault(other.getPublisherType(), this.getPublisherType());
-        result.representative = ObjectUtils.getNotNullOrDefault(other.getRepresentative(), this.getRepresentative());
-        result.representativeType = ObjectUtils.getNotNullOrDefault(other.getRepresentativeType(),
-                this.getRepresentativeType());
-        result.wktGeometry = ObjectUtils.getNotNullOrDefault(other.getWktGeometry(), this.getWktGeometry());
-        result.wktProjection = ObjectUtils.getNotNullOrDefault(other.getWktProjection(), this.getWktProjection());
-        result.secondsBeforeTimeSpanForReminder =
-                ObjectUtils.getNotNullOrDefault(other.getSecondsBeforeTimeSpanForReminder(),
-                        this.getSecondsBeforeTimeSpanForReminder());
-        result.rRule = ObjectUtils.getNotNullOrDefault(other.getRRule(), this.getRRule());
-        result.actions = ObjectUtils.getNotNullOrDefault(other.getActions(), this.getActions());
+        result.publisherType = ObjectUtils.getNotNullOrDefault(other.publisherType, this.publisherType);
+        result.representative = ObjectUtils.getNotNullOrDefault(other.representative, this.representative);
+        result.representativeType = ObjectUtils.getNotNullOrDefault(other.representativeType,
+                this.representativeType);
+        result.wktGeometry = ObjectUtils.getNotNullOrDefault(other.wktGeometry, this.wktGeometry);
+        result.wktProjection = ObjectUtils.getNotNullOrDefault(other.wktProjection, this.wktProjection);
+        result.secondsBeforeTimeSpanForReminder = ObjectUtils.getNotNullOrDefault(
+                other.secondsBeforeTimeSpanForReminder,
+                this.secondsBeforeTimeSpanForReminder);
+        result.rRule = ObjectUtils.getNotNullOrDefault(other.rRule, this.rRule);
+        result.actions = ObjectUtils.getNotNullOrDefault(other.actions, this.actions);
 
         return result;
     }
 
-    public void setLastUpdate(Instant lastUpdate){
-        this.lastUpdate = lastUpdate;
-    }
 }

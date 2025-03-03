@@ -7,14 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.consultation.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
@@ -32,11 +29,15 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 
 /**
- * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
+ * <p>
+ * Handles cards access at the rest level. Depends on
+ * {@link CardSubscriptionService} for business logic
+ * </p>
  */
 @Component
-@Slf4j
 public class CardOperationsController {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardOperationsController.class);
 
     private final CustomScreenDataFields customScreenDataFields;
 
@@ -48,9 +49,8 @@ public class CardOperationsController {
 
     private final String version = getClass().getPackage().getImplementationVersion();
 
-    
     public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper,
-                                    CardRepository cardRepository, CustomScreenDataFields customScreenDataFields) {
+            CardRepository cardRepository, CustomScreenDataFields customScreenDataFields) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -58,37 +58,36 @@ public class CardOperationsController {
         this.customScreenDataFields = customScreenDataFields;
     }
 
-
     /**
-     * Registers to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
-     * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
+     * Registers to {@link CardSubscriptionService} to get access to a {@link Flux}
+     * of String. Those strings are Json
+     * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation}
+     * representation
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
                 .flatMapMany(t -> {
 
-                    if (t.getClientId() != null) {
-                        log.debug("Check UI version {} match current version: {}", t.getUiVersion(), version);
+                    if (t.clientId != null) {
+                        log.debug("Check UI version {} match current version: {}", t.uiVersion, version);
 
                         CardSubscription subscription = null;
-                        if (t.isNotification()) {
+                        if (t.notification) {
                             boolean wrongUiVersion = false;
-                            if (version != null && (t.getUiVersion() == null || !t.getUiVersion().equals(version))) {
-                                log.warn("Wrong UI version : {}", t.getUiVersion());
+                            if (version != null && (t.uiVersion == null || !t.uiVersion.equals(version))) {
+                                log.warn("Wrong UI version : {}", t.uiVersion);
                                 wrongUiVersion = true;
                             }
-                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), t.getUiVersion(), wrongUiVersion);
+                            subscription = cardSubscriptionService.subscribe(t.currentUserWithPerimeters,
+                                    t.clientId, t.uiVersion, wrongUiVersion);
                             return subscription.getPublisher();
                         } else {
                             return fetchOldCards(t, customScreenDataFields);
                         }
                     } else {
                         log.warn("\"clientId\" is a mandatory request parameter");
-                        ApiErrorException e = new ApiErrorException(ApiError.builder()
-                                .status(HttpStatus.BAD_REQUEST)
-                                .message("\"clientId\" is a mandatory request parameter")
-                                .build()
-                        );
+                        ApiErrorException e = new ApiErrorException(
+                                new ApiError(HttpStatus.BAD_REQUEST, "\"clientId\" is a mandatory request parameter"));
                         log.debug("4xx error underlying exception", e);
                         return Mono.just(objectToJsonString(e.getError()));
                     }
@@ -99,19 +98,20 @@ public class CardOperationsController {
         return parameters.map(p -> {
             try {
                 CardSubscription oldSubscription = cardSubscriptionService
-                        .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
+                        .findSubscription(p.currentUserWithPerimeters, p.clientId);
                 if (oldSubscription != null) {
                     log.debug("Found subscription: {}", oldSubscription.getId());
-                    oldSubscription.publishOldCardsIntoSubscription(fetchOldCards(oldSubscription, p.getUpdatedFrom(),
-                            p.getRangeStart(), p.getRangeEnd(), customScreenDataFields));
+                    oldSubscription.publishOldCardsIntoSubscription(fetchOldCards(oldSubscription, p.updatedFrom,
+                            p.rangeStart, p.rangeEnd, customScreenDataFields));
                 } else {
-                    log.debug("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+                    log.debug("No subscription found for {}#{}",
+                            p.currentUserWithPerimeters.getUserData().getLogin(), p.clientId);
                 }
-                return new CardSubscriptionDto(p.getRangeStart(),p.getRangeEnd(),p.getUpdatedFrom());
+                return new CardSubscriptionDto(p.rangeStart, p.rangeEnd, p.updatedFrom);
             } catch (IllegalArgumentException e) {
                 log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(
-                        ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
+                        new ApiError(HttpStatus.BAD_REQUEST, e.getMessage()));
             }
         });
 
@@ -124,25 +124,25 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription, Instant updatedFrom, Instant start, Instant end,
-                                       CustomScreenDataFields customScreenDataFields)  {
-        
+            CustomScreenDataFields customScreenDataFields) {
+
         return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters(),
                 customScreenDataFields);
     }
 
-    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters, CustomScreenDataFields customScreenDataFields) {
-        Instant start = parameters.getRangeStart();
-        Instant end = parameters.getRangeEnd();
-        Instant updatedFrom = parameters.getUpdatedFrom();
-        return fetchOldCards0(updatedFrom, start, end, parameters.getCurrentUserWithPerimeters(), customScreenDataFields);
+    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters,
+            CustomScreenDataFields customScreenDataFields) {
+        return fetchOldCards0(parameters.updatedFrom, parameters.rangeStart, parameters.rangeEnd,
+                parameters.currentUserWithPerimeters,
+                customScreenDataFields);
     }
 
     private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end,
-                                        CurrentUserWithPerimeters currentUserWithPerimeters,
-                                        CustomScreenDataFields customScreenDataFields) {
+            CurrentUserWithPerimeters currentUserWithPerimeters,
+            CustomScreenDataFields customScreenDataFields) {
         Flux<CardOperation> oldCards;
 
-        log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}",start,end,updatedFrom);
+        log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}", start, end, updatedFrom);
         if ((end != null && start != null) || (updatedFrom != null)) {
             oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters,
                     customScreenDataFields);
@@ -155,7 +155,8 @@ public class CardOperationsController {
 
     public Mono<String> deleteSubscription(Mono<CardOperationsGetParameters> parameters) {
         return parameters.map(p -> {
-            cardSubscriptionService.deleteSubscription(p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+            cardSubscriptionService.deleteSubscription(p.currentUserWithPerimeters.getUserData().getLogin(),
+                    p.clientId);
             return "";
         });
     }
@@ -171,14 +172,14 @@ public class CardOperationsController {
         try {
             return mapper.writeValueAsString(cardOperation);
         } catch (JsonProcessingException e) {
-            log.error(String.format("Unable to linearize %s to Json",cardOperation.getClass().getSimpleName()),e);
+            log.error(String.format("Unable to linearize %s to Json", cardOperation.getClass().getSimpleName()), e);
             return null;
         }
     }
 
-
     /**
-     * Converts an object to a JSON string. If conversion problems arise, logs and returns "null" string
+     * Converts an object to a JSON string. If conversion problems arise, logs and
+     * returns "null" string
      *
      * @param o an object
      * @return Json object string representation or "null" if error.

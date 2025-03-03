@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externalapp.common;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -17,15 +16,15 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 
-@Slf4j
 public class HttpClientInterceptor
-  implements ClientHttpRequestInterceptor {
+        implements ClientHttpRequestInterceptor {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(HttpClientInterceptor.class);
 
-	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-			throws IOException {
+    @Override
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+            throws IOException {
         log.info("Request body: " + new String(body));
         return execution.execute(request, body);
-	}
+    }
 }

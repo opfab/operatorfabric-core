@@ -1,7 +1,5 @@
 subprojects {
     dependencies {
-        testAnnotationProcessor misc.lombok
-        testCompileOnly misc.lombok
         testRuntimeOnly testing_deps.junit5Engine
         testImplementation testing_deps.junit5Api
         testImplementation testing_deps.assertJ

@@ -7,14 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.consultation.services;
-
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 
@@ -23,16 +16,13 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
-
-@Slf4j
-@EqualsAndHashCode
 public class CardSubscription {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardSubscription.class);
 
     private Instant lastHearbeatReceptionDate;
     private CurrentUserWithPerimeters currentUserWithPerimeters;
-    @Getter
     private String id;
-    @Getter
     private Flux<String> publisher;
     private FluxSink<String> messageSink;
 
@@ -40,13 +30,11 @@ public class CardSubscription {
 
     private UserServiceCache userServiceCache;
 
-
     /**
      * Constructs a card subscription and init access to AMQP exchanges
      */
-    @Builder
     public CardSubscription(UserServiceCache userServiceCache, CurrentUserWithPerimeters currentUserWithPerimeters,
-                            String clientId) {
+            String clientId) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
@@ -55,11 +43,18 @@ public class CardSubscription {
 
     }
 
-    public String getUserLogin()
-    {
+    public String getId() {
+        return id;
+    }
+
+    public Flux<String> getPublisher() {
+        return publisher;
+    }
+
+    public String getUserLogin() {
         return userLogin;
     }
-    
+
     public CurrentUserWithPerimeters getCurrentUserWithPerimeters() {
         if (userServiceCache != null) {
             try {
@@ -67,26 +62,27 @@ public class CardSubscription {
             } catch (InterruptedException exc) {
                 log.info("Interrupted exception if fetch fetchCurrentUserWithPerimetersFromCacheOrProxy {}", userLogin);
                 Thread.currentThread().interrupt();
-               
+
             } catch (Exception exc) {
-                // This situation arises when the user cache has been cleared and the token is expired
+                // This situation arises when the user cache has been cleared and the token is
+                // expired
                 // in this case, the service cannot retrieve the user information
                 // it arises only in implicit mode as the user is not disconnected
                 // if the token expired due to the silent refresh mechanism
                 //
                 // When the user will make another request (for example: click on a card feed)
-                // the new token will be set and it will then retrieve user information on the next call
+                // the new token will be set and it will then retrieve user information on the
+                // next call
                 //
                 log.info("Cannot get new perimeter for user {}, use old one", userLogin);
             }
         }
         return currentUserWithPerimeters;
     }
- 
+
     public static String computeSubscriptionId(String prefix, String clientId) {
         return prefix + "#" + clientId;
     }
-
 
     public void initSubscription(boolean sendReload, Runnable doOnCancel) {
         this.publisher = Flux.create(emitter -> {
@@ -104,21 +100,21 @@ public class CardSubscription {
 
     }
 
-    
-    public void publishDataIntoSubscription(String message)
-    {
-        if (this.messageSink != null) this.messageSink.next(message);
+    public void publishDataIntoSubscription(String message) {
+        if (this.messageSink != null)
+            this.messageSink.next(message);
     }
 
     public void publishOldCardsIntoSubscription(Flux<String> messageFlux) {
         messageFlux.doOnComplete(() -> this.messageSink.next("OLD_CARDS_LOADING_END"))
-            .subscribe(next -> this.messageSink.next(next));
+                .subscribe(next -> this.messageSink.next(next));
     }
-    public void setHeartbeatReceptionDate(Instant date){
+
+    public void setHeartbeatReceptionDate(Instant date) {
         this.lastHearbeatReceptionDate = date;
     }
 
-    public Instant getHeartbeatReceptionDate(){
+    public Instant getHeartbeatReceptionDate() {
         return this.lastHearbeatReceptionDate;
     }
 

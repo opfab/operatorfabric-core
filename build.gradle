@@ -60,7 +60,6 @@ ext {
 
     misc = [
             slf4j          : "org.slf4j:slf4j-api:$slf4j",
-            lombok         : "org.projectlombok:lombok:$lombok",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
             guava          : "com.google.guava:guava:33.4.0-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",

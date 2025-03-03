@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,6 @@ import org.opfab.avro.CommandType;
 import org.opfab.avro.I18n;
 import org.opfab.avro.SeverityType;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.opfab.avro.Card;
 
 import java.time.Instant;
@@ -26,8 +24,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-@Slf4j
 public class OpfabKafkaProducer {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpfabKafkaProducer.class);
 
     private KafkaProducer<Object, Object> kafka;
 
@@ -35,7 +34,8 @@ public class OpfabKafkaProducer {
         Properties pp = new Properties();
         pp.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
 
-        pp.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class.getName());
+        pp.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                org.apache.kafka.common.serialization.StringSerializer.class.getName());
         pp.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 KafkaAvroWithoutRegistrySerializer.class.getName());
 
@@ -81,10 +81,10 @@ public class OpfabKafkaProducer {
                 .setCommand(CommandType.DELETE_CARD)
                 .setCard(Card.newBuilder()
                         .setProcessInstanceId((String) cardMap.get("processInstanceId"))
-                        .setProcess((String)cardMap.get("process"))
-                        .setState((String)cardMap.get("state"))
-                        .setPublisher((String)cardMap.get("publisher"))
-                        .setProcessVersion((String)cardMap.get("processVersion"))
+                        .setProcess((String) cardMap.get("process"))
+                        .setState((String) cardMap.get("state"))
+                        .setPublisher((String) cardMap.get("publisher"))
+                        .setProcessVersion((String) cardMap.get("processVersion"))
                         .setStartDate(Instant.ofEpochMilli((Long) cardMap.get("startDate")))
                         .setSeverity(getSeverity((String) cardMap.get("processVersion")))
                         .setTitle(new I18n("message.title", null))
@@ -102,7 +102,7 @@ public class OpfabKafkaProducer {
     }
 
     private List<String> getListFromCvsString(String input) {
-        return input != null ? List.of(input.split(",")): null;
+        return input != null ? List.of(input.split(",")) : null;
     }
 
     private SeverityType getSeverity(String severity) {

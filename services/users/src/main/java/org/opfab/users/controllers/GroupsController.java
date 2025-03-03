@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,26 +56,25 @@ public class GroupsController {
     }
 
     @GetMapping(value = "/{id}", produces = { "application/json" })
-    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) throws ApiErrorException {
+    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id)
+            throws ApiErrorException {
         OperationResult<Group> operationResult = groupsService.fetchGroup(id);
         if (!operationResult.isSuccess())
             throw createExceptionFromOperationResult(operationResult);
         return operationResult.getResult();
     }
 
-    private <S extends Object> ApiErrorException createExceptionFromOperationResult(OperationResult<S> operationResult) {
+    private <S extends Object> ApiErrorException createExceptionFromOperationResult(
+            OperationResult<S> operationResult) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         if (operationResult.getErrorType().equals(OperationResult.ErrorType.NOT_FOUND))
             status = HttpStatus.NOT_FOUND;
         if (operationResult.getErrorType().equals(OperationResult.ErrorType.BAD_REQUEST))
             status = HttpStatus.BAD_REQUEST;
         return new ApiErrorException(
-                ApiError.builder()
-                        .status(status)
-                        .message(operationResult.getErrorMessage())
-                        .build());
+                new ApiError(status, operationResult.getErrorMessage()));
     }
-    
+
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
     public Group createGroup(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody Group group)
@@ -98,10 +97,7 @@ public class GroupsController {
         // id from group body parameter should match id path parameter
         if (!group.getId().equals(id)) {
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_GROUP_ID_MSG)
-                            .build());
+                    new ApiError(HttpStatus.BAD_REQUEST, NO_MATCHING_GROUP_ID_MSG));
         } else {
             return createGroup(request, response, group);
         }
@@ -109,7 +105,7 @@ public class GroupsController {
 
     @DeleteMapping(value = "/{id}", produces = { "application/json" })
     public Void deleteGroup(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id)
-            throws ApiErrorException{
+            throws ApiErrorException {
         OperationResult<String> result = groupsService.deleteGroup(id);
         if (result.isSuccess())
             return null;

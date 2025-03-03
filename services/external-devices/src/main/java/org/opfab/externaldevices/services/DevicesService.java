@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
 import org.opfab.externaldevices.drivers.*;
 import org.opfab.externaldevices.model.*;
@@ -34,8 +33,9 @@ import jakarta.annotation.PreDestroy;
  * regulary
  */
 @Service
-@Slf4j
 public class DevicesService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DevicesService.class);
 
     private final ConfigService configService;
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
@@ -72,19 +72,15 @@ public class DevicesService {
 
         try {
             resolvedAddress = InetAddress.getByName(resolvedAddress).toString();
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             throw new ExternalDeviceConfigurationException("Impossible to resolve device host ");
         }
-        
 
         Device device = new Device();
         device.id = deviceConfiguration.id;
         device.resolvedAddress = resolvedAddress;
         device.port = deviceConfiguration.port;
         device.isConnected = true;
-
-        
 
         String driverId = getDriverIdFromDevice(device);
         if (!driversPool.containsKey(driverId)) {
@@ -105,7 +101,6 @@ public class DevicesService {
         return device.resolvedAddress + ":" + Integer.toString(device.port);
     }
 
-
     public void disableDevice(String deviceId) throws ExternalDeviceDriverException {
         log.info("Try to remove device {} from connected devices", deviceId);
         Device deviceToRemove = devices.get(deviceId);
@@ -116,22 +111,22 @@ public class DevicesService {
             if (isDriverStillConnectedToADevice(driverId)) {
                 log.info("Keep driver {} as still in use ", driverId);
             } else {
-                log.info("Remove driver {} as it is not used anymore by another device",driverId);
+                log.info("Remove driver {} as it is not used anymore by another device", driverId);
                 ExternalDeviceDriver driver = driversPool.get(driverId);
                 driversPool.remove(driverId);
                 log.info("Driver {} has been removed form pool", driverId);
                 driver.disconnect();
                 log.info("Driver {} has been disconnected", driverId);
             }
-        }
-        else  log.info("No device {} was present in connected devices", deviceId);
+        } else
+            log.info("No device {} was present in connected devices", deviceId);
     }
 
     private boolean isDriverStillConnectedToADevice(String driverId) {
         List<Device> devicesConnectedToDriver = devices.values().stream()
                 .filter(device -> getDriverIdFromDevice(device).equals(driverId))
                 .toList();
-        return  (!devicesConnectedToDriver.isEmpty());
+        return (!devicesConnectedToDriver.isEmpty());
     }
 
     /**
@@ -179,14 +174,14 @@ public class DevicesService {
         log.info("Try to send signal " + signalId + " for device " + deviceId);
 
         Device device = devices.get(deviceId);
-        if (device == null){
+        if (device == null) {
             log.warn("No device with id " + deviceId + " is enabled ");
             throw new ExternalDeviceAvailableException("No device with id " + deviceId + " is enabled ");
         }
 
         ExternalDeviceDriver driver = driversPool.get(getDriverIdFromDevice(device));
         if (driver == null) {
-            log.warn( "No driver with id " + getDriverIdFromDevice(device) + " in the driver pool ");
+            log.warn("No driver with id " + getDriverIdFromDevice(device) + " in the driver pool ");
             throw new ExternalDeviceAvailableException(
                     "No driver with id " + getDriverIdFromDevice(device) + " in the driver pool ");
         }
@@ -237,7 +232,7 @@ public class DevicesService {
         if (Boolean.TRUE.equals((externalDevicesWatchdogProperties.getEnabled()))) {
             this.driversPool.forEach((driverId, driver) -> {
                 if (!driver.isConnected()) {
-                    log.info("Driver {} is not connected. Try to connect",driverId);
+                    log.info("Driver {} is not connected. Try to connect", driverId);
                     try {
                         driver.connect();
 
@@ -250,21 +245,18 @@ public class DevicesService {
         }
     }
 
-
     @PreDestroy
     public void destroy() {
         log.info("Will disconnect all devices");
-        driversPool.values().stream().forEach( driver -> {
+        driversPool.values().stream().forEach(driver -> {
             try {
                 driver.disconnect();
                 log.info("Driver " + driver.toString() + " has been disconnected");
-            }
-            catch (Exception exc) {
-                log.warn("Impossible to disconnect driver " + driver,exc);
+            } catch (Exception exc) {
+                log.warn("Impossible to disconnect driver " + driver, exc);
             }
 
         });
-        
 
     }
 

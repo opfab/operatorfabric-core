@@ -8,12 +8,6 @@ subprojects {
     dependencies {
         implementation boot.actuator
         implementation misc.micrometer
-        annotationProcessor misc.lombok
-        implementation misc.lombok
-
-        testAnnotationProcessor misc.lombok
-        testCompileOnly misc.lombok
-
         testImplementation boot.starterTest, testing_deps.assertJ
         testImplementation project(':tools:generic:test-utilities')
 

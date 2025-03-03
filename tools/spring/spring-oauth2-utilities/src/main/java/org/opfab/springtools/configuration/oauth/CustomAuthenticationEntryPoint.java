@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,20 +20,20 @@ import org.springframework.web.server.ServerWebExchange;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint, ServerAuthenticationEntryPoint {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CustomAuthenticationEntryPoint.class);
 
     private static final String AUTH_FAILED_WARNING = "SECURITY : try to access resource {} without a valid token";
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-                log.warn(AUTH_FAILED_WARNING, request.getRequestURI());
-                BearerTokenAuthenticationEntryPoint delegate = new BearerTokenAuthenticationEntryPoint();
-                delegate.commence(request, response, authException);
+        log.warn(AUTH_FAILED_WARNING, request.getRequestURI());
+        BearerTokenAuthenticationEntryPoint delegate = new BearerTokenAuthenticationEntryPoint();
+        delegate.commence(request, response, authException);
     }
 
     @Override

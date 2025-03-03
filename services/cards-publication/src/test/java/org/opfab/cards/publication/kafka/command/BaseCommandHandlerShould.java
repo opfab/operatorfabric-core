@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.Map;
-
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -50,8 +49,7 @@ class BaseCommandHandlerShould {
         objectMapper = mock(CardObjectMapper.class);
         cut = new BaseCommandHandler();
         ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
-        org.opfab.cards.publication.model.Card cardPublicationData = org.opfab.cards.publication.model.Card.builder()
-                .build();
+        org.opfab.cards.publication.model.Card cardPublicationData = new org.opfab.cards.publication.model.Card();
 
         cardCommand = mock(CardCommand.class);
         card = mock(Card.class);
@@ -64,7 +62,7 @@ class BaseCommandHandlerShould {
     void testBuildCardPublicationData_withoutDataProperty() {
         when(card.getData()).thenReturn(null);
         org.opfab.cards.publication.model.Card result = cut.buildCardPublicationData(cardCommand);
-        Map<String,Object> data = (Map<String,Object>) result.getData();
+        Map<String, Object> data = (Map<String, Object>) result.data;
         Assertions.assertThat(data).isEmpty();
     }
 
@@ -75,10 +73,10 @@ class BaseCommandHandlerShould {
         when(card.getData()).thenReturn(cardDataAsString);
         when(objectMapper.readJSONValue(anyString())).thenReturn(cardData);
         org.opfab.cards.publication.model.Card result = cut.buildCardPublicationData(cardCommand);
-        Map<String,Object> data = (Map<String,Object>) result.getData();
+        Map<String, Object> data = (Map<String, Object>) result.data;
         Assertions.assertThat(data)
-            .hasSize(1)
-            .containsEntry(DATA_KEY,DATA_VALUE);
+                .hasSize(1)
+                .containsEntry(DATA_KEY, DATA_VALUE);
     }
 
 }

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 package org.opfab.cards.publication.configuration.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
-import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.opfab.avro.CardCommand;
@@ -27,7 +26,6 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
 @ConditionalOnProperty("spring.kafka.consumer.group-id")
 @EnableConfigurationProperties(SchemaRegistryProperties.class)
 @Configuration
@@ -37,8 +35,12 @@ public class ProducerFactoryAutoConfiguration {
 
     private final KafkaProperties kafkaProperties;
 
+    public ProducerFactoryAutoConfiguration(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
+    }
+
     private Map<String, Object> producerConfigs() {
-        Map<String,Object> props = kafkaProperties.buildProducerProperties(null);
+        Map<String, Object> props = kafkaProperties.buildProducerProperties(null);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "opfab-producer");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueDeserializer);
@@ -46,9 +48,9 @@ public class ProducerFactoryAutoConfiguration {
     }
 
     private ProducerFactory<String, CardCommand> producerFactory(SchemaRegistryProperties schemaRegistryProperties) {
-        Map<String,Object> props = producerConfigs();
-        if (schemaRegistryProperties.getUrl() != null && !schemaRegistryProperties.getUrl().isEmpty()) {
-            props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryProperties.getUrl());
+        Map<String, Object> props = producerConfigs();
+        if (schemaRegistryProperties.url != null && !schemaRegistryProperties.url.isEmpty()) {
+            props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryProperties.url);
         }
         return new DefaultKafkaProducerFactory<>(props);
     }
@@ -58,4 +60,3 @@ public class ProducerFactoryAutoConfiguration {
         return new KafkaTemplate<>(producerFactory(schemaRegistryProperties));
     }
 }
-

@@ -252,7 +252,7 @@ Scenario: Post card with initialParentCardUid not correct
   When method post
   Then status 400
   And match response.message contains "Constraint violation in the request"
-  And match response.errors[0] contains "The initialParentCardUid 1 is not the uid of any card"
+  And match response.error contains "The initialParentCardUid 1 is not the uid of any card"
 
 Scenario: Post card with parentCardId not correct
   * def card =
@@ -280,7 +280,7 @@ Scenario: Post card with parentCardId not correct
   When method post
   Then status 400
   And match response.message contains "Constraint violation in the request"
-  And match response.errors[0] contains "The parentCardId 1 is not the id of any card"
+  And match response.error contains "The parentCardId 1 is not the id of any card"
 
 Scenario: Post card with correct parentCardId but initialParentCardUid not correct
   * def card =
@@ -340,7 +340,7 @@ Scenario: Post card with correct parentCardId but initialParentCardUid not corre
   When method post
   Then status 400
   And match response.message contains "Constraint violation in the request"
-  And match response.errors[0] contains "The initialParentCardUid 1 is not the uid of any card"
+  And match response.error contains "The initialParentCardUid 1 is not the uid of any card"
 
 Scenario: Post card with correct parentCardId and initialParentCardUid
   # Get parent card id
@@ -412,7 +412,7 @@ Scenario: Post card with correct parentCardId and initialParentCardUid
   When method post
   Then status 400
   And match response.message contains "Constraint violation in the request"
-  And match response.errors[0] contains "The parentCardId " + cardId + " is a child card"
+  And match response.error contains "The parentCardId " + cardId + " is a child card"
 
 
 Scenario: Push card and its two child cards, then get the parent card

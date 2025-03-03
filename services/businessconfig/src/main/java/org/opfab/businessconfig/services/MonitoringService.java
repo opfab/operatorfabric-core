@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 package org.opfab.businessconfig.services;
 
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -25,13 +23,13 @@ import java.nio.file.Paths;
 import jakarta.annotation.PostConstruct;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
-@Slf4j
 public class MonitoringService implements ResourceLoaderAware {
 
-	private static final String PATH_PREFIX = "file:";
+    private static final String PATH_PREFIX = "file:";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
@@ -40,7 +38,7 @@ public class MonitoringService implements ResourceLoaderAware {
     private ObjectMapper objectMapper;
     private Monitoring monitoring;
     private EventBus eventBus;
-
+    private static final Logger log = LoggerFactory.getLogger(MonitoringService.class);
 
     public MonitoringService(ObjectMapper objectMapper, EventBus eventBus) {
         this.objectMapper = objectMapper;
@@ -55,14 +53,13 @@ public class MonitoringService implements ResourceLoaderAware {
                     .normalize();
 
             File f = new File(rootPath.toString() + "/monitoring.json");
-            
+
             if (f.exists() && f.isFile()) {
                 log.info("loading monitoring.json file from {}", new File(storagePath).getAbsolutePath());
                 this.monitoring = objectMapper.readValue(f, Monitoring.class);
-            }
-            else log.info("No monitoring.json file found in {} ", rootPath.toString());
-        }
-        catch (IOException e) {
+            } else
+                log.info("No monitoring.json file found in {} ", rootPath.toString());
+        } catch (IOException e) {
             log.warn("Unreadable monitoring.json file at  {}", storagePath);
         }
     }
@@ -77,7 +74,7 @@ public class MonitoringService implements ResourceLoaderAware {
     }
 
     public void setMonitoring(Monitoring monitoring) throws IOException {
-        this.monitoring =  monitoring;
+        this.monitoring = monitoring;
         saveMonitoringFile();
         this.eventBus.sendEvent("process", "MONITORING_CONFIG_CHANGE");
     }
@@ -89,7 +86,7 @@ public class MonitoringService implements ResourceLoaderAware {
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy monitoring file");
         File f = new File(rootPath.toString() + "/monitoring.json");
-        objectMapper.writeValue(f,this.monitoring);
+        objectMapper.writeValue(f, this.monitoring);
     }
 
 }

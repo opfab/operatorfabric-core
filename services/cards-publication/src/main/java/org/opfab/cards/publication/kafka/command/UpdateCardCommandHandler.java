@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 202-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 202-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,20 +10,22 @@
 
 package org.opfab.cards.publication.kafka.command;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 public class UpdateCardCommandHandler extends BaseCommandHandler implements CommandHandler {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateCardCommandHandler.class);
+
     private final Services services;
-    
+
+    public UpdateCardCommandHandler(Services services) {
+        this.services = services;
+    }
+
     @Override
     public CommandType getCommandType() {
         return CommandType.UPDATE_CARD;

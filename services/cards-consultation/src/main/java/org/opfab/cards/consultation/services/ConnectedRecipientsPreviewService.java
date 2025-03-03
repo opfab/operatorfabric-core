@@ -29,8 +29,8 @@ public class ConnectedRecipientsPreviewService {
     public List<String> getConnectedRecipients(Card lightcard) {
         List<String> connectedRecipients = new ArrayList<>();
 
-        List<String> cardRecipients = lightcard.getEntityRecipients();
-        List<String> cardRecipientsForInformation = lightcard.getEntityRecipientsForInformation();
+        List<String> cardRecipients = lightcard.entityRecipients;
+        List<String> cardRecipientsForInformation = lightcard.entityRecipientsForInformation;
 
         List<String> cardTotalRecipients = new ArrayList<>(cardRecipients);
         cardTotalRecipients.addAll(cardRecipientsForInformation);
@@ -39,13 +39,13 @@ public class ConnectedRecipientsPreviewService {
             CurrentUserWithPerimeters userWithPerimeters = cardSubscription.getCurrentUserWithPerimeters();
             if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(
                     userWithPerimeters,
-                    lightcard.getId(),
-                    lightcard.getProcess(),
-                    lightcard.getState(),
-                    lightcard.getPublisher(),
-                    lightcard.getPublisherType().name(),
-                    lightcard.getGroupRecipients(),
-                    lightcard.getUserRecipients(),
+                    lightcard.id,
+                    lightcard.process,
+                    lightcard.state,
+                    lightcard.publisher,
+                    lightcard.publisherType.toString(),
+                    lightcard.groupRecipients,
+                    lightcard.userRecipients,
                     cardTotalRecipients)) {
                 for (String entity : userWithPerimeters.getUserData().getEntities()) {
                     if (cardTotalRecipients.contains(entity)) {

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,6 @@
 package org.opfab.cards.publication.kafka.card;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.avro.ResponseCard;
@@ -20,18 +18,22 @@ import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.Card;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 public class CardCommandFactory {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardCommandFactory.class);
     private final CardObjectMapper objectMapper;
+
+    public CardCommandFactory(CardObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public CardCommand createResponseCard(Card cardPublicationData) {
         CardCommand cardCommand = new CardCommand();
-        final Object cardData = cardPublicationData.getData();
+        final Object cardData = cardPublicationData.data;
         ResponseCard kafkaCard;
         try {
-            cardPublicationData.setData(null); // Prevent Jackson errors
+            cardPublicationData.data = null; // Prevent Jackson errors
 
             kafkaCard = objectMapper.readResponseCardValue(objectMapper.writeValueAsString(cardPublicationData));
             cardCommand.setCommand(CommandType.RESPONSE_CARD);
@@ -40,9 +42,10 @@ public class CardCommandFactory {
             String cardDataString = objectMapper.writeValueAsString(cardData);
             kafkaCard.setData(cardDataString);
         } catch (JsonProcessingException e) {
-            log.error("Unable to serialize CardPublicationData {} into CardCommand. Message: {}", cardPublicationData, e.getMessage());
+            log.error("Unable to serialize CardPublicationData {} into CardCommand. Message: {}", cardPublicationData,
+                    e.getMessage());
         } finally {
-            cardPublicationData.setData(cardData);
+            cardPublicationData.data = cardData;
         }
         return cardCommand;
     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,104 +46,106 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class })
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WithMockOpFabUser(login = "adminUser", permissions = { PermissionEnum.ADMIN })
-@Slf4j
 class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware {
 
-        private MockMvc mockMvc;
-        private ResourceLoader resourceLoader;
+    private MockMvc mockMvc;
+    private ResourceLoader resourceLoader;
 
-        @Autowired
-        private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        private static final String PATH_PREFIX = "file:";
+    private static final String PATH_PREFIX = "file:";
 
-        @Value("${operatorfabric.businessconfig.storage.path}")
-        private String storagePath;
+    @Value("${operatorfabric.businessconfig.storage.path}")
+    private String storagePath;
 
-        @Autowired
-        private WebApplicationContext webApplicationContext;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-        @Override
-        public void setResourceLoader(ResourceLoader resourceLoader) {
-                this.resourceLoader = resourceLoader;
+    private static final Logger log = LoggerFactory.getLogger(BusinessconfigControllerForMonitoringShould.class);
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
+    @BeforeAll
+    void setup() {
+        this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
+    }
+
+    private String getMonitoring() {
+        return "{ \"export\" : { "
+                + "\"fields\": [ "
+                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"STRING\"},"
+                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.data\", \"fields\": ["
+                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"EPOCHDATE\"},"
+                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\"}"
+                + "]}"
+                + "]}"
+                + "}";
+    }
+
+    public Monitoring getMonitoringFormFile() {
+        try {
+            Path rootPath = Paths
+                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+                            .getAbsolutePath())
+                    .normalize();
+
+            File f = new File(rootPath.toString() + "/monitoring.json");
+
+            if (f.exists() && f.isFile()) {
+                log.info("loading monitoring.json file from {}",
+                        new File(storagePath).getAbsolutePath());
+                return objectMapper.readValue(f, Monitoring.class);
+            } else
+                log.info("No monitoring.json file found in {} ", rootPath.toString());
+        } catch (IOException e) {
+            log.warn("Unreadable monitoring.json file at  {}", storagePath);
         }
+        return null;
+    }
 
-        @BeforeAll
-        void setup() {
-                this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
-        }
+    @Test
+    void postInvalidMonitoringShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
+                .content("dummyContent")).andExpect(status().isBadRequest()).andReturn();
+    }
 
-        private String getMonitoring() {
-                return "{ \"export\" : { "
-                                + "\"fields\": [ "
-                                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"STRING\"},"
-                                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.data\", \"fields\": ["
-                                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\", \"type\":\"EPOCHDATE\"},"
-                                + "{ \"columnName\" : \"myField\" , \"jsonField\" :\"card.state\"}"
-                                + "]}"
-                                + "]}"
-                                + "}";
-        }
+    @Test
+    void postMonitoringShouldUpdateMonitoring() throws Exception {
 
-        public Monitoring getMonitoringFormFile() {
-                try {
-                        Path rootPath = Paths
-                                        .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                                                        .getAbsolutePath())
-                                        .normalize();
+        // should have value on startup
+        mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.export.fields[0].columnName", is("initValue")));
 
-                        File f = new File(rootPath.toString() + "/monitoring.json");
+        // post new configuration
+        mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
+                .content(getMonitoring())).andExpect(status().isCreated()).andReturn();
 
-                        if (f.exists() && f.isFile()) {
-                                log.info("loading monitoring.json file from {}",
-                                                new File(storagePath).getAbsolutePath());
-                                return objectMapper.readValue(f, Monitoring.class);
-                        } else
-                                log.info("No monitoring.json file found in {} ", rootPath.toString());
-                } catch (IOException e) {
-                        log.warn("Unreadable monitoring.json file at  {}", storagePath);
-                }
-                return null;
-        }
+        // check new configuration loaded
+        mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.export.fields[0].columnName", is("myField")))
+                .andExpect(jsonPath("$.export.fields[0].jsonField", is("card.state")))
+                .andExpect(jsonPath("$.export.fields[0].type", is("STRING")))
+                .andExpect(jsonPath("$.export.fields[1].fields[0].jsonField", is("card.state")))
+                .andExpect(jsonPath("$.export.fields[1].fields[0].type", is("EPOCHDATE")));
 
-        @Test
-        void postInvalidMonitoringShouldReturnBadRequest() throws Exception {
-                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
-                                .content("dummyContent")).andExpect(status().isBadRequest()).andReturn();
-        }
-
-        @Test
-        void postMonitoringShouldUpdateMonitoring() throws Exception {
-
-                // should have value on startup
-                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.export.fields[0].columnName", is("initValue")));
-
-                // post new configuration
-                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
-                                .content(getMonitoring())).andExpect(status().isCreated()).andReturn();
-
-                // check new configuration loaded
-                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.export.fields[0].columnName", is("myField")))
-                                .andExpect(jsonPath("$.export.fields[0].jsonField", is("card.state")))
-                                .andExpect(jsonPath("$.export.fields[0].type", is("STRING")))
-                                .andExpect(jsonPath("$.export.fields[1].fields[0].jsonField", is("card.state")))
-                                .andExpect(jsonPath("$.export.fields[1].fields[0].type", is("EPOCHDATE")));
-
-                // check new file has been saved on disk
-                Monitoring monitoringFormFile = getMonitoringFormFile();
-                assertThat(monitoringFormFile).isNotNull();
-                assertThat(monitoringFormFile.export().fields().get(0).columnName()).isEqualTo("myField");
-        }
+        // check new file has been saved on disk
+        Monitoring monitoringFormFile = getMonitoringFormFile();
+        assertThat(monitoringFormFile).isNotNull();
+        assertThat(monitoringFormFile.export().fields().get(0).columnName()).isEqualTo("myField");
+    }
 
 }

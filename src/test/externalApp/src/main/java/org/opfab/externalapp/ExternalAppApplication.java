@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,25 +9,24 @@
 
 package org.opfab.externalapp;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-@Slf4j
 @SpringBootApplication
 public class ExternalAppApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ExternalAppApplication.class, args);
-	}
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExternalAppApplication.class);
 
-	@Override
-	public void run(String... args) throws Exception {
-		log.info(" ******************************************************");
-		log.info(" ***********  Welcome to External Application **********");
-		log.info(" ******************************************************");
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ExternalAppApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        log.info(" ******************************************************");
+        log.info(" ***********  Welcome to External Application **********");
+        log.info(" ******************************************************");
+    }
 
 }

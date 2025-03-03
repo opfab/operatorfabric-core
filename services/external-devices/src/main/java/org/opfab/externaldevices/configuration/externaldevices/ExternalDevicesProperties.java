@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.configuration.externaldevices;
 
-import lombok.Data;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
 import org.opfab.externaldevices.model.UserConfiguration;
@@ -27,7 +26,6 @@ import java.util.List;
  */
 @ConfigurationProperties("operatorfabric.externaldevices.default")
 @Component
-@Data
 public class ExternalDevicesProperties {
 
     private List<DeviceConfiguration> deviceConfigurations = new ArrayList<>();
@@ -35,5 +33,17 @@ public class ExternalDevicesProperties {
     private List<SignalMapping> signalMappings = new ArrayList<>();
 
     private List<UserConfiguration> userConfigurations = new ArrayList<>();
+
+    public List<DeviceConfiguration> getDeviceConfigurations() {
+        return deviceConfigurations;
+    }
+
+    public List<SignalMapping> getSignalMappings() {
+        return signalMappings;
+    }
+
+    public List<UserConfiguration> getUserConfigurations() {
+        return userConfigurations;
+    }
 
 }

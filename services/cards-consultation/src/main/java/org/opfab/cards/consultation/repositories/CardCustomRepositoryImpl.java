@@ -9,8 +9,6 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
@@ -39,21 +37,19 @@ import java.util.Map;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
-
-@Slf4j
 public class CardCustomRepositoryImpl implements CardCustomRepository {
 
-	private static final String CARDS_COLLECTION = "cards";
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardCustomRepositoryImpl.class);
 
+    private static final String CARDS_COLLECTION = "cards";
 
-	private static final String PUBLISH_DATE_FIELD = "publishDate";
-	private static final String START_DATE_FIELD = "startDate";
-	private static final String END_DATE_FIELD = "endDate";
-	private static final String SEVERITY_FIELD = "severity";
-	private static final String LAST_UPDATE_FIELD = "lastUpdate";
+    private static final String PUBLISH_DATE_FIELD = "publishDate";
+    private static final String START_DATE_FIELD = "startDate";
+    private static final String END_DATE_FIELD = "endDate";
+    private static final String SEVERITY_FIELD = "severity";
+    private static final String LAST_UPDATE_FIELD = "lastUpdate";
 
     private final ReactiveMongoTemplate template;
-
 
     public CardCustomRepositoryImpl(ReactiveMongoTemplate template) {
         this.template = template;
@@ -67,171 +63,163 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         return findByParentCardId(template, parentId, Card.class);
     }
 
-	public Flux<Card> findByInitialParentCardUid(String initialParentCardUid) {
-		return findByInitialParentCardUid(template, initialParentCardUid, Card.class);
-	}
+    public Flux<Card> findByInitialParentCardUid(String initialParentCardUid) {
+        return findByInitialParentCardUid(template, initialParentCardUid, Card.class);
+    }
 
+    @Override
+    public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
+        return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields)
+                .map(lightCard -> new CardOperation(CardOperationTypeEnum.ADD, null, lightCard));
+    }
 
-	@Override
-	public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd, 
-	CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields)
-	{
-		return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields).map(lightCard ->
-			new CardOperation(CardOperationTypeEnum.ADD, null, lightCard)
-		);
-	}
-	
     private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-	CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields)
-	{	
-		Criteria criteria ;
-		if (updatedFrom != null) 
-		{
-			if ((rangeEnd != null) || (rangeStart != null))criteria =
-					new Criteria().andOperator(updateDateCriteria(updatedFrom),
-						computeCriteriaForUser(currentUserWithPerimeters, false),
-						getCriteriaForRange(rangeStart, rangeEnd));
-			else criteria = new Criteria().andOperator(updateDateCriteria(updatedFrom),
-					computeCriteriaForUser(currentUserWithPerimeters, false));
-		}
-		else criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters, false),
-													  getCriteriaForRange(rangeStart, rangeEnd));
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
+        Criteria criteria;
+        if (updatedFrom != null) {
+            if ((rangeEnd != null) || (rangeStart != null))
+                criteria = new Criteria().andOperator(updateDateCriteria(updatedFrom),
+                        computeCriteriaForUser(currentUserWithPerimeters, false),
+                        getCriteriaForRange(rangeStart, rangeEnd));
+            else
+                criteria = new Criteria().andOperator(updateDateCriteria(updatedFrom),
+                        computeCriteriaForUser(currentUserWithPerimeters, false));
+        } else
+            criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters, false),
+                    getCriteriaForRange(rangeStart, rangeEnd));
 
+        Query query = new Query();
+        query.fields()
+                .include("uid")
+                .include("id")
+                .include("publisher")
+                .include("processVersion")
+                .include(PUBLISH_DATE_FIELD)
+                .include(START_DATE_FIELD)
+                .include(END_DATE_FIELD)
+                .include("expirationDate")
+                .include(SEVERITY_FIELD)
+                .include("processInstanceId")
+                .include("lttd")
+                .include("title")
+                .include("summary")
+                .include("titleTranslated")
+                .include("summaryTranslated")
+                .include("tags")
+                .include("timeSpans")
+                .include("rRule")
+                .include("process")
+                .include("state")
+                .include("parentCardId")
+                .include("initialParentCardUid")
+                .include("representative")
+                .include("representativeType")
+                .include("wktGeometry")
+                .include("wktProjection")
+                .include("entitiesAcks")
+                .include("entityRecipients")
+                .include("entityRecipientsForInformation")
+                .include("entitiesAllowedToRespond")
+                .include("entitiesRequiredToRespond")
+                .include("entitiesAllowedToEdit")
+                .include("publisherType")
+                .include("secondsBeforeTimeSpanForReminder")
+                .include("actions")
+                .include("usersReads")
+                .include("usersAcks");
 
-		Query query = new Query();
-		query.fields()
-				.include("uid")
-				.include("id")
-				.include("publisher")
-				.include("processVersion")
-				.include(PUBLISH_DATE_FIELD)
-				.include(START_DATE_FIELD)
-				.include(END_DATE_FIELD)
-				.include("expirationDate")
-				.include(SEVERITY_FIELD)
-				.include("processInstanceId")
-				.include("lttd")
-				.include("title")
-				.include("summary")
-				.include("titleTranslated")
-				.include("summaryTranslated")
-				.include("tags")
-				.include("timeSpans")
-				.include("rRule")
-				.include("process")
-				.include("state")
-				.include("parentCardId")
-				.include("initialParentCardUid")
-				.include("representative")
-				.include("representativeType")
-				.include("wktGeometry")
-				.include("wktProjection")
-				.include("entitiesAcks")
-				.include("entityRecipients")
-				.include("entityRecipientsForInformation")
-				.include("entitiesAllowedToRespond")
-				.include("entitiesRequiredToRespond")
-				.include("entitiesAllowedToEdit")
-				.include("publisherType")
-				.include("secondsBeforeTimeSpanForReminder")
-				.include("actions")
-				.include("usersReads")
-				.include("usersAcks");
+        if ((customScreenDataFields != null) && (customScreenDataFields.getDataFields() != null)) {
+            customScreenDataFields.getDataFields().forEach(dataField -> query.fields().include("data." + dataField));
+        }
 
-		if ((customScreenDataFields != null) && (customScreenDataFields.getDataFields() != null)) {
-			customScreenDataFields.getDataFields().forEach(dataField ->
-				query.fields().include("data." + dataField)
-			);
-		}
-
-		Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(currentUserWithPerimeters);
+        Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
+                currentUserWithPerimeters);
 
         query.addCriteria(criteria);
         query.addCriteria(criteriaForProcessesStatesNotNotified);
         log.debug("launch query with user {}", currentUserWithPerimeters.getUserData().getLogin());
         return template.find(query, Card.class).map(card -> {
-            log.debug("Find card {}",card.getId());
-			card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(currentUserWithPerimeters.getUserData().getLogin()));
-			card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(currentUserWithPerimeters.getUserData().getLogin()));
-			return card;
-		});
+            log.debug("Find card {}", card.id);
+            card.hasBeenAcknowledged = card.usersAcks != null
+                    && card.usersAcks.contains(currentUserWithPerimeters.getUserData().getLogin());
+            card.hasBeenRead = card.usersReads != null
+                    && card.usersReads.contains(currentUserWithPerimeters.getUserData().getLogin());
+            return card;
+        });
 
-	}
+    }
 
-	private Criteria computeCriteriaForProcessesStatesNotNotified(CurrentUserWithPerimeters currentUserWithPerimeters) {
-		List<String> processesStatesNotNotifiedList = new ArrayList<>();
-		Map<String, List<String>> processesStatesNotNotifiedMap = currentUserWithPerimeters.getProcessesStatesNotNotified();
+    private Criteria computeCriteriaForProcessesStatesNotNotified(CurrentUserWithPerimeters currentUserWithPerimeters) {
+        List<String> processesStatesNotNotifiedList = new ArrayList<>();
+        Map<String, List<String>> processesStatesNotNotifiedMap = currentUserWithPerimeters
+                .getProcessesStatesNotNotified();
 
-		if (processesStatesNotNotifiedMap != null) {
-			processesStatesNotNotifiedMap.keySet().forEach(process ->
-				processesStatesNotNotifiedMap.get(process).forEach(state ->
-					processesStatesNotNotifiedList.add(process + "." + state)
-				)
-			);
-		}
-		return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
-	}
+        if (processesStatesNotNotifiedMap != null) {
+            processesStatesNotNotifiedMap.keySet().forEach(process -> processesStatesNotNotifiedMap.get(process)
+                    .forEach(state -> processesStatesNotNotifiedList.add(process + "." + state)));
+        }
+        return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
+    }
 
-	private Criteria getCriteriaForRange(Instant rangeStart, Instant rangeEnd)
-	{	
-		if (rangeStart==null) return  new Criteria().orOperator(
-			where(END_DATE_FIELD).lte(rangeEnd),
-			where(PUBLISH_DATE_FIELD).lte(rangeEnd)
-		);
-		if (rangeEnd==null) return new Criteria().orOperator(
-			where(END_DATE_FIELD).gte(rangeStart),
-			where(START_DATE_FIELD).gte(rangeStart),
-			where(PUBLISH_DATE_FIELD).gte(rangeStart)
-		);
-		return new Criteria().orOperator(
-			where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-			where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-			new Criteria().andOperator(
-				where(START_DATE_FIELD).lte(rangeStart),
-				where(END_DATE_FIELD).gte(rangeEnd)
-			),
-			where(PUBLISH_DATE_FIELD).gte(rangeStart).lte(rangeEnd)
-		);
-	}
+    private Criteria getCriteriaForRange(Instant rangeStart, Instant rangeEnd) {
+        if (rangeStart == null)
+            return new Criteria().orOperator(
+                    where(END_DATE_FIELD).lte(rangeEnd),
+                    where(PUBLISH_DATE_FIELD).lte(rangeEnd));
+        if (rangeEnd == null)
+            return new Criteria().orOperator(
+                    where(END_DATE_FIELD).gte(rangeStart),
+                    where(START_DATE_FIELD).gte(rangeStart),
+                    where(PUBLISH_DATE_FIELD).gte(rangeStart));
+        return new Criteria().orOperator(
+                where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+                where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+                new Criteria().andOperator(
+                        where(START_DATE_FIELD).lte(rangeStart),
+                        where(END_DATE_FIELD).gte(rangeEnd)),
+                where(PUBLISH_DATE_FIELD).gte(rangeStart).lte(rangeEnd));
+    }
 
-	private Criteria updateDateCriteria(Instant updatedFrom) {
-		return Criteria.where(LAST_UPDATE_FIELD).gte(updatedFrom);
-	}
-
+    private Criteria updateDateCriteria(Instant updatedFrom) {
+        return Criteria.where(LAST_UPDATE_FIELD).gte(updatedFrom);
+    }
 
     public Mono<Page<Object>> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
-		CardsFilter queryFilter = filter.getT2();
+        CardsFilter queryFilter = filter.getT2();
 
-		if ((queryFilter.selectedFields() != null) && (!queryFilter.selectedFields().isEmpty())) {
-			return findWithUserAndFilterAndSelectedFields(filter);
-		}
+        if ((queryFilter.selectedFields() != null) && (!queryFilter.selectedFields().isEmpty())) {
+            return findWithUserAndFilterAndSelectedFields(filter);
+        }
 
-        Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.page() != null ? queryFilter.page().intValue() : null , queryFilter.size() != null ? queryFilter.size().intValue() : null);
-        String[] fields = {"uid",
-        "publisher",
-        "processVersion",
-        PROCESS_FIELD,
-        PROCESS_INSTANCE_ID_FIELD,
-        "state",
-        "titleTranslated",
-        "summaryTranslated",
-        PUBLISH_DATE_FIELD,
-        START_DATE_FIELD,
-        END_DATE_FIELD,
-		SEVERITY_FIELD,
-        "publisherType",
-        "representative",
-        "representativeType",
-		"entityRecipients",
-		"entityRecipientsForInformation",
-        "entitiesAcks",
-		"usersReads",
-		"userRecipients",
-		"groupRecipients",
-	};
-        Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
-        Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
+        Pageable pageableRequest = PaginationUtils.createPageable(
+                queryFilter.page() != null ? queryFilter.page().intValue() : null,
+                queryFilter.size() != null ? queryFilter.size().intValue() : null);
+        String[] fields = { "uid",
+                "publisher",
+                "processVersion",
+                PROCESS_FIELD,
+                PROCESS_INSTANCE_ID_FIELD,
+                "state",
+                "titleTranslated",
+                "summaryTranslated",
+                PUBLISH_DATE_FIELD,
+                START_DATE_FIELD,
+                END_DATE_FIELD,
+                SEVERITY_FIELD,
+                "publisherType",
+                "representative",
+                "representativeType",
+                "entityRecipients",
+                "entityRecipientsForInformation",
+                "entitiesAcks",
+                "usersReads",
+                "userRecipients",
+                "groupRecipients",
+        };
+        Aggregation agg = newAggregation(this.getFilterOperations(filter, pageableRequest, fields));
+        Aggregation countAgg = newAggregation(this.getFilterOperationsForCount(filter));
 
         if (pageableRequest.isPaged()) {
             return template.aggregate(agg, CARDS_COLLECTION, Card.class)
@@ -239,45 +227,48 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
-                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
+                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
+                            PaginationUtils.getCountFromJson(tuple.getT2())));
         } else {
             return template.aggregate(agg, CARDS_COLLECTION, Card.class)
                     .cast(Object.class).collectList()
                     .map(PageImpl::new);
         }
-	}
+    }
 
-	public Mono<Page<Object>> findWithUserAndFilterAndSelectedFields(
-			Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
-		CardsFilter queryFilter = filter.getT2();
+    public Mono<Page<Object>> findWithUserAndFilterAndSelectedFields(
+            Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
+        CardsFilter queryFilter = filter.getT2();
 
-		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.page() != null ? queryFilter.page().intValue() : null , queryFilter.size() != null ? queryFilter.size().intValue() : null);
-		List<String> fields = new ArrayList<>(List.of(
-				"uid",
-				SEVERITY_FIELD));
+        Pageable pageableRequest = PaginationUtils.createPageable(
+                queryFilter.page() != null ? queryFilter.page().intValue() : null,
+                queryFilter.size() != null ? queryFilter.size().intValue() : null);
+        List<String> fields = new ArrayList<>(List.of(
+                "uid",
+                SEVERITY_FIELD));
 
-		fields.addAll(queryFilter.selectedFields());
-		List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
-		String[] selectedFields = fieldsWithoutDuplicates.toArray(String[]::new);
+        fields.addAll(queryFilter.selectedFields());
+        List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
+        String[] selectedFields = fieldsWithoutDuplicates.toArray(String[]::new);
 
-		Aggregation agg = newAggregation(this.getFilterOperations(filter, pageableRequest, selectedFields));
-		agg = agg.withOptions(AggregationOptions.builder().strictMapping().build());
-		Aggregation countAgg = newAggregation(this.getFilterOperationsForCount(filter));
+        Aggregation agg = newAggregation(this.getFilterOperations(filter, pageableRequest, selectedFields));
+        agg = agg.withOptions(AggregationOptions.builder().strictMapping().build());
+        Aggregation countAgg = newAggregation(this.getFilterOperationsForCount(filter));
 
-		if (pageableRequest.isPaged()) {
-			return template.aggregate(agg, CARDS_COLLECTION, Object.class)
-					.collectList()
-					.zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
-							.defaultIfEmpty("{\"count\":0}")
-							.single())
-					.map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
-		} else {
-			return template.aggregate(agg, CARDS_COLLECTION, Object.class)
-					.collectList()
-					.map(PageImpl::new);
-		}
-	}
-
+        if (pageableRequest.isPaged()) {
+            return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+                    .collectList()
+                    .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
+                            .defaultIfEmpty("{\"count\":0}")
+                            .single())
+                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
+                            PaginationUtils.getCountFromJson(tuple.getT2())));
+        } else {
+            return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+                    .collectList()
+                    .map(PageImpl::new);
+        }
+    }
 
     public boolean checkIfInAdminMode(CurrentUserWithPerimeters currentUserWithPerimeters,
             CardsFilter filter) {

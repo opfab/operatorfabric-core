@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.consultation.configuration.webflux;
-
 
 import org.opfab.cards.consultation.model.CardActionEnum;
 import org.opfab.cards.consultation.model.Card;
@@ -33,12 +30,10 @@ import static org.springframework.web.reactive.function.server.ServerResponse.no
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import static reactor.util.function.Tuples.of;
 
-
 @Configuration
 public class CardRoutesConfig implements UserExtractor {
 
     private final CardRepository cardRepository;
-
 
     public CardRoutesConfig(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
@@ -57,34 +52,39 @@ public class CardRoutesConfig implements UserExtractor {
                 .andRoute(RequestPredicates.POST("/cards"), queryCardPostRoute());
     }
 
-
     private HandlerFunction<ServerResponse> cardGetRoute() {
-        return request ->
-                extractUserFromJwtToken(request)
-                        .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters)))
-                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardId(userCardT2.getT2().getId()).collectList()))
-                        .doOnNext(t2 -> {
-                            CurrentUserWithPerimeters user = t2.getT1().getT1();
-                            Card card = t2.getT1().getT2();
-                            card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(user.getUserData().getLogin()));
-                            card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(user.getUserData().getLogin()));
-                        })
-                        .flatMap(t2 -> {
-                            CurrentUserWithPerimeters user = t2.getT1().getT1();
-                            Card card = t2.getT1().getT2();
-                            List<Card> childCards = t2.getT2();
-                            childCards.forEach(child -> {
-                                if (child.getActions() != null && child.getActions().contains(CardActionEnum.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
-                                    child.setHasBeenAcknowledged(child.getUsersAcks() != null && child.getUsersAcks().contains(user.getUserData().getLogin()));
-                                    child.setHasBeenRead(child.getUsersReads() != null && child.getUsersReads().contains(user.getUserData().getLogin()));
-                                }
-                            });
+        return request -> extractUserFromJwtToken(request)
+                .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(
+                        cardRepository.findByIdWithUser(request.pathVariable("id"), currentUserWithPerimeters)))
+                .flatMap(userCardT2 -> Mono.just(userCardT2)
+                        .zipWith(cardRepository.findByParentCardId(userCardT2.getT2().id).collectList()))
+                .doOnNext(t2 -> {
+                    CurrentUserWithPerimeters user = t2.getT1().getT1();
+                    Card card = t2.getT1().getT2();
+                    card.hasBeenAcknowledged = card.usersAcks != null
+                            && card.usersAcks.contains(user.getUserData().getLogin());
+                    card.hasBeenRead = card.usersReads != null
+                            && card.usersReads.contains(user.getUserData().getLogin());
+                })
+                .flatMap(t2 -> {
+                    CurrentUserWithPerimeters user = t2.getT1().getT1();
+                    Card card = t2.getT1().getT2();
+                    List<Card> childCards = t2.getT2();
+                    childCards.forEach(child -> {
+                        if (child.actions != null
+                                && child.actions.contains(CardActionEnum.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
+                            child.hasBeenAcknowledged = child.usersAcks != null
+                                    && child.usersAcks.contains(user.getUserData().getLogin());
+                            child.hasBeenRead = child.usersReads != null
+                                    && child.usersReads.contains(user.getUserData().getLogin());
+                        }
+                    });
 
-                            return ok()
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .body(fromValue(new CardWithChildCards(card, childCards)));
-                        })
-                        .switchIfEmpty(notFound().build());
+                    return ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(fromValue(new CardWithChildCards(card, childCards)));
+                })
+                .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> cardOptionRoute() {
@@ -93,17 +93,17 @@ public class CardRoutesConfig implements UserExtractor {
 
     private HandlerFunction<ServerResponse> queryCardPostRoute() {
         return request -> extractFilterOnPost(request).flatMap(params -> cardRepository.findWithUserAndFilter(params)
-                .flatMap(cards-> ok().contentType(MediaType.APPLICATION_JSON)
+                .flatMap(cards -> ok().contentType(MediaType.APPLICATION_JSON)
                         .body(fromValue(cards))));
     }
 
-    private Mono<Tuple2<CurrentUserWithPerimeters, CardsFilter>> extractFilterOnPost(ServerRequest request){
+    private Mono<Tuple2<CurrentUserWithPerimeters, CardsFilter>> extractFilterOnPost(ServerRequest request) {
         Mono<CardsFilter> filter = request.bodyToMono(CardsFilter.class);
         return request.principal().zipWith(filter)
-                .map(t->{
+                .map(t -> {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
                     CurrentUserWithPerimeters c = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-                    return of(c,t.getT2());
+                    return of(c, t.getT2());
                 });
     }
 }

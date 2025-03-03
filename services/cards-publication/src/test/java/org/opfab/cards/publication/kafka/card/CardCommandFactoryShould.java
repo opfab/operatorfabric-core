@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,6 +36,7 @@ class CardCommandFactoryShould {
 
     @InjectMocks
     CardCommandFactory cut;
+
     @Test
     void createResponseCard() {
         ReflectionTestUtils.setField(cut, "objectMapper", new CardObjectMapper());
@@ -43,15 +44,15 @@ class CardCommandFactoryShould {
         Card cardPublicationData = createCardPublicationData();
         CardCommand cardCommand = cut.createResponseCard(cardPublicationData);
 
-        assertThat (cardCommand.getCommand(), is (CommandType.RESPONSE_CARD));
-        assertThat (cardCommand.getResponseCard().getProcess(), is (cardPublicationData.getProcess()));
-        assertThat (cardCommand.getResponseCard().getState(), is(cardPublicationData.getState()));
+        assertThat(cardCommand.getCommand(), is(CommandType.RESPONSE_CARD));
+        assertThat(cardCommand.getResponseCard().getProcess(), is(cardPublicationData.process));
+        assertThat(cardCommand.getResponseCard().getState(), is(cardPublicationData.state));
     }
 
     @Test
     void createResponseCardFailure() throws JsonProcessingException {
-        CardObjectMapper failMapper = mock (CardObjectMapper.class);
-        when (failMapper.readResponseCardValue(any())).thenThrow(JsonProcessingException.class);
+        CardObjectMapper failMapper = mock(CardObjectMapper.class);
+        when(failMapper.readResponseCardValue(any())).thenThrow(JsonProcessingException.class);
         ReflectionTestUtils.setField(cut, "objectMapper", failMapper);
 
         CardCommand cardCommand = cut.createResponseCard(createCardPublicationData());
@@ -59,13 +60,17 @@ class CardCommandFactoryShould {
     }
 
     private Card createCardPublicationData() {
-        return Card.builder().publisher("PUBLISHER_1").processVersion("O")
-                .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                .title(new I18n("title",null))
-                .summary(new I18n("summary",null))
-                .startDate(Instant.now())
-                .process("process5")
-                .state("state5")
-                .build();
+        Card card = new Card();
+        card.publisher = "PUBLISHER_1";
+        card.processVersion = "O";
+        card.processInstanceId = "PROCESS_1";
+        card.severity = SeverityEnum.INFORMATION;
+        card.title = new I18n("title", null);
+        card.summary = new I18n("summary", null);
+        card.startDate = Instant.now();
+        card.process = "process5";
+        card.state = "state5";
+
+        return card;
     }
 }

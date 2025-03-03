@@ -11,6 +11,7 @@ package org.opfab.cards.publication.services;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
@@ -23,10 +24,9 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class TestHelpers {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TestHelpers.class);
 
     public static User getCurrentUser() {
 
@@ -83,65 +83,85 @@ public class TestHelpers {
     }
 
     public static Card generateOneCard(String publisher) {
-        return Card.builder().publisher(publisher).processVersion("0")
-                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                .title(new I18n("title", null))
-                .summary(new I18n("summary", null))
-                .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
-                .process("PROCESS_CARD_USER")
-                .state("state1")
-                .build();
+        Card card = new Card();
+        card.publisher = publisher;
+        card.processVersion = "0";
+        card.processInstanceId = "PROCESS_1";
+        card.severity = SeverityEnum.ALARM;
+        card.title = new I18n("title", null);
+        card.summary = new I18n("summary", null);
+        card.startDate = Instant.now();
+        card.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochMilli(123l), null));
+        card.process = "PROCESS_CARD_USER";
+        card.state = "state1";
+
+        return card;
     }
 
     public static List<Card> generateFiveCards() {
         ArrayList<Card> cards = new ArrayList<>();
-        cards.add(
-                Card.builder().publisher("PUBLISHER_1").processVersion("0")
-                        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                        .title(new I18n("title", null))
-                        .summary(new I18n("summary", null))
-                        .startDate(Instant.now())
-                        .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
-                        .process("process1")
-                        .state("state1")
-                        .build());
-        cards.add(
-                Card.builder().publisher("PUBLISHER_2").processVersion("0")
-                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                        .title(new I18n("title", null))
-                        .summary(new I18n("summary", null))
-                        .startDate(Instant.now())
-                        .process("process2")
-                        .state("state2")
-                        .build());
-        cards.add(
-                Card.builder().publisher("PUBLISHER_2").processVersion("0")
-                        .processInstanceId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
-                        .title(new I18n("title", null))
-                        .summary(new I18n("summary", null))
-                        .startDate(Instant.now())
-                        .process("process3")
-                        .state("state3")
-                        .build());
-        cards.add(
-                Card.builder().publisher("PUBLISHER_1").processVersion("0")
-                        .processInstanceId("PROCESS_2").severity(SeverityEnum.INFORMATION)
-                        .title(new I18n("title", null))
-                        .summary(new I18n("summary", null))
-                        .startDate(Instant.now())
-                        .process("process4")
-                        .state("state4")
-                        .build());
-        cards.add(
-                Card.builder().publisher("PUBLISHER_1").processVersion("0")
-                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                        .title(new I18n("title", null))
-                        .summary(new I18n("summary", null))
-                        .startDate(Instant.now())
-                        .process("process5")
-                        .state("state5")
-                        .build());
+
+        Card card1 = new Card();
+        card1.publisher = "PUBLISHER_1";
+        card1.processVersion = "0";
+        card1.processInstanceId = "PROCESS_1";
+        card1.severity = SeverityEnum.ALARM;
+        card1.title = new I18n("title", null);
+        card1.summary = new I18n("summary", null);
+        card1.startDate = Instant.now();
+        card1.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochMilli(123l), null));
+        card1.process = "process1";
+        card1.state = "state1";
+        cards.add(card1);
+
+        Card card2 = new Card();
+        card2.publisher = "PUBLISHER_2";
+        card2.processVersion = "0";
+        card2.processInstanceId = "PROCESS_1";
+        card2.severity = SeverityEnum.INFORMATION;
+        card2.title = new I18n("title", null);
+        card2.summary = new I18n("summary", null);
+        card2.startDate = Instant.now();
+        card2.process = "process2";
+        card2.state = "state2";
+        cards.add(card2);
+
+        Card card3 = new Card();
+        card3.publisher = "PUBLISHER_2";
+        card3.processVersion = "0";
+        card3.processInstanceId = "PROCESS_2";
+        card3.severity = SeverityEnum.COMPLIANT;
+        card3.title = new I18n("title", null);
+        card3.summary = new I18n("summary", null);
+        card3.startDate = Instant.now();
+        card3.process = "process3";
+        card3.state = "state3";
+        cards.add(card3);
+
+        Card card4 = new Card();
+        card4.publisher = "PUBLISHER_1";
+        card4.processVersion = "0";
+        card4.processInstanceId = "PROCESS_2";
+        card4.severity = SeverityEnum.INFORMATION;
+        card4.title = new I18n("title", null);
+        card4.summary = new I18n("summary", null);
+        card4.startDate = Instant.now();
+        card4.process = "process4";
+        card4.state = "state4";
+        cards.add(card4);
+
+        Card card5 = new Card();
+        card5.publisher = "PUBLISHER_1";
+        card5.processVersion = "0";
+        card5.processInstanceId = "PROCESS_1";
+        card5.severity = SeverityEnum.INFORMATION;
+        card5.title = new I18n("title", null);
+        card5.summary = new I18n("summary", null);
+        card5.startDate = Instant.now();
+        card5.process = "process5";
+        card5.state = "state5";
+        cards.add(card5);
+
         return cards;
     }
 

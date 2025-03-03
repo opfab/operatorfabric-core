@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.cards.consultation.repositories;
 
@@ -35,11 +33,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.smartcardio.Card;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.opfab.cards.consultation.TestUtilities.*;
 import static reactor.util.function.Tuples.of;
-
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = IntegrationTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -80,8 +79,6 @@ public class ArchivedCardRepositoryShould {
     @Autowired
     private ArchivedCardRepository repository;
 
-
-
     @AfterEach
     public void clean() {
         repository.deleteAll().subscribe();
@@ -99,72 +96,96 @@ public class ArchivedCardRepositoryShould {
         user1.addGroupsItem("someOtherGroup");
         currentUser1.setUserData(user1);
         currentUser1.setComputedPerimeters(Arrays.asList(perimeter));
-        //Groups only
+        // Groups only
 
         user2.setLogin(LOGIN_2);
         user2.addGroupsItem("rte");
         currentUser2.setUserData(user2);
         currentUser2.setComputedPerimeters(Arrays.asList(perimeter));
-        //Group only
+        // Group only
 
         user3.setLogin(LOGIN_3);
         currentUser3.setUserData(user3);
-        //No group and no entity
+        // No group and no entity
 
         user4.setLogin(LOGIN_4);
         user4.addEntitiesItem("someEntity");
         user4.addEntitiesItem("someOtherEntity");
         currentUser4.setUserData(user4);
-        //Entities only
+        // Entities only
 
         user5.setLogin(LOGIN_5);
         user5.addGroupsItem("group1");
         user5.addEntitiesItem("entity1");
         currentUser5.setUserData(user5);
-        //Group and entity
+        // Group and entity
+    }
+
+    private CardsFilter getEmptyCardsFilter() {
+        return getCardsFilter(List.of());
+    }
+
+    private CardsFilter getCardsFilter(List<FilterModel> filters) {
+        return new CardsFilter(null, null, null, null, null, filters, null);
     }
 
     @BeforeEach
     public void initCardData() {
 
         int processNo = 0;
-        //create past cards
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusOne, now, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
-        //create future cards
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, now, nowPlusOne, LOGIN_1, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusOne, nowPlusTwo, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusTwo, nowPlusThree, LOGIN_1, new String[]{"rte","operator"}, null));
+        // create past cards
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne,
+                LOGIN_1, new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne,
+                LOGIN_1, new String[] { "rte", "operator" }, null));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusOne, now, LOGIN_1,
+                new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
+        // create future cards
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, now, nowPlusOne, LOGIN_1,
+                new String[] { "rte", "operator" }, null));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusOne, nowPlusTwo,
+                LOGIN_1, new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusTwo, nowPlusThree,
+                LOGIN_1, new String[] { "rte", "operator" }, null));
 
-        //card starts in past and ends in future
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, nowPlusThree, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        // card starts in past and ends in future
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, nowPlusThree,
+                LOGIN_1, new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
 
-        //card starts in past and never ends
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, null, LOGIN_1, new String[]{"rte","operator"}, null));
+        // card starts in past and never ends
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, null, LOGIN_1,
+                new String[] { "rte", "operator" }, null));
 
-        //card starts in future and never ends
-        persistCard(createSimpleArchivedCard(processNo, firstPublisher, nowMinusThree, nowPlusThree, null, LOGIN_1, new String[]{"rte","operator","group2"}, new String[]{"entity1","entity2"}));
+        // card starts in future and never ends
+        persistCard(createSimpleArchivedCard(processNo, firstPublisher, nowMinusThree, nowPlusThree, null, LOGIN_1,
+                new String[] { "rte", "operator", "group2" }, new String[] { "entity1", "entity2" }));
 
-        //create later published cards in past
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, null));
+        // create later published cards in past
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1,
+                new String[] { "rte", "operator" }, null));
 
-        //create later published cards in future
-        persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        // create later published cards in future
+        persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN_1,
+                new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
 
-        //create cards with different publishers
-        persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, null));
+        // create cards with different publishers
+        persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, LOGIN_1,
+                new String[] { "rte", "operator" }, null));
 
-        persistCard(createSimpleArchivedCard(1, businessconfigPublisher, nowPlusTwo, now, null, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        persistCard(createSimpleArchivedCard(1, businessconfigPublisher, nowPlusTwo, now, null, LOGIN_1,
+                new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" }));
 
-        //create card sent to user3
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_3, new String[]{"rte","operator"}, null));
+        // create card sent to user3
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_3,
+                new String[] { "rte", "operator" }, null));
 
-        //create card only received by user4
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null, null, new String[]{"someEntity"}));
+        // create card only received by user4
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null, null,
+                new String[] { "someEntity" }));
 
-        //create card only received by user5
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null, new String[]{"group1"}, new String[]{"entity1"}));
+        // create card only received by user5
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null,
+                new String[] { "group1" }, new String[] { "entity1" }));
 
     }
 
@@ -179,8 +200,8 @@ public class ArchivedCardRepositoryShould {
     void persistCard() {
         repository.deleteAll().subscribe();
 
-        ArchivedCard card =
-                createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"});
+        ArchivedCard card = createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1,
+                new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" });
         StepVerifier.create(repository.save(card))
                 .expectNextMatches(computeCardPredicate())
                 .expectComplete()
@@ -193,40 +214,44 @@ public class ArchivedCardRepositoryShould {
     }
 
     private Predicate<ArchivedCard> computeCardPredicate() {
-        Predicate<ArchivedCard> predicate = c -> !(c.id()==null);
-        predicate = predicate.and(c -> firstPublisher.equals(c.publisher()));
-        predicate = predicate.and(c -> c.userRecipients().contains(LOGIN_1));
-        predicate = predicate.and(c -> c.groupRecipients().contains("rte"));
-        predicate = predicate.and(c -> c.groupRecipients().contains("operator"));
-        predicate = predicate.and(c -> c.entityRecipients().size() == 2);
-        predicate = predicate.and(c -> c.entityRecipients().get(0).equals("entity1"));
-        predicate = predicate.and(c -> c.entityRecipients().get(1).equals("entity2"));
+        Predicate<ArchivedCard> predicate = c -> !(c.id == null);
+        predicate = predicate.and(c -> firstPublisher.equals(c.publisher));
+        predicate = predicate.and(c -> c.userRecipients.contains(LOGIN_1));
+        predicate = predicate.and(c -> c.groupRecipients.contains("rte"));
+        predicate = predicate.and(c -> c.groupRecipients.contains("operator"));
+        predicate = predicate.and(c -> c.entityRecipients.size() == 2);
+        predicate = predicate.and(c -> c.entityRecipients.get(0).equals("entity1"));
+        predicate = predicate.and(c -> c.entityRecipients.get(1).equals("entity2"));
         return predicate;
     }
 
-    @Test void fetchArchivedCardByIdWithUserWhoIsARecipient() {
+    @Test
+    void fetchArchivedCardByIdWithUserWhoIsARecipient() {
 
-        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"rte","operator"}, null);
-        String id = archivedCard.id();
+        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne,
+                LOGIN_1, new String[] { "rte", "operator" }, null);
+        String id = archivedCard.id;
 
         persistCard(archivedCard);
 
         StepVerifier.create(repository.findByIdWithUser(id, currentUser1))
                 .assertNext(card -> {
-                    assertThat(card.id()).isEqualTo(id);
-                    assertThat(card.publisher()).isEqualTo("PUBLISHER");
-                    assertThat(card.processInstanceId()).isEqualTo("PROCESS1");
-                    assertThat(card.startDate()).isEqualTo(nowMinusTwo);
-                    assertThat(card.endDate()).isEqualTo(nowMinusOne);
+                    assertThat(card.id).isEqualTo(id);
+                    assertThat(card.publisher).isEqualTo("PUBLISHER");
+                    assertThat(card.processInstanceId).isEqualTo("PROCESS1");
+                    assertThat(card.startDate).isEqualTo(nowMinusTwo);
+                    assertThat(card.endDate).isEqualTo(nowMinusOne);
                 })
                 .expectComplete()
                 .verify();
     }
 
-    @Test void fetchArchivedCardByIdWithUserWhoIsNotARecipient() {
+    @Test
+    void fetchArchivedCardByIdWithUserWhoIsNotARecipient() {
 
-        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN_1, new String[]{"someGroup","operator"}, null);
-        String id = archivedCard.id();
+        ArchivedCard archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne,
+                LOGIN_1, new String[] { "someGroup", "operator" }, null);
+        String id = archivedCard.id;
 
         persistCard(archivedCard);
 
@@ -238,35 +263,27 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithRegularParams() {
 
-        //Find cards with given publishers and a given processInstanceId
+        // Find cards with given publishers and a given processInstanceId
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publisher")
-            .matchType(FilterMatchTypeEnum.IN)
-            .filter(List.of(secondPublisher, businessconfigPublisher))
-            .build();
-        FilterModel filter2 = FilterModel.builder()
-            .columnName("processInstanceId")
-            .matchType(FilterMatchTypeEnum.EQUALS)
-            .filter(List.of("PROCESS1"))
-            .build();
+        FilterModel filter1 = new FilterModel("publisher", null, FilterMatchTypeEnum.IN,
+                List.of(secondPublisher, businessconfigPublisher), null);
+        FilterModel filter2 = new FilterModel("processInstanceId", null, FilterMatchTypeEnum.EQUALS,
+                List.of("PROCESS1"), null);
 
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1, filter2)).build();
+        CardsFilter filters = getCardsFilter(List.of(filter1, filter2));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
-
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
-                //The card from businessconfigPublisher is returned first because it has the latest publication date
+                // The card from businessconfigPublisher is returned first because it has the
+                // latest publication date
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(2);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent().get(0).getPublisher()).isEqualTo(businessconfigPublisher);
-                    assertThat(page.getContent().get(0).getProcessInstanceId()).isEqualTo("PROCESS1");
-                    assertThat(page.getContent().get(1).getPublisher()).isEqualTo(secondPublisher);
-                    assertThat(page.getContent().get(1).getProcessInstanceId()).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(0).publisher).isEqualTo(businessconfigPublisher);
+                    assertThat(page.getContent().get(0).processInstanceId).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(1).publisher).isEqualTo(secondPublisher);
+                    assertThat(page.getContent().get(1).processInstanceId).isEqualTo("PROCESS1");
                 })
                 .expectComplete()
                 .verify();
@@ -276,14 +293,10 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithRegularParamsEmptyResultSet() {
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publisher")
-            .matchType(FilterMatchTypeEnum.IN)
-            .filter(List.of("noSuchPublisher"))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("publisher", null, FilterMatchTypeEnum.IN,
+                List.of("noSuchPublisher"), null);
+
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
@@ -300,35 +313,28 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateBetween() {
 
-        //Find cards published between start and end (included)
+        // Find cards published between start and end (included)
         Instant start = now;
         Instant end = nowPlusOne;
 
+        FilterModel filter1 = new FilterModel("publishDateFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+        FilterModel filter2 = new FilterModel("publishDateTo", null, null,
+                List.of(Long.toString(end.toEpochMilli())), null);
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publishDateFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-        FilterModel filter2 = FilterModel.builder()
-            .columnName("publishDateTo")
-            .filter(List.of(Long.toString(end.toEpochMilli())))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1, filter2)).build();
+        CardsFilter filters = getCardsFilter(List.of(filter1, filter2));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(3);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(start)>=0)&&(card.getPublishDate().compareTo(end)<=0))
-                    );
-                    //Check sort order
+                            card -> (card.publishDate.compareTo(start) >= 0)
+                                    && (card.publishDate.compareTo(end) <= 0)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -338,29 +344,24 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateAfter() {
 
-        //Find cards published after start (included)
+        // Find cards published after start (included)
         Instant start = now;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publishDateFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("publishDateFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(4);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(start) >= 0))
-                    );
-                    //Check sort order
+                            card -> (card.publishDate.compareTo(start) >= 0)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -370,29 +371,23 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateBefore() {
 
-        //Find cards published before end (included)
+        // Find cards published before end (included)
         Instant end = nowMinusTwo;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publishDateTo")
-            .filter(List.of(Long.toString(end.toEpochMilli())))
-            .build();
-        
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("publishDateTo", null, null,
+                List.of(Long.toString(end.toEpochMilli())), null);
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(9);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublishDate().compareTo(end) <= 0))
-                    );
-                    //Check sort order
+                            card -> (card.publishDate.compareTo(end) <= 0)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -402,34 +397,28 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveBetween() {
 
-        //Find cards with an active period that overlaps the [start,end] range (bounds included)
+        // Find cards with an active period that overlaps the [start,end] range (bounds
+        // included)
         Instant start = nowMinusHalf;
         Instant end = nowPlusHalf;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("activeFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-        FilterModel filter2 = FilterModel.builder()
-            .columnName("activeTo")
-            .filter(List.of(Long.toString(end.toEpochMilli())))
-            .build();
-        
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1, filter2)).build();
+        FilterModel filter1 = new FilterModel("activeFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+        FilterModel filter2 = new FilterModel("activeTo", null, null,
+                List.of(Long.toString(end.toEpochMilli())), null);
+
+        CardsFilter filters = getCardsFilter(List.of(filter1, filter2));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(4);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, start, end))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, start, end)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -439,56 +428,44 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveFrom() {
 
-        //Find cards with an active period that is at least partly after start
+        // Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("activeFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("activeFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(5);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, start, null))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, start, null)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
                 .verify();
     }
 
-
-
     @Test
     void fetchArchivedCardsActiveFromWithPaging() {
 
-        //Find cards with an active period that is at least partly after start
+        // Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("activeFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-            
-        //Page 1
-        CardsFilter filters = CardsFilter.builder()
-            .size(BigDecimal.valueOf(2))
-            .page(BigDecimal.ZERO)
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("activeFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+
+        // Page 1
+        CardsFilter filters = new CardsFilter(BigDecimal.ZERO, BigDecimal.valueOf(2), null, null, null,
+                List.of(filter1),
+                null);
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
@@ -498,24 +475,18 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheFirstPage = 2;
                     assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheFirstPage);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, start, null))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, start, null)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
                 .verify();
 
-        //Page 2
-
-        filters = CardsFilter.builder()
-            .size(BigDecimal.valueOf(2))
-            .page(BigDecimal.ONE)
-            .filters(List.of(filter1)).build();
+        // Page 2
+        filters = new CardsFilter(BigDecimal.ONE, BigDecimal.valueOf(2), null, null, null, List.of(filter1), null);
         filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
@@ -525,21 +496,18 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheSecondPage = 2;
                     assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheSecondPage);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, start, null))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, start, null)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
                 .verify();
 
-        //Page 3
-        filters = CardsFilter.builder()
-        .size(BigDecimal.valueOf(2))
-        .page(BigDecimal.valueOf(2))
-        .filters(List.of(filter1)).build();
+        // Page 3
+        filters = new CardsFilter(BigDecimal.valueOf(2), BigDecimal.valueOf(2), null, null, null, List.of(filter1),
+                null);
 
         filterParams = of(currentUser1, filters);
 
@@ -551,11 +519,10 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheBusinessconfigPage = 1;
                     assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheBusinessconfigPage);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, start, null))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, start, null)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -563,34 +530,26 @@ public class ArchivedCardRepositoryShould {
 
     }
 
-
     @Test
     void fetchArchivedCardsActiveTo() {
 
-        //Find cards with an active period that is at least partly before end
+        // Find cards with an active period that is at least partly before end
         Instant end = nowMinusTwo;
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("activeTo")
-            .filter(List.of(Long.toString(end.toEpochMilli())))
-            .build();
-
-        
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("activeTo", null, null,
+                List.of(Long.toString(end.toEpochMilli())), null);
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
-        
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(6);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfCardActiveInRange(card, null, end))
-                    );
-                    //Check sort order
+                            card -> checkIfCardActiveInRange(card, null, end)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -600,17 +559,12 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsPublishDateGreaterThan() {
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publishDate")
-            .matchType(FilterMatchTypeEnum.GREATERTHAN)
-            .filter(List.of(Long.toString(now.toEpochMilli())))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("publishDate", null, FilterMatchTypeEnum.GREATERTHAN,
+                List.of(Long.toString(now.toEpochMilli())), null);
+
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
@@ -618,9 +572,8 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getPublishDate().isAfter(now))
-                    );
-                    //Check sort order
+                            card -> card.publishDate.isAfter(now)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -630,17 +583,12 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsPublishDateLessThan() {
 
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("publishDate")
-            .matchType(FilterMatchTypeEnum.LESSTHAN)
-            .filter(List.of(Long.toString(now.toEpochMilli())))
-            .build();
-            
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("publishDate", null, FilterMatchTypeEnum.LESSTHAN,
+                List.of(Long.toString(now.toEpochMilli())), null);
+
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
@@ -648,9 +596,8 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getPublishDate().isBefore(now))
-                    );
-                    //Check sort order
+                            card -> card.publishDate.isBefore(now)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -660,14 +607,10 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsProcessInstanceIdLessThan() {
 
-        FilterModel filter1 = FilterModel.builder()
-                .columnName("processInstanceId")
-                .matchType(FilterMatchTypeEnum.LESSTHAN)
-                .filter(List.of("PROCESS3"))
-                .build();
+        FilterModel filter1 = new FilterModel("processInstanceId", null, FilterMatchTypeEnum.LESSTHAN,
+                List.of("PROCESS3"), null);
 
-        CardsFilter filters = CardsFilter.builder()
-                .filters(List.of(filter1)).build();
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
@@ -677,7 +620,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getProcessInstanceId().compareTo("PROCESS3") < 0));
+                            card -> card.processInstanceId.compareTo("PROCESS3") < 0));
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -688,14 +631,9 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsProcessInstanceIdGreaterThan() {
 
-        FilterModel filter1 = FilterModel.builder()
-                .columnName("processInstanceId")
-                .matchType(FilterMatchTypeEnum.GREATERTHAN)
-                .filter(List.of("PROCESS2"))
-                .build();
-
-        CardsFilter filters = CardsFilter.builder()
-                .filters(List.of(filter1)).build();
+        FilterModel filter1 = new FilterModel("processInstanceId", null, FilterMatchTypeEnum.GREATERTHAN,
+                List.of("PROCESS2"), null);
+        CardsFilter filters = getCardsFilter(List.of(filter1));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
@@ -705,7 +643,7 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> card.getProcessInstanceId().compareTo("PROCESS2") > 0));
+                            card -> card.processInstanceId.compareTo("PROCESS2") > 0));
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -720,45 +658,29 @@ public class ArchivedCardRepositoryShould {
         Instant end = nowPlusHalf;
 
         Instant publishTo = now;
-     
-        FilterModel filter1 = FilterModel.builder()
-            .columnName("activeFrom")
-            .filter(List.of(Long.toString(start.toEpochMilli())))
-            .build();
-        FilterModel filter2 = FilterModel.builder()
-            .columnName("activeTo")
-            .filter(List.of(Long.toString(end.toEpochMilli())))
-            .build();
 
-        FilterModel filter3= FilterModel.builder()
-            .columnName("publishDateTo")
-            .filter(List.of(Long.toString(publishTo.toEpochMilli())))
-            .build();
-
-        FilterModel filter4= FilterModel.builder()
-            .columnName("publisher")
-            .matchType(FilterMatchTypeEnum.EQUALS)
-            .filter(List.of(firstPublisher))
-            .build();
-
-        CardsFilter filters = CardsFilter.builder()
-            .filters(List.of(filter1, filter2, filter3, filter4)).build();
+        FilterModel filter1 = new FilterModel("activeFrom", null, null,
+                List.of(Long.toString(start.toEpochMilli())), null);
+        FilterModel filter2 = new FilterModel("activeTo", null, null,
+                List.of(Long.toString(end.toEpochMilli())), null);
+        FilterModel filter3 = new FilterModel("publishDateTo", null, null,
+                List.of(Long.toString(publishTo.toEpochMilli())), null);
+        FilterModel filter4 = new FilterModel("publisher", null, FilterMatchTypeEnum.EQUALS,
+                List.of(firstPublisher), null);
+        CardsFilter filters = getCardsFilter(List.of(filter1, filter2, filter3, filter4));
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(3);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
+                    // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (card.getPublisher().equals(firstPublisher)
-                                    &&checkIfCardActiveInRange(card, start, end)
-                                    &&card.getPublishDate().compareTo(publishTo)<=0)
-                            )
-                    );
-                    //Check sort order
+                            card -> (card.publisher.equals(firstPublisher)
+                                    && checkIfCardActiveInRange(card, start, end)
+                                    && card.publishDate.compareTo(publishTo) <= 0)));
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -769,17 +691,16 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsUserRecipientIsAllowedToSee() {
 
-        //Cards visible by user1
-        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
+        // Cards visible by user1
+        CardsFilter filters = getEmptyCardsFilter();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(13);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check sort order
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -790,17 +711,16 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
 
-        //Cards visible by someone from group "rte"
-        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
+        // Cards visible by someone from group "rte"
+        CardsFilter filters = getEmptyCardsFilter();
 
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser2, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(7);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check sort order
+                    // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
@@ -811,10 +731,9 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
 
-        //Cards visible by user3 (who has no groups at all)
-        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
+        // Cards visible by user3 (who has no groups at all)
+        CardsFilter filters = getEmptyCardsFilter();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser3, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)
@@ -826,10 +745,9 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
 
-        //Cards visible by someone from entity "someEntity"
-        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
+        // Cards visible by someone from entity "someEntity"
+        CardsFilter filters = getEmptyCardsFilter();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser4, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)
@@ -841,10 +759,9 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
 
-        //Cards visible by someone from group "group1" and from entity "entity1"
-        CardsFilter filters = CardsFilter.builder().filters(List.of()).build();
+        // Cards visible by someone from group "group1" and from entity "entity1"
+        CardsFilter filters = getEmptyCardsFilter();
         Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser5, filters);
-
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)

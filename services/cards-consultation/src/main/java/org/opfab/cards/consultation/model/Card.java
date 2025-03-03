@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,114 +21,101 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Instant;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Document(collection = "cards")
 @Validated
+@SuppressWarnings("java:S1104") // it is just a data object , we choose to have all fields public for simplicity
 public class Card {
 
-    private String uid;
+    public String uid;
     @Id
-    private String id;
-    private String parentCardId;
-    private String initialParentCardUid;
+    public String id;
+    public String parentCardId;
+    public String initialParentCardUid;
 
-    private String publisher;
-    private String processVersion;
-    private String process;
-    private String processInstanceId;
-    private String state;
-    private I18n title;
-    private I18n summary;
+    public String publisher;
+    public String processVersion;
+    public String process;
+    public String processInstanceId;
+    public String state;
+    public I18n title;
+    public I18n summary;
 
-    private String titleTranslated;
-    private String summaryTranslated;
+    public String titleTranslated;
+    public String summaryTranslated;
 
-    private Instant publishDate;
+    public Instant publishDate;
 
-    private Instant lastUpdate;
+    public Instant lastUpdate;
 
-    private Instant lttd;
-    private Instant startDate;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant endDate;
+    public Instant lttd;
+    public Instant startDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant expirationDate;
+    public Instant endDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String media;
-
-    private SeverityEnum severity;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<String> tags;
+    public Instant expirationDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Object data;
+    public String media;
+
+    public SeverityEnum severity;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<String> userRecipients;
+    public List<String> tags;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Object data;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<String> groupRecipients;
-
-    @Singular
-    private List<String> entityRecipients;
-
-    @Singular("entityRecipientForInformation")
-    private List<String> entityRecipientsForInformation;
-
-    @Singular("entityAllowedToRespond")
-    private List<String> entitiesAllowedToRespond;
-
-    @Singular("entityRequiredToRespond")
-    private List<String> entitiesRequiredToRespond;
-
-    @Singular("entityAllowedToEdit")
-    private List<String> entitiesAllowedToEdit;
+    public List<String> userRecipients;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<String> externalRecipients;
+    public List<String> groupRecipients;
 
-    @Singular
-    private List<TimeSpan> timeSpans;
+    public List<String> entityRecipients;
+
+    public List<String> entityRecipientsForInformation;
+
+    public List<String> entitiesAllowedToRespond;
+
+    public List<String> entitiesRequiredToRespond;
+
+    public List<String> entitiesAllowedToEdit;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public List<String> externalRecipients;
+
+    public List<TimeSpan> timeSpans;
 
     @JsonIgnore
-    private List<String> usersAcks; // information not needed in the front
+    public List<String> usersAcks; // information not needed in the front
 
-    private List<String> entitiesAcks;
+    public List<String> entitiesAcks;
 
     @JsonIgnore
-    private List<String> usersReads; // information not needed in the front
+    public List<String> usersReads; // information not needed in the front
 
     @Transient
-    private Boolean hasBeenAcknowledged;
+    public Boolean hasBeenAcknowledged;
 
     @Transient
-    private Boolean hasBeenRead;
+    public Boolean hasBeenRead;
 
-    private PublisherTypeEnum publisherType;
-    private String representative;
-    private PublisherTypeEnum representativeType;
-    private String wktGeometry;
-    private String wktProjection;
-    private Integer secondsBeforeTimeSpanForReminder;
+    public PublisherTypeEnum publisherType;
+    public String representative;
+    public PublisherTypeEnum representativeType;
+    public String wktGeometry;
+    public String wktProjection;
+    public Integer secondsBeforeTimeSpanForReminder;
 
-    private String processStateKey;
+    public String processStateKey;
 
     @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private RRule rRule;
+    public RRule rRule;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<CardActionEnum> actions;
+    public List<CardActionEnum> actions;
 
 }

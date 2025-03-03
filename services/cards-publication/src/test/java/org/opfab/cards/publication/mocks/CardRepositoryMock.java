@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,8 +59,8 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public void saveCard(Card card) {
-        cardsById.put(card.getId(), card);
-        cardsByUid.put(card.getUid(), card);
+        cardsById.put(card.id, card);
+        cardsByUid.put(card.uid, card);
         return;
     }
 
@@ -71,8 +71,8 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public void deleteCard(Card cardToDelete) {
-        cardsById.remove(cardToDelete.getId());
-        cardsByUid.remove(cardToDelete.getUid());
+        cardsById.remove(cardToDelete.id);
+        cardsByUid.remove(cardToDelete.uid);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class CardRepositoryMock implements CardRepository {
         List<Card> children = new ArrayList<Card>();
         if (card != null)
             cardsById.values().stream().forEach(child -> {
-                if ((child.getParentCardId() != null) && child.getParentCardId().equals(card.getId()))
+                if ((child.parentCardId != null) && child.parentCardId.equals(card.id))
                     children.add(child);
             });
         return Optional.of(children);
@@ -99,9 +99,9 @@ public class CardRepositoryMock implements CardRepository {
     @Override
     public void setChildCardDates(String parentCardId, Instant startDate, Instant endDate) {
         cardsById.values().stream().forEach(child -> {
-            if ((child.getParentCardId() != null) && child.getParentCardId().equals(parentCardId)) {
-                child.setStartDate(startDate);
-                child.setEndDate(endDate);
+            if ((child.parentCardId != null) && child.parentCardId.equals(parentCardId)) {
+                child.startDate = startDate;
+                child.endDate = endDate;
             }
         });
     }
@@ -113,22 +113,21 @@ public class CardRepositoryMock implements CardRepository {
             Card card = found.get();
 
             List<String> userAcks = new ArrayList<String>();
-            if (card.getUsersAcks() != null)
-                userAcks.addAll(card.getUsersAcks());
-            
-            userAcks.add(user.getLogin());
-            card.setUsersAcks(userAcks);
+            if (card.usersAcks != null)
+                userAcks.addAll(card.usersAcks);
 
+            userAcks.add(user.getLogin());
+            card.usersAcks = userAcks;
 
             if (entitiesAcks != null) {
                 List<String> acks = new ArrayList<String>();
 
-                if (card.getEntitiesAcks() != null)
-                    acks.addAll(card.getEntitiesAcks());
+                if (card.entitiesAcks != null)
+                    acks.addAll(card.entitiesAcks);
 
                 acks.addAll(entitiesAcks);
 
-                card.setEntitiesAcks(acks);
+                card.entitiesAcks = acks;
             }
             return UserBasedOperationResult.cardFound().operationDone(true);
         }
@@ -142,11 +141,11 @@ public class CardRepositoryMock implements CardRepository {
             Card card = found.get();
             List<String> userReads = new ArrayList<String>();
 
-            if (card.getUsersReads() != null)
-                userReads.addAll(card.getUsersReads());
-            
+            if (card.usersReads != null)
+                userReads.addAll(card.usersReads);
+
             userReads.add(name);
-            card.setUsersReads(userReads);
+            card.usersReads = userReads;
             return UserBasedOperationResult.cardFound().operationDone(true);
         }
         return UserBasedOperationResult.cardNotFound();
@@ -169,14 +168,14 @@ public class CardRepositoryMock implements CardRepository {
         List<Card> cards = new ArrayList<Card>();
         cardsById.values().stream().forEach(card -> {
 
-            if (((card.getEndDate() != null) && card.getEndDate().getNano() < endDateBefore.getNano())
-                    || ((card.getEndDate() == null) && (card.getStartDate().getNano() < endDateBefore.getNano()))) {
+            if (((card.endDate != null) && card.endDate.getNano() < endDateBefore.getNano())
+                    || ((card.endDate == null) && (card.startDate.getNano() < endDateBefore.getNano()))) {
                 cards.add(card);
             }
         });
         cards.forEach(card -> {
-            cardsById.remove(card.getId());
-            cardsByUid.remove(card.getUid());
+            cardsById.remove(card.id);
+            cardsByUid.remove(card.uid);
         });
         return cards;
     }
@@ -185,8 +184,8 @@ public class CardRepositoryMock implements CardRepository {
     public List<Card> findCardsByExpirationDate(Instant expirationDate) {
         List<Card> cards = new ArrayList<Card>();
         cardsById.values().stream().forEach(card -> {
-            if (((card.getExpirationDate() != null)
-                    && (card.getExpirationDate().toEpochMilli() < expirationDate.toEpochMilli()))) {
+            if (((card.expirationDate != null)
+                    && (card.expirationDate.toEpochMilli() < expirationDate.toEpochMilli()))) {
                 cards.add(card);
             }
         });

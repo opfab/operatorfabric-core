@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,7 +62,7 @@ public class CardController {
     public CardCreationReport createCard(@RequestBody Card card,
             HttpServletResponse response, Principal principal) {
         // Overwrite eventual uid sent by client
-        card.setUid(UUID.randomUUID().toString());
+        card.uid = UUID.randomUUID().toString();
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null;
         Jwt token = null;
@@ -74,18 +74,18 @@ public class CardController {
         cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token), false);
 
         logUserAction(user != null ? user.getUserData().getLogin() : null,
-                card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
-                user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
+                card.parentCardId != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
+                user != null ? user.getUserData().getEntities() : null, card.uid, null);
 
-        return new CardCreationReport(card.getId(), card.getUid());
+        return new CardCreationReport(card.id, card.uid);
     }
 
     @PatchMapping(value = "/{id}", produces = { "application/json" }, consumes = { "application/json" })
     @ResponseStatus(HttpStatus.OK)
-    public CardCreationReport patchCard( @PathVariable String id, @RequestBody Card card,
-                                          HttpServletResponse response, Principal principal) {
+    public CardCreationReport patchCard(@PathVariable String id, @RequestBody Card card,
+            HttpServletResponse response, Principal principal) {
         // Overwrite eventual uid sent by client
-        card.setUid(UUID.randomUUID().toString());
+        card.uid = UUID.randomUUID().toString();
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null;
         Jwt token = null;
@@ -97,10 +97,10 @@ public class CardController {
         cardProcessingService.patchCard(id, card, Optional.ofNullable(user), Optional.ofNullable(token));
 
         logUserAction(user != null ? user.getUserData().getLogin() : null,
-                      UserActionEnum.SEND_CARD,
-                      user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
+                UserActionEnum.SEND_CARD,
+                user != null ? user.getUserData().getEntities() : null, card.uid, null);
 
-        return new CardCreationReport(card.getId(),card.getUid());
+        return new CardCreationReport(card.id, card.uid);
     }
 
     @DeleteMapping
@@ -120,9 +120,9 @@ public class CardController {
         cardProcessingService.processUserCard(card, user, Optional.of(token));
 
         logUserAction(user.getUserData().getLogin(),
-                card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
-                user.getUserData().getEntities(), card.getUid(), null);
-        return new CardCreationReport(card.getId(), card.getUid());
+                card.parentCardId != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD,
+                user.getUserData().getEntities(), card.uid, null);
+        return new CardCreationReport(card.id, card.uid);
     }
 
     @DeleteMapping("/userCard/{id}")

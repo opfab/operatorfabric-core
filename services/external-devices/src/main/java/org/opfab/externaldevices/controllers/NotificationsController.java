@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.oauth2.UserExtractor;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceException;
@@ -29,14 +28,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-/**
- * NotificationsController, documented at {@link NotificationsApi}
- *
- */
 @RestController
-@Slf4j
 @RequestMapping("/notifications")
 public class NotificationsController implements UserExtractor {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NotificationsController.class);
 
     private static final String RECEIVED_NOTIFICATION = "Notification {} for user {} was received to be passed on to an external device.";
     private static final String UNHANDLED_NOTIFICATION = "Notification %1$s for user %2$s couldn't be handled for at least one device.";
@@ -57,15 +53,13 @@ public class NotificationsController implements UserExtractor {
         try {
             devicesService.sendSignalToAllDevicesOfUser(notification.opfabSignalId, user.getLogin());
         } catch (ExternalDeviceConfigurationException | ExternalDeviceException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message(String.format(UNHANDLED_NOTIFICATION, notification.opfabSignalId, user.getLogin()))
-                    .build(), e);
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.BAD_REQUEST,
+                            String.format(UNHANDLED_NOTIFICATION, notification.opfabSignalId, user.getLogin())),
+                    e);
         } catch (UnknownExternalDeviceException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(UNKNOWN_DEVICE, user.getLogin()))
-                    .build(), e);
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND, String.format(UNKNOWN_DEVICE, user.getLogin())), e);
         }
         response.setStatus(200);
         return null;

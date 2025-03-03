@@ -17,7 +17,6 @@ import org.apache.commons.io.FileUtils;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.*;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.springtools.error.model.ApiError;
@@ -47,8 +46,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 @Service
-@Slf4j
 public class ProcessesService implements ResourceLoaderAware {
 
     private static final String PATH_PREFIX = "file:";
@@ -70,6 +71,8 @@ public class ProcessesService implements ResourceLoaderAware {
     private ProcessMonitoring processMonitoringCache;
 
     private EventBus eventBus;
+
+    private static final Logger log = LoggerFactory.getLogger(ProcessesService.class);
 
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, EventBus eventBus) {
         this.objectMapper = objectMapper;
@@ -386,10 +389,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         if (!checkNoDuplicateProcessInUploadedFile(newProcessGroups))
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE)
-                            .build());
+                    new ApiError(HttpStatus.BAD_REQUEST, DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE));
 
         // copy file
         PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),
@@ -698,8 +698,8 @@ public class ProcessesService implements ResourceLoaderAware {
             throws IOException, ParseException {
 
         Path rootPath = Paths
-        .get(this.storagePath)
-        .normalize();
+                .get(this.storagePath)
+                .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy processmonitoring file");
 
@@ -708,7 +708,7 @@ public class ProcessesService implements ResourceLoaderAware {
         ProcessMonitoring processMonitoring = objectMapper.readValue(fileContent, ProcessMonitoring.class);
 
         PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8)),
-        rootPath.toString() + "/processmonitoring.json");
+                rootPath.toString() + "/processmonitoring.json");
 
         processMonitoringCache = processMonitoring;
         this.eventBus.sendEvent(PROCESS_EVENT_KEY, "MONITORING_CONFIG_CHANGE");
@@ -754,10 +754,8 @@ public class ProcessesService implements ResourceLoaderAware {
         if (inputValue.contains("#") || inputValue.contains("?") ||
                 inputValue.contains("/") || inputValue.contains("\\")) {
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("The " + inputName + " should not contain characters #, ?, /, \\")
-                            .build());
+                    new ApiError(HttpStatus.BAD_REQUEST,
+                            "The " + inputName + " should not contain characters #, ?, /, \\"));
         }
     }
 }
