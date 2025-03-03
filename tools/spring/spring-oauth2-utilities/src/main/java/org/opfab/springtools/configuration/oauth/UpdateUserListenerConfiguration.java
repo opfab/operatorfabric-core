@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,20 +13,17 @@ import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import lombok.extern.slf4j.Slf4j;
-
-
 @Configuration
-@Slf4j
 public class UpdateUserListenerConfiguration {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
+            .getLogger(UpdateUserListenerConfiguration.class);
 
     UpdateUserListener updateUserListener;
 
     @Autowired
-    public  void initUpdateUserListener(EventBus eventbus,UserServiceCache userServiceCache) {
+    public void initUpdateUserListener(EventBus eventbus, UserServiceCache userServiceCache) {
         log.info("Start user listener");
-        updateUserListener =  new UpdateUserListener(eventbus,userServiceCache);
+        updateUserListener = new UpdateUserListener(eventbus, userServiceCache);
     }
 }
-
-

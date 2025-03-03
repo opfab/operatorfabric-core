@@ -10,12 +10,9 @@ subprojects {
 
     dependencies {
         implementation misc.slf4j
-        annotationProcessor misc.lombok
-        implementation misc.lombok
-
         testRuntimeOnly testing_deps.junit5Engine
         testImplementation testing_deps.junit5Api
-        testImplementation boot.starterTest, testing_deps.assertJ, misc.lombok
+        testImplementation boot.starterTest, testing_deps.assertJ
     }
 
     /////// CONFIGURATION
@@ -37,7 +34,11 @@ subprojects {
     tasks.jacocoTestReport.dependsOn test
 
     /*Task that copies all the dependencies under build/support_libs so Sonar
-    can make sense of the Lombok annotations for example */
+    can make sense of the Lombok annotations for example 
+
+To be checked if it is still needed because lombok has been removed from the project
+
+    */
     task copyDependencies(type: Copy) {
         description 'copy dependencies to build/support_libs'
         from configurations.compileClasspath

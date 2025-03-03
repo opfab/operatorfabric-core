@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.useractiontracing.mongo;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.useractiontracing.model.UserActionLog;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.springframework.data.domain.*;
@@ -31,8 +30,9 @@ import net.minidev.json.parser.ParseException;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
-@Slf4j
 public class UserActionLogRepositoryImpl implements UserActionLogRepository {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserActionLogRepositoryImpl.class);
 
     private final MongoTemplate template;
     private final MongoUserActionLogRepository repository;

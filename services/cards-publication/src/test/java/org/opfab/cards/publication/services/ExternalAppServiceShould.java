@@ -9,7 +9,6 @@
  */
 package org.opfab.cards.publication.services;
 
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -62,13 +61,11 @@ class ExternalAppServiceShould {
     void setup() {
         externalRecipients = new ExternalRecipients();
         List<ExternalRecipients.ExternalRecipient> recipients = new ArrayList<>();
-        ExternalRecipients.ExternalRecipient kafka = new ExternalRecipients.ExternalRecipient();
-        kafka.setId(externalRecipientKafka);
-        kafka.setUrl("kafka:");
+        ExternalRecipients.ExternalRecipient kafka = new ExternalRecipients.ExternalRecipient(externalRecipientKafka,
+                "kafka:", false);
 
-        ExternalRecipients.ExternalRecipient http = new ExternalRecipients.ExternalRecipient();
-        http.setId(externalRecipientHttp);
-        http.setUrl("http://");
+        ExternalRecipients.ExternalRecipient http = new ExternalRecipients.ExternalRecipient(externalRecipientHttp,
+                "http://", false);
 
         recipients.add(kafka);
         recipients.add(http);
@@ -80,7 +77,7 @@ class ExternalAppServiceShould {
         Card card = createCardPublicationData(externalRecipientKafka);
         ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
         externalAppService.sendCardToExternalApplication(card, Optional.empty());
-        verify (responseCardProducer).send(card);
+        verify(responseCardProducer).send(card);
     }
 
     @Test
@@ -88,19 +85,23 @@ class ExternalAppServiceShould {
         Card card = createCardPublicationData(externalRecipientHttp);
         ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
         externalAppService.sendCardToExternalApplication(card, Optional.empty());
-        verify (restTemplate).postForObject(anyString(), any(), any());
+        verify(restTemplate).postForObject(anyString(), any(), any());
     }
 
-    private Card createCardPublicationData( String externalRecipients ) {
-        return  Card.builder().publisher("PUBLISHER_1").processVersion("O")
-                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
-                .title(new I18n("title",null))
-                .summary(new I18n("summary",null))
-                .startDate(Instant.now())
-                .timeSpan(new TimeSpan(Instant.ofEpochMilli(123l), null))
-                .process("process1")
-                .state("state1")
-                .externalRecipients(Arrays.asList(externalRecipients))
-                .build();
+    private Card createCardPublicationData(String externalRecipients) {
+
+        Card card = new Card();
+        card.publisher = "PUBLISHER_1";
+        card.processVersion = "O";
+        card.processInstanceId = "PROCESS_1";
+        card.severity = SeverityEnum.ALARM;
+        card.title = new I18n("title", null);
+        card.summary = new I18n("summary", null);
+        card.startDate = Instant.now();
+        card.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochMilli(123l), null));
+        card.process = "process1";
+        card.state = "state1";
+        card.externalRecipients = Arrays.asList(externalRecipients);
+        return card;
     }
 }

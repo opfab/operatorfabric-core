@@ -32,4 +32,4 @@ Feature: Cards
     Then status 400
     And match response.status == 'BAD_REQUEST'
     And match response.message == 'Constraint violation in the request'
-    And match response.errors[0] contains "Impossible to publish card because there is no process"
+    And match response.error contains "Impossible to publish card because there is no process"

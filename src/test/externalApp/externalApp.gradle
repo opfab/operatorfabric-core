@@ -39,10 +39,7 @@ dependencies {
 	implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	implementation project(':tools:generic:utilities')
-	//implementation project(':tools:spring:spring-oauth2-utilities')
 	implementation project(':tools:spring:spring-utilities')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {

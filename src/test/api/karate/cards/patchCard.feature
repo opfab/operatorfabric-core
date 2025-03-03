@@ -118,7 +118,7 @@ Feature: Cards
     When method patch
     Then status 400
     And match response.message contains "Constraint violation in the request"
-    And match response.errors[0] contains "The current process field api_test can not be patched with new value aDifferentProcess"
+    And match response.error contains "The current process field api_test can not be patched with new value aDifferentProcess"
 
    * def cardPatch =
 """
@@ -135,7 +135,7 @@ Feature: Cards
       When method patch
       Then status 400
       And match response.message contains "Constraint violation in the request"
-      And match response.errors[0] contains "The current processInstanceId field processForTestingPatch can not be patched with new value aDifferentProcessInstanceId"
+      And match response.error contains "The current processInstanceId field processForTestingPatch can not be patched with new value aDifferentProcessInstanceId"
 
 # Delete card
       Given url opfabPublishCardUrl + 'cards/' + cardId

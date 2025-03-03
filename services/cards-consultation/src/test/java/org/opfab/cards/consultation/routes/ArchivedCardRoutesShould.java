@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.cards.consultation.routes;
 
@@ -38,7 +36,8 @@ import static org.opfab.cards.consultation.TestUtilities.createSimpleArchivedCar
 import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class, ArchivedCardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = { IntegrationTestApplication.class,
+        ArchivedCardRoutesConfig.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class ArchivedCardRoutesShould {
 
@@ -52,13 +51,13 @@ class ArchivedCardRoutesShould {
     private ArchivedCardRepository repository;
 
     @AfterEach
-    public void cleanArchivedCardRepository(){
+    public void cleanArchivedCardRepository() {
         repository.deleteAll().subscribe();
 
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithGroup", groups = {"SOME_GROUP"})
+    @WithMockOpFabUserReactive(login = "userWithGroup", groups = { "SOME_GROUP" })
     class GivenUserWithGroupArchivedCardRoutesShould {
 
         @Test
@@ -78,96 +77,101 @@ class ArchivedCardRoutesShould {
         @Test
         void findArchivedCardById() {
             Instant now = roundingToMillis(Instant.now());
-            ArchivedCard simpleCard = createSimpleArchivedCard(1, publisher,now,now,now.plusSeconds(3600),"userWithGroup",null,null);
+            ArchivedCard simpleCard = createSimpleArchivedCard(1, publisher, now, now, now.plusSeconds(3600),
+                    "userWithGroup", null, null);
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard.id).exchange()
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardWithChildCards.class).value(res -> {
-                assertThat(res.card())
-                        .usingRecursiveComparison()
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualTo(simpleCard);
-            });
+                        assertThat(res.card())
+                                .usingRecursiveComparison()
+                                // This is necessary because empty lists are ignored in the returned JSON
+                                .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details",
+                                        "userRecipients", "groupRecipients", "timeSpans")
+                                .isEqualTo(simpleCard);
+                    });
         }
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithNoGroup", groups = {})
+    @WithMockOpFabUserReactive(login = "userWithNoGroup", groups = {})
     class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
-        void findOutCard(){
-            ArchivedCard simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+        void findOutCard() {
+            ArchivedCard simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(),
+                    Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}",simpleCard.id()).exchange()
-                    .expectStatus().isNotFound()
-            ;
+            webTestClient.get().uri("/archives/{id}", simpleCard.id).exchange()
+                    .expectStatus().isNotFound();
         }
 
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithGroupAndEntity", groups={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    @WithMockOpFabUserReactive(login = "userWithGroupAndEntity", groups = { "SOME_GROUP" }, entities = {
+            "SOME_ENTITY" })
     class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
 
         @Test
         void findArchivedCardById() {
-        Instant now = roundingToMillis(Instant.now());
+            Instant now = roundingToMillis(Instant.now());
 
-            ArchivedCard simpleCard1 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+            ArchivedCard simpleCard1 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    new String[] { "OTHER_GROUP", "SOME_GROUP" }, new String[] { "OTHER_ENTITY", "SOME_ENTITY" });// must
+                                                                                                                  // receive
 
-            ArchivedCard simpleCard2 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"});//must not receive
+            ArchivedCard simpleCard2 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    new String[] { "OTHER_GROUP", "SOME_GROUP" }, new String[] { "OTHER_ENTITY" });// must not receive
 
-            ArchivedCard simpleCard3 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive
+            ArchivedCard simpleCard3 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    new String[] { "OTHER_GROUP" }, new String[] { "OTHER_ENTITY", "SOME_ENTITY" });// must not receive
 
-            ArchivedCard simpleCard4 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, null);//must receive
+            ArchivedCard simpleCard4 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    new String[] { "OTHER_GROUP", "SOME_GROUP" }, null);// must receive
 
-            ArchivedCard simpleCard5 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+            ArchivedCard simpleCard5 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    null, new String[] { "OTHER_ENTITY", "SOME_ENTITY" });// must receive
 
-            ArchivedCard simpleCard6 = createSimpleArchivedCard(1, publisher,now,
-                   now,now.plusSeconds(3600), "",
-                    null, null);//must not receive
+            ArchivedCard simpleCard6 = createSimpleArchivedCard(1, publisher, now,
+                    now, now.plusSeconds(3600), "",
+                    null, null);// must not receive
 
             StepVerifier.create(repository.save(simpleCard1))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard1.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard1.id).exchange()
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardWithChildCards.class).value(res -> {
-                assertThat(res.card())
-                        .usingRecursiveComparison()
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualTo(simpleCard1);
-            });
+                        assertThat(res.card())
+                                .usingRecursiveComparison()
+                                // This is necessary because empty lists are ignored in the returned JSON
+                                .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details",
+                                        "userRecipients", "groupRecipients", "timeSpans")
+                                .isEqualTo(simpleCard1);
+                    });
 
             StepVerifier.create(repository.save(simpleCard2))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard2.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard2.id).exchange()
                     .expectStatus().isNotFound();
 
             StepVerifier.create(repository.save(simpleCard3))
@@ -175,7 +179,7 @@ class ArchivedCardRoutesShould {
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard3.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard3.id).exchange()
                     .expectStatus().isNotFound();
 
             StepVerifier.create(repository.save(simpleCard4))
@@ -183,37 +187,39 @@ class ArchivedCardRoutesShould {
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard4.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard4.id).exchange()
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardWithChildCards.class).value(res -> {
-                assertThat(res.card())
-                        .usingRecursiveComparison()
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualTo(simpleCard4);
-            });
+                        assertThat(res.card())
+                                .usingRecursiveComparison()
+                                // This is necessary because empty lists are ignored in the returned JSON
+                                .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details",
+                                        "userRecipients", "groupRecipients", "timeSpans")
+                                .isEqualTo(simpleCard4);
+                    });
 
             StepVerifier.create(repository.save(simpleCard5))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard5.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard5.id).exchange()
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardWithChildCards.class).value(res -> {
-                assertThat(res.card())
-                        .usingRecursiveComparison()
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualTo(simpleCard5);
-            });
+                        assertThat(res.card())
+                                .usingRecursiveComparison()
+                                // This is necessary because empty lists are ignored in the returned JSON
+                                .withComparatorForFields(new EmptyListComparator<String>(), "tags", "details",
+                                        "userRecipients", "groupRecipients", "timeSpans")
+                                .isEqualTo(simpleCard5);
+                    });
 
             StepVerifier.create(repository.save(simpleCard6))
                     .expectNextCount(1)
                     .expectComplete()
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.get().uri("/archives/{id}", simpleCard6.id()).exchange()
+            webTestClient.get().uri("/archives/{id}", simpleCard6.id).exchange()
                     .expectStatus().isNotFound();
         }
     }

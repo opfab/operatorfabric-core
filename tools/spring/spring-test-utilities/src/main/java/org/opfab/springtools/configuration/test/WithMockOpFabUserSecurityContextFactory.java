@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.springtools.configuration.test;
 
@@ -21,8 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-
-import lombok.Data;
 
 import java.io.BufferedReader;
 import java.security.Principal;
@@ -45,7 +41,8 @@ import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 
 /**
- * Creates {@link SecurityContext} containing token holding {@link WithMockOpFabUser} principal
+ * Creates {@link SecurityContext} containing token holding
+ * {@link WithMockOpFabUser} principal
  *
  *
  */
@@ -63,20 +60,19 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null);
 
         principal.setPermissions(Arrays.asList(customUser.permissions()));
-        
+
         String tokenValue = "dummyTokenValue";
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plus(365, ChronoUnit.DAYS);
         Map<String, Object> headers = new HashMap<>();
-        headers.put("dummyHeaderKey","dummyHeaderValue");
+        headers.put("dummyHeaderKey", "dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
-        claim.put("sub",customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getPermissions());
+        claim.put("sub", customUser.login());
+        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities
+                .computeAuthorities(principal.getPermissions());
 
-        Authentication auth = new MockAuthenticationWithDetails( 
-                new Jwt(tokenValue, issuedAt,expiresAt,headers,claim
-                ),principal,authorities);
-
+        Authentication auth = new MockAuthenticationWithDetails(
+                new Jwt(tokenValue, issuedAt, expiresAt, headers, claim), principal, authorities);
 
         context.setAuthentication(auth);
 
@@ -86,7 +82,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
     private class MockAuthenticationWithDetails extends OpFabJwtAuthenticationToken {
 
         MockAuthenticationWithDetails(Jwt token, OpFabUserDetails principal, Collection<GrantedAuthority> authorities) {
-            super(token, principal,authorities);
+            super(token, principal, authorities);
         }
 
         @Override
@@ -102,25 +98,29 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
             super(req);
         }
 
-        
         @Override
         public String getRemoteAddress() {
             return "127.0.0.1";
         }
 
-
     }
-    @Data
+
     class MockHttpservletRequest implements HttpServletRequest {
 
         @Override
-        public String getRequestId() { return null; }
+        public String getRequestId() {
+            return null;
+        }
 
         @Override
-        public String getProtocolRequestId() { return null; }
+        public String getProtocolRequestId() {
+            return null;
+        }
 
         @Override
-        public ServletConnection getServletConnection() { return null; }
+        public ServletConnection getServletConnection() {
+            return null;
+        }
 
         @Override
         public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) {
@@ -178,7 +178,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public Map<String,String[]>  getParameterMap() {
+        public Map<String, String[]> getParameterMap() {
             return new HashMap<>();
         }
 
@@ -443,7 +443,8 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
+        public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+                throws IllegalStateException {
             return null;
         }
 

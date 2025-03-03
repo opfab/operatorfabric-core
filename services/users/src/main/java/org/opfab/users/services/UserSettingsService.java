@@ -26,10 +26,12 @@ import org.opfab.users.model.UserSettings;
 import org.opfab.users.model.OperationResult.ErrorType;
 import org.opfab.users.repositories.UserSettingsRepository;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class UserSettingsService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserSettingsService.class);
 
     private static final String FILTERING_NOTIFICATION_NOT_ALLOWED = "Filtering notification not allowed for at least one process/state";
 

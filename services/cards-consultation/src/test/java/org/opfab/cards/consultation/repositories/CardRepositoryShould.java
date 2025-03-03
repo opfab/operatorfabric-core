@@ -106,9 +106,9 @@ class CardRepositoryShould {
     }
 
     private void assertCard(CardOperation op, Object processName, Object publisher, Object processVersion) {
-        assertThat(op.card().getId()).isEqualTo(processName);
-        assertThat(op.card().getPublisher()).isEqualTo(publisher);
-        assertThat(op.card().getProcessVersion()).isEqualTo(processVersion);
+        assertThat(op.card().id).isEqualTo(processName);
+        assertThat(op.card().publisher).isEqualTo(publisher);
+        assertThat(op.card().processVersion).isEqualTo(processVersion);
     }
 
     private void persistCard(Card simpleCard) {
@@ -120,18 +120,17 @@ class CardRepositoryShould {
 
     @Test
     void persistCard() {
-        Card card = Card.builder()
-                .processInstanceId("PROCESS_ID")
-                .process("PROCESS")
-                .publisher("PUBLISHER")
-                .processVersion("0")
-                .state("anyState")
-                .startDate(Instant.now())
-                .severity(SeverityEnum.ALARM)
-                .title(new I18n("title", null))
-                .summary(new I18n("summary", null))
-                .entityRecipients(new ArrayList<String>(Arrays.asList("entity1", "entity2")))
-                .build();
+        Card card = new Card();
+        card.processInstanceId = "PROCESS_ID";
+        card.process = "PROCESS";
+        card.publisher = "PUBLISHER";
+        card.processVersion = "0";
+        card.state = "anyState";
+        card.startDate = Instant.now();
+        card.severity = SeverityEnum.ALARM;
+        card.title = new I18n("title", null);
+        card.summary = new I18n("summary", null);
+        card.entityRecipients = new ArrayList<String>(Arrays.asList("entity1", "entity2"));
         prepareCard(card, Instant.now());
         StepVerifier.create(repository.save(card))
                 .expectNextMatches(computeCardPredicate(card))
@@ -213,11 +212,11 @@ class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .expectComplete()
                 .verify();
@@ -239,11 +238,11 @@ class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .expectComplete()
                 .verify();
@@ -265,11 +264,11 @@ class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
-                    results.put(op.card().getProcessInstanceId(), op);
+                    results.put(op.card().processInstanceId, op);
                 })
                 .expectComplete()
                 .verify();
@@ -432,12 +431,12 @@ class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS1", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenAcknowledged()).isFalse();
+                    assertThat(op.card().hasBeenAcknowledged).isFalse();
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS2", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenAcknowledged()).isTrue();
+                    assertThat(op.card().hasBeenAcknowledged).isTrue();
                 })
                 .expectComplete()
                 .verify();
@@ -456,12 +455,12 @@ class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS1", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenAcknowledged()).isFalse();
+                    assertThat(op.card().hasBeenAcknowledged).isFalse();
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS2", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenAcknowledged()).isFalse();
+                    assertThat(op.card().hasBeenAcknowledged).isFalse();
                 })
                 .expectComplete()
                 .verify();
@@ -479,12 +478,12 @@ class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS1", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenRead()).isFalse();
+                    assertThat(op.card().hasBeenRead).isFalse();
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS2", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenRead()).isTrue();
+                    assertThat(op.card().hasBeenRead).isTrue();
                 })
                 .expectComplete()
                 .verify();
@@ -503,12 +502,12 @@ class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS1", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenRead()).isFalse();
+                    assertThat(op.card().hasBeenRead).isFalse();
                 })
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
                     assertCard(op, "PROCESS.PROCESS2", "PUBLISHER", "0");
-                    assertThat(op.card().getHasBeenRead()).isFalse();
+                    assertThat(op.card().hasBeenRead).isFalse();
                 })
                 .expectComplete()
                 .verify();
@@ -516,11 +515,11 @@ class CardRepositoryShould {
     }
 
     private Predicate<Card> computeCardPredicate(Card card) {
-        Predicate<Card> predicate = c -> card.getId().equals(c.getId());
-        predicate = predicate.and(c -> "PUBLISHER".equals(c.getPublisher()));
-        predicate = predicate.and(c -> c.getEntityRecipients().size() == 2);
-        predicate = predicate.and(c -> c.getEntityRecipients().get(0).equals("entity1"));
-        predicate = predicate.and(c -> c.getEntityRecipients().get(1).equals("entity2"));
+        Predicate<Card> predicate = c -> card.id.equals(c.id);
+        predicate = predicate.and(c -> "PUBLISHER".equals(c.publisher));
+        predicate = predicate.and(c -> c.entityRecipients.size() == 2);
+        predicate = predicate.and(c -> c.entityRecipients.get(0).equals("entity1"));
+        predicate = predicate.and(c -> c.entityRecipients.get(1).equals("entity2"));
         return predicate;
     }
 

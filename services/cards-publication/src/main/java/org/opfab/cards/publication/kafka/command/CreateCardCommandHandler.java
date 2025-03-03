@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
-*  Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+*  Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,20 +10,22 @@
 
 package org.opfab.cards.publication.kafka.command;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 public class CreateCardCommandHandler extends BaseCommandHandler implements CommandHandler {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CreateCardCommandHandler.class);
+
     private final Services services;
+
+    public CreateCardCommandHandler(Services services) {
+        this.services = services;
+    }
 
     @Override
     public CommandType getCommandType() {
@@ -31,7 +33,7 @@ public class CreateCardCommandHandler extends BaseCommandHandler implements Comm
     }
 
     @Override
-    public void executeCommand(CardCommand cardCommand)  {
+    public void executeCommand(CardCommand cardCommand) {
         Card kafkaCard = cardCommand.getCard();
         log.debug("Received Kafka CREATE CARD with processInstanceId {}, taskId {} and variables: {}",
                 kafkaCard.getProcessInstanceId(), kafkaCard.getProcess(), kafkaCard.getData());

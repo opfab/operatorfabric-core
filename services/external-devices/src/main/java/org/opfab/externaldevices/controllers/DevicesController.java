@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
@@ -31,14 +30,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- * DevicesController, documented at {@link DevicesApi}
- *
- */
 @RestController
-@Slf4j
 @RequestMapping("/devices")
 public class DevicesController {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DevicesController.class);
 
     private static final String CONNECT_FAILED_DUE_TO_CONFIG = "Could not connect to device %1$s due to a configuration issue.";
     private static final String CONNECT_FAILED = "Connection to device %1$s failed.";
@@ -112,10 +108,7 @@ public class DevicesController {
         return this.devicesService.getDevice(deviceId)
                 .orElseThrow(
                         () -> new ApiErrorException(
-                                ApiError.builder()
-                                        .status(HttpStatus.NOT_FOUND)
-                                        .message(String.format(DEVICE_NOT_FOUND_MSG, deviceId))
-                                        .build()));
+                                new ApiError(HttpStatus.NOT_FOUND, String.format(DEVICE_NOT_FOUND_MSG, deviceId))));
     }
 
     @GetMapping(produces = { "application/json" })
@@ -125,9 +118,7 @@ public class DevicesController {
     }
 
     private Void throwApiException(Exception e, HttpStatus errorStatus, String errorMessage) {
-        throw new ApiErrorException(ApiError.builder()
-                .status(errorStatus)
-                .message(errorMessage)
-                .build(), e);
+        throw new ApiErrorException(
+                new ApiError(errorStatus, errorMessage), e);
     }
 }

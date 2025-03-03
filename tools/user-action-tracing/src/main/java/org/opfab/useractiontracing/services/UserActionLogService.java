@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-@Slf4j
 @Service
 public class UserActionLogService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserActionLogService.class);
 
     private UserActionLogRepository userActionLogRepository;
 
@@ -35,13 +34,14 @@ public class UserActionLogService {
 
     public void insertUserActionLog(String login, UserActionEnum actionType, List<String> entities, String cardUid,
             String comment) {
-        UserActionLog action = UserActionLog.builder().login(login)
-                .action(actionType)
-                .date(Instant.now())
-                .entities(entities)
-                .cardUid(cardUid)
-                .comment(comment)
-                .build();
+
+        UserActionLog action = new UserActionLog();
+        action.login = login;
+        action.action = actionType;
+        action.date = Instant.now();
+        action.entities = entities;
+        action.cardUid = cardUid;
+        action.comment = comment;
         this.insertUserActionLog(action);
     }
 
@@ -57,7 +57,7 @@ public class UserActionLogService {
         return this.userActionLogRepository.findByParams(params, pageable);
     }
 
-    public void deleteLogsByExpirationDate(Integer daysStored) {     
+    public void deleteLogsByExpirationDate(Integer daysStored) {
         Instant expirationDate = Instant.now().minus(daysStored, ChronoUnit.DAYS);
         this.userActionLogRepository.deleteExpiredLogs(expirationDate);
         log.info(String.format("User action logs older than %2d days have been deleted", daysStored));

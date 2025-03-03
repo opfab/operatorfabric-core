@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,6 @@ package org.opfab.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -37,8 +35,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class OpfabKafkaConsumer implements Runnable {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpfabKafkaConsumer.class);
+
     private KafkaConsumer<Object, Object> kafka;
     private CountDownLatch startupLatch = new CountDownLatch(1);
     private CountDownLatch shutdownLatch = new CountDownLatch(1);
@@ -46,7 +46,8 @@ public class OpfabKafkaConsumer implements Runnable {
 
     private BlockingQueue<String> outputList = new LinkedBlockingQueue<>();
 
-    public OpfabKafkaConsumer(String kafkaTopic, String bootstrapServer) throws InterruptedException, ExecutionException {
+    public OpfabKafkaConsumer(String kafkaTopic, String bootstrapServer)
+            throws InterruptedException, ExecutionException {
         Properties cp = new Properties();
         cp.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         cp.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
@@ -60,7 +61,6 @@ public class OpfabKafkaConsumer implements Runnable {
         createTopicIfNotExists(kafkaTopic, cp);
         kafka = new KafkaConsumer<>(cp);
         kafka.subscribe(Collections.singleton(kafkaTopic));
-
 
         Thread t = new Thread(this);
         t.start();
@@ -122,7 +122,7 @@ public class OpfabKafkaConsumer implements Runnable {
             while (true) {
                 ConsumerRecords<Object, Object> records = kafka.poll(Duration.ofMillis(500));
                 signalWhenReady();
-                if (records != null && !records.isEmpty() ) {
+                if (records != null && !records.isEmpty()) {
                     for (ConsumerRecord<Object, Object> cunsumerRecord : records) {
                         Object key = cunsumerRecord.key();
                         Object value = cunsumerRecord.value();

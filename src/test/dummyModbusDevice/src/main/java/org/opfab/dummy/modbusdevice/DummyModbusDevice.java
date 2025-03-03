@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,12 +15,12 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-@Slf4j
 public class DummyModbusDevice {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DummyModbusDevice.class);
 
     private final ModbusSlave modbusSlave;
     private final ReentrantLock lock = new ReentrantLock(true);
@@ -51,7 +51,7 @@ public class DummyModbusDevice {
         try {
             modbusSlave.listen();
         } catch (ModbusIOException e) {
-            log.error("Dummy modbus device stopped due to an exception",e);
+            log.error("Dummy modbus device stopped due to an exception", e);
         }
 
         if (modbusSlave.isListening()) {

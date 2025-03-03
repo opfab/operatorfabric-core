@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.ResponseEntity;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -23,13 +22,13 @@ class OpfabCustomExceptionHandlerShould {
     private OpfabCustomExceptionHandler handler = new OpfabCustomExceptionHandler();
 
     @Test
-    void handleApiErrorException(){
+    void handleApiErrorException() {
         ApiErrorException aee = new ApiErrorException(
-                ApiError.builder().status(INTERNAL_SERVER_ERROR).error("api error message").build(),
+                new ApiError(INTERNAL_SERVER_ERROR, "", "api error message"),
                 "api error test",
                 null);
         ResponseEntity<Object> result = handler.handleApiError(aee, null);
-        assertThat(((ApiError)result.getBody()).getErrors()).contains("api error message");
+        assertThat(((ApiError) result.getBody()).getError()).isEqualTo("api error message");
     }
 
 }

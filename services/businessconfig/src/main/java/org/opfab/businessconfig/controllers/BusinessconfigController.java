@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.businessconfig.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.*;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.services.MonitoringService;
@@ -41,8 +40,10 @@ import java.util.List;
 
 import net.minidev.json.parser.ParseException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
-@Slf4j
 @RequestMapping({ "/businessconfig", "/" }) // /businessconfig is a legacy path, shall be removed in a future version
 public class BusinessconfigController {
 
@@ -53,6 +54,7 @@ public class BusinessconfigController {
     public static final String IMPOSSIBLE_TO_UPDATE_BUNDLE = "Impossible to update bundle";
     private ProcessesService processService;
     private MonitoringService monitoringService;
+    private static final Logger log = LoggerFactory.getLogger(BusinessconfigController.class);
 
     public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService) {
         this.processService = processService;
@@ -123,10 +125,8 @@ public class BusinessconfigController {
             @Valid @RequestParam(value = "version", required = false) String version) {
         Process process = processService.fetch(processId, version);
         if (process == null) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Process with id %s was not found", processId))
-                    .build());
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND, String.format("Process with id %s was not found", processId)));
         }
         return process;
     }
@@ -151,11 +151,7 @@ public class BusinessconfigController {
             if (result == null) {
                 log.error(IMPOSSIBLE_TO_UPDATE_BUNDLE);
                 throw new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.BAD_REQUEST)
-                                .message(IMPOSSIBLE_TO_UPDATE_BUNDLE)
-                                .error(IMPOSSIBLE_TO_UPDATE_BUNDLE)
-                                .build(),
+                        new ApiError(HttpStatus.BAD_REQUEST, IMPOSSIBLE_TO_UPDATE_BUNDLE, IMPOSSIBLE_TO_UPDATE_BUNDLE),
                         UNABLE_TO_LOAD_FILE_MSG);
             }
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.id());
@@ -164,20 +160,12 @@ public class BusinessconfigController {
         } catch (FileNotFoundException e) {
             log.error("File not found while loading bundle file", e);
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("Incorrect inner file structure")
-                            .error(e.getMessage())
-                            .build(),
+                    new ApiError(HttpStatus.BAD_REQUEST, "Incorrect inner file structure", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (IOException e) {
             log.error("IOException while loading bundle file", e);
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("unable to load submitted file")
-                            .error(e.getMessage())
-                            .build(),
+                    new ApiError(HttpStatus.BAD_REQUEST, "unable to load submitted file", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         }
     }
@@ -204,18 +192,13 @@ public class BusinessconfigController {
             state = process.states().get(stateName);
             if (state == null) {
                 throw new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message("Unknown state for businessconfig party service process")
-                                .build(),
+                        new ApiError(HttpStatus.NOT_FOUND,
+                                String.format("State %s for process %s was not found", stateName, processId)),
                         UNABLE_TO_LOAD_FILE_MSG);
             }
         } else {
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.NOT_FOUND)
-                            .message("Unknown process")
-                            .build(),
+                    new ApiError(HttpStatus.NOT_FOUND, "Unknown process"),
                     UNABLE_TO_LOAD_FILE_MSG);
         }
         return state;
@@ -242,14 +225,14 @@ public class BusinessconfigController {
             return null;
         } catch (FileNotFoundException e) {
             log.error("Bundle directory not found when wanted to delete bundle", e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                    .message("Bundle not found").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND, "Bundle not found", e.getMessage()),
                     "Bundle directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting bundle directory";
             log.error(message, e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .message("unable to delete submitted bundle").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted bundle", e.getMessage()),
                     message, e);
         }
     }
@@ -266,14 +249,14 @@ public class BusinessconfigController {
             return null;
         } catch (FileNotFoundException e) {
             log.error("Bundle directory not found when wanted to delete bundle", e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                    .message("Bundle not found").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND, "Bundle not found", e.getMessage()),
                     "Bundle directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting bundle directory";
             log.error(message, e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .message("unable to delete submitted bundle").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted bundle", e.getMessage()),
                     message, e);
         }
     }
@@ -304,36 +287,25 @@ public class BusinessconfigController {
                 processService.updateBusinessDataFile(new String(file.getBytes()), resourceName);
             if (endPointName.equals("processmonitoring"))
                 processService.updateProcessMonitoringFile(new String(file.getBytes()));
-                
+
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);
             return null;
         } catch (FileNotFoundException e) {
             log.error("File not found while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("Incorrect inner file structure")
-                            .error(e.getMessage())
-                            .build(),
+                    new ApiError(HttpStatus.BAD_REQUEST, "Incorrect inner file structure", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (IOException e) {
             log.error("IOException while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("unable to load submitted file")
-                            .error(e.getMessage())
-                            .build(),
+                    new ApiError(HttpStatus.BAD_REQUEST, "unable to load submitted file", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (ParseException e) {
             log.error("ParseException while posting the " + file.getOriginalFilename() + FILE, e);
             throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message("The file " + file.getOriginalFilename() + " is not json compliant")
-                            .error(e.getMessage())
-                            .build(),
+                    new ApiError(HttpStatus.BAD_REQUEST,
+                            "The file " + file.getOriginalFilename() + " is not json compliant", e.getMessage()),
                     UNABLE_TO_POST_FILE_MSG, e);
         }
     }
@@ -357,10 +329,9 @@ public class BusinessconfigController {
         List<Process> history = processService.listProcessHistory(processId);
 
         if (history.isEmpty()) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("History for process with id %s was not found", processId))
-                    .build());
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND,
+                            String.format("History for process with id %s was not found", processId)));
         }
         return history;
     }
@@ -410,20 +381,21 @@ public class BusinessconfigController {
             return null;
         } catch (FileNotFoundException e) {
             log.error("Resource not found", e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                    .message("Resource not found").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.NOT_FOUND, "Resource not found", e.getMessage()),
                     "Resource directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting resource file";
             log.error(message, e);
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .message("unable to delete submitted resource").error(e.getMessage()).build(),
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted resource",
+                            e.getMessage()),
                     message, e);
         }
     }
 
     @PostMapping(value = "/processmonitoring", produces = { "application/json" }, consumes = {
-        "multipart/form-data" })
+            "multipart/form-data" })
     public Void uploadProcessMonitoring(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
         return uploadFile(request, response, file, "processmonitoring", null);

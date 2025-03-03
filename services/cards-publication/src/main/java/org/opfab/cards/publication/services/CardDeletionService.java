@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 package org.opfab.cards.publication.services;
-
 
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
@@ -66,14 +65,12 @@ public class CardDeletionService {
             if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending
                     && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete, login)) {
 
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message(buildPublisherErrorMessage(cardToDelete, login))
-                        .build());
+                throw new ApiErrorException(
+                        new ApiError(HttpStatus.FORBIDDEN, buildPublisherErrorMessage(cardToDelete, login)));
             }
         }
 
-        return deleteCard(cardToDelete,Instant.now(), jwt);
+        return deleteCard(cardToDelete, Instant.now(), jwt);
     }
 
     public Optional<Card> deleteUserCard(String id, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
@@ -82,12 +79,10 @@ public class CardDeletionService {
             return Optional.empty();
 
         if (cardPermissionControlService.isUserAllowedToDeleteThisCard(cardToDelete, user)) {
-            return deleteCard(cardToDelete,Instant.now(), jwt);
+            return deleteCard(cardToDelete, Instant.now(), jwt);
         } else {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.FORBIDDEN)
-                    .message("User not allowed to delete this card")
-                    .build());
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.FORBIDDEN, "User not allowed to delete this card"));
         }
     }
 
@@ -102,21 +97,21 @@ public class CardDeletionService {
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepository.deleteCard(cardToDelete);
-            cardRepository.setArchivedCardAsDeleted(cardToDelete.getProcess(), cardToDelete.getProcessInstanceId(),deletionDate);
+            cardRepository.setArchivedCardAsDeleted(cardToDelete.process, cardToDelete.processInstanceId, deletionDate);
             externalAppService.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
             Optional<List<Card>> childCard = cardRepository.findChildCard(cardToDelete);
             if (childCard.isPresent()) {
-                childCard.get().forEach(x -> deleteCardById(x.getId(), deletionDate, jwt));
+                childCard.get().forEach(x -> deleteCardById(x.id, deletionDate, jwt));
             }
         }
         return deletedCard;
     }
 
     private String buildPublisherErrorMessage(Card card, String login) {
-        String errorMessagePrefix = "Card publisher is set to " + card.getPublisher() + " and account login is "
+        String errorMessagePrefix = "Card publisher is set to " + card.publisher + " and account login is "
                 + login;
-        if (card.getRepresentative() != null) {
-            errorMessagePrefix = "Card representative is set to " + card.getRepresentative() + " and account login is "
+        if (card.representative != null) {
+            errorMessagePrefix = "Card representative is set to " + card.representative + " and account login is "
                     + login;
         }
         return errorMessagePrefix + ", the card cannot be deleted";

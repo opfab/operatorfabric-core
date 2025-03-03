@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.businessconfig.controllers;
 
@@ -27,36 +25,36 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class})
+@SpringBootTest(classes = { IntegrationTestApplication.class })
 class CustomExceptionHandlerShould {
 
-  @Autowired
-  private CustomExceptionHandler handler;
+    @Autowired
+    private CustomExceptionHandler handler;
 
-  @Test
-  void handleIOException(){
-    IOException ioe = new IOException("ioexception test");
-    ResponseEntity<Object> result = handler.handleIOException(ioe, null);
-    assertThat(((ApiError)result.getBody()).getErrors()).contains("ioexception test");
-  }
+    @Test
+    void handleIOException() {
+        IOException ioe = new IOException("ioexception test");
+        ResponseEntity<Object> result = handler.handleIOException(ioe, null);
+        assertThat(((ApiError) result.getBody()).getError()).isEqualTo("ioexception test");
+    }
 
-  @Test
-  void handleFileNotFoundException(){
-    FileNotFoundException fnfe = new FileNotFoundException("fileNotFound test");
-    ResponseEntity<Object> result = handler.handleFileNotFoundException(fnfe, null);
-    assertThat(((ApiError)result.getBody()).getErrors()).contains("fileNotFound test");
-  }
+    @Test
+    void handleFileNotFoundException() {
+        FileNotFoundException fnfe = new FileNotFoundException("fileNotFound test");
+        ResponseEntity<Object> result = handler.handleFileNotFoundException(fnfe, null);
+        assertThat(((ApiError) result.getBody()).getError()).isEqualTo("fileNotFound test");
+    }
 
-  @Test
-  void handleApiErrorException(){
-    ApiErrorException aee = new ApiErrorException(
-       ApiError.builder().status(INTERNAL_SERVER_ERROR).error("api error message").build(),
-       "api error test",
-       null);
-    ResponseEntity<Object> result = handler.handleApiError(aee, null);
-    assertThat(((ApiError)result.getBody()).getErrors()).contains("api error message");
-  }
+    @Test
+    void handleApiErrorException() {
+        ApiError error = new ApiError(INTERNAL_SERVER_ERROR, "", "api error message");
+        ApiErrorException aee = new ApiErrorException(
+                error,
+                "api error test",
+                null);
+        ResponseEntity<Object> result = handler.handleApiError(aee, null);
+        assertThat(((ApiError) result.getBody()).getError()).isEqualTo("api error message");
+    }
 
 }

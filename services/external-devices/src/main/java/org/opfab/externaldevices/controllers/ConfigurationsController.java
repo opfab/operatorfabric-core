@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
@@ -39,14 +38,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DevicesController, documented at {@link ConfigurationsApi}
- *
- */
 @RestController
-@Slf4j
 @RequestMapping("/configurations")
 public class ConfigurationsController {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConfigurationsController.class);
 
     public static final String CREATED_LOG = "{} {} was created.";
     public static final String DELETED_LOG = "{} {} was deleted.";
@@ -105,10 +101,8 @@ public class ConfigurationsController {
     }
 
     private ApiErrorException buildApiNotFoundException(Exception e, String errorMessage) {
-        return new ApiErrorException(ApiError.builder()
-                .status(HttpStatus.NOT_FOUND)
-                .message(errorMessage)
-                .build(), e);
+        return new ApiErrorException(
+                new ApiError(HttpStatus.NOT_FOUND, errorMessage), e);
     }
 
     @DeleteMapping(value = "/devices/{deviceId}", produces = { "application/json" })
@@ -126,6 +120,7 @@ public class ConfigurationsController {
         return null;
 
     }
+
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PostMapping(value = "/signals", produces = { "application/json" }, consumes = {
             "application/json" })
@@ -175,9 +170,9 @@ public class ConfigurationsController {
 
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PostMapping(value = "/users", produces = { "application/json" }, consumes = {
-        "application/json" })
+            "application/json" })
     public Void createUserConfiguration(HttpServletRequest request, HttpServletResponse response,
-        @Valid @RequestBody UserConfiguration userConfiguration) {
+            @Valid @RequestBody UserConfiguration userConfiguration) {
         String id = userConfiguration.userLogin;
         configService.saveUserConfiguration(userConfiguration);
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/signals/" + id);

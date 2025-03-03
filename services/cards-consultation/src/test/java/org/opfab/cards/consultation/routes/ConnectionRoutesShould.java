@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,154 +33,154 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class, ConnectionRoutesConfig.class,
-                CardSubscriptionService.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        CardSubscriptionService.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@Slf4j
 class ConnectionRoutesShould {
 
-        private static final String USER_LOGIN = "testuser";
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConnectionRoutesShould.class);
 
-        @Autowired
-        private WebTestClient webTestClient;
-        @Autowired
-        private RouterFunction<ServerResponse> connectionRoutes;
-        @Autowired
-        private CardSubscriptionService service;
+    private static final String USER_LOGIN = "testuser";
 
-        private CurrentUserWithPerimeters currentUserWithPerimeters;
+    @Autowired
+    private WebTestClient webTestClient;
+    @Autowired
+    private RouterFunction<ServerResponse> connectionRoutes;
+    @Autowired
+    private CardSubscriptionService service;
 
-        public ConnectionRoutesShould() {
-                currentUserWithPerimeters = createUserWithPerimeter(USER_LOGIN);
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
+
+    public ConnectionRoutesShould() {
+        currentUserWithPerimeters = createUserWithPerimeter(USER_LOGIN);
+    }
+
+    @BeforeEach
+    public void clearSubscriptions() {
+        service.clearSubscriptions();
+    }
+
+    @Nested
+    @WithMockOpFabUserReactive(login = "userWithGroup")
+    class ConnectionRoutesForAdminShould {
+        @Test
+        void respondOk() {
+            assertThat(connectionRoutes).isNotNull();
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
         }
 
-        
-        @BeforeEach
-        public void clearSubscriptions() {
-                service.clearSubscriptions();
+        @Test
+        void respondWithNoUSerConnectedIsEmpty() {
+            assertThat(connectionRoutes).isNotNull();
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$[0]").doesNotExist();
         }
 
-        @Nested
-        @WithMockOpFabUserReactive(login = "userWithGroup")
-        class ConnectionRoutesForAdminShould {
-                @Test
-                void respondOk() {
-                        assertThat(connectionRoutes).isNotNull();
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
-                }
+        @Test
+        void respondWithNoUSerConnectedIsEmptyAfterDeleteSubscription() {
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            subscription.getPublisher().subscribe(log::info);
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$[0].login").isEqualTo(USER_LOGIN);
 
-                @Test
-                void respondWithNoUSerConnectedIsEmpty() {
-                        assertThat(connectionRoutes).isNotNull();
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
-                                        .expectBody()
-                                        .jsonPath("$[0]").doesNotExist();
-                }
+            service.deleteSubscription(USER_LOGIN, "test");
 
-                @Test
-                void respondWithNoUSerConnectedIsEmptyAfterDeleteSubscription() {
-                        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
-                        subscription.getPublisher().subscribe(log::info);
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
-                                .expectBody()
-                                .jsonPath("$[0].login").isEqualTo(USER_LOGIN);
-
-                        service.deleteSubscription(USER_LOGIN, "test");
-
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
-                                .expectBody()
-                                .jsonPath("$[0]").doesNotExist();
-                }
-
-                @Test
-                void respondWithOneUserConnected() {
-                        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
-                        subscription.getPublisher().subscribe(log::info);
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
-                                        .expectBody()
-                                        .jsonPath("$[0].login").isEqualTo(USER_LOGIN);
-                }
-
-                @Test
-                void shouldDetectThatAUserIsAlreadyConnected() {
-                        // Force the service to check whether a user is already connected
-                        CardSubscriptionService subscriptionSpy = Mockito.spy(service);
-                        Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(true);
-
-                        Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-                        subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
-                        Assertions.assertTrue(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-
-                        // Simulate a log off
-                        subscriptionSpy.evictSubscription(CardSubscription.computeSubscriptionId(USER_LOGIN, "test"));
-
-                        Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-                }
-
-                @Test
-                void shouldNotDetectThatAUserIsAlreadyConnectedWhenOptionIsDisabled() {
-                        // Force the service not to check whether a user is already connected
-                        CardSubscriptionService subscriptionSpy = Mockito.spy(service);
-                        Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(false);
-
-                        Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-                        subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
-                        Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-
-                        // Simulate a log off
-                        subscriptionSpy.evictSubscription(CardSubscription.computeSubscriptionId(USER_LOGIN, "test"));
-
-                        Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-                }
-
-                @Test
-                void respondWithThreeUserConnected() {
-                        service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
-                        service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
-                        service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
-
-                        String[] expectedUsers = {"{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                                                  "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                                                  "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}"};
-
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
-
-                        FluxExchangeResult<String> request =  webTestClient.get().uri("/connections").exchange().returnResult(String.class);
-                        String actualJson = extractResponseJsonFromRequest(request);
-
-                        int actualUsersCount = actualJson.split("\"login\":").length - 1;
-                        Assertions.assertEquals(3, actualUsersCount);
-                        for (String currentUser : expectedUsers) {
-                                Assertions.assertTrue(actualJson.contains(currentUser));
-                        }
-
-                }
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$[0]").doesNotExist();
         }
 
-        @Nested
-        @WithMockOpFabUserReactive(login = "userWithGroup")
-        class ConnectionRoutesForNonAdminShould {
-                @Test
-                void accessIsAuthorized() {
-                        assertThat(connectionRoutes).isNotNull();
-                        webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
-                }
+        @Test
+        void respondWithOneUserConnected() {
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            subscription.getPublisher().subscribe(log::info);
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$[0].login").isEqualTo(USER_LOGIN);
         }
 
+        @Test
+        void shouldDetectThatAUserIsAlreadyConnected() {
+            // Force the service to check whether a user is already connected
+            CardSubscriptionService subscriptionSpy = Mockito.spy(service);
+            Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(true);
 
-        private CurrentUserWithPerimeters createUserWithPerimeter(String userLogin) {
-                User user = new User();
-                user.setLogin(userLogin);
+            Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            Assertions.assertTrue(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
 
-                CurrentUserWithPerimeters userWithPerimeters = new CurrentUserWithPerimeters();
-                userWithPerimeters.setUserData(user);
-                return userWithPerimeters;
+            // Simulate a log off
+            subscriptionSpy.evictSubscription(CardSubscription.computeSubscriptionId(USER_LOGIN, "test"));
+
+            Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
         }
 
-        private String extractResponseJsonFromRequest(FluxExchangeResult<String> request) {
-                Object[] responseBodyArray = request.getResponseBody().toStream().toArray();
-                return (String) responseBodyArray[0];
+        @Test
+        void shouldNotDetectThatAUserIsAlreadyConnectedWhenOptionIsDisabled() {
+            // Force the service not to check whether a user is already connected
+            CardSubscriptionService subscriptionSpy = Mockito.spy(service);
+            Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(false);
+
+            Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
+
+            // Simulate a log off
+            subscriptionSpy.evictSubscription(CardSubscription.computeSubscriptionId(USER_LOGIN, "test"));
+
+            Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
         }
+
+        @Test
+        void respondWithThreeUserConnected() {
+            service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
+
+            String[] expectedUsers = {
+                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
+                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
+                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}" };
+
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
+
+            FluxExchangeResult<String> request = webTestClient.get().uri("/connections").exchange()
+                    .returnResult(String.class);
+            String actualJson = extractResponseJsonFromRequest(request);
+
+            int actualUsersCount = actualJson.split("\"login\":").length - 1;
+            Assertions.assertEquals(3, actualUsersCount);
+            for (String currentUser : expectedUsers) {
+                Assertions.assertTrue(actualJson.contains(currentUser));
+            }
+
+        }
+    }
+
+    @Nested
+    @WithMockOpFabUserReactive(login = "userWithGroup")
+    class ConnectionRoutesForNonAdminShould {
+        @Test
+        void accessIsAuthorized() {
+            assertThat(connectionRoutes).isNotNull();
+            webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
+        }
+    }
+
+    private CurrentUserWithPerimeters createUserWithPerimeter(String userLogin) {
+        User user = new User();
+        user.setLogin(userLogin);
+
+        CurrentUserWithPerimeters userWithPerimeters = new CurrentUserWithPerimeters();
+        userWithPerimeters.setUserData(user);
+        return userWithPerimeters;
+    }
+
+    private String extractResponseJsonFromRequest(FluxExchangeResult<String> request) {
+        Object[] responseBodyArray = request.getResponseBody().toStream().toArray();
+        return (String) responseBodyArray[0];
+    }
 }

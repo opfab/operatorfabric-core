@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) RTE 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) RTE 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,19 +20,16 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProducerFactoryAutoConfigurationShould {
     @Mock
     private KafkaProperties kafkaProperties;
 
-    @Mock
-    private SchemaRegistryProperties schemaRegistryProperties;
+    private SchemaRegistryProperties schemaRegistryProperties = new SchemaRegistryProperties();
 
     @InjectMocks
     ProducerFactoryAutoConfiguration cut;
@@ -42,22 +39,27 @@ class ProducerFactoryAutoConfigurationShould {
         String valueDeserializer = "MyValueDeserializer";
         String schemaUrl = "http://some-url";
 
-        when (schemaRegistryProperties.getUrl()).thenReturn(schemaUrl);
+        schemaRegistryProperties.url = schemaUrl;
         ReflectionTestUtils.setField(cut, "valueDeserializer", valueDeserializer);
-        KafkaTemplate<String, CardCommand>  template = cut.kafkaTemplate(schemaRegistryProperties);
+        KafkaTemplate<String, CardCommand> template = cut.kafkaTemplate(schemaRegistryProperties);
 
-        assertThat(template.getProducerFactory().getConfigurationProperties().get("value.serializer"), is(valueDeserializer));
-        assertThat(template.getProducerFactory().getConfigurationProperties().get("schema.registry.url"), is(schemaUrl));
+        assertThat(template.getProducerFactory().getConfigurationProperties().get("value.serializer"),
+                is(valueDeserializer));
+        assertThat(template.getProducerFactory().getConfigurationProperties().get("schema.registry.url"),
+                is(schemaUrl));
     }
 
     @Test
     void kafkaTemplateNoSchemaUrl() {
         String valueDeserializer = "MyValueDeserializer";
         ReflectionTestUtils.setField(cut, "valueDeserializer", valueDeserializer);
+        schemaRegistryProperties.url = null;
 
-        KafkaTemplate<String, CardCommand>  template = cut.kafkaTemplate(schemaRegistryProperties);
+        KafkaTemplate<String, CardCommand> template = cut.kafkaTemplate(schemaRegistryProperties);
 
-        assertThat(template.getProducerFactory().getConfigurationProperties().get("value.serializer"), is(valueDeserializer));
-        assertThat(template.getProducerFactory().getConfigurationProperties().get("schema.registry.url"), is(nullValue()));
+        assertThat(template.getProducerFactory().getConfigurationProperties().get("value.serializer"),
+                is(valueDeserializer));
+        assertThat(template.getProducerFactory().getConfigurationProperties().get("schema.registry.url"),
+                is(nullValue()));
     }
 }

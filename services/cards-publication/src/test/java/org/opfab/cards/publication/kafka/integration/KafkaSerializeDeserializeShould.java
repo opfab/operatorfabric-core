@@ -20,7 +20,6 @@ import org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeseri
 import org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer;
 import org.opfab.cards.publication.model.*;
 
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -49,19 +48,24 @@ class KafkaSerializeDeserializeShould {
     }
 
     private Card createCardPublicationData() {
-        return Card.builder().publisher("PUBLISHER_1").processVersion("O")
-                .id("124454")
-                .uid("uid293454")
-                .parentCardId("myParent1234")
-                .timeSpans(List.of(new TimeSpan(
-                        Instant.now(),
-                        Instant.now().plus(2, ChronoUnit.HOURS))))
-                .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
-                .title(new I18n("title", null))
-                .summary(new I18n("summary", null))
-                .startDate(Instant.now())
-                .process("process5")
-                .state("state5")
-                .build();
+        Card card = new Card();
+        card.publisher = "PUBLISHER_1";
+        card.processVersion = "O";
+        card.id = "124454";
+        card.uid = "uid293454";
+        card.parentCardId = "myParent1234";
+        card.timeSpans = List.of(new TimeSpan(
+                Instant.now(),
+                Instant.now().plus(2, ChronoUnit.HOURS)));
+        card.processInstanceId = "PROCESS_1";
+        card.severity = SeverityEnum.INFORMATION;
+        card.title = new I18n("title", null);
+        card.summary = new I18n("summary", null);
+        card.startDate = Instant.now();
+        card.process = "process5";
+        card.state = "state5";
+
+        return card;
+
     }
 }

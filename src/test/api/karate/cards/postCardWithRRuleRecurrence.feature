@@ -237,7 +237,7 @@ Feature: postCardWithRRuleRecurrence
     When method post
     Then status 400
     And match response.message == 'Constraint violation in the request'
-    And match response.errors[0] == 'constraint violation : RRule.durationInMinutes: must be greater than or equal to 0'
+    And match response.error == 'constraint violation : RRule.durationInMinutes: must be greater than or equal to 0'
 
 #delete perimeter created previously
     * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)'}

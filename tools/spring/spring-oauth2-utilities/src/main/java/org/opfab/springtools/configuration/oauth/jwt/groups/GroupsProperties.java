@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.springtools.configuration.oauth.jwt.groups;
 
-import lombok.Data;
 import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -18,19 +16,30 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Define how to get the roles from a JWT mode or from the OPERATOR_FABRIC mode
- */
-
 @ConfigurationProperties("operatorfabric.security.jwt.groups")
 @Component
-@Data
 public class GroupsProperties {
 
     // mandatory : default mode
     private GroupsMode mode = GroupsMode.OPERATOR_FABRIC;
 
     private RolesClaim rolesClaim;
+
+    public GroupsMode getMode() {
+        return mode;
+    }
+
+    public void setMode(GroupsMode mode) {
+        this.mode = mode;
+    }
+
+    public RolesClaim getRolesClaim() {
+        return rolesClaim;
+    }
+
+    public void setRolesClaim(RolesClaim rolesClaim) {
+        this.rolesClaim = rolesClaim;
+    }
 
     /**
      * retrieve all the RolesClaimStandard and all the RolesClaimCheckExistPath
@@ -47,5 +56,4 @@ public class GroupsProperties {
         listRoleClaimResult.addAll(rolesClaim.getRolesClaimCheckExistPath());
         return listRoleClaimResult;
     }
-
 }

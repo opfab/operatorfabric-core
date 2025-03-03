@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,13 +38,12 @@ class ConsumerFactoryAutoConfigurationShould {
     @Mock
     private KafkaProperties kafkaProperties;
 
-    @Mock
-    private SchemaRegistryProperties schemaRegistryProperties;
+    private SchemaRegistryProperties schemaRegistryProperties = new SchemaRegistryProperties();
 
     @InjectMocks
     private ConsumerFactoryAutoConfiguration cut;
 
-    private final Map<String,Object> props = new HashMap<>();
+    private final Map<String, Object> props = new HashMap<>();
 
     @BeforeEach
     void SetUp() {
@@ -55,19 +54,25 @@ class ConsumerFactoryAutoConfigurationShould {
 
     @Test
     void testConsumerFactoryWithoutSchemaRegistry() {
-        when(schemaRegistryProperties.getUrl()).thenReturn(null);
+        schemaRegistryProperties.url = null;
 
-        ConsumerFactory<String, CardCommand > result = cut.consumerFactory(schemaRegistryProperties);
+        ConsumerFactory<String, CardCommand> result = cut.consumerFactory(schemaRegistryProperties);
         assertNotNull(result);
-        verify(schemaRegistryProperties, times(1)).getUrl();
+
+        Map<String, Object> consumerProps = result.getConfigurationProperties();
+        assertNull(consumerProps.get("schema.registry.url"));
+        assertNull(schemaRegistryProperties.url);
     }
 
     @Test
     void testConsumerFactoryWithSchemaRegistry() {
-        when(schemaRegistryProperties.getUrl()).thenReturn("Url of Registry");
 
-        ConsumerFactory<String, CardCommand > result = cut.consumerFactory(schemaRegistryProperties);
+        schemaRegistryProperties.url = "Url of Registry";
+
+        ConsumerFactory<String, CardCommand> result = cut.consumerFactory(schemaRegistryProperties);
         assertNotNull(result);
-        verify(schemaRegistryProperties, times(3)).getUrl();
+
+        Map<String, Object> consumerProps = result.getConfigurationProperties();
+        assertEquals("Url of Registry", consumerProps.get("schema.registry.url"));
     }
 }

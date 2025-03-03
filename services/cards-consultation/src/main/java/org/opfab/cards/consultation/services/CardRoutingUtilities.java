@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.services;
 
-import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -18,8 +17,9 @@ import org.opfab.cards.consultation.model.PublisherTypeEnum;
 
 import java.util.*;
 
-@Slf4j
 public class CardRoutingUtilities {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardRoutingUtilities.class);
 
     private CardRoutingUtilities() {
     }
@@ -164,7 +164,8 @@ public class CardRoutingUtilities {
             return true;
         }
 
-        // FE-4573 : from now, we want the user to receive all the cards sent by its entities
+        // FE-4573 : from now, we want the user to receive all the cards sent by its
+        // entities
         if (checkInCaseOfCardSentByEntitiesOfTheUser(publisher, publisherType, userEntities)) {
             log.debug("User {} is member of the entity that published the card {} so he shall receive it",
                     currentUserWithPerimeters.getUserData().getLogin(), idCard);
@@ -208,8 +209,8 @@ public class CardRoutingUtilities {
     }
 
     private static boolean checkInCaseOfCardSentByTheUserHimself(String publisher,
-                                                                 String publisherType,
-                                                                 String userLogin) {
+            String publisherType,
+            String userLogin) {
         return (publisherType.equals(PublisherTypeEnum.USER.toString()) &&
                 publisher.equals(userLogin));
     }

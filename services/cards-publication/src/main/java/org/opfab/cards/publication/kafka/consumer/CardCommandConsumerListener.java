@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.opfab.cards.publication.kafka.consumer;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
@@ -22,10 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class CardCommandConsumerListener {
 
-    private final Map<CommandType,CommandHandler> commandHandlerMap;
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardCommandConsumerListener.class);
+
+    private final Map<CommandType, CommandHandler> commandHandlerMap;
 
     public CardCommandConsumerListener(List<CommandHandler> commandHandlerList) {
         commandHandlerMap = commandHandlerList.stream()
@@ -42,8 +42,7 @@ public class CardCommandConsumerListener {
         CommandHandler commandHandler = commandHandlerMap.get(cardCommand.getCommand());
         if (commandHandler != null) {
             commandHandler.executeCommand(cardCommand);
-        }
-        else {
+        } else {
             throw new IllegalStateException("No command handler available for " + cardCommand.getCommand());
         }
     }

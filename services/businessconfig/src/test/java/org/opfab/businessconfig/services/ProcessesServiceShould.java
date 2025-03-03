@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.businessconfig.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
@@ -38,9 +37,11 @@ import static org.opfab.businessconfig.model.ResourceTypeEnum.*;
 import static org.opfab.utilities.PathUtils.copy;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class })
-@Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProcessesServiceShould {
 
@@ -48,6 +49,8 @@ class ProcessesServiceShould {
     private static Path bundleDataDir = Paths.get("./build/test-data/businessconfig-storage/bundles");
     @Autowired
     private ProcessesService service;
+
+    private static final Logger log = LoggerFactory.getLogger(ProcessesServiceShould.class);
 
     @BeforeEach
     void prepare() throws IOException {
@@ -194,10 +197,10 @@ class ProcessesServiceShould {
     @Test
     void testCheckNoDuplicateProcessInUploadedFile() {
 
-        ProcessGroup gp1 = new ProcessGroup("gp1","gp1",Arrays.asList("process1", "process2"));
-        ProcessGroup gp2 = new ProcessGroup("gp2","gp2",Arrays.asList("process3", "process4"));
-        ProcessGroup gp3 = new ProcessGroup("gp3","gp3",Arrays.asList("process5", "process4"));
-        ProcessGroup gp4 = new ProcessGroup("gp4","gp4",Arrays.asList("process7", "process8", "process7"));
+        ProcessGroup gp1 = new ProcessGroup("gp1", "gp1", Arrays.asList("process1", "process2"));
+        ProcessGroup gp2 = new ProcessGroup("gp2", "gp2", Arrays.asList("process3", "process4"));
+        ProcessGroup gp3 = new ProcessGroup("gp3", "gp3", Arrays.asList("process5", "process4"));
+        ProcessGroup gp4 = new ProcessGroup("gp4", "gp4", Arrays.asList("process7", "process8", "process7"));
 
         ProcessGroups groupsWithoutDuplicate = new ProcessGroups(Arrays.asList(gp1, gp2));
         ProcessGroups groupsWithDuplicate = new ProcessGroups(Arrays.asList(gp2, gp3));

@@ -11,7 +11,6 @@ package org.opfab.cards.publication.mongo;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.client.result.UpdateResult;
-import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.model.ArchivedCard;
 import org.opfab.cards.publication.model.Card;
@@ -23,7 +22,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,8 +29,9 @@ import java.util.Objects;
 import java.util.Optional;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@Slf4j
 public class CardRepositoryImpl implements CardRepository {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardRepositoryImpl.class);
 
     private MongoTemplate template;
 
@@ -61,7 +60,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public void saveCard(Card card) {
         log.debug("preparing to write {}", card.toString());
-        card.setLastUpdate(Instant.now());
+        card.lastUpdate = Instant.now();
         template.save(card);
     }
 
@@ -83,7 +82,6 @@ public class CardRepositoryImpl implements CardRepository {
                 ArchivedCard.class);
     }
 
-
     public Card findCardById(String id, boolean dataFieldIncluded) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
@@ -104,24 +102,24 @@ public class CardRepositoryImpl implements CardRepository {
 
         Query findCardByParentCardIdWithoutDataField = new Query();
         findCardByParentCardIdWithoutDataField.fields().exclude("data");
-        findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.getId()));
+        findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.id));
         return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, Card.class));
     }
 
     public void setChildCardDates(String parentCardId, Instant startDate, Instant endDate) {
         Update update = new Update().set(START_DATE, startDate).set(END_DATE, endDate);
         UpdateResult updateChilds = template.updateMulti(Query.query(Criteria.where("parentCardId").is(parentCardId)),
-        update,
-        Card.class);
+                update,
+                Card.class);
         log.debug("updated startDate and EndDate of {} child cards of {} parent card", updateChilds.getModifiedCount(),
-        parentCardId);
+                parentCardId);
     }
 
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
         Update update = new Update()
-            .addToSet(USERS_ACKS, user.getLogin())
-            .addToSet(ENTITIES_ACKS,BasicDBObjectBuilder.start("$each", entitiesAcks).get())
-            .set(LAST_UPDATE, Instant.now());
+                .addToSet(USERS_ACKS, user.getLogin())
+                .addToSet(ENTITIES_ACKS, BasicDBObjectBuilder.start("$each", entitiesAcks).get())
+                .set(LAST_UPDATE, Instant.now());
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update,
@@ -133,11 +131,11 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
         Update update = new Update()
-            .addToSet(USERS_READS, name)
-            .set(LAST_UPDATE, Instant.now());
+                .addToSet(USERS_READS, name)
+                .set(LAST_UPDATE, Instant.now());
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                update, 
+                update,
                 Card.class);
         log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
@@ -146,7 +144,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteUserAck(String userName, String cardUid, List<String> entitiesAcks) {
         Update update = new Update().pull(USERS_ACKS, userName);
-        if (entitiesAcks != null) 
+        if (entitiesAcks != null)
             update = update.pullAll(ENTITIES_ACKS, entitiesAcks.toArray());
         update.set(LAST_UPDATE, Instant.now());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
@@ -198,12 +196,12 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
         Update update = new Update()
-            .unset(USERS_ACKS)
-            .unset(USERS_READS)
-            .set(ENTITIES_ACKS,new LinkedList<String>())
-            .set(LAST_UPDATE, Instant.now())
-            .set("publishDate", Instant.now())
-            .pull("actions", "NOT_NOTIFIED");
+                .unset(USERS_ACKS)
+                .unset(USERS_READS)
+                .set(ENTITIES_ACKS, new LinkedList<String>())
+                .set(LAST_UPDATE, Instant.now())
+                .set("publishDate", Instant.now())
+                .pull("actions", "NOT_NOTIFIED");
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
         log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),

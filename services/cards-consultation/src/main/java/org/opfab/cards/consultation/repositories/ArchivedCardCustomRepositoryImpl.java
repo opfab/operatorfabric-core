@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.consultation.model.ArchivedCard;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
@@ -27,9 +26,12 @@ import reactor.util.function.Tuple2;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@Slf4j
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(ArchivedCardCustomRepositoryImpl.class);
     public static final String PUBLISH_DATE_FIELD = "publishDate";
     public static final String START_DATE_FIELD = "startDate";
     public static final String END_DATE_FIELD = "endDate";
@@ -134,23 +136,23 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public Flux<ArchivedCard> findByParentCard(ReactiveMongoTemplate template, ArchivedCard parentCard) {
 
         Query query = new Query();
-        if (parentCard.deletionDate() == null) {
+        if (parentCard.deletionDate == null) {
             query.addCriteria(
                     new Criteria().andOperator(
-                            where(PARENT_CARD_ID_FIELD).is(parentCard.process() + "." + parentCard.processInstanceId()),
+                            where(PARENT_CARD_ID_FIELD).is(parentCard.process + "." + parentCard.processInstanceId),
                             where(DELETION_DATE_FIELD).isNull()));
-        } else if (parentCard.deletionDate().toEpochMilli() == 0) {
+        } else if (parentCard.deletionDate.toEpochMilli() == 0) {
             // use to exclude old card inserted in archives before adding the current
             // feature
             return Flux.empty();
         } else {
             query.addCriteria(
                     new Criteria().andOperator(
-                            where(PARENT_CARD_ID_FIELD).is(parentCard.process() + "." + parentCard.processInstanceId()),
-                            where(PUBLISH_DATE_FIELD).lt(parentCard.deletionDate()),
+                            where(PARENT_CARD_ID_FIELD).is(parentCard.process + "." + parentCard.processInstanceId),
+                            where(PUBLISH_DATE_FIELD).lt(parentCard.deletionDate),
                             new Criteria().orOperator(
                                     where(DELETION_DATE_FIELD).isNull(), // when parent has KEEP_CHILD_CARD action
-                                    where(DELETION_DATE_FIELD).gte(parentCard.deletionDate()))));
+                                    where(DELETION_DATE_FIELD).gte(parentCard.deletionDate))));
         }
         return template.find(query, ArchivedCard.class);
     }

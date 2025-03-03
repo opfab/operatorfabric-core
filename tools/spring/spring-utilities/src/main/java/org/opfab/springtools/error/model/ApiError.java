@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,30 +7,38 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.springtools.error.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
 import org.springframework.http.HttpStatusCode;
 
-import java.util.List;
-
-/**
- * Api Error model used to return formatted error in http response payload
- *
- *
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class ApiError {
 
-  private HttpStatusCode status;
-  private String message;
-  @Singular
-  @JsonInclude(value=JsonInclude.Include.NON_EMPTY, content=JsonInclude.Include.NON_NULL)
-  private List<String> errors;
+    private HttpStatusCode status;
+    private String message;
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
+    private String error;
+
+    public ApiError(HttpStatusCode status, String message, String error) {
+        this.status = status;
+        this.message = message;
+        this.error = error;
+    }
+
+    public ApiError(HttpStatusCode status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
+    public HttpStatusCode getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getError() {
+        return error;
+    }
 }

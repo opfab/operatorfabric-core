@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,26 +16,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.opfab.users.model.User;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class OpfabLoginAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+
+    private static final Logger log = LoggerFactory.getLogger(OpfabLoginAuthorizationManager.class);
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-        
+
         return new AuthorizationDecision(checkUserLogin(supplier.get(), context));
     }
-    
+
     boolean checkUserLogin(Authentication authentication, RequestAuthorizationContext context) {
 
         String login = context.getVariables().get("login");
         String user;
 
-        //authentication.getPrincipal() is UserData type if there is authentication
-        //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String principal)
+        // authentication.getPrincipal() is UserData type if there is authentication
+        // but is String type if there is no authentication (jira : OC-655)
+        if (authentication.getPrincipal() instanceof String principal)
             user = principal;
         else {
             user = ((User) authentication.getPrincipal()).getLogin();

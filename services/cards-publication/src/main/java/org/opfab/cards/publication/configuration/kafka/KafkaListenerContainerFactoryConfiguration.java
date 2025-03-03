@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,6 @@
 
 package org.opfab.cards.publication.configuration.kafka;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.command.CommandHandler;
 import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
@@ -28,15 +26,22 @@ import org.springframework.kafka.listener.ConsumerProperties;
 import java.time.Duration;
 import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
 @ConditionalOnProperty("spring.kafka.consumer.group-id")
 @Configuration
 public class KafkaListenerContainerFactoryConfiguration {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
+            .getLogger(KafkaListenerContainerFactoryConfiguration.class);
+
     private final KafkaProperties kafkaProperties;
 
     private final ConsumerFactory<String, CardCommand> consumerFactory;
+
+    public KafkaListenerContainerFactoryConfiguration(KafkaProperties kafkaProperties,
+            ConsumerFactory<String, CardCommand> consumerFactory) {
+        this.kafkaProperties = kafkaProperties;
+        this.consumerFactory = consumerFactory;
+    }
 
     private Integer getConcurrency(KafkaProperties.Listener listener) {
         Integer concurrency = listener.getConcurrency();

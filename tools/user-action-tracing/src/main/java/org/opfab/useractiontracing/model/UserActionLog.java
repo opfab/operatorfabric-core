@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,10 +9,6 @@
 
 package org.opfab.useractiontracing.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,19 +16,16 @@ import java.time.Instant;
 import java.util.List;
 
 @Document(collection = "userActionLogs")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@SuppressWarnings("java:S1104") // it is just a data object , we choose to have all fields public for simplicity
 public class UserActionLog {
     @Indexed
-    private Instant date;
+    public Instant date;
     @Indexed
-    private String login;
-    private List<String> entities;
+    public String login;
+    public List<String> entities;
     @Indexed
-    private UserActionEnum action;
-    private String cardUid;
-    private String comment;
+    public UserActionEnum action;
+    public String cardUid;
+    public String comment;
 
 }

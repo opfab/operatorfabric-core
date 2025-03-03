@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,8 +45,7 @@ class DevicesServiceShould {
     @Mock
     private ExternalDeviceDriverFactory externalDeviceDriverFactory;
 
-    @Mock
-    private ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
+    private ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties = new ExternalDevicesWatchdogProperties();
 
     private DeviceConfiguration deviceConfigurationData;
     private DeviceConfiguration deviceConfigurationData2;
@@ -56,9 +55,12 @@ class DevicesServiceShould {
     private static final String TEST_DEVICE_ID = "testDeviceId";
     private static final String TEST_DEVICE_ID_2 = "testDeviceId2";
     public static final String FAKE_HOST = "123.45.67.1";
+    final int CUSTOM_SIGNAL_ID = 4;
 
     @BeforeEach
     public void setUp() {
+        externalDevicesWatchdogProperties.setEnabled(true);
+        externalDevicesWatchdogProperties.setSignalId(CUSTOM_SIGNAL_ID);
         devicesService = new DevicesService(configService, externalDeviceDriverFactory,
                 externalDevicesWatchdogProperties);
         deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, true);
@@ -129,14 +131,15 @@ class DevicesServiceShould {
 
     @Test
     void shouldEnableAndDisableDevice()
-            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException,
+            UnknownHostException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
-        
+
         devicesService.enableDevice(TEST_DEVICE_ID);
         List<Device> deviceList = devicesService.getDevices();
         Assertions.assertThat(deviceList).isNotNull().hasSize(1);
@@ -148,7 +151,8 @@ class DevicesServiceShould {
 
     @Test
     void shouldDisconnectWhenDisableDevice()
-            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException, UnknownHostException {
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException,
+            UnknownHostException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
@@ -164,18 +168,15 @@ class DevicesServiceShould {
             throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
             UnknownHostException, UnknownExternalDeviceException {
 
-
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
-        
 
         ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1));
-
 
         devicesService.enableDevice(TEST_DEVICE_ID);
         devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
@@ -300,15 +301,16 @@ class DevicesServiceShould {
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
             UnknownExternalDeviceException, UnknownHostException {
 
-        final int CUSTOM_SIGNAL_ID = 4;
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
-
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
 
         devicesService.enableDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
 
@@ -323,14 +325,11 @@ class DevicesServiceShould {
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException,
             UnknownHostException {
 
-        final int CUSTOM_SIGNAL_ID = 4;
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(false);
-
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
 
         devicesService.enableDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
         devicesService.sendWatchdog();
@@ -342,14 +341,10 @@ class DevicesServiceShould {
     void shouldSendWatchdogToTwoDevicesWhenTwoDevicesWithDifferentIPPortAreConnected()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
-        final int CUSTOM_SIGNAL_ID = 4;
-
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
         when(externalDeviceDriver2.isConnected()).thenReturn(true);
         when(externalDeviceDriver.getPort()).thenReturn(1234);
@@ -367,14 +362,10 @@ class DevicesServiceShould {
     void shouldSendWatchdogToOneDevicesWhenTwoDevicesWithSameIPPortAreConnected()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
-        final int CUSTOM_SIGNAL_ID = 4;
-
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         DeviceConfiguration deviceConfigurationData3 = buildDeviceConfiguration(1234, TEST_DEVICE_ID_2, true);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData3);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
         when(externalDeviceDriver.getPort()).thenReturn(1234);
 
@@ -390,14 +381,10 @@ class DevicesServiceShould {
     void shouldSendWatchdogToOnlyOneDevicesWhenTwoDevicesAreConfiguredButOnlyOneConnected()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
 
-        final int CUSTOM_SIGNAL_ID = 4;
-
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
         when(externalDeviceDriver2.isConnected()).thenReturn(false);
         when(externalDeviceDriver.getPort()).thenReturn(1234);
@@ -414,12 +401,10 @@ class DevicesServiceShould {
     @Test
     void shouldReconnectDisconnectedDevices()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
-
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
 
-        devicesService.enableDevice(TEST_DEVICE_ID); 
+        devicesService.enableDevice(TEST_DEVICE_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(false);
 
         devicesService.reconnectDisconnectedDevices();
@@ -430,17 +415,14 @@ class DevicesServiceShould {
     @Test
     void shouldNotReconnectConnectedDevices()
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
+        devicesService.enableDevice(TEST_DEVICE_ID);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
 
-                when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-                when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-                when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        
-                devicesService.enableDevice(TEST_DEVICE_ID); 
-                when(externalDeviceDriver.isConnected()).thenReturn(true);
-        
-                devicesService.reconnectDisconnectedDevices();
-                verify(externalDeviceDriver, times(0)).connect();
+        devicesService.reconnectDisconnectedDevices();
+        verify(externalDeviceDriver, times(0)).connect();
 
     }
 

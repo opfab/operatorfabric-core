@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.cards.consultation.configuration.webflux;
 
@@ -27,8 +25,9 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+
 @Configuration
-public class CardSubscriptionRoutesConfig implements UserExtractor  {
+public class CardSubscriptionRoutesConfig implements UserExtractor {
 
     public static final String FALSE = "false";
     public static final String TRUE = "true";
@@ -39,21 +38,23 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
     private final CardOperationsController cardOperationsController;
     private final CardSubscriptionService cardSubscriptionService;
 
-    public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController, CardSubscriptionService cardSubscriptionService){
+    public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController,
+            CardSubscriptionService cardSubscriptionService) {
         this.cardOperationsController = cardOperationsController;
         this.cardSubscriptionService = cardSubscriptionService;
     }
 
     /**
      * Card operation route configuration
+     * 
      * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET(CARD_SUBSCRIPTION_PATH), cardSubscriptionGetRoute())
-                .andRoute(RequestPredicates.GET(CARD_SUBSCRIPTION_HEARTBEAT),cardSubscriptionHeartbeatGetRoute())
-                .andRoute(RequestPredicates.POST(CARD_SUBSCRIPTION_PATH),cardSubscriptionPostRoute())
+                .andRoute(RequestPredicates.GET(CARD_SUBSCRIPTION_HEARTBEAT), cardSubscriptionHeartbeatGetRoute())
+                .andRoute(RequestPredicates.POST(CARD_SUBSCRIPTION_PATH), cardSubscriptionPostRoute())
                 .andRoute(RequestPredicates.OPTIONS(CARD_SUBSCRIPTION_PATH), cardSubscriptionOptionsRoute())
                 .andRoute(RequestPredicates.DELETE(CARD_SUBSCRIPTION_PATH), cardSubscriptionDeleteRoute());
     }
@@ -62,9 +63,9 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.APPLICATION_JSON);
-                return builder.body(cardOperationsController.updateSubscriptionAndPublish
-                                (extractCardSubscriptionInfoOnPost(request)),
-                        CardSubscriptionDto.class);
+            return builder.body(
+                    cardOperationsController.updateSubscriptionAndPublish(extractCardSubscriptionInfoOnPost(request)),
+                    CardSubscriptionDto.class);
         };
     }
 
@@ -72,9 +73,9 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.TEXT_EVENT_STREAM);
-            return builder.body(cardOperationsController.registerSubscriptionAndPublish
-                                (extractCardSubscriptionInfoOnGet(request)),
-                        String.class);
+            return builder.body(
+                    cardOperationsController.registerSubscriptionAndPublish(extractCardSubscriptionInfoOnGet(request)),
+                    String.class);
 
         };
     }
@@ -85,11 +86,11 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
 
     private HandlerFunction<ServerResponse> cardSubscriptionHeartbeatGetRoute() {
         return request -> extractUserFromJwtToken(request)
-        .flatMap(currentUserWithPerimeters -> {
-            String clientId = request.queryParam(CLIENT_ID).orElse(null);
-            cardSubscriptionService.saveHeartbeat(currentUserWithPerimeters, clientId);
-            return ok().build();
-        });
+                .flatMap(currentUserWithPerimeters -> {
+                    String clientId = request.queryParam(CLIENT_ID).orElse(null);
+                    cardSubscriptionService.saveHeartbeat(currentUserWithPerimeters, clientId);
+                    return ok().build();
+                });
 
     }
 
@@ -97,73 +98,87 @@ public class CardSubscriptionRoutesConfig implements UserExtractor  {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.APPLICATION_JSON);
-            return builder.body(cardOperationsController.deleteSubscription(extractCardSubscriptionInfoOnDelete(request)), String.class);
+            return builder.body(
+                    cardOperationsController.deleteSubscription(extractCardSubscriptionInfoOnDelete(request)),
+                    String.class);
         };
     }
 
     /**
-     * Extracts card operation parameters from Authentication and Query parameters GET context
+     * Extracts card operation parameters from Authentication and Query parameters
+     * GET context
+     * 
      * @param request the http request
      * @return a parameter aggregation DTO
      */
-    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnGet(ServerRequest request){
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnGet(ServerRequest request) {
         return request.principal()
-                .map(principal->{
+                .map(principal -> {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    return CardOperationsGetParameters.builder()
-                            .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
-                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
-                            .uiVersion(request.queryParam("version").orElse(null))
-                            .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
-                            .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
-                            .updatedFrom(parseAsInstant(request.queryParam("updatedFrom").orElse(null)))
-                            .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
-                            .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
-                            .build();
+                    CardOperationsGetParameters cardOperationsGetParameters = new CardOperationsGetParameters();
+                    cardOperationsGetParameters.currentUserWithPerimeters = (CurrentUserWithPerimeters) jwtPrincipal
+                            .getPrincipal();
+                    cardOperationsGetParameters.clientId = request.queryParam(CLIENT_ID).orElse(null);
+                    cardOperationsGetParameters.uiVersion = request.queryParam("version").orElse(null);
+                    cardOperationsGetParameters.rangeStart = parseAsInstant(
+                            request.queryParam("rangeStart").orElse(null));
+                    cardOperationsGetParameters.rangeEnd = parseAsInstant(request.queryParam("rangeEnd").orElse(null));
+                    cardOperationsGetParameters.updatedFrom = parseAsInstant(
+                            request.queryParam("updatedFrom").orElse(null));
+                    cardOperationsGetParameters.notification = request.queryParam("notification").orElse(FALSE)
+                            .equals(TRUE);
+                    return cardOperationsGetParameters;
                 });
     }
 
     /**
-     * Extracts card operation parameters from Authentication and Query parameters DELETE context
+     * Extracts card operation parameters from Authentication and Query parameters
+     * DELETE context
+     * 
      * @param request the http request
      * @return a parameter aggregation DTO
      */
-    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnDelete(ServerRequest request){
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnDelete(ServerRequest request) {
         return request.principal()
-                .map(principal->{
+                .map(principal -> {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    return CardOperationsGetParameters.builder()
-                            .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
-                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
-                            .build();
+                    CardOperationsGetParameters cardOperationsGetParameters = new CardOperationsGetParameters();
+                    cardOperationsGetParameters.currentUserWithPerimeters = (CurrentUserWithPerimeters) jwtPrincipal
+                            .getPrincipal();
+                    cardOperationsGetParameters.clientId = request.queryParam(CLIENT_ID).orElse(null);
+                    return cardOperationsGetParameters;
                 });
     }
 
     /**
-     * Extracts card operation parameters from Authentication and Query parameters in POST context
+     * Extracts card operation parameters from Authentication and Query parameters
+     * in POST context
+     * 
      * @param request the http request
      * @return a parameter aggregation DTO
      */
-    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnPost(ServerRequest request){
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnPost(ServerRequest request) {
         Mono<CardSubscriptionDto> inputSubscription = request.bodyToMono(CardSubscriptionDto.class);
         return request.principal().zipWith(inputSubscription)
-                .map(t->{
+                .map(t -> {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
-                    CardOperationsGetParameters.CardOperationsGetParametersBuilder builder = CardOperationsGetParameters.builder()
-                            .currentUserWithPerimeters((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal())
-                            .clientId(request.queryParam(CLIENT_ID).orElse(null))
-                            .rangeStart(t.getT2().rangeStart())
-                            .rangeEnd(t.getT2().rangeEnd())
-                            .updatedFrom(t.getT2().updatedFrom())
-                            .test(false)
-                            .notification(true);
-                    return builder.build();
+                    CardOperationsGetParameters cardOperationsGetParameters = new CardOperationsGetParameters();
+                    cardOperationsGetParameters.currentUserWithPerimeters = (CurrentUserWithPerimeters) jwtPrincipal
+                            .getPrincipal();
+                    cardOperationsGetParameters.clientId = request.queryParam(CLIENT_ID).orElse(null);
+                    cardOperationsGetParameters.rangeStart = t.getT2().rangeStart();
+                    cardOperationsGetParameters.rangeEnd = t.getT2().rangeEnd();
+                    cardOperationsGetParameters.updatedFrom = t.getT2().updatedFrom();
+                    cardOperationsGetParameters.notification = true;
+                    return cardOperationsGetParameters;
                 });
     }
 
-    /** Takes string representing number of milliseconds since Epoch and returns corresponding Instant
-     * */
+    /**
+     * Takes string representing number of milliseconds since Epoch and returns
+     * corresponding Instant
+     */
     private static Instant parseAsInstant(String instantAsEpochMillString) {
-        return instantAsEpochMillString==null?null:Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
+        return instantAsEpochMillString == null ? null : Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
     }
 }

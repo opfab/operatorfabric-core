@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users.configuration.users;
 
-import lombok.Data;
 import org.opfab.users.model.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -20,25 +17,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>User and groups property definition.</p>
+ * <p>
+ * User and groups property definition.
+ * </p>
  *
- * <p>The properties are prefixed by "operatorfabric.users.default"</p>
+ * <p>
+ * The properties are prefixed by "operatorfabric.users.default"
+ * </p>
  *
- * <p>See {@link org.lfenergy.operatorfabric.users.model.User} and {@link org.lfenergy.operatorfabric.users.model.Group}
- * and {@link org.lfenergy.operatorfabric.users.model.Entity} and {@link org.lfenergy.operatorfabric.users.model.Perimeter}
- * for data structure details</p>
+ * <p>
+ * See {@link org.lfenergy.operatorfabric.users.model.User} and
+ * {@link org.lfenergy.operatorfabric.users.model.Group}
+ * and {@link org.lfenergy.operatorfabric.users.model.Entity} and
+ * {@link org.lfenergy.operatorfabric.users.model.Perimeter}
+ * for data structure details
+ * </p>
  *
  *
  */
 @ConfigurationProperties("operatorfabric.users.default")
 @Component
-@Data
 public class UsersProperties {
-
 
     private List<User> users = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     private List<Perimeter> perimeters = new ArrayList<>();
     private List<UserSettings> userSettings = new ArrayList<>();
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public List<Perimeter> getPerimeters() {
+        return perimeters;
+    }
+
+    public List<UserSettings> getUserSettings() {
+        return userSettings;
+    }
+
 }

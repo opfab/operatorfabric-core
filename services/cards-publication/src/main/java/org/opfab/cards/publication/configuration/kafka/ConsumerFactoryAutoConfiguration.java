@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,6 @@
 
 package org.opfab.cards.publication.configuration.kafka;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.SchemaRegistryProperties;
@@ -28,13 +26,14 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 
 import java.util.Map;
 
-@Slf4j
-@RequiredArgsConstructor
 @ConditionalOnProperty("spring.kafka.consumer.group-id")
 @EnableConfigurationProperties(SchemaRegistryProperties.class)
-@Import({KafkaListenerContainerFactoryConfiguration.class})
+@Import({ KafkaListenerContainerFactoryConfiguration.class })
 @Configuration
 public class ConsumerFactoryAutoConfiguration {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
+            .getLogger(ConsumerFactoryAutoConfiguration.class);
 
     private final KafkaProperties kafkaProperties;
 
@@ -43,9 +42,13 @@ public class ConsumerFactoryAutoConfiguration {
     @Value("${spring.deserializer.value.delegate.class}")
     private String valueDeserializer;
 
-    private Map<String,Object> consumerConfig() {
+    public ConsumerFactoryAutoConfiguration(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
+    }
+
+    private Map<String, Object> consumerConfig() {
         log.info("bootstrapServers: " + kafkaProperties.getBootstrapServers());
-        Map<String,Object> props = kafkaProperties.buildConsumerProperties(null);
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties(null);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, deserializerKeyClass);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
@@ -56,9 +59,10 @@ public class ConsumerFactoryAutoConfiguration {
 
     @Bean
     ConsumerFactory<String, CardCommand> consumerFactory(SchemaRegistryProperties schemaRegistryProperties) {
-        Map<String,Object> props = consumerConfig();
-        if (schemaRegistryProperties.getUrl() != null && !schemaRegistryProperties.getUrl().isEmpty()) {
-            props.put(io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryProperties.getUrl());
+        Map<String, Object> props = consumerConfig();
+        if (schemaRegistryProperties.url != null && !schemaRegistryProperties.url.isEmpty()) {
+            props.put(io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+                    schemaRegistryProperties.url);
         }
         return new DefaultKafkaConsumerFactory<>(props);
     }

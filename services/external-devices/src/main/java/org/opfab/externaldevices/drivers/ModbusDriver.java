@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,20 +15,16 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.msg.request.WriteSingleRegisterRequest;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 
-@Slf4j
-@Getter
-@ToString
 public class ModbusDriver implements ExternalDeviceDriver {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModbusDriver.class);
 
     private InetAddress resolvedHost;
     private int port;
-    @ToString.Exclude private ModbusMaster modbusMaster;
+    private ModbusMaster modbusMaster;
 
     static final int TRIGGER_VALUE = 1;
     static final String SENDING_REQUEST = "Sending write request for register {}, value {} on {}";
@@ -42,12 +38,13 @@ public class ModbusDriver implements ExternalDeviceDriver {
     }
 
     @Override
-    public void connect () throws ExternalDeviceDriverException {
-            try {
-                modbusMaster.connect();
-            } catch (ModbusIOException e) {
-                throw new ExternalDeviceDriverException("Error during ModbusDriver connection to " + this.resolvedHost + ":" + this.port, e);
-            }
+    public void connect() throws ExternalDeviceDriverException {
+        try {
+            modbusMaster.connect();
+        } catch (ModbusIOException e) {
+            throw new ExternalDeviceDriverException(
+                    "Error during ModbusDriver connection to " + this.resolvedHost + ":" + this.port, e);
+        }
     }
 
     @Override
@@ -55,7 +52,8 @@ public class ModbusDriver implements ExternalDeviceDriver {
         try {
             modbusMaster.disconnect();
         } catch (ModbusIOException e) {
-            throw new ExternalDeviceDriverException("Error during ModbusDriver disconnection from "+this.resolvedHost +":"+this.port, e);
+            throw new ExternalDeviceDriverException(
+                    "Error during ModbusDriver disconnection from " + this.resolvedHost + ":" + this.port, e);
         }
     }
 
@@ -69,24 +67,49 @@ public class ModbusDriver implements ExternalDeviceDriver {
             request.setServerAddress(Modbus.BROADCAST_ID);
             request.setStartAddress(registerAddress);
             request.setValue(value);
-            log.debug(SENDING_REQUEST,registerAddress,value,getResolvedHost().getHostAddress(),getPort());
+            log.debug(SENDING_REQUEST, registerAddress, value, getResolvedHost().getHostAddress(), getPort());
             modbusMaster.processRequest(request);
-            // In broadcast mode, the Modbus device doesn't send a response (because in the case where there are
-            // really several devices receiving the broadcast, the master would be flooded with responses for a single
-            // request). However, it means that if there is a problem on the device while processing the request (for
-            // example, attempting to write outside of the allowed registers), no exception will be thrown.
+            // In broadcast mode, the Modbus device doesn't send a response (because in the
+            // case where there are
+            // really several devices receiving the broadcast, the master would be flooded
+            // with responses for a single
+            // request). However, it means that if there is a problem on the device while
+            // processing the request (for
+            // example, attempting to write outside of the allowed registers), no exception
+            // will be thrown.
         } catch (ModbusIOException e) {
-            // If something is wrong with the connection, an ModbusIOException will be thrown
-            throw new ExternalDeviceDriverException("Unable to write value on register "+registerAddress ,e);
+            // If something is wrong with the connection, an ModbusIOException will be
+            // thrown
+            throw new ExternalDeviceDriverException("Unable to write value on register " + registerAddress, e);
         } catch (ModbusProtocolException | ModbusNumberException e) {
-            // Judging by the code for the processRequest method, these exceptions will never be thrown in broadcast mode
-            throw new ExternalDeviceDriverException("Unexpected in broadcast mode - Unable to write value on register "+registerAddress ,e);
+            // Judging by the code for the processRequest method, these exceptions will
+            // never be thrown in broadcast mode
+            throw new ExternalDeviceDriverException(
+                    "Unexpected in broadcast mode - Unable to write value on register " + registerAddress, e);
         }
     }
 
     @Override
     public boolean isConnected() {
         return modbusMaster.isConnected();
+    }
+
+    @Override
+    public InetAddress getResolvedHost() {
+        return resolvedHost;
+    }
+
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public String toString() {
+        return "ModbusDriver{" +
+                "resolvedHost=" + resolvedHost +
+                ", port=" + port +
+                '}';
     }
 
 }

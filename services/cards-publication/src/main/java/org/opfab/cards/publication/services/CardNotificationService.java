@@ -12,7 +12,6 @@ package org.opfab.cards.publication.services;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.publication.DataExtractor;
 import org.opfab.cards.publication.configuration.CustomScreenDataFields;
 import org.opfab.cards.publication.model.CardOperation;
@@ -23,30 +22,38 @@ import org.opfab.utilities.eventbus.EventBus;
 
 import java.util.*;
 
-@Slf4j
 public class CardNotificationService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CardNotificationService.class);
 
     private final EventBus eventBus;
     private final ObjectMapper mapper;
     private final CustomScreenDataFields dataFields;
 
-    public CardNotificationService(EventBus eventBus, ObjectMapper mapper, CustomScreenDataFields customScreenDataFields) {
+    public CardNotificationService(EventBus eventBus, ObjectMapper mapper,
+            CustomScreenDataFields customScreenDataFields) {
         this.eventBus = eventBus;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         this.dataFields = customScreenDataFields;
+        if (this.dataFields == null) {
+            log.info("CardNotificationService initialized without custom fields");
+        } else
+            log.info("CardNotificationService initialized with custom fields " + this.dataFields.getDataFields());
     }
 
     public void notifyOneCard(Card card, CardOperationTypeEnum type) {
         Card cardWithCustomDataFields = card.patch(card);
         LinkedHashMap<String, Object> customDataFields = new LinkedHashMap<>();
 
-        if ((dataFields != null) && (dataFields.getDataFields() != null) && (card.getData() != null)) {
-            customDataFields = (LinkedHashMap<String, Object>) DataExtractor.extractFields(card.getData(), dataFields.getDataFields());
+        if ((dataFields != null) && (dataFields.getDataFields() != null) && (card.data != null)) {
+            customDataFields = (LinkedHashMap<String, Object>) DataExtractor.extractFields(card.data,
+                    dataFields.getDataFields());
         }
-        cardWithCustomDataFields.setData(customDataFields);
+        cardWithCustomDataFields.data = customDataFields;
 
-        CardOperation cardOperation = new CardOperation(type, card.getId(), null, new LightCard(cardWithCustomDataFields), null);
+        CardOperation cardOperation = new CardOperation(type, card.id, null,
+                new LightCard(cardWithCustomDataFields), null);
 
         pushCardInEventBus(cardOperation);
     }
@@ -69,13 +76,14 @@ public class CardNotificationService {
         }
     }
 
-    public void pushAckOfCardInEventBus(String cardUid, String cardId, List<String> entitiesAcks, CardOperationTypeEnum operationType ) {
+    public void pushAckOfCardInEventBus(String cardUid, String cardId, List<String> entitiesAcks,
+            CardOperationTypeEnum operationType) {
         CardOperation cardOperation = new CardOperation(operationType, cardId, cardUid, null, entitiesAcks);
 
         try {
             eventBus.sendEvent("ack", mapper.writeValueAsString(cardOperation));
-            log.debug("{} for cardUid={} and cardId={} with entitiesAcks={} sent to event bus", 
-                    operationType == CardOperationTypeEnum.ACK ? "Acknowlegement" : "Cancel acknowledgement" , 
+            log.debug("{} for cardUid={} and cardId={} with entitiesAcks={} sent to event bus",
+                    operationType == CardOperationTypeEnum.ACK ? "Acknowlegement" : "Cancel acknowledgement",
                     cardUid, cardId, entitiesAcks);
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card operation for acknowledgement to json on event bus");

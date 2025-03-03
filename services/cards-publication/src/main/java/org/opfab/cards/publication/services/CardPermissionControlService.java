@@ -19,55 +19,58 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-
 public class CardPermissionControlService {
 
     boolean isCardPublisherAllowedForUser(Card card, String login) {
-        if (card.getRepresentative() != null) {
-            if (card.getRepresentativeType().equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL))
-                return card.getRepresentative().equalsIgnoreCase(login);
-        } else if (card.getPublisherType().equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL)) {
-            return card.getPublisher().equalsIgnoreCase(login);
+        if (card.representative != null) {
+            if (card.representativeType.equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL))
+                return card.representative.equalsIgnoreCase(login);
+        } else if (card.publisherType.equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL)) {
+            return card.publisher.equalsIgnoreCase(login);
         }
         return true;
     }
 
     boolean isUserAllowedToEditCard(CurrentUserWithPerimeters user, Card card, Card oldCard) {
-        return oldCard.getPublisher().equals(card.getPublisher()) || isUserInEntityAllowedToEditCard(oldCard, user);
+        return oldCard.publisher.equals(card.publisher) || isUserInEntityAllowedToEditCard(oldCard, user);
     }
 
     private boolean isUserInEntityAllowedToEditCard(Card card, CurrentUserWithPerimeters user) {
-        if (user.getUserData().getEntities().contains(card.getPublisher()))
+        if (user.getUserData().getEntities().contains(card.publisher))
             return true;
-        List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
+        List<String> entitiesAllowed = card.entitiesAllowedToEdit;
         if (entitiesAllowed != null) {
-            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).toList();
+            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream()
+                    .filter(entitiesAllowed::contains).toList();
             return !userEntitiesAllowed.isEmpty();
         }
         return false;
     }
 
     boolean isCardPublisherInUserEntities(Card card, CurrentUserWithPerimeters user) {
-        Optional<List<String>> entitiesUser= Optional.ofNullable(user.getUserData().getEntities());
-        //Check that publisher is included in user entities
+        Optional<List<String>> entitiesUser = Optional.ofNullable(user.getUserData().getEntities());
+        // Check that publisher is included in user entities
         return entitiesUser.isPresent() &&
                 !entitiesUser.get().isEmpty() &&
-                entitiesUser.get().contains(card.getPublisher()) &&
-                card.getPublisherType() != PublisherTypeEnum.USER;
+                entitiesUser.get().contains(card.publisher) &&
+                card.publisherType != PublisherTypeEnum.USER;
     }
 
     boolean isCardPublisherTheUserHimself(Card card, CurrentUserWithPerimeters user) {
-        return card.getPublisherType() == PublisherTypeEnum.USER && card.getPublisher().equals(user.getUserData().getLogin());
+        return card.publisherType == PublisherTypeEnum.USER && card.publisher.equals(user.getUserData().getLogin());
     }
 
-    /* 
-    1st check : not a READONLY user
-    2nd check : card.publisherType == ENTITY
-    3rd check : the card has been sent by an entity of the user connected
-    4th check : the user has the Write access to the process/state of the card */
+    /*
+     * 1st check : not a READONLY user
+     * 2nd check : card.publisherType == ENTITY
+     * 3rd check : the card has been sent by an entity of the user connected
+     * 4th check : the user has the Write access to the process/state of the card
+     */
     boolean isUserAllowedToDeleteThisCard(Card card, CurrentUserWithPerimeters user) {
-        return !isCurrentUserReadOnly(user) && card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
-            && user.getUserData().getEntities().contains(card.getPublisher()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
+        return !isCurrentUserReadOnly(user)
+                && card.publisherType == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
+                && user.getUserData().getEntities().contains(card.publisher)
+                && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
     boolean isUserAuthorizedToSendCard(Card card, CurrentUserWithPerimeters user) {
@@ -79,14 +82,16 @@ public class CardPermissionControlService {
     }
 
     boolean hasCurrentUserAnyPermission(CurrentUserWithPerimeters user, PermissionEnum... permissions) {
-        if (permissions == null || user.getPermissions() == null) return false;
+        if (permissions == null || user.getPermissions() == null)
+            return false;
         List<PermissionEnum> permissionsList = Arrays.asList(permissions);
         return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
     private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, Card card) {
-        Optional<ComputedPerimeter> cardPerimeter = perimeters.stream().
-                filter(x->x.getState().equalsIgnoreCase(card.getState()) && x.getProcess().equalsIgnoreCase(card.getProcess())).findFirst();
+        Optional<ComputedPerimeter> cardPerimeter = perimeters.stream()
+                .filter(x -> x.getState().equalsIgnoreCase(card.state) && x.getProcess().equalsIgnoreCase(card.process))
+                .findFirst();
         return cardPerimeter.isPresent() && RightEnum.ReceiveAndWrite.equals(cardPerimeter.get().getRights());
     }
 }

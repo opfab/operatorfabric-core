@@ -1,5 +1,4 @@
 dependencies{
-    implementation misc.lombok
     implementation cloud.avro
     implementation cloud.kafkaClients
     implementation misc.jacksonAnnotations

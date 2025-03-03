@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.configuration;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigurationProperties("operatorfabric.customscreen")
-@Data
 @Component
 public class CustomScreenDataFields {
     private List<String> dataFields = new ArrayList<>();
+
+    public List<String> getDataFields() {
+        return dataFields;
+    }
 }

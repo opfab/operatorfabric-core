@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.users.configuration.oauth2;
 
-
-
- package org.opfab.users.configuration.oauth2;
-
-import lombok.Getter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,34 +18,31 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Collection;
 
 /**
- * Custom OperatorFabric Jwt Authentication Token whose custom principal is a {@link User} object
+ * Custom OperatorFabric Jwt Authentication Token whose custom principal is a
+ * {@link User} object
  *
  *
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
 
-     private static final long serialVersionUID = 1L;
-     
-    @Getter
-     private  final transient Object  principal;
-    /**
-     * @param jwt
-     *    original Jwt object from http call
-     * @param principal
-     *    custom principal
-     * @param authorities
-     *    list of authorities
-     */
-    public OpFabJwtAuthenticationToken(Jwt jwt, User principal, Collection<? extends GrantedAuthority>
-       authorities) {
+    private static final long serialVersionUID = 1L;
+
+    private final transient Object principal;
+
+    public OpFabJwtAuthenticationToken(Jwt jwt, User principal, Collection<? extends GrantedAuthority> authorities) {
         super(jwt, authorities);
         this.principal = principal;
     }
 
-    public OpFabJwtAuthenticationToken(Jwt jwt, CurrentUserWithPerimeters principal, Collection<? extends GrantedAuthority>
-            authorities) {
+    public OpFabJwtAuthenticationToken(Jwt jwt, CurrentUserWithPerimeters principal,
+            Collection<? extends GrantedAuthority> authorities) {
         super(jwt, authorities);
         this.principal = principal;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return this.principal;
     }
 
     @Override
@@ -77,5 +70,4 @@ public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
         return true;
     }
 
-    
 }
