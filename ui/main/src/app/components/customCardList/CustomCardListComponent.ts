@@ -300,13 +300,14 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             this.headerForm.get('processes').setValue([]);
             this.initProcessFilter();
         }
+
+        this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
+            this.sendQuery();
+        });
     }
     private initProcessFilter(): void {
         this.customCardListView.getProcessList().forEach((process) => {
             this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
-        });
-        this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
-            this.sendQuery();
         });
     }
     onGridReady(params: any) {
@@ -320,12 +321,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     resetForm() {
-        if (this.processFilterVisible) {
-            this.processSelected = [];
-            this.typeOfStateSelected = [];
-            this.readAndAckSelected = [];
-            this.sendQuery();
-        }
+        this.processSelected = [];
+        this.typeOfStateSelected = [];
+        this.readAndAckSelected = [];
+        this.sendQuery();
     }
 
     sendQuery() {
