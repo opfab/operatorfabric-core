@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -109,6 +109,16 @@ export class OpfabGeneralCommands extends OpfabCommands {
     navigateToMonitoringProcessus = function () {
         cy.get('#opfab-navbar-menu-processmonitoring').click();
         cy.get('of-processmonitoring').should('exist');
+    };
+
+    navigateToCustomScreen1 = function () {
+        cy.get('#opfab-navbar-menu-label-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId').click();
+    };
+
+    navigateToCustomScreen2 = function () {
+        cy.get('#opfab-navbar-menu-label-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId2').click();
     };
 
     navigateToRealTimeUsers = function () {
