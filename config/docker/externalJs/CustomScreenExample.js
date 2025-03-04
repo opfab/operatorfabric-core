@@ -148,10 +148,10 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
-                        const responseData = {choice1: 'on', choice2: 'on', choice3: 'on', comment: comment};
-                        responseCards.push({data: responseData});
+                        const responseData = { choice1: 'on', choice2: 'on', choice3: 'on', comment: comment };
+                        responseCards.push({ data: responseData });
                     });
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             },
             {
@@ -166,13 +166,13 @@
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = {comment: comment};
-                        responseCards.push({data: responseData});
+                        const responseData = { comment: comment };
+                        responseCards.push({ data: responseData });
                     });
                     if (!hasAlwaysComment) {
-                        return {valid: false, errorMsg: 'Please fill in the comment field for all cards'};
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
                     }
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             }
         ]
