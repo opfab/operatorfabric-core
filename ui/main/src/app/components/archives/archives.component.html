@@ -12,7 +12,7 @@
             [parentForm]="archiveForm"
             [visibleProcesses]="listOfProcesses"
             (resetFormEvent)="resetForm()"
-            (search)="sendQuery(0)"
+            (sendRequest)="sendQuery(0)"
             [hideChildStates]="true"
             [tags]="tags"
             #filters>

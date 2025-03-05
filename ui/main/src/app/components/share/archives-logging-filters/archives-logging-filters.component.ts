@@ -59,7 +59,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
-    @Output() search = new EventEmitter<string>();
+    @Output() sendRequest = new EventEmitter<string>();
     @Output() resetFormEvent = new EventEmitter<string>();
 
     hasCurrentUserRightsToViewAllArchivedCards: boolean;
@@ -387,7 +387,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     }
 
     query(): void {
-        this.search.emit(null);
+        this.sendRequest.emit(null);
     }
 
     resetForm() {
