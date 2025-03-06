@@ -25,9 +25,11 @@ export class CustomCardListView {
     private results: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     filter$: Subject<void> = new ReplaySubject<void>(1);
+    private readonly allProcessesListAvailableForUser: {id: string; label: string}[];
 
     constructor(id: string) {
         this.customScreenDefinition = CustomScreenService.getCustomScreenDefinition(id);
+        this.allProcessesListAvailableForUser = this.getAllProcessesListAvailableForUser();
         this.resultTable = new ResultTable(this.customScreenDefinition);
         this.responses = new Responses(this.customScreenDefinition);
         this.resultTable.setBusinessDateFilter(
@@ -96,7 +98,13 @@ export class CustomCardListView {
     }
 
     public setProcessList(processIds: string[]) {
-        this.resultTable.setProcessFilter(processIds);
+        if (processIds?.length > 0) {
+            this.resultTable.setProcessFilter(processIds);
+        } else if (!this.customScreenDefinition.processIds || this.customScreenDefinition.processIds.length === 0) {
+            this.resultTable.setProcessFilter([]);
+        } else {
+            this.resultTable.setProcessFilter(this.allProcessesListAvailableForUser.map((a) => a.id));
+        }
     }
 
     public setTypesOfStateFilter(typesOfState: string[]) {
@@ -123,16 +131,30 @@ export class CustomCardListView {
         } else this.resultTable.excludeCardsWithResponseFromAllEntities();
     }
 
-    public getProcessList(): {id: string; label: string}[] {
-        const perimeters = UsersService.getCurrentUserWithPerimeters().computedPerimeters;
+    public getAllProcessesListAvailableForUser(): {id: string; label: string}[] {
+        const perimeters = UsersService.getCurrentUserWithPerimeters().computedPerimeters ?? [];
 
         const processes = new Map();
         perimeters.forEach((perimeter) => {
             const process = ProcessesService.getProcess(perimeter.process);
-            if (process && !processes.has(process.id)) processes.set(process.id, {id: process.id, label: process.name});
+            if (
+                process &&
+                this.isProcessIdInTheListOfCustomScreenDefinition(process.id) &&
+                !processes.has(process.id)
+            ) {
+                processes.set(process.id, {id: process.id, label: process.name});
+            }
         });
 
         return Array.from(processes.values());
+    }
+
+    private isProcessIdInTheListOfCustomScreenDefinition(processId: string): boolean {
+        return (
+            !this.customScreenDefinition?.processIds ||
+            this.customScreenDefinition.processIds?.length === 0 ||
+            this.customScreenDefinition.processIds.includes(processId)
+        );
     }
 
     public getResponseButtons(): {id: string; label: string}[] {

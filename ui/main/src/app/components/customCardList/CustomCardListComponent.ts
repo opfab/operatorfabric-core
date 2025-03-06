@@ -317,7 +317,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         });
     }
     private initProcessFilter(): void {
-        this.customCardListView.getProcessList().forEach((process) => {
+        this.customCardListView.getAllProcessesListAvailableForUser().forEach((process) => {
             this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
         });
     }

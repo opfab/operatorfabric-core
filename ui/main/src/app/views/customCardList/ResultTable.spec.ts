@@ -21,11 +21,11 @@ import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('CustomScreenView - ResultTable', () => {
-    const getResultTable = (customScreenDefintionResults: any) => {
+    const getResultTable = (customScreenDefinitionResults: any) => {
         const customScreenDefinition = new CustomScreenDefinition();
         customScreenDefinition.id = 'testId';
         customScreenDefinition.name = 'testName';
-        customScreenDefinition.results = customScreenDefintionResults;
+        customScreenDefinition.results = customScreenDefinitionResults;
         return new ResultTable(customScreenDefinition);
     };
 
@@ -71,7 +71,7 @@ describe('CustomScreenView - ResultTable', () => {
         DateTimeFormatterService.init();
         ConfigService.setConfigValue('settings.locale', 'en');
     });
-    describe('Shoud get columns definition for ag-grid', () => {
+    describe('Should get columns definition for ag-grid', () => {
         it('columDefinitions', () => {
             const resultTable = getResultTable({
                 columns: [

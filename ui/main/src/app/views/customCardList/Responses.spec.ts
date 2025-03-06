@@ -69,7 +69,7 @@ describe('CustomCardListView - Response possible', () => {
     const customScreenDefinition = {
         id: 'testId',
         name: 'name',
-        cardProcessIds: [],
+        processIds: [],
         headerFilters: [],
         results: {
             columns: []

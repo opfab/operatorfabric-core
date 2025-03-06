@@ -12,6 +12,16 @@
     const customScreenExample = {
         id: 'testId',
         name: 'testName',
+        processIds: [
+            'api_test',
+            'cypress',
+            'defaultProcess',
+            'gridCooperation',
+            'messageOrQuestionExample',
+            'supervisor',
+            'taskAdvancedExample',
+            'taskExample'
+        ],
         headerFilters: [
             'PROCESS',
             'TYPE_OF_STATE',

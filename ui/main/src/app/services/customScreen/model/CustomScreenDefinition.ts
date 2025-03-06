@@ -12,7 +12,7 @@ import {Card} from 'app/model/Card';
 export class CustomScreenDefinition {
     id: string;
     name: string;
-    cardProcessIds: string[];
+    processIds: string[];
     headerFilters: HeaderFilter[];
     results: {
         columns: Column[];
