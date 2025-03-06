@@ -82,7 +82,7 @@ describe('UserCard CardSender', () => {
             await cardSender.sendCardAndChildCard(card);
             expect(cardsServerMock.cardsPosted.length).toBe(0);
         });
-        it('Shoud display the error message if the function registered via api.currentUserCard.registerFunctionToBeCalledBeforeCardSending throws an error', async () => {
+        it('Should display the error message if the function registered via api.currentUserCard.registerFunctionToBeCalledBeforeCardSending throws an error', async () => {
             opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending(async () => {
                 throw new Error('Error in function');
             });

@@ -62,7 +62,7 @@ describe('CustomCardListView - Responses', () => {
         return {
             id: 'testId',
             name: 'name',
-            cardProcessIds: [],
+            processIds: [],
             headerFilters: [],
             results: {
                 columns: []

@@ -183,7 +183,7 @@ describe('NewFilterService ', () => {
     });
 
     describe('business  date  filter', () => {
-        it('Filter with start date after card 1 startDate => shoud return 3 cards   ', () => {
+        it('Filter with start date after card 1 startDate => should return 3 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -197,7 +197,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[3]);
         });
 
-        it('Filter with business period matching card 3 ,4 , 5   => shoud return 3 cards   ', () => {
+        it('Filter with business period matching card 3 ,4 , 5   => should return 3 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -211,7 +211,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[4]);
         });
 
-        it('Filter with business period matching card 4 only   => shoud return 1 cards   ', () => {
+        it('Filter with business period matching card 4 only   => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -223,7 +223,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[3]);
         });
 
-        it('Filter with start date after all business period, card 5 has publish date in business period  => shoud return 1 cards   ', () => {
+        it('Filter with start date after all business period, card 5 has publish date in business period  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -235,7 +235,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[4]);
         });
 
-        it('Filter with end date before all business period, card 6 has publish date before end date  => shoud return 1 cards   ', () => {
+        it('Filter with end date before all business period, card 6 has publish date before end date  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -246,7 +246,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[5]);
         });
 
-        it('Filter with start date after all business periods, card 7 has publish date after start date  => shoud return 1 cards   ', () => {
+        it('Filter with start date after all business periods, card 7 has publish date after start date  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
@@ -259,7 +259,7 @@ describe('NewFilterService ', () => {
     });
 
     describe('publish date  filter', () => {
-        it('Filter with start date before all date => shoud return the four cards   ', () => {
+        it('Filter with start date before all date => should return the four cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() - 4 * ONE_HOUR});
@@ -271,7 +271,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[3]);
         });
 
-        it('Filter with start date before two date => shoud return two cards   ', () => {
+        it('Filter with start date before two date => should return two cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() - 1.5 * ONE_HOUR});
@@ -281,7 +281,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[1]);
         });
 
-        it('Filter with start date after all date => shoud return no cards   ', () => {
+        it('Filter with start date after all date => should return no cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() + ONE_HOUR});
@@ -289,7 +289,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards.length).toBe(0);
         });
 
-        it('Filter with end date after  all date => shoud return the four cards   ', () => {
+        it('Filter with end date after  all date => should return the four cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() + 4 * ONE_HOUR});
@@ -301,7 +301,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[3]);
         });
 
-        it('Filter with end date before two date => shoud return two cards   ', () => {
+        it('Filter with end date before two date => should return two cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() - 1.5 * ONE_HOUR});
@@ -311,7 +311,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards).toContain(cards[3]);
         });
 
-        it('Filter with end date before all date => shoud return no cards   ', () => {
+        it('Filter with end date before all date => should return no cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() - 5 * ONE_HOUR});
@@ -319,7 +319,7 @@ describe('NewFilterService ', () => {
             expect(filteredCards.length).toBe(0);
         });
 
-        it('Filter with [start date ; end date ]  => shoud return two cards   ', () => {
+        it('Filter with [start date ; end date ]  => should return two cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {
