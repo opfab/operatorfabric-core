@@ -10,6 +10,7 @@
     <div>
         <input
             [formControl]="cardInputControl"
+            (keydown)="onKeyDown($event)"
             type="text"
             class="opfab-input"
             style="height: 35px; width: 80%"
