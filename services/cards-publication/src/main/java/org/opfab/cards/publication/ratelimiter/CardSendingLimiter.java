@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,19 +31,20 @@ public class CardSendingLimiter {
         this.customClock = customClock;
     }
 
-    public boolean isNewSendingAllowed(String login) {
+    // Synchronization is needed as :
+    // - cardSendings and publisherData are shared between threads
+    // - cardSendings and publisherData are not thread-safe
+    //
+    // See https://github.com/opfab/operatorfabric-core/issues/6727
+    // See https://github.com/opfab/operatorfabric-core/issues/8088
+    //
+    public synchronized boolean isNewSendingAllowed(String login) {
         List<Long> cardSendings = getCardSendings(login.toUpperCase());
-        // Synchronization is needed as :
-        //  - cardSendings is shared between threads
-        //  - cardSendings list is not thread-safe
-        // See https://github.com/opfab/operatorfabric-core/issues/6727
-        synchronized (cardSendings) {
-            if (!isLimitReached(cardSendings)) {
-                registerNewSending(cardSendings);
-                return true;
-            } else
-                return false;
-        }
+        if (!isLimitReached(cardSendings)) {
+            registerNewSending(cardSendings);
+            return true;
+        } else
+            return false;
     }
 
     public void reset() {
