@@ -47,4 +47,11 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
     getInputValue() {
         return this.cardInputControl.value;
     }
+
+    onKeyDown(event: KeyboardEvent) {
+        // this prevent arrow key navigation in the ag-grid and permit to use arrow key in the input field
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.stopPropagation();
+        }
+    }
 }
