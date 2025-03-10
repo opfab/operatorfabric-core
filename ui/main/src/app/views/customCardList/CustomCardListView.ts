@@ -36,6 +36,7 @@ export class CustomCardListView {
             RealTimeDomainService.getCurrentDomain().startDate,
             RealTimeDomainService.getCurrentDomain().endDate
         );
+        if (this.customScreenDefinition) this.setProcessList([]);
         this.filter$.next();
     }
 
@@ -132,7 +133,8 @@ export class CustomCardListView {
     }
 
     public getAllProcessesListAvailableForUser(): {id: string; label: string}[] {
-        const perimeters = UsersService.getCurrentUserWithPerimeters().computedPerimeters ?? [];
+        const perimeters = UsersService.getCurrentUserWithPerimeters()?.computedPerimeters ?? [];
+        if (!perimeters) return []; // Should only happen in test context when no user service is not loaded
 
         const processes = new Map();
         perimeters.forEach((perimeter) => {
