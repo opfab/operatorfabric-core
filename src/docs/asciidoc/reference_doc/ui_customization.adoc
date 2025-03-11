@@ -423,6 +423,8 @@ You can define the column header text using the `headerName` field.
 
 The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `COLORED_CIRCLE`, `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
 
+For `STRING` field type if the method `getValue` is defined, the value of the field will be the result of this method instead of the value of the cardField.
+
 The `flex` field sets the CSS flex property for the column.
 
 === Response buttons 

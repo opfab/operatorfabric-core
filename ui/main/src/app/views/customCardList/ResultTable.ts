@@ -197,6 +197,13 @@ export class ResultTable {
                     case FieldType.RESPONSE_FROM_MY_ENTITIES:
                         data['responseFromMyEntities'] = card.hasChildCardFromCurrentUserEntity;
                         break;
+                    case FieldType.STRING:
+                        if (column.getValue) {
+                            data[column.field] = column.getValue(card);
+                        } else {
+                            data[column.field] = this.getNestedField(card, column.cardField);
+                        }
+                        break;
                     default:
                         data[column.field] = this.getNestedField(card, column.cardField);
                 }

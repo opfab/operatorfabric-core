@@ -45,7 +45,6 @@ export class UserResponse {
 export enum FieldType {
     STRING = 'STRING',
     DATE_AND_TIME = 'DATE_AND_TIME',
-    ARRAY = 'ARRAY',
     SEVERITY = 'SEVERITY',
     PUBLISHER = 'PUBLISHER',
     TYPE_OF_STATE = 'TYPE_OF_STATE',
