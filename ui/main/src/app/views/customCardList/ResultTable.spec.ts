@@ -365,6 +365,31 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
+        it('with getValue method if getValue is defined and fieldType is STRING', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        fieldType: FieldType.STRING,
+                        getValue: (card: Card) => {
+                            return card.process + ' - ' + card.state;
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: new Date(),
+                    state: 'state1',
+                    id: 'id1'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1 - state1'}]);
+        });
         it('with the color using custom method getValue() if field type is COLORED_CIRCLE', () => {
             const resultTable = getResultTable({
                 columns: [
