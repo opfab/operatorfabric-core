@@ -80,6 +80,7 @@ class CardProcessServiceShould {
     private ExternalAppService externalAppService;
 
     private CardProcessingService cardProcessingService;
+    private CardReadAndAckService cardReadAndAckService;
     private CardTranslationService cardTranslationService;
     private EventBusSpy eventBusSpy;
     private CardNotificationService cardNotificationService;
@@ -110,6 +111,7 @@ class CardProcessServiceShould {
                 cardRepositoryMock, externalAppService,
                 cardTranslationService, cardValidationService, true, true,
                 false, 1000, 3600, true);
+        cardReadAndAckService = new CardReadAndAckService(cardNotificationService, cardRepositoryMock);
         user = TestHelpers.getCurrentUser();
         currentUserWithPerimeters = TestHelpers.getCurrentUserWithPerimeter(user);
         cardRepositoryMock.clear();
@@ -884,23 +886,15 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void GIVEN_a_card_WHEN_reset_reads_and_acks_THEN_card_event_UPDATE_is_sent_to_eventBus() {
-        Card card = TestHelpers.generateOneCard();
-        cardProcessingService.processCard(card);
-        cardProcessingService.resetReadAndAcks(card.uid);
-        Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");
-    }
-
-    @Test
     void GIVEN_an_existing_card_WHEN_update_card_CONTAINS_KEEP_EXISTING_ACKS_AND_READS_THEN_acks_and_reads_are_kept() {
         Card card = TestHelpers.generateOneCard("entity2");
         cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
-        cardProcessingService.processUserRead(card.uid,
+        cardReadAndAckService.processUserRead(card.uid,
                 currentUserWithPerimeters.getUserData().getLogin());
-        cardProcessingService.processUserRead(card.uid, "user2");
+        cardReadAndAckService.processUserRead(card.uid, "user2");
 
         List<String> entitiesAcks = List.of("entity2");
-        cardProcessingService.processUserAcknowledgement(card.uid, currentUserWithPerimeters,
+        cardReadAndAckService.processUserAcknowledgement(card.uid, currentUserWithPerimeters,
                 entitiesAcks);
         Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 1)).isTrue();
 
