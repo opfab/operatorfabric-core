@@ -27,8 +27,8 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
+import {AcknowledgeStatus} from '@ofServices/acknowlegment/AcknowledgeStatus';
 
 /**
  *
@@ -227,13 +227,13 @@ export class LightCardsStore {
     }
 
     public isLightCardHasBeenAcknowledged(card) {
-        let hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
+        let hasBeenAcknowledged = AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
         const children = this.getChildCards(card.id);
         if (hasBeenAcknowledged && children) {
             for (const child of children) {
                 if (
                     child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD) &&
-                    !AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(child)
+                    !AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(child)
                 ) {
                     hasBeenAcknowledged = false;
                     break;
@@ -282,7 +282,7 @@ export class LightCardsStore {
                 }
                 if (
                     parent.hasBeenAcknowledged &&
-                    !AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card)
+                    !AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card)
                 ) {
                     this.setLightCardAcknowledgment(parent.id, false);
                 }
@@ -368,7 +368,7 @@ export class LightCardsStore {
             card.entitiesAcks = card.entitiesAcks
                 ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
-            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -381,7 +381,7 @@ export class LightCardsStore {
                 const indexToRemove = card.entitiesAcks.indexOf(entityToRemove);
                 if (indexToRemove >= 0) card.entitiesAcks.splice(indexToRemove, 1);
             });
-            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -439,7 +439,7 @@ export class LightCardsStore {
             card.hasBeenAcknowledged = ack;
 
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks
-            card.hasBeenAcknowledged = AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }

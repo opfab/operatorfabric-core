@@ -14,7 +14,6 @@ import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
-import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
@@ -23,7 +22,6 @@ import {Subject, map, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {OpfabStore} from '../../../../store/OpfabStore';
-import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
@@ -31,6 +29,8 @@ import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../../../share/spinner/spinner.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
+import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
+import {AcknowledgeStatus} from '@ofServices/acknowlegment/AcknowledgeStatus';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -95,7 +95,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
@@ -110,7 +110,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
@@ -167,8 +167,11 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged
             ? false
-            : AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, this.card, this.cardProcess) &&
-              NavigationService.getCurrentPageType() !== PageType.CALENDAR;
+            : AcknowledgePermission.isAcknowledgmentAllowed(
+                  this.currentUserWithPerimeters,
+                  this.card,
+                  this.cardProcess
+              ) && NavigationService.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton =
             this.isCancelAcknowledgmentAllowed() && NavigationService.getCurrentPageType() !== PageType.CALENDAR;
@@ -177,7 +180,11 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     private isCancelAcknowledgmentAllowed(): boolean {
         return !this.card.hasBeenAcknowledged || !this.cardState.cancelAcknowledgmentAllowed
             ? false
-            : AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, this.card, this.cardProcess);
+            : AcknowledgePermission.isAcknowledgmentAllowed(
+                  this.currentUserWithPerimeters,
+                  this.card,
+                  this.cardProcess
+              );
     }
 
     get btnAckText(): string {
@@ -197,9 +204,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     public acknowledgeCard() {
         this.ackOrUnackInProgress = true;
 
-        const entitiesAcks = this.computeAcknowledgedEntities();
-
-        AcknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+        AcknowledgeService.postAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 OpfabStore.getLightCardStore().setLightCardAcknowledgment(this.card.id, true);
@@ -210,7 +215,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 if (childCards) {
                     childCards.forEach((child) => {
                         if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
-                            AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
+                            AcknowledgeService.postAcknowledgement(child.uid).subscribe();
                             child.hasBeenAcknowledged = true;
                         }
                     });
@@ -227,19 +232,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    private computeAcknowledgedEntities(): string[] {
-        const entitiesAcks = [];
-        if (!this.isReadOnlyUser) {
-            const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
-            entities.forEach((entity) => {
-                if (entity.roles?.includes(RoleEnum.CARD_SENDER))
-                    // this avoids to display entities used only for grouping
-                    entitiesAcks.push(entity.id);
-            });
-        }
-        return entitiesAcks;
-    }
-
     public closeDetails() {
         this.closeCardDetail.emit(true);
     }
@@ -250,8 +242,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     public cancelAcknowledgement() {
         this.ackOrUnackInProgress = true;
-        const entitiesAcks = this.computeAcknowledgedEntities();
-        AcknowledgeService.deleteUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+        AcknowledgeService.deleteAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
