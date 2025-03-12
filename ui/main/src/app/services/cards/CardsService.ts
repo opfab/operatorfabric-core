@@ -15,9 +15,9 @@ import {I18n} from 'app/model/I18n';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {CardsServer} from './server/CardsServer';
 import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
-import {AcknowledgeService} from '../acknowlegment/AcknowledgeService';
 import {Card} from 'app/model/Card';
 import {FieldToTranslate} from './model/FieldToTranslate';
+import {AcknowledgeStatus} from '@ofServices/acknowlegment/AcknowledgeStatus';
 
 export class CardsService {
     private static cardsServer: CardsServer;
@@ -32,7 +32,7 @@ export class CardsService {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                     const cardData = cardResponse.data;
                     cardData.card.hasBeenAcknowledged =
-                        AcknowledgeService.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardData.card);
+                        AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardData.card);
                     return cardData;
                 }
             })

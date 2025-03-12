@@ -17,7 +17,6 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
@@ -25,7 +24,6 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../../store/OpfabStore';
-import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {FiltersComponent} from './filters/filters.component';
@@ -34,6 +32,7 @@ import {NgIf, NgFor, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {LightCardModule} from 'app/components/share/light-card/light-card.module';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
+import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
 
 @Component({
     selector: 'of-card-list',
@@ -166,20 +165,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
-            AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)
+            AcknowledgePermission.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)
         ) {
             try {
-                const entitiesAcks = [];
-                const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
-                entities.forEach((entity) => {
-                    if (entity.roles?.includes(RoleEnum.CARD_SENDER))
-                        // this avoids to display entities used only for grouping
-                        entitiesAcks.push(entity.id);
-                });
-                AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
+                AcknowledgeService.postAcknowledgement(lightCard.uid).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
                         OpfabStore.getLightCardStore().setLightCardAcknowledgment(lightCard.id, true);
-                        this.handleChildCardsUserAcknowledgement(lightCard.id, entitiesAcks);
+                        this.handleChildCardsUserAcknowledgement(lightCard.id);
                     } else {
                         throw new Error(
                             'the remote acknowledgement endpoint returned an error status(' + resp.status + ')'
@@ -193,12 +185,12 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         }
     }
 
-    private handleChildCardsUserAcknowledgement(cardId, entitiesAcks) {
+    private handleChildCardsUserAcknowledgement(cardId) {
         const childCards = OpfabStore.getLightCardStore().getChildCards(cardId);
         if (childCards) {
             childCards.forEach((child) => {
                 if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
-                    AcknowledgeService.postUserAcknowledgement(child.uid, entitiesAcks).subscribe();
+                    AcknowledgeService.postAcknowledgement(child.uid).subscribe();
                 }
             });
         }
