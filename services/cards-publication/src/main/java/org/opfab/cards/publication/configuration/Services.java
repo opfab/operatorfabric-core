@@ -19,6 +19,7 @@ import org.opfab.cards.publication.repositories.ProcessRepositoryImpl;
 import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
+import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.CardValidationService;
 import org.opfab.cards.publication.services.ExternalAppService;
@@ -37,6 +38,8 @@ public class Services {
     private final CardProcessingService cardProcessingService;
 
     private final CardTranslationService cardTranslationService;
+
+    private final CardReadAndAckService cardReadAndAckService;
 
     private final UserActionLogService userActionLogService;
 
@@ -65,7 +68,8 @@ public class Services {
             this.cardTranslationService = new CardTranslationService(i18nRepository.get());
         }
         this.userActionLogService = userActionLogService;
-        CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper, customScreenDataFields);
+        CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper,
+                customScreenDataFields);
         cardValidationService = new CardValidationService(cardRepository,
                 new ProcessRepositoryImpl(businessconfigUrl, eventBus));
         cardDeletionService = new CardDeletionService(cardNotificationService, cardRepository, externalAppService,
@@ -76,6 +80,7 @@ public class Services {
                 checkPerimeterForCardSending,
                 authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod,
                 activateCardSendingLimiter);
+        cardReadAndAckService = new CardReadAndAckService(cardNotificationService, cardRepository);
 
     }
 
@@ -89,6 +94,10 @@ public class Services {
 
     public CardProcessingService getCardProcessingService() {
         return cardProcessingService;
+    }
+
+    public CardReadAndAckService getCardReadAndAckService() {
+        return cardReadAndAckService;
     }
 
     public CardTranslationService getCardTranslationService() {

@@ -19,6 +19,7 @@ import org.opfab.cards.publication.model.TranslatedField;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardProcessingService;
+import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -44,6 +45,7 @@ public class CardController {
     private CardDeletionService cardDeletionService;
     private CardProcessingService cardProcessingService;
     private CardTranslationService cardTranslationService;
+    private CardReadAndAckService cardReadAndAckService;
     private UserActionLogService userActionLogService;
 
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
@@ -54,6 +56,7 @@ public class CardController {
         cardTranslationService = services.getCardTranslationService();
         userActionLogService = services.getUserActionLogService();
         cardProcessingService = services.getCardProcessingService();
+        cardReadAndAckService = services.getCardReadAndAckService();
 
     }
 
@@ -174,7 +177,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardProcessingService.processUserAcknowledgement(cardUid, user, entitiesAcks);
+        UserBasedOperationResult result = cardReadAndAckService.processUserAcknowledgement(cardUid, user, entitiesAcks);
 
         if (!result.isCardFound())
             response.setStatus(404);
@@ -202,7 +205,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardProcessingService.processUserRead(cardUid, user.getUserData().getLogin());
+        UserBasedOperationResult result = cardReadAndAckService.processUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -228,7 +231,7 @@ public class CardController {
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, user, entitiesAcks);
+        UserBasedOperationResult result = cardReadAndAckService.deleteUserAcknowledgement(cardUid, user, entitiesAcks);
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -253,7 +256,7 @@ public class CardController {
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardProcessingService.deleteUserRead(cardUid, user.getUserData().getLogin());
+        UserBasedOperationResult result = cardReadAndAckService.deleteUserRead(cardUid, user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -303,7 +306,7 @@ public class CardController {
     public Void postResetReadAndAcks(Principal principal,
             @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
 
-        UserBasedOperationResult result = cardProcessingService.resetReadAndAcks(cardUid);
+        UserBasedOperationResult result = cardReadAndAckService.resetReadAndAcks(cardUid);
         if (!result.isCardFound())
             response.setStatus(404);
         else {
