@@ -116,7 +116,7 @@ sonar {
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
         
 
-        property 'sonar.issue.ignore.multicriteria', 'e1,e2'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3'
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
@@ -127,6 +127,11 @@ sonar {
         // provided that the modal can also be closed by pressing the Escape key.
         property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'Web:MouseEventWithoutKeyboardEquivalentCheck'
         property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*'
+        // Ignoring the rule: "Change this code to not log user-controlled data" 
+        // We are preventing log injection via specific appenders that remove new lines and carriage returns.
+        property 'sonar.issue.ignore.multicriteria.e3.ruleKey', 'javasecurity:S5145'
+        property 'sonar.issue.ignore.multicriteria.e3.resourceKey', '**/*'
+
     }
 }
 
