@@ -31,8 +31,9 @@ export class CardsService {
             map((cardResponse) => {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                     const cardData = cardResponse.data;
-                    cardData.card.hasBeenAcknowledged =
-                        AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(cardData.card);
+                    cardData.card.hasBeenAcknowledged = AcknowledgeStatus.isCardAcknowledgedForCurrentUser(
+                        cardData.card
+                    );
                     return cardData;
                 }
             })

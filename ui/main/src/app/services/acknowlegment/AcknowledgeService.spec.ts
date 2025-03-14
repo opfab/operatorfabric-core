@@ -46,7 +46,7 @@ describe('AcknowledgeService testing ', () => {
         mockEntitiesServer.setEntities([
             new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
             new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, null),
+            new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, ['ENTITY_FR']),
             new Entity('ENTITY_FR', 'ENTITY FR', '', [RoleEnum.CARD_SENDER], null, null)
         ]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
@@ -72,6 +72,14 @@ describe('AcknowledgeService testing ', () => {
         expect(acknowledgeServerMock.cardUidPosted).toEqual('test');
         expect(acknowledgeServerMock.entitiesAcksPosted).toEqual([]);
     });
+    it('Should not ack at the parent entity level', async () => {
+        const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY3', 'ENTITY_FR']);
+        const userWithPerimeters = new UserWithPerimeters(user, [], []);
+        await setUserPerimeter(userWithPerimeters);
+        AcknowledgeService.postAcknowledgement('test');
+        expect(acknowledgeServerMock.cardUidPosted).toEqual('test');
+        expect(acknowledgeServerMock.entitiesAcksPosted).toEqual(['ENTITY2', 'ENTITY3']);
+    });
 
     it('should unack at the entity level', async () => {
         const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
@@ -91,5 +99,13 @@ describe('AcknowledgeService testing ', () => {
         AcknowledgeService.deleteAcknowledgement('test');
         expect(acknowledgeServerMock.cardUidDeleted).toEqual('test');
         expect(acknowledgeServerMock.entitiesAcksDeleted).toEqual([]);
+    });
+    it('Should not unack at the parent entity level', async () => {
+        const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY3', 'ENTITY_FR']);
+        const userWithPerimeters = new UserWithPerimeters(user, [], []);
+        await setUserPerimeter(userWithPerimeters);
+        AcknowledgeService.deleteAcknowledgement('test');
+        expect(acknowledgeServerMock.cardUidDeleted).toEqual('test');
+        expect(acknowledgeServerMock.entitiesAcksDeleted).toEqual(['ENTITY2', 'ENTITY3']);
     });
 });
