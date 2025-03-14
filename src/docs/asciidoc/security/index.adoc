@@ -1,4 +1,4 @@
-// Copyright (c) 2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2024-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -88,6 +88,12 @@ It is possible, by configuration, to bypass authentication for third-party tool 
 
 OperatorFabric is designed to be used with card templates provided by the end user. These templates should be considered as code and reviewed by the end user before being used in a production environment. Failure to do so could lead to security issues.
 
+
+== Security audit 
+
+On September 2024, OperatorFabric undergoes a security audit sponsored by OSTIF (Open Source Technology Improvement Fund). The result of the audit is publicly available on the OSTIF website: https://ostif.org/operatorfabric-audit-complete/
+
+Prior to the publication of the report, the OperatorFabric team fixed all the issues found by the audit.
 
 
 
