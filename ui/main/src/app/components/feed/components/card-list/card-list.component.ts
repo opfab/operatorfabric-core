@@ -20,7 +20,6 @@ import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {GroupedLightCardsService} from '@ofServices/groupedLightCards/GroupedLightCardsService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../../store/OpfabStore';
@@ -167,30 +166,9 @@ export class CardListComponent implements AfterViewChecked, OnInit {
             this.isCardPublishedBeforeAckDemand(lightCard) &&
             AcknowledgePermission.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)
         ) {
-            try {
-                AcknowledgeService.postAcknowledgement(lightCard.uid).subscribe((resp) => {
-                    if (resp.status === ServerResponseStatus.OK) {
-                        OpfabStore.getLightCardStore().setLightCardAcknowledgment(lightCard.id, true);
-                        this.handleChildCardsUserAcknowledgement(lightCard.id);
-                    } else {
-                        throw new Error(
-                            'the remote acknowledgement endpoint returned an error status(' + resp.status + ')'
-                        );
-                    }
-                });
-            } catch (err) {
-                logger.error(JSON.stringify(err));
-                this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
-            }
-        }
-    }
-
-    private handleChildCardsUserAcknowledgement(cardId) {
-        const childCards = OpfabStore.getLightCardStore().getChildCards(cardId);
-        if (childCards) {
-            childCards.forEach((child) => {
-                if (child.actions?.includes(CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD)) {
-                    AcknowledgeService.postAcknowledgement(child.uid).subscribe();
+            AcknowledgeService.postAcknowledgement(lightCard).subscribe((resp) => {
+                if (resp.status !== ServerResponseStatus.OK) {
+                    this.displayMessage('response.error.ack', null, MessageLevel.ERROR);
                 }
             });
         }

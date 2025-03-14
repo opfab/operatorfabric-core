@@ -1,4 +1,5 @@
 /* Copyright (c) 2025, RTE (http://www.rte-france.com)
+
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,32 +8,30 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {setUserPerimeter} from '@tests/helpers';
+import {getOneCard, setUserPerimeter, sendLightCard, setEntities, sendLightCards} from '@tests/helpers';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
-import {EntitiesService} from '@ofServices/entities/EntitiesService';
-import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {AcknowledgeService} from './AcknowledgeService';
+import {OpfabStore} from '@ofStore/OpfabStore';
+import {Observable, firstValueFrom, of} from 'rxjs';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
+import {CardAction} from 'app/model/CardAction';
 
 class AcknowledgeServerMock implements AcknowledgeServer {
-    public entitiesAcksPosted: string[] = undefined;
-    public cardUidPosted: string = undefined;
-    public entitiesAcksDeleted: string[] = undefined;
-    public cardUidDeleted: string = undefined;
+    public ackPosted = new Array<{cardUid: string; entitiesAcks: string[]}>();
+    public ackDeleted = new Array<{cardUid: string; entitiesAcks: string[]}>();
+    public serverResponseStatus = ServerResponseStatus.OK;
 
-    postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): any {
-        this.entitiesAcksPosted = entitiesAcks;
-        this.cardUidPosted = cardUid;
-        return null;
+    postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
+        this.ackPosted.push({cardUid, entitiesAcks});
+        return of(new ServerResponse<void>(null, this.serverResponseStatus, 'OK'));
     }
-    deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): any {
-        this.entitiesAcksDeleted = entitiesAcks;
-        this.cardUidDeleted = cardUid;
-        return null;
+    deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
+        this.ackDeleted.push({cardUid, entitiesAcks});
+        return of(new ServerResponse<void>(null, this.serverResponseStatus, 'OK'));
     }
 }
 
@@ -42,15 +41,12 @@ describe('AcknowledgeService testing ', () => {
         acknowledgeServerMock = new AcknowledgeServerMock();
         AcknowledgeService.setAcknowledgeServer(acknowledgeServerMock);
 
-        const mockEntitiesServer = new EntitiesServerMock();
-        mockEntitiesServer.setEntities([
-            new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, ['ENTITY_FR']),
-            new Entity('ENTITY_FR', 'ENTITY FR', '', [RoleEnum.CARD_SENDER], null, null)
+        setEntities([
+            new Entity('ENTITY1', 'ENTITY 1', '', [], null, null),
+            new Entity('ENTITY2', 'ENTITY 2', '', [], null, null),
+            new Entity('ENTITY3', 'ENTITY 3', '', [], null, ['ENTITY_FR']),
+            new Entity('ENTITY_FR', 'ENTITY FR', '', [], null, null)
         ]);
-        EntitiesService.setEntitiesServer(mockEntitiesServer);
-        EntitiesService.loadAllEntitiesData().subscribe();
     });
 
     it('should ack at the entity level', async () => {
@@ -58,9 +54,9 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(user, [], []);
         await setUserPerimeter(userWithPerimeters);
 
-        AcknowledgeService.postAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidPosted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksPosted).toEqual(['ENTITY1', 'ENTITY2']);
+        AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackPosted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackPosted[0].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
     it('should not ack at the entity level is user is readonly ', async () => {
@@ -68,27 +64,26 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(user, [], [PermissionEnum.READONLY]);
         await setUserPerimeter(userWithPerimeters);
 
-        AcknowledgeService.postAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidPosted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksPosted).toEqual([]);
+        AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackPosted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackPosted[0].entitiesAcks).toEqual([]);
     });
     it('Should not ack at the parent entity level', async () => {
         const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY3', 'ENTITY_FR']);
         const userWithPerimeters = new UserWithPerimeters(user, [], []);
         await setUserPerimeter(userWithPerimeters);
-        AcknowledgeService.postAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidPosted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksPosted).toEqual(['ENTITY2', 'ENTITY3']);
+        AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackPosted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackPosted[0].entitiesAcks).toEqual(['ENTITY2', 'ENTITY3']);
     });
-
     it('should unack at the entity level', async () => {
         const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
         const userWithPerimeters = new UserWithPerimeters(user, [], []);
         await setUserPerimeter(userWithPerimeters);
 
-        AcknowledgeService.deleteAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidDeleted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksDeleted).toEqual(['ENTITY1', 'ENTITY2']);
+        AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackDeleted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackDeleted[0].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
     it('should not unack at the entity level is user is readonly ', async () => {
@@ -96,16 +91,107 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(user, [], [PermissionEnum.READONLY]);
         await setUserPerimeter(userWithPerimeters);
 
-        AcknowledgeService.deleteAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidDeleted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksDeleted).toEqual([]);
+        AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackDeleted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackDeleted[0].entitiesAcks).toEqual([]);
     });
     it('Should not unack at the parent entity level', async () => {
         const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY3', 'ENTITY_FR']);
         const userWithPerimeters = new UserWithPerimeters(user, [], []);
         await setUserPerimeter(userWithPerimeters);
-        AcknowledgeService.deleteAcknowledgement('test');
-        expect(acknowledgeServerMock.cardUidDeleted).toEqual('test');
-        expect(acknowledgeServerMock.entitiesAcksDeleted).toEqual(['ENTITY2', 'ENTITY3']);
+        AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'}));
+        expect(acknowledgeServerMock.ackDeleted[0].cardUid).toEqual('testUid');
+        expect(acknowledgeServerMock.ackDeleted[0].entitiesAcks).toEqual(['ENTITY2', 'ENTITY3']);
+    });
+    describe('Should in the store', () => {
+        it('set the card as acked', async () => {
+            const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
+            const userWithPerimeters = new UserWithPerimeters(user, [], []);
+            await setUserPerimeter(userWithPerimeters);
+            sendLightCard(getOneCard({id: 'testId', uid: 'testUid', hasBeenAcknowledged: false}));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(false);
+            await firstValueFrom(AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(true);
+        });
+        it('not set the card as acked if ack server request fail', async () => {
+            const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
+            const userWithPerimeters = new UserWithPerimeters(user, [], []);
+            await setUserPerimeter(userWithPerimeters);
+            sendLightCard(getOneCard({id: 'testId', uid: 'testUid', hasBeenAcknowledged: false}));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(false);
+            acknowledgeServerMock.serverResponseStatus = ServerResponseStatus.UNKNOWN_ERROR;
+            await firstValueFrom(AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(false);
+        });
+        it('set the card as unacked', async () => {
+            const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
+            const userWithPerimeters = new UserWithPerimeters(user, [], []);
+            await setUserPerimeter(userWithPerimeters);
+            sendLightCard(getOneCard({id: 'testId', uid: 'testUid', hasBeenAcknowledged: true}));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(true);
+            await firstValueFrom(AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(false);
+        });
+        it('not set the card as unacked if unack server request fail', async () => {
+            const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
+            const userWithPerimeters = new UserWithPerimeters(user, [], []);
+            await setUserPerimeter(userWithPerimeters);
+            sendLightCard(getOneCard({id: 'testId', uid: 'testUid', hasBeenAcknowledged: true}));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(true);
+            acknowledgeServerMock.serverResponseStatus = ServerResponseStatus.UNKNOWN_ERROR;
+            await firstValueFrom(AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(OpfabStore.getLightCardStore().getLightCard('testId').hasBeenAcknowledged).toEqual(true);
+        });
+    });
+    describe('When card has child cards', () => {
+        beforeEach(async () => {
+            const user = new User('user', 'firstName', 'lastName', null, ['group1'], ['ENTITY1', 'ENTITY2']);
+            const userWithPerimeters = new UserWithPerimeters(user, [], []);
+            await setUserPerimeter(userWithPerimeters);
+
+            sendLightCards([
+                getOneCard({id: 'testId', uid: 'testUid', hasBeenAcknowledged: false}),
+                getOneCard({
+                    uid: 'child1Uid',
+                    id: 'child1Id',
+                    parentCardId: 'testId',
+                    hasBeenAcknowledged: false,
+                    actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
+                }),
+                getOneCard({
+                    uid: 'child2Uid',
+                    id: 'child2Id',
+                    parentCardId: 'testId',
+                    hasBeenAcknowledged: false,
+                    actions: [CardAction.PROPAGATE_READ_ACK_TO_PARENT_CARD]
+                }),
+                getOneCard({
+                    uid: 'child3Uid',
+                    id: 'child3Id',
+                    parentCardId: 'testId',
+                    hasBeenAcknowledged: false
+                })
+            ]);
+        });
+        it('should ack all the child cardsi with action PROPAGATE_READ_ACK_TO_PARENT_CARD', async () => {
+            await firstValueFrom(AcknowledgeService.postAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(acknowledgeServerMock.ackPosted.length).toEqual(3);
+            expect(acknowledgeServerMock.ackPosted[0].cardUid).toEqual('testUid');
+            expect(acknowledgeServerMock.ackPosted[0].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+            expect(acknowledgeServerMock.ackPosted[1].cardUid).toEqual('child1Uid');
+            expect(acknowledgeServerMock.ackPosted[1].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+            expect(acknowledgeServerMock.ackPosted[2].cardUid).toEqual('child2Uid');
+            expect(acknowledgeServerMock.ackPosted[2].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+        });
+        it('should unack all the child cards with action PROPAGATE_READ_ACK_TO_PARENT_CARD', async () => {
+            await firstValueFrom(AcknowledgeService.deleteAcknowledgement(getOneCard({id: 'testId', uid: 'testUid'})));
+            expect(acknowledgeServerMock.ackDeleted.length).toEqual(3);
+            expect(acknowledgeServerMock.ackDeleted[0].cardUid).toEqual('testUid');
+            expect(acknowledgeServerMock.ackDeleted[0].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+            expect(acknowledgeServerMock.ackDeleted[1].cardUid).toEqual('child1Uid');
+            expect(acknowledgeServerMock.ackDeleted[1].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+            expect(acknowledgeServerMock.ackDeleted[2].cardUid).toEqual('child2Uid');
+            expect(acknowledgeServerMock.ackDeleted[2].entitiesAcks).toEqual(['ENTITY1', 'ENTITY2']);
+        });
     });
 });

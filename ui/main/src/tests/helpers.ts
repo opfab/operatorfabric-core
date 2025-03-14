@@ -35,6 +35,9 @@ import {Message} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
+import {OpfabEventStreamServerMock} from './mocks/opfab-event-stream.server.mock';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
+import {OpfabStore} from '@ofStore/OpfabStore';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -95,7 +98,7 @@ export function getOneCard(cardTemplate?: any): Card {
     const today = new Date().getTime();
     const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
     return new Card(
-        Guid.create().toString(),
+        cardTemplate.uid ?? Guid.create().toString(),
         cardTemplate.id ?? 'testId',
         cardTemplate.publisher ?? 'testPublisher',
         cardTemplate.processVersion ?? 'testProcessVersion',
@@ -230,6 +233,19 @@ export async function setEntities(entities: Entity[]) {
     EntitiesService.setEntitiesServer(entitiesServerMock);
     entitiesServerMock.setEntities(entities);
     await firstValueFrom(EntitiesService.loadAllEntitiesData());
+}
+
+export function sendLightCard(card: Card) {
+    const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
+    OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
+    OpfabStore.reset();
+    opfabEventStreamServerMock.sendLightCard(card);
+}
+export function sendLightCards(cards: Card[]) {
+    const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
+    OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
+    OpfabStore.reset();
+    cards.forEach((card) => opfabEventStreamServerMock.sendLightCard(card));
 }
 
 export function initOpfabAPI() {
