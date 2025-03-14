@@ -16,7 +16,13 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
-import {AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, RowSelectionOptions} from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ModuleRegistry,
+    provideGlobalGridOptions,
+    RowSelectionOptions,
+    SelectionChangedEvent
+} from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/ExcelExport';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
@@ -141,6 +147,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     public rowSelection: RowSelectionOptions;
 
     private readonly ngUnsubscribe$ = new Subject<void>();
+    private inputMode$ = new Subject<void>();
 
     loadingInProgress = false;
 
@@ -288,10 +295,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         };
         this.rowData$ = this.rowDataSubject.asObservable();
         this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
-        this.customCardListView.getResults().subscribe((results) => {
-            this.rowData = results;
-            this.rowDataSubject.next(this.rowData);
-        });
+        this.startListeningToResults();
         if (this.responseButtons.length > 0) {
             this.rowSelection = {
                 mode: 'multiRow',
@@ -323,12 +327,40 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
     onGridReady(params: any) {
         this.gridApi = params.api;
+
+        this.gridApi.addEventListener('selectionChanged', (event: SelectionChangedEvent) => {
+            const userHasSelectedRows = this.gridApi.getSelectedRows().length > 0;
+
+            // If a row is selected, the user is editing the selection, so we stop listening to results
+            if (userHasSelectedRows) {
+                this.stopListeningToResults();
+            } else {
+                this.startListeningToResults();
+            }
+        });
     }
 
     updateResultPage(currentPage: number): void {
         if (this.page !== currentPage) this.gridApi.deselectAll();
         this.gridApi.paginationGoToPage(currentPage - 1);
         this.page = currentPage;
+    }
+
+    startListeningToResults() {
+        this.inputMode$ = new Subject<void>();
+
+        this.customCardListView
+            .getResults()
+            .pipe(takeUntil(this.inputMode$))
+            .subscribe((results) => {
+                this.rowData = results;
+                this.rowDataSubject.next(this.rowData);
+            });
+    }
+
+    stopListeningToResults() {
+        this.inputMode$.next();
+        this.inputMode$.complete();
     }
 
     resetForm() {
@@ -373,6 +405,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             return;
         }
         this.customCardListView.clickOnButton(buttonId, this.getResponsesData());
+        this.gridApi.deselectAll();
     }
 
     private getResponsesData(): Map<string, any> {
@@ -428,6 +461,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.customCardListView.destroy();
+        this.stopListeningToResults();
         this.ngUnsubscribe$.next();
         this.ngUnsubscribe$.complete();
     }

@@ -14,7 +14,7 @@ import {NgIf} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
-    selector: 'of-has-response-cell-renderer',
+    selector: 'of-input-cell-renderer',
     templateUrl: './InputCellRendererComponent.html',
     standalone: true,
     imports: [NgIf, ReactiveFormsModule]
