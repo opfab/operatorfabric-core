@@ -14,11 +14,11 @@ import {Utilities} from '../../../../utils/Utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/OpfabStore';
-import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgFor, NgStyle} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
+import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
 
 @Component({
     selector: 'of-card-acks-footer',
@@ -77,25 +77,12 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private computeListEntitiesToAck() {
-        const resolved = new Set<string>();
-
         const entityRecipientsToAck = Utilities.removeElementsFromArray(
             this.card.entityRecipients,
             this.card.entityRecipientsForInformation
         );
 
-        entityRecipientsToAck.forEach((entityRecipient) => {
-            const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity?.roles?.includes(RoleEnum.CARD_SENDER)) {
-                resolved.add(entityRecipient);
-            }
-
-            EntitiesService.resolveChildEntities(entityRecipient)
-                .filter((child) => child.roles?.includes(RoleEnum.CARD_SENDER))
-                .forEach((child) => resolved.add(child.id));
-        });
-
-        resolved.forEach((entityToAck) =>
+        AcknowledgeUtils.getEntitiesAllowedToAcknowledge(entityRecipientsToAck).forEach((entityToAck) =>
             this.listEntitiesToAck.push({
                 id: entityToAck,
                 name: EntitiesService.getEntityName(entityToAck),

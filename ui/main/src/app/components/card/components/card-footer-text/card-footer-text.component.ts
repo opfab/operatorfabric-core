@@ -20,6 +20,7 @@ import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';
+import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
 
 @Component({
     selector: 'of-card-footer-text',
@@ -98,21 +99,16 @@ export class CardFooterTextComponent implements OnChanges, OnInit {
     private computeListEntitiesAcknowledged() {
         const addressedTo = [];
         if (this.card.entityRecipients && this.card.entityRecipients.length > 0) {
-            // We compute the entities allowed to send cards to which the user is connected
-            const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
-                EntitiesService.isEntityAllowedToSendCard(entityId)
+            const userEntitiesAllowedToAcknowledge = AcknowledgeUtils.getCurrentUserEntitiesAllowedToAcknowledge();
+
+            const entityRecipientsAllowedToAcknowledge = AcknowledgeUtils.getEntitiesAllowedToAcknowledge(
+                this.card.entityRecipients
             );
 
-            // We compute the entities recipients of the card, taking into account parent entities
-            const entityRecipients = EntitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = EntitiesService.resolveEntitiesAllowedToSendCards(
-                entityRecipients
-            ).map((entity) => entity.id);
-
-            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
-                entityRecipientsAllowedToSendCards.includes(entityId)
+            const userEntitiesAllowedToAcknowledgeWhichAreRecipient = userEntitiesAllowedToAcknowledge.filter(
+                (entityId) => entityRecipientsAllowedToAcknowledge.includes(entityId)
             );
-            userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
+            userEntitiesAllowedToAcknowledgeWhichAreRecipient.forEach((entityId) => {
                 addressedTo.push({
                     id: entityId,
                     entityName: EntitiesService.getEntityName(entityId),

@@ -12,6 +12,7 @@ import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {ServerResponse} from '../../server/ServerResponse';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UsersService} from '@ofServices/users/UsersService';
+import {AcknowledgeUtils} from './AcknowledgeUtils';
 
 export class AcknowledgeService {
     private static acknowledgeServer: AcknowledgeServer;
@@ -36,7 +37,7 @@ export class AcknowledgeService {
 
     private static getAcknowledgedEntities(): string[] {
         if (!UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]))
-            return UsersService.getCurrentUserWithPerimeters().userData.entities;
+            return AcknowledgeUtils.getCurrentUserEntitiesAllowedToAcknowledge();
         return [];
     }
 }

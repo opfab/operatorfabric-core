@@ -95,7 +95,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeStatus.isCardAcknowledgedForCurrentUser(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
@@ -110,7 +110,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: AcknowledgeStatus.hasLightCardBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeStatus.isCardAcknowledgedForCurrentUser(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
     }
