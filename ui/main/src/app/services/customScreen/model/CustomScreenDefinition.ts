@@ -28,6 +28,7 @@ export class Column {
     fieldType: FieldType;
     flex?: number;
     getValue?: (card: Card) => string;
+    minWidth?: number;
 }
 
 export class ResponseButton {

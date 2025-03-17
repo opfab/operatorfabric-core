@@ -40,28 +40,36 @@
                     field: 'TIME',
                     headerName: 'TIME',
                     cardField: 'publishDate',
-                    fieldType: 'DATE_AND_TIME'
+                    fieldType: 'DATE_AND_TIME',
+                    minWidth: 150,
+                    flex: 0.5
+
                 },
                 {
-                    fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                    fieldType: 'RESPONSE_FROM_MY_ENTITIES',
                 },
                 {
                     field: 'testField',
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
-                    flex: 1
+                    flex: 1,
+                    minWidth: 150
                 },
                 {
                     field: 'testField2',
                     headerName: 'SUMMARY',
                     cardField: 'summaryTranslated',
                     fieldType: 'STRING',
-                    flex: 2
+                    flex: 2,
+                    minWidth: 150
                 },
                 {
                     fieldType: 'TYPE_OF_STATE',
-                    headerName: 'STATUS'
+                    headerName: 'STATUS',
+                    flex: 0.5,
+                    minWidth: 150
+
                 },
                 {
                     field: 'publisher',
@@ -77,26 +85,31 @@
                         if (card.severity === 'ALARM') return 'red';
                         return 'green';
                     },
-                    flex: 0.5
+                    flex: 0.5,
+                    minWidth: 100
+
                 },
                 {
                     field: 'keywords',
                     headerName: 'keywords field',
                     cardField: 'data.keywords',
                     fieldType: 'STRING',
-                    flex: 1
+                    flex: 1,
+                    minWidth: 150
                 },
                 {
                     field: 'nestedField',
                     headerName: 'nested field',
                     cardField: 'data.nested.field',
                     fieldType: 'STRING',
-                    flex: 1
+                    flex: 1,
+                    minWidth: 150
                 },
                 {
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
-                    flex: 2
+                    flex: 2,
+                    minWidth: 400
                 }
             ]
         }
