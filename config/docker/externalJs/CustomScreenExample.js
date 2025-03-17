@@ -43,10 +43,9 @@
                     fieldType: 'DATE_AND_TIME',
                     minWidth: 150,
                     flex: 0.5
-
                 },
                 {
-                    fieldType: 'RESPONSE_FROM_MY_ENTITIES',
+                    fieldType: 'RESPONSE_FROM_MY_ENTITIES'
                 },
                 {
                     field: 'testField',
@@ -69,7 +68,6 @@
                     headerName: 'STATUS',
                     flex: 0.5,
                     minWidth: 150
-
                 },
                 {
                     field: 'publisher',
@@ -87,13 +85,18 @@
                     },
                     flex: 0.5,
                     minWidth: 100
-
                 },
                 {
                     field: 'keywords',
                     headerName: 'keywords field',
                     cardField: 'data.keywords',
-                    fieldType: 'STRING',
+                    getValue: (card) => {
+                        if (card.data?.keywords) {
+                            return '<i>' + opfab.utils.escapeHtml(card.data.keywords) + '</i>';
+                        }
+                        return '';
+                    },
+                    fieldType: 'HTML',
                     flex: 1,
                     minWidth: 150
                 },
@@ -171,10 +174,10 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
-                        const responseData = { choice1: 'on', choice2: 'on', choice3: 'on', comment: comment };
-                        responseCards.push({ data: responseData });
+                        const responseData = {choice1: 'on', choice2: 'on', choice3: 'on', comment: comment};
+                        responseCards.push({data: responseData});
                     });
-                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                    return {valid: true, errorMsg: '', responseCards: responseCards};
                 }
             },
             {
@@ -189,13 +192,13 @@
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = { comment: comment };
-                        responseCards.push({ data: responseData });
+                        const responseData = {comment: comment};
+                        responseCards.push({data: responseData});
                     });
                     if (!hasAlwaysComment) {
-                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
+                        return {valid: false, errorMsg: 'Please fill in the comment field for all cards'};
                     }
-                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                    return {valid: true, errorMsg: '', responseCards: responseCards};
                 }
             }
         ]

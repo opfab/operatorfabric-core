@@ -65,6 +65,20 @@ describe('Custom Card List Screen', function () {
             // Should have 1 card
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 1);
         });
+
+        it(`Check html cells`, function () {
+            opfab.loginWithUser('operator1_fr');
+            opfab.navigateToCustomScreen1();
+
+            cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
+
+            cy.get('.ag-row[row-id="4"]')
+                .should('exist')
+                .within(() => {
+                    // Check that 'chart line' is contained inside <i> </i>
+                    cy.get('of-html-renderer').find('i').should('contain', 'chart line');
+                });
+        });
     });
     describe('Custom screen 2', function () {
         it(`Check response from table`, function () {
