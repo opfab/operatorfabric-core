@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,8 @@ public class I18NRepositoryImpl implements I18NRepository, EventListener {
             return i18nCache.get(key);
         }
         String i18n = getI18NFromBusinessConfigService(process, processVersion);
-        if (i18n==null) return null;
+        if (i18n == null)
+            return null;
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = null;
@@ -52,18 +53,20 @@ public class I18NRepositoryImpl implements I18NRepository, EventListener {
     private String getI18NFromBusinessConfigService(String process, String processVersion)
             throws IOException, InterruptedException {
 
-        HttpClient httpClient = HttpClient.newHttpClient();
         String uri = String.format(
                 "%s/processes/%s/i18n?version=%s", businessConfigUrl, process, processVersion);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 404)
-            return null;
+        try (HttpClient httpClient = HttpClient.newHttpClient()) {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(uri))
+                    .build();
 
-        return response.body();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 404)
+                return null;
+
+            return response.body();
+        }
     }
 
     @Override
