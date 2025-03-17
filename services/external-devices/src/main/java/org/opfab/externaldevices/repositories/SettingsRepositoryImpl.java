@@ -53,8 +53,7 @@ public class SettingsRepositoryImpl implements SettingsRepository {
                 .method("PATCH", HttpRequest.BodyPublishers.ofString(settingsJson))
                 .build();
 
-        try {
-            HttpClient httpClient = HttpClient.newHttpClient();
+        try (HttpClient httpClient = HttpClient.newHttpClient()) {
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
             log.error("Error patching user settings", e);
