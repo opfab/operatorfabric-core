@@ -114,8 +114,8 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
-                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', flex: undefined},
-                {field: 'comment', headerName: 'Comment', type: 'input', flex: undefined}
+                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
+                {field: 'comment', headerName: 'Comment', type: 'input'}
             ]);
         });
 
@@ -144,7 +144,29 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', flex: undefined}
+                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState'}
+            ]);
+        });
+        it('specify minWidth if defined in column definition', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'processId',
+                        fieldType: FieldType.STRING,
+                        minWidth: 200
+                    },
+                    {
+                        field: 'testField2',
+                        headerName: 'test2',
+                        cardField: 'test2'
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'testField', headerName: 'Process', type: 'default', minWidth: 200},
+                {field: 'testField2', headerName: 'test2', type: 'default'}
             ]);
         });
     });

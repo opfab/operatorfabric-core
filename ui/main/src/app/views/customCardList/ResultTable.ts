@@ -57,69 +57,45 @@ export class ResultTable {
         const agGridColumns = [];
         if (this.customScreenDefinition) {
             this.customScreenDefinition.results.columns.forEach((column) => {
+                const col = {
+                    field: column.field,
+                    headerName: column.headerName,
+                    type: 'default'
+                };
+                if (column.minWidth) col['minWidth'] = column.minWidth;
+                if (column.flex) col['flex'] = column.flex;
+
                 switch (column.fieldType) {
                     case FieldType.SEVERITY:
-                        agGridColumns.push({
-                            field: column.field,
-                            headerName: '',
-                            type: 'severity'
-                        });
+                        col.headerName = '';
+                        col.type = 'severity';
                         break;
                     case FieldType.DATE_AND_TIME:
-                        agGridColumns.push({
-                            field: column.field,
-                            headerName: column.headerName,
-                            type: 'dateAndTime',
-                            flex: column.flex
-                        });
+                        col.type = 'dateAndTime';
                         break;
                     case FieldType.TYPE_OF_STATE:
-                        agGridColumns.push({
-                            field: 'typeOfState',
-                            headerName: column.headerName,
-                            type: 'typeOfState',
-                            flex: column.flex
-                        });
+                        col.field = 'typeOfState';
+                        col.type = 'typeOfState';
                         break;
                     case FieldType.RESPONSES:
-                        agGridColumns.push({
-                            field: 'responses',
-                            headerName: column.headerName,
-                            type: 'responses',
-                            flex: column.flex
-                        });
+                        col.field = 'responses';
+                        col.type = 'responses';
                         break;
                     case FieldType.RESPONSE_FROM_MY_ENTITIES:
-                        agGridColumns.push({
-                            field: 'responseFromMyEntities',
-                            headerName: '',
-                            type: 'responseFromMyEntities'
-                        });
+                        col.field = 'responseFromMyEntities';
+                        col.headerName = '';
+                        col.type = 'responseFromMyEntities';
                         break;
                     case FieldType.COLORED_CIRCLE:
-                        agGridColumns.push({
-                            field: column.field,
-                            headerName: column.headerName,
-                            type: 'coloredCircle',
-                            flex: column.flex
-                        });
+                        col.type = 'coloredCircle';
                         break;
                     case FieldType.INPUT:
-                        agGridColumns.push({
-                            field: column.field,
-                            headerName: column.headerName,
-                            type: 'input',
-                            flex: column.flex
-                        });
+                        col.type = 'input';
                         break;
                     default:
-                        agGridColumns.push({
-                            field: column.field,
-                            headerName: column.headerName,
-                            type: 'default',
-                            flex: column.flex
-                        });
+                        break;
                 }
+                agGridColumns.push(col);
             });
         }
         return agGridColumns;

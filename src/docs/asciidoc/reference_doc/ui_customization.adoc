@@ -394,6 +394,7 @@ const customScreenExample = {
             {
                 headerName: 'ANSWERS',
                 fieldType: 'RESPONSES',
+                minWidth: 150, 
                 flex: 2
             }
         ]
@@ -427,6 +428,7 @@ For `STRING` field type if the method `getValue` is defined, the value of the fi
 
 The `flex` field sets the CSS flex property for the column.
 
+It is possible to define the minimum width of the column by setting the `minWidth` field in the column definition. The `minWidth` is a number representing the width in pixels.
 === Response buttons 
 
 It is possible to define custom response buttons for the custom screen allowing the user to send multiple responses at once.

@@ -291,6 +291,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             },
             columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
             paginationPageSize: this.pageSize,
+            suppressHorizontalScroll: false,
             onRowSelected: (event) => this.onRowSelected(event)
         };
         this.rowData$ = this.rowDataSubject.asObservable();
