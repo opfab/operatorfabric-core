@@ -38,6 +38,7 @@ import {InputCellRendererComponent} from './cellRenderers/InputCellRendererCompo
 import {AgGrid} from 'app/utils/AgGrid';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {debounceTime} from 'rxjs/operators';
+import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererComponent';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -196,7 +197,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             components: {
                 responsesCellRenderer: ResponsesCellRendererComponent,
                 hasResponseCellRenderer: HasResponseCellRendererComponent,
-                inputCellRenderer: InputCellRendererComponent
+                inputCellRenderer: InputCellRendererComponent,
+                htmlCellRenderer: HTMLCellRendererComponent
             },
 
             defaultColDef: {
@@ -208,6 +210,13 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     filter: true,
                     resizable: false,
                     wrapText: false
+                },
+                html: {
+                    sortable: false,
+                    filter: true,
+                    resizable: false,
+                    wrapText: false,
+                    cellRenderer: 'htmlCellRenderer'
                 },
                 severity: {
                     sortable: false,

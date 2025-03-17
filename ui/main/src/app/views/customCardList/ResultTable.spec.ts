@@ -90,6 +90,13 @@ describe('CustomScreenView - ResultTable', () => {
                         flex: 1
                     },
                     {
+                        field: 'testField3',
+                        headerName: 'keywords',
+                        cardField: 'keywords',
+                        fieldType: FieldType.HTML,
+                        flex: 1
+                    },
+                    {
                         headerName: 'Responses',
                         fieldType: FieldType.RESPONSES,
                         flex: 2
@@ -112,6 +119,7 @@ describe('CustomScreenView - ResultTable', () => {
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
                 {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
                 {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1},
+                {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
@@ -412,6 +420,32 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1 - state1'}]);
         });
+
+        it('with getValue method if getValue is defined and fieldType is HTML', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        fieldType: FieldType.HTML,
+                        getValue: (card: Card) => {
+                            return '<i>' + card.process + '</i>';
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: new Date(),
+                    state: 'state1',
+                    id: 'id1'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: '<i>processId1</i>'}]);
+        });
+
         it('with the color using custom method getValue() if field type is COLORED_CIRCLE', () => {
             const resultTable = getResultTable({
                 columns: [

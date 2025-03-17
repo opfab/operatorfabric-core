@@ -92,6 +92,9 @@ export class ResultTable {
                     case FieldType.INPUT:
                         col.type = 'input';
                         break;
+                    case FieldType.HTML:
+                        col.type = 'html';
+                        break;
                     default:
                         break;
                 }
@@ -179,6 +182,9 @@ export class ResultTable {
                         } else {
                             data[column.field] = this.getNestedField(card, column.cardField);
                         }
+                        break;
+                    case FieldType.HTML:
+                        data[column.field] = column.getValue(card);
                         break;
                     default:
                         data[column.field] = this.getNestedField(card, column.cardField);

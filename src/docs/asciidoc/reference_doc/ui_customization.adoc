@@ -418,13 +418,16 @@ For each field you want to display in the result table, define a column object. 
 - `RESPONSE_FROM_MY_ENTITIES`: Displays a blue arrow if one of the user's entity has responded to the card.
 - `SEVERITY`: Displays the severity as a color rectangle.
 - `STRING`: Displays a string value.
+- `HTML`: Renders the HTML contained in the `getValue` method.
 - `TYPE_OF_STATE`: Displays the type of state value: `INPROGRESS`, `FINISHED`, `CANCELLED`.
 
 You can define the column header text using the `headerName` field.
 
-The `cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `COLORED_CIRCLE`, `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
+`cardField` is the field of the card that will be displayed in the result. It is not used for the following field types: `COLORED_CIRCLE`, `SEVERITY`, `TYPE_OF_STATE`,`RESPONSES` and `RESPONSE_FROM_MY_ENTITIES`.
 
 For `STRING` field type if the method `getValue` is defined, the value of the field will be the result of this method instead of the value of the cardField.
+
+For `HTML` field type, sorting has been deactivated because the HTML tags may falsify the order. Filtering is enabled but may also be impacted. The HTML tags need to be injected by the `getValue` method of the column.
 
 The `flex` field sets the CSS flex property for the column.
 
