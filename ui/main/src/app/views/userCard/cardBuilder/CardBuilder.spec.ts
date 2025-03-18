@@ -12,6 +12,7 @@ import {Severity} from 'app/model/Severity';
 import {CardBuilder} from './CardBuilder';
 import {
     AlertMessageReceiver,
+    getAlertMessageReceiver,
     getOneCard,
     initOpfabAPI,
     setEntities,
@@ -65,7 +66,7 @@ describe('UserCard CardBuilder', () => {
         }
 
         beforeEach(() => {
-            alertMessageReceiver = new AlertMessageReceiver();
+            alertMessageReceiver = getAlertMessageReceiver();
             jasmine.clock().install();
             jasmine.clock().mockDate(new Date(50));
         });

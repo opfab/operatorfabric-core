@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AlertMessageReceiver, getOneCard} from '@tests/helpers';
+import {getAlertMessageReceiver, getOneCard} from '@tests/helpers';
 import {CardSender} from './CardSender';
 import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {CardsService} from '@ofServices/cards/CardsService';
@@ -39,7 +39,7 @@ describe('UserCard CardSender', () => {
             expect(cardsServerMock.cardsPosted[0]).toEqual(convertCardToCardForPublishing(card));
         });
         it('Should display a success message to user if card sent', async () => {
-            const alertMessageReceiver = new AlertMessageReceiver();
+            const alertMessageReceiver = getAlertMessageReceiver();
             await cardSender.sendCardAndChildCard(card);
             const alertMessage = await alertMessageReceiver.getMessageReceived();
             expect(alertMessage.i18n.key).toEqual('userCard.cardSendWithNoError');
@@ -49,7 +49,7 @@ describe('UserCard CardSender', () => {
             cardsServerMock.setResponseFunctionForPostCard(() => {
                 return new ServerResponse(null, ServerResponseStatus.NOT_FOUND, null);
             });
-            const alertMessageReceiver = new AlertMessageReceiver();
+            const alertMessageReceiver = getAlertMessageReceiver();
             await cardSender.sendCardAndChildCard(card);
             const alertMessage = await alertMessageReceiver.getMessageReceived();
             expect(alertMessage.i18n.key).toEqual('userCard.error.impossibleToSendCard');
@@ -86,7 +86,7 @@ describe('UserCard CardSender', () => {
             opfab.currentUserCard.registerFunctionToBeCalledBeforeCardSending(async () => {
                 throw new Error('Error in function');
             });
-            const alertMessageReceiver = new AlertMessageReceiver();
+            const alertMessageReceiver = getAlertMessageReceiver();
             await cardSender.sendCardAndChildCard(card);
             const alertMessage = await alertMessageReceiver.getMessageReceived();
             expect(alertMessage.message).toEqual('Error in function');
@@ -111,7 +111,7 @@ describe('UserCard CardSender', () => {
             });
         });
         it('Should display a success message to user if card sent', async () => {
-            const alertMessageReceiver = new AlertMessageReceiver();
+            const alertMessageReceiver = getAlertMessageReceiver();
             await cardSender.sendCardAndChildCard(card, childCard);
             const alertMessage = await alertMessageReceiver.getMessageReceived();
             expect(alertMessage.i18n.key).toEqual('userCard.cardSendWithNoError');
@@ -119,7 +119,7 @@ describe('UserCard CardSender', () => {
         });
 
         it('Should display error to user if child card not sent', async () => {
-            const alertMessageReceiver = new AlertMessageReceiver();
+            const alertMessageReceiver = getAlertMessageReceiver();
             let methodCallsNumber = 0;
             cardsServerMock.setResponseFunctionForPostCard(() => {
                 if (methodCallsNumber === 0) {

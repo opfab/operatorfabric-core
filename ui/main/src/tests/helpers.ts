@@ -256,11 +256,16 @@ export function initOpfabAPI() {
     UserCardTemplateGateway.initTemplateFunctions();
 }
 
+export function getAlertMessageReceiver(): AlertMessageReceiver {
+    const alertMessageReceiver = new AlertMessageReceiver();
+    alertMessageReceiver.listenForMessageReceived();
+    return alertMessageReceiver;
+}
+
 export class AlertMessageReceiver {
     private readonly alertSubject: ReplaySubject<Message>;
     constructor() {
         this.alertSubject = new ReplaySubject<Message>();
-        this.listenForMessageReceived();
     }
 
     async listenForMessageReceived() {
