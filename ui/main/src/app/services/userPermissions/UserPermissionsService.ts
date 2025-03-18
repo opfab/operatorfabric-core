@@ -13,7 +13,6 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {User} from '@ofServices/users/model/User';
-import {LoggerService} from 'app/services/logs/LoggerService';
 import {UsersService} from '../users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
@@ -107,10 +106,7 @@ export class UserPermissionsService {
                 .map((entity) => entity.id)
                 .filter((x) => x !== card.publisher || emittingEntityAllowedToRespond);
 
-            LoggerService.debug(' Detail card - entities allowed to respond = ' + allowed);
-
             userEntitiesAllowedToRespond = allowed.filter((x) => user.userData.entities.includes(x));
-            LoggerService.debug(' Detail card - users entities allowed to respond = ' + userEntitiesAllowedToRespond);
         }
         return userEntitiesAllowedToRespond;
     }
