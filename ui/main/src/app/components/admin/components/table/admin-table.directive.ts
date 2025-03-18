@@ -278,7 +278,8 @@ export abstract class AdminTableDirective implements OnDestroy {
             });
         }
         if (columnId === 'update') {
-            this.updateItem();
+            const fileName = params.data[this.idField];
+            this.updateItem(fileName);
         }
     }
     openDeleteConfirmationDialog(row: any): any {
@@ -319,8 +320,8 @@ export abstract class AdminTableDirective implements OnDestroy {
         }
     }
 
-    updateItem(): void {
-        document.getElementById('fileUpdater').click();
+    updateItem(fileName: string): void {
+        document.getElementById('fileUpdater_' + fileName).click();
     }
 
     onFileSelected(event) {
