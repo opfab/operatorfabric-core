@@ -46,6 +46,9 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
         <br/>
         `;
+    }
+
+    connectedCallback() {
         this.listenToEntityUsedForSendingCardChange();
         this.view
             .initRecipientsAndMessageList(this.getAttribute('businessData'))
