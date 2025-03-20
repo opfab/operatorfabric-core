@@ -18,6 +18,7 @@ export class CustomScreenDefinition {
         columns: Column[];
     };
     responseButtons?: ResponseButton[];
+    showAcknowledgmentButton?: boolean;
 }
 
 export class Column {

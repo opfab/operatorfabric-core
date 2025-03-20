@@ -409,6 +409,9 @@
     "processMonitoring": {
         "viewResultOnMap": "Afficher les Résultats sur une Carte Géographique"
     },
+    "customCardList" :{
+        "acknowledge": "ACQUITTER LA SÉLECTION"
+    },
     "button": {
         "ok": "OK",
         "cancel": "ANNULER",

@@ -189,6 +189,15 @@
                         {{ responseButton.label }}
                     </button>
                 </div>
+                <div *ngIf="isAcknowledgmentButtonVisible" class="opfab-custom-screen-response-btn">
+                    <button
+                        id="opfab-acknowledge-button"
+                        class="opfab-btn"
+                        style="width: max-content"
+                        (click)="clickOnAcknowledgmentButton()">
+                        <span translate> customCardList.acknowledge </span>
+                    </button>
+                </div>
             </ng-container>
 
             <div class="opfab-custom-card-list-export-div">

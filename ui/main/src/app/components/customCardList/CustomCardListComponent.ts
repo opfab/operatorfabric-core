@@ -67,6 +67,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     customCardListView: CustomCardListView;
     isCustomScreenDefinitionExist: boolean;
+    isAcknowledgmentButtonVisible: boolean;
     gridOptions: any;
     gridApi: any;
     page = 1;
@@ -181,6 +182,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
         };
         this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
+        this.isAcknowledgmentButtonVisible = this.customCardListView.isAcknowledgmentButtonVisible();
         this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
         this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
         this.readAndAckFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.READ_ACK);
@@ -306,13 +308,16 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.rowData$ = this.rowDataSubject.asObservable();
         this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
         this.startListeningToResults();
-        if (this.responseButtons.length > 0) {
+        if (this.responseButtons.length > 0 || this.customCardListView.isAcknowledgmentButtonVisible()) {
             this.rowSelection = {
                 mode: 'multiRow',
                 selectAll: 'currentPage',
                 hideDisabledCheckboxes: true,
                 isRowSelectable: (node) => {
-                    return node.data.isResponsePossible;
+                    return (
+                        (this.responseButtons.length > 0 && node.data.isResponsePossible) ||
+                        (this.customCardListView.isAcknowledgmentButtonVisible() && node.data.isAcknowledgmentPossible)
+                    );
                 }
             };
         }
@@ -418,22 +423,35 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.gridApi.deselectAll();
     }
 
+    clickOnAcknowledgmentButton() {
+        const selectedRows = this.gridApi.getSelectedRows();
+        if (selectedRows.length === 0) {
+            return;
+        }
+        this.customCardListView.clickOnAcknowledgmentButton(
+            selectedRows.filter((row) => row.isAcknowledgmentPossible).map((row) => row.cardId)
+        );
+        this.gridApi.deselectAll();
+    }
+
     private getResponsesData(): Map<string, any> {
         const responseData = new Map<string, any>();
         const selectedRowNodes = this.gridApi.getSelectedNodes();
         const inputColumns = this.getInputColumnIds();
 
         selectedRowNodes.forEach((rowNode: any) => {
-            const userInputs = {};
-            const inputCellRenderers = this.gridApi.getCellRendererInstances({
-                columns: inputColumns,
-                rowNodes: [rowNode]
-            });
-            if (inputCellRenderers.length > 0)
-                inputCellRenderers.forEach((cellRenderer: any) => {
-                    userInputs[cellRenderer.params.colDef.field] = cellRenderer.getInputValue();
+            if (rowNode.data.isResponsePossible) {
+                const userInputs = {};
+                const inputCellRenderers = this.gridApi.getCellRendererInstances({
+                    columns: inputColumns,
+                    rowNodes: [rowNode]
                 });
-            responseData.set(rowNode.data.cardId, userInputs);
+                if (inputCellRenderers.length > 0)
+                    inputCellRenderers.forEach((cellRenderer: any) => {
+                        userInputs[cellRenderer.params.colDef.field] = cellRenderer.getInputValue();
+                    });
+                responseData.set(rowNode.data.cardId, userInputs);
+            }
         });
         return responseData;
     }
@@ -447,8 +465,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         const instances = this.gridApi.getCellRendererInstances(param);
         if (instances.length > 0)
             instances.forEach((element) => {
-                if (event.node.isSelected()) element.activateInput();
-                else element.deactivateInput();
+                if (event.node.data.isResponsePossible) {
+                    if (event.node.isSelected()) element.activateInput();
+                    else element.deactivateInput();
+                }
             });
     }
 

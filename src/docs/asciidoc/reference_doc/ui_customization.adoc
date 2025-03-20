@@ -342,6 +342,7 @@ const customScreenExample = {
     id: 'testId',
     name: 'testName',
     headerFilters: ['PROCESS', 'TYPE_OF_STATE'],
+    showAcknowledgmentButton: false,
     results: {
         columns: [
             {
@@ -432,6 +433,11 @@ For `HTML` field type, sorting has been deactivated because the HTML tags may fa
 The `flex` field sets the CSS flex property for the column.
 
 It is possible to define the minimum width of the column by setting the `minWidth` field in the column definition. The `minWidth` is a number representing the width in pixels.
+
+=== Acknowledgment 
+
+It is possible to define a custom screen with an acknowledgment button allowing the user to acknowledge multiple cards at once. This is possible by setting the `showAcknowledgmentButton` field to `true` in the custom screen object.
+
 === Response buttons 
 
 It is possible to define custom response buttons for the custom screen allowing the user to send multiple responses at once.
