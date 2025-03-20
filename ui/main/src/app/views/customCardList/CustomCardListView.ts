@@ -17,11 +17,13 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {LoggerService} from '@ofServices/logs/LoggerService';
 import {Responses} from './Responses';
+import {Acknowledgments} from './Acknowledgments';
 
 export class CustomCardListView {
     private readonly customScreenDefinition: CustomScreenDefinition;
     private readonly resultTable: ResultTable;
     private readonly responses: Responses;
+    private readonly acknowledgments: Acknowledgments;
     private results: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     filter$: Subject<void> = new ReplaySubject<void>(1);
@@ -32,6 +34,7 @@ export class CustomCardListView {
         this.allProcessesListAvailableForUser = this.getAllProcessesListAvailableForUser();
         this.resultTable = new ResultTable(this.customScreenDefinition);
         this.responses = new Responses(this.customScreenDefinition);
+        this.acknowledgments = new Acknowledgments(this.customScreenDefinition);
         this.resultTable.setBusinessDateFilter(
             RealTimeDomainService.getCurrentDomain().startDate,
             RealTimeDomainService.getCurrentDomain().endDate
@@ -58,8 +61,11 @@ export class CustomCardListView {
                     OpfabStore.getLightCardStore().getAllChildCards()
                 );
                 const endTimer = Date.now();
+                if (this.customScreenDefinition.showAcknowledgmentButton)
+                    this.results = this.acknowledgments.addAcknowledgmentPossibleForCardToResults(this.results);
+                this.results = this.responses.addIsResponsePossibleForCardToResults(this.results);
                 LoggerService.info(`Custom card list - Time to process data: ${endTimer - startTimer}ms`);
-                return this.responses.addIsResponsePossibleForCardToResults(this.results);
+                return this.results;
             })
         );
     }
@@ -165,6 +171,14 @@ export class CustomCardListView {
 
     public async clickOnButton(buttonId: string, responsesData: Map<string, any>) {
         await this.responses.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
+    }
+
+    public isAcknowledgmentButtonVisible(): boolean {
+        return this.acknowledgments.isAcknowledgmentButtonVisible();
+    }
+
+    public clickOnAcknowledgmentButton(cardIds: string[]) {
+        this.acknowledgments.sendAcknowledgments(cardIds);
     }
 
     public destroy() {

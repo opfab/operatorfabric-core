@@ -12,28 +12,13 @@ import {getOneCard, setUserPerimeter, sendLightCard, setEntities, sendLightCards
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {AcknowledgeServer} from './server/AcknowledgeServer';
 import {AcknowledgeService} from './AcknowledgeService';
 import {OpfabStore} from '@ofStore/OpfabStore';
-import {Observable, firstValueFrom, of} from 'rxjs';
-import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
+import {firstValueFrom} from 'rxjs';
+import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {CardAction} from 'app/model/CardAction';
-
-class AcknowledgeServerMock implements AcknowledgeServer {
-    public ackPosted = new Array<{cardUid: string; entitiesAcks: string[]}>();
-    public ackDeleted = new Array<{cardUid: string; entitiesAcks: string[]}>();
-    public serverResponseStatus = ServerResponseStatus.OK;
-
-    postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        this.ackPosted.push({cardUid, entitiesAcks});
-        return of(new ServerResponse<void>(null, this.serverResponseStatus, 'OK'));
-    }
-    deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        this.ackDeleted.push({cardUid, entitiesAcks});
-        return of(new ServerResponse<void>(null, this.serverResponseStatus, 'OK'));
-    }
-}
+import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeServerMock: AcknowledgeServerMock;

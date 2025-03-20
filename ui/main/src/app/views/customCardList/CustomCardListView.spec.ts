@@ -381,6 +381,51 @@ describe('CustomCardListView', () => {
             ]);
         });
 
+        it('with isAcknowledgmentPossible field if ack button is present', async () => {
+            await setUserPerimeter({
+                computedPerimeters: [],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: []
+                }
+            });
+
+            const customScreenDefinition = getCustomScreenDefinition();
+            customScreenDefinition.showAcknowledgmentButton = true;
+            customScreenDefinition.results = {
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        cardField: 'process',
+                        fieldType: FieldType.STRING,
+                        flex: 2
+                    }
+                ]
+            };
+            CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
+            const customScreenView = new CustomCardListView('testId');
+
+            const card = getOneLightCard({
+                process: 'process1',
+                state: 'state1',
+                entitiesAllowedToRespond: ['entity1'],
+                id: 'id1'
+            });
+            opfabEventStreamServerMock.sendLightCard(card);
+            const result = await firstValueFrom(customScreenView.getResults());
+            expect(result).toEqual([
+                {
+                    cardId: 'id1',
+                    testField: 'process1',
+                    isResponsePossible: false,
+                    isAcknowledgmentPossible: true
+                }
+            ]);
+        });
+
         it('converted for export', async () => {
             const customScreenDefinition = getCustomScreenDefinition();
             customScreenDefinition.results = {

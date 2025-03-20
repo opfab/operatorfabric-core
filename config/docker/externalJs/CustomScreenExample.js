@@ -204,6 +204,83 @@
         ]
     };
 
+    const customScreenExample3 = {
+        id: 'testId3',
+        name: 'testName',
+        headerFilters: ['PROCESS'],
+        showAcknowledgmentButton: true,
+        results: {
+            columns: [
+                {
+                    field: 'TIME',
+                    headerName: 'PUBLISH DATE',
+                    cardField: 'publishDate',
+                    fieldType: 'DATE_AND_TIME'
+                },
+                {
+                    fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                },
+                {
+                    field: 'testField',
+                    headerName: 'TITLE',
+                    cardField: 'titleTranslated',
+                    fieldType: 'STRING',
+                    flex: 1
+                },
+                {
+                    headerName: 'ANSWERS',
+                    fieldType: 'RESPONSES',
+                    flex: 2
+                },
+                {
+                    fieldType: 'INPUT',
+                    field: 'comment',
+                    cardField: 'data.comment',
+                    isFieldFromCurrentUserChildCard: true,
+                    headerName: 'COMMENT'
+                }
+            ]
+        },
+        responseButtons: [
+            {
+                id: 'button1',
+                label: 'Accept proposals',
+                getUserResponses: (selectedCards, userInputs) => {
+                    const responseCards = [];
+
+                    selectedCards.forEach((card) => {
+                        const userInput = userInputs.get(card.id);
+                        const comment = userInput?.comment ?? '';
+                        const responseData = { choice1: 'on', choice2: 'on', choice3: 'on', comment: comment };
+                        responseCards.push({ data: responseData });
+                    });
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            },
+            {
+                id: 'button2',
+                label: 'Refuse proposals',
+                getUserResponses: (selectedCards, userInputs) => {
+                    const responseCards = [];
+                    let hasAlwaysComment = true;
+                    selectedCards.forEach((card) => {
+                        const userInput = userInputs.get(card.id);
+                        const comment = userInput?.comment ?? '';
+                        if (comment === '') {
+                            hasAlwaysComment = false;
+                        }
+                        const responseData = { comment: comment };
+                        responseCards.push({ data: responseData });
+                    });
+                    if (!hasAlwaysComment) {
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
+                    }
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
+                }
+            }
+        ]
+    };
     opfab.businessconfig.registerCustomScreen(customScreenExample);
     opfab.businessconfig.registerCustomScreen(customScreenExample2);
+    opfab.businessconfig.registerCustomScreen(customScreenExample3);
 }

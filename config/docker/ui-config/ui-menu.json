@@ -58,6 +58,11 @@
                     "url": "http://localhost:2002/external/appExample/",
                     "label": "entry.entry3",
                     "linkType": "BOTH"
+                },
+                {
+                    "customMenuId": "uid_test_5",
+                    "customScreenId": "testId3",
+                    "label": "entry.custom3"
                 }
             ]
         },
@@ -149,7 +154,8 @@
                     "entry3": "External application",
                     "admin": "Admin menu entry",
                     "custom": "Custom screen",
-                    "custom2": "Custom screen 2"
+                    "custom2": "Custom screen 2",
+                    "custom3": "Custom screen 3"
                 }
             }
         },
@@ -167,8 +173,8 @@
                     "entry3": "Application externe",
                     "admin": "Menu admin élément",
                     "custom": "Écran personnalisé",
-                    "custom2": "Écran personnalisé 2"
-
+                    "custom2": "Écran personnalisé 2",
+                    "custom3": "Écran personnalisé 3"
                 }
             }
         },
@@ -186,7 +192,8 @@
                     "entry3": "TExterne applicatie",
                     "admin": "Admin menu-item",
                     "custom": "Aangepast scherm",
-                    "custom2": "Aangepast scherm 2"
+                    "custom2": "Aangepast scherm 2",
+                    "custom3": "Aangepast scherm 3"
                 }
             }
         }

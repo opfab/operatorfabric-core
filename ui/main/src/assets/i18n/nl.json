@@ -408,6 +408,9 @@
     "processMonitoring": {
         "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"
     },
+    "customCardList" :{
+        "acknowledge": "Bevestigen selectie"
+    },
     "button": {
         "ok": "OK",
         "cancel": "ANNULEREN",

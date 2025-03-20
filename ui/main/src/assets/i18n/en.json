@@ -408,6 +408,9 @@
     "processMonitoring": {
         "viewResultOnMap": "View Results on a Geographical Map"
     },
+    "customCardList" :{
+        "acknowledge": "ACKNOWLEDGE SELECTED"
+    },
     "button": {
         "ok": "OK",
         "cancel": "CANCEL",
