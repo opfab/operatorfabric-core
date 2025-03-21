@@ -10,29 +10,27 @@
 import {CustomScreenDefinition, FieldType, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {CustomCardListView} from './CustomCardListView';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {OpfabStore} from '@ofStore/OpfabStore';
-import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {
+    getOneLightCard,
+    mockTranslation,
+    sendLightCards,
+    setEntities,
+    setProcessConfiguration,
+    setUserPerimeter
+} from '@tests/helpers';
 import {firstValueFrom} from 'rxjs';
-import {FilteredLightCardsStore} from '@ofStore/lightcards/FilteredLightcardsStore';
-import {FilterType} from '@ofStore/lightcards/model/Filter';
-import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
 import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
-import {TranslationService} from '@ofServices/translation/TranslationService';
-import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
-import {ConfigService} from '@ofServices/config/ConfigService';
-import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {FilterValues} from './FilterValues';
+import {OpfabStore} from '@ofStore/OpfabStore';
+import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
+import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 
 describe('CustomCardListView', () => {
-    let opfabEventStreamServerMock: OpfabEventStreamServerMock;
-    let filteredLightCardStore: FilteredLightCardsStore;
-
     const getCustomScreenDefinition = () => {
         const customScreenDefinition = new CustomScreenDefinition();
         customScreenDefinition.id = 'testId';
@@ -41,20 +39,17 @@ describe('CustomCardListView', () => {
     };
 
     beforeAll(() => {
-        TranslationService.setTranslationLib(new TranslationLibMock());
-        ConfigService.setConfigServer(new ConfigServerMock());
-        DateTimeFormatterService.init();
-        ConfigService.setConfigValue('settings.locale', 'en');
+        mockTranslation();
+
+        // init necessary as the constructor of CustomCardListView call the store via RealTimeDomainService
+        const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
+        OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
+        OpfabStore.reset();
+        RealTimeDomainService.init();
     });
 
     beforeEach(() => {
         CustomScreenService.clearCustomScreenDefinitions();
-        opfabEventStreamServerMock = new OpfabEventStreamServerMock();
-        OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
-        OpfabStore.reset();
-        RealTimeDomainService.init();
-        RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
-        filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     });
     describe('Custom screen configuration', () => {
         it('should return false if custom screen definition does not exist', () => {
@@ -80,66 +75,19 @@ describe('CustomCardListView', () => {
             const customScreenView = new CustomCardListView('testId');
             expect(customScreenView.isFilterVisibleInHeader(HeaderFilter.PROCESS)).toEqual(false);
         });
-
-        it('should return columDefinition for agGrid', () => {
-            const customScreenDefinition = getCustomScreenDefinition();
-            customScreenDefinition.results = {
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'processId',
-                        fieldType: FieldType.STRING,
-                        flex: 2
-                    },
-                    {
-                        field: 'testField2',
-                        headerName: 'Start Date',
-                        cardField: 'startDate',
-                        fieldType: FieldType.DATE_AND_TIME,
-                        flex: 1
-                    }
-                ]
-            };
-            CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
-            expect(customScreenView.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
-                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1}
-            ]);
-        });
     });
     describe('Should get processes list', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             const process = [
                 new Process('myProcess', '1', 'my process label', null, new Map<string, State>()),
                 new Process('myProcess2', '2', 'my process label 2', null, new Map<string, State>())
             ];
-            setProcessConfiguration(process);
+            await setProcessConfiguration(process);
         });
 
-        it('with one process from user perimeter if user has one process state visible', async () => {
+        it('with one process from user perimeter if user has one process', async () => {
             const customScreenDefinition = getCustomScreenDefinition();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
-
-            await setUserPerimeter({
-                computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.Receive)],
-                userData: {
-                    login: 'test',
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    entities: []
-                }
-            });
-            const result = customScreenView.getAllProcessesListAvailableForUser();
-            expect(result).toEqual([{id: 'myProcess', label: 'my process label'}]);
-        });
-
-        it('with one process from user perimeter if user has one process with 2 states visible', async () => {
-            const customScreenDefinition = getCustomScreenDefinition();
-            CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
 
             await setUserPerimeter({
                 computedPerimeters: [
@@ -153,6 +101,7 @@ describe('CustomCardListView', () => {
                     entities: []
                 }
             });
+            const customScreenView = new CustomCardListView('testId');
             const result = customScreenView.getAllProcessesListAvailableForUser();
             expect(result).toEqual([{id: 'myProcess', label: 'my process label'}]);
         });
@@ -160,7 +109,6 @@ describe('CustomCardListView', () => {
         it('with two processes from user perimeter if user has two process state visible', async () => {
             const customScreenDefinition = getCustomScreenDefinition();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
 
             await setUserPerimeter({
                 computedPerimeters: [
@@ -174,6 +122,7 @@ describe('CustomCardListView', () => {
                     entities: []
                 }
             });
+            const customScreenView = new CustomCardListView('testId');
             const result = customScreenView.getAllProcessesListAvailableForUser();
             expect(result).toEqual([
                 {id: 'myProcess', label: 'my process label'},
@@ -188,7 +137,6 @@ describe('CustomCardListView', () => {
                 const customScreenDefinition = getCustomScreenDefinition();
                 customScreenDefinition.processIds = [];
                 CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-                const customScreenView = new CustomCardListView('testId');
 
                 await setUserPerimeter({
                     computedPerimeters: [
@@ -202,6 +150,7 @@ describe('CustomCardListView', () => {
                         entities: []
                     }
                 });
+                const customScreenView = new CustomCardListView('testId');
                 const result = customScreenView.getAllProcessesListAvailableForUser();
                 expect(result).toEqual([
                     {id: 'myProcess', label: 'my process label'},
@@ -214,11 +163,6 @@ describe('CustomCardListView', () => {
             'with one process from user perimeter if user has two process state visible but customScreenDefinition ' +
                 'restricts the processes list to myProcess',
             async () => {
-                const customScreenDefinition = getCustomScreenDefinition();
-                customScreenDefinition.processIds = ['myProcess'];
-                CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-                const customScreenView = new CustomCardListView('testId');
-
                 await setUserPerimeter({
                     computedPerimeters: [
                         new ComputedPerimeter('myProcess', 'myState', RightEnum.Receive),
@@ -231,6 +175,10 @@ describe('CustomCardListView', () => {
                         entities: []
                     }
                 });
+                const customScreenDefinition = getCustomScreenDefinition();
+                customScreenDefinition.processIds = ['myProcess'];
+                CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
+                const customScreenView = new CustomCardListView('testId');
                 const result = customScreenView.getAllProcessesListAvailableForUser();
                 expect(result).toEqual([{id: 'myProcess', label: 'my process label'}]);
             }
@@ -240,12 +188,13 @@ describe('CustomCardListView', () => {
         beforeEach(async () => {
             const myState = new State();
             myState.response = {state: 'state1'};
+            myState.type = TypeOfStateEnum.INPROGRESS;
 
             const statesList = new Map();
             statesList.set('state1', myState);
 
             const process = [new Process('process1', '1', 'my process label', null, statesList)];
-            setProcessConfiguration(process);
+            await setProcessConfiguration(process);
 
             await setEntities([
                 {
@@ -270,18 +219,6 @@ describe('CustomCardListView', () => {
         });
 
         it('from light cards store', async () => {
-            // this is necessary to set the user perimeter for child card
-            // to be processed correctly by the lightcard store
-            await setUserPerimeter({
-                computedPerimeters: [],
-                userData: {
-                    login: 'test',
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    entities: []
-                }
-            });
-
             const customScreenDefinition = getCustomScreenDefinition();
             customScreenDefinition.results = {
                 columns: [
@@ -300,13 +237,13 @@ describe('CustomCardListView', () => {
                 ]
             };
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
 
             const card = getOneLightCard({
                 process: 'process1',
                 state: 'state1',
                 entitiesAllowedToRespond: ['entity1'],
-                id: 'id1'
+                id: 'id1',
+                startDate: new Date().valueOf()
             });
             const childCard = getOneLightCard({
                 process: 'process1',
@@ -314,34 +251,24 @@ describe('CustomCardListView', () => {
                 parentCardId: 'id1',
                 id: 'id2',
                 publisher: 'entity1',
-                severity: Severity.COMPLIANT
+                severity: Severity.COMPLIANT,
+                startDate: new Date().valueOf()
             });
-            opfabEventStreamServerMock.sendLightCard(card);
-            opfabEventStreamServerMock.sendLightCard(childCard);
+            sendLightCards([card, childCard]);
+
+            const customScreenView = new CustomCardListView('testId');
+
             const result = await firstValueFrom(customScreenView.getResults());
             expect(result).toEqual([
                 {
                     cardId: 'id1',
                     testField: 'process1',
-                    responses: [{name: 'entity1 name', color: 'green'}],
-                    isResponsePossible: false
+                    responses: [{name: 'entity1 name', color: 'green'}]
                 }
             ]);
         });
 
         it('filtered from light cards store', async () => {
-            // this is necessary to set the user perimeter for child card
-            // to be processed correctly by the lightcard store
-            await setUserPerimeter({
-                computedPerimeters: [],
-                userData: {
-                    login: 'test',
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    entities: []
-                }
-            });
-
             const customScreenDefinition = getCustomScreenDefinition();
             customScreenDefinition.results = {
                 columns: [
@@ -355,7 +282,6 @@ describe('CustomCardListView', () => {
                 ]
             };
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
 
             const card = getOneLightCard({
                 process: 'process1',
@@ -367,61 +293,19 @@ describe('CustomCardListView', () => {
                 state: 'state1',
                 id: 'id2'
             });
-            opfabEventStreamServerMock.sendLightCard(card);
-            opfabEventStreamServerMock.sendLightCard(childCard);
-            customScreenView.setProcessList(['process1']);
+            sendLightCards([card, childCard]);
+
+            const customScreenView = new CustomCardListView('testId');
+
+            const filterValues = new FilterValues();
+            filterValues.processes = ['process1'];
+            customScreenView.setFilters(filterValues);
             customScreenView.search();
             const result = await firstValueFrom(customScreenView.getResults());
             expect(result).toEqual([
                 {
                     cardId: 'id1',
-                    testField: 'process1',
-                    isResponsePossible: false
-                }
-            ]);
-        });
-
-        it('with isAcknowledgmentPossible field if ack button is present', async () => {
-            await setUserPerimeter({
-                computedPerimeters: [],
-                userData: {
-                    login: 'test',
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    entities: []
-                }
-            });
-
-            const customScreenDefinition = getCustomScreenDefinition();
-            customScreenDefinition.showAcknowledgmentButton = true;
-            customScreenDefinition.results = {
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING,
-                        flex: 2
-                    }
-                ]
-            };
-            CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
-            const customScreenView = new CustomCardListView('testId');
-
-            const card = getOneLightCard({
-                process: 'process1',
-                state: 'state1',
-                entitiesAllowedToRespond: ['entity1'],
-                id: 'id1'
-            });
-            opfabEventStreamServerMock.sendLightCard(card);
-            const result = await firstValueFrom(customScreenView.getResults());
-            expect(result).toEqual([
-                {
-                    cardId: 'id1',
-                    testField: 'process1',
-                    isResponsePossible: false,
-                    isAcknowledgmentPossible: true
+                    testField: 'process1'
                 }
             ]);
         });
@@ -449,16 +333,9 @@ describe('CustomCardListView', () => {
             };
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
 
-            const states = new Map<string, State>();
-            states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
-            const process = [new Process('myProcess', '1', null, null, states)];
-            setProcessConfiguration(process);
-
-            const customScreenView = new CustomCardListView('testId');
-
             const card = getOneLightCard({
-                process: 'myProcess',
-                state: 'myState',
+                process: 'process1',
+                state: 'state1',
                 data: 'data1',
 
                 entitiesAllowedToRespond: ['entity1'],
@@ -466,20 +343,16 @@ describe('CustomCardListView', () => {
             });
 
             const card2 = getOneLightCard({
-                process: 'myProcess',
-                state: 'myState',
+                process: 'process1',
+                state: 'state1',
                 data: 'data2',
                 entitiesAllowedToRespond: ['entity1'],
                 id: 'id2'
             });
-            opfabEventStreamServerMock.sendLightCard(card);
-            opfabEventStreamServerMock.sendLightCard(card2);
+            sendLightCards([card, card2]);
 
-            filteredLightCardStore.updateFilter(
-                FilterType.BUSINESSDATE_FILTER,
-                true,
-                filteredLightCardStore.getBusinessDateFilter().status
-            );
+            const customScreenView = new CustomCardListView('testId');
+
             await firstValueFrom(customScreenView.getResults());
             const result = customScreenView.getDataForExport();
 

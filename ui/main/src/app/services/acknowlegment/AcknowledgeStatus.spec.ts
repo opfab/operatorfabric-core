@@ -36,7 +36,7 @@ describe('AcknowledgeStatus', () => {
             new Entity('ENTITY_FR', 'ENTITY FR', '', [], null, null),
             new Entity('PARENT', 'PARENT', '', [], null, null)
         ]);
-        setProcessConfiguration(getTestProcesses());
+        await setProcessConfiguration(getTestProcesses());
 
         userMemberOfEntity1 = new User('userMemberOfEntity1', '', '', null, [], ['ENTITY1']);
         userMemberOfEntity1AndEntity3 = new User(

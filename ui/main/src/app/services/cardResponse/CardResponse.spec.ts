@@ -27,9 +27,9 @@ describe('Card response service', () => {
     let card: Card;
     let cardServerMock: CardsServerMock;
 
-    beforeEach(() => {
-        initEnitiesService();
-        initProcessService();
+    beforeEach(async () => {
+        await initEnitiesService();
+        await initProcessService();
         initUser();
         CardTemplateGateway.init();
         CardTemplateGateway.initTemplateFunctions();
@@ -53,15 +53,15 @@ describe('Card response service', () => {
         CardsService.setCardsServer(cardServerMock);
     });
 
-    function initEnitiesService() {
-        setEntities([
+    async function initEnitiesService() {
+        await setEntities([
             new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
             new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
             new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, null)
         ]);
     }
 
-    function initProcessService() {
+    async function initProcessService() {
         const state1 = new State();
         state1.response = {state: 'state2', externalRecipients: ['externalRecipient']};
         const state2 = new State();
@@ -71,7 +71,7 @@ describe('Card response service', () => {
         statesList.set('state2', state2);
 
         const testProcess = new Process('testProcess', '1', null, null, statesList);
-        setProcessConfiguration([testProcess]);
+        await setProcessConfiguration([testProcess]);
     }
 
     function initUser() {

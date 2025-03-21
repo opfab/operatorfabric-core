@@ -9,16 +9,11 @@
 
 import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
-import {getOneLightCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
-import {ConfigService} from '@ofServices/config/ConfigService';
-import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {Process, ReadAndAckEnum, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
+import {getOneLightCard, mockTranslation, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
-import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
-import {TranslationService} from '@ofServices/translation/TranslationService';
 
 describe('CustomScreenView - ResultTable', () => {
     const getResultTable = (customScreenDefinitionResults: any) => {
@@ -31,10 +26,9 @@ describe('CustomScreenView - ResultTable', () => {
 
     const emptyChildCardsList = new Map<string, Array<Card>>();
 
-    beforeAll(() => {
-        TranslationService.setTranslationLib(new TranslationLibMock());
-
-        setEntities([
+    beforeAll(async () => {
+        mockTranslation();
+        await setEntities([
             {
                 id: 'entity1',
                 name: 'entity1 name',
@@ -65,11 +59,6 @@ describe('CustomScreenView - ResultTable', () => {
                 parents: ['parent_entity']
             }
         ]);
-    });
-    beforeEach(() => {
-        ConfigService.setConfigServer(new ConfigServerMock());
-        DateTimeFormatterService.init();
-        ConfigService.setConfigValue('settings.locale', 'en');
     });
     describe('Should get columns definition for ag-grid', () => {
         it('columDefinitions', () => {
@@ -347,7 +336,7 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([{cardId: 'card1', date: {text: '01/01/2021 2:00 AM', value: 1609462800000}}]);
         });
 
-        it('with the type of state if field type is type_of_state', () => {
+        it('with the type of state if field type is type_of_state', async () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -376,7 +365,7 @@ describe('CustomScreenView - ResultTable', () => {
             states.set('myState', {type: TypeOfStateEnum.INPROGRESS});
             states.set('myState2', {type: undefined});
             const process = [new Process('myProcess', '1', null, null, states)];
-            setProcessConfiguration(process);
+            await setProcessConfiguration(process);
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([
                 {
@@ -476,442 +465,6 @@ describe('CustomScreenView - ResultTable', () => {
             ]);
         });
     });
-    describe('Should filter card', () => {
-        describe('by read and acknowledged', () => {
-            let cards = [];
-            let resultTable: ResultTable;
-            beforeEach(() => {
-                resultTable = getResultTable({
-                    columns: [
-                        {
-                            field: 'testField',
-                            headerName: 'Process',
-                            cardField: 'process',
-                            fieldType: FieldType.STRING
-                        }
-                    ]
-                });
-                cards = [
-                    getOneLightCard({
-                        process: 'processId0',
-                        state: 'state1.0',
-                        startDate: 5,
-                        hasBeenRead: false,
-                        hasBeenAcknowledged: false,
-                        id: 'id0'
-                    }),
-                    getOneLightCard({
-                        process: 'processId0',
-                        state: 'state1.1',
-                        startDate: 100,
-                        hasBeenRead: true,
-                        hasBeenAcknowledged: false,
-                        id: 'id1'
-                    }),
-                    getOneLightCard({
-                        process: 'processId1',
-                        state: 'state2.0',
-                        startDate: 1000,
-                        hasBeenRead: false,
-                        hasBeenAcknowledged: true,
-                        id: 'id2'
-                    }),
-                    getOneLightCard({
-                        process: 'processId1',
-                        state: 'state2.1',
-                        startDate: 1000,
-                        hasBeenRead: true,
-                        hasBeenAcknowledged: true,
-                        id: 'id3'
-                    })
-                ];
-            });
-            it('none', () => {
-                resultTable.setReadAndAckFilter([]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id0', testField: 'processId0'},
-                    {cardId: 'id1', testField: 'processId0'},
-                    {cardId: 'id2', testField: 'processId1'},
-                    {cardId: 'id3', testField: 'processId1'}
-                ]);
-            });
-            it('only read', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.READ]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id1', testField: 'processId0'},
-                    {cardId: 'id3', testField: 'processId1'}
-                ]);
-            });
-            it('only not read', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_READ]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id0', testField: 'processId0'},
-                    {cardId: 'id2', testField: 'processId1'}
-                ]);
-            });
-            it('only acknowledged', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.ACKNOWLEDGED]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id2', testField: 'processId1'},
-                    {cardId: 'id3', testField: 'processId1'}
-                ]);
-            });
-            it('only not acknowledged', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_ACKNOWLEDGED]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id0', testField: 'processId0'},
-                    {cardId: 'id1', testField: 'processId0'}
-                ]);
-            });
-            it('all', () => {
-                resultTable.setReadAndAckFilter([
-                    ReadAndAckEnum.READ,
-                    ReadAndAckEnum.NOT_READ,
-                    ReadAndAckEnum.ACKNOWLEDGED,
-                    ReadAndAckEnum.NOT_ACKNOWLEDGED
-                ]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([
-                    {cardId: 'id0', testField: 'processId0'},
-                    {cardId: 'id1', testField: 'processId0'},
-                    {cardId: 'id2', testField: 'processId1'},
-                    {cardId: 'id3', testField: 'processId1'}
-                ]);
-            });
-            it('read and acknowledged', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.READ, ReadAndAckEnum.ACKNOWLEDGED]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([{cardId: 'id3', testField: 'processId1'}]);
-            });
-            it('not read and not acknowledged', () => {
-                resultTable.setReadAndAckFilter([ReadAndAckEnum.NOT_READ, ReadAndAckEnum.NOT_ACKNOWLEDGED]);
-                const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-                expect(dataArray).toEqual([{cardId: 'id0', testField: 'processId0'}]);
-            });
-        });
-        it('by business period startDate', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING,
-                        flex: 2
-                    }
-                ]
-            });
-
-            resultTable.setBusinessDateFilter(10, 200);
-            const cards = [
-                getOneLightCard({
-                    process: 'processId0',
-                    startDate: 5,
-                    id: 'id0'
-                }),
-                getOneLightCard({
-                    process: 'processId1',
-                    startDate: 100,
-                    id: 'id1'
-                }),
-                getOneLightCard({
-                    process: 'processId2',
-                    startDate: 1000,
-                    id: 'id2'
-                })
-            ];
-            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1'}]);
-        });
-
-        it('by business period startDate and endDate', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING,
-                        flex: 2
-                    }
-                ]
-            });
-            resultTable.setBusinessDateFilter(10, 200);
-            const cards = [
-                getOneLightCard({
-                    process: 'processId0',
-                    startDate: 5,
-                    endDate: 50,
-                    id: 'id0'
-                }),
-                getOneLightCard({
-                    process: 'processId1',
-                    startDate: 5,
-                    endDate: 8,
-                    id: 'id1'
-                }),
-                getOneLightCard({
-                    process: 'processId2',
-                    startDate: 5,
-                    endDate: 2000,
-                    id: 'id2'
-                })
-            ];
-            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([
-                {cardId: 'id0', testField: 'processId0'},
-                {cardId: 'id2', testField: 'processId2'}
-            ]);
-        });
-
-        it('by process', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING
-                    }
-                ]
-            });
-
-            resultTable.setProcessFilter(['processId1', 'processId2']);
-            const cards = [
-                getOneLightCard({
-                    process: 'processId0',
-                    startDate: 5,
-                    id: 'id0'
-                }),
-                getOneLightCard({
-                    process: 'processId1',
-                    startDate: 100,
-                    id: 'id1'
-                }),
-                getOneLightCard({
-                    process: 'processId2',
-                    startDate: 1000,
-                    id: 'id2'
-                })
-            ];
-            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([
-                {cardId: 'id1', testField: 'processId1'},
-                {cardId: 'id2', testField: 'processId2'}
-            ]);
-        });
-        it('by type of state', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING
-                    }
-                ]
-            });
-            const states = new Map<string, State>();
-            states.set('state1.0', {type: TypeOfStateEnum.INPROGRESS});
-            states.set('state1.1', {type: TypeOfStateEnum.FINISHED});
-            const states2 = new Map<string, State>();
-            states2.set('state2.0', {type: TypeOfStateEnum.CANCELED});
-            states2.set('state2.1', {type: undefined});
-            const process = [
-                new Process('processId0', '1', null, null, states),
-                new Process('processId1', '1', null, null, states2)
-            ];
-
-            setProcessConfiguration(process);
-
-            const cards = [
-                getOneLightCard({
-                    process: 'processId0',
-                    state: 'state1.0',
-                    startDate: 5,
-                    id: 'id0'
-                }),
-                getOneLightCard({
-                    process: 'processId0',
-                    state: 'state1.1',
-                    startDate: 100,
-                    id: 'id1'
-                }),
-                getOneLightCard({
-                    process: 'processId1',
-                    state: 'state2.0',
-                    startDate: 1000,
-                    id: 'id2'
-                }),
-                getOneLightCard({
-                    process: 'processId1',
-                    state: 'state2.1',
-                    startDate: 1000,
-                    id: 'id3'
-                })
-            ];
-            resultTable.setTypesOfStateFilter([TypeOfStateEnum.INPROGRESS, TypeOfStateEnum.FINISHED]);
-            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([
-                {cardId: 'id0', testField: 'processId0'},
-                {cardId: 'id1', testField: 'processId0'}
-            ]);
-        });
-        it('that have responses from my entities if excludeCardsWithResponseFromMyEntities is called', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING
-                    }
-                ]
-            });
-            const cards = [
-                getOneLightCard({
-                    process: 'processId0',
-                    state: 'state1.0',
-                    hasChildCardFromCurrentUserEntity: true,
-                    id: 'id0'
-                }),
-                getOneLightCard({
-                    process: 'processId0',
-                    state: 'state1.1',
-                    hasChildCardFromCurrentUserEntity: false,
-                    startDate: 100,
-                    id: 'id1'
-                })
-            ];
-            resultTable.excludeCardsWithResponseFromMyEntities();
-            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId0'}]);
-        });
-        it('that have all entities entitiesRequiredToRespond responded if excludeCardsWithAllEntitiesHaveResponded is called', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING
-                    }
-                ]
-            });
-            const cards = [
-                getOneLightCard({
-                    process: 'processId1',
-                    state: 'state1.0',
-                    entitiesRequiredToRespond: ['entity1', 'entity2'],
-                    id: 'card1'
-                }),
-                getOneLightCard({
-                    process: 'processId2',
-                    state: 'state1.1',
-                    entitiesRequiredToRespond: ['entity1', 'entity2'],
-                    id: 'card2'
-                }),
-                getOneLightCard({
-                    process: 'processId3',
-                    state: 'state1.2',
-                    entitiesRequiredToRespond: [],
-                    id: 'card3'
-                })
-            ];
-            const childCards = new Map<string, Array<Card>>();
-            childCards.set('card1', [
-                getOneLightCard({
-                    publisher: 'entity1',
-                    publisherType: 'ENTITY',
-                    severity: Severity.ALARM
-                }),
-                getOneLightCard({
-                    publisher: 'entity2',
-                    publisherType: 'ENTITY',
-                    severity: Severity.ACTION
-                })
-            ]);
-            childCards.set('card2', [
-                getOneLightCard({
-                    publisher: 'entity1',
-                    publisherType: 'ENTITY',
-                    severity: Severity.COMPLIANT
-                })
-            ]);
-            resultTable.excludeCardsWithResponseFromAllEntities();
-            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
-            expect(dataArray).toEqual([
-                {
-                    cardId: 'card2',
-                    testField: 'processId2'
-                },
-                {
-                    cardId: 'card3',
-                    testField: 'processId3'
-                }
-            ]);
-        });
-        it('that have all entities in entitiesAllowedToRespond responded if entitiesRequiredToRespond is empty and excludeCardsWithAllEntitiesHaveResponded is called', () => {
-            const resultTable = getResultTable({
-                columns: [
-                    {
-                        field: 'testField',
-                        headerName: 'Process',
-                        cardField: 'process',
-                        fieldType: FieldType.STRING
-                    }
-                ]
-            });
-            const cards = [
-                getOneLightCard({
-                    process: 'processId1',
-                    state: 'state1.0',
-                    entitiesAllowedToRespond: ['entity1', 'entity2'],
-                    id: 'card1'
-                }),
-                getOneLightCard({
-                    process: 'processId2',
-                    state: 'state1.1',
-                    entitiesAllowedToRespond: ['entity1', 'entity2'],
-                    id: 'card2'
-                })
-            ];
-            const childCards = new Map<string, Array<Card>>();
-            childCards.set('card1', [
-                getOneLightCard({
-                    publisher: 'entity1',
-                    publisherType: 'ENTITY',
-                    severity: Severity.ALARM
-                }),
-                getOneLightCard({
-                    publisher: 'entity2',
-                    publisherType: 'ENTITY',
-                    severity: Severity.ACTION
-                })
-            ]);
-            childCards.set('card2', [
-                getOneLightCard({
-                    publisher: 'entity1',
-                    publisherType: 'ENTITY',
-                    severity: Severity.COMPLIANT
-                })
-            ]);
-            resultTable.excludeCardsWithResponseFromAllEntities();
-            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
-            expect(dataArray).toEqual([
-                {
-                    cardId: 'card2',
-                    testField: 'processId2'
-                }
-            ]);
-        });
-    });
-
     describe('Should get responses in data array', () => {
         it('with entities required to reponse in alphabetical order and in grey if there is no responses', () => {
             const resultTable = getResultTable({
@@ -1144,7 +697,7 @@ describe('CustomScreenView - ResultTable', () => {
                 })
             ];
         });
-        it('get custom data field', async () => {
+        it('get custom data field', () => {
             const childCards = new Map<string, Array<Card>>();
             childCards.set('card1', [
                 getOneLightCard({
@@ -1169,7 +722,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
-        it('get empty value if no child card for current user', async () => {
+        it('get empty value if no child card for current user', () => {
             const childCards = new Map<string, Array<Card>>();
             childCards.set('card1', [
                 getOneLightCard({

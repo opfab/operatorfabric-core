@@ -9,37 +9,48 @@
 
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {CustomScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
-import {ResultTable} from './ResultTable';
+import {ResultTable} from './resultTable/ResultTable';
 import {OpfabStore} from '@ofStore/OpfabStore';
 import {Observable, ReplaySubject, Subject, combineLatest, map, takeUntil} from 'rxjs';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {LoggerService} from '@ofServices/logs/LoggerService';
-import {Responses} from './Responses';
-import {Acknowledgments} from './Acknowledgments';
+import {ButtonActions} from './buttonActions/ButtonActions';
+import {FilterValues} from './FilterValues';
+
+/**
+ * This class is responsible for implementing the business logic related to the UI component.
+ *
+ * It retrieves data from the store and uses the ResultTable class to build the data array for display.
+ * By subscribing to the store, it updates the data array when cards are updated.
+ *
+ * The ButtonActions class is used to execute user actions when buttons are clicked:
+ *    - Send response for selected cards
+ *    - Acknowledge selected cards
+ *
+ * Everything is configured via the CustomScreenDefinition, which is loaded on startup and accessible via the CustomScreenService.
+ **/
 
 export class CustomCardListView {
     private readonly customScreenDefinition: CustomScreenDefinition;
     private readonly resultTable: ResultTable;
-    private readonly responses: Responses;
-    private readonly acknowledgments: Acknowledgments;
+    private readonly buttonActions: ButtonActions;
     private results: Array<any> = [];
     unsubscribe$: Subject<void> = new Subject<void>();
     filter$: Subject<void> = new ReplaySubject<void>(1);
-    private readonly allProcessesListAvailableForUser: {id: string; label: string}[];
 
     constructor(id: string) {
         this.customScreenDefinition = CustomScreenService.getCustomScreenDefinition(id);
-        this.allProcessesListAvailableForUser = this.getAllProcessesListAvailableForUser();
         this.resultTable = new ResultTable(this.customScreenDefinition);
-        this.responses = new Responses(this.customScreenDefinition);
-        this.acknowledgments = new Acknowledgments(this.customScreenDefinition);
-        this.resultTable.setBusinessDateFilter(
-            RealTimeDomainService.getCurrentDomain().startDate,
-            RealTimeDomainService.getCurrentDomain().endDate
-        );
-        if (this.customScreenDefinition) this.setProcessList([]);
+        this.buttonActions = new ButtonActions(this.customScreenDefinition);
+        const filterValues = new FilterValues();
+        filterValues.startDate = RealTimeDomainService.getCurrentDomain()?.startDate;
+        filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
+        filterValues.processes = [];
+        filterValues.includeCardsWithResponseFromMyEntities = true;
+        filterValues.includeCardsWithResponsesFromAllEntities = true;
+        this.setFilters(filterValues);
         this.filter$.next();
     }
 
@@ -61,19 +72,17 @@ export class CustomCardListView {
                     OpfabStore.getLightCardStore().getAllChildCards()
                 );
                 const endTimer = Date.now();
-                if (this.customScreenDefinition.showAcknowledgmentButton)
-                    this.results = this.acknowledgments.addAcknowledgmentPossibleForCardToResults(this.results);
-                this.results = this.responses.addIsResponsePossibleForCardToResults(this.results);
                 LoggerService.info(`Custom card list - Time to process data: ${endTimer - startTimer}ms`);
                 return this.results;
             })
         );
     }
 
-    public setBusinessPeriod(startDate: number, endDate: number) {
-        RealTimeDomainService.setStartAndEndPeriod(startDate, endDate);
+    public setFilters(filterValues: FilterValues) {
+        RealTimeDomainService.setStartAndEndPeriod(filterValues.startDate, filterValues.endDate);
         RealTimeDomainService.saveUserPreferenceAsNearestDomain();
-        this.resultTable.setBusinessDateFilter(startDate, endDate);
+        filterValues.processes = this.getProcessList(filterValues.processes);
+        this.resultTable.setFilters(filterValues);
     }
 
     public search() {
@@ -104,52 +113,17 @@ export class CustomCardListView {
         return this.customScreenDefinition.headerFilters?.includes(filter);
     }
 
-    public setProcessList(processIds: string[]) {
-        if (processIds?.length > 0) {
-            this.resultTable.setProcessFilter(processIds);
-        } else if (!this.customScreenDefinition.processIds || this.customScreenDefinition.processIds.length === 0) {
-            this.resultTable.setProcessFilter([]);
-        } else {
-            this.resultTable.setProcessFilter(this.allProcessesListAvailableForUser.map((a) => a.id));
-        }
-    }
-
-    public setTypesOfStateFilter(typesOfState: string[]) {
-        this.resultTable.setTypesOfStateFilter(typesOfState);
-    }
-
-    public setReadAndAckFilter(readAndAck: string[]) {
-        this.resultTable.setReadAndAckFilter(readAndAck);
-    }
-
-    //We disable sonar rules typescript:S2301 here because we
-    //want the method to reflect the checkbox status
-    public setResponseFromMyEntitiesChoice(checked: boolean) {
-        // NOSONAR
-        if (checked) {
-            this.resultTable.includeCardsWithResponseFromMyEntities();
-        } else this.resultTable.excludeCardsWithResponseFromMyEntities();
-    }
-
-    public setResponseFromAllEntitiesChoice(checked: boolean) {
-        // NOSONAR
-        if (checked) {
-            this.resultTable.includeCardsWithResponseFromAllEntities();
-        } else this.resultTable.excludeCardsWithResponseFromAllEntities();
+    private getProcessList(processIds: string[]): string[] {
+        if (processIds?.length > 0 || !this.customScreenDefinition) return processIds;
+        return this.customScreenDefinition.processIds ?? [];
     }
 
     public getAllProcessesListAvailableForUser(): {id: string; label: string}[] {
         const perimeters = UsersService.getCurrentUserWithPerimeters()?.computedPerimeters ?? [];
-        if (!perimeters) return []; // Should only happen in test context when no user service is not loaded
-
         const processes = new Map();
         perimeters.forEach((perimeter) => {
             const process = ProcessesService.getProcess(perimeter.process);
-            if (
-                process &&
-                this.isProcessIdInTheListOfCustomScreenDefinition(process.id) &&
-                !processes.has(process.id)
-            ) {
+            if (process && this.isProcessIdInTheListOfCustomScreenDefinition(process.id)) {
                 processes.set(process.id, {id: process.id, label: process.name});
             }
         });
@@ -166,19 +140,19 @@ export class CustomCardListView {
     }
 
     public getResponseButtons(): {id: string; label: string}[] {
-        return this.responses.getResponseButtons();
+        return this.buttonActions.getResponseButtons();
     }
 
     public async clickOnButton(buttonId: string, responsesData: Map<string, any>) {
-        await this.responses.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
+        await this.buttonActions.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
     }
 
     public isAcknowledgmentButtonVisible(): boolean {
-        return this.acknowledgments.isAcknowledgmentButtonVisible();
+        return this.buttonActions.isAcknowledgmentButtonVisible();
     }
 
     public clickOnAcknowledgmentButton(cardIds: string[]) {
-        this.acknowledgments.sendAcknowledgments(cardIds);
+        this.buttonActions.sendAcknowledgments(cardIds);
     }
 
     public destroy() {
