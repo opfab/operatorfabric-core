@@ -38,6 +38,10 @@ import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTempl
 import {OpfabEventStreamServerMock} from './mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabStore} from '@ofStore/OpfabStore';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {TranslationService} from '@ofServices/translation/TranslationService';
+import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
+import {TranslationLibMock} from './mocks/TranslationLib.mock';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
@@ -239,12 +243,16 @@ export function sendLightCard(card: Card) {
     const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
     OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
     OpfabStore.reset();
+    RealTimeDomainService.init();
+    RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
     opfabEventStreamServerMock.sendLightCard(card);
 }
 export function sendLightCards(cards: Card[]) {
     const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
     OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
     OpfabStore.reset();
+    RealTimeDomainService.init();
+    RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
     cards.forEach((card) => opfabEventStreamServerMock.sendLightCard(card));
 }
 
@@ -254,6 +262,13 @@ export function initOpfabAPI() {
     OpfabAPI.initAPI();
     CardTemplateGateway.initTemplateFunctions();
     UserCardTemplateGateway.initTemplateFunctions();
+}
+
+export function mockTranslation() {
+    TranslationService.setTranslationLib(new TranslationLibMock());
+    ConfigService.setConfigServer(new ConfigServerMock());
+    DateTimeFormatterService.init();
+    ConfigService.setConfigValue('settings.locale', 'en');
 }
 
 export function getAlertMessageReceiver(): AlertMessageReceiver {

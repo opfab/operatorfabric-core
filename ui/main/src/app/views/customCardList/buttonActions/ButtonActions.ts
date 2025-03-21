@@ -11,13 +11,11 @@ import {CardResponseService} from '@ofServices/cardResponse/CardResponseService'
 import {CustomScreenDefinition, ResponseButton} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {Card} from 'app/model/Card';
 import {OpfabStore} from '@ofStore/OpfabStore';
-import {UserPermissionsService} from '@ofServices/userPermissions/UserPermissionsService';
-import {UsersService} from '@ofServices/users/UsersService';
-import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
+import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 
-export class Responses {
+export class ButtonActions {
     private readonly customScreenDefinition: CustomScreenDefinition;
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
@@ -34,28 +32,6 @@ export class Responses {
                 label: button.label
             };
         });
-    }
-
-    public addIsResponsePossibleForCardToResults(results: any[]): any[] {
-        return results.map((result) => {
-            const isResponsePossible = this.isResponsePossibleForCard(result.cardId);
-            return {
-                ...result,
-                isResponsePossible
-            };
-        });
-    }
-
-    private isResponsePossibleForCard(cardId: string): boolean {
-        const card = OpfabStore.getLightCardStore().getLightCard(cardId);
-        if (!card) {
-            return false;
-        }
-        return UserPermissionsService.isUserEnabledToRespond(
-            UsersService.getCurrentUserWithPerimeters(),
-            card,
-            ProcessesService.getProcess(card.process)
-        );
     }
 
     public async sendResponsesWhenUserClicksOnResponseButton(
@@ -98,5 +74,16 @@ export class Responses {
         });
 
         return cards;
+    }
+
+    public isAcknowledgmentButtonVisible(): boolean {
+        return this.customScreenDefinition.showAcknowledgmentButton;
+    }
+
+    public sendAcknowledgments(cardIds: string[]) {
+        cardIds.forEach((cardId) => {
+            const card = OpfabStore.getLightCardStore().getLightCard(cardId);
+            AcknowledgeService.postAcknowledgement(card).subscribe();
+        });
     }
 }

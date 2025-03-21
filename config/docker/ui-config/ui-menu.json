@@ -47,6 +47,11 @@
                     "label": "entry.custom2"
                 },
                 {
+                    "customMenuId": "uid_test_5",
+                    "customScreenId": "testId3",
+                    "label": "entry.custom3"
+                },
+                {
                     "customMenuId": "uid_test_2",
                     "url": "https://opfab.github.io/",
                     "label": "entry.doc",
@@ -58,13 +63,7 @@
                     "url": "http://localhost:2002/external/appExample/",
                     "label": "entry.entry3",
                     "linkType": "BOTH"
-                },
-                {
-                    "customMenuId": "uid_test_5",
-                    "customScreenId": "testId3",
-                    "label": "entry.custom3"
-                }
-            ]
+                }            ]
         },
         {
             "id": "adminmenu",

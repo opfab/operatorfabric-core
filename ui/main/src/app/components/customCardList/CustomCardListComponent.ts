@@ -39,6 +39,7 @@ import {AgGrid} from 'app/utils/AgGrid';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {debounceTime} from 'rxjs/operators';
 import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererComponent';
+import {FilterValues} from 'app/views/customCardList/FilterValues';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -193,7 +194,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
         );
         this.responseButtons = this.customCardListView.getResponseButtons();
-        if (this.responseButtons.length > 0) this.rowSelection = {mode: 'multiRow'};
         this.gridOptions = {
             ...AgGrid.getDefaultGridOptions(),
             components: {
@@ -314,10 +314,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 selectAll: 'currentPage',
                 hideDisabledCheckboxes: true,
                 isRowSelectable: (node) => {
-                    return (
-                        (this.responseButtons.length > 0 && node.data.isResponsePossible) ||
-                        (this.customCardListView.isAcknowledgmentButtonVisible() && node.data.isAcknowledgmentPossible)
-                    );
+                    return this.isRowSelectableForResponse(node) || this.isRowSelectableForAcknowledgment(node);
                 }
             };
         }
@@ -335,11 +332,22 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             this.sendQuery();
         });
     }
+
     private initProcessFilter(): void {
         this.customCardListView.getAllProcessesListAvailableForUser().forEach((process) => {
             this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
         });
     }
+    private isRowSelectableForResponse(node: any): boolean {
+        if (this.responseButtons?.length > 0) return node.data.isResponsePossible;
+        return false;
+    }
+
+    private isRowSelectableForAcknowledgment(node: any): boolean {
+        if (this.customCardListView.isAcknowledgmentButtonVisible()) return node.data.isAcknowledgmentPossible;
+        return false;
+    }
+
     onGridReady(params: any) {
         this.gridApi = params.api;
 
@@ -389,12 +397,15 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         const businessDates = this.headerForm.get('businessDateRanges').value as {startDate: Date; endDate: Date};
         const startDate = Date.parse(businessDates.startDate?.toISOString());
         const endDate = Date.parse(businessDates.endDate?.toISOString());
-        this.customCardListView.setBusinessPeriod(startDate, endDate);
-        this.customCardListView.setProcessList([...this.headerForm.get('processes').value]);
-        this.customCardListView.setTypesOfStateFilter([...this.headerForm.get('typeOfState').value]);
-        this.customCardListView.setReadAndAckFilter([...this.headerForm.get('readAndAck').value]);
-        this.customCardListView.setResponseFromMyEntitiesChoice(this.headerForm.get('responseFromMyEntities').value);
-        this.customCardListView.setResponseFromAllEntitiesChoice(this.headerForm.get('responseFromAllEntities').value);
+        const filterValues = new FilterValues();
+        filterValues.startDate = startDate;
+        filterValues.endDate = endDate;
+        filterValues.processes = [...this.headerForm.get('processes').value];
+        filterValues.typesOfStateFilter = [...this.headerForm.get('typeOfState').value];
+        filterValues.readAndAckFilter = [...this.headerForm.get('readAndAck').value];
+        filterValues.includeCardsWithResponseFromMyEntities = this.headerForm.get('responseFromMyEntities').value;
+        filterValues.includeCardsWithResponsesFromAllEntities = this.headerForm.get('responseFromAllEntities').value;
+        this.customCardListView.setFilters(filterValues);
         this.customCardListView.search();
     }
 
