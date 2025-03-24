@@ -11,17 +11,28 @@
     <div class="form-group">
         <h4> Outage needed for 2 hours on the France-England HVDC line</h4>
         <br />
-        Could you please confirm the time frames that are ok for you ? <br /> <br />
-        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date1"></span> between 8AM and 10AM <input
-                type="checkbox" id="choice1" name="choice1"> <span id="question-choice1"
-                class="opfab-checkbox-checkmark"> </span> </label>
-        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date2"></span> between 10AM and 12PM
-            <input type="checkbox" id="choice2" name="choice2"> <span id="question-choice2"
-                class="opfab-checkbox-checkmark"> </span> </label>
-        <label class="opfab-checkbox" style="margin-left:40px"> The <span id="date3"></span> between 8AM and 10AM <input
-                type="checkbox" id="choice3" name="choice3"> <span id="question-choice3"
-                class="opfab-checkbox-checkmark"> </span> </label>
+        Could you please confirm that the <span id="date"></span> between 8AM and 10AM is okay for you ? <br /> <br />
+
+        <div>
+            <div class="toggle-container">
+                <span>Yes</span>
+                <label class="toggle">
+                    <input type="checkbox" id="opfab-toggle">
+                    <span id="opfab-slider" class="slider"></span>
+                </label>
+                <span>No</span>
+            </div>
+            <div style="height:50px">
+                <div id="opfab-answer-selector" class="opfab-multiselect" style="width: 500px; display: none">
+                    <label> Reason for refusal </label>
+                    <div id="answer-select"></div>
+                </div>
+            </div>
+           
+            <br/>
+        </div>
     </div>
+   
 
       <div class="opfab-input" style="margin-top:20px;margin-bottom:10px;width:500px">
           <label> Comment </label>
@@ -39,168 +50,175 @@
 <div id="childs-div"></div>
 
 <script>
-    init();
 
-    function init() {
+    //tag::functionToGetUserResponse_example[]
+    function fetchResponseCardData() {
 
-        let today = new Date();
-        let tomorrow = new Date(today.getTime() + 24 * 3600 * 1000);
-        let dayAfterTomorrow = new Date(today.getTime() + 48 * 3600 * 1000);
+        const answer = document.getElementById('opfab-toggle').checked;
+        let reason = '';
+        // answer = true means refusal in the toggle
+        if (answer) {
+            reason = document.querySelector('#answer-select').value;
+        }
 
-        let date1 = Intl.DateTimeFormat('en-GB').format(tomorrow);
-        let date2 = Intl.DateTimeFormat('en-GB').format(dayAfterTomorrow);
+        const comment = document.getElementById('comment').value;
 
-        document.getElementById('date1').innerHTML = date1;
-        document.getElementById('date2').innerHTML = date1;
-        document.getElementById('date3').innerHTML = date2;
+        const result = {
+            valid: true,
+            responseCard:{
+                data: {
+                propositionRefused: answer,
+                reason: reason, 
+                comment: comment
+                }
+            } 
+        };
 
+        // If the user choses to answer no, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
+        if (answer){
+            result.responseCard['state'] = 'refuseResponseState';
+            result.responseCard['severity'] = "ALARM"
+        }  else {
+            result.responseCard['severity'] = "COMPLIANT"
+        }
+        return result
+    }
+    //end::functionToGetUserResponse_example[]
 
+    cardTemplate = {
 
-        opfab.currentCard.listenToChildCards((childCards) => {
-            let childsDiv = document.getElementById("childs-div");
+        answerSelect: null,
 
-            if (childCards[0]) {
-                let responses = '<center> <h4>Responses received </h4> <br/>';
-                responses += ' <table width="100%""> <tr> <th> Entity </th>';
-                responses += ' <th> ' + date1 + ' 8AM-10AM </th>';
-                responses += ' <th> ' + date1 + ' 10AM-12PM </th>';
-                responses += ' <th> ' + date2 + ' 8AM-10AM </th>';
-                responses += ' <th> Comment </th>';
-                responses += ' </tr>';
+        init: function() {
+            this.initMultiSelect();
+            this.initCardTemplate();
+        },
 
-                childCards.forEach((c, i) => {
-                    const entityName = opfab.users.entities.getEntityName(c.publisher);
-                    responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
-                    if (c.data.choice1) responses += "<td> OK </td>";
-                    else responses += "<td> NOK </td>";
-                    if (c.data.choice2) responses += "<td> OK </td>";
-                    else responses += "<td> NOK </td>";
-                    if (c.data.choice3) responses += "<td> OK </td>";
-                    else responses += "<td> NOK </td>";
-                    if (c.data.comment) responses += `<td> ${c.data.comment} </td>`;
-                    else responses += "<td>  </td>";
-                    responses += "</tr>";
-                });
+        initMultiSelect: async function() {
+            
+            this.answerSelect = opfab.multiSelect.init({
+                id: "answer-select",
+                multiple: false,
+                search: false,
+                allowNewOption: true
+            });
 
-                responses += '</table> </center> <br/> <br/>';
+            const answersOptions = [
+                { label: "Time frame is too short to decide", value: "Time frame is too short to decide" },
+                { label: "Constraints on the network", value: "Constraints on the network" },
+                { label: "Low margin on the network", value: "Low margin on the network" },
+                { label: "Critical situation", value: "Critical situation" },
+                { label: "Other (Please specify)", value: "Other" }
+            ];
 
+            this.answerSelect.setOptions(answersOptions);
 
-                childsDiv.innerHTML = responses;
-            } else {
-                childsDiv.innerHTML = '';
-            }
-        });
+        },
 
-        // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
-        // documentation, it should not be used in actual templates.
-        //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
-        opfab.currentCard.registerFunctionToGetUserResponse(() => {
+        initCardTemplate: function() {
 
+            let today = new Date();
+            let tomorrow = new Date(today.getTime() + 24 * 3600 * 1000);
 
-            const choice1 = document.getElementById('choice1').checked;
-            const choice2 = document.getElementById('choice2').checked;
-            const choice3 = document.getElementById('choice3').checked;
-            const comment = document.getElementById('comment').value;
-            const result = {
-                valid: true,
-                responseCard:{
-                    data: {
-                    choice1: choice1,
-                    choice2: choice2, 
-                    choice3: choice3,
-                    comment: comment
-                    }
-                } 
-            };
+            let date = Intl.DateTimeFormat('en-GB').format(tomorrow);
 
-            // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
-            let choiceOnNumber = 0;
-            if (choice1) choiceOnNumber++;
-            if (choice2) choiceOnNumber++;
-            if (choice3) choiceOnNumber++;
-            if (choiceOnNumber>1) result.responseCard['state'] = 'multipleOptionsResponseState';
-            switch( choiceOnNumber ) {
-                case 0:
-                    result.responseCard['severity'] = "ALARM"
-                    break;
-                case 1:
-                case 2:
-                    result.responseCard['severity'] = "INFORMATION"
-                    break;
-                case 3:
-                    result.responseCard['severity'] = "COMPLIANT"
-                    break;
-            }
-            return result;
+            document.getElementById('date').innerHTML = date;
 
-        });
-        //end::opfab.currentCard.registerFunctionToGetUserResponse_example[]
-
-        opfab.currentCard.listenToResponseLock(() => {
-            document.getElementById('choice1').disabled = true;
-            document.getElementById('choice2').disabled = true;
-            document.getElementById('choice3').disabled = true;
-            document.getElementById('comment').disabled = true;
-        });
-
-        opfab.currentCard.listenToResponseUnlock(() => {
-            document.getElementById('choice1').disabled = false;
-            document.getElementById('choice2').disabled = false;
-            document.getElementById('choice3').disabled = false;
-            document.getElementById('comment').disabled = false;
-
-        });
-
-        opfab.currentCard.listenToLttdExpired((expired) => {
-            const responseEnabled = document.getElementById('responseDisabled');
-            if (responseEnabled != null) {
-                if (expired) {
-                    const responseRequired = document.getElementById('responseRequired');
-                    if (responseRequired != null) {
-                        responseRequired.innerHTML = "";
-                    }
-                    responseEnabled.innerHTML = "Response time has expired";
-                    document.getElementById('choice1').disabled = true;
-                    document.getElementById('choice2').disabled = true;
-                    document.getElementById('choice3').disabled = true;
+            const toggleSwitch = document.getElementById('opfab-toggle');
+            toggleSwitch.addEventListener('change', function() {
+                if (toggleSwitch.checked) {
+                    document.getElementById('opfab-answer-selector').style.display = 'block';
                 } else {
-                    responseEnabled.innerHTML = "";
-                    document.getElementById('choice1').disabled = false;
-                    document.getElementById('choice2').disabled = false;
-                    document.getElementById('choice3').disabled = false;
+                    document.getElementById('opfab-answer-selector').style.display = 'none';
+                }
+            });
+
+            opfab.currentCard.listenToChildCards((childCards) => {
+                let childsDiv = document.getElementById("childs-div");
+                if (childCards[0]) {
+                    let responses = '<center> <h4>Responses received </h4> <br/>';
+                    responses += ' <table width="100%""> <tr> <th> Entity </th>';
+                    responses += ' <th> ' + date + ' 8AM-10AM </th>';
+                    responses += ' <th> Reason </th>';
+                    responses += ' <th> Comment </th>';
+                    responses += ' </tr>';
+
+                    childCards.forEach((c, i) => {
+                        const entityName = opfab.users.entities.getEntityName(c.publisher);
+                        responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
+                        if (c.data.propositionRefused) responses += '<td style="color: red;"> NOK </td>';
+                        else responses += '<td style="color: green;"> OK </td>';
+                        if (c.data.reason) responses += `<td> ${c.data.reason} </td>`;
+                        else responses += "<td>  </td>";
+                        if (c.data.comment) responses += `<td> ${c.data.comment} </td>`;
+                        else responses += "<td>  </td>";
+                        responses += "</tr>";
+                    });
+
+                    responses += '</table> </center> <br/> <br/>';
+
+
+                    childsDiv.innerHTML = responses;
+                } else {
+                    childsDiv.innerHTML = '';
+                }
+            });
+
+            // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
+            // documentation, it should not be used in actual templates.
+            //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
+            opfab.currentCard.registerFunctionToGetUserResponse(fetchResponseCardData);
+            //end::opfab.currentCard.registerFunctionToGetUserResponse_example[]
+
+            opfab.currentCard.listenToResponseLock(() => {
+                document.getElementById('opfab-toggle').disabled = true;
+                document.getElementById('comment').disabled = true;
+                cardTemplate.answerSelect.disable();
+            });
+
+            opfab.currentCard.listenToResponseUnlock(() => {
+                document.getElementById('opfab-toggle').disabled = false;
+                document.getElementById('comment').disabled = false;
+                cardTemplate.answerSelect.enable();
+            });
+
+            opfab.currentCard.listenToLttdExpired((expired) => {
+                const responseEnabled = document.getElementById('responseDisabled');
+                if (responseEnabled != null) {
+                    if (expired) {
+                        const responseRequired = document.getElementById('responseRequired');
+                        if (responseRequired != null) {
+                            responseRequired.innerHTML = "";
+                        }
+                        responseEnabled.innerHTML = "Response time has expired";
+                        document.getElementById('opfab-toggle').disabled = true;
+                    } else {
+                        responseEnabled.innerHTML = "";
+                        document.getElementById('opfab-toggle').disabled = false;
+                    }
+                }
+            });
+
+
+            if (opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()) {
+
+                const responseRequired = document.getElementById('responseRequired');
+                if (responseRequired != null) {
+                    responseRequired.innerHTML = "Your response is required";
+                }
+            } else {
+                if (responseRequired != null) {
+                    responseRequired.innerHTML = "";
                 }
             }
-        });
-
-
-        if (opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()) {
-
-            const responseRequired = document.getElementById('responseRequired');
-            if (responseRequired != null) {
-                responseRequired.innerHTML = "Your response is required";
-            }
-        } else {
-            if (responseRequired != null) {
-                responseRequired.innerHTML = "";
-            }
         }
     }
+
     function alternativeResponse() {
-        const responseCardData = {};
-        const formElement = document.getElementById('question-form');
-        for (const [key, value] of [... new FormData(formElement)]) {
-            (key in responseCardData) ? responseCardData[key].push(value) : responseCardData[key] = [value];
-        }
+        const responseCard = fetchResponseCardData();
 
-        const responseCard= {
-                data: responseCardData
-            }
-
-        // If the user chose several options, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
-        const choiceRequiresFollowUp = Object.entries(responseCardData).length > 1;
-        if (choiceRequiresFollowUp) responseCard['state'] = 'multipleOptionsResponseState';
-
-
-        opfab.cards.sendResponseCard(opfab.currentCard.getCard(), responseCard);
+        opfab.cards.sendResponseCard(opfab.currentCard.getCard(), responseCard.responseCard);
     }
+
+    cardTemplate.init();
 </script>

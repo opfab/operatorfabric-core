@@ -12,7 +12,7 @@
 			"right" : "ReceiveAndWrite"
 		},
 				{
-			"state" : "multipleOptionsResponseState",
+			"state" : "refuseResponseState",
 			"right" : "ReceiveAndWrite"
 		},
 		{

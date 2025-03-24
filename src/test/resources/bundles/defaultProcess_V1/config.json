@@ -84,12 +84,12 @@
             "validateAnswerButtonLabel": "SEND RESPONSE",
             "modifyAnswerButtonLabel": "MODIFY RESPONSE"
         },
-        "multipleOptionsResponseState": {
+        "refuseResponseState": {
             "name": "Additional information required",
             "description": "Follow-up Question state",
             "color": "#0070C0",
             "acknowledgmentAllowed": "Always",
-            "templateName": "multipleOptionsResponseState"
+            "templateName": "refuseResponseState"
         },
         "responseState": {
             "name": "Planned outage date response",
