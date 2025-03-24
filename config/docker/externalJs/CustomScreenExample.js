@@ -167,7 +167,7 @@
         responseButtons: [
             {
                 id: 'button1',
-                label: 'Accept proposals',
+                label: 'ACCEPT PROPOSALS',
                 getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
 
@@ -182,7 +182,7 @@
             },
             {
                 id: 'button2',
-                label: 'Refuse proposals',
+                label: 'REFUSE PROPOSALS',
                 getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
                     let hasAlwaysComment = true;
@@ -244,7 +244,7 @@
         responseButtons: [
             {
                 id: 'button1',
-                label: 'Accept proposals',
+                label: 'ACCEPT PROPOSALS',
                 getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
 
@@ -259,7 +259,7 @@
             },
             {
                 id: 'button2',
-                label: 'Refuse proposals',
+                label: 'REFUSE PROPOSALS',
                 getUserResponses: (selectedCards, userInputs) => {
                     const responseCards = [];
                     let hasAlwaysComment = true;
