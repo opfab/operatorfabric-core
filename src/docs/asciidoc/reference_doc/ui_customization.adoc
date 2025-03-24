@@ -473,7 +473,7 @@ const customScreenExample = {
         responseButtons: [
             {
                 id: 'button1',
-                label: 'Accept proposals',
+                label: 'ACCEPT PROPOSALS',
                 getUserResponses: (cards, userInputs) => {
                     const responseCards = [];
 
@@ -489,7 +489,7 @@ const customScreenExample = {
             },
             {
                 id: 'button2',
-                label: 'Refuse proposals',
+                label: 'REFUSE PROPOSALS',
                 getUserResponses: (cards, userInputs) => {
                     const responseCards = [];
                     let hasAlwaysComment = true;
