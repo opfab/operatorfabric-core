@@ -134,12 +134,13 @@ which returns an object containing the following fields :
 This method is to be registered via `opfab.currentCard.registerFunctionToGetUserResponse`, the method will be called by OperatorFabric when the user clicks on the button to send the response.
 
 In the example below, the `getUserResponse` creates a `responseCard` object by retrieving the user's inputs from the HTML.
-In addition, if the user choses several options, it overrides the response state defined in the `config.json` with another
+In addition, if the user choses the refusal option, it overrides the response state defined in the `config.json` with another
 state. It is also possible to dynamically set the severity of the response with a logic from the template. Here the severity of the response depends on the number of choices selected by the user. 
 
 .src/test/resources/bundles/defaultProcess_V1/template/question.handlebars
 [source,js]
 ----
+include::../../../test/resources/bundles/defaultProcess_V1/template/question.handlebars[tag=functionToGetUserResponse_example]
 include::../../../test/resources/bundles/defaultProcess_V1/template/question.handlebars[tag=opfab.currentCard.registerFunctionToGetUserResponse_example]
 ----
 

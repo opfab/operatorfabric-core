@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
-import { ActivityAreaCommands } from '../support/activityAreaCommands';
-import { ScriptCommands } from '../support/scriptCommands';
-import { CardCommands } from '../support/cardCommands';
-import { FeedCommands } from '../support/feedCommands';
-import { UserCardCommands } from '../support/userCardCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ActivityAreaCommands} from '../support/activityAreaCommands';
+import {ScriptCommands} from '../support/scriptCommands';
+import {CardCommands} from '../support/cardCommands';
+import {FeedCommands} from '../support/feedCommands';
+import {UserCardCommands} from '../support/userCardCommands';
 
-describe('Response card tests', function() {
+describe('Response card tests', function () {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
@@ -22,7 +22,7 @@ describe('Response card tests', function() {
     const feed = new FeedCommands();
     const usercard = new UserCardCommands();
 
-    before('Set up configuration and clean cards', function() {
+    before('Set up configuration and clean cards', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         script.resetUIConfigurationFiles();
 
@@ -35,7 +35,7 @@ describe('Response card tests', function() {
         script.sendCard('defaultProcess/question.json');
     });
 
-    it('Check card response for operator1_fr ', function() {
+    it('Check card response for operator1_fr ', function () {
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -45,7 +45,7 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice1');
+        cy.get('#opfab-slider');
 
         card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
@@ -61,7 +61,7 @@ describe('Response card tests', function() {
         cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
 
         // Respond to the card
-        cy.get('#question-choice1').click();
+        cy.get('#opfab-slider').click();
         card.sendResponse();
 
         // The label of the validate button must be "MODIFY RESPONSE" now
@@ -71,13 +71,7 @@ describe('Response card tests', function() {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
         //check the response has been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' NOK ');
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
@@ -95,16 +89,9 @@ describe('Response card tests', function() {
         cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
 
         cy.waitDefaultTime(); // to avoid detach dom error, we need to wait the new template has been rendered
-        cy.get('#question-choice3').click();
         card.sendResponse();
 
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
@@ -112,7 +99,7 @@ describe('Response card tests', function() {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
     });
 
-    it('Check READONLY operator1_crisisroom cannot respond ', function() {
+    it('Check READONLY operator1_crisisroom cannot respond ', function () {
         opfab.loginWithUser('operator1_crisisroom');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -122,12 +109,12 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice1');
+        cy.get('#opfab-slider');
 
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check card response for operator2_fr (using frontend API method opfab.cards.sendResponseCard)', function() {
+    it('Check card response for operator2_fr (using frontend API method opfab.cards.sendResponseCard)', function () {
         opfab.loginWithUser('operator2_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -137,16 +124,10 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice2');
+        cy.get('#opfab-slider');
 
         // Check the response from ENTITY1_FR has been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
@@ -157,29 +138,17 @@ describe('Response card tests', function() {
         cy.get('#opfab-card-details-btn-response');
 
         // Respond to the card
-        cy.get('#question-choice2').click();
+        cy.get('#opfab-slider').click();
 
-        //Send response via frontend API 
+        //Send response via frontend API
         cy.get('#opfab-api-responselink').click();
 
         // See in the feed the fact that user has responded (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
         // Check the response from current user has been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' NOK ');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
         // check entities in card header
@@ -189,7 +158,7 @@ describe('Response card tests', function() {
 
     // operator4_fr is member of ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR and the question card sent can be responded by
     // ENTITY1_FR, ENTITY2_FR, ENTITY3_FR
-    it('Check card response for operator4_fr ', function() {
+    it('Check card response for operator4_fr ', function () {
         opfab.loginWithUser('operator4_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -199,23 +168,11 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice2');
+        cy.get('#opfab-slider');
 
         // Check the response from ENTITY1_FR and ENTITY2_FR have been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' NOK ');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
         // check entities in card header
@@ -225,7 +182,7 @@ describe('Response card tests', function() {
         card.modifyResponse();
 
         // Respond to the card
-        cy.get('#question-choice3').click();
+        cy.get('#opfab-slider').click();
         card.clickOnSendResponse();
 
         // Check the popup for the entities choice is displayed
@@ -253,32 +210,13 @@ describe('Response card tests', function() {
         card.closeMessageAfterResponseSend();
 
         // Check the response from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         // operator4_fr updates the answer of ENTITY1_FR and ENTITY2_FR
         card.modifyResponse();
-        cy.get('#question-choice1').click();
-        cy.get('#question-choice3').click(); //to uncheck the box
+        cy.get('#opfab-slider').click();
         card.clickOnSendResponse();
         cy.get('#opfab-card-details-entities-choice-selector').click();
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
@@ -297,27 +235,9 @@ describe('Response card tests', function() {
 
         cy.waitDefaultTime();
         // Check the response from ENTITY1_FR and ENTITY2_FR have been updated and the other response is still the same
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entities choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
@@ -329,48 +249,30 @@ describe('Response card tests', function() {
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
 
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click({ force: true });
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click({ force: true });
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
         activityArea.save();
         cy.waitDefaultTime();
         opfab.navigateToFeed();
         feed.openFirstCard();
         card.modifyResponse();
-        cy.get('#question-choice2').click(); // to check the box
+        cy.get('#opfab-slider').click();
         card.sendResponse();
         cy.get('#opfab-card-details-entities-choice-selector').should('not.exist'); // entities choice popup must not be displayed
         cy.waitDefaultTime();
         // Check the response from ENTITY3_FR (East) has been updated and the other responses are still the same
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
         opfab.navigateToActivityArea();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click({ force: true });
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click({ force: true });
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force: true});
         activityArea.save();
     });
 
-    it('Check itsupervisor1 see the card but cannot respond ', function() {
+    it('Check itsupervisor1 see the card but cannot respond ', function () {
         opfab.loginWithUser('itsupervisor1');
         feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -380,30 +282,12 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice2');
+        cy.get('#opfab-slider');
 
         // Check the response from ENTITY1_FR and ENTITY2_FR has been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
         card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
@@ -412,7 +296,7 @@ describe('Response card tests', function() {
         cy.get('#opfab-card-details-btn-response').should('not.exist');
     });
 
-    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function() {
+    it('Check response for operator1_fr is still present after update of card with action KEEP_CHILD_CARDS re-logging', function () {
         script.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -422,36 +306,18 @@ describe('Response card tests', function() {
         feed.openFirstCard();
 
         // Check the correct rendering of card
-        cy.get('#question-choice2');
+        cy.get('#opfab-slider');
 
         // Check the old responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
         card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
     });
 
-    it('Check response for  operator1_fr  is not present after update of card without KEEP_CHILD_CARDS action re-logging', function() {
+    it('Check response for operator1_fr is not present after update of card without KEEP_CHILD_CARDS action re-logging', function () {
         script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
@@ -461,7 +327,7 @@ describe('Response card tests', function() {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
 
         // Check the correct rendering of card
-        cy.get('#question-choice2');
+        cy.get('#opfab-slider');
 
         // Check the old responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have not been integrated in the template
         cy.get('#response_from_ENTITY1_FR').should('not.exist');
@@ -472,7 +338,7 @@ describe('Response card tests', function() {
         card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
     });
 
-    it('Check responses in archived cards detail', function() {
+    it('Check responses in archived cards detail', function () {
         opfab.loginWithUser('operator1_fr');
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
@@ -502,27 +368,9 @@ describe('Response card tests', function() {
         cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 4);
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY2_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
-        cy.get('#response_from_ENTITY3_FR')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
         // close card detail
         cy.get('#opfab-archives-card-detail-close').click();
@@ -533,16 +381,10 @@ describe('Response card tests', function() {
         cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR  has been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 2);
-        cy.get('#response_from_ENTITY1_FR')
-            .next()
-            .should('have.text', ' OK ')
-            .next()
-            .should('have.text', ' NOK ')
-            .next()
-            .should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' NOK ');
     });
 
-    it('Check response button is disabled while sending response', function() {
+    it('Check response button is disabled while sending response', function () {
         opfab.loginWithUser('operator1_fr');
         feed.openFirstCard();
 
@@ -553,7 +395,7 @@ describe('Response card tests', function() {
         });
 
         // Check template is loaded
-        cy.get('#question-choice1');
+        cy.get('#opfab-slider');
 
         cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
         card.clickOnSendResponse();
@@ -690,6 +532,7 @@ describe('Response card tests', function() {
 
         card.sendResponse();
         opfab.logout();
+
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
         //Check card is unread
