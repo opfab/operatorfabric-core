@@ -61,7 +61,7 @@ ext {
     misc = [
             slf4j          : "org.slf4j:slf4j-api:$slf4j",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
-            guava          : "com.google.guava:guava:33.4.0-jre",
+            guava          : "com.google.guava:guava:33.4.5-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
