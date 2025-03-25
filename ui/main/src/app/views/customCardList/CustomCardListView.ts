@@ -94,19 +94,7 @@ export class CustomCardListView {
     }
 
     public getDataForExport(): Array<any> {
-        const result = [];
-        this.results.forEach((line) => {
-            const row = {};
-            this.resultTable.getColumnsDefinitionForAgGrid().forEach((column) => {
-                let cellValue = line[column.field];
-                if (cellValue?.text) cellValue = cellValue.text;
-                row[column.headerName] = cellValue;
-            });
-            result.push(row);
-        });
-        result.push();
-
-        return result;
+        return this.resultTable.getDataForExport();
     }
 
     public isFilterVisibleInHeader(filter: HeaderFilter): boolean {

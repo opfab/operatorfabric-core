@@ -18,6 +18,8 @@ export class ResultTable {
     private readonly tableRowsBuilder: TableRowBuilder;
     private readonly cardFilter: CardFilter;
 
+    private results: Array<any> = [];
+
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
         this.tableRowsBuilder = new TableRowBuilder(customScreenDefinition);
@@ -91,6 +93,34 @@ export class ResultTable {
                 dataArray.push(data);
             }
         });
+        this.results = dataArray;
         return dataArray;
+    }
+
+    public getDataForExport(): Array<any> {
+        return this.results.map((line) => {
+            const row = {};
+            this.getColumnsDefinitionForAgGrid().forEach((column) => {
+                let cellValue = line[column.field];
+                if (column.type === 'responses') {
+                    cellValue = this.getResponseFieldForExport(cellValue);
+                } else if (cellValue?.text) {
+                    cellValue = cellValue.text;
+                }
+                row[column.headerName] = cellValue;
+            });
+            return row;
+        });
+    }
+
+    private getResponseFieldForExport(cellValue: any[]): string {
+        if (!cellValue?.length) return '';
+        return (
+            cellValue
+                // exclude grey color which represents the absence of response
+                .filter((response) => response.color !== 'grey')
+                .map((response) => response.name)
+                .join(', ')
+        );
     }
 }
