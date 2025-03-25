@@ -11,7 +11,6 @@ info:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
 host: localhost:2002
-basePath: /externaldevices
 schemes:
   - http
 tags:
@@ -123,7 +122,7 @@ definitions:
       externalDeviceIds: [CDS_1, CDS_2]
 
 paths:
-  '/notifications':
+  '/externaldevices/notifications':
     post:
       tags:
         - notification
@@ -148,7 +147,7 @@ paths:
           description: Authentication required
         '404':
           description: Could not send notification to device because it has no known driver
-  '/configurations/devices':
+  '/externaldevices/configurations/devices':
     post:
       tags:
         - deviceConfiguration
@@ -191,7 +190,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/configurations/devices/{deviceId}':
+  '/externaldevices/configurations/devices/{deviceId}':
     get:
       tags:
         - deviceConfiguration
@@ -238,7 +237,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Device configuration not found
-  '/configurations/signals':
+  '/externaldevices/configurations/signals':
     post:
       tags:
         - signalMapping
@@ -277,7 +276,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/configurations/signals/{signalMappingId}':
+  '/externaldevices/configurations/signals/{signalMappingId}':
     get:
       tags:
         - signalMapping
@@ -324,7 +323,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Signal mapping not found
-  '/configurations/users':
+  '/externaldevices/configurations/users':
     post:
       tags:
         - userConfiguration
@@ -363,7 +362,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/configurations/users/{userLogin}':
+  '/externaldevices/configurations/users/{userLogin}':
     get:
       tags:
         - userConfiguration
@@ -410,7 +409,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: User configuration not found
-  '/devices':
+  '/externaldevices/devices':
     get:
       tags:
         - device
@@ -425,7 +424,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Device'
-  '/devices/{deviceId}':
+  '/externaldevices/devices/{deviceId}':
     get:
       tags:
         - device
@@ -447,7 +446,7 @@ paths:
             $ref: '#/definitions/Device'
         '404':
           description: Required device not found
-  '/devices/{deviceId}/enable':
+  '/externaldevices/devices/{deviceId}/enable':
     post:
       tags:
         - device
@@ -470,7 +469,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required device not found
-  '/devices/{deviceId}/disable':
+  '/externaldevices/devices/{deviceId}/disable':
     post:
       tags:
         - device

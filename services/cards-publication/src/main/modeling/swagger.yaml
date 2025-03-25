@@ -11,7 +11,6 @@ info:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
 host: localhost:2002
-basePath: /cards
 tags:
   - name: cards
     description: Everything concerning cards
@@ -773,7 +772,7 @@ definitions:
         description: Version of the process
         type: string
 paths:
-  /cardSubscription:
+  /cards-consultation/cardSubscription:
     get:
       tags:
         - cards
@@ -822,7 +821,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/cardSubscription/{uiId}':
+  '/cards-consultation/cardSubscription/{uiId}':
     put:
       tags:
         - cards
@@ -856,7 +855,7 @@ paths:
           description: Authentication required
         '404':
           description: Subscription not found
-  /rateLimiter:
+  /cards-publication/cards/rateLimiter:
     post:
       summary: reset the rate limiter
       responses:
@@ -864,7 +863,7 @@ paths:
           description: rate limiter reset
         '400':
           description: bad request
-  /logs:
+  /cards-consultation/logs:
     post:
       summary: sends remote logs
       produces:
@@ -874,7 +873,7 @@ paths:
           description: remote logs sent
         '400':
           description: bad request
-  /cards:
+  /cards-publication/cards:
     post:
       tags:
         - card
@@ -979,7 +978,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/archives/{id}':
+  '/cards-consultation/archives/{id}':
     parameters:
       - in: path
         name: id
@@ -1001,7 +1000,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  /archives:
+  /cards-consultation/archives:
     post:
       tags:
         - archives
@@ -1032,7 +1031,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  /connectedRecipientsPreview:
+  /cards-consultation/connectedRecipientsPreview:
     post:
       summary: get the connected Entity among the recipients in card preview
       consumes:
@@ -1053,7 +1052,7 @@ paths:
               type: string
         '400':
           description: Bad request
-  '/cards/{id}':
+  '/cards-consultation/cards/{id}':
     parameters:
       - in: path
         name: id
@@ -1093,7 +1092,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/cards/userAcknowledgement/{uid}':
+  '/cards-publication/cards/userAcknowledgement/{uid}':
     parameters:
       - in: path
         name: uid
@@ -1121,8 +1120,8 @@ paths:
         '200':
           description: No action done, the item already exists
         '404':
-          description: Try to remove item from unexisting card
-  '/cards/cancelUserAcknowledgement/{uid}':
+          description: Try to remove item from non-existing card
+  '/cards-publication/cards/cancelUserAcknowledgement/{uid}':
     parameters:
       - in: path
         name: uid
@@ -1148,10 +1147,10 @@ paths:
         '200':
           description: Item removed
         '204':
-          description: Try to remove unexisting item
+          description: Try to remove non-existing item
         '404':
-          description: Try to remove item from unexisting card
-  '/cards/userCardRead/{uid}':
+          description: Try to remove item from non-existing card
+  '/cards-publication/cards/userCardRead/{uid}':
     parameters:
       - in: path
         name: uid
@@ -1172,7 +1171,7 @@ paths:
         '200':
           description: No action done, the item already exists
         '404':
-          description: Try to remove item from unexisting card
+          description: Try to remove item from non-existing card
     delete:
       operationId: deleteUserRead
       tags:
@@ -1187,8 +1186,8 @@ paths:
         '200':
           description: No action done, the item already exists
         '404':
-          description: Try to remove item from unexisting card
-  '/cards/translateCardField':
+          description: Try to remove item from non-existing card
+  '/cards-publication/cards/translateCardField':
     post:
       summary: Get translated field
       description: Get translated field for a given i18n value
@@ -1211,7 +1210,7 @@ paths:
           description: Bad request
         '401':
           description: Authentication required
-  '/cards/resetReadAndAcks/{uid}':
+  '/cards-publication/cards/resetReadAndAcks/{uid}':
     parameters:
       - in: path
         name: uid
@@ -1230,6 +1229,6 @@ paths:
         '200':
           description: card updated and sent with updated publishDate
         '404':
-          description: Try to update unexisting card
+          description: Try to update non-existing card
         '403':
           description: Forbidden - User not allowed

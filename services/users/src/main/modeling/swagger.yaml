@@ -11,7 +11,6 @@ info:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
 host: localhost:2002
-basePath: /users
 tags:
   - name: users
     description: Everything concerning users
@@ -450,7 +449,7 @@ definitions:
         description: >-
           Page number
 paths:
-  /users:
+  /users/users:
     get:
       tags:
         - users
@@ -521,7 +520,7 @@ paths:
         '403':
           description: Authenticated users who are not admins can only create their own
             data
-  '/users/{login}':
+  '/users/users/{login}':
     get:
       tags:
         - users
@@ -610,7 +609,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required user not found
-  '/users/{login}/settings':
+  '/users/users/{login}/settings':
     get:
       tags:
       - users
@@ -708,7 +707,7 @@ paths:
           description: Authenticated users who are not admins can only update their own data
         '404':
           description: User not found
-  '/users/synchronizeWithToken':
+  '/users/users/synchronizeWithToken':
     post:
       tags:
       - users
@@ -728,7 +727,7 @@ paths:
             $ref: '#/definitions/User'
         '401':
           description: Authentication required
-  /groups:
+  /users/groups:
     get:
       tags:
         - groups
@@ -787,7 +786,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/groups/{id}':
+  '/users/groups/{id}':
     put:
       tags:
         - groups
@@ -874,7 +873,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-  '/groups/{id}/users':
+  '/users/groups/{id}/users':
     put:
       tags:
         - groups
@@ -975,7 +974,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-  '/groups/{id}/users/{login}':
+  '/users/groups/{id}/users/{login}':
     delete:
       tags:
       - groups
@@ -1007,7 +1006,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-  /entities:
+  /users/entities:
     get:
       tags:
         - entities
@@ -1064,7 +1063,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/entities/{id}':
+  '/users/entities/{id}':
     put:
       tags:
         - entities
@@ -1151,7 +1150,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required entity not found
-  '/entities/{id}/users':
+  '/users/entities/{id}/users':
     put:
       tags:
         - entities
@@ -1252,7 +1251,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required entity not found
-  '/entities/{id}/users/{login}':
+  '/users/entities/{id}/users/{login}':
     delete:
       tags:
         - entities
@@ -1284,7 +1283,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required entity not found
-  /perimeters:
+  /users/perimeters:
     get:
       tags:
         - perimeters
@@ -1347,7 +1346,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/perimeters/{id}':
+  '/users/perimeters/{id}':
     put:
       tags:
         - perimeters
@@ -1434,7 +1433,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required perimeter not found
-  '/perimeters/{id}/groups':
+  '/users/perimeters/{id}/groups':
     put:
       tags:
         - perimeters
@@ -1533,7 +1532,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required perimeter not found
-  '/perimeters/{idPerimeter}/groups/{idGroup}':
+  '/users/perimeters/{idPerimeter}/groups/{idGroup}':
     delete:
       tags:
         - perimeters
@@ -1565,7 +1564,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required perimeter not found
-  '/groups/{id}/perimeters':
+  '/users/groups/{id}/perimeters':
     get:
       tags:
         - groups
@@ -1682,7 +1681,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-  '/users/{login}/perimeters':
+  '/users/users/{login}/perimeters':
     get:
       tags:
         - users
@@ -1729,7 +1728,7 @@ paths:
             data
         '404':
           description: Required user not found
-  /CurrentUserWithPerimeters:
+  /users/CurrentUserWithPerimeters:
     get:
       tags:
         - users
@@ -1765,7 +1764,7 @@ paths:
                   rights: ReceiveAndWrite
         '401':
           description: Authentication required
-  /UserWithPerimeters/{login}:
+  /users/UserWithPerimeters/{login}:
     get:
       tags:
         - users
@@ -1807,7 +1806,7 @@ paths:
                   rights: ReceiveAndWrite
         '401':
           description: Authentication required
-  /userActionLogs:
+  /users/userActionLogs:
     get:
       tags:
         - user actions logs
@@ -1873,7 +1872,7 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/UserActionLogPage'
-  /notificationconfiguration/processstatenotified/{process}/{state}:
+  /users/notificationconfiguration/processstatenotified/{process}/{state}:
       post:
         tags:
           - notification configuration
@@ -1926,7 +1925,7 @@ paths:
             description: Authentication required
           '403':
             description: Forbidden - ADMIN role necessary
-  /notificationconfiguration/processstatenotifiedbymail/{process}/{state}:
+  /users/notificationconfiguration/processstatenotifiedbymail/{process}/{state}:
       post:
         tags:
           - email notification configuration
