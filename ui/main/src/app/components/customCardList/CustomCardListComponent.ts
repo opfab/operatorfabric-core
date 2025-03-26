@@ -18,6 +18,7 @@ import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
 import {
     AllCommunityModule,
+    ITooltipParams,
     ModuleRegistry,
     provideGlobalGridOptions,
     RowSelectionOptions,
@@ -40,6 +41,7 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
 import {debounceTime} from 'rxjs/operators';
 import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererComponent';
 import {FilterValues} from 'app/views/customCardList/FilterValues';
+import {CustomTooltipComponent} from './CustomToolTipComponent';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -300,9 +302,12 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     resizable: false
                 }
             },
-            columnDefs: this.customCardListView.getColumnsDefinitionForAgGrid(),
+            columnDefs: this.getColumnDefs(),
             paginationPageSize: this.pageSize,
             suppressHorizontalScroll: false,
+            tooltipShowDelay: 1000,
+            tooltipHideDelay: 2000,
+            tooltipComponent: CustomTooltipComponent,
             onRowSelected: (event) => this.onRowSelected(event)
         };
         this.rowData$ = this.rowDataSubject.asObservable();
@@ -336,6 +341,19 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     private initProcessFilter(): void {
         this.customCardListView.getAllProcessesListAvailableForUser().forEach((process) => {
             this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
+        });
+    }
+
+    private getColumnDefs() {
+        return this.customCardListView.getColumnsDefinitionForAgGrid().map((columnDef) => {
+            if (columnDef.showTooltips) {
+                columnDef.tooltipComponent = CustomTooltipComponent;
+                columnDef.tooltipValueGetter = (params: ITooltipParams) => {
+                    return params.value;
+                };
+            }
+            columnDef.showTooltips = undefined; //avoid collusion with potential ag-grid column definition attribute
+            return columnDef;
         });
     }
     private isRowSelectableForResponse(node: any): boolean {

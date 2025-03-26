@@ -30,6 +30,7 @@ export class Column {
     flex?: number;
     getValue?: (card: Card) => string;
     minWidth?: number;
+    showTooltips?: boolean;
 }
 
 export class ResponseButton {
