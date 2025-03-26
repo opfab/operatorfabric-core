@@ -144,6 +144,21 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'typeOfState', headerName: 'Status', type: 'typeOfState'}
             ]);
         });
+        it('specific columDefinition with showTooltips', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'test',
+                        headerName: 'Status',
+                        fieldType: FieldType.STRING,
+                        showTooltips: true
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'test', headerName: 'Status', type: 'default', showTooltips: true}
+            ]);
+        });
         it('specify minWidth if defined in column definition', () => {
             const resultTable = getResultTable({
                 columns: [
