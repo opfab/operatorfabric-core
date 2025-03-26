@@ -561,6 +561,10 @@ Then you have to add the fields in the `results.columns` field in the custom scr
                 ...
 ----
 
+WARNING: Be cautious when adding too many data fields in the configuration files. If there are numerous cards with many data fields (or fields containing large amounts of data) in the service configuration file, it may slow down the application due to the volume of data to be loaded. The fields are loaded even if the user does not navigate to the custom screen.
+
+
+
 === Current user child card field 
 
 
