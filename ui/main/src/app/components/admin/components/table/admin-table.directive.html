@@ -33,7 +33,8 @@
             [gridOptions]="gridOptions"
             [rowData]="rowData"
             class="opfab-admin-table ag-theme-opfab opfab-cell-overflow-visible"
-            (filterChanged)="onFilterChanged($event)">
+            (filterChanged)="onFilterChanged($event)"
+            [enableCellTextSelection]="true">
         </ag-grid-angular>
 
         <div *ngIf="gridApi" class="opfab-pagination">
