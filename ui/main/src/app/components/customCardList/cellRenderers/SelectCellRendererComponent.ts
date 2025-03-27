@@ -10,25 +10,33 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MultiSelectComponent} from '../../share/multi-select/multi-select.component';
 
 @Component({
-    selector: 'of-input-cell-renderer',
-    templateUrl: './InputCellRendererComponent.html',
+    selector: 'of-select-cell-renderer',
+    templateUrl: './SelectCellRendererComponent.html',
     standalone: true,
-    imports: [NgIf, ReactiveFormsModule]
+    imports: [NgIf, NgForOf, ReactiveFormsModule, MultiSelectComponent]
 })
-export class InputCellRendererComponent implements ICellRendererAngularComp {
+export class SelectCellRendererComponent implements ICellRendererAngularComp {
     public params: any;
     public isInputFieldVisible = false;
     public fieldValue = '';
-    cardInputControl: FormControl = new FormControl('');
+    cardSelectControl: FormControl = new FormControl('');
+    selectOptions = [];
 
     agInit(params: any): void {
         this.params = params;
-        this.fieldValue = params.getValue();
-        this.cardInputControl.setValue(this.fieldValue);
+        this.fieldValue = params.getValue().value;
+        this.selectOptions = params.getValue().possibleValues.map((value: any) => ({
+            label: value.label,
+            value: value.value
+        }));
+
+        // Initialize control with current value
+        this.cardSelectControl.setValue(this.fieldValue);
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes
@@ -45,11 +53,10 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
         this.isInputFieldVisible = false;
     }
     getInputValue() {
-        return this.cardInputControl.value;
+        return this.cardSelectControl.value;
     }
 
     onKeyDown(event: KeyboardEvent) {
-        // this prevent arrow key navigation in the ag-grid and permit to use arrow key in the input field
         event.stopPropagation();
     }
 

@@ -182,8 +182,9 @@ describe('CustomCardListView - Button actions - Responses', () => {
             const responseData = new Map<string, any>();
             responseData.set('id1', {});
             responseData.set('id2', {});
-            await buttonActions.sendResponsesWhenUserClicksOnResponseButton('button1', responseData);
+            const result = await buttonActions.sendResponsesWhenUserClicksOnResponseButton('button1', responseData);
 
+            expect(result).toBe(true);
             expect(cardServerMock.cardsPosted[0].process).toBe('myProcess');
             expect(cardServerMock.cardsPosted[0].state).toBe('myState');
             expect(cardServerMock.cardsPosted[0].data).toEqual({parentCard: 'id1', comment: ''});
@@ -219,7 +220,9 @@ describe('CustomCardListView - Button actions - Responses', () => {
                 alertSubject.next(Message);
             });
 
-            await buttonActions.sendResponsesWhenUserClicksOnResponseButton('button2', responseData);
+            const result = await buttonActions.sendResponsesWhenUserClicksOnResponseButton('button2', responseData);
+            expect(result).toBe(false);
+
             const message = await firstValueFrom(alertSubject.asObservable());
             expect(message.message).toEqual('Error test');
             expect(message.level).toEqual(MessageLevel.ERROR);

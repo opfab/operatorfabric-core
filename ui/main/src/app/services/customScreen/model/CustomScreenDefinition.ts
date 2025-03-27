@@ -29,6 +29,7 @@ export class Column {
     fieldType: FieldType;
     flex?: number;
     getValue?: (card: Card) => string;
+    possibleValues?: {value: string; label: string}[];
     minWidth?: number;
     showTooltips?: boolean;
 }
@@ -55,7 +56,8 @@ export enum FieldType {
     RESPONSES = 'RESPONSES',
     COLORED_CIRCLE = 'COLORED_CIRCLE',
     RESPONSE_FROM_MY_ENTITIES = 'RESPONSE_FROM_MY_ENTITIES',
-    INPUT = 'INPUT'
+    INPUT = 'INPUT',
+    SELECT = 'SELECT'
 }
 
 export enum HeaderFilter {

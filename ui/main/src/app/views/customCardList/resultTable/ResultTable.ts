@@ -66,6 +66,9 @@ export class ResultTable {
                     case FieldType.INPUT:
                         col.type = 'input';
                         break;
+                    case FieldType.SELECT:
+                        col.type = 'select';
+                        break;
                     case FieldType.HTML:
                         col.type = 'html';
                         break;
