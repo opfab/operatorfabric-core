@@ -146,7 +146,11 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         );
     }
 
-    async ngAfterViewInit() {
+    ngAfterViewInit() {
+        this.init();
+    }
+
+    async init() {
         // Use promise to avoid angular warning ExpressionChangedAfterItHasBeenCheckedError
         await Promise.resolve();
         if (this.cardIdToEdit) {
