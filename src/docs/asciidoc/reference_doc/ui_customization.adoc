@@ -341,6 +341,7 @@ Here is an example of a custom screen registration:
 const customScreenExample = {
     id: 'testId',
     name: 'testName',
+    statesToExclude: [{processId: 'processId0', stateIds: ['stateId0', 'stateId1']}],
     headerFilters: ['PROCESS', 'TYPE_OF_STATE'],
     showAcknowledgmentButton: false,
     results: {
@@ -407,6 +408,8 @@ opfab.businessconfig.registerCustomScreen(customScreenExample);
 ----
 
 In this example, the custom screen is accessible via the URL `#/customscreen/testId`.
+
+It is possible to exclude specific states from being display by adding them to the `statesToExclude` array. State ids are not unique and should be associated to their process id.
 
 You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`, `READ_ACK`, `RESPONSE_FROM_MY_ENTITIES` and `RESPONSE_FROM_ALL_ENTITIES`.
 

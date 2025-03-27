@@ -322,6 +322,50 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             {cardId: 'id1', testField: 'processId0'}
         ]);
     });
+    it('by excluded states', () => {
+        const resultTable = getResultTable();
+        const states = new Map<string, State>();
+        states.set('state1.0', {});
+        states.set('state1.1', {});
+        const states2 = new Map<string, State>();
+        states2.set('state2.0', {});
+        const process = [
+            new Process('processId0', '1', null, null, states),
+            new Process('processId1', '1', null, null, states2)
+        ];
+
+        setProcessConfiguration(process);
+
+        const cards = [
+            getOneLightCard({
+                process: 'processId0',
+                state: 'state1.0',
+                startDate: 5,
+                id: 'id0'
+            }),
+            getOneLightCard({
+                process: 'processId0',
+                state: 'state1.1',
+                startDate: 100,
+                id: 'id1'
+            }),
+            getOneLightCard({
+                process: 'processId1',
+                state: 'state2.0',
+                startDate: 1000,
+                id: 'id2'
+            })
+        ];
+        const filterValues = new FilterValues();
+        filterValues.statesToExcludeFilter = [{processId: 'processId0', stateIds: ['state1.0']}];
+        resultTable.setFilters(filterValues);
+
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([
+            {cardId: 'id1', testField: 'processId0'},
+            {cardId: 'id2', testField: 'processId1'}
+        ]);
+    });
     it('that have responses from my entities if excludeCardsWithResponseFromMyEntities is called', () => {
         const resultTable = getResultTable();
         const cards = [

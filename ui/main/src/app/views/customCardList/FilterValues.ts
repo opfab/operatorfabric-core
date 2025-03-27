@@ -7,11 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
+
 export class FilterValues {
     public startDate: number;
     public endDate: number;
     public processes: string[];
     public typesOfStateFilter: string[];
+    public statesToExcludeFilter: StateExclusion[];
     public readAndAckFilter: string[];
     public includeCardsWithResponseFromMyEntities: boolean;
     public includeCardsWithResponsesFromAllEntities: boolean;

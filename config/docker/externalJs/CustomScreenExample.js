@@ -22,6 +22,7 @@
             'taskAdvancedExample',
             'taskExample'
         ],
+        statesToExclude: [{processId: 'messageOrQuestionExample', stateIds: ['confirmationState']}],
         headerFilters: [
             'PROCESS',
             'TYPE_OF_STATE',

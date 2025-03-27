@@ -82,6 +82,7 @@ export class CustomCardListView {
         RealTimeDomainService.setStartAndEndPeriod(filterValues.startDate, filterValues.endDate);
         RealTimeDomainService.saveUserPreferenceAsNearestDomain();
         filterValues.processes = this.getProcessList(filterValues.processes);
+        filterValues.statesToExcludeFilter = this.customScreenDefinition?.statesToExclude;
         this.resultTable.setFilters(filterValues);
     }
 

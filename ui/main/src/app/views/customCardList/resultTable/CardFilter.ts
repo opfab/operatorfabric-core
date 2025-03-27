@@ -11,12 +11,14 @@ import {ReadAndAckEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from 'app/model/Card';
 import {FilterValues} from '../FilterValues';
+import {StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
 
 export class CardFilter {
     private startDate: number;
     private endDate: number;
     private processIds: string[] = [];
     private typesOfState: string[] = [];
+    private statesToExclude: StateExclusion[] = [];
     private includeCardsWithResponseFromMyEntities = true;
     private includeCardsWithResponsesFromAllEntities = true;
     private readFilter: boolean = undefined;
@@ -27,6 +29,7 @@ export class CardFilter {
         this.endDate = filterValues.endDate;
         this.processIds = filterValues.processes;
         this.typesOfState = filterValues.typesOfStateFilter;
+        this.statesToExclude = filterValues.statesToExcludeFilter;
         this.setReadAndAckFilter(filterValues.readAndAckFilter);
         this.includeCardsWithResponsesFromAllEntities = filterValues.includeCardsWithResponsesFromAllEntities;
         this.includeCardsWithResponseFromMyEntities = filterValues.includeCardsWithResponseFromMyEntities;
@@ -55,12 +58,29 @@ export class CardFilter {
         if (!this.isCardInDateRange(card)) return true;
         if (!this.isCardInProcessIds(card)) return true;
         if (!this.isCardInTypesOfState(card)) return true;
+        if (this.isCardStateExcluded(card)) return true;
         if (this.isCardFilteredByRead(card)) return true;
         if (this.isCardFilteredByAck(card)) return true;
         if (!this.includeCardsWithResponseFromMyEntities && card.hasChildCardFromCurrentUserEntity) return true;
         if (!this.includeCardsWithResponsesFromAllEntities && this.haveAllEntitiesResponded(card, childCards))
             return true;
         return false;
+    }
+
+    private isCardStateExcluded(card: Card): boolean {
+        const cardProcessId = card.process;
+        const cardStateId = card.state;
+        let isStateExcluded = false;
+        if (this.statesToExclude) {
+            isStateExcluded = ProcessesService.getProcess(cardProcessId)?.states
+                ? this.statesToExclude.some(
+                      (stateExclusion) =>
+                          stateExclusion.processId === cardProcessId && stateExclusion.stateIds.includes(cardStateId)
+                  )
+                : false;
+        }
+
+        return isStateExcluded;
     }
 
     private isCardInDateRange(card: Card): boolean {
