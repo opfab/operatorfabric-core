@@ -11,6 +11,7 @@
         "lint:ts": "ng lint",
         "lint:css": "stylelint 'src/**/*.*css'",
         "prettier": "prettier src/**/* -c",
+        "prettier:fix": "prettier src/**/* --write",
         "e2e": "ng e2e",
         "audit": "npm audit --json | $(npm bin)/npm-audit-html --output reports/report.html"
     },

@@ -37,7 +37,7 @@ export class ButtonActions {
     public async sendResponsesWhenUserClicksOnResponseButton(
         buttonId: string,
         responsesData: Map<string, unknown>
-    ): Promise<void> {
+    ): Promise<boolean> {
         const button = this.customScreenDefinition.responseButtons.find(
             (button: ResponseButton) => button.id === buttonId
         );
@@ -46,10 +46,12 @@ export class ButtonActions {
             const responses = button.getUserResponses(selectedCards, responsesData);
             if (responses.valid) {
                 await this.sendResponseCards(responses, selectedCards);
+                return true;
             } else {
                 AlertMessageService.sendAlertMessage(new Message(responses.errorMsg, MessageLevel.ERROR));
             }
         }
+        return false;
     }
 
     private async sendResponseCards(responses: any, selectedCards: Card[]) {

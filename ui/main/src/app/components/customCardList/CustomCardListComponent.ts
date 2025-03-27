@@ -42,6 +42,7 @@ import {debounceTime} from 'rxjs/operators';
 import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererComponent';
 import {FilterValues} from 'app/views/customCardList/FilterValues';
 import {CustomTooltipComponent} from './CustomToolTipComponent';
+import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -202,7 +203,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 responsesCellRenderer: ResponsesCellRendererComponent,
                 hasResponseCellRenderer: HasResponseCellRendererComponent,
                 inputCellRenderer: InputCellRendererComponent,
-                htmlCellRenderer: HTMLCellRendererComponent
+                htmlCellRenderer: HTMLCellRendererComponent,
+                selectCellRenderer: SelectCellRendererComponent
             },
 
             defaultColDef: {
@@ -297,6 +299,12 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 },
                 input: {
                     cellRenderer: 'inputCellRenderer',
+                    sortable: false,
+                    filter: false,
+                    resizable: false
+                },
+                select: {
+                    cellRenderer: 'selectCellRenderer',
                     sortable: false,
                     filter: false,
                     resizable: false
@@ -428,8 +436,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     selectCard(event: any) {
-        // avoid opening card detail when clicking on input cells or when selecting row
-        if (!event.colDef.type || event.colDef.type === 'input') return;
         SelectedCardService.setSelectedCardId(event.data.cardId);
         const options: NgbModalOptions = {
             size: 'fullscreen'
@@ -448,8 +454,9 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         if (selectedRows.length === 0) {
             return;
         }
-        this.customCardListView.clickOnButton(buttonId, this.getResponsesData());
-        this.gridApi.deselectAll();
+        this.customCardListView.clickOnButton(buttonId, this.getResponsesData()).then((success) => {
+            if (success) this.gridApi.deselectAll();
+        });
     }
 
     clickOnAcknowledgmentButton() {
@@ -510,7 +517,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private getInputColumnIds(): string[] {
         const allColumns = this.gridApi.getColumnDefs();
-        const inputColumns = allColumns.filter((col) => col.type === 'input');
+        const inputColumns = allColumns.filter((col) => col.type === 'input' || col.type === 'select');
         return inputColumns.map((col) => col.field);
     }
 

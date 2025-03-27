@@ -47,7 +47,7 @@ export class TableRowBuilder {
         const data = {};
         columns.forEach((column) => {
             if (column.isFieldFromCurrentUserChildCard) {
-                data[column.field] = this.getCurrentUserChildCardField(childCards, column.cardField);
+                data[column.field] = this.getCurrentUserChildCardField(childCards, column);
                 return;
             }
             switch (column.fieldType) {
@@ -79,6 +79,7 @@ export class TableRowBuilder {
                 case FieldType.HTML:
                     data[column.field] = column.getValue(card);
                     break;
+
                 default:
                     data[column.field] = this.getNestedField(card, column.cardField);
             }
@@ -100,15 +101,25 @@ export class TableRowBuilder {
         };
     }
 
-    private getCurrentUserChildCardField(childCards: Card[], field: string): any {
-        if (!childCards || childCards.length === 0) return '';
-        const userEntities = UsersService.getCurrentUserWithPerimeters().userData?.entities;
-        for (const childCard of childCards) {
-            if (userEntities.includes(childCard.publisher)) {
-                return this.getNestedField(childCard, field);
+    private getCurrentUserChildCardField(childCards: Card[], column: Column): any {
+        let fieldValue = '';
+        if (childCards && childCards.length > 0) {
+            const userEntities = UsersService.getCurrentUserWithPerimeters().userData?.entities;
+            for (const childCard of childCards) {
+                if (userEntities.includes(childCard.publisher)) {
+                    fieldValue = this.getNestedField(childCard, column.cardField);
+                    break;
+                }
             }
         }
-        return '';
+
+        if (column.fieldType === FieldType.SELECT) {
+            return {
+                value: fieldValue,
+                possibleValues: column.possibleValues
+            };
+        }
+        return fieldValue;
     }
 
     private getPublisherLabel(card: Card): string {

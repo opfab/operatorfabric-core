@@ -532,6 +532,21 @@ The input fields are to be defined in the columns definition with fieldType set 
 }
 ----
 
+It is possible instead of using an input field to use a select field by setting the fieldType to `SELECT` and defining the options in the column definition, for example : 
+
+
+----
+{
+    field: 'choice',
+    headerName: 'Choice',
+    fieldType: 'SELECT',
+    possibleValues: [
+        { value: 'on', label: 'Accept' },
+        { value: 'off', label: 'Refuse' }
+    ],
+    flex: 1
+}
+
 === Card data fields
 
 It is possible to define data fields you want to display in the custom screen. To do this, you have to define the data

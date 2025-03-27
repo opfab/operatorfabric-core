@@ -132,8 +132,8 @@ export class CustomCardListView {
         return this.buttonActions.getResponseButtons();
     }
 
-    public async clickOnButton(buttonId: string, responsesData: Map<string, any>) {
-        await this.buttonActions.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
+    public async clickOnButton(buttonId: string, responsesData: Map<string, any>): Promise<boolean> {
+        return await this.buttonActions.sendResponsesWhenUserClicksOnResponseButton(buttonId, responsesData);
     }
 
     public isAcknowledgmentButtonVisible(): boolean {

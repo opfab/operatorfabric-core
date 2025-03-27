@@ -159,6 +159,21 @@
                     flex: 2
                 },
                 {
+                    fieldType: 'SELECT',
+                    field: 'reason',
+                    cardField: 'data.reason',
+                    possibleValues: [
+                        {label: 'Time frame is too short to decide', value: 'Time frame is too short to decide'},
+                        {label: 'Constraints on the network', value: 'Constraints on the network'},
+                        {label: 'Low margin on the network', value: 'Low margin on the network'},
+                        {label: 'Critical situation', value: 'Critical situation'},
+                        {label: 'Other (Please specify)', value: 'Other'}
+                    ],
+                    isFieldFromCurrentUserChildCard: true,
+                    headerName: 'REASON',
+                    minWidth: 300
+                },
+                {
                     fieldType: 'INPUT',
                     field: 'comment',
                     cardField: 'data.comment',
@@ -192,10 +207,11 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
+                        const reason = userInput?.reason ?? '';
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = {propositionRefused: true, comment: comment};
+                        const responseData = {propositionRefused: true, comment: comment, reason: reason};
                         responseCards.push({data: responseData, severity: 'ALARM'});
                     });
                     if (!hasAlwaysComment) {
@@ -236,6 +252,21 @@
                     flex: 2
                 },
                 {
+                    fieldType: 'SELECT',
+                    field: 'reason',
+                    cardField: 'data.reason',
+                    possibleValues: [
+                        {label: 'Time frame is too short to decide', value: 'Time frame is too short to decide'},
+                        {label: 'Constraints on the network', value: 'Constraints on the network'},
+                        {label: 'Low margin on the network', value: 'Low margin on the network'},
+                        {label: 'Critical situation', value: 'Critical situation'},
+                        {label: 'Other (Please specify)', value: 'Other'}
+                    ],
+                    isFieldFromCurrentUserChildCard: true,
+                    headerName: 'REASON',
+                    minWidth: 300
+                },
+                {
                     fieldType: 'INPUT',
                     field: 'comment',
                     cardField: 'data.comment',
@@ -269,10 +300,11 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
+                        const reason = userInput?.reason ?? '';
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = {propositionRefused: true, comment: comment};
+                        const responseData = {propositionRefused: true, comment: comment, reason: reason};
                         responseCards.push({data: responseData, severity: 'ALARM'});
                     });
                     if (!hasAlwaysComment) {

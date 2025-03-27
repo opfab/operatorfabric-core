@@ -102,6 +102,11 @@ describe('CustomScreenView - ResultTable', () => {
                         field: 'comment',
                         headerName: 'Comment',
                         fieldType: FieldType.INPUT
+                    },
+                    {
+                        field: 'select',
+                        headerName: 'Select',
+                        fieldType: FieldType.SELECT
                     }
                 ]
             });
@@ -112,7 +117,8 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
-                {field: 'comment', headerName: 'Comment', type: 'input'}
+                {field: 'comment', headerName: 'Comment', type: 'input'},
+                {field: 'select', headerName: 'Select', type: 'select'}
             ]);
         });
 
@@ -753,6 +759,88 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     childData: ''
+                }
+            ]);
+        });
+    });
+    describe('Should get select field', () => {
+        const cards = [
+            getOneLightCard({
+                id: 'card1',
+                publisher: 'entity1',
+                publisherType: 'ENTITY',
+                entitiesAllowedToRespond: ['entity1', 'entity2', 'entity3', 'child_entity']
+            })
+        ];
+
+        let resultTable = undefined;
+
+        beforeAll(async () => {
+            await setUserPerimeter({
+                computedPerimeters: [],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+            resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'childData',
+                        headerName: 'Selection',
+                        cardField: 'data.test',
+                        fieldType: FieldType.SELECT,
+                        isFieldFromCurrentUserChildCard: true,
+                        possibleValues: [
+                            {value: 'option1', label: 'Label option1'},
+                            {value: 'option2', label: 'Label option2'}
+                        ]
+                    }
+                ]
+            });
+        });
+        it('get field actual value with possibles values', async () => {
+            const childCards = new Map<string, Array<Card>>();
+            childCards.set('card1', [
+                getOneLightCard({
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    severity: Severity.ALARM,
+                    data: {test: 'option1'}
+                })
+            ]);
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    childData: {
+                        value: 'option1',
+                        possibleValues: [
+                            {value: 'option1', label: 'Label option1'},
+                            {value: 'option2', label: 'Label option2'}
+                        ]
+                    }
+                }
+            ]);
+        });
+        it('get empty value if no child card', async () => {
+            const childCards = new Map<string, Array<Card>>();
+
+            const dataArray = resultTable.getDataArrayFromCards(cards, childCards);
+
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    childData: {
+                        value: '',
+                        possibleValues: [
+                            {value: 'option1', label: 'Label option1'},
+                            {value: 'option2', label: 'Label option2'}
+                        ]
+                    }
                 }
             ]);
         });

@@ -6,15 +6,16 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="isInputFieldVisible" style="margin: 3px; align-items: center">
-    <input
-        [formControl]="cardInputControl"
+<div [hidden]="!isInputFieldVisible" style="margin: 3px; align-items: center">
+    <select
+        id="opfab-customcardlist-select"
+        [formControl]="cardSelectControl"
         (keydown)="onKeyDown($event)"
         (click)="onClick($event)"
-        type="text"
-        class="opfab-input"
-        style="height: 35px; width: 80%"
-        size="30" />
+        class="opfab-select"
+        style="height: 35px; width: 80%">
+        <option *ngFor="let option of selectOptions" [value]="option.value">{{ option.label }}</option>
+    </select>
 </div>
 
 <div *ngIf="!isInputFieldVisible" style="margin: 3px; align-items: center">{{ fieldValue }}</div>

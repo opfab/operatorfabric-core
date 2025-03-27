@@ -10,18 +10,18 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {ScriptCommands} from '../support/scriptCommands';
-import {AgGridCommands} from '../support/agGridCommands';
-import {FeedCommands} from '../support/feedCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { ScriptCommands } from '../support/scriptCommands';
+import { AgGridCommands } from '../support/agGridCommands';
+import { FeedCommands } from '../support/feedCommands';
 
-describe('Custom Card List Screen', function () {
+describe('Custom Card List Screen', function() {
     const feed = new FeedCommands();
     const script = new ScriptCommands();
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
 
-    before('Set up configuration', function () {
+    before('Set up configuration', function() {
         script.resetUIConfigurationFiles();
         script.deleteAllSettings();
         script.loadTestConf();
@@ -30,8 +30,8 @@ describe('Custom Card List Screen', function () {
         script.send6TestCards();
     });
 
-    describe('Custom screen 1', function () {
-        it(`Check filters`, function () {
+    describe('Custom screen 1', function() {
+        it(`Check filters`, function() {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
@@ -66,7 +66,7 @@ describe('Custom Card List Screen', function () {
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 1);
         });
 
-        it(`Check html cells`, function () {
+        it(`Check html cells`, function() {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
@@ -80,14 +80,14 @@ describe('Custom Card List Screen', function () {
                 });
         });
     });
-    describe('Custom screen 2', function () {
-        it(`Check response from table`, function () {
+    describe('Custom screen 2', function() {
+        it(`Check response from table`, function() {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen2();
 
             cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
-            cy.get('.ag-header-cell').should('be.visible').should('have.length', 7);
+            cy.get('.ag-header-cell').should('be.visible').should('have.length', 8);
 
             // Click the ag-selection-checkbox within the row and fill the answer
             cy.get('.ag-row[row-id="3"]')
@@ -96,6 +96,7 @@ describe('Custom Card List Screen', function () {
                     cy.get('.ag-selection-checkbox').click();
                     cy.get('.ag-cell[col-id="comment"]').click();
                     cy.get('.ag-cell[col-id="comment"]').type('not available');
+                    cy.get('#opfab-customcardlist-select').select('Constraints on the network');
                 });
 
             // Refuse proposal
@@ -105,6 +106,7 @@ describe('Custom Card List Screen', function () {
             opfab.navigateToFeed();
             feed.openNthCard(2);
             cy.get('#opfab-div-card-template-processed').should('contain.text', 'not available');
+            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Constraints on the network');
         });
     });
 });
