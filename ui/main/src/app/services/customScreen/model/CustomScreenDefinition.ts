@@ -13,6 +13,7 @@ export class CustomScreenDefinition {
     id: string;
     name: string;
     processIds: string[];
+    statesToExclude?: StateExclusion[];
     headerFilters: HeaderFilter[];
     results: {
         columns: Column[];
@@ -43,6 +44,11 @@ export class UserResponse {
     valid: boolean;
     errorMsg: string;
     responseCards: any[];
+}
+
+export class StateExclusion {
+    processId: string;
+    stateIds: string[];
 }
 
 export enum FieldType {
