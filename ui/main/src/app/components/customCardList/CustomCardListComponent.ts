@@ -83,6 +83,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     private readonly rowDataSubject = new ReplaySubject(1);
     dateRangePickerCustomRanges: any = {};
     dateRangePickerLocale: any = {};
+    initialStartDate: number;
+    initialEndDate: number;
     headerForm = new FormGroup({
         businessDateRanges: new FormControl({}),
         processes: new FormControl([]),
@@ -172,6 +174,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             });
 
         this.customCardListView = new CustomCardListView(this.customScreenId);
+        this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
+        this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
 
         const severityCellClassRules = {
             'opfab-sev-alarm': (field) => field.value === 'ALARM',
@@ -332,10 +336,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             };
         }
 
-        this.headerForm.get('businessDateRanges').setValue({
-            startDate: new Date(this.customCardListView.getBusinessPeriod().startDate),
-            endDate: new Date(this.customCardListView.getBusinessPeriod().endDate)
-        });
+        this.setInitialBusinessPeriod();
         if (this.processFilterVisible) {
             this.headerForm.get('processes').setValue([]);
             this.initProcessFilter();
@@ -343,6 +344,13 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
         this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             this.sendQuery();
+        });
+    }
+
+    private setInitialBusinessPeriod() {
+        this.headerForm.get('businessDateRanges').setValue({
+            startDate: new Date(this.initialStartDate),
+            endDate: new Date(this.initialEndDate)
         });
     }
 
@@ -416,6 +424,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.processSelected = [];
         this.typeOfStateSelected = [];
         this.readAndAckSelected = [];
+        this.setInitialBusinessPeriod();
         this.sendQuery();
     }
 
