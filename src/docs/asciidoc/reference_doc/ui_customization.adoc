@@ -476,6 +476,7 @@ Here is an example of a custom screen configuration with response buttons:
 const customScreenExample = {
         id: 'testId2',
         name: 'testName',
+        responseOnlyAllowedForEntitiesRequiredToRespond: false,
 
         .....
 
@@ -546,6 +547,9 @@ It is possible instead of using an input field to use a select field by setting 
     ],
     flex: 1
 }
+----
+
+It is possible to restrict the possibility to respond to entities that are defined as required (field `entitiesRequiredToRespond` in the card). To do this, you need to set `responseOnlyAllowedForEntitiesRequiredToRespond` to `true` in the custom screen definition.
 
 === Card data fields
 
