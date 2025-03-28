@@ -205,10 +205,20 @@ export class TableRowBuilder {
         if (!card) {
             return false;
         }
-        return UserPermissionsService.isUserEnabledToRespond(
+        const isUserAllowed = UserPermissionsService.isUserEnabledToRespond(
             UsersService.getCurrentUserWithPerimeters(),
             card,
             ProcessesService.getProcess(card.process)
         );
+        if (this.customScreenDefinition.responseOnlyAllowedForEntitiesRequiredToRespond) {
+            return (
+                isUserAllowed &&
+                card.entitiesRequiredToRespond?.some((entity) =>
+                    UsersService.getCurrentUserWithPerimeters().userData.entities.includes(entity)
+                )
+            );
+        }
+
+        return isUserAllowed;
     }
 }

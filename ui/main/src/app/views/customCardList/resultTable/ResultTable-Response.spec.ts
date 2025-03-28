@@ -19,27 +19,10 @@ import {FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 
 describe('CustomCardListView - Result array - Response possible', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();
-    let resultTable: ResultTable;
     let card: Card;
 
-    beforeAll(async () => {
-        mockTranslation();
-        CustomScreenService.clearCustomScreenDefinitions();
-        const myState = new State();
-        myState.response = {state: 'myState'};
-        const statesList = new Map();
-        statesList.set('myState', myState);
-        const process = [new Process('myProcess', '1', 'my process label', null, statesList)];
-        await setProcessConfiguration(process);
-        await setEntities([
-            {
-                id: 'entity1',
-                name: 'entity1 name',
-                roles: [RoleEnum.CARD_SENDER]
-            }
-        ]);
-
-        resultTable = new ResultTable({
+    const getResultTable = (responseOnlyAllowedForEntitiesRequiredToRespond?: boolean) => {
+        return new ResultTable({
             id: 'testId',
             name: 'name',
             processIds: [],
@@ -60,8 +43,32 @@ describe('CustomCardListView - Result array - Response possible', () => {
                     label: 'label1',
                     getUserResponses: undefined
                 }
-            ]
+            ],
+            responseOnlyAllowedForEntitiesRequiredToRespond: responseOnlyAllowedForEntitiesRequiredToRespond
         });
+    };
+
+    beforeAll(async () => {
+        mockTranslation();
+        CustomScreenService.clearCustomScreenDefinitions();
+        const myState = new State();
+        myState.response = {state: 'myState'};
+        const statesList = new Map();
+        statesList.set('myState', myState);
+        const process = [new Process('myProcess', '1', 'my process label', null, statesList)];
+        await setProcessConfiguration(process);
+        await setEntities([
+            {
+                id: 'entity1',
+                name: 'entity1 name',
+                roles: [RoleEnum.CARD_SENDER]
+            },
+            {
+                id: 'entity2',
+                name: 'entity2 name',
+                roles: [RoleEnum.CARD_SENDER]
+            }
+        ]);
 
         card = getOneLightCard({
             publisher: 'entity0',
@@ -69,35 +76,71 @@ describe('CustomCardListView - Result array - Response possible', () => {
             process: 'myProcess',
             state: 'myState',
             entitiesAllowedToRespond: ['entity1'],
+            entitiesRequiredToRespond: ['entity2'],
             id: 'id1'
         });
     });
+    describe('responseOnlyAllowedForEntitiesRequiredToRespond is false', () => {
+        it('should be true if user is allowed to respond ', async () => {
+            await setUserPerimeter({
+                computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+            const resultTable = getResultTable();
 
-    it('should be true if user is allowed to respond ', async () => {
-        await setUserPerimeter({
-            computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
-            userData: {
-                login: 'test',
-                firstName: 'firstName',
-                lastName: 'lastName',
-                entities: ['entity1']
-            }
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: true}]);
         });
-
-        const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: true}]);
+        it('should be false if user is not allowed to respond ', async () => {
+            await setUserPerimeter({
+                computedPerimeters: [],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+            const resultTable = getResultTable();
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: false}]);
+        });
     });
-    it('should be false if user is not allowed to respond ', async () => {
-        await setUserPerimeter({
-            computedPerimeters: [],
-            userData: {
-                login: 'test',
-                firstName: 'firstName',
-                lastName: 'lastName',
-                entities: ['entity1']
-            }
+    describe('responseOnlyAllowedForEntitiesRequiredToRespond is true', () => {
+        it('should be false if user is allowed to respond but not required  ', async () => {
+            await setUserPerimeter({
+                computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+
+            const resultTable = getResultTable(true);
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: false}]);
         });
-        const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
-        expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: false}]);
+        it('should be true if user is allowed to respond and required  ', async () => {
+            await setUserPerimeter({
+                computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity2']
+                }
+            });
+
+            const resultTable = getResultTable(true);
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: true}]);
+        });
     });
 });

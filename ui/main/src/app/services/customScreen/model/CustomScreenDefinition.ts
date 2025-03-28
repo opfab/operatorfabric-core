@@ -19,6 +19,7 @@ export class CustomScreenDefinition {
         columns: Column[];
     };
     responseButtons?: ResponseButton[];
+    responseOnlyAllowedForEntitiesRequiredToRespond?: boolean;
     showAcknowledgmentButton?: boolean;
 }
 

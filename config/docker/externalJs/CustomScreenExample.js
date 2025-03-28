@@ -182,6 +182,7 @@
                 }
             ]
         },
+        responseOnlyAllowedForEntitiesRequiredToRespond: false,
         responseButtons: [
             {
                 id: 'button1',
@@ -275,6 +276,7 @@
                 }
             ]
         },
+        responseOnlyAllowedForEntitiesRequiredToRespond: false,
         responseButtons: [
             {
                 id: 'button1',
