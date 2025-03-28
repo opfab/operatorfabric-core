@@ -82,14 +82,12 @@ public class OAuth2UsersConfiguration {
 
                 Optional<User> optionalUser = userRepository.findById(principalId);
 
-                User user;
-                if (optionalUser.isPresent()) {
-                    user = optionalUser.get();
-                } else {
-                    user = createUserDataVirtualFromJwt(jwt);
-                    log.warn("user virtual(nonexistent in opfab) : '{}'", user.toString());
-                }
-
+                User user = optionalUser.orElseGet(() -> {
+                    User virtualUser = createUserDataVirtualFromJwt(jwt);
+                    log.warn("user virtual(nonexistent in opfab) : '{}'",
+                            virtualUser != null ? virtualUser.toString() : "null");
+                    return virtualUser;
+                });
                 if (groupsProperties.getMode() == GroupsMode.JWT) {
                     // override the groups list from JWT mode, otherwise, default mode is
                     // OPERATOR_FABRIC
