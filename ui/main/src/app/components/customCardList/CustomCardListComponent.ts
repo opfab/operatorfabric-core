@@ -225,8 +225,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     sortable: false,
                     filter: true,
                     resizable: false,
-                    wrapText: true,
-                    autoHeight: true,
+                    wrapText: false,
                     cellRenderer: 'htmlCellRenderer'
                 },
                 severity: {

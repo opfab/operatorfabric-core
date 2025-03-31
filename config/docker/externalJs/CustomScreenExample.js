@@ -94,7 +94,7 @@
                     cardField: 'data.keywords',
                     getValue: (card) => {
                         if (card.data?.keywords) {
-                            return '<i>' + opfab.utils.escapeHtml(card.data.keywords) + '</i> <br/> TEST';
+                            return '<i>' + opfab.utils.escapeHtml(card.data.keywords) + '</i>';
                         }
                         return '';
                     },
@@ -141,8 +141,7 @@
                     field: 'TIME',
                     headerName: 'PUBLISH DATE',
                     cardField: 'publishDate',
-                    fieldType: 'DATE_AND_TIME',
-                    minWidth: 300
+                    fieldType: 'DATE_AND_TIME'
                 },
                 {
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
@@ -152,8 +151,7 @@
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
-                    flex: 1,
-                    minWidth: 300
+                    flex: 1
                 },
                 {
                     headerName: 'ANSWERS',
@@ -179,13 +177,6 @@
                     fieldType: 'INPUT',
                     field: 'comment',
                     cardField: 'data.comment',
-                    isFieldFromCurrentUserChildCard: true,
-                    headerName: 'COMMENT'
-                },
-                {
-                    fieldType: 'INPUT',
-                    field: 'comment2',
-                    cardField: 'data.comment2',
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'COMMENT'
                 }
