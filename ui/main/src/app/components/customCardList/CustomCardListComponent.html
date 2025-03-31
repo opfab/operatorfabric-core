@@ -132,7 +132,7 @@
         <ag-grid-angular
             *ngIf="(this.responseButtons?.length === 0) || loadingInProgress; else rowSelectionEnabled"
             id="opfab-custom-screen-table-grid"
-            [rowData]="rowData$ | async"
+            [rowData]="rowData"
             [gridOptions]="gridOptions"
             style="overflow-y: auto; max-height: calc(100vh - 350px)"
             (gridReady)="onGridReady($event)"
@@ -142,7 +142,7 @@
         <ng-template #rowSelectionEnabled>
             <ag-grid-angular
                 id="opfab-custom-screen-table-grid"
-                [rowData]="rowData$ | async"
+                [rowData]="rowData"
                 [gridOptions]="gridOptions"
                 style="overflow-y: auto; max-height: calc(100vh - 350px)"
                 [rowSelection]="rowSelection"
