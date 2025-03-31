@@ -60,6 +60,12 @@ export class ResultTable {
                         col.headerName = '';
                         col.type = 'responseFromMyEntities';
                         break;
+                    case FieldType.STATE_NAME:
+                        col.type = 'stateName';
+                        break;
+                    case FieldType.PROCESS_NAME:
+                        col.type = 'processName';
+                        break;
                     case FieldType.COLORED_CIRCLE:
                         col.type = 'coloredCircle';
                         break;

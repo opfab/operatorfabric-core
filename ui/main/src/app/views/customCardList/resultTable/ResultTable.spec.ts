@@ -94,6 +94,16 @@ describe('CustomScreenView - ResultTable', () => {
                         fieldType: FieldType.RESPONSE_FROM_MY_ENTITIES
                     },
                     {
+                        field: 'stateName',
+                        headerName: 'State Name',
+                        fieldType: FieldType.STATE_NAME
+                    },
+                    {
+                        field: 'processName',
+                        headerName: 'Process Name',
+                        fieldType: FieldType.PROCESS_NAME
+                    },
+                    {
                         field: 'coloredCircleTest',
                         headerName: 'circle',
                         fieldType: FieldType.COLORED_CIRCLE
@@ -116,6 +126,8 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
+                {field: 'stateName', headerName: 'State Name', type: 'stateName'},
+                {field: 'processName', headerName: 'Process Name', type: 'processName'},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
                 {field: 'comment', headerName: 'Comment', type: 'input'},
                 {field: 'select', headerName: 'Select', type: 'select'}
@@ -189,7 +201,7 @@ describe('CustomScreenView - ResultTable', () => {
         });
     });
     describe('Should get data array from cards', () => {
-        it('with only card fields defines in state screen defintion + cardId', () => {
+        it('with only card fields defined in state screen definition + cardId', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
@@ -484,6 +496,37 @@ describe('CustomScreenView - ResultTable', () => {
                 {cardId: 'card1', myfield: 'red'},
                 {cardId: 'card2', myfield: 'blue'}
             ]);
+        });
+        it('with state name and process name', async () => {
+            const state = new State();
+            state.name = 'State Name';
+            const statesList = new Map();
+            statesList.set('state1', state);
+            const process = [new Process('processId1', '1', 'Process Name', null, statesList)];
+            await setProcessConfiguration(process);
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        fieldType: 'PROCESS_NAME'
+                    },
+                    {
+                        fieldType: 'STATE_NAME'
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    state: 'state1',
+                    process: 'processId1',
+                    publisherType: 'ENTITY',
+                    hasChildCardFromCurrentUserEntity: true,
+                    entitiesAllowedToRespond: ['entity1', 'entity2', 'entity3', 'child_entity']
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', processName: 'Process Name', stateName: 'State Name'}]);
         });
     });
     describe('Should get responses in data array', () => {

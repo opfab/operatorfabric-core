@@ -69,6 +69,12 @@ export class TableRowBuilder {
                 case FieldType.RESPONSE_FROM_MY_ENTITIES:
                     data['responseFromMyEntities'] = card.hasChildCardFromCurrentUserEntity;
                     break;
+                case FieldType.STATE_NAME:
+                    data['stateName'] = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.name;
+                    break;
+                case FieldType.PROCESS_NAME:
+                    data['processName'] = ProcessesService.getProcess(card.process)?.name;
+                    break;
                 case FieldType.STRING:
                     if (column.getValue) {
                         data[column.field] = column.getValue(card);
