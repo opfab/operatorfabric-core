@@ -27,14 +27,6 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
 
     agInit(params: any): void {
         this.params = params;
-
-        // Node can be destroyed and recreated in the grid when the window is resized
-        // so we need to check if the node is selected and activate the input field if it is
-        // otherwise the input field will be hidden
-        if (params.data.isResponsePossible) {
-            if (params.node.isSelected()) this.activateInput();
-        }
-        console.log('params', params);
         this.fieldValue = params.getValue();
         this.cardInputControl.setValue(this.fieldValue);
     }
