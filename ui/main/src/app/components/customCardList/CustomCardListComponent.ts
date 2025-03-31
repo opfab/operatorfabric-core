@@ -21,14 +21,13 @@ import {
     ITooltipParams,
     ModuleRegistry,
     provideGlobalGridOptions,
-    RowSelectionOptions,
-    SelectionChangedEvent
+    RowSelectionOptions
 } from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/ExcelExport';
 import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
 import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/multi-select.component';
@@ -65,26 +64,11 @@ import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererCom
     ]
 })
 export class CustomCardListComponent implements OnInit, OnDestroy {
-    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
-
     @Input() customScreenId: string;
-
     customCardListView: CustomCardListView;
     isCustomScreenDefinitionExist: boolean;
-    isAcknowledgmentButtonVisible: boolean;
-    gridOptions: any;
-    gridApi: any;
-    page = 1;
-    pageSize: number = 10;
-    readonly paginationPageSizeOptions = [10, 20, 50, 100];
 
-    private rowData = [];
-    rowData$: Observable<any>;
-    private readonly rowDataSubject = new ReplaySubject(1);
-    dateRangePickerCustomRanges: any = {};
-    dateRangePickerLocale: any = {};
-    initialStartDate: number;
-    initialEndDate: number;
+    // Header form configuration
     headerForm = new FormGroup({
         businessDateRanges: new FormControl({}),
         processes: new FormControl([]),
@@ -93,8 +77,14 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         responseFromMyEntities: new FormControl(true),
         responseFromAllEntities: new FormControl(true)
     });
-    modalRef: NgbModalRef;
 
+    // Date range picker configuration
+    dateRangePickerCustomRanges: any = {};
+    dateRangePickerLocale: any = {};
+    initialStartDate: number;
+    initialEndDate: number;
+
+    // Process multi-select configuration
     processFilterVisible = false;
     processMultiSelectOptions: Array<MultiSelectOption> = [];
     processSelected: Array<string> = [];
@@ -105,6 +95,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         nbOfDisplayValues: 1
     };
 
+    // Type of state multi-select configuration
     typeOfStateFilterVisible = false;
     typeOfStateMultiSelectOptions: Array<MultiSelectOption> = [
         new MultiSelectOption(
@@ -128,6 +119,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         nbOfDisplayValues: 1
     };
 
+    // Read and Ack multi-select configuration
     readAndAckSelected: Array<string> = [];
     readAndAckFilterVisible = true;
     readAndAckMultiSelectConfig = {
@@ -149,14 +141,30 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         new MultiSelectOption(ReadAndAckEnum.NOT_READ, TranslationService.getTranslation('shared.readAndAck.NOT_READ'))
     ];
 
+    // Ag-grid configuration
+    gridOptions: any;
+    gridApi: any;
+    rowData = [];
+    rowSelection: RowSelectionOptions;
+
+    // Card detail modal configuration
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
+    modalRef: NgbModalRef;
+
+    // Pagination configuration
+    page = 1;
+    pageSize: number = 10;
+    readonly paginationPageSizeOptions = [10, 20, 50, 100];
+
     responseFromMyEntitiesFilterVisible = false;
     responseFromAllEntitiesFilterVisible = false;
+
+    // Buttons configuration
     responseButtons = [];
-    public rowSelection: RowSelectionOptions;
+    isAcknowledgmentButtonVisible: boolean;
 
     private readonly ngUnsubscribe$ = new Subject<void>();
     private inputMode$ = new Subject<void>();
-
     loadingInProgress = false;
 
     constructor(private readonly modalService: NgbModal) {
@@ -167,16 +175,66 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.customCardListView = new CustomCardListView(this.customScreenId);
+        this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
+        this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
+        this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
+        this.listenForLoadingInProcess();
+        this.setFiltersVisibility();
+        this.setInitialBusinessPeriod();
+        this.setButtonsConfiguration();
+        this.setProcessFilter();
+        this.setAgridConfiguration();
+        this.startListeningToResults();
+
+        this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+            this.sendQuery();
+        });
+    }
+
+    private listenForLoadingInProcess() {
         OpfabEventStreamService.getLoadingInProgress()
             .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(500))
             .subscribe((loadingInProgress: boolean) => {
                 this.loadingInProgress = loadingInProgress;
             });
+    }
 
-        this.customCardListView = new CustomCardListView(this.customScreenId);
-        this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
-        this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
+    private setFiltersVisibility() {
+        this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
+        this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
+        this.readAndAckFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.READ_ACK);
+        this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+            HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+        );
+        this.responseFromAllEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
+            HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
+        );
+    }
 
+    private setInitialBusinessPeriod() {
+        this.headerForm.get('businessDateRanges').setValue({
+            startDate: new Date(this.initialStartDate),
+            endDate: new Date(this.initialEndDate)
+        });
+    }
+
+    private setButtonsConfiguration() {
+        this.isAcknowledgmentButtonVisible = this.customCardListView.isAcknowledgmentButtonVisible();
+        this.responseButtons = this.customCardListView.getResponseButtons();
+        if (this.responseButtons.length > 0 || this.customCardListView.isAcknowledgmentButtonVisible()) {
+            this.rowSelection = {
+                mode: 'multiRow',
+                selectAll: 'currentPage',
+                hideDisabledCheckboxes: true,
+                isRowSelectable: (node) => {
+                    return this.isRowSelectableForResponse(node) || this.isRowSelectableForAcknowledgment(node);
+                }
+            };
+        }
+    }
+
+    private setAgridConfiguration() {
         const severityCellClassRules = {
             'opfab-sev-alarm': (field) => field.value === 'ALARM',
             'opfab-sev-action': (field) => field.value === 'ACTION',
@@ -189,18 +247,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             'opfab-type-of-state-FINISHED': (field) => field.value.value === 'FINISHED',
             'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
         };
-        this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
-        this.isAcknowledgmentButtonVisible = this.customCardListView.isAcknowledgmentButtonVisible();
-        this.processFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.PROCESS);
-        this.typeOfStateFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.TYPE_OF_STATE);
-        this.readAndAckFilterVisible = this.customCardListView.isFilterVisibleInHeader(HeaderFilter.READ_ACK);
-        this.responseFromMyEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
-            HeaderFilter.RESPONSE_FROM_MY_ENTITIES
-        );
-        this.responseFromAllEntitiesFilterVisible = this.customCardListView.isFilterVisibleInHeader(
-            HeaderFilter.RESPONSE_FROM_ALL_ENTITIES
-        );
-        this.responseButtons = this.customCardListView.getResponseButtons();
         this.gridOptions = {
             ...AgGrid.getDefaultGridOptions(),
             components: {
@@ -322,42 +368,15 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             tooltipComponent: CustomTooltipComponent,
             onRowSelected: (event) => this.onRowSelected(event)
         };
-        this.rowData$ = this.rowDataSubject.asObservable();
-        this.rowDataSubject.next(this.rowData); // needed to have an empty table if no data on component init
-        this.startListeningToResults();
-        if (this.responseButtons.length > 0 || this.customCardListView.isAcknowledgmentButtonVisible()) {
-            this.rowSelection = {
-                mode: 'multiRow',
-                selectAll: 'currentPage',
-                hideDisabledCheckboxes: true,
-                isRowSelectable: (node) => {
-                    return this.isRowSelectableForResponse(node) || this.isRowSelectableForAcknowledgment(node);
-                }
-            };
-        }
+    }
 
-        this.setInitialBusinessPeriod();
+    private setProcessFilter(): void {
         if (this.processFilterVisible) {
             this.headerForm.get('processes').setValue([]);
-            this.initProcessFilter();
+            this.customCardListView.getAllProcessesListAvailableForUser().forEach((process) => {
+                this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
+            });
         }
-
-        this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
-            this.sendQuery();
-        });
-    }
-
-    private setInitialBusinessPeriod() {
-        this.headerForm.get('businessDateRanges').setValue({
-            startDate: new Date(this.initialStartDate),
-            endDate: new Date(this.initialEndDate)
-        });
-    }
-
-    private initProcessFilter(): void {
-        this.customCardListView.getAllProcessesListAvailableForUser().forEach((process) => {
-            this.processMultiSelectOptions.push(new MultiSelectOption(process.id, process.label));
-        });
     }
 
     private getColumnDefs() {
@@ -385,7 +404,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     onGridReady(params: any) {
         this.gridApi = params.api;
 
-        this.gridApi.addEventListener('selectionChanged', (event: SelectionChangedEvent) => {
+        this.gridApi.addEventListener('selectionChanged', () => {
             const userHasSelectedRows = this.gridApi.getSelectedRows().length > 0;
 
             // If a row is selected, the user is editing the selection, so we stop listening to results
@@ -411,7 +430,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.inputMode$))
             .subscribe((results) => {
                 this.rowData = results;
-                this.rowDataSubject.next(this.rowData);
             });
     }
 
