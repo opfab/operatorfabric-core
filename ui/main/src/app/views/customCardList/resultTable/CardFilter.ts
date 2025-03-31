@@ -71,7 +71,7 @@ export class CardFilter {
         const cardProcessId = card.process;
         const cardStateId = card.state;
         let isStateExcluded = false;
-        if (this.statesToExclude) {
+        if (this.statesToExclude && this.statesToExclude.length > 0) {
             isStateExcluded = ProcessesService.getProcess(cardProcessId)?.states
                 ? this.statesToExclude.some(
                       (stateExclusion) =>

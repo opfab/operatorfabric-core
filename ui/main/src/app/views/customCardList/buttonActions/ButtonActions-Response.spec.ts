@@ -195,6 +195,25 @@ describe('CustomCardListView - Button actions - Responses', () => {
             expect(cardServerMock.cardsPosted[1].parentCardId).toBe('id2');
         });
 
+        it('be send with confirmation message for user', async () => {
+            const responseData = new Map<string, any>();
+            responseData.set('id1', {});
+            responseData.set('id2', {});
+
+            const alertSubject = new ReplaySubject<Message>();
+            AlertMessageService.getAlertMessage().subscribe((Message) => {
+                alertSubject.next(Message);
+            });
+
+            const result = await buttonActions.sendResponsesWhenUserClicksOnResponseButton('button1', responseData);
+
+            expect(result).toBe(true);
+
+            const message = await firstValueFrom(alertSubject.asObservable());
+            expect(message.i18n.key).toEqual('response.submitSuccess');
+            expect(message.level).toEqual(MessageLevel.INFO);
+        });
+
         it('be sent with user input', async () => {
             const responseData = new Map<string, any>();
             responseData.set('id1', {comment: 'comment1'});

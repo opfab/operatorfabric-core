@@ -14,6 +14,7 @@ import {OpfabStore} from '@ofStore/OpfabStore';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
+import {I18n} from 'app/model/I18n';
 
 export class ButtonActions {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -55,14 +56,21 @@ export class ButtonActions {
     }
 
     private async sendResponseCards(responses: any, selectedCards: Card[]) {
+        let success = true;
         if (responses?.responseCards) {
             for (const [index, response] of responses.responseCards.entries()) {
                 try {
                     await CardResponseService.sendResponse(selectedCards[index], response);
                 } catch (error) {
                     AlertMessageService.sendAlertMessage(new Message(error.message, MessageLevel.ERROR));
+                    success = false;
                 }
             }
+        }
+        if (success) {
+            AlertMessageService.sendAlertMessage(
+                new Message('', MessageLevel.INFO, new I18n('response.submitSuccess'))
+            );
         }
     }
 
