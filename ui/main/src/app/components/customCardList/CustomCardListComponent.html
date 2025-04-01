@@ -184,6 +184,7 @@
                     <button
                         id="opfab-response-button-{{ responseButton.id }}"
                         class="opfab-btn"
+                        [disabled]="responseButtonDisabled"
                         style="width: max-content"
                         (click)="clickOnResponseButton(responseButton.id)">
                         {{ responseButton.label }}
@@ -193,6 +194,7 @@
                     <button
                         id="opfab-acknowledge-button"
                         class="opfab-btn"
+                        [disabled]="ackButtonDisabled"
                         style="width: max-content"
                         (click)="clickOnAcknowledgmentButton()">
                         <span translate> customCardList.acknowledge </span>

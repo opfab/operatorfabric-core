@@ -10,18 +10,18 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
-import { ScriptCommands } from '../support/scriptCommands';
-import { AgGridCommands } from '../support/agGridCommands';
-import { FeedCommands } from '../support/feedCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ScriptCommands} from '../support/scriptCommands';
+import {AgGridCommands} from '../support/agGridCommands';
+import {FeedCommands} from '../support/feedCommands';
 
-describe('Custom Card List Screen', function() {
+describe('Custom Card List Screen', function () {
     const feed = new FeedCommands();
     const script = new ScriptCommands();
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
 
-    before('Set up configuration', function() {
+    before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
         script.deleteAllSettings();
         script.loadTestConf();
@@ -30,8 +30,8 @@ describe('Custom Card List Screen', function() {
         script.send6TestCards();
     });
 
-    describe('Custom screen 1', function() {
-        it(`Check filters`, function() {
+    describe('Custom screen 1', function () {
+        it(`Check filters`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
@@ -66,7 +66,7 @@ describe('Custom Card List Screen', function() {
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 1);
         });
 
-        it(`Check html cells`, function() {
+        it(`Check html cells`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
@@ -80,14 +80,15 @@ describe('Custom Card List Screen', function() {
                 });
         });
     });
-    describe('Custom screen 2', function() {
-        it(`Check response from table`, function() {
+    describe('Custom screen 2', function () {
+        it(`Check response from table`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen2();
 
             cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
             cy.get('.ag-header-cell').should('be.visible').should('have.length', 8);
+            cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
 
             // Click the ag-selection-checkbox within the row and fill the answer
             cy.get('.ag-row[row-id="3"]')
