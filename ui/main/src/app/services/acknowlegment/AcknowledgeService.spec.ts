@@ -22,11 +22,11 @@ import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeServerMock: AcknowledgeServerMock;
-    beforeEach(() => {
+    beforeEach(async () => {
         acknowledgeServerMock = new AcknowledgeServerMock();
         AcknowledgeService.setAcknowledgeServer(acknowledgeServerMock);
 
-        setEntities([
+        await setEntities([
             new Entity('ENTITY1', 'ENTITY 1', '', [], null, null),
             new Entity('ENTITY2', 'ENTITY 2', '', [], null, null),
             new Entity('ENTITY3', 'ENTITY 3', '', [], null, ['ENTITY_FR']),

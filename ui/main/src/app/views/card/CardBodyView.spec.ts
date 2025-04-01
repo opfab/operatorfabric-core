@@ -30,9 +30,9 @@ describe('CardBodyView', () => {
     let card: Card;
     let cardBodyView: CardBodyView;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         mockUsersService();
-        mockProcessesService();
+        await mockProcessesService();
 
         ConfigService.reset();
         configServerMock = new ConfigServerMock();
@@ -44,7 +44,7 @@ describe('CardBodyView', () => {
         UsersService.setUsersServer(usersServerMock);
     }
 
-    function mockProcessesService() {
+    async function mockProcessesService() {
         const processesServerMock = new ProcessesServerMock();
         processesServerMock.setResponseForProcessesDefinition(
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
@@ -53,8 +53,8 @@ describe('CardBodyView', () => {
             new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
         );
         ProcessesService.setProcessServer(processesServerMock);
-        ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
-        ProcessesService.loadAllProcessesWithAllVersions().subscribe();
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
     }
 
     function getTestProcesses(): Process[] {

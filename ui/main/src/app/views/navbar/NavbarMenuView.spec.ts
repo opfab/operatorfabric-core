@@ -767,7 +767,7 @@ describe('NavbarMenuView', () => {
     async function stubCurrentUserData(userGroups: string[], permissions: PermissionEnum[] = []) {
         const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
         const userWithPerimeters = new UserWithPerimeters(user, new Array(), permissions, new Map());
-        setUserPerimeter(userWithPerimeters);
+        await setUserPerimeter(userWithPerimeters);
     }
 
     function getNavbarMenu(): NavbarMenu {
