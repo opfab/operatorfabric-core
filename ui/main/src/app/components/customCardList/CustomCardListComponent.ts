@@ -162,6 +162,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     // Buttons configuration
     responseButtons = [];
     isAcknowledgmentButtonVisible: boolean;
+    responseButtonDisabled = true;
+    ackButtonDisabled = true;
 
     private readonly ngUnsubscribe$ = new Subject<void>();
     private inputMode$ = new Subject<void>();
@@ -440,6 +442,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     resetForm() {
+        this.gridApi.deselectAll();
         this.processSelected = [];
         this.typeOfStateSelected = [];
         this.readAndAckSelected = [];
@@ -534,6 +537,19 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     else element.deactivateInput();
                 }
             });
+        this.setButtonStatus();
+    }
+
+    setButtonStatus() {
+        const instances = this.gridApi.getSelectedNodes();
+        let isResponseButtonEnabled = false;
+        let isAckButtonEnabled = false;
+        instances.forEach((node) => {
+            if (node.data.isResponsePossible) isResponseButtonEnabled = true;
+            if (node.data.isAcknowledgmentPossible) isAckButtonEnabled = true;
+        });
+        this.responseButtonDisabled = !isResponseButtonEnabled;
+        this.ackButtonDisabled = !isAckButtonEnabled;
     }
 
     onPageSizeChanged(target: EventTarget | null) {
