@@ -330,10 +330,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     filter: false,
                     resizable: false,
                     wrapText: false,
-                    cellStyle: {display: 'flex', 'justify-content': 'center', alignItems: 'center'},
+                    cellStyle: {display: 'flex', 'justify-content': 'center'},
                     cellRenderer: (params: any) => {
                         return (
-                            '<div style="width: 20px; height: 20px;border-radius: 50%;background-color:' +
+                            '<div style="margin-top:10px;width: 20px; height: 20px;border-radius: 50%;background-color:' +
                             params.value +
                             '"></div>'
                         );

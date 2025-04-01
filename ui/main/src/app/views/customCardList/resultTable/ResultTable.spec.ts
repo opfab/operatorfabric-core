@@ -199,6 +199,20 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'testField2', headerName: 'test2', type: 'default'}
             ]);
         });
+        it('specific columDefinition with autoHeight and wrapText when mutliLineText is true', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        headerName: 'Status',
+                        fieldType: FieldType.TYPE_OF_STATE,
+                        multiLinesInCell: true
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', autoHeight: true, wrapText: true}
+            ]);
+        });
     });
     describe('Should get data array from cards', () => {
         it('with only card fields defined in state screen definition + cardId', () => {

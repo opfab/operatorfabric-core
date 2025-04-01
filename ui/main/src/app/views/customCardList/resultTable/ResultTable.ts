@@ -38,6 +38,10 @@ export class ResultTable {
                 if (column.minWidth) col['minWidth'] = column.minWidth;
                 if (column.flex) col['flex'] = column.flex;
                 if (column.showTooltips) col['showTooltips'] = true;
+                if (column.multiLinesInCell) {
+                    col['autoHeight'] = true;
+                    col['wrapText'] = true;
+                }
 
                 switch (column.fieldType) {
                     case FieldType.SEVERITY:
