@@ -151,11 +151,13 @@
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
+                    minWidth: 300,
                     flex: 1
                 },
                 {
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
+                    minWidth: 300,
                     flex: 2
                 },
                 {
