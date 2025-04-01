@@ -47,8 +47,8 @@ describe('Response card tests', function () {
         // Check the correct rendering of card
         cy.get('#opfab-slider');
 
-        card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY1_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
 
         // ENTITY3 is allowed to response but not required --> it should not be visible in the header
         card.checkEntityIsNotVisibleInCardHeader('ENTITY3_FR');
@@ -75,8 +75,8 @@ describe('Response card tests', function () {
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
-        card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
+        card.checkEntityIsRedInCardHeader('ENTITY1_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
 
         // update card
         script.sendCard('defaultProcess/question.json');
@@ -132,7 +132,7 @@ describe('Response card tests', function () {
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
         card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
 
         // Response button is present
         cy.get('#opfab-card-details-btn-response');
@@ -152,8 +152,8 @@ describe('Response card tests', function () {
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
         // check entities in card header
-        card.checkEntityIsGreenInCardHeader('ENTITY1_FR'); // entity 1 color is green
-        card.checkEntityIsGreenInCardHeader('ENTITY2_FR'); // entity 2 color is green
+        card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
+        card.checkEntityIsRedInCardHeader('ENTITY2_FR');
     });
 
     // operator4_fr is member of ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR and the question card sent can be responded by
@@ -177,7 +177,7 @@ describe('Response card tests', function () {
 
         // check entities in card header
         card.checkEntityIsGreenInCardHeader('ENTITY1_FR');
-        card.checkEntityIsGreenInCardHeader('ENTITY2_FR');
+        card.checkEntityIsRedInCardHeader('ENTITY2_FR');
 
         card.modifyResponse();
 
@@ -334,8 +334,8 @@ describe('Response card tests', function () {
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
         cy.get('#response_from_ENTITY3_FR').should('not.exist');
 
-        card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY1_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
     });
 
     it('Check responses in archived cards detail', function () {
@@ -432,12 +432,12 @@ describe('Response card tests', function () {
         cy.get('#opfab-answered-list').find('span').should('have.length', 0);
         cy.get('#opfab-not-answered-list').find('span').should('have.length', 6);
 
-        card.checkEntityIsOrangeInCardHeader('ENTITY1_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY3_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
-        card.checkEntityIsOrangeInCardHeader('ENTITY1_IT');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');
+        card.checkEntityIsGreyInCardHeader('ENTITY1_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY3_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY4_FR');
+        card.checkEntityIsGreyInCardHeader('ENTITY1_IT');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_IT');
 
         opfab.logout();
         opfab.loginWithUser('operator1_it');
@@ -448,9 +448,9 @@ describe('Response card tests', function () {
         card.openEntityDropdownInCardHeader();
         cy.get('#opfab-answered-list').find('span').should('have.length', 1);
         cy.get('#opfab-not-answered-list').find('span').should('have.length', 5);
-        card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
-        card.checkEntityIsGreenInCardHeader('ENTITY1_IT');
-        card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');
+        card.checkEntityIsGreyInCardHeader('ENTITY4_FR');
+        card.checkEntityIsBlueInCardHeader('ENTITY1_IT');
+        card.checkEntityIsGreyInCardHeader('ENTITY2_IT');
     });
 
     it('Check response publisher set from template', () => {

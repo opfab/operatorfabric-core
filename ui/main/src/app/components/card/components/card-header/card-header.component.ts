@@ -16,6 +16,7 @@ import {NgIf, NgFor, NgStyle} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CountDownComponent} from '../../../share/countdown/countdown.component';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
+import {Severity} from 'app/model/Severity';
 
 class EntityForCardHeader {
     id: string;
@@ -42,8 +43,7 @@ export class CardHeaderComponent implements OnChanges {
     public answeredList: EntityForCardHeader[];
     public notAnsweredList: EntityForCardHeader[];
 
-    private static readonly ANSWERED_COLOR = 'var(--opfab-color-green)';
-    private static readonly NOT_ANSWERED_COLOR = 'var(--opfab-color-darker-orange)';
+    private static readonly NOT_ANSWERED_COLOR = 'grey';
 
     ngOnChanges(): void {
         this.computeExpireLabelAndIcon();
@@ -96,22 +96,34 @@ export class CardHeaderComponent implements OnChanges {
                 entityHeader.push({
                     id: entity,
                     name: entityName,
-                    color: this.hasEntityAnswered(entity)
-                        ? CardHeaderComponent.ANSWERED_COLOR
-                        : CardHeaderComponent.NOT_ANSWERED_COLOR
+                    color: this.getEntityResponseColor(entity)
                 });
             }
         });
         return entityHeader;
     }
 
-    private hasEntityAnswered(entity: string): boolean {
-        return this.childCards.some((childCard) => childCard.publisher === entity);
+    private getEntityResponseColor(entity: string): string {
+        const child = this.childCards.find((childCard) => childCard.publisher === entity);
+        return child ? this.getColorForSeverity(child.severity) : CardHeaderComponent.NOT_ANSWERED_COLOR;
+    }
+
+    private getColorForSeverity(severity: Severity): string {
+        switch (severity) {
+            case Severity.ALARM:
+                return 'red';
+            case Severity.ACTION:
+                return 'orange';
+            case Severity.COMPLIANT:
+                return 'green';
+            default:
+                return 'blue';
+        }
     }
 
     private computeAnswersLists() {
         this.answeredList = this.entitiesForCardHeader.filter(
-            (entity) => entity.color === CardHeaderComponent.ANSWERED_COLOR
+            (entity) => entity.color !== CardHeaderComponent.NOT_ANSWERED_COLOR
         );
         this.notAnsweredList = this.entitiesForCardHeader.filter(
             (entity) => entity.color === CardHeaderComponent.NOT_ANSWERED_COLOR
