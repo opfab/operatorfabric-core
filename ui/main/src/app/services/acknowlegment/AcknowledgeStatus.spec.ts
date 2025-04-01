@@ -29,7 +29,7 @@ describe('AcknowledgeStatus', () => {
     let usersServerMock: UsersServerMock;
 
     beforeAll(async () => {
-        setEntities([
+        await setEntities([
             new Entity('ENTITY1', 'ENTITY 1', '', [], null, null),
             new Entity('ENTITY2', 'ENTITY 2', '', [], null, ['PARENT']),
             new Entity('ENTITY3', 'ENTITY 3', '', [], null, ['PARENT']),

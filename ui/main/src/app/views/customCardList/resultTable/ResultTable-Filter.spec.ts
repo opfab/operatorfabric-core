@@ -272,7 +272,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             {cardId: 'id2', testField: 'processId2'}
         ]);
     });
-    it('by type of state', () => {
+    it('by type of state', async () => {
         const resultTable = getResultTable();
         const states = new Map<string, State>();
         states.set('state1.0', {type: TypeOfStateEnum.INPROGRESS});
@@ -285,7 +285,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             new Process('processId1', '1', null, null, states2)
         ];
 
-        setProcessConfiguration(process);
+        await setProcessConfiguration(process);
 
         const cards = [
             getOneLightCard({
@@ -322,7 +322,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             {cardId: 'id1', testField: 'processId0'}
         ]);
     });
-    it('by excluded states', () => {
+    it('by excluded states', async () => {
         const resultTable = getResultTable();
         const states = new Map<string, State>();
         states.set('state1.0', {});
@@ -334,7 +334,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             new Process('processId1', '1', null, null, states2)
         ];
 
-        setProcessConfiguration(process);
+        await setProcessConfiguration(process);
 
         const cards = [
             getOneLightCard({

@@ -10,11 +10,9 @@
 import {Entity} from '@ofServices/entities/model/Entity';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
-import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {CurrentUserStore} from '../../store/CurrentUserStore';
@@ -22,24 +20,23 @@ import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './ActivityAreaView';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {getOneLightCard} from '@tests/helpers';
+import {getOneLightCard, setEntities} from '@tests/helpers';
 import {Severity} from 'app/model/Severity';
 import {OpfabStore} from '../../store/OpfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('ActivityAreaView', () => {
     let usersServerMock: UsersServerMock;
-    let entitiesServerMock: EntitiesServerMock;
     let settingsServerMock: UserSettingsServerMock;
     let user: User;
     let activityAreaView: ActivityAreaView;
     let clusterLineCheckBoxActivated = '';
     let clusterCheckboxActivated = '';
 
-    beforeEach(() => {
+    beforeEach(async () => {
         jasmine.clock().uninstall();
         mockUsersService();
-        mockEntitiesService();
+        await mockEntitiesService();
         mockSettingsService();
     });
 
@@ -62,9 +59,7 @@ describe('ActivityAreaView', () => {
         });
     }
 
-    function mockEntitiesService() {
-        entitiesServerMock = new EntitiesServerMock();
-        EntitiesService.setEntitiesServer(entitiesServerMock);
+    async function mockEntitiesService() {
         const entities: Entity[] = [
             new Entity(
                 'CLUSTERING_ENTITY',
@@ -119,9 +114,7 @@ describe('ActivityAreaView', () => {
                 null
             )
         ];
-        entitiesServerMock.setEntities(entities);
-        EntitiesService.loadAllEntitiesData().subscribe();
-        usersServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
+        await setEntities(entities);
     }
 
     function mockSettingsService() {
@@ -138,6 +131,7 @@ describe('ActivityAreaView', () => {
     async function mockUserConfig(userEntities: string[], userConnectedEntities: string[]) {
         user = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
         usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
+        usersServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
         const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userConnectedEntities);
         const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
         usersServerMock.setResponseForCurrentUserWithPerimeter(
@@ -151,7 +145,7 @@ describe('ActivityAreaView', () => {
     }
 
     it('GIVEN a user WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {
-        mockUserConfig(['ENTITY1'], []);
+        await mockUserConfig(['ENTITY1'], []);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters).toHaveSize(1);
@@ -160,7 +154,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN he is member of entity1 and entity2 THEN activityArea has 2 lines with entity1 and entity2', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], []);
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());

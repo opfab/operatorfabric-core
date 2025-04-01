@@ -30,7 +30,7 @@ describe('Card response service', () => {
     beforeEach(async () => {
         await initEnitiesService();
         await initProcessService();
-        initUser();
+        await initUser();
         CardTemplateGateway.init();
         CardTemplateGateway.initTemplateFunctions();
         NotificationDecision.init();
@@ -74,8 +74,8 @@ describe('Card response service', () => {
         await setProcessConfiguration([testProcess]);
     }
 
-    function initUser() {
-        setUserPerimeter(
+    async function initUser() {
+        await setUserPerimeter(
             new UserWithPerimeters(
                 new User('user1', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY1']),
                 [
