@@ -226,6 +226,11 @@
         ]
     };
 
+    function getDateTime(epoch) {
+        const date = new Date(epoch);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    }
+
     const customScreenExample3 = {
         id: 'testId3',
         name: 'testName',
@@ -234,10 +239,16 @@
         results: {
             columns: [
                 {
-                    field: 'TIME',
-                    headerName: 'PUBLISH DATE',
-                    cardField: 'publishDate',
-                    fieldType: 'DATE_AND_TIME'
+                    field: 'businessDate',
+                    headerName: 'BUSINESS DATE',
+                    fieldType: 'STRING',
+                    getValue: (card) => {
+                        let field = getDateTime(card.startDate);
+                        if (card.endDate) field += ' - ' + getDateTime(card.endDate);
+                        return field;
+                    },
+                    minWidth: 100,
+                    multiLinesInCell: true
                 },
                 {
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
@@ -247,6 +258,7 @@
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
+                    minWidth: 600,
                     flex: 1
                 },
                 {

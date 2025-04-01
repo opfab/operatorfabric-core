@@ -34,6 +34,7 @@ export class Column {
     possibleValues?: {value: string; label: string}[];
     minWidth?: number;
     showTooltips?: boolean;
+    multiLinesInCell?: boolean;
 }
 
 export class ResponseButton {

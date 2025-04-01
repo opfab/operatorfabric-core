@@ -436,9 +436,12 @@ For `STRING` field type if the method `getValue` is defined, the value of the fi
 
 For `HTML` field type, sorting has been deactivated because the HTML tags may falsify the order. Filtering is enabled but may also be impacted. The HTML tags need to be injected by the `getValue` method of the column.
 
-The `flex` field sets the CSS flex property for the column.
+=== Cell size
 
-It is possible to define the minimum width of the column by setting the `minWidth` field in the column definition. The `minWidth` is a number representing the width in pixels.
+To better control cell size, you can use the following fields in the column definition:
+- `flex`: Specifies the CSS flex property for the cell.
+- `minWidth`: Defines the minimum width of the column in pixels.
+- `multiLinesInCell`: Allows the cell to display multiple lines of text if set to `true`. The default value is `false`.
 
 === Tooltips
 
