@@ -363,6 +363,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             columnDefs: this.getColumnDefs(),
             paginationPageSize: this.pageSize,
             suppressHorizontalScroll: false,
+            suppressColumnVirtualisation: true, // This is necessary to avoid the input field to disappear when scrolling horizontally (see issue #8187)
             tooltipShowDelay: 1000,
             tooltipHideDelay: 2000,
             tooltipComponent: CustomTooltipComponent,
