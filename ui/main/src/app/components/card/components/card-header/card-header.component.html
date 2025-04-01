@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -39,7 +39,7 @@
         <span translate>response.answers</span> :
         <span
             *ngFor="let entity of entitiesForCardHeader; let isLast = last"
-            [ngStyle]="{color: entity.color, 'text-align': 'center'}"
+            [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')', 'text-align': 'center'}"
             [id]="'opfab-card-header-entity-' + entity.id">
             &nbsp; {{ entity.name }} &nbsp;
         </span>
@@ -57,7 +57,7 @@
                 <div *ngFor="let entity of answeredList">
                     <span
                         style="white-space: nowrap"
-                        [ngStyle]="{color: entity.color}"
+                        [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')'}"
                         [id]="'opfab-list-answered-entity-' + entity.id"
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
@@ -67,7 +67,7 @@
                 <div *ngFor="let entity of notAnsweredList">
                     <span
                         style="white-space: nowrap"
-                        [ngStyle]="{color: entity.color}"
+                        [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')'}"
                         [id]="'opfab-list-not-answered-entity-' + entity.id"
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
