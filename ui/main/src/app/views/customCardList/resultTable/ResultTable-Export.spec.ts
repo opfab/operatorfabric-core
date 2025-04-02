@@ -90,6 +90,33 @@ describe('CustomScreenView - ResultTable - Export', () => {
             {Process: 'processId2', State: 'state2'}
         ]);
     });
+    it('Should not contain responseFromMyEntities', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'Process',
+                    cardField: 'process',
+                    fieldType: FieldType.STRING
+                },
+                {
+                    field: 'testField2',
+                    fieldType: FieldType.RESPONSE_FROM_MY_ENTITIES
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date(),
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([{Process: 'processId1'}]);
+    });
     it('Should contain value for type of state', async () => {
         const myState = new State();
         myState.response = {state: 'state1'};
