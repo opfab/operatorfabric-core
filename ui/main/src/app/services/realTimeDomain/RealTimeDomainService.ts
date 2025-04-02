@@ -152,21 +152,6 @@ export class RealTimeDomainService {
     }
 
     private static setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false) {
-        if (RealTimeDomainService.currentDomainId === 'W') {
-            /*
-             * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
-             * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
-             * to a locale with monday as first day of week
-             */
-            const startOfWeekTime = startOfWeek(
-                add(new Date(startDomain), {days: 2}),
-                DateTimeFormatterService.getDateFnsLocaleOption()
-            ).getTime();
-            const endOfWeekTime = add(startOfWeekTime, {weeks: 1}).getTime();
-            startDomain = startOfWeekTime;
-            endDomain = endOfWeekTime;
-        }
-
         if (useOverlap) {
             RealTimeDomainService.overlap = RealTimeDomainService.OVERLAP_DURATION_IN_MS;
             startDomain = startDomain - RealTimeDomainService.overlap;

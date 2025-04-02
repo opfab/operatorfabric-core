@@ -737,11 +737,13 @@
         "daysOfWeek": ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"],
         "monthNames": ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
         "today": "Vandaag",
-        "yesterday": "Gisteren",
-        "last7Days": "Afgelopen 7 Dagen",
-        "last30Days": "Afgelopen 30 Dagen",
-        "thisMonth": "Deze Maand",
-        "lastMonth": "Vorige Maand"
+        "last7Days": "Afgelopen 7 dagen",
+        "thisWeek": "Deze week",
+        "lastWeek": "Vorige week",
+        "thisMonth": "Deze maand",
+        "lastMonth": "Vorige maand",
+        "thisYear": "Dit jaar",
+        "lastYear": "Vorig jaar"
     },
     "reloadRequired": {
         "message": "Applicatie herladen vereist. Om te herladen klik ",

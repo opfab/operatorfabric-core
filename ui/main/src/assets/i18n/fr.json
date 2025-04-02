@@ -738,11 +738,13 @@
         "daysOfWeek": ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"],
         "monthNames": ["Jan", "Fév", "Mar", "Avr", "Mai", "Jui", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"],
         "today": "Aujourd'hui",
-        "yesterday": "Hier",
         "last7Days": "7 derniers jours",
-        "last30Days": "30 derniers jours",
+        "thisWeek": "Cette semaine",
+        "lastWeek": "Semaine dernière",
         "thisMonth": "Ce mois-ci",
-        "lastMonth": "Le mois dernier"
+        "lastMonth": "Mois dernier",
+        "thisYear": "Cette année",
+        "lastYear": "Année dernière"
     },
     "reloadRequired": {
         "message": "Rechargement de l'application nécessaire. Pour recharger veuillez cliquer ",
