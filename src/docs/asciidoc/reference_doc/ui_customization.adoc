@@ -360,6 +360,9 @@ const customScreenExample = {
                 fieldType: 'RESPONSE_FROM_MY_ENTITIES'
             },
             {
+                fieldType: 'ACKNOWLEDGMENT'
+            },
+            {
                 field: 'testField',
                 headerName: 'TITLE',
                 cardField: 'titleTranslated',
@@ -421,6 +424,7 @@ For each field you want to display in the result table, define a column object. 
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
 - `RESPONSE_FROM_MY_ENTITIES`: Displays a blue arrow if one of the user's entity has responded to the card.
+- `ACKNOWLEDGMENT`: Displays a blue check if the card has been acknowledged.
 - `STATE_NAME`: Displays the name of the card's state.
 - `PROCESS_NAME`: Displays the name of the card's process.
 - `SEVERITY`: Displays the severity as a color rectangle.

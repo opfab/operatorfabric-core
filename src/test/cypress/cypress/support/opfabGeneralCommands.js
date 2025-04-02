@@ -121,6 +121,11 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('#opfab-navbar-menu-dropdown-testId2').click();
     };
 
+    navigateToCustomScreen3 = function () {
+        cy.get('#opfab-navbar-menu-label-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId3').click();
+    };
+
     navigateToRealTimeUsers = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();

@@ -69,6 +69,9 @@ export class TableRowBuilder {
                 case FieldType.RESPONSE_FROM_MY_ENTITIES:
                     data['responseFromMyEntities'] = card.hasChildCardFromCurrentUserEntity;
                     break;
+                case FieldType.ACKNOWLEDGMENT:
+                    data['hasBeenAcknowledged'] = card.hasBeenAcknowledged;
+                    break;
                 case FieldType.STATE_NAME:
                     data['stateName'] = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.name;
                     break;
