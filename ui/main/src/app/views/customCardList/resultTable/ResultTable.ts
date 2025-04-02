@@ -115,13 +115,15 @@ export class ResultTable {
         return this.results.map((line) => {
             const row = {};
             this.getColumnsDefinitionForAgGrid().forEach((column) => {
-                let cellValue = line[column.field];
-                if (column.type === 'responses') {
-                    cellValue = this.getResponseFieldForExport(cellValue);
-                } else if (cellValue?.text) {
-                    cellValue = cellValue.text;
+                if (column.type !== 'responseFromMyEntities') {
+                    let cellValue = line[column.field];
+                    if (column.type === 'responses') {
+                        cellValue = this.getResponseFieldForExport(cellValue);
+                    } else if (cellValue?.text) {
+                        cellValue = cellValue.text;
+                    }
+                    row[column.headerName] = cellValue;
                 }
-                row[column.headerName] = cellValue;
             });
             return row;
         });
