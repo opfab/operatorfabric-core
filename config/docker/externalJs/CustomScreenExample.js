@@ -254,6 +254,9 @@
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
                 },
                 {
+                    fieldType: 'ACKNOWLEDGMENT'
+                },
+                {
                     field: 'testField',
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',

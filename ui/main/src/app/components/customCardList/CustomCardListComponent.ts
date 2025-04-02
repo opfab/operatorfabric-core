@@ -42,6 +42,7 @@ import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererCompone
 import {FilterValues} from 'app/views/customCardList/FilterValues';
 import {CustomTooltipComponent} from './CustomToolTipComponent';
 import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
+import {AcknowledgmentCellRendererComponent} from './cellRenderers/AcknowledgmentCellRendererComponent';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -254,6 +255,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             components: {
                 responsesCellRenderer: ResponsesCellRendererComponent,
                 hasResponseCellRenderer: HasResponseCellRendererComponent,
+                acknowledgmentCellRenderer: AcknowledgmentCellRendererComponent,
                 inputCellRenderer: InputCellRendererComponent,
                 htmlCellRenderer: HTMLCellRendererComponent,
                 selectCellRenderer: SelectCellRendererComponent
@@ -348,6 +350,14 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     width: 15,
                     wrapText: false,
                     cellRenderer: 'hasResponseCellRenderer'
+                },
+                acknowledgment: {
+                    sortable: false,
+                    filter: false,
+                    resizable: false,
+                    width: 15,
+                    wrapText: false,
+                    cellRenderer: 'acknowledgmentCellRenderer'
                 },
                 input: {
                     cellRenderer: 'inputCellRenderer',

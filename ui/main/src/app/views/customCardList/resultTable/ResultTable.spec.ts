@@ -94,6 +94,9 @@ describe('CustomScreenView - ResultTable', () => {
                         fieldType: FieldType.RESPONSE_FROM_MY_ENTITIES
                     },
                     {
+                        fieldType: FieldType.ACKNOWLEDGMENT
+                    },
+                    {
                         field: 'stateName',
                         headerName: 'State Name',
                         fieldType: FieldType.STATE_NAME
@@ -126,6 +129,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1},
                 {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
                 {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
+                {field: 'hasBeenAcknowledged', headerName: '', type: 'acknowledgment'},
                 {field: 'stateName', headerName: 'State Name', type: 'stateName'},
                 {field: 'processName', headerName: 'Process Name', type: 'processName'},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
@@ -710,7 +714,7 @@ describe('CustomScreenView - ResultTable', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
-                        fieldType: 'RESPONSE_FROM_MY_ENTITIES'
+                        fieldType: FieldType.RESPONSE_FROM_MY_ENTITIES
                     }
                 ]
             });
@@ -736,6 +740,31 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     responseFromMyEntities: true
+                }
+            ]);
+        });
+        it('with acknowledgment set to true if card has been acknowledged', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        fieldType: FieldType.ACKNOWLEDGMENT
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    publisher: 'entity1',
+                    publisherType: 'ENTITY',
+                    hasBeenAcknowledged: true,
+                    entitiesAllowedToRespond: ['entity1']
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    hasBeenAcknowledged: true
                 }
             ]);
         });

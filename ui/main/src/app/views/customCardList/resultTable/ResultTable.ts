@@ -64,6 +64,11 @@ export class ResultTable {
                         col.headerName = '';
                         col.type = 'responseFromMyEntities';
                         break;
+                    case FieldType.ACKNOWLEDGMENT:
+                        col.field = 'hasBeenAcknowledged';
+                        col.headerName = '';
+                        col.type = 'acknowledgment';
+                        break;
                     case FieldType.STATE_NAME:
                         col.type = 'stateName';
                         break;

@@ -110,4 +110,38 @@ describe('Custom Card List Screen', function () {
             cy.get('#opfab-div-card-template-processed').should('contain.text', 'Constraints on the network');
         });
     });
+    describe('Custom screen 3', function () {
+        it(`Check acknowledgment`, function () {
+            opfab.loginWithUser('operator1_fr');
+            opfab.navigateToCustomScreen3();
+
+            cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
+            agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
+            cy.get('.ag-header-cell').should('be.visible').should('have.length', 8);
+            cy.get('#opfab-response-button-button1').should('exist').and('be.disabled');
+            cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
+            cy.get('#opfab-acknowledge-button').should('exist').and('be.disabled');
+
+            // Check no cards are acknowledged
+            cy.get('.ag-root-wrapper').find('.fa-check').should('not.exist');
+
+            //Select the card with possible answer
+            cy.get('.ag-row[row-id="3"]')
+                .should('exist')
+                .within(() => {
+                    cy.get('.ag-selection-checkbox').click();
+                });
+            cy.get('#opfab-response-button-button1').should('exist').and('not.be.disabled');
+            cy.get('#opfab-response-button-button2').should('exist').and('not.be.disabled');
+            cy.get('#opfab-acknowledge-button').should('exist').and('be.disabled');
+
+            // Select every card and acknowledge them
+            cy.get('.ag-header-select-all input[type="checkbox"]').click({multiple: true, force: true});
+            cy.get('#opfab-acknowledge-button').should('exist').and('not.be.disabled');
+            cy.get('#opfab-acknowledge-button').click();
+
+            // Check the number of acknowledged icons in the column
+            cy.get(`[col-id="hasBeenAcknowledged"] .fa-check`).should('have.length', 5);
+        });
+    });
 });
