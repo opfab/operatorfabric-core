@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {ScriptCommands} from "../support/scriptCommands";
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {CardCommands} from '../support/cardCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('Calendar screen tests', function () {
-    
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
-    
+    const card = new CardCommands();
+
     const SECONDS = 1000;
     const HOURS = 3600000;
 
@@ -64,7 +65,6 @@ describe('Calendar screen tests', function () {
         openAndCheckCardDataQuality();
     });
 
-
     function openAndCheckCardDataQuality() {
         cy.waitDefaultTime();
         // click the card
@@ -73,10 +73,7 @@ describe('Calendar screen tests', function () {
         // detail card is present, check content and then close the card
         cy.get('of-card-body').should('be.visible');
         cy.get('#opfab-card-title').should('have.text', 'Data quality'.toUpperCase());
-        cy.get('#opfab-div-card-template-processed')
-            .find('div')
-            .first()
-            .should('contain.text', 'Info on quality degradation of the main server');
+        card.checkContainsText('Info on quality degradation of the main server');
         cy.get('#opfab-close-card').click({force: true});
     }
 });

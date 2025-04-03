@@ -14,12 +14,26 @@ import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {ScriptCommands} from '../support/scriptCommands';
 import {AgGridCommands} from '../support/agGridCommands';
 import {FeedCommands} from '../support/feedCommands';
+import {CardCommands} from '../support/cardCommands';
 
 describe('Custom Card List Screen', function () {
     const feed = new FeedCommands();
     const script = new ScriptCommands();
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
+    const card = new CardCommands();
+
+    function charCountOnInputShouldBe(countString) {
+        cy.get('.char-count').should('contain.text', countString);
+    }
+
+    function numberOfRowsShouldBe(rowNumber) {
+        agGrid.countTableRows('#opfab-custom-screen-table-grid', rowNumber);
+    }
+
+    function numberOfColumsShouldBe(colNumber) {
+        cy.get('.ag-header-cell').should('have.length', colNumber);
+    }
 
     before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
@@ -34,26 +48,20 @@ describe('Custom Card List Screen', function () {
         it(`Check filters`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
-
-            cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
-
-            agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
-            cy.get('.ag-header-cell').should('be.visible').should('have.length', 11);
+            numberOfColumsShouldBe(11);
+            numberOfRowsShouldBe(6);
 
             // Filter on "External recipient" process
             cy.get('#opfab-process').click();
             cy.get('#opfab-process').contains('External recipient').should('exist');
             cy.get('#opfab-process').find('.vscomp-option-text').eq(1).click();
 
-            // Should have 0 card
-            agGrid.countTableRows('#opfab-custom-screen-table-grid', 0);
+            numberOfRowsShouldBe(0);
 
             // Reset displayed cards
-            cy.get('#opfab-monitoring-btn-reset').should('exist');
             cy.get('#opfab-monitoring-btn-reset').click();
 
-            // Should be back to 6 cards
-            agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
+            numberOfRowsShouldBe(6);
 
             // Filter on "CANCELED" process status
             cy.get('#opfab-type-of-state').click();
@@ -62,15 +70,12 @@ describe('Custom Card List Screen', function () {
             // Click again to remove the dropdown menu
             cy.get('#opfab-type-of-state').click();
 
-            // Should have 1 card
-            agGrid.countTableRows('#opfab-custom-screen-table-grid', 1);
+            numberOfRowsShouldBe(1);
         });
 
         it(`Check html cells`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
-
-            cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
 
             cy.get('.ag-row[row-id="4"]')
                 .should('exist')
@@ -85,9 +90,8 @@ describe('Custom Card List Screen', function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen2();
 
-            cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
-            agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
-            cy.get('.ag-header-cell').should('be.visible').should('have.length', 8);
+            numberOfColumsShouldBe(8);
+            numberOfRowsShouldBe(6);
             cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
 
             // Click the ag-selection-checkbox within the row and fill the answer
@@ -96,18 +100,19 @@ describe('Custom Card List Screen', function () {
                 .within(() => {
                     cy.get('.ag-selection-checkbox').click();
                     cy.get('.ag-cell[col-id="comment"]').click();
+                    charCountOnInputShouldBe('0/256');
                     cy.get('.ag-cell[col-id="comment"]').type('not available');
+                    charCountOnInputShouldBe('13/256');
                     cy.get('#opfab-customcardlist-select').select('Constraints on the network');
                 });
-
-            // Refuse proposal
             cy.get('#opfab-response-button-button2').click();
+            cy.get('#opfab-close-alert').click();
 
             // Check the answer appears in the card feed
             opfab.navigateToFeed();
             feed.openNthCard(2);
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'not available');
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Constraints on the network');
+            card.checkContainsText('not available');
+            card.checkContainsText('Constraints on the network');
         });
     });
     describe('Custom screen 3', function () {

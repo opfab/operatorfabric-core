@@ -23,6 +23,10 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-edit').should('not.exist');
     };
 
+    checkContainsText = function (text) {
+        cy.get('#opfab-div-card-template-processed').should('contain.text', text);
+    };
+
     checkCopyButtonDoesNotExist = function () {
         cy.get('#opfab-card-create-copy').should('not.exist');
     };

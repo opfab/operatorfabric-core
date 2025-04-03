@@ -7,14 +7,19 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div *ngIf="isInputFieldVisible" style="margin: 3px; align-items: center">
-    <input
-        [formControl]="cardInputControl"
-        (keydown)="onKeyDown($event)"
-        (click)="onClick($event)"
-        type="text"
-        class="opfab-input"
-        style="height: 35px; width: 80%"
-        size="30" />
+    <div class="input-container">
+        <input
+            type="text"
+            [formControl]="cardInputControl"
+            (keydown)="onKeyDown($event)"
+            (click)="onClick($event)"
+            (input)="onInput($event)"
+            [attr.maxlength]="maxLength > 0 ? maxLength : null"
+            type="text"
+            class="opfab-input"
+            style="height: 35px; width: 100%" />
+        <span *ngIf="maxLength>0" class="char-count"> {{ charCount }} </span>
+    </div>
 </div>
 
 <div *ngIf="!isInputFieldVisible" style="margin: 3px; align-items: center">{{ fieldValue }}</div>

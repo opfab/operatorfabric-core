@@ -16,6 +16,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 @Component({
     selector: 'of-input-cell-renderer',
     templateUrl: './InputCellRendererComponent.html',
+    styleUrls: ['./InputCellRendererComponent.scss'],
     standalone: true,
     imports: [NgIf, ReactiveFormsModule]
 })
@@ -23,11 +24,15 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
     public params: any;
     public isInputFieldVisible = false;
     public fieldValue = '';
+    public charCount = '';
+    public maxLength: number;
     cardInputControl: FormControl = new FormControl('');
 
     agInit(params: any): void {
         this.params = params;
-        this.fieldValue = params.getValue();
+        this.fieldValue = params.getValue() ?? '';
+        this.maxLength = params.colDef.customParams.maxInputLength;
+        this.charCount = `${this.fieldValue.length}/${this.maxLength}`;
         this.cardInputControl.setValue(this.fieldValue);
     }
 
@@ -46,6 +51,10 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
     }
     getInputValue() {
         return this.cardInputControl.value;
+    }
+
+    onInput(event: any) {
+        if (this.maxLength > 0) this.charCount = `${event.target.value.length}/${this.maxLength}`;
     }
 
     onKeyDown(event: KeyboardEvent) {

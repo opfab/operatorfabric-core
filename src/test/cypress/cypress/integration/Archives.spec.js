@@ -10,11 +10,13 @@
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {ArchivesAndLoggingCommands} from '../support/archivesAndLoggingCommands';
 import {ScriptCommands} from '../support/scriptCommands';
+import {CardCommands} from '../support/cardCommands';
 
 describe('Archives screen tests', function () {
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
 
     before('Set up configuration', function () {
         script.loadTestConf();
@@ -499,7 +501,7 @@ describe('Archives screen tests', function () {
 
     function openAndCheckArchiveCardContent(cellContent, cardText, entityRecipientsFooterText = '') {
         cy.get('#opfab-archives-cards-list').find('td').contains(cellContent.toUpperCase()).should('exist').click();
-        cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
+        card.checkContainsText(cardText);
 
         if (entityRecipientsFooterText !== '')
             cy.get('#opfab-card-detail-footer').contains(entityRecipientsFooterText).should('exist');

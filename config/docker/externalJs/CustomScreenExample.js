@@ -180,7 +180,9 @@
                     field: 'comment',
                     cardField: 'data.comment',
                     isFieldFromCurrentUserChildCard: true,
-                    headerName: 'COMMENT'
+                    headerName: 'COMMENT',
+                    minWidth: 256,
+                    maxInputLength: 256
                 }
             ]
         },
@@ -289,7 +291,9 @@
                     field: 'comment',
                     cardField: 'data.comment',
                     isFieldFromCurrentUserChildCard: true,
-                    headerName: 'COMMENT'
+                    headerName: 'COMMENT',
+                    minWidth: 100,
+                    maxInputLength: 100
                 }
             ]
         },

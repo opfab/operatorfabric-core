@@ -33,11 +33,13 @@ export class ResultTable {
                 const col = {
                     field: column.field,
                     headerName: column.headerName,
-                    type: 'default'
+                    type: 'default',
+                    customParams: {}
                 };
                 if (column.minWidth) col['minWidth'] = column.minWidth;
                 if (column.flex) col['flex'] = column.flex;
-                if (column.showTooltips) col['showTooltips'] = true;
+                if (column.showTooltips) col.customParams['showTooltips'] = true;
+                if (column.maxInputLength) col.customParams['maxInputLength'] = column.maxInputLength;
                 if (column.multiLinesInCell) {
                     col['autoHeight'] = true;
                     col['wrapText'] = true;
