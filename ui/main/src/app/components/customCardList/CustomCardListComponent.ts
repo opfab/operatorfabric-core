@@ -272,11 +272,25 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     wrapText: false
                 },
                 html: {
-                    sortable: false,
+                    sortable: true,
                     filter: true,
                     resizable: false,
                     wrapText: false,
-                    cellRenderer: 'htmlCellRenderer'
+                    cellRenderer: 'htmlCellRenderer',
+                    filterValueGetter: (params: any) => {
+                        return params.data[params.column.colId]?.rowValue ?? '';
+                    },
+                    comparator: (valueA: any, valueB: any) => {
+                        const rowValueA = valueA.rowValue ?? '';
+                        const rowValueB = valueB.rowValue ?? '';
+                        if (rowValueA < rowValueB) {
+                            return -1;
+                        }
+                        if (rowValueA > rowValueB) {
+                            return 1;
+                        }
+                        return 0;
+                    }
                 },
                 severity: {
                     sortable: false,

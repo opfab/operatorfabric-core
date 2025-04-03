@@ -36,6 +36,10 @@ export class CustomTooltipComponent implements ITooltipAngularComp {
     plainText = true;
     agInit(params): void {
         this.plainText = params.colDef.type !== 'html';
-        this.value = params.value;
+        if (this.plainText) {
+            this.value = params.value;
+        } else {
+            this.value = params.value.htmlValue;
+        }
     }
 }

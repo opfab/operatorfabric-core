@@ -31,6 +31,7 @@ export class Column {
     fieldType: FieldType;
     flex?: number;
     getValue?: (card: Card) => string;
+    getHTMLValue?: (card: Card) => string;
     possibleValues?: {value: string; label: string}[];
     minWidth?: number;
     showTooltips?: boolean;

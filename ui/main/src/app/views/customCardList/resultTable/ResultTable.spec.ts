@@ -487,14 +487,15 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([{cardId: 'id1', testField: 'processId1 - state1'}]);
         });
 
-        it('with getValue method if getValue is defined and fieldType is HTML', () => {
+        it('with getValueHTML method if fieldType is HTML', () => {
             const resultTable = getResultTable({
                 columns: [
                     {
                         field: 'testField',
                         headerName: 'Process',
                         fieldType: FieldType.HTML,
-                        getValue: (card: Card) => {
+                        cardField: 'process',
+                        getHTMLValue: (card: Card) => {
                             return '<i>' + card.process + '</i>';
                         }
                     }
@@ -509,7 +510,39 @@ describe('CustomScreenView - ResultTable', () => {
                 })
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'id1', testField: '<i>processId1</i>'}]);
+            expect(dataArray).toEqual([
+                {cardId: 'id1', testField: {rowValue: 'processId1', htmlValue: '<i>processId1</i>'}}
+            ]);
+        });
+        it('with get row value with getValue if exist and if fieldType is HTML', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'testField',
+                        headerName: 'Process',
+                        fieldType: FieldType.HTML,
+                        cardField: 'process',
+                        getHTMLValue: (card: Card) => {
+                            return '<i>' + card.process + '</i>';
+                        },
+                        getValue: (card: Card) => {
+                            return card.process + '-test';
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    process: 'processId1',
+                    startDate: new Date(),
+                    state: 'state1',
+                    id: 'id1'
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {cardId: 'id1', testField: {rowValue: 'processId1-test', htmlValue: '<i>processId1</i>'}}
+            ]);
         });
 
         it('with the color using custom method getValue() if field type is COLORED_CIRCLE', () => {

@@ -86,7 +86,7 @@ export class TableRowBuilder {
                     }
                     break;
                 case FieldType.HTML:
-                    data[column.field] = column.getValue(card);
+                    data[column.field] = this.getHTMLValue(card, column);
                     break;
 
                 default:
@@ -200,6 +200,17 @@ export class TableRowBuilder {
 
     private getColoredCircleValue(card: Card, field: string): string {
         return this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
+    }
+
+    private getHTMLValue(card: Card, column: Column): {rowValue: string; htmlValue: string} {
+        let htmlValue = '';
+        let rowValue = '';
+        if (column.getHTMLValue) htmlValue = column.getHTMLValue(card);
+        if (column.getValue) rowValue = column.getValue(card);
+        else {
+            rowValue = this.getNestedField(card, column.cardField);
+        }
+        return {rowValue, htmlValue};
     }
 
     private isAcknowlegmentPossibleForCard(card: Card): boolean {
