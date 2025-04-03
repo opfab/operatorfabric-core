@@ -24,7 +24,7 @@ export class HTMLCellRendererComponent implements ICellRendererAngularComp {
     public cellHTML: string;
 
     agInit(params: any): void {
-        this.cellHTML = params.value;
+        this.cellHTML = params.value.htmlValue;
     }
 
     // noinspection JSUnusedLocalSymbols

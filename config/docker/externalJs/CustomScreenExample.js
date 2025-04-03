@@ -92,7 +92,7 @@
                     field: 'keywords',
                     headerName: 'keywords field',
                     cardField: 'data.keywords',
-                    getValue: (card) => {
+                    getHTMLValue: (card) => {
                         if (card.data?.keywords) {
                             return '<i>' + opfab.utils.escapeHtml(card.data.keywords) + '</i>';
                         }

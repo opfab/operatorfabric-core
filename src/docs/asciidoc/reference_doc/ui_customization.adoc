@@ -438,8 +438,19 @@ You can define the column header text using the `headerName` field.
 
 For `STRING` field type if the method `getValue` is defined, the value of the field will be the result of this method instead of the value of the cardField.
 
-For `HTML` field type, sorting has been deactivated because the HTML tags may falsify the order. Filtering is enabled but may also be impacted. The HTML tags need to be injected by the `getValue` method of the column.
+For `HTML` field type, the HTML tags need to be injected by the `getHTMLValue` method of the column. The value for sorting and filtering the column will be the content of the field `cardField` or the result of the `getValue` method if defined. For example:
 
+```
+{
+    field: 'testField',
+    headerName: 'TITLE',
+    cardField: 'titleTranslated',
+    fieldType: 'HTML',
+    getHTMLValue: (card) => {
+        return `<span style="color:red">${card.titleTranslated}</span>`;
+    }
+}
+```
 === Cell size
 
 To better control cell size, you can use the following fields in the column definition:
