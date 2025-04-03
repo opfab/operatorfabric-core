@@ -177,6 +177,7 @@ a|authentication mode, available options:
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : dd/MM/yyyy )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm dd/MM/yyyy )
 |settings.locale|en|no|Default user locale (use en if not set)
+|settings.weekStartsOn|1|no|Default days defined as start of the week. Monday (1) is default, Saturday is 6 and Sunday is 0.
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed

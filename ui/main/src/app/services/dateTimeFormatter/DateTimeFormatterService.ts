@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ export class DateTimeFormatterService {
         DateTimeFormatterService.timeFormat = ConfigService.getConfigValue('settings.timeFormat', 'p');
         DateTimeFormatterService.defaultDateFormat = ConfigService.getConfigValue('settings.dateFormat', 'P');
         DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat');
-        DateTimeFormatterService.destroy$.next(); // unsubscribe from previous subscription , only useful for unit tests as they call init more than one time
+        DateTimeFormatterService.destroy$.next(); // unsubscribe from previous subscription, only useful for unit tests as they're called in it more than one time
         ConfigService.getConfigValueAsObservable('settings.locale', 'en')
             .pipe(takeUntil(DateTimeFormatterService.destroy$))
             .subscribe((locale) => DateTimeFormatterService.setDateFnsLocaleOption(locale));
@@ -31,15 +31,16 @@ export class DateTimeFormatterService {
 
     private static setDateFnsLocaleOption(locale) {
         let fnsLocale;
+        const weekStartsOn = ConfigService.getConfigValue('settings.weekStartsOn', '1');
         switch (locale) {
             case 'fr':
-                fnsLocale = fr;
+                fnsLocale = {...fr, options: {...fr.options, weekStartsOn: weekStartsOn}};
                 break;
             case 'nl':
-                fnsLocale = nl;
+                fnsLocale = {...nl, options: {...nl.options, weekStartsOn: weekStartsOn}};
                 break;
             default:
-                fnsLocale = {...enUS, options: {...enUS.options, weekStartsOn: 6}};
+                fnsLocale = {...enUS, options: {...enUS.options, weekStartsOn: weekStartsOn}};
                 break;
         }
         DateTimeFormatterService.dateFnsLocaleOption = {locale: fnsLocale};

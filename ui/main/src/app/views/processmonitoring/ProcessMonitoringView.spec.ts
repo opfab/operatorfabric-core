@@ -21,7 +21,7 @@ import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
-import {ConfigService} from 'app/services/config/ConfigService';
+import {loadWebUIConf} from '@tests/helpers';
 
 describe('Process Monitoring view ', () => {
     let processesServerMock: ProcessesServerMock;
@@ -437,8 +437,8 @@ describe('Process Monitoring view ', () => {
         beforeEach(() => {
             TranslationService.setTranslationLib(new TranslationLibMock());
             TranslationService.initLocale();
+            loadWebUIConf({settings: {locale: 'en', weekStartsOn: 6}});
             DateTimeFormatterService.init();
-            ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();
         });
 
@@ -471,8 +471,8 @@ describe('Process Monitoring view ', () => {
         beforeEach(() => {
             TranslationService.setTranslationLib(new TranslationLibMock());
             TranslationService.initLocale();
+            loadWebUIConf({settings: {locale: 'en', weekStartsOn: 6}});
             DateTimeFormatterService.init();
-            ConfigService.setConfigValue('settings.locale', 'en');
             jasmine.clock().install();
         });
 

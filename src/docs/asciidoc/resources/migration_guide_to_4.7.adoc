@@ -49,3 +49,15 @@ Note that the `responseState` field has been renamed to `state`.
 
 The old structure will be supported as a fallback for a limited time, it is recommended to update your code to use the new structure.
 `
+
+== web-ui Config
+
+A new setting has been added to set on which day a week starts. The parameter `settings.weekStartsOn` is 1 by default, implying Monday is the first day. The day mapping is as follows :
+
+0 - Sunday
+1 - Monday
+2 - Tuesday
+3 - Wednesday
+4 - Thursday
+5 - Friday
+6 - Saturday

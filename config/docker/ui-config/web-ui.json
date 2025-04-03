@@ -124,6 +124,7 @@
   },
   "settings": {
     "locale": "en",
+    "weekStartsOn": 1,
     "dateTimeFormat": "HH:mm dd/MM/yyyy",
     "dateFormat": "dd/MM/yyyy",
     "styleWhenNightDayModeDesactivated": "NIGHT",
