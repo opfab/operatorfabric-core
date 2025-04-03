@@ -13,11 +13,13 @@ it might make sense to merge it with other tests.
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {FeedCommands} from '../support/feedCommands';
 import {ScriptCommands} from '../support/scriptCommands';
+import {CardCommands} from '../support/cardCommands';
 
 describe('Card detail', function () {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
 
     before('Set up configuration', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
@@ -253,9 +255,7 @@ describe('Card detail', function () {
             cy.get('#showCardLink').click();
 
             cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
-            cy.get('#opfab-div-card-template-processed').contains(
-                'Hello operator1_fr, you received the following message'
-            );
+            card.checkContainsText('Hello operator1_fr, you received the following message');
         });
 
         it(`Check show alert message links`, function () {

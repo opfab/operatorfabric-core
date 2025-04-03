@@ -35,6 +35,7 @@ export class Column {
     minWidth?: number;
     showTooltips?: boolean;
     multiLinesInCell?: boolean;
+    maxInputLength?: number;
 }
 
 export class ResponseButton {

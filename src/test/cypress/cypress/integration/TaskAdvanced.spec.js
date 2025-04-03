@@ -11,12 +11,14 @@ import {UserCardCommands} from '../support/userCardCommands';
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {FeedCommands} from '../support/feedCommands';
 import {ScriptCommands} from '../support/scriptCommands';
+import {CardCommands} from '../support/cardCommands';
 
 describe('Task Advanced', function () {
     const usercard = new UserCardCommands();
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
 
     before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
@@ -104,16 +106,10 @@ describe('Task Advanced', function () {
             feed.openFirstCard();
             feed.checkSelectedCardHasTitle('Task Advanced - Task title');
             feed.checkSelectedCardHasSummary('There is something to do');
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Test task for daily frequency');
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Duration: 20 minutes');
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                'At 20:00\n        \n        on Monday Wednesday Friday'
-            );
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                'in February May August November December'
-            );
+            card.checkContainsText('Test task for daily frequency');
+            card.checkContainsText('Duration: 20 minutes');
+            card.checkContainsText('At 20:00\n        \n        on Monday Wednesday Friday');
+            card.checkContainsText('in February May August November December');
 
             // We check all fields are correctly filled
             feed.editCurrentCard();
@@ -176,17 +172,11 @@ describe('Task Advanced', function () {
             feed.openFirstCard();
             feed.checkSelectedCardHasTitle('Task Advanced - Task title');
             feed.checkSelectedCardHasSummary('There is something to do');
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                'Test task for monthly frequency (Nth day)'
-            );
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Duration: 5 minutes');
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'At 21:00');
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                'The first day of the month, The last day of the month, The 15th day of the month'
-            );
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'in July August November December');
+            card.checkContainsText('Test task for monthly frequency (Nth day)');
+            card.checkContainsText('Duration: 5 minutes');
+            card.checkContainsText('At 21:00');
+            card.checkContainsText('The first day of the month, The last day of the month, The 15th day of the month');
+            card.checkContainsText('in July August November December');
 
             // We check all fields are correctly filled
             feed.editCurrentCard();
@@ -249,16 +239,11 @@ describe('Task Advanced', function () {
             feed.openFirstCard();
             feed.checkSelectedCardHasTitle('Task Advanced - Task title');
             feed.checkSelectedCardHasSummary('There is something to do');
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                'Test task for monthly frequency (Nth weekday)'
-            );
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'Duration: 7 minutes');
-            cy.get('#opfab-div-card-template-processed').should(
-                'contain.text',
-                '19:00\n        \n        The first  Wednesday'
-            );
-            cy.get('#opfab-div-card-template-processed').should('contain.text', 'in September December');
+            card.checkContainsText('Test task for monthly frequency (Nth weekday)');
+            card.checkContainsText('Duration: 7 minutes');
+            card.checkContainsText('At 19:00');
+            card.checkContainsText('19:00\n        \n        The first  Wednesday');
+            card.checkContainsText('in September December');
 
             // We check all fields are correctly filled
             feed.editCurrentCard();

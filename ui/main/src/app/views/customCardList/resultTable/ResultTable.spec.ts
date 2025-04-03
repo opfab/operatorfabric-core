@@ -124,17 +124,17 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'testField', headerName: 'Process', type: 'default', flex: 2},
-                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1},
-                {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1},
-                {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2},
-                {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities'},
-                {field: 'hasBeenAcknowledged', headerName: '', type: 'acknowledgment'},
-                {field: 'stateName', headerName: 'State Name', type: 'stateName'},
-                {field: 'processName', headerName: 'Process Name', type: 'processName'},
-                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle'},
-                {field: 'comment', headerName: 'Comment', type: 'input'},
-                {field: 'select', headerName: 'Select', type: 'select'}
+                {field: 'testField', headerName: 'Process', type: 'default', flex: 2, customParams: {}},
+                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1, customParams: {}},
+                {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1, customParams: {}},
+                {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2, customParams: {}},
+                {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities', customParams: {}},
+                {field: 'hasBeenAcknowledged', headerName: '', type: 'acknowledgment', customParams: {}},
+                {field: 'stateName', headerName: 'State Name', type: 'stateName', customParams: {}},
+                {field: 'processName', headerName: 'Process Name', type: 'processName', customParams: {}},
+                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', customParams: {}},
+                {field: 'comment', headerName: 'Comment', type: 'input', customParams: {}},
+                {field: 'select', headerName: 'Select', type: 'select', customParams: {}}
             ]);
         });
 
@@ -150,7 +150,7 @@ describe('CustomScreenView - ResultTable', () => {
             });
 
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'severity', headerName: '', type: 'severity'}
+                {field: 'severity', headerName: '', type: 'severity', customParams: {}}
             ]);
         });
         it('specific columDefinition with type_of_state', () => {
@@ -163,7 +163,7 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState'}
+                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', customParams: {}}
             ]);
         });
         it('specific columDefinition with showTooltips', () => {
@@ -178,7 +178,7 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'test', headerName: 'Status', type: 'default', showTooltips: true}
+                {field: 'test', headerName: 'Status', type: 'default', customParams: {showTooltips: true}}
             ]);
         });
         it('specify minWidth if defined in column definition', () => {
@@ -199,8 +199,8 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'testField', headerName: 'Process', type: 'default', minWidth: 200},
-                {field: 'testField2', headerName: 'test2', type: 'default'}
+                {field: 'testField', headerName: 'Process', type: 'default', customParams: {}, minWidth: 200},
+                {field: 'testField2', headerName: 'test2', type: 'default', customParams: {}}
             ]);
         });
         it('specific columDefinition with autoHeight and wrapText when mutliLineText is true', () => {
@@ -214,7 +214,33 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
             expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', autoHeight: true, wrapText: true}
+                {
+                    field: 'typeOfState',
+                    headerName: 'Status',
+                    type: 'typeOfState',
+                    autoHeight: true,
+                    wrapText: true,
+                    customParams: {}
+                }
+            ]);
+        });
+        it('specific columDefinition with maxInputLenght custom params when maxInputLenght is set', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        headerName: 'Status',
+                        fieldType: FieldType.TYPE_OF_STATE,
+                        maxInputLength: 200
+                    }
+                ]
+            });
+            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+                {
+                    field: 'typeOfState',
+                    headerName: 'Status',
+                    type: 'typeOfState',
+                    customParams: {maxInputLength: 200}
+                }
             ]);
         });
     });

@@ -394,13 +394,12 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private getColumnDefs() {
         return this.customCardListView.getColumnsDefinitionForAgGrid().map((columnDef) => {
-            if (columnDef.showTooltips) {
+            if (columnDef.customParams.showTooltips) {
                 columnDef.tooltipComponent = CustomTooltipComponent;
                 columnDef.tooltipValueGetter = (params: ITooltipParams) => {
                     return params.value;
                 };
             }
-            columnDef.showTooltips = undefined; //avoid collusion with potential ag-grid column definition attribute
             return columnDef;
         });
     }
