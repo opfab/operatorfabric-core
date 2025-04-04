@@ -12,10 +12,18 @@ import {Utilities} from '../../utils/Utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
-import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './DashboardPage';
+import {
+    DashboardPage,
+    ProcessContent,
+    StateContent,
+    CardForDashboard,
+    DashboardCircle,
+    CustomScreenLink
+} from './DashboardPage';
 import {FilteredLightCardsStore} from '../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../store/OpfabStore';
 import {format} from 'date-fns';
+import {ConfigService} from '@ofServices/config/ConfigService';
 
 export class Dashboard {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -23,8 +31,10 @@ export class Dashboard {
     public noSeverityColor = '#717274';
     private readonly ngUnsubscribe$ = new Subject<void>();
     private readonly filteredLightCardStore: FilteredLightCardsStore;
+    private readonly processesCustomScreenLinks: any;
 
     constructor() {
+        this.processesCustomScreenLinks = ConfigService.getConfigValue('dashboard.processCustomLinks', []);
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.loadProcesses();
         this.processLightCards();
@@ -60,10 +70,27 @@ export class Dashboard {
             processContent.name = process.name;
             statesContent.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
             processContent.states = statesContent;
+            this.addCustomScreenLinks(processContent);
 
             if (processContent.states.length > 0) this.dashboardPage.processes.push(processContent);
         });
         this.dashboardPage.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
+    }
+
+    private addCustomScreenLinks(processContent: ProcessContent) {
+        this.processesCustomScreenLinks.forEach((processCustomScreenLinks) => {
+            if (processCustomScreenLinks.processId === processContent.id) {
+                processCustomScreenLinks.customLinks?.forEach((processCustomScreenLink) => {
+                    const customScreenLink = new CustomScreenLink();
+                    customScreenLink.label = processCustomScreenLink.label;
+                    customScreenLink.customScreenId = processCustomScreenLink.customScreenId;
+                    if (!processContent.customScreenLinks) {
+                        processContent.customScreenLinks = [];
+                    }
+                    processContent.customScreenLinks.push(customScreenLink);
+                });
+            }
+        });
     }
 
     private processLightCards() {

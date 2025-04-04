@@ -13,7 +13,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/Use
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {getOneLightCard, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {getOneLightCard, loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from 'app/model/Severity';
 import {Utilities} from '../../utils/Utilities';
@@ -103,6 +103,45 @@ describe('Dashboard', () => {
         expect(result.processes[1].id).toEqual('process2');
         expect(result.processes[1].name).toEqual('process name 2');
         expect(result.processes[1].states.length).toEqual(2);
+    });
+
+    it('GIVEN a process with custom screen links in config WHEN get dashboard THEN dashboard contains links', async () => {
+        await loadWebUIConf({
+            dashboard: {
+                processCustomLinks: [
+                    {
+                        processId: 'process1',
+                        customLinks: [
+                            {
+                                customScreenId: 'testId',
+                                label: 'My link'
+                            },
+                            {
+                                customScreenId: 'testId2',
+                                label: 'My Link 2'
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        await initProcesses();
+
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboard = new Dashboard();
+
+        const result = await firstValueFrom(dashboard.getDashboardPage());
+        expect(result.processes[0].id).toEqual('process1');
+        expect(result.processes[0].name).toEqual('process name');
+        expect(result.processes[0].customScreenLinks[0].label).toEqual('My link');
+        expect(result.processes[0].customScreenLinks[0].customScreenId).toEqual('testId');
+        expect(result.processes[0].customScreenLinks[1].label).toEqual('My Link 2');
+        expect(result.processes[0].customScreenLinks[1].customScreenId).toEqual('testId2');
     });
 
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
