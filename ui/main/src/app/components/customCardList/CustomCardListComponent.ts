@@ -18,6 +18,7 @@ import {CardComponent} from 'app/components/card/card.component';
 import {AgGridAngular} from 'ag-grid-angular';
 import {
     AllCommunityModule,
+    CellClickedEvent,
     ITooltipParams,
     ModuleRegistry,
     provideGlobalGridOptions,
@@ -477,6 +478,11 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     selectCard(event: any) {
+        if (this.isCheckboxColumnClicked(event)) {
+            const node = event.node;
+            node.setSelected(!node.isSelected());
+            return;
+        }
         SelectedCardService.setSelectedCardId(event.data.cardId);
         const options: NgbModalOptions = {
             size: 'fullscreen'
@@ -488,6 +494,11 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.modalRef.dismissed.subscribe(() => {
             SelectedCardService.clearSelectedCardId();
         });
+    }
+
+    // Allows row selection by clicking the cell and not just the generated ag-checkbox
+    private isCheckboxColumnClicked(event: CellClickedEvent): boolean {
+        return event.column.getColId() === 'ag-Grid-SelectionColumn';
     }
 
     clickOnResponseButton(buttonId: string) {
