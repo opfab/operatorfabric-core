@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,11 +10,10 @@
 
  .opfab-dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 300px));
-    margin-left: 15px;
-    margin-right: 15px;
-    padding: 10px 10%;
-    margin-top: 20px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 400px));
+    padding: 40px 3%;
+    justify-content: center;
 }
 
 
@@ -23,15 +22,13 @@
     border-radius: 2px;
     margin-right: 4px;
     align-content: center;
-    padding: 2px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding: 8px;
 }
 
 .opfab-dashboard-process {
-    border-radius: 2px;
-    margin-left: 4px;
-    margin-right: 4px;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-bottom: 20px;
     padding: 2px;
 }

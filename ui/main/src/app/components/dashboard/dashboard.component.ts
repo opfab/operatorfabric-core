@@ -119,4 +119,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
             NavigationService.navigateToFeedWithProcessStateFilter(processId, stateId);
         }
     }
+
+    onCustomScreenLinkClick(customScreenId: string) {
+        if (customScreenId) {
+            NavigationService.navigateTo('customscreen/' + customScreenId);
+        }
+    }
 }

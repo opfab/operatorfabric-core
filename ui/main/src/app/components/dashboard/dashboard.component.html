@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023-2024, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2023-2025, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -18,13 +18,16 @@
         shared.noProcessStateAvailable
     </div>
 </ng-template>
-
 <div class="opfab-dashboard" *ngIf="dashboardPage.processes.length > 0; else noProcessStateToDisplay">
-    <div class="opfab-dashboardGrid" *ngFor="let process of dashboardPage.processes">
+    <div *ngFor="let process of dashboardPage.processes">
         <div class="opfab-dashboard-process">
-            <span [ngClass]="{'opfab-feed-link': !hideProcessFilter}" (click)="onProcessClick(process.id)"
-                ><b style="font-size: 16px">{{ process.name }}</b></span
-            >
+            <div
+                style="margin-bottom: 10px"
+                [ngClass]="{'opfab-feed-link': !hideProcessFilter}"
+                (click)="onProcessClick(process.id)">
+                <b style="font-size: 16px">{{ process.name }}</b>
+            </div>
+
             <div class="opfab-dashboard-cell" *ngFor="let state of process.states">
                 <span *ngFor="let circle of state.circles; let index = index">
                     <svg
@@ -90,10 +93,16 @@
                 >
                 <br />
             </div>
+            <div
+                class="opfab-dashboard-cell"
+                *ngFor="let links of process.customScreenLinks"
+                (click)="onCustomScreenLinkClick(links.customScreenId)">
+                <em class="fas fa-external-link-alt" style="font-size: 1.5em"></em>
+                {{ links.label }}
+            </div>
         </div>
     </div>
 </div>
-
 <ng-template #tooltipTemplate>
     <div
         (mouseenter)="onMouseEnter()"

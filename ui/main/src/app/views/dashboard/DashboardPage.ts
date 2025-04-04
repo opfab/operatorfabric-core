@@ -25,6 +25,7 @@ export class ProcessContent {
     id: string;
     name: string;
     states: StateContent[];
+    customScreenLinks?: CustomScreenLink[];
 }
 
 export class DashboardPage {
@@ -37,4 +38,9 @@ export class DashboardCircle {
     severity: Severity;
     numberOfCards: number;
     cards: CardForDashboard[];
+}
+
+export class CustomScreenLink {
+    label: string;
+    customScreenId: string;
 }
