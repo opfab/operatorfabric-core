@@ -147,6 +147,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     gridApi: any;
     rowData = [];
     rowSelection: RowSelectionOptions;
+    agGridHeight = 'calc(100vh - 380px)';
 
     // Card detail modal configuration
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
@@ -389,6 +390,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             columnDefs: this.getColumnDefs(),
             paginationPageSize: this.pageSize,
             suppressHorizontalScroll: false,
+            domLayout: 'normal',
             suppressColumnVirtualisation: true, // This is necessary to avoid the input field to disappear when scrolling horizontally (see issue #8187)
             tooltipShowDelay: 1000,
             tooltipHideDelay: 2000,
@@ -430,6 +432,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     onGridReady(params: any) {
         this.gridApi = params.api;
 
+        setTimeout(() => this.setAgGridHeight(), 0);
+
         this.gridApi.addEventListener('selectionChanged', () => {
             const userHasSelectedRows = this.gridApi.getSelectedRows().length > 0;
 
@@ -457,6 +461,33 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             .subscribe((results) => {
                 this.rowData = results;
             });
+    }
+
+    onGridContentChanged(): void {
+        if (this.gridApi) this.setAgGridHeight();
+    }
+
+    setAgGridHeight() {
+        let rowsHeight = 0;
+        const paginationPageSize = this.gridApi.paginationGetPageSize();
+        const currentPage = this.gridApi.paginationGetCurrentPage();
+        const lowerBound = currentPage * paginationPageSize;
+        const upperBound = lowerBound + paginationPageSize;
+        this.gridApi.forEachNodeAfterFilterAndSort((node: any) => {
+            // get the real heights of each visible rows
+            // taking into account the pagination
+            if (node.rowIndex !== null && node.rowIndex >= lowerBound && node.rowIndex < upperBound) {
+                // Ignore sonar issue : "This assertion is unnecessary since it does not change the type of the expression."
+                // it is necessary to cast to any to avoid typescript error when getting field offsetHeight
+                const rowElement = <any>document.querySelector(`[row-id="${node.id}"]`); //NOSONAR
+                if (rowElement) {
+                    rowsHeight += rowElement.offsetHeight; // Use the actual height of the row
+                }
+            }
+        });
+        const headerHeight = this.gridOptions.headerHeight || 50; // Default header height
+        const gridHeight = rowsHeight + headerHeight;
+        this.agGridHeight = `calc(min(100vh - 380px,${gridHeight}px))`;
     }
 
     stopListeningToResults() {
@@ -580,6 +611,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         const value = +(<HTMLSelectElement>target).value;
         this.gridApi.setGridOption('paginationPageSize', value);
         this.pageSize = value;
+        this.setAgGridHeight();
     }
 
     private getInputColumnIds(): string[] {

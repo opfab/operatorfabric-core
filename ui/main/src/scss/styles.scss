@@ -412,6 +412,10 @@ ngb-pagination {
         }
     }
 
+    .ag-body {
+      background-color: var(--opfab-bgcolor-darker);
+    }
+
     // This is a workaround to avoid duplicated bottom border after page change
     .ag-sticky-bottom {
         display: none;
