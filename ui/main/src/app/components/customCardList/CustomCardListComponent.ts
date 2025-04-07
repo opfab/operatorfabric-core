@@ -491,7 +491,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             }
         });
         const headerHeight = this.gridOptions.headerHeight || 50; // Default header height
-        const gridHeight = rowsHeight + headerHeight;
+        const gridHeight = rowsHeight + headerHeight + 20; // need to add 20px for horizontal scroll bar
         this.agGridHeight = `calc(min(100vh - 380px,${gridHeight}px))`;
     }
 
