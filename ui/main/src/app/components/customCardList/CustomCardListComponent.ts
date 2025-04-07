@@ -44,6 +44,7 @@ import {FilterValues} from 'app/views/customCardList/FilterValues';
 import {CustomTooltipComponent} from './CustomToolTipComponent';
 import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
 import {AcknowledgmentCellRendererComponent} from './cellRenderers/AcknowledgmentCellRendererComponent';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -184,6 +185,9 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
         this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
         this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
+
+        const savedPageSize = UserPreferencesService.getPreference('opfab.customScreens.page.size');
+        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
         this.listenForLoadingInProcess();
         this.setFiltersVisibility();
         this.setInitialBusinessPeriod();
@@ -623,6 +627,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.gridApi.setGridOption('paginationPageSize', value);
         this.pageSize = value;
         this.setAgGridHeight();
+        UserPreferencesService.setPreference('opfab.customScreens.page.size', this.pageSize);
     }
 
     private getInputColumnIds(): string[] {
