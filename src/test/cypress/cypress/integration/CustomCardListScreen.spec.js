@@ -77,7 +77,7 @@ describe('Custom Card List Screen', function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
-            cy.get('.ag-row[row-id="4"]')
+            cy.get('.ag-row[row-id="1"]')
                 .should('exist')
                 .within(() => {
                     // Check that 'chart line' is contained inside <i> </i>
@@ -95,7 +95,7 @@ describe('Custom Card List Screen', function () {
             cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
 
             // Click the ag-selection-checkbox within the row and fill the answer
-            cy.get('.ag-row[row-id="3"]')
+            cy.get('.ag-row[row-id="2"]')
                 .should('exist')
                 .within(() => {
                     cy.get('.ag-selection-checkbox').click();
@@ -131,7 +131,7 @@ describe('Custom Card List Screen', function () {
             cy.get('.ag-root-wrapper').find('.fa-check').should('not.exist');
 
             //Select the card with possible answer
-            cy.get('.ag-row[row-id="3"]')
+            cy.get('.ag-row[row-id="2"]')
                 .should('exist')
                 .within(() => {
                     cy.get('.ag-selection-checkbox').click();

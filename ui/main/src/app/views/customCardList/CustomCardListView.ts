@@ -66,9 +66,11 @@ export class CustomCardListView {
         return combineLatest([OpfabStore.getLightCardStore().getLightCards(), this.filter$]).pipe(
             takeUntil(this.unsubscribe$),
             map((result) => {
+                const cards = result[0];
+                const sortedCards = [...cards].sort((a, b) => b.publishDate - a.publishDate);
                 const startTimer = Date.now();
                 this.results = this.resultTable.getDataArrayFromCards(
-                    result[0],
+                    sortedCards,
                     OpfabStore.getLightCardStore().getAllChildCards()
                 );
                 const endTimer = Date.now();

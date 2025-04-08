@@ -86,6 +86,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
                     process: 'processId0',
                     state: 'state1.0',
                     startDate: 5,
+                    publishDate: 5,
                     hasBeenRead: false,
                     hasBeenAcknowledged: false,
                     id: 'id0'
@@ -93,6 +94,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
                 getOneLightCard({
                     process: 'processId0',
                     state: 'state1.1',
+                    publishDate: 100,
                     startDate: 100,
                     hasBeenRead: true,
                     hasBeenAcknowledged: false,
