@@ -627,6 +627,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.gridApi.setGridOption('paginationPageSize', value);
         this.pageSize = value;
         this.setAgGridHeight();
+        this.gridApi.deselectAll();
         UserPreferencesService.setPreference('opfab.customScreens.page.size', this.pageSize);
     }
 
