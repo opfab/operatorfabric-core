@@ -17,7 +17,7 @@ export class NearestDomainId {
     public setDomainList(domainList: Array<string>): void {
         this.domainOrderedList = [
             {id: 'RT', threshold: NearestDomainId.MS_PER_HOUR * 12},
-            {id: 'D', threshold: NearestDomainId.MS_PER_HOUR * 36},
+            {id: 'J', threshold: NearestDomainId.MS_PER_HOUR * 36},
             {id: '7D', threshold: NearestDomainId.MS_PER_DAY * 10},
             {id: 'W', threshold: NearestDomainId.MS_PER_DAY * 10},
             {id: 'M', threshold: NearestDomainId.MS_PER_MONTH * 3},
@@ -28,7 +28,9 @@ export class NearestDomainId {
     public getNearestDomainId(startDate: number, endDate: number): string {
         const period = endDate - startDate;
         for (const domain of this.domainOrderedList) {
-            if (period <= domain.threshold) return domain.id;
+            if (period <= domain.threshold) {
+                return domain.id;
+            }
         }
 
         return this.domainOrderedList[this.domainOrderedList.length - 1].id;

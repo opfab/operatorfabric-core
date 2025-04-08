@@ -27,15 +27,15 @@ describe('NearestDomainId', () => {
     });
 
     it('should return RT if period is less than 12 hours and RT exists', () => {
-        nearestDomainId.setDomainList(['D', 'RT']);
+        nearestDomainId.setDomainList(['J', 'RT']);
         const endDate = startDate + twelveHoursInMillis - 1;
         expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('RT');
     });
 
-    it('should return D if period is less than 12 hours and RT does not exist', () => {
-        nearestDomainId.setDomainList(['D']);
+    it('should return J if period is less than 12 hours and RT does not exist', () => {
+        nearestDomainId.setDomainList(['J']);
         const endDate = startDate + twelveHoursInMillis - 1;
-        expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('D');
+        expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('J');
     });
 
     it('should return 7D if period is less than 12 hours and RT, J do not exist but 7D exists', () => {
@@ -50,10 +50,10 @@ describe('NearestDomainId', () => {
         expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('W');
     });
 
-    it('should return D if period is greater than 12 hours', () => {
-        nearestDomainId.setDomainList(['D', 'RT']);
+    it('should return J if period is greater than 12 hours', () => {
+        nearestDomainId.setDomainList(['J', 'RT']);
         const endDate = startDate + twelveHoursInMillis + 1;
-        expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('D');
+        expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('J');
     });
 
     it('should return Y if period is greater than 3 months and Y domain exists', () => {
@@ -69,7 +69,7 @@ describe('NearestDomainId', () => {
     });
 
     it('should return 7D if period is greater than 1.5 days and 7D exists', () => {
-        nearestDomainId.setDomainList(['RT', 'D', '7D', 'W']);
+        nearestDomainId.setDomainList(['RT', 'J', '7D', 'W']);
         const endDate = startDate + oneAndHalfDaysInMillis + 1;
         expect(nearestDomainId.getNearestDomainId(startDate, endDate)).toEqual('7D');
     });
