@@ -129,7 +129,7 @@
             margin-left: 5%;
             margin-right: 5%;
         ">
-        <div [style]="'height:' + agGridHeight">
+        <div style="height: calc(100vh - 380px)">
             <ag-grid-angular
                 *ngIf="(this.responseButtons?.length === 0) || loadingInProgress; else rowSelectionEnabled"
                 id="opfab-custom-screen-table-grid"
@@ -138,7 +138,6 @@
                 style="width: 100%; height: 100%"
                 (gridReady)="onGridReady($event)"
                 (cellClicked)="selectCard($event)"
-                (modelUpdated)="onGridContentChanged($event)"
                 class="ag-theme-opfab">
             </ag-grid-angular>
             <ng-template #rowSelectionEnabled>
@@ -150,7 +149,6 @@
                     [rowSelection]="rowSelection"
                     (gridReady)="onGridReady($event)"
                     (cellClicked)="selectCard($event)"
-                    (modelUpdated)="onGridContentChanged($event)"
                     class="ag-theme-opfab">
                 </ag-grid-angular>
             </ng-template>
