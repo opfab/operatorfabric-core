@@ -95,10 +95,13 @@
             </div>
             <div
                 class="opfab-dashboard-cell"
+                style="align-items: center; display: flex; cursor: pointer"
                 *ngFor="let links of process.customScreenLinks"
                 (click)="onCustomScreenLinkClick(links.customScreenId)">
-                <em class="fas fa-external-link-alt" style="font-size: 1.5em"></em>
-                {{ links.label }}
+                <em class="fas fa-circle-chevron-right" style="font-size: 1.5em"></em>
+                <span style="margin-left: 5px">
+                    {{ links.label }}
+                </span>
             </div>
         </div>
     </div>
