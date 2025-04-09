@@ -21,6 +21,8 @@
             "NOT_ACKNOWLEDGED": "NOT ACKNOWLEDGED"
         },
         "filters": {
+            "activeFrom": "ACTIVE FROM",
+            "activeTo": "ACTIVE TO",
             "processGroup": "SERVICE",
             "process": "PROCESS",
             "state": "STATE",

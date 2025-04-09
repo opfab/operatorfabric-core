@@ -21,6 +21,8 @@
             "NOT_ACKNOWLEDGED": "NON ACQUITTÉ"
         },
         "filters": {
+            "activeFrom": "ACTIF DEPUIS",
+            "activeTo": "ACTIF JUSQU'À",
             "processGroup": "SERVICE",
             "process": "PROCESSUS",
             "state": "ÉTAT",
