@@ -476,6 +476,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.typeOfStateSelected = [];
         this.readAndAckSelected = [];
         this.setInitialBusinessPeriod();
+        this.gridApi.setFilterModel(null);
         this.sendQuery();
     }
 
