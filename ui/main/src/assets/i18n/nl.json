@@ -21,6 +21,8 @@
             "NOT_ACKNOWLEDGED": "NIET BEVESTIGD"
         },
         "filters": {
+            "activeFrom": "ACTIEF VANAF",
+            "activeTo": "ACTIEF TOT",
             "processGroup": "DIENST",
             "process": "PROCES",
             "state": "STATUS",
