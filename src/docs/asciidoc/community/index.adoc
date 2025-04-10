@@ -157,16 +157,18 @@ ifndef::single-page-doc[<</documentation/current/CICD/index.adoc#release_process
 
 Prior to initiating the release process, the release candidate must undergo manual testing by the team, as not all aspects are covered by automated tests.
 
-The manual tests should, at a minimum, cover the following areas not addressed by automated tests:
+The manual testing process should include, at a minimum, the following areas that are not addressed by automated tests:
 
-- Geographical features
-- Verification that a card is properly reminded (reminder feature) and sounded
-- Authentication using both IMPLICIT and CODE flows
-- Load testing via src/test/resources/cardsForStressTests/send6xN_TestCards.sh
+- Validation of geographical features
+- Verification that the reminder feature functions correctly, including proper reminders and sound notifications
+- Authentication testing using both IMPLICIT and CODE flows
+- Load testing using the script located at `src/test/resources/cardsForStressTests/send6xN_TestCards.sh`
+- Testing under slow network conditions (e.g., simulating slow 4G using Chrome DevTools)
 - Visual inspection of all screens at the minimum supported resolution in both day and night modes
-- Sound notifications
-- System notifications
-
+- Verification of sound notifications
+- Validation of system notifications
+- Testing the remote logging feature
+- Ensuring no exceptions or errors are present in the browser console logs
 
 == Project Governance
 
