@@ -1,4 +1,4 @@
-FROM nginx:1.27.4-alpine@sha256:b471bb609adc83f73c2d95148cf1bd683408739a3c09c0afc666ea2af0037aef
+FROM nginx:1.27.5-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 VOLUME /tmp
 RUN apk --no-cache add bash logrotate \
     && apk del nginx-module-image-filter 
