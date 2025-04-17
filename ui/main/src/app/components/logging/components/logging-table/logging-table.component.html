@@ -17,7 +17,8 @@
         [gridOptions]="gridOptions"
         [rowData]="result"
         (filterChanged)="onFilterChanged($event)"
-        class="ag-theme-opfab">
+        class="ag-theme-opfab"
+        [enableCellTextSelection]="true">
     </ag-grid-angular>
 
     <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
