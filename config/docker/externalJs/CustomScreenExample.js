@@ -135,7 +135,8 @@
                         if (card.severity === 'ALARM') return 'red';
                         return 'green';
                     },
-                    flex: 0.25
+                    flex: 0.25,
+                    minWidth: 100
                 },
                 {
                     field: 'TIME',
