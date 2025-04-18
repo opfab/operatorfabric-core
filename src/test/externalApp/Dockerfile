@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:21.0.6-jre@sha256:cf24bfe32cb1b34d20d7cd256e9aaae677b576612c4cf293938980dfc1c4a3c1
+FROM azul/zulu-openjdk-alpine:21.0.7-jre@sha256:6ffe7528bb02cca947f791e59d3a4206ade9df5f584c0b62529b473dceae1f89
 VOLUME /tmp
 RUN env
 ARG JAR_FILE
