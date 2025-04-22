@@ -116,7 +116,7 @@ public class UserSettingsService {
         StringBuilder sb = new StringBuilder();
         sb.append("Patch " + login + ":\n");
         processesStatesNotNotified.forEach(
-                (process, states) -> sb.append(process).append(": [").append(String.join(",", states)).append("]\n"));
+                (process, states) -> sb.append(process).append(": [").append(String.join(",", states)).append("]"));
         return sb.toString();
     }
 
