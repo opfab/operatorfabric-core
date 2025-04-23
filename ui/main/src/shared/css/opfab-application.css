@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@
     --opfab-popover-bgcolor: #182638;
     --opfab-tooltip-template-bgcolor: #182638;
     --opfab-tooltip-template-bgcolor-for-form-lighter: #182638;
-    --opfab-tooltip-template-border-color:#182638 ;
+    --opfab-tooltip-template-border-color: #182638;
     --opfab-tooltip-template-arrow-color: white;
     --opfab-feedbar-icon-color: white;
     --opfab-feedbar-icon-hover-color: white;
@@ -134,7 +134,7 @@
     --opfab-navbar-color-active: black;
     --opfab-navbar-dropdown-menu-border-color: #ccc;
     --opfab-navbar-info-block-color: rgb(0 0 0 / 90%);
-    --opfab-navbar-right-menu-bgcolor: #F3F2F1;
+    --opfab-navbar-right-menu-bgcolor: #f3f2f1;
     --opfab-timeline-cardlink: #212529;
     --opfab-timeline-cardlink-bgcolor-hover: #e2e6ea;
     --opfab-timeline-cardlink-bordercolor-hover: #dae0e5;
@@ -152,7 +152,7 @@
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('shared/fonts/OpenSans-Bold.ttf') format('truetype');
+    src: url('../fonts/OpenSans-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -160,7 +160,7 @@
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('shared/fonts/OpenSans-SemiBold.ttf') format('truetype');
+    src: url('../fonts/OpenSans-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -168,7 +168,7 @@
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('shared/fonts/OpenSans-Regular.ttf') format('truetype');
+    src: url('../fonts/OpenSans-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -206,8 +206,6 @@ body {
     font-family: var(--opfab-font-family);
     font-size: 13px;
 }
-
-
 
 /* SELECT FIELD STYLE */
 
@@ -285,7 +283,7 @@ body {
     filter: none;
 }
 
-.opfab-input{
+.opfab-input {
     box-sizing: border-box;
     position: relative;
     color: var(--opfab-input-text-color);
@@ -329,7 +327,6 @@ body {
 }
 
 /* CHECKBOX */
-
 
 /* The opfab-checkbox */
 .opfab-checkbox {
@@ -459,14 +456,12 @@ input:-webkit-autofill {
     -webkit-text-fill-color: var(--opfab-input-text-color) !important;
 }
 
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
 }
-
 
 /* TEXTAREA FIELD STYLE */
 
@@ -572,8 +567,6 @@ input:-webkit-autofill:active {
     color: var(--opfab-form-label-text-color);
     background-color: var(--opfab-bgcolor-darker);
 }
-
-
 
 /* VIRTUAL MULTI SELECT */
 
@@ -818,7 +811,7 @@ input:-webkit-autofill:active {
 }
 
 .opfab-tooltip-content::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -827,12 +820,10 @@ input:-webkit-autofill:active {
     /* vertically center */
     top: 50%;
     transform: translateY(-50%);
-  
+
     /* the arrow */
     border: 8px solid var(--opfab-tooltip-template-arrow-color);
-    border-color:  transparent var(--opfab-tooltip-template-arrow-color) transparent transparent;
- 
-
+    border-color: transparent var(--opfab-tooltip-template-arrow-color) transparent transparent;
 }
 
 .opfab-tooltip-content.left {
@@ -860,11 +851,11 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.left::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -878,7 +869,6 @@ input:-webkit-autofill:active {
     /* the arrow */
     border: 8px solid var(--opfab-tooltip-template-bgcolor);
     border-color: transparent transparent transparent var(--opfab-tooltip-template-arrow-color);
-
 }
 
 .opfab-tooltip-content.top {
@@ -906,11 +896,11 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.top::after {
-    content: "";
+    content: '';
     position: absolute;
 
     /* set new values */
@@ -952,7 +942,7 @@ input:-webkit-autofill:active {
     text-align: center;
     display: none; /* hide by default */
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .opfab-tooltip-content.bottom::after {
@@ -973,7 +963,7 @@ input:-webkit-autofill:active {
 
     /* the arrow */
     border: 8px solid var(--opfab-tooltip-template-arrow-color);
-    border-color:  transparent transparent var(--opfab-tooltip-template-arrow-color);
+    border-color: transparent transparent var(--opfab-tooltip-template-arrow-color);
 }
 
 .opfab-form-lighter .opfab-tooltip-content {
@@ -992,12 +982,10 @@ input:-webkit-autofill:active {
     background: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
 }
 
-
 .opfab-tooltip:hover .opfab-tooltip-content {
     display: block;
     opacity: 1;
 }
-
 
 .opfab-badge {
     color: white;
@@ -1006,12 +994,11 @@ input:-webkit-autofill:active {
     line-height: 1;
     text-align: center;
     border-radius: 0.375rem;
-    padding : 0.35em 0.65em;
+    padding: 0.35em 0.65em;
     vertical-align: baseline;
     white-space: nowrap;
     display: inline-block;
 }
-
 
 .opfab-rounded-badge {
     color: white;
@@ -1020,7 +1007,7 @@ input:-webkit-autofill:active {
     line-height: 1;
     text-align: center;
     border-radius: 50rem;
-    padding : 0.35em 0.65em;
+    padding: 0.35em 0.65em;
     vertical-align: baseline;
     white-space: nowrap;
     display: inline-block;
