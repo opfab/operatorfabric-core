@@ -19,6 +19,7 @@ export class AngularServer {
             catchError((httpErrorResponse) => {
                 let serverStatus = ServerResponseStatus.UNKNOWN_ERROR;
                 if (httpErrorResponse.status === 404) serverStatus = ServerResponseStatus.NOT_FOUND;
+                else if (httpErrorResponse.status === 413) serverStatus = ServerResponseStatus.TOO_LARGE;
                 else if (httpErrorResponse.status === 403) serverStatus = ServerResponseStatus.FORBIDDEN;
                 else if (httpErrorResponse.status === 400) serverStatus = ServerResponseStatus.BAD_REQUEST;
 
