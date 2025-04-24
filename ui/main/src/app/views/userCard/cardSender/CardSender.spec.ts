@@ -55,6 +55,16 @@ describe('UserCard CardSender', () => {
             expect(alertMessage.i18n.key).toEqual('userCard.error.impossibleToSendCard');
             expect(alertMessage.level).toEqual(MessageLevel.ERROR);
         });
+        it('Should display size limit error to user if card is too large', async () => {
+            cardsServerMock.setResponseFunctionForPostCard(() => {
+                return new ServerResponse(null, ServerResponseStatus.TOO_LARGE, null);
+            });
+            const alertMessageReceiver = getAlertMessageReceiver();
+            await cardSender.sendCardAndChildCard(card);
+            const alertMessage = await alertMessageReceiver.getMessageReceived();
+            expect(alertMessage.i18n.key).toEqual('userCard.error.cardContentTooLarge');
+            expect(alertMessage.level).toEqual(MessageLevel.ERROR);
+        });
         it('Should set the card id as last card sent for soundNotification service to not play sound for the card', async () => {
             await cardSender.sendCardAndChildCard(card);
             expect(NotificationDecision.hasSentCard(card.process + '.' + card.processInstanceId)).toBeTrue();

@@ -447,6 +447,7 @@
             "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes.",
             "templateError": "Erreur technique : template non conforme",
             "impossibleToSendCard": "Impossible d'envoyer la carte pour des raisons techniques",
+            "cardContentTooLarge": "Impossible d'envoyer la carte car le contenu de la carte est trop lourd (max 1.5 Mb)",
             "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début et postérieure à la date/heure courante.",
             "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin.",
             "expirationDateBeforeStartDate": "La date d'expiration doit être postérieure à la date de début."

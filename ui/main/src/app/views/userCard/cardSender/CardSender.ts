@@ -40,7 +40,7 @@ export class CardSender {
         NotificationDecision.addSentCard(card.process + '.' + card.processInstanceId);
         const responseFromCardPost = await firstValueFrom(CardsService.postCard(cardForPublish));
         if (responseFromCardPost.status !== ServerResponseStatus.OK) {
-            this.displayErrorMessageOnUI();
+            this.displayErrorMessageOnUI(responseFromCardPost.status);
             logger.error(
                 `Error while sending card to the back end, status = ${responseFromCardPost.status} message =  ${responseFromCardPost.statusMessage}`
             );
@@ -54,7 +54,7 @@ export class CardSender {
                 setCurrentDateForStartDate
             );
             if (responseFromChildCardPost.status !== ServerResponseStatus.OK) {
-                this.displayErrorMessageOnUI();
+                this.displayErrorMessageOnUI(responseFromChildCardPost.status);
                 logger.error(
                     `Error while sending child card to the back end, status = ${responseFromChildCardPost.status} message =  ${responseFromChildCardPost.statusMessage}`
                 );
@@ -64,12 +64,20 @@ export class CardSender {
         this.displaySuccessMessageOnUI();
     }
 
-    private displayErrorMessageOnUI() {
-        AlertMessageService.sendAlertMessage({
-            message: '',
-            level: MessageLevel.ERROR,
-            i18n: new I18n('userCard.error.impossibleToSendCard')
-        });
+    private displayErrorMessageOnUI(status: ServerResponseStatus) {
+        if (status === ServerResponseStatus.TOO_LARGE) {
+            AlertMessageService.sendAlertMessage({
+                message: '',
+                level: MessageLevel.ERROR,
+                i18n: new I18n('userCard.error.cardContentTooLarge')
+            });
+        } else {
+            AlertMessageService.sendAlertMessage({
+                message: '',
+                level: MessageLevel.ERROR,
+                i18n: new I18n('userCard.error.impossibleToSendCard')
+            });
+        }
     }
     private async sendChildCard(
         childCard: Card,

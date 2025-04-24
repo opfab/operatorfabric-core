@@ -20,5 +20,6 @@ export enum ServerResponseStatus {
     NOT_FOUND,
     BAD_REQUEST,
     UNKNOWN_ERROR,
-    FORBIDDEN
+    FORBIDDEN,
+    TOO_LARGE
 }

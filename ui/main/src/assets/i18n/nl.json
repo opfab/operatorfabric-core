@@ -446,6 +446,7 @@
             "notAvailable": "U heeft geen toestemming om kaarten te verzenden.",
             "templateError": "Technische fout: ongeldige sjabloon",
             "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
+            "cardContentTooLarge": "Onmogelijk om de kaart te verzenden, de inhoud van de kaart is te groot (max 1,5 Mb)",
             "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
             "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
             "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."

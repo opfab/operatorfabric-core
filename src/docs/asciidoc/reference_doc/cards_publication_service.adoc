@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -16,6 +16,8 @@ to OperatorFabric. It then handles those cards:
 * Time-stamping them with a "publishDate"
 * Sending them to the message broker (RabbitMQ) to be delivered in real time to the appropriate operators
 * Persisting them to the database (MongoDB) for later consultation
+
+The maximum size of a card is 1.5 Mb. This limit is enforced to avoid bloating the mongo database and for performance reasons.
 
 include::card_structure.adoc[leveloffset=+1]
 

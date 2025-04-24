@@ -446,6 +446,7 @@
             "notAvailable": "You are not allowed to send cards.",
             "templateError": "Technical error : invalid template",
             "impossibleToSendCard": "Impossible to send card for technical reasons",
+            "cardContentTooLarge": "Impossible to send card, the content of the card is too large (max 1.5 Mb)",
             "lttdBeforeStartDate": "Limit date for response must be after start date and after the current date and time.",
             "lttdAfterEndDate": "Limit date for response must be before end date.",
             "expirationDateBeforeStartDate": "Expiration date must be after start date."
