@@ -349,8 +349,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     cellRenderer: 'responsesCellRenderer'
                 },
                 coloredCircle: {
-                    sortable: false,
-                    filter: false,
+                    sortable: true,
+                    filter: true,
                     resizable: false,
                     wrapText: false,
                     cellStyle: {display: 'flex', 'justify-content': 'center'},
