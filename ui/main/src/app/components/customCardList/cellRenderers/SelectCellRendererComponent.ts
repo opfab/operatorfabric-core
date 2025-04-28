@@ -24,6 +24,8 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
     public params: any;
     public isInputFieldVisible = false;
     public fieldValue = '';
+    public fieldLabel = '';
+
     cardSelectControl: FormControl = new FormControl('');
     selectOptions = [];
 
@@ -34,6 +36,9 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
             label: value.label,
             value: value.value
         }));
+        this.fieldLabel =
+            params.getValue()?.possibleValues?.find((value: any) => value.value === this.fieldValue)?.label ??
+            this.fieldValue;
 
         // Initialize control with current value
         this.cardSelectControl.setValue(this.fieldValue);
