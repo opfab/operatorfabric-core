@@ -267,7 +267,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             },
 
             defaultColDef: {
-                editable: false
+                editable: false,
+                wrapHeaderText: true
             },
             columnTypes: {
                 default: {
