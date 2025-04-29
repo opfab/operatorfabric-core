@@ -69,7 +69,7 @@ opfab.businessconfig.registerFunctionToGetTags(function);
 The registered function must take as input parameter the screen name. The possible values for screen name are : 'archive', 'logging', 'processMonitoring'.
 
 An example of usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJs/loadTags.js[config/docker/externalJs/loadTags.js].
+https://github.com/opfab/operatorfabric-core/blob/{gitReference}/config/docker/externalJs/loadTags.js[config/docker/externalJs/loadTags.js].
 
 If no custom function is registered or if the registered function returns `undefined`, then Opfab will take the tags values configured in web-ui.json.
 
@@ -88,7 +88,7 @@ The function takes as argument a list of functions that will be registered as ha
 To avoid conflict with existing helpers, it is recommended to prefix your helper (For example : myapp_xxx)
 
 An example of usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/config/docker/externalJs/handlebarsExample.js[config/docker/externalJs/handlebarsExample.js].
+https://github.com/opfab/operatorfabric-core/blob/{gitReference}/config/docker/externalJs/handlebarsExample.js[config/docker/externalJs/handlebarsExample.js].
 
 
 == Navigate API 
@@ -213,7 +213,7 @@ To know if template is locked (i.e. user can not respond unless he unlocks the c
 
 The template can know if the current user has the permission to send a response to the current card by calling the isUserAllowedToRespond() function.
 An example of usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars[src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars].
+https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars[src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars].
 
 
 ```
@@ -223,7 +223,7 @@ https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bund
 === Function isUserMemberOfAnEntityRequiredToRespond
 
 The template can know if the current user is member of an Entity required to respond by calling the isUserMemberOfAnEntityRequiredToRespond function.
-An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
+An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
 
 
 ``` 
