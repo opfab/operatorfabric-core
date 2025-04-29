@@ -52,6 +52,7 @@ ext {
     testing_deps = [
             junit5Api       : "org.junit.jupiter:junit-jupiter-api:$junit5",
             junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:$junit5",
+            junit5Platform  : "org.junit.platform:junit-platform-launcher:$junitPlatformVersion",
             assertJ         : "org.assertj:assertj-core:$assertj",
             reactor         : "io.projectreactor:reactor-test:$reactor",
             karate          : "io.karatelabs:karate-junit5:$karate"
