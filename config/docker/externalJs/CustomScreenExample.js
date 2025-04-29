@@ -82,8 +82,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return 'red';
-                        return 'green';
+                        if (card.severity === 'ALARM') return {color: 'red', numericalValue: 20};
+                        return {color: 'green', numericalValue: 10};
                     },
                     flex: 0.5,
                     minWidth: 100
@@ -132,8 +132,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return 'red';
-                        return 'green';
+                        if (card.severity === 'ALARM') return {color: 'red', numericalValue: 20};
+                        return {color: 'green', numericalValue: 10};
                     },
                     flex: 0.25,
                     minWidth: 100

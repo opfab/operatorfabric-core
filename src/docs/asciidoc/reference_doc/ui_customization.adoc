@@ -392,9 +392,9 @@ const customScreenExample = {
                 headerName: 'URGENCY',
                 fieldType: 'COLORED_CIRCLE',
                 getValue: (card) => {
-                        if (card.severity === 'ALARM') return "red"
-                        return "green"
-                    },
+                    if (card.severity === 'ALARM') return {color: 'red', numericalValue: 20};
+                    return {color: 'green', numericalValue: 10};
+                },
                 flex: 0.5
             },
             {
@@ -418,7 +418,9 @@ You can define the filters to be displayed in the header of the screen by adding
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
-- `COLORED_CIRCLE`: Displays a colored circle. The color is defined with a custom method `getValue` defined in the field definition.
+- `COLORED_CIRCLE`: Displays a colored circle. The value is to be defined with a custom method `getValue` that shall contain two fields:
+  ** `color`: The color of the circle.
+  ** `numericalValue`: The numerical value of the circle that will be used for sorting and filtering.
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
 - `INPUT`: Displays an input field. The value of the input field will be used for response cards if the custom screen has response buttons (see below).
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
