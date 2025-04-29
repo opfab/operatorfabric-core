@@ -102,7 +102,7 @@ with the value of the field `message` from the card's data.
 The second part is a javascript method you need to implement to allow OperatorFabric to get your specific data .
 
 To have a better understanding of this feature, we encourage you to have a look at the examples in the OperatorFabric
-core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/conferenceAndITIncidentExample[src/test/resources/bundles/conferenceAndITIncidentExample]).
+core repository under (https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/conferenceAndITIncidentExample[src/test/resources/bundles/conferenceAndITIncidentExample]).
 
 
 == Method registerFunctionToGetSpecificCardInformation
@@ -141,7 +141,7 @@ If you send a card to an ExternalRecipient, when the user delete it, the externa
 
 If you want the card to be visible in the calendar feature, you need to set 'timeSpans' field (as array of TimeSpans objects) in the object returned by the method. 
 You can find an example in the file:
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/taskExample/template/usercard_task.handlebars[src/test/resources/bundles/taskExample/template/usercard_task.handlebars].
+https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/taskExample/template/usercard_task.handlebars[src/test/resources/bundles/taskExample/template/usercard_task.handlebars].
 
 If not using 'timeSpans' it's possible to set the 'viewCardInCalendar' field to true, the card will be visible using card's startDate and endDate as default timeSpan.
 
