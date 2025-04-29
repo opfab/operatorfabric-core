@@ -348,18 +348,35 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     wrapText: false,
                     cellRenderer: 'responsesCellRenderer'
                 },
+
+                // The cell should show a circle with the color defined in the field color
+                // and the numerical value defined in the field numericalValue is used for sorting and filtering
+                // the use of agNumberColumnFilter is necessary to be able to filter the numerical value
+                // using for example the range filter
                 coloredCircle: {
                     sortable: true,
-                    filter: true,
+                    filter: 'agNumberColumnFilter',
                     resizable: false,
                     wrapText: false,
                     cellStyle: {display: 'flex', 'justify-content': 'center'},
                     cellRenderer: (params: any) => {
                         return (
                             '<div style="margin-top:10px;width: 20px; height: 20px;border-radius: 50%;background-color:' +
-                            params.value +
+                            params.value?.color +
                             '"></div>'
                         );
+                    },
+                    comparator: (valueA: any, valueB: any) => {
+                        if (valueA.numericalValue < valueB.numericalValue) {
+                            return -1;
+                        }
+                        if (valueA.numericalValue > valueB.numericalValue) {
+                            return 1;
+                        }
+                        return 0;
+                    },
+                    filterValueGetter: (params: any) => {
+                        return params.data[params.column.colId].numericalValue;
                     }
                 },
                 responseFromMyEntities: {
