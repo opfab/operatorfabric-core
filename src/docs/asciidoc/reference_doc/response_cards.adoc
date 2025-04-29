@@ -236,7 +236,7 @@ field of the child card and then you  can get the name of the entity by calling 
 
 === Example 
 
-You can find an example in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
+You can find an example in the file https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
 
 
 == Lock mechanism

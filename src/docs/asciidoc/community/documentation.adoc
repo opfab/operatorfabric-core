@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -14,7 +14,7 @@ it should be written.
 == Structure
 
 All the sources for the AsciiDoc documentation published on our link:https://opfab.github.io/[website] are found under
-the link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/asciidoc[src/docs/asciidoc] folder in the
+the link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs/asciidoc[src/docs/asciidoc] folder in the
 operatorfabric-core repository.
 
 It is organized into several folders (architecture documentation, deployment documentation, etc.). Each of these
