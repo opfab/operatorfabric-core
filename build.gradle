@@ -148,6 +148,28 @@ asciidoctor {
             include 'images/*','pdf/*'
         }
     }
+    
+    // This is done to fetch the correct version for links that reference source files.
+    // The reference is set to develop if on develop branch for snapshot
+    // else it's set on latest release tag
+    doFirst {
+        def currentBranchProcess = ['sh', '-c', 'git rev-parse --abbrev-ref HEAD'].execute()
+        currentBranchProcess.waitFor()
+        def currentBranch = currentBranchProcess.text.trim()
+        
+        def gitReference
+        
+        if (currentBranch == "develop") {
+            gitReference = "develop"
+        } else {
+            def latestTagProcess = ['sh', '-c', 'git tag -l --sort=-creatordate | head -n 1'].execute()
+            latestTagProcess.waitFor()
+            gitReference = latestTagProcess.text.trim()
+        }
+        
+        attributes('gitReference': gitReference)
+    }
+
     attributes  nofooter            : '',
             revnumber           : operatorfabric.version,
             revdate             : operatorfabric.revisionDate,

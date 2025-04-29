@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -18,7 +18,7 @@ Not all the cards are visible, it depends on the business process they are part 
 An Excel export function is available in the monitoring screen, the content of the export can be configured. 
 To do so, a json file describing the expected output can be sent to the businessconfig service through the /businessconfig/monitoring endpoint.
 
-In opfab git repository, you can find in directory https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/monitoringConfig[src/test/resources/monitoringConfig]  : 
+In opfab git repository, you can find in directory https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/monitoringConfig[src/test/resources/monitoringConfig]  : 
   
   - a script to load a monitoring configuration `loadMonitoringConfig.sh`
 
