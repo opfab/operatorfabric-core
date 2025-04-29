@@ -13,6 +13,7 @@ subprojects {
         testRuntimeOnly testing_deps.junit5Engine
         testImplementation testing_deps.junit5Api
         testImplementation boot.starterTest, testing_deps.assertJ
+        testRuntimeOnly testing_deps.junit5Platform
     }
 
     /////// CONFIGURATION
