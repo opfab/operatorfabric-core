@@ -124,10 +124,15 @@ export class ResultTable {
             this.getColumnsDefinitionForAgGrid().forEach((column) => {
                 if (column.type !== 'responseFromMyEntities') {
                     let cellValue = line[column.field];
-                    if (column.type === 'responses') {
-                        cellValue = this.getResponseFieldForExport(cellValue);
-                    } else if (cellValue?.text) {
-                        cellValue = cellValue.text;
+                    switch (column.type) {
+                        case 'responses':
+                            cellValue = this.getResponseFieldForExport(cellValue);
+                            break;
+                        case 'coloredCircle':
+                            cellValue = cellValue?.numericalValue;
+                            break;
+                        default:
+                            if (cellValue?.text) cellValue = cellValue.text;
                     }
                     row[column.headerName] = cellValue;
                 }
