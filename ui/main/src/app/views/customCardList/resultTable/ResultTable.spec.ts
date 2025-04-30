@@ -449,14 +449,16 @@ describe('CustomScreenView - ResultTable', () => {
                     cardId: 'card1',
                     typeOfState: {
                         text: 'Translation (en) of shared.typeOfState.INPROGRESS',
-                        value: 'INPROGRESS'
+                        value: 'INPROGRESS',
+                        color: 'darker-orange'
                     }
                 },
                 {
                     cardId: 'card2',
                     typeOfState: {
                         text: '',
-                        value: undefined
+                        value: undefined,
+                        color: 'grey'
                     }
                 }
             ]);
