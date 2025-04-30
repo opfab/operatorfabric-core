@@ -17,6 +17,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CountDownComponent} from '../../../share/countdown/countdown.component';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {Severity} from 'app/model/Severity';
+import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';
 
 class EntityForCardHeader {
     id: string;
@@ -42,12 +43,21 @@ export class CardHeaderComponent implements OnChanges {
     public entitiesForCardHeader: EntityForCardHeader[];
     public answeredList: EntityForCardHeader[];
     public notAnsweredList: EntityForCardHeader[];
+    public typeOfStateColor: string;
 
     private static readonly NOT_ANSWERED_COLOR = 'grey';
 
     ngOnChanges(): void {
+        this.computeProcessStateColor();
         this.computeExpireLabelAndIcon();
         this.computeEntitiesForHeader();
+    }
+
+    private computeProcessStateColor() {
+        ProcessesService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
+            const state = process.states.get(this.card.state);
+            this.typeOfStateColor = getTypeOfStateColor(state.type, this.card, this.childCards);
+        });
     }
 
     private computeExpireLabelAndIcon() {
