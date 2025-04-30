@@ -432,7 +432,14 @@ For each field you want to display in the result table, define a column object. 
 - `SEVERITY`: Displays the severity as a color rectangle.
 - `STRING`: Displays a string value.
 - `HTML`: Renders the HTML contained in the `getValue` method.
-- `TYPE_OF_STATE`: Displays the type of state value: `INPROGRESS`, `FINISHED`, `CANCELLED`.
+- `TYPE_OF_STATE`: Displays the name of the type of state (`INPROGRESS`, `FINISHED`, `CANCELLED`) with a corresponding color. The color is defined as follows:
+  * `INPROGRESS`: orange
+  * `FINISHED`: 
+    ** orange if not all entities required to respond have responded
+    ** red if one or more entities responded with a severity of `ALARM`
+    ** green otherwise
+  * `CANCELLED`: red
+  * none: grey
 
 You can define the column header text using the `headerName` field.
 

@@ -19,28 +19,29 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Card} from 'app/model/Card';
 import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
+import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';
 
 export class TableRowBuilder {
     private readonly customScreenDefinition: CustomScreenDefinition;
-    private readonly typeOfStateData = new Map<string, {text: string; value: string}>();
+    private readonly typeOfStateTranslation = new Map<string, string>();
 
     constructor(customScreenDefinition: CustomScreenDefinition) {
         this.customScreenDefinition = customScreenDefinition;
 
         // for performance reasons, we store the translation of the type of state in a map
         // this is to avoid calling the translation service for each row in the table
-        this.typeOfStateData.set(TypeOfStateEnum.CANCELED, {
-            value: TypeOfStateEnum.CANCELED,
-            text: TranslationService.getTranslation('shared.typeOfState.CANCELED')
-        });
-        this.typeOfStateData.set(TypeOfStateEnum.FINISHED, {
-            value: TypeOfStateEnum.FINISHED,
-            text: TranslationService.getTranslation('shared.typeOfState.FINISHED')
-        });
-        this.typeOfStateData.set(TypeOfStateEnum.INPROGRESS, {
-            value: TypeOfStateEnum.INPROGRESS,
-            text: TranslationService.getTranslation('shared.typeOfState.INPROGRESS')
-        });
+        this.typeOfStateTranslation.set(
+            TypeOfStateEnum.CANCELED,
+            TranslationService.getTranslation('shared.typeOfState.CANCELED')
+        );
+        this.typeOfStateTranslation.set(
+            TypeOfStateEnum.FINISHED,
+            TranslationService.getTranslation('shared.typeOfState.FINISHED')
+        );
+        this.typeOfStateTranslation.set(
+            TypeOfStateEnum.INPROGRESS,
+            TranslationService.getTranslation('shared.typeOfState.INPROGRESS')
+        );
     }
 
     public getRowFromCard(card: Card, childCards: Array<Card>, columns: Array<Column>): any {
@@ -58,7 +59,7 @@ export class TableRowBuilder {
                     data[column.field] = this.getDateAndTime(card, column.cardField);
                     break;
                 case FieldType.TYPE_OF_STATE:
-                    data['typeOfState'] = this.getTypeOfState(card);
+                    data['typeOfState'] = this.getTypeOfState(card, childCards);
                     break;
                 case FieldType.RESPONSES:
                     data['responses'] = this.getResponses(card, childCards);
@@ -144,10 +145,16 @@ export class TableRowBuilder {
         return publisherLabel;
     }
 
-    private getTypeOfState(card: Card): {text: string; value: string | undefined} {
+    private getTypeOfState(card: Card, childCards: Card[]): {text: string; value: string | undefined; color: string} {
         const typeOfState = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
-        if (typeOfState) return this.typeOfStateData.get(typeOfState) as {text: string; value: string};
-        else return {text: '', value: undefined};
+        const color = getTypeOfStateColor(typeOfState, card, childCards);
+        if (typeOfState) {
+            return {
+                text: this.typeOfStateTranslation.get(typeOfState),
+                value: typeOfState,
+                color
+            };
+        } else return {text: '', value: undefined, color};
     }
 
     private getResponses(card: Card, childCards: Array<Card>): Array<any> {

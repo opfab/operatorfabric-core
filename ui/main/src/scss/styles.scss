@@ -64,6 +64,7 @@ body {
 
 /* stylelint-disable selector-class-pattern */
 // Colors for state types
+// Only used now by monitoring screen , shall be removed when monitoring screen is removed
 .opfab-type-of-state-INPROGRESS {
     color: var(--opfab-color-darker-orange);
 }
