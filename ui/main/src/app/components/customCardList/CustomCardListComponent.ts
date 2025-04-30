@@ -250,11 +250,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             'opfab-sev-information': (field) => field.value === 'INFORMATION'
         };
 
-        const typeOfStateCellClassRules = {
-            'opfab-type-of-state-INPROGRESS': (field) => field.value.value === 'INPROGRESS',
-            'opfab-type-of-state-FINISHED': (field) => field.value.value === 'FINISHED',
-            'opfab-type-of-state-CANCELED': (field) => field.value.value === 'CANCELED'
-        };
         this.gridOptions = {
             ...AgGrid.getDefaultGridOptions(),
             components: {
@@ -308,7 +303,11 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     sortable: true,
                     resizable: false,
                     wrapText: false,
-                    cellClassRules: typeOfStateCellClassRules,
+                    cellStyle: (params) => {
+                        return {
+                            color: 'var(--opfab-color-' + params.value.color + ')'
+                        };
+                    },
                     cellRenderer: (params: any) => params.value.text,
                     comparator: (valueA: any, valueB: any) => {
                         if (valueA.text < valueB.text) {

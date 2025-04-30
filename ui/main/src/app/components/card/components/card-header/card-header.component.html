@@ -10,7 +10,7 @@
         <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
             <span translate>response.status</span> :
             <!--The translate directive should stay there rather than in the element see OC-1603-->
-            <span class="opfab-type-of-state-{{ cardState.type }}">{{
+            <span id="opfab-card-type-of-state" style="color:var(--opfab-color-{{ typeOfStateColor }})">{{
                 'shared.typeOfState.' + cardState.type | translate
             }}</span>
         </span>
