@@ -148,6 +148,33 @@ describe('CustomScreenView - ResultTable - Export', () => {
         const dataForExport = resultTable.getDataForExport();
         expect(dataForExport).toEqual([{'Type of state': 'Translation (en) of shared.typeOfState.INPROGRESS'}]);
     });
+    it('Should contain numerical value for colored circle', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'ColorCircle',
+                    fieldType: FieldType.COLORED_CIRCLE,
+                    getValue: (card: Card, childCards: Card[]) => {
+                        return {color: 'red', numericalValue: 12};
+                    }
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date(),
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([{ColorCircle: 12}]);
+    });
+
     it('Should contain list of entity names that have responded', () => {
         const resultTable = getResultTable({
             columns: [
