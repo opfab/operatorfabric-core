@@ -13,7 +13,6 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {User} from '@ofServices/users/model/User';
-import {UsersService} from '../users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
 export class UserPermissionsService {
@@ -32,7 +31,7 @@ export class UserPermissionsService {
     public static doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
         let permission = false;
         if (
-            !UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) &&
+            !UserPermissionsService.isUserReadonly(user) &&
             card.publisherType === 'ENTITY' &&
             user.userData.entities.includes(card.publisher)
         ) {
@@ -41,8 +40,12 @@ export class UserPermissionsService {
         return permission;
     }
 
+    private static isUserReadonly(user: UserWithPerimeters): boolean {
+        return user.permissions?.some((permission) => permission === PermissionEnum.READONLY);
+    }
+
     public static doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-        if (UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY])) return false;
+        if (UserPermissionsService.isUserReadonly(user)) return false;
         if (card.entitiesAllowedToEdit && UserPermissionsService.isUserInEntityAllowedToEditCard(user.userData, card))
             return UserPermissionsService.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))
