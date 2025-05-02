@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {debounceTime, map} from 'rxjs/operators';
+import {debounceTime, map, takeUntil} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {Card} from 'app/model/Card';
 import {LightCardsFilter} from './LightcardsFilter';
@@ -29,6 +29,7 @@ export class FilteredLightCardsStore {
     private readonly lightCardFilter: LightCardsFilter;
     private readonly lightCardsSorter: LightCardsSorter;
     private readonly lightCardTextFilter: LightCardsTextFilter;
+    private readonly unsubscribe$ = new Subject<void>();
 
     constructor(private readonly lightCardStore: LightCardsStore) {
         this.lightCardFilter = new LightCardsFilter();
@@ -43,6 +44,7 @@ export class FilteredLightCardsStore {
     private computeFilteredAndSortedLightCards() {
         combineLatest([this.lightCardsSorter.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
             .pipe(
+                takeUntil(this.unsubscribe$),
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
                     if (this.isGroupedCardsEnabled()) {
@@ -74,6 +76,7 @@ export class FilteredLightCardsStore {
             this.onlyBusinessFilterForTimeLine.asObservable()
         ])
             .pipe(
+                takeUntil(this.unsubscribe$),
                 debounceTime(50), // When resetting components it can happen that we have more than one filter change
                 // with debounceTime, we avoid processing intermediate states
                 map((results) => {
@@ -102,6 +105,7 @@ export class FilteredLightCardsStore {
     private computeFilteredAndSearchedLightCards() {
         combineLatest([this.lightCardTextFilter.getSearchChanges(), this.getFilteredLightCards()])
             .pipe(
+                takeUntil(this.unsubscribe$),
                 map((results) => {
                     return this.lightCardTextFilter.searchLightCards(results[1]);
                 })
@@ -151,5 +155,10 @@ export class FilteredLightCardsStore {
 
     public setSearchTermForTextFilter(searchTerm: string) {
         return this.lightCardTextFilter.setSearchTerm(searchTerm);
+    }
+
+    public destroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
