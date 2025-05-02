@@ -131,26 +131,24 @@
 
             <div class="opfab-vertical-bar"></div>
             <div
-                style="margin-left: 40px; width: 230px; min-width: 230px; margin-bottom: 30px"
-                [formGroup]="processMonitoringForm">
-                <div class="opfab-input" style="margin-top: 30px; margin-bottom: 54px">
-                    <label for="opfab-active-from" translate>shared.filters.activeFrom</label>
-                    <input
-                        type="datetime-local"
-                        id="opfab-active-from"
-                        formControlName="activeFrom"
-                        (change)="onDateTimeChange()"
-                        [max]="activeMaxDate" />
-                </div>
-                <div class="opfab-input">
-                    <label for="opfab-active-to" translate>shared.filters.activeTo</label>
-                    <input
-                        type="datetime-local"
-                        id="opfab-active-to"
-                        formControlName="activeTo"
-                        (change)="onDateTimeChange()"
-                        [min]="activeMinDate" />
-                </div>
+                class="opfab-date-range-input opfab-input"
+                style="margin-top: 28px; margin-bottom: 130px; width: 260px; margin-left: 40px"
+                [formGroup]="this.processMonitoringForm">
+                <label class="opfab-date-range-label" for="opfab-active-date-range" translate
+                    >shared.filters.activeDateRange
+                </label>
+                <input
+                    id="opfab-active-date-range"
+                    type="button"
+                    ngxDaterangepickerMd
+                    [locale]="locale"
+                    [ranges]="ranges"
+                    [alwaysShowCalendars]="true"
+                    [timePicker]="true"
+                    [timePicker24Hour]="true"
+                    [timePickerIncrement]="1"
+                    formControlName="activeDateRange"
+                    (datesUpdated)="datesUpdated()" />
             </div>
 
             <div class="opfab-buttons">
