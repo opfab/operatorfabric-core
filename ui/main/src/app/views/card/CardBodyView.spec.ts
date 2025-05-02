@@ -7,10 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {CardBodyView} from './CardBodyView';
 import {User} from '@ofServices/users/model/User';
-import {UsersService} from '@ofServices/users/UsersService';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {firstValueFrom} from 'rxjs';
@@ -24,25 +22,17 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('CardBodyView', () => {
-    let usersServerMock: UsersServerMock;
     let configServerMock: ConfigServerMock;
-    let user: User;
     let card: Card;
     let cardBodyView: CardBodyView;
 
     beforeEach(async () => {
-        mockUsersService();
         await mockProcessesService();
 
         ConfigService.reset();
         configServerMock = new ConfigServerMock();
         ConfigService.setConfigServer(configServerMock);
     });
-
-    function mockUsersService() {
-        usersServerMock = new UsersServerMock();
-        UsersService.setUsersServer(usersServerMock);
-    }
 
     async function mockProcessesService() {
         const processesServerMock = new ProcessesServerMock();
@@ -105,8 +95,6 @@ describe('CardBodyView', () => {
     }
 
     function getUserWithPerimeters(userEntities: string[]) {
-        user = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
-        usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
         const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
         return getUserMemberOfEntity1WithPerimeter(userForPerimeter);
     }
