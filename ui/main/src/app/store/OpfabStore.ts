@@ -28,7 +28,14 @@ export class OpfabStore {
         OpfabStore.lightCardsStore.initStore();
     }
 
+    // This method shall only be used for testing purpose
     public static reset() {
+        if (OpfabStore.lightCardsStore) {
+            OpfabStore.lightCardsStore.destroy();
+        }
+        if (OpfabStore.filteredLightCardsStore) {
+            OpfabStore.filteredLightCardsStore.destroy();
+        }
         OpfabStore.lightCardsStore = new LightCardsStore();
         OpfabStore.filteredLightCardsStore = new FilteredLightCardsStore(OpfabStore.lightCardsStore);
         OpfabStore.init();

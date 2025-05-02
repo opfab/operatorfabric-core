@@ -81,6 +81,7 @@ export class LightCardsStore {
 
     private getLightCardsWithLimitedUpdateRate(): Observable<any> {
         return merge(this.getLightCardsInterval(), this.getLightCardDebounce()).pipe(
+            takeUntil(this.unsubscribe$),
             map((cards) => {
                 const array = new Array();
                 cards.forEach((card, id) => {
@@ -94,6 +95,7 @@ export class LightCardsStore {
 
     private getLightCardsInterval(): Observable<any> {
         return this.lightCardsEvents.pipe(
+            takeUntil(this.unsubscribe$),
             sample(interval(1000)),
             filter(
                 (results: Map<any, any>) =>
@@ -113,6 +115,7 @@ export class LightCardsStore {
     // when a flow of card is arriving
     private getLightCardDebounce(): Observable<any> {
         return this.lightCardsEvents.pipe(
+            takeUntil(this.unsubscribe$),
             debounceTime(LightCardsStore.DEBOUNCE_TIME_IN_MS),
             tap(() => (this.timeOfLastDebounce = new Date().valueOf()))
         );
@@ -439,5 +442,10 @@ export class LightCardsStore {
             card.hasBeenAcknowledged = AcknowledgeStatus.isCardAcknowledgedForCurrentUser(card);
             this.lightCardsEvents.next(this.lightCards);
         }
+    }
+
+    destroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
