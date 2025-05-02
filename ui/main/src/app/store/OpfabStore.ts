@@ -28,7 +28,7 @@ export class OpfabStore {
         OpfabStore.lightCardsStore.initStore();
     }
 
-    // This method shall only be used for testing purpose
+    // This method shall only be used for testing purposes
     public static reset() {
         if (OpfabStore.lightCardsStore) {
             OpfabStore.lightCardsStore.destroy();

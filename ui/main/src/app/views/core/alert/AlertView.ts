@@ -13,11 +13,13 @@ import {AlertPage} from './AlertPage';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {Subject, takeUntil} from 'rxjs';
 
 export class AlertView {
     private readonly alarmMessageAutoClose: boolean;
     private readonly alertPage: AlertPage;
     private lastMessageDate: number;
+    private readonly unsubscribe$ = new Subject<void>();
 
     constructor() {
         this.alarmMessageAutoClose = ConfigService.getConfigValue('alerts.alarmLevelAutoClose', false);
@@ -26,7 +28,9 @@ export class AlertView {
         if (ConfigService.getConfigValue('alerts.messageOnBottomOfTheScreen', false))
             this.alertPage.style = 'bottom: 0';
 
-        AlertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
+        AlertMessageService.getAlertMessage()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((message: Message) => this.processAlertMessage(message));
     }
 
     private processAlertMessage(message: Message) {
@@ -65,5 +69,10 @@ export class AlertView {
 
     public closeAlert() {
         this.alertPage.display = false;
+    }
+
+    public destroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }
