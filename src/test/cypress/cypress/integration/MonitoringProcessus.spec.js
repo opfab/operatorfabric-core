@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -214,21 +214,17 @@ describe('Monitoring processus screen tests', function () {
         opfab.navigateToMonitoringProcessus();
         cy.waitDefaultTime();
 
-        checkDatePickerValue('#opfab-active-from', '2024-01-01T00:00');
-        checkDatePickerValue('#opfab-active-to', '2025-01-01T00:00');
+        checkDatePickerValue('#opfab-active-date-range', '2024-01-01 00:00 - 2025-01-01 00:00');
 
         navigateBackward();
-        checkDatePickerValue('#opfab-active-from', '2023-01-01T00:00');
-        checkDatePickerValue('#opfab-active-to', '2024-01-01T00:00');
+        checkDatePickerValue('#opfab-active-date-range', '2023-01-01 00:00 - 2024-01-01 00:00');
 
         navigateForward();
         navigateForward();
-        checkDatePickerValue('#opfab-active-from', '2025-01-01T00:00');
-        checkDatePickerValue('#opfab-active-to', '2026-01-01T00:00');
+        checkDatePickerValue('#opfab-active-date-range', '2025-01-01 00:00 - 2026-01-01 00:00');
 
         clickMonthPeriod();
-        checkDatePickerValue('#opfab-active-from', '2024-04-01T00:00');
-        checkDatePickerValue('#opfab-active-to', '2024-05-01T00:00');
+        checkDatePickerValue('#opfab-active-date-range', '2024-04-01 00:00 - 2024-05-01 00:00');
     });
 
     function clickOnResetButton() {

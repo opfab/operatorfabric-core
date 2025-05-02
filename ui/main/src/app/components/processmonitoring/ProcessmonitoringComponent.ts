@@ -30,7 +30,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {SelectedCardService} from '../../services/selectedCard/SelectedCardService';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ProcessMonitoringView} from 'app/views/processmonitoring/ProcessMonitoringView';
 import {ProcessToMonitor} from 'app/views/processmonitoring/ProcessMonitoringPage';
 import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
@@ -48,25 +48,8 @@ import {
 } from 'app/services/config/model/ProcessMonitoringConfig';
 import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {TranslationService} from '@ofServices/translation/TranslationService';
-
-export enum FilterDateTypes {
-    PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
-    PUBLISH_DATE_TO_PARAM = 'publishDateTo',
-    ACTIVE_FROM_PARAM = 'activeFrom',
-    ACTIVE_TO_PARAM = 'activeTo'
-}
-
-export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
-    let result = false;
-    if (
-        Object.values(enumeration)
-            .map((enumValue) => enumValue.toString())
-            .includes(value)
-    ) {
-        result = true;
-    }
-    return result;
-};
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
+import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
 
 @Component({
     selector: 'of-processmonitoring',
@@ -83,7 +66,8 @@ export const checkElement = (enumeration: typeof FilterDateTypes, value: string)
         ReactiveFormsModule,
         SpinnerComponent,
         ProcessmonitoringTableComponent,
-        MonitoringMapComponent
+        MonitoringMapComponent,
+        NgxDaterangepickerMd
     ]
 })
 export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewInit {
@@ -133,12 +117,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         state: new FormControl([]),
         process: new FormControl([]),
         processGroup: new FormControl([]),
-        activeFrom: new FormControl(),
-        activeTo: new FormControl()
+        activeDateRange: new FormControl({})
     });
-
-    activeMinDate: {year: number; month: number; day: number} = null;
-    activeMaxDate: {year: number; month: number; day: number} = null;
 
     results: Card[];
     currentPage = 0;
@@ -177,6 +157,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     monthButtonClicked = false;
     weekButtonClicked = false;
     periodClicked: string;
+    defaultActiveEndDate: Date;
+    defaultActiveStartDate: Date;
 
     private readonly mapSeverity = new Map([
         ['alarm', 1],
@@ -191,6 +173,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     selectedCardId: string;
 
     isMapViewActivated: boolean;
+
+    locale: any = {};
+    ranges: any = {};
 
     constructor(
         private readonly modalService: NgbModal,
@@ -230,6 +215,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                 });
             }
         });
+
+        this.locale = DateRangePickerConfig.getLocale();
+        this.ranges = DateRangePickerConfig.getCustomRanges();
     }
 
     isThereProcessStateToDisplay(): boolean {
@@ -237,14 +225,18 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     moveDomain(isForward: boolean): void {
-        if (this.processMonitoringForm.value.activeFrom && this.processMonitoringForm.value.activeTo) {
+        if (this.processMonitoringForm.get('activeDateRange').value) {
+            const currentActiveDateRange = this.processMonitoringForm.get('activeDateRange').value;
+
             const newDates = this.processMonitoringView.getDatesWhenMoving(
-                this.processMonitoringForm.value.activeFrom,
-                this.processMonitoringForm.value.activeTo,
+                currentActiveDateRange['startDate'],
+                currentActiveDateRange['endDate'],
                 isForward,
                 this.periodClicked
             );
-            this.processMonitoringForm.patchValue({activeFrom: newDates.activeFrom, activeTo: newDates.activeTo});
+            this.processMonitoringForm.patchValue({
+                activeDateRange: {startDate: newDates.activeFrom, endDate: newDates.activeTo}
+            });
         }
     }
 
@@ -255,9 +247,13 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.weekButtonClicked = periodClicked === 'week';
 
         const newDates = this.processMonitoringView.getDatesAfterPeriodClick(periodClicked);
-        this.processMonitoringForm.patchValue({activeFrom: newDates.activeFrom, activeTo: newDates.activeTo});
+        this.processMonitoringForm.patchValue({
+            activeDateRange: {startDate: newDates.activeFrom, endDate: newDates.activeTo}
+        });
+    }
 
-        setTimeout(() => this.setDateFilterBounds(), 100);
+    datesUpdated() {
+        this.resetPeriodClicked();
     }
 
     ngOnInit() {
@@ -295,6 +291,20 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         );
 
         this.isMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
+
+        this.setDefaultActiveDateFilter();
+    }
+
+    setDefaultActiveDateFilter() {
+        const currentDate = new Date();
+        this.defaultActiveEndDate = new Date(currentDate.getFullYear() + 1, 0, 1, 0, 0, 0);
+
+        this.defaultActiveStartDate = new Date(currentDate.getFullYear(), 0, 1, 0, 0, 0);
+
+        this.processMonitoringForm.controls.activeDateRange.setValue({
+            startDate: this.defaultActiveStartDate,
+            endDate: this.defaultActiveEndDate
+        });
     }
 
     public tagsChoiceChanged(tags: string[]) {
@@ -368,34 +378,15 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.processGroupMultiSelectOptions = this.processMonitoringView.getProcessGroups().map((processGroup) => {
             return new MultiSelectOption(processGroup.id, processGroup.label);
         });
+        this.processMonitoringForm.controls.activeDateRange.setValue({
+            startDate: this.defaultActiveStartDate,
+            endDate: this.defaultActiveEndDate
+        });
         this.tagsSelected = [];
         this.columnFilters = [];
         this.firstQueryHasBeenDone = false;
-        this.setDateFilterBounds();
         this.resetPeriodClicked();
         document.getElementById('opfab-processmonitoring-period-year').click();
-    }
-
-    setDateFilterBounds(): void {
-        if (this.processMonitoringForm.value.activeFrom?.length > 0) {
-            this.activeMinDate = this.processMonitoringForm.value.activeFrom;
-        } else {
-            this.activeMinDate = null;
-        }
-
-        if (this.processMonitoringForm.value.activeTo?.length > 0) {
-            this.activeMaxDate = this.processMonitoringForm.value.activeTo;
-        } else {
-            this.activeMaxDate = null;
-        }
-
-        this.changeDetector.markForCheck();
-    }
-
-    onDateTimeChange() {
-        this.resetPeriodClicked();
-        // need to wait otherwise change is not always done
-        setTimeout(() => this.setDateFilterBounds(), 100);
     }
 
     toggleAdminMode() {
@@ -488,8 +479,11 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             const element = filters[key];
             // if the form element is date
             if (key !== 'processGroup' && element) {
-                if (checkElement(FilterDateTypes, key)) {
-                    this.dateFilterToMap(key, element);
+                if (key === 'activeDateRange') {
+                    if (element?.startDate && element?.endDate) {
+                        this.filters.set('activeFrom', [Date.parse(element.startDate)]);
+                        this.filters.set('activeTo', [Date.parse(element.endDate)]);
+                    }
                 } else if (key === 'process') {
                     this.processFilterToMap(element);
                 } else if (element.length) {
@@ -507,13 +501,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         const ids = [];
         element.forEach((val) => ids.push(val));
         this.filters.set(key, ids);
-    }
-
-    dateFilterToMap(key: string, element: any) {
-        const epochDate = Date.parse(element);
-        if (epochDate) {
-            this.filters.set(key, [epochDate]);
-        }
     }
 
     processFilterToMap(element: any) {
