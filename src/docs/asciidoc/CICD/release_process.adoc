@@ -299,8 +299,9 @@ The following files have been updated:
 +
 This script performs the following changes:
 +
-* Replace SNAPSHOT with X.X.X.RELEASE in swagger.yaml files and the VERSION file at the root operator-fabric folder
-* Change the version from SNAPSHOT to X.X.X.RELEASE in the docker compose files for dev and docker deployments
+* Change the version to  X.X.X.RELEASE in swagger.yaml files and the VERSION file at the root operator-fabric folder
+* Change the version to X.X.X.RELEASE in the docker compose files for dev and docker deployments
+* Change the version to X.X.X.RELEASE in the package.json for opfab-cli and web-ui
 +
 . Commit the changes with the template message:
 +
@@ -317,7 +318,7 @@ git push --set-upstream origin X.X.X.release.draft
 +
 . Create a pull request from the 'X.X.X.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
-. Once the pull request is approved and merge, create the tag for the release candidate:
+. Once the pull request is approved and merge, create the tag for the release :
 +
 ----
 git checkout X.X.release
