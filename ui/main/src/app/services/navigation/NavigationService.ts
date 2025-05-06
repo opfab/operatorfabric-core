@@ -91,7 +91,7 @@ export class NavigationService {
     }
 
     public static navigateToCard(cardId: string) {
-        NavigationService.navigateTo('/feed/cards/' + encodeURIComponent(cardId));
+        NavigationService.navigateTo('/feed/cards/' + cardId);
     }
 
     public static navigateToFeedWithProcessStateFilter(processFilter: string, stateFilter: string) {
