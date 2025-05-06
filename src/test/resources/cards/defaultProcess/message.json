@@ -17,7 +17,9 @@
 	"endDate" : 28800000,
 	"summary" : {"key" : "messageState.summary", "parameters" : {"summary": "France-England's interconnection is 100% operational / Result of the maintenance is <OK>"}},
 	"title" : {"key" : "messageState.title"},
-	"data" : {"richMessage": "{\"ops\":[{\"insert\":\"France-England's interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}"},
+	"data" : {
+        "test.test" : "test field just to check fields with dots are well accepted, see Issue #8347",
+        "richMessage": "{\"ops\":[{\"insert\":\"France-England's interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}"},
 	"timeSpans" : [
 		{"start" : 7200000},
 		{"start" : 28800000}
