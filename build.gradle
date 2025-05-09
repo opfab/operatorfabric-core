@@ -102,16 +102,62 @@ sonar {
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,node-services/**/coverage/lcov.info'
-        // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','cli/**,config*/**/*,ui/**/*.spec.ts,ui/main/src/app/modules/**,\
-                                              ui/main/src/app/server/**,ui/main/src/app/authentication/**,\
-                                              ui/main/src/app/services/**,ui/main/src/app/router/**,ui/main/src/tests/**,\
-                                              **/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*,\
-                                              node-services/**/server-side/**,**/*config.js,**/*.conf.js,\
-                                              client/**,**/spring-test-utilities/**,tools/spring/spring-mongo-utilities,\
-                                              tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**,\
-                                              tools/generic/test-utilities/**,tools/swagger-spring-generators/**,\
-                                              tools/kafka-test/**'
+        // Exlude from sonar coverage :
+        // - cli/** : cli is not tested
+        // - config/** : config files are not tested
+        // - ui :
+        //     - ui/main/src/app/modules/** : external modules are not tested
+        //     - ui/main/src/app/server/**, ui/main/src/app/**/*Server.ts : angular server interface implementations are not tested , there will be tested via cypress e2e tests
+        //     - ui/main/src/app/authentication/** : authentication is not unit tested
+        //     - ui/main/src/app/services/** : services as there are interfaces to the back are not unit tested , there will be tested via cypress e2e tests
+        //     - ui/main/**/*.component.ts & ui/main/**/*Component.ts : component code is not tested as the business logic shall not be in component but in view classes 
+        //     - ui/main/src/tests/** : tests helpers are not tested
+        //     - ui/main/**/*.specs.ts : tests are not tested
+        //     - ui/main/src/karma.conf.js : karma config files are not tested
+        // - java services :
+        //     - **/controllers/** : controllers are not unit tested as they are no business logic and there will be tested via cypress e2e tests and API karate test-utilities
+        //     - **/src/tooling/** : one-time migration tools, not meant to evolve or be tested
+        //     - **/src/test/** : test code is not tested
+        //     - **/spring-test-utilities/** : spring test utilities are not tested
+        //     - tools/spring/spring-mongo-utilities/** : spring mongo interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
+        //     - tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/** : rabbitMQ interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
+        //     - tools/generic/test-utilities/** : test utilities are not tested
+        //     - tools/swagger-spring-generators/** : swagger documentation generation is not tested
+        //     - tools/kafka-test/** : kafka test  utilities are not tested
+        // - node services:
+        //     - node-services/**/tests/* : tests are not relevant
+        //     - node-services/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
+        //     - node-services/**/jest.config.js : jest config files are not tested
+        // - client/** : client librairy is not unit tested (contains only data models)
+
+        def coverageExclusions = [
+          'cli/**',
+          'config/**',
+          'ui/main/src/app/modules/**',
+          'ui/main/src/app/server/**',
+          'ui/main/src/app/**/*Server.ts',
+          'ui/main/src/app/authentication/**',
+          'ui/main/src/app/services/**',
+          'ui/main/**/*.component.ts',
+          'ui/main/**/*Component.ts',
+          'ui/main/src/tests/**',
+          'ui/main/**/*.specs.ts',
+          'ui/main/src/karma.conf.js',
+          '**/controllers/**',
+          '**/src/tooling/**',
+          '**/src/test/**',
+          '**/spring-test-utilities/**',
+          'tools/spring/spring-mongo-utilities/**',
+          'tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**',
+          'tools/generic/test-utilities/**',
+          'tools/swagger-spring-generators/**',
+          'tools/kafka-test/**',
+          'node-services/**/tests/*',
+          'node-services/**/server-side/**',
+          'node-services/**/jest.config.js',
+          'client/**'
+        ]
+        property 'sonar.coverage.exclusions', coverageExclusions.join(',')
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
