@@ -43,7 +43,10 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     loadCard(id: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<CardWithChildCards>(`${this.cardConsultationUrl}/${id}`));
+        // it is necessary to encode the id because it can contain special characters
+        return this.processHttpResponse(
+            this.httpClient.get<CardWithChildCards>(`${this.cardConsultationUrl}/${encodeURIComponent(id)}`)
+        );
     }
 
     loadArchivedCard(id: string): Observable<ServerResponse<any>> {
@@ -65,7 +68,10 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     deleteCard(card: Card): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.delete<void>(`${this.userCardUrl}/${card.id}`));
+        // it is necessary to encode the id because it can contain special characters
+        return this.processHttpResponse(
+            this.httpClient.delete<void>(`${this.userCardUrl}/${encodeURIComponent(card.id)}`)
+        );
     }
 
     postUserCardRead(cardUid: string): Observable<ServerResponse<any>> {

@@ -362,28 +362,14 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void GIVEN_a_card_with_forbidden_characters_in_processInstanceId_WHEN_sending_card_THEN_card_is_rejected() {
+    void GIVEN_a_card_with_slash_in_processInstanceId_WHEN_sending_card_THEN_card_is_rejected() {
         Card card = TestHelpers.generateOneCard("entity2");
-        card.processInstanceId = "processinstance" + "#123";
+        card.processInstanceId = "processinstance/123";
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
-
-        card.processInstanceId = "processinstance" + "?123";
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
-                .isInstanceOf(ConstraintViolationException.class)
-                .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
-
-        card.processInstanceId = "processinstance" + "/123";
-
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
-                .isInstanceOf(ConstraintViolationException.class)
-                .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
+                        "constraint violation : forbidden characters '/' in processInstanceId");
 
         Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
         Assertions.assertThat(checkArchiveCount(0)).isTrue();
@@ -397,21 +383,21 @@ class CardProcessServiceShould {
         Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
+                        "constraint violation : forbidden characters ('#','?','/') in process");
 
         card.process = "process" + "?123";
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
+                        "constraint violation : forbidden characters ('#','?','/') in process");
 
         card.process = "process" + "/123";
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card))
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage(
-                        "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId");
+                        "constraint violation : forbidden characters ('#','?','/') in process");
 
         Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 0)).isTrue();
         Assertions.assertThat(checkArchiveCount(0)).isTrue();

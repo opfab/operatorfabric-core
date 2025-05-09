@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -153,7 +153,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                 '<a href=" ' +
                 this.opfabUrlInMailContent +
                 '/#/feed/cards/' +
-                card.id +
+                this.base64urlEncode(card.id) +
                 ' ">' +
                 this.escapeHtml(card.titleTranslated) +
                 ' - ' +

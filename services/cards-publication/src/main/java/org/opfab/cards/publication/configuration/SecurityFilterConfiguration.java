@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,12 @@ public class SecurityFilterConfiguration {
         StrictHttpFirewall firewall = new StrictHttpFirewall();
         // It is necessary to allow semi-colons because ids in url may contain some
         firewall.setAllowSemicolon(true);
+
+        // The two following lines are necessary because we can delete a card with its
+        // id in the url and the id may contain special characters
+        firewall.setAllowUrlEncodedPercent(true);
+        firewall.setAllowBackSlash(true);
         return firewall;
     }
 
 }
-

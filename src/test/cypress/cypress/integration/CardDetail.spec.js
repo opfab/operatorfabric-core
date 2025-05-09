@@ -10,18 +10,18 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {FeedCommands} from '../support/feedCommands';
-import {ScriptCommands} from '../support/scriptCommands';
-import {CardCommands} from '../support/cardCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { FeedCommands } from '../support/feedCommands';
+import { ScriptCommands } from '../support/scriptCommands';
+import { CardCommands } from '../support/cardCommands';
 
-describe('Card detail', function () {
+describe('Card detail', function() {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const script = new ScriptCommands();
     const card = new CardCommands();
 
-    before('Set up configuration', function () {
+    before('Set up configuration', function() {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         script.resetUIConfigurationFiles();
         script.deleteAllSettings();
@@ -31,8 +31,8 @@ describe('Card detail', function () {
         script.sendCard('cypress/cardDetail/cardDetail.json');
     });
 
-    describe('Check card detail', function () {
-        it(`Check card detail`, function () {
+    describe('Check card detail', function() {
+        it(`Check card detail`, function() {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
 
@@ -98,7 +98,7 @@ describe('Card detail', function () {
             cy.get('#severityColor').contains('#1074ad');
         });
 
-        it(`Check card footer for operator4_fr (member of several entities)`, function () {
+        it(`Check card footer for operator4_fr (member of several entities)`, function() {
             opfab.loginWithUser('operator4_fr');
             feed.openFirstCard();
 
@@ -110,7 +110,7 @@ describe('Card detail', function () {
             cy.get('#opfab-card-details-address-to').contains('Control Center FR South');
         });
 
-        it(`Check card detail spinner when simulating card processed `, function () {
+        it(`Check card detail spinner when simulating card processed `, function() {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#opfabAPI-display-spinner-button').click();
@@ -118,7 +118,7 @@ describe('Card detail', function () {
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
 
-        it(`Check card detail in archives`, function () {
+        it(`Check card detail in archives`, function() {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToArchives();
             // We click the search button
@@ -169,7 +169,7 @@ describe('Card detail', function () {
             cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
-        it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function () {
+        it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function() {
             opfab.loginWithUser('operator4_fr');
             opfab.navigateToArchives();
 
@@ -192,7 +192,7 @@ describe('Card detail', function () {
             cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
-        it(`Check opfab API when response not required `, function () {
+        it(`Check opfab API when response not required `, function() {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -200,7 +200,7 @@ describe('Card detail', function () {
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
-        it(`Check opfab API when response is not possible `, function () {
+        it(`Check opfab API when response is not possible `, function() {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -208,7 +208,7 @@ describe('Card detail', function () {
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
-        it(`Check that a spinner is displayed when the card takes time to load `, function () {
+        it(`Check that a spinner is displayed when the card takes time to load `, function() {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             cy.delayRequestResponse('/cards-consultation/cards/**');
             opfab.loginWithUser('operator1_fr');
@@ -217,7 +217,7 @@ describe('Card detail', function () {
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
 
-        it(`Check deleted card detail footer in archives`, function () {
+        it(`Check deleted card detail footer in archives`, function() {
             script.sendCard('cypress/userCard/message.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -242,29 +242,26 @@ describe('Card detail', function () {
             );
         });
 
-        it(`Check showCard link`, function () {
+        it(`Check showCard link`, function() {
             script.sendCard('cypress/userCard/message.json');
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
             opfab.loginWithUser('operator1_fr');
 
             feed.openFirstCard();
-            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
 
             // We click on show card link
             cy.get('#showCardLink').click();
 
-            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
             card.checkContainsText('Hello operator1_fr, you received the following message');
         });
 
-        it(`Check show alert message links`, function () {
+        it(`Check show alert message links`, function() {
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
             opfab.loginWithUser('operator1_fr');
 
             feed.openFirstCard();
-            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
 
             cy.get('#showDebugMessage').click();
             cy.get('#opfab-alert-detail-msg').contains('Debug message');
@@ -287,26 +284,24 @@ describe('Card detail', function () {
             cy.get('.opfab-alert-close').click();
         });
 
-        it(`Check getCards API call`, function () {
+        it(`Check getCards API call`, function() {
             script.sendCard('cypress/userCard/message.json');
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
             opfab.loginWithUser('operator1_fr');
 
             feed.openFirstCard();
-            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
 
             cy.get('#opfabGetCardsResult').contains('"numberOfElements":1');
             cy.get('#opfabGetCardsResult').contains('"_id":"defaultProcess.process1"');
             cy.get('#opfabGetCardsResult').contains('"titleTranslated":"Message"');
         });
 
-        it(`Check isUserAllowedToEdit and editCard API call`, function () {
+        it(`Check isUserAllowedToEdit and editCard API call`, function() {
             script.sendCard('defaultProcess/message.json');
             opfab.loginWithUser('operator1_fr');
 
             feed.openFirstCard();
-            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
 
             // check allowed user can use the edit button to edit card
             cy.get('#opfab-div-card-template-processed').find('#editButton').eq(0).should('contain.text', 'Edit');
@@ -320,7 +315,6 @@ describe('Card detail', function () {
             opfab.loginWithUser('operator3_fr');
 
             feed.openFirstCard();
-            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
 
             // check user not allowed to edit does not see the edit button
             cy.get('#opfab-div-card-template-processed').should('exist');

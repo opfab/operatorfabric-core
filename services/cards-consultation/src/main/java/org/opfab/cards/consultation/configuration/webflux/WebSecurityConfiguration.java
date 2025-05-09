@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.cards.consultation.configuration.webflux;
 
@@ -20,11 +18,11 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.firewall.StrictServerWebExchangeFirewall;
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
 
 import reactor.core.publisher.Mono;
-
 
 @Configuration
 @EnableWebFluxSecurity
@@ -36,7 +34,6 @@ public class WebSecurityConfiguration {
     public static final String CONNECTIONS_PATH = "/connections**";
     public static final String MESSAGE_TO_SUBSCRIPTIONS = "/messageToSubscriptions";
     public static final String ADMIN_ROLE = "ADMIN";
-
 
     /**
      * Secures access (all uris are secured)
@@ -51,8 +48,8 @@ public class WebSecurityConfiguration {
         configureCommon(http);
         http
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-                    .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(opfabReactiveJwtConverter))
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(opfabReactiveJwtConverter))
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
@@ -65,19 +62,27 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final ServerHttpSecurity http) {
         http
                 .headers(headers -> headers
-                    .frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable
-                    )
-                )
+                        .frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                    .accessDeniedHandler(new CustomAccessDeniedHandler())
-                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeExchange(authorizeExchange -> authorizeExchange
-                    .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                    .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
-                    .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
-                    .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
-                    .anyExchange().authenticated()
-                );
+                        .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                        .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
+                        .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
+                        .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
+                        .anyExchange().authenticated());
     }
+
+    @Bean
+    public StrictServerWebExchangeFirewall httpFirewall() {
+        StrictServerWebExchangeFirewall firewall = new StrictServerWebExchangeFirewall();
+        // The two following lines are necessary because we can get a card with its
+        // id in the url and the id may contain special characters
+        firewall.setAllowUrlEncodedPercent(true);
+        firewall.setAllowBackSlash(true);
+        return firewall;
+    }
+
 }

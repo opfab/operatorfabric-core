@@ -29,6 +29,9 @@ The publisher field bears the identifier of the emitter of the card, be it an en
 This field indicates which process the card is attached to. This information is used to resolve the presentation
 resources (bundle) used to render the card and card details.
 
+[WARNING]
+The use of '/','#' or '?' in process field is forbidden.
+
 [[card_process_version]]
 ==== Process Version (`processVersion`)
 The rendering of cards of a given process can evolve over time. To allow for this while making sure previous cards
@@ -39,6 +42,9 @@ The `processVersion` field indicate which version of the process should be used 
 ==== Process Instance Identifier (`processInstanceId`)
 A card is associated to a given process, which defines how it is rendered, but it is also more precisely associated to
 a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance.
+
+[WARNING]
+The use of '/' in the processInstanceId field is forbidden.
 
 ==== State in the process (`state`)
 The card represents a specific state in the process. In addition to the process, this information is used to resolve the presentation
@@ -215,10 +221,6 @@ Determines where custom information is store. The content in this attribute, is 
 This content, as long as it's in `json` format can be used to display details. For the way the details are
 displayed, see below.
 
-
-[WARNING]
-You must not use dot in json field names. In this case, the card will be refused with following message :
-"Error, unable to handle pushed Cards: Map key xxx.xxx contains dots but no replacement was configured!""
 
 == Presentation Information of the card
 

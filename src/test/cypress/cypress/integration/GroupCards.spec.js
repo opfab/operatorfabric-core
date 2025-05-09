@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * Ther Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with ther
@@ -6,15 +6,15 @@
  * SPDX-License-Identifier: MPL-2.0
  * Ther file is part of the OperatorFabric project.
  */
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
-import {ScriptCommands} from "../support/scriptCommands";
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands'
+import { ScriptCommands } from "../support/scriptCommands";
 
-describe('Group Cards tests', function () {
+describe('Group Cards tests', function() {
 
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
 
-    before('Set up configuration', function () {
+    before('Set up configuration', function() {
 
         // Ther can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         script.resetUIConfigurationFiles();
@@ -25,26 +25,26 @@ describe('Group Cards tests', function () {
         script.deleteAllCards();
 
         // Send four cards with the same tag
-        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_1'});
-        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_2'});
-        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_3'});
-        script.sendCard('cypress/group/message1.json', {processInstanceId: 'message1_4'});
+        script.sendCard('cypress/group/message1.json', { processInstanceId: 'message1_1' });
+        script.sendCard('cypress/group/message1.json', { processInstanceId: 'message1_2' });
+        script.sendCard('cypress/group/message1.json', { processInstanceId: 'message1_3' });
+        script.sendCard('cypress/group/message1.json', { processInstanceId: 'message1_4' });
 
         // Send three others cards, all having the same tag
-        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_1'});
-        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_2'});
-        script.sendCard('cypress/group/message2.json', {processInstanceId: 'message2_3'});
+        script.sendCard('cypress/group/message2.json', { processInstanceId: 'message2_1' });
+        script.sendCard('cypress/group/message2.json', { processInstanceId: 'message2_2' });
+        script.sendCard('cypress/group/message2.json', { processInstanceId: 'message2_3' });
 
         // Send three others cards (all having only the combined tags of the previous cards)
-        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_1'});
-        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_2'});
-        script.sendCard('cypress/group/message3.json', {processInstanceId: 'message3_3'});
+        script.sendCard('cypress/group/message3.json', { processInstanceId: 'message3_1' });
+        script.sendCard('cypress/group/message3.json', { processInstanceId: 'message3_2' });
+        script.sendCard('cypress/group/message3.json', { processInstanceId: 'message3_3' });
 
         // Send one card, having a different tag, not grouped
-        script.sendCard('cypress/group/message4.json', {processInstanceId: 'message4_1'});
+        script.sendCard('cypress/group/message4.json', { processInstanceId: 'message4_1' });
     });
 
-    it('Card grouping disabled -> all cards should be visible in the feed', function () {
+    it('Card grouping disabled -> all cards should be visible in the feed', function() {
         script.setPropertyInConf('feed.enableGroupedCards', false);
         opfab.loginWithUser('operator1_fr');
 
@@ -56,13 +56,13 @@ describe('Group Cards tests', function () {
         cy.get('[id^="opfab-feed-light-card-cypress-message2_"]').first().click();
 
         // Check if URL changes to display the card detail
-        cy.url().should('include', 'cypress.message2_')
+        cy.url().should('include', opfab.base64urlEncode('cypress.message2_'));
 
         // Operator1 should still see 11 cards in her feed
         cy.get('of-light-card').should('have.length', 11);
     });
 
-    it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function () {
+    it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function() {
         script.setPropertyInConf('feed.enableGroupedCards', true);
         opfab.loginWithUser('operator1_fr');
 
@@ -72,8 +72,8 @@ describe('Group Cards tests', function () {
         // // Click on a card
         cy.get('[id^="opfab-feed-light-card-cypress-message1_"]').first().click();
 
-         // Check if URL changes to display the card detail
-        cy.url().should('include', 'cypress.message1_');
+        // Check if URL changes to display the card detail
+        cy.url().should('include', opfab.base64urlEncode('cypress.message1_'));
 
         // Operator1 should see 4 + the 2 grouped cards + 1 not grouped card == 7 cards  in her feed
         cy.get('of-light-card').should('have.length', 7);
@@ -88,13 +88,13 @@ describe('Group Cards tests', function () {
         cy.get('[id^="opfab-feed-light-card-cypress-message3_"]').first().click();
 
         // Check if URL changes to display the card detail
-        cy.url().should('include', 'cypress.message3_');
+        cy.url().should('include', opfab.base64urlEncode('cypress.message3_'));
 
         // Operator1 should see 3 + the 2 grouped cards + 1 not grouped card == 6 cards  in her feed
         cy.get('of-light-card').should('have.length', 6);
     });
 
-    it('Card grouping enabled -> only cards with childrens should display the icon', function () {
+    it('Card grouping enabled -> only cards with childrens should display the icon', function() {
         opfab.loginWithUser('operator1_fr');
 
         cy.get('[id="opfab-feed-light-card-group-icon"]').should('have.length', 3);
