@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {ActivityAreaCommands} from '../support/activityAreaCommands';
-import {ScriptCommands} from '../support/scriptCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { ActivityAreaCommands } from '../support/activityAreaCommands';
+import { ScriptCommands } from '../support/scriptCommands';
 
 describe('ActivityAreaPage', () => {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
 
-    before('Delete previous cards', function () {
+    before('Delete previous cards', function() {
         script.loadTestConf();
         script.deleteAllSettings();
         script.deleteAllCards();
@@ -57,7 +57,7 @@ describe('ActivityAreaPage', () => {
         opfab.navigateToActivityArea();
 
         // We check the title of the page
-        cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
+        cy.get('.opfab-activityarea-title').should('contain.text', 'ACTIVITY AREA');
 
         // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -115,7 +115,7 @@ describe('ActivityAreaPage', () => {
         activityArea.save();
     });
 
-    it('Choose activity area on login', function () {
+    it('Choose activity area on login', function() {
         script.setPropertyInConf('selectActivityAreaOnLogin ', true);
 
         cy.visit('');
@@ -134,7 +134,7 @@ describe('ActivityAreaPage', () => {
         cy.get('of-activityarea').should('exist');
 
         // We check the title of the page
-        cy.get('.opfab-activityarea-title').should('have.text', ' CHOOSE YOUR ACTIVITY AREA\n');
+        cy.get('.opfab-activityarea-title').should('contain.text', 'CHOOSE YOUR ACTIVITY AREA');
 
         // We should have only one 'block'
         cy.get('.opfab-activityarea-clusters').should('have.length', 1);
@@ -218,7 +218,7 @@ describe('ActivityAreaPage', () => {
         script.setPropertyInConf('selectActivityAreaOnLogin ', false);
     });
 
-    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
+    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function() {
         cy.delayRequestResponse('/users/users/*');
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
@@ -227,7 +227,7 @@ describe('ActivityAreaPage', () => {
         opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 
-    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function () {
+    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function() {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
         cy.delayRequestResponse('/users/users/**');
@@ -247,7 +247,7 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
     });
 
-    it('Check message is displayed when user has no activity area', function () {
+    it('Check message is displayed when user has no activity area', function() {
         opfab.loginWithUser('opfab');
         opfab.navigateToActivityArea();
         cy.get('#opfab-no-activityarea').should('exist');

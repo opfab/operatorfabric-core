@@ -46,7 +46,7 @@ import {
     ProcessMonitoringField,
     ProcessMonitoringFieldEnum
 } from 'app/services/config/model/ProcessMonitoringConfig';
-import {BusinessConfigAPI} from 'app/api/businessconfig.api';
+import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export enum FilterDateTypes {

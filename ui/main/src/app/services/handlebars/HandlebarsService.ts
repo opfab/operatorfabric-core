@@ -13,7 +13,7 @@ import {map, tap} from 'rxjs/operators';
 import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {HandlebarsHelper} from './HandlebarsHelper';
-import {HandlebarsAPI} from 'app/api/handlebars.api';
+import {HandlebarsAPI} from 'app/api/HandlebarsApi';
 import {HandlebarsTemplateServer} from './server/HandlebarsTemplateServer';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 

@@ -16,7 +16,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {TimelineButtonsComponent} from '../share/timeline-buttons/timeline-buttons.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgClass} from '@angular/common';
-import {CardComponent} from '../card/card.component';
+import {CardComponent} from '../card/CardComponent';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 declare const opfab: any;

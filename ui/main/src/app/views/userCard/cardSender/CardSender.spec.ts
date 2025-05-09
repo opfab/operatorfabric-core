@@ -17,7 +17,7 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {NotificationDecision} from 'app/services/notifications/NotificationDecision';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
-import {CurrentUserCardAPI} from 'app/api/currentusercard.api';
+import {CurrentUserCardAPI} from 'app/api/CurrentUserCardApi';
 
 declare const opfab: any;
 

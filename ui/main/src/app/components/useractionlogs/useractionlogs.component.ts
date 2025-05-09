@@ -27,7 +27,7 @@ import {MultiSelectComponent} from '../share/multi-select/multi-select.component
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
-import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/archived-card-detail.component';
+import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/ArchivedCardDetailComponent';
 import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
 import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 

@@ -37,7 +37,7 @@ import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {BusinessConfigAPI} from 'app/api/businessconfig.api';
+import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

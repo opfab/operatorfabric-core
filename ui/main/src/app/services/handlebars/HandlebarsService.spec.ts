@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {getOneCard} from '@tests/helpers';
 import {HandlebarsService} from './HandlebarsService';
 import {UserContext} from '@ofServices/handlebars/model/UserContext.model';
 import {DetailContext} from '@ofServices/handlebars/model/DetailContext.model';
-import {OpfabAPI} from '../../api/opfab.api';
+import {OpfabAPI} from '../../api/OpfabApi';
 import {HandlebarsHelper} from './HandlebarsHelper';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {TranslationService} from '@ofServices/translation/TranslationService';

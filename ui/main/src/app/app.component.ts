@@ -12,9 +12,9 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from './services/events/OpfabEventStreamService';
-import {ApplicationLoadingComponent} from './components/core/application-loading/application-loading.component';
+import {ApplicationLoadingComponent} from './components/core/application-loading/ApplicationLoadingComponent';
 import {NgIf} from '@angular/common';
-import {AlertComponent} from './components/core/alert/alert.component';
+import {AlertComponent} from './components/core/alert/AlertComponent';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {RouterOutlet} from '@angular/router';
 import {ConnectionLostComponent} from './components/core/connection-lost/connection-lost.component';

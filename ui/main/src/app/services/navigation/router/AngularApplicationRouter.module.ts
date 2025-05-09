@@ -9,10 +9,10 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from '../../../components/core/application-loading/login/login.component';
+import {LoginComponent} from '../../../components/core/application-loading/login/LoginComponent';
 import {FeedComponent} from 'app/components/feed/feed.component';
-import {CardComponent} from 'app/components/card/card.component';
-import {CardBodyComponent} from 'app/components/card/components/card-body/card-body.component';
+import {CardComponent} from 'app/components/card/CardComponent';
+import {CardBodyComponent} from 'app/components/card/components/card-body/CardBodyComponent';
 import {MapComponent} from 'app/components/feed/components/map/map.component';
 
 // !!! WARNING !!!
@@ -54,7 +54,7 @@ const routes: Routes = [
     },
     {
         path: 'archives',
-        loadComponent: () => import('../../../components/archives/archives.component').then((m) => m.ArchivesComponent)
+        loadComponent: () => import('../../../components/archives/ArchivesComponent').then((m) => m.ArchivesComponent)
     },
     {
         path: 'monitoring',
@@ -79,11 +79,11 @@ const routes: Routes = [
     },
     {
         path: 'calendar',
-        loadComponent: () => import('../../../components/calendar/calendar.component').then((m) => m.CalendarComponent)
+        loadComponent: () => import('../../../components/calendar/CalendarComponent').then((m) => m.CalendarComponent)
     },
     {
         path: 'businessconfigparty',
-        loadChildren: () => import('../../../components/businessconfigparty/businessconfigparty-routing')
+        loadChildren: () => import('../../../components/externalappiframe/ExternalAppIframeRouting')
     },
     {
         path: 'settings',
@@ -95,7 +95,7 @@ const routes: Routes = [
     },
     {
         path: 'admin',
-        loadChildren: () => import('../../../components/admin/admin-routing')
+        loadChildren: () => import('../../../components/admin/AdminRouting')
     },
     {
         path: 'realtimeusers',
@@ -104,7 +104,7 @@ const routes: Routes = [
     },
     {
         path: 'activityarea',
-        loadChildren: () => import('../../../components/activityarea/activityarea-routing')
+        loadChildren: () => import('../../../components/activityarea/ActivityAreaRouting')
     },
     {
         path: 'feedconfiguration',
@@ -113,7 +113,7 @@ const routes: Routes = [
     {
         path: 'changepassword',
         loadComponent: () =>
-            import('../../../components/changepassword/changepassword.component').then((m) => m.ChangepasswordComponent)
+            import('../../../components/changepassword/ChangePasswordComponent').then((m) => m.ChangepasswordComponent)
     },
     {
         path: 'externaldevicesconfiguration',

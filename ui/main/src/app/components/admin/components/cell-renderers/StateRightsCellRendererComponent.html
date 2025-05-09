@@ -1,0 +1,22 @@
+<!-- Copyright (c) 2021-2025, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<span *ngFor="let element of _stateRightsValues">
+    <span class="opfab-tooltip">
+        <span
+            class="opfab-badge opfab-bg-right-{{ element.stateRight.right.toString() | lowercase }}"
+            style="font-size: 14px; margin: 3px; color: black"
+            >{{ element.stateName }}</span
+        >
+        <span
+            class="opfab-tooltip-content left"
+            style="text-align: center; min-width: unset; padding-top: 0; padding-bottom: 0; translate: 10px">
+            {{ element.stateRight.right.toString() }}
+        </span>
+    </span>
+</span>
