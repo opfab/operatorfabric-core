@@ -102,9 +102,7 @@ sonar {
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,node-services/**/coverage/lcov.info'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
-        property 'sonar.coverage.exclusions','cli/**,config*/**/*,ui/**/*.spec.ts,ui/main/src/app/modules/**,\
-                                              ui/main/src/app/server/**,ui/main/src/app/authentication/**,\
-                                              ui/main/src/app/services/**,ui/main/src/app/router/**,ui/main/src/tests/**,\
+        property 'sonar.coverage.exclusions','cli/**,config*/**/*,ui/**,\
                                               **/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*,\
                                               node-services/**/server-side/**,**/*config.js,**/*.conf.js,\
                                               client/**,**/spring-test-utilities/**,tools/spring/spring-mongo-utilities,\
