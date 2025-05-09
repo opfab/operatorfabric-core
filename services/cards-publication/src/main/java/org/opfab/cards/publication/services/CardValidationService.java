@@ -99,11 +99,15 @@ public class CardValidationService {
             throw new ConstraintViolationException(
                     "constraint violation : character '.' is forbidden in process and state", null);
 
-        // constraint check : process and processInstanceId must not contain
+        // constraint check process must not contain
         // ('#','?','/')
-        if (!checkForbiddenChars(c))
+        if (!checkForbiddenCharsInProcess(c))
             throw new ConstraintViolationException(
-                    "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
+                    "constraint violation : forbidden characters ('#','?','/') in process", null);
+
+        if (checkSlashInProcessInstanceId(c))
+            throw new ConstraintViolationException(
+                    "constraint violation : forbidden characters '/' in processInstanceId", null);
     }
 
     void checkIsCardAChildCard(Card card) {
@@ -141,13 +145,16 @@ public class CardValidationService {
                 (!cardRepository.findArchivedCardByUid(initialParentCardUid).isPresent()));
     }
 
-    boolean checkForbiddenChars(Card card) {
+    boolean checkForbiddenCharsInProcess(Card card) {
         for (char ch : FORBIDDEN_CHARS) {
-            if (card.process.contains(Character.toString(ch))
-                    || card.processInstanceId.contains(Character.toString(ch)))
+            if (card.process.contains(Character.toString(ch)))
                 return false;
         }
         return true;
+    }
+
+    boolean checkSlashInProcessInstanceId(Card card) {
+        return card.processInstanceId.contains("/");
     }
 
     boolean checkIsDotCharacterNotInProcessAndState(Card c) {

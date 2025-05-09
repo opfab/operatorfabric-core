@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabCommands} from './opfabCommands';
+import { OpfabCommands } from './opfabCommands';
 
 export class OpfabGeneralCommands extends OpfabCommands {
     constructor() {
@@ -15,19 +15,30 @@ export class OpfabGeneralCommands extends OpfabCommands {
         super.init('OPFAB');
     }
 
-    checkLoadingSpinnerIsDisplayed = function () {
+    base64urlEncode(str) {
+        const base64 = btoa(str);
+        // Replace '+' with '-', '/' with '_' and remove trailing '=' to convert base64 to base64url
+        let base64url = base64.replace(/\+/g, '-').replace(/\//g, '_');
+        while (base64url.endsWith('=')) {
+            base64url = base64url.slice(0, base64url.length - 1);
+        }
+        return base64url;
+    }
+
+    checkLoadingSpinnerIsDisplayed = function() {
         cy.get('#opfab-loading-spinner').should('exist');
     };
 
-    checkLoadingSpinnerIsNotDisplayed = function () {
+    checkLoadingSpinnerIsNotDisplayed = function() {
         cy.get('#opfab-loading-spinner').should('not.exist');
     };
 
-    hackUrlCurrentlyUsedMechanism = function () {
+    hackUrlCurrentlyUsedMechanism = function() {
         cy.hackUrlCurrentlyUsedMechanism();
     };
 
-    loginWithoutHackWithUser = function (user) {
+
+    loginWithoutHackWithUser = function(user) {
         //type login
         cy.get('#opfab-login').should('be.visible');
         cy.get('#opfab-login').type(user);
@@ -40,10 +51,10 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('#opfab-login-btn-submit').click();
 
         //Wait for the app to finish initializing
-        cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
+        cy.get('#opfab-cypress-loaded-check', { timeout: 20000 }).should('have.text', 'true');
     };
 
-    loginWithUser = function (user) {
+    loginWithUser = function(user) {
         this.hackUrlCurrentlyUsedMechanism();
         //go to login page
         cy.visit('');
@@ -51,7 +62,7 @@ export class OpfabGeneralCommands extends OpfabCommands {
         this.loginWithoutHackWithUser(user);
     };
 
-    loginWithClock = function (dateToUse) {
+    loginWithClock = function(dateToUse) {
         // Do not use the generic login feature as we
         // need to launch cy.clock after cy.visit('')
         this.hackUrlCurrentlyUsedMechanism();
@@ -62,97 +73,97 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('#opfab-login-btn-submit').click();
 
         //Wait for the app to finish initializing
-        cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
+        cy.get('#opfab-cypress-loaded-check', { timeout: 15000 }).should('have.text', 'true');
     };
 
-    logout = function () {
+    logout = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-logout').click();
     };
 
-    navigateToAdministration = function () {
+    navigateToAdministration = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-admin').click();
     };
 
-    navigateToFeed = function () {
+    navigateToFeed = function() {
         cy.get('#opfab-navbar-menu-feed').click();
         cy.get('of-card-list').should('exist');
     };
 
-    navigateToActivityArea = function () {
+    navigateToActivityArea = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
         cy.get('of-activityarea').should('exist');
     };
 
-    navigateToArchives = function () {
+    navigateToArchives = function() {
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('of-archives').should('exist');
     };
 
-    navigateToCalendar = function () {
+    navigateToCalendar = function() {
         cy.get('#opfab-calendar-menu').click();
         cy.get('of-calendar').should('exist');
     };
 
-    navigateToDashboard = function () {
+    navigateToDashboard = function() {
         cy.get('#opfab-navbar-menu-dashboard').click();
         cy.get('of-dashboard').should('exist');
     };
 
-    navigateToMonitoring = function () {
+    navigateToMonitoring = function() {
         cy.get('#opfab-navbar-menu-monitoring').click();
         cy.get('of-monitoring').should('exist');
     };
 
-    navigateToMonitoringProcessus = function () {
+    navigateToMonitoringProcessus = function() {
         cy.get('#opfab-navbar-menu-processmonitoring').click();
         cy.get('of-processmonitoring').should('exist');
     };
 
-    navigateToCustomScreen1 = function () {
+    navigateToCustomScreen1 = function() {
         cy.get('#opfab-navbar-menu-label-menu2').click();
         cy.get('#opfab-navbar-menu-dropdown-testId').click();
     };
 
-    navigateToCustomScreen2 = function () {
+    navigateToCustomScreen2 = function() {
         cy.get('#opfab-navbar-menu-label-menu2').click();
         cy.get('#opfab-navbar-menu-dropdown-testId2').click();
     };
 
-    navigateToCustomScreen3 = function () {
+    navigateToCustomScreen3 = function() {
         cy.get('#opfab-navbar-menu-label-menu2').click();
         cy.get('#opfab-navbar-menu-dropdown-testId3').click();
     };
 
-    navigateToRealTimeUsers = function () {
+    navigateToRealTimeUsers = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();
     };
 
-    navigateToSettings = function () {
+    navigateToSettings = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-settings').click();
         cy.get('of-settings').should('exist');
     };
 
-    navigateToUserCard = function () {
+    navigateToUserCard = function() {
         cy.get('#opfab-newcard-menu').click();
         cy.get('of-usercard').should('exist');
     };
 
-    navigateToNotificationConfiguration = function () {
+    navigateToNotificationConfiguration = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click();
     };
 
-    openExternalDevices = function () {
+    openExternalDevices = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
     };
 
-    simulateTimeForOpfabCodeToExecute = function () {
+    simulateTimeForOpfabCodeToExecute = function() {
         cy.tick(100);
         cy.wait(10);
         cy.tick(100);
@@ -161,21 +172,21 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.wait(10);
     };
 
-    navigateToUserActionLogs = function () {
+    navigateToUserActionLogs = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-useractionlogs').click();
     };
 
-    switchToDayMode = function () {
+    switchToDayMode = function() {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-nightdaymode').click();
     };
 
-    checkUrlDisplayedIs = function (url) {
+    checkUrlDisplayedIs = function(url) {
         cy.get('iframe').invoke('attr', 'src').should('eq', url);
     };
 
-    selectOptionsFromMultiselect = function (multiselectId, option, hasTags = false, searchResultNumber = 0) {
+    selectOptionsFromMultiselect = function(multiselectId, option, hasTags = false, searchResultNumber = 0) {
         cy.get(multiselectId).click();
         cy.get(multiselectId).find('.vscomp-search-input').clear();
         cy.get(multiselectId).find('.vscomp-search-input').type(option);

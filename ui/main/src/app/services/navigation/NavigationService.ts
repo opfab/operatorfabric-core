@@ -11,6 +11,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {ApplicationRouter} from './router/ApplicationRouter';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {Observable, ReplaySubject} from 'rxjs';
+import {base64urlDecode, base64urlEncode} from 'app/utils/Encoding';
 export enum PageType {
     UNKNOWN,
     FEED,
@@ -59,7 +60,9 @@ export class NavigationService {
         NavigationService.router.listenForNavigationEnd((route: string) => {
             if (route.startsWith('/feed/cards/')) {
                 const cardId = route.split('cards/')[1];
-                SelectedCardService.setSelectedCardId(decodeURI(cardId));
+                // we need to decode the id as it is encoded in base64url to avoid the browser
+                // to interpret special characters that the id may contain
+                SelectedCardService.setSelectedCardId(base64urlDecode(cardId));
             }
         });
     }
@@ -91,7 +94,8 @@ export class NavigationService {
     }
 
     public static navigateToCard(cardId: string) {
-        NavigationService.navigateTo('/feed/cards/' + cardId);
+        // we encode the id in base64url to avoid the browser to interpret special characters that the id may contain
+        NavigationService.navigateTo('/feed/cards/' + base64urlEncode(cardId));
     }
 
     public static navigateToFeedWithProcessStateFilter(processFilter: string, stateFilter: string) {

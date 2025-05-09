@@ -7,13 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {FeedCommands} from '../support/feedCommands';
-import {CardCommands} from '../support/cardCommands';
-import {ScriptCommands} from '../support/scriptCommands';
-import {SettingsCommands} from '../support/settingsCommands';
+import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
+import { FeedCommands } from '../support/feedCommands';
+import { CardCommands } from '../support/cardCommands';
+import { ScriptCommands } from '../support/scriptCommands';
+import { SettingsCommands } from '../support/settingsCommands';
 
-describe('FeedScreen tests', function () {
+describe('FeedScreen tests', function() {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const card = new CardCommands();
@@ -25,16 +25,16 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-card-not-found').should('exist');
     }
 
-    before('Set up configuration', function () {
+    before('Set up configuration', function() {
         script.resetUIConfigurationFiles();
         script.loadTestConf();
     });
 
-    beforeEach('Delete all cards', function () {
+    beforeEach('Delete all cards', function() {
         script.deleteAllCards();
     });
 
-    it('Check card reception and read behaviour', function () {
+    it('Check card reception and read behaviour', function() {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
@@ -73,7 +73,7 @@ describe('FeedScreen tests', function () {
             .invoke('attr', 'data-urlId')
             .as('firstCardUrlId')
             .then((urlId) => {
-                cy.hash().should('eq', '#/feed/cards/' + urlId);
+                cy.hash().should('eq', '#/feed/cards/' + opfab.base64urlEncode(urlId));
                 cy.get('of-card').find('of-card-body');
             });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
@@ -97,7 +97,7 @@ describe('FeedScreen tests', function () {
                 .should('have.css', 'margin-left', '20px')
                 .invoke('attr', 'data-urlId')
                 .then((urlId) => {
-                    cy.hash().should('eq', '#/feed/cards/' + urlId);
+                    cy.hash().should('eq', '#/feed/cards/' + opfab.base64urlEncode(urlId));
                     cy.get('of-card').find('of-card-body');
                 });
         });
@@ -117,7 +117,7 @@ describe('FeedScreen tests', function () {
         });
     });
 
-    it('Check card delete ', function () {
+    it('Check card delete ', function() {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
@@ -127,13 +127,13 @@ describe('FeedScreen tests', function () {
         cy.get('of-card').should('not.exist');
     });
 
-    it('Check card visibility by publish date when business period is after selected time range', function () {
+    it('Check card visibility by publish date when business period is after selected time range', function() {
         script.sendCard('cypress/feed/futureEvent.json');
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
     });
 
-    it('Check sorting', function () {
+    it('Check sorting', function() {
         script.sendCard('defaultProcess/chartLine.json');
         script.sendCard('defaultProcess/question.json');
         script.sendCard('defaultProcess/process.json');
@@ -198,7 +198,7 @@ describe('FeedScreen tests', function () {
         feed.checkLightCardAtIndexHasTitle(3, 'Process state (calcul)');
     });
 
-    it('Check filter by priority', function () {
+    it('Check filter by priority', function() {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
 
@@ -226,7 +226,7 @@ describe('FeedScreen tests', function () {
         feed.checkNumberOfDisplayedCardsIs(6);
     });
 
-    it('Check filter by acknowledgement', function () {
+    it('Check filter by acknowledgement', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/message.json');
         script.sendCard('defaultProcess/chart.json');
@@ -276,7 +276,7 @@ describe('FeedScreen tests', function () {
         feed.checkNumberOfDisplayedCardsIs(0);
     });
 
-    it('Check filter by response from user entity', function () {
+    it('Check filter by response from user entity', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/message.json');
         script.sendCard('defaultProcess/question.json');
@@ -308,7 +308,7 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-light-card-defaultProcess-process4').should('exist');
     });
 
-    it('Check filter by process', function () {
+    it('Check filter by process', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/chart.json');
         script.sendCard('defaultProcess/question.json');
@@ -334,7 +334,7 @@ describe('FeedScreen tests', function () {
         feed.checkNumberOfDisplayedCardsIs(3);
     });
 
-    it('Check apply filters to timeline', function () {
+    it('Check apply filters to timeline', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/chart.json');
 
@@ -359,7 +359,7 @@ describe('FeedScreen tests', function () {
         checkTimelineCircles(2);
     });
 
-    it('Check reset all filters', function () {
+    it('Check reset all filters', function() {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
 
@@ -412,7 +412,7 @@ describe('FeedScreen tests', function () {
         checkResetAllFiltersLinkDoesNotExists();
     });
 
-    it('Check reads and acks are kept when update card has KEEP_EXISTING_ACKS_AND_READS action', function () {
+    it('Check reads and acks are kept when update card has KEEP_EXISTING_ACKS_AND_READS action', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/message.json');
 
@@ -467,7 +467,7 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-light-card-defaultProcess-process1 .fa-check');
     });
 
-    it('Check Hallway mode', function () {
+    it('Check Hallway mode', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/message.json');
         script.sendCard('defaultProcess/contingencies.json');
@@ -501,7 +501,7 @@ describe('FeedScreen tests', function () {
         cy.get('of-card').should('not.exist');
     });
 
-    it('Open next card after acknowledgment', function () {
+    it('Open next card after acknowledgment', function() {
         opfab.loginWithUser('operator1_fr');
         script.sendCard('defaultProcess/chart.json');
         script.sendCard('defaultProcess/message.json');

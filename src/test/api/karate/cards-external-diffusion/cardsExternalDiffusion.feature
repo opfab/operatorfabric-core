@@ -198,7 +198,8 @@ Scenario: Check mail for operator 1 is sent
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title - card summary') == 0
     And match response.items[0].Content.Body contains 'A MESSAGE'
-    And match response.items[0].Content.Body contains '/api_test.process1'
+    # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
+    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE' 
 
     # Delete sent email
     Given url 'http://localhost:8025/api/v1/messages'
@@ -287,7 +288,8 @@ Scenario: Check daily recap email is being sent
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the day') == 0
-    And match response.items[0].Content.Body contains 'api_test.process1'
+    # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
+    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE'
 
     # Delete sent email
     Given url 'http://localhost:8025/api/v1/messages'
@@ -314,7 +316,8 @@ Scenario: Check weekly recap email is being sent
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the week') == 0
-    And match response.items[0].Content.Body contains 'api_test.process1'
+    # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
+    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE'
 
     # Delete sent email
     Given url 'http://localhost:8025/api/v1/messages'

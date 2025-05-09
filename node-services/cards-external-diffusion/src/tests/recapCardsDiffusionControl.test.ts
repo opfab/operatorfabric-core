@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,11 @@ import {
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
+
+// URL BASE 64 encoding of "defaultProcess.process1"
+const BASE64URL_ENCODED_CARDID_FOR_PROCESS1 = 'ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE';
+// URL BASE 64 encoding of "defaultProcess.process2"
+const BASE64URL_ENCODED_CARDID_FOR_PROCESS2 = 'ZGVmYXVsdFByb2Nlc3MucHJvY2VzczI';
 
 const logger = getLogger();
 
@@ -208,10 +213,10 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
         expect(mailService.sent[0].body).toMatch(
-            `INFORMATION - <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1</a>`
+            `INFORMATION - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS1} ">Title1 - Summary1</a>`
         );
         expect(mailService.sent[0].body).toMatch(
-            `ALARM - <a href=" http://localhost/#/feed/cards/defaultProcess.process2 ">Title1 - Summary1</a>`
+            `ALARM - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS2} ">Title1 - Summary1</a>`
         );
         expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });

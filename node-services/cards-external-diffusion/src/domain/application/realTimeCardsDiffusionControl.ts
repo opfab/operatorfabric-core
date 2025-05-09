@@ -223,7 +223,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             ' <a href=" ' +
             this.opfabUrlInMailContent +
             '/#/feed/cards/' +
-            card.id +
+            this.base64urlEncode(card.id) +
             ' ">' +
             this.escapeHtml(card.titleTranslated) +
             ' - ' +
@@ -263,16 +263,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);
         }
         return cardBodyHtml;
-    }
-
-    escapeHtml(text: string | undefined): string {
-        if (text == null) return '';
-        return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
     }
 
     async cleanCardsAlreadySent(): Promise<void> {

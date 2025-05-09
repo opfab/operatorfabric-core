@@ -22,6 +22,9 @@ import {
 
 const logger = getLogger();
 
+// URL BASE 64 encoding of "defaultProcess.process1"
+const BASE64URL_ENCODED_CARDID = 'ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE';
+
 describe('Cards external diffusion', function () {
     let realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
     let opfabServicesInterfaceStub: OpfabServicesInterfaceStub;
@@ -101,7 +104,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1 - ' +
+            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 - Summary1 - ` +
                 startDateString +
                 ' - </a> <br><br>Postfix'
         );
@@ -158,7 +161,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 - Summary1 - ' +
+            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 - Summary1 - ` +
                 startDateString +
                 ' - ' +
                 '</a> <br> Title1 Param1 <br><br>Postfix'
@@ -269,7 +272,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;br&gt; - ' +
+            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 &amp; &lt;br&gt; - &quot; Summary1 &lt;br&gt; - ` +
                 startDateString +
                 ' - ' +
                 '</a> <br> Title1 &amp; &lt;br&gt; <br><br>Sent by ENTITY2 name. <br><br>Postfix'
@@ -325,7 +328,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            'Prefix <a href=" http://localhost/#/feed/cards/defaultProcess.process1 ">Title1 &amp; &lt;br&gt; - &quot; ' +
+            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 &amp; &lt;br&gt; - &quot; ` +
                 'Summary1 &lt;br&gt; - ' +
                 startDateString +
                 ' - </a> <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
