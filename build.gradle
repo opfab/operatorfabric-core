@@ -141,7 +141,7 @@ sonar {
           'ui/main/**/*.component.ts',
           'ui/main/**/*Component.ts',
           'ui/main/src/tests/**',
-          'ui/main/**/*.specs.ts',
+          'ui/main/**/*.spec.ts',
           'ui/main/src/karma.conf.js',
           '**/controllers/**',
           '**/src/tooling/**',
