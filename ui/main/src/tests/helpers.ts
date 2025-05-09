@@ -30,7 +30,7 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {EntitiesServerMock} from './mocks/entitiesServer.mock';
 import {Entity} from '@ofServices/entities/model/Entity';
-import {OpfabAPI} from 'app/api/opfab.api';
+import {OpfabAPI} from 'app/api/OpfabApi';
 import {Message} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';

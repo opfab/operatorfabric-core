@@ -21,12 +21,12 @@ import {
     ModuleRegistry,
     provideGlobalGridOptions
 } from 'ag-grid-community';
-import {CheckboxCellRendererComponent} from 'app/components/admin/components/cell-renderers/checkbox-cell-renderer.component';
+import {CheckboxCellRendererComponent} from 'app/components/admin/components/cell-renderers/CheckboxCellRendererComponent';
 import {Observable} from 'rxjs';
-import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
+import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/ActionCellRendererComponent';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
-import {SignalMappingsCellRendererComponent} from 'app/components/admin/components/cell-renderers/signal-mappings-cell-renderer.component';
+import {SignalMappingsCellRendererComponent} from 'app/components/admin/components/cell-renderers/SignalMappingsCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
 
 @Directive()

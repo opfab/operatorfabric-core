@@ -24,7 +24,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstr
 import {SelectedCardService} from '../../../../services/selectedCard/SelectedCardService';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf} from '@angular/common';
-import {CardComponent} from '../../../card/card.component';
+import {CardComponent} from '../../../card/CardComponent';
 import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/config/model/ProcessMonitoringConfig';
 import {AgGrid} from 'app/utils/AgGrid';
 

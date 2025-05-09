@@ -28,7 +28,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {OpfabMap} from 'app/components/share/map/opfab-map';
 import {NgFor} from '@angular/common';
-import {CardComponent} from '../../../card/card.component';
+import {CardComponent} from '../../../card/CardComponent';
 
 @Component({
     selector: 'of-monitoring-map',

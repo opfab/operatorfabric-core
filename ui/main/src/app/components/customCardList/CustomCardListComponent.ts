@@ -14,7 +14,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from 
 import {TranslateModule} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
-import {CardComponent} from 'app/components/card/card.component';
+import {CardComponent} from 'app/components/card/CardComponent';
 import {AgGridAngular} from 'ag-grid-angular';
 import {
     AllCommunityModule,

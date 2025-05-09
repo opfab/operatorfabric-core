@@ -30,7 +30,7 @@ import {OpfabStore} from '../../../../store/OpfabStore';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgIf, AsyncPipe} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {CardComponent} from '../../../card/card.component';
+import {CardComponent} from '../../../card/CardComponent';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {Utilities} from '../../../../utils/Utilities';
 import {AgGrid} from '../../../../utils/AgGrid';

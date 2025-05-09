@@ -13,7 +13,7 @@ import {LoggerService as logger, LogOption} from 'app/services/logs/LoggerServic
 import {RemoteLoggerService} from '../logs/RemoteLoggerService';
 import {TranslationService} from '../translation/TranslationService';
 import {UsersService} from '../users/UsersService';
-import {OpfabAPI} from '../../api/opfab.api';
+import {OpfabAPI} from '../../api/OpfabApi';
 import {GlobalStyleService} from '../style/global-style.service';
 import {EntitiesService} from '../entities/EntitiesService';
 import {GroupsService} from '../groups/GroupsService';

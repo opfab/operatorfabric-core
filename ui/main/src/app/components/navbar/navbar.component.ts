@@ -18,7 +18,7 @@ import {NgClass, NgTemplateOutlet, NgFor, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InfoComponent} from './info/info.component';
 import {UserCardComponent} from '../usercard/usercard.component';
-import {AboutComponent} from '../core/about/about.component';
+import {AboutComponent} from '../core/about/AboutComponent';
 import {SpinnerComponent} from '../share/spinner/spinner.component';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
