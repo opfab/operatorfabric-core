@@ -45,7 +45,7 @@
         "@types/node": "22.15.17",
         "@types/nodemailer": "6.4.17",
         "@types/sinon": "17.0.4",
-        "eslint": "9.25.1",
+        "eslint": "9.26.0",
         "eslint-plugin-jest": "28.11.0",
         "globals": "16.0.0",
         "jest": "29.7.0",
