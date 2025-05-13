@@ -62,7 +62,7 @@ describe('Response card tests', function () {
 
         // Respond to the card
         cy.get('#opfab-slider').click();
-        card.sendResponse();
+        card.sendResponseWithConfirmationPopup();
 
         // The label of the validate button must be "MODIFY RESPONSE" now
         cy.contains('#opfab-card-details-btn-response', 'MODIFY RESPONSE');
@@ -89,7 +89,7 @@ describe('Response card tests', function () {
         cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
 
         cy.waitDefaultTime(); // to avoid detach dom error, we need to wait the new template has been rendered
-        card.sendResponse();
+        card.sendResponseWithConfirmationPopup();
 
         cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
         cy.get('#response_from_ENTITY2_FR').should('not.exist');
@@ -183,7 +183,7 @@ describe('Response card tests', function () {
 
         // Respond to the card
         cy.get('#opfab-slider').click();
-        card.clickOnSendResponse();
+        card.clickOnSendResponseWithConfirmationPopup();
 
         // Check the popup for the entities choice is displayed
         cy.get('#opfab-card-details-entities-choice-selector').should('exist');
@@ -217,7 +217,7 @@ describe('Response card tests', function () {
         // operator4_fr updates the answer of ENTITY1_FR and ENTITY2_FR
         card.modifyResponse();
         cy.get('#opfab-slider').click();
-        card.clickOnSendResponse();
+        card.clickOnSendResponseWithConfirmationPopup();
         cy.get('#opfab-card-details-entities-choice-selector').click();
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
         cy.get('#opfab-card-details-entity-choice-btn-confirm').should('be.disabled'); // Check if the button is disabled when no entity is selected
@@ -257,7 +257,7 @@ describe('Response card tests', function () {
         feed.openFirstCard();
         card.modifyResponse();
         cy.get('#opfab-slider').click();
-        card.sendResponse();
+        card.sendResponseWithConfirmationPopup();
         cy.get('#opfab-card-details-entities-choice-selector').should('not.exist'); // entities choice popup must not be displayed
         cy.waitDefaultTime();
         // Check the response from ENTITY3_FR (East) has been updated and the other responses are still the same
@@ -398,7 +398,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-slider');
 
         cy.contains('#opfab-card-details-btn-response', 'SEND RESPONSE');
-        card.clickOnSendResponse();
+        card.clickOnSendResponseWithConfirmationPopup();
 
         // Send response button should be disabled
         cy.get('#opfab-card-details-btn-response').should('be.disabled');

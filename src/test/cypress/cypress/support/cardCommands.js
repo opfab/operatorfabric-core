@@ -84,6 +84,11 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-details-btn-response').click();
     };
 
+    clickOnSendResponseWithConfirmationPopup = function () {
+        cy.get('#opfab-card-details-btn-response').click();
+        cy.get('#opfab-btn-ok').click();
+    };
+
     closeMessageAfterResponseSend = function () {
         cy.get('.opfab-info-message').contains('Your answer is confirmed. Thank you!');
         cy.get('#opfab-close-alert').click();
@@ -91,6 +96,11 @@ export class CardCommands extends OpfabCommands {
 
     sendResponse = function () {
         this.clickOnSendResponse();
+        this.closeMessageAfterResponseSend();
+    };
+
+    sendResponseWithConfirmationPopup = function () {
+        this.clickOnSendResponseWithConfirmationPopup();
         this.closeMessageAfterResponseSend();
     };
 

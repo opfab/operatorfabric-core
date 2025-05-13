@@ -32,7 +32,8 @@
 				},
 		  "response": {
 			"state": "questionState",
-			"emittingEntityAllowedToRespond": true
+			"emittingEntityAllowedToRespond": true,
+			"showConfirmationPopup": true
 		  },
 		  "templateName": "question",
 		  "styles": [],

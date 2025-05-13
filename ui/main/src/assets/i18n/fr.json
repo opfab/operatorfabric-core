@@ -77,7 +77,8 @@
         "pageSize": "lignes par page",
         "popup": {
             "title": "CONFIRMATION",
-            "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?"
+            "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?",
+            "areYouSureYouWantToSendResponse": "Êtes-vous sûr de vouloir envoyer votre réponse ?"
         },
         "error": {
             "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
