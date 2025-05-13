@@ -17,15 +17,15 @@ Feature: getResponseBusinessconfig
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
-      And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"],"emittingEntityAllowedToRespond":false}
+      And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"],"emittingEntityAllowedToRespond":false,"showConfirmationPopup":false}
 
-    Scenario: get businessconfig response with emittingEntityAllowedToRespond
+    Scenario: get businessconfig response with emittingEntityAllowedToRespond and showConfirmationPopup
 
       Given url opfabUrl + '/businessconfig/processes/' + questionProcess + '/' + questionState + '/response?version=' + version
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
-      And match response == {"lock":null,"state":"questionState","externalRecipients":[],"emittingEntityAllowedToRespond":true}
+      And match response == {"lock":null,"state":"questionState","externalRecipients":[],"emittingEntityAllowedToRespond":true,"showConfirmationPopup":true}
 
 
 
@@ -34,7 +34,7 @@ Feature: getResponseBusinessconfig
     Given url opfabUrl + '/businessconfig/processes/' + process + '/' + state + '/response?version=' + version
     When method get
     Then status 200
-    And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"],"emittingEntityAllowedToRespond":false}
+    And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"],"emittingEntityAllowedToRespond":false,"showConfirmationPopup":false}
 
 
   Scenario: get businessconfig response without authentication

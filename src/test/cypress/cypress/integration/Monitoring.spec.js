@@ -474,7 +474,7 @@ describe ('Monitoring screen tests',function () {
         // template is ready
         cy.get("#question-form").should('exist');
         // Respond to the card 
-        card.sendResponse();
+        card.sendResponseWithConfirmationPopup();
 
         cy.waitDefaultTime();
 

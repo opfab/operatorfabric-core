@@ -10,7 +10,7 @@
     class="opfab-btn"
     *ngIf="showButton && isUserEnabledToRespond && !isResponseLocked"
     [disabled]="lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponseInProgress"
-    (click)="processClickOnSendResponse()">
+    (click)="openConfirmSendResponse()">
     {{ btnValidateLabel | translate }}
 </button>
 

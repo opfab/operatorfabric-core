@@ -28,6 +28,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
+import {ModalService} from '@ofServices/modal/ModalService';
+import {I18n} from '../../../../model/I18n';
 
 const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
@@ -75,12 +77,17 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public btnUnlockLabel = 'response.btnUnlock';
     isReadOnlyUser: boolean;
 
+    private askConfirmation: boolean;
+
     constructor(private readonly modalService: NgbModal) {
         const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
+        const processDefinition = ProcessesService.getProcess(this.card.process);
+        this.askConfirmation = processDefinition.states.get(this.card.state).response?.showConfirmationPopup ?? false;
+
         this.selectEntitiesForm = new FormGroup({
             entities: new FormControl([])
         });
@@ -195,5 +202,24 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     public unlockAnswer() {
         this.unlockAnswerEvent.emit(true);
+    }
+
+    public openSendResponseConfirmationModal() {
+        ModalService.openConfirmationModal(
+            new I18n('shared.popup.title'),
+            new I18n('shared.popup.areYouSureYouWantToSendResponse')
+        ).then((confirm) => {
+            if (confirm) {
+                this.processClickOnSendResponse();
+            }
+        });
+    }
+
+    public openConfirmSendResponse() {
+        if (this.askConfirmation) {
+            this.openSendResponseConfirmationModal();
+        } else {
+            this.processClickOnSendResponse();
+        }
     }
 }

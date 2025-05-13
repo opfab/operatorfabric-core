@@ -76,7 +76,8 @@ export class Response {
         readonly lock?: boolean,
         readonly state?: string,
         readonly externalRecipients?: string[],
-        readonly emittingEntityAllowedToRespond?: boolean
+        readonly emittingEntityAllowedToRespond?: boolean,
+        readonly showConfirmationPopup?: boolean
     ) {}
 }
 

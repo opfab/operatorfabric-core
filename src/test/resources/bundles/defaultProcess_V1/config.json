@@ -75,7 +75,8 @@
             "description": "Question state",
             "response": {
                 "lock": true,
-                "state": "responseState"
+                "state": "responseState",
+                "showConfirmationPopup": true
             },
             "templateName": "question",
             "styles": ["style"],

@@ -553,7 +553,7 @@ describe('FeedScreen tests', function() {
 
         // Respond to the card
         cy.get('#opfab-slider').click();
-        card.sendResponse();
+        card.sendResponseWithConfirmationPopup();
     }
 
     function acknowledgeCard(cardId) {

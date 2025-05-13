@@ -77,7 +77,8 @@
         "pageSize": "lines per page",
         "popup": {
             "title": "CONFIRMATION",
-            "areYouSure": "You have made some changes. Are you sure you want to save them ?"
+            "areYouSure": "You have made some changes. Are you sure you want to save them ?",
+            "areYouSureYouWantToSendResponse": "Are you sure you want to send response ?"
         },
         "error": {
             "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
