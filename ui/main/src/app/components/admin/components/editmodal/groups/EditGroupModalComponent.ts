@@ -33,7 +33,7 @@ import {Observable, of} from 'rxjs';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 
 @Component({
     selector: 'of-edit-group-modal',

@@ -64,7 +64,7 @@ import {OAuthModule} from 'angular-oauth2-oidc';
 import {NgbModule, NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import {AppRoutingModule} from './app/services/navigation/router/AngularApplicationRouter.module';
-import {AppComponent} from './app/app.component';
+import {AppComponent} from './app/AppComponent';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {AngularHandlebarsTemplateServer} from '@ofServices/handlebars/server/AngularHandlebarsTemplateServer';
 import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';

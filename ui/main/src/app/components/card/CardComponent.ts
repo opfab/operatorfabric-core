@@ -21,7 +21,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/CardBodyComponent';
-import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {TranslateModule} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';

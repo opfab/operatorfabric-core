@@ -1,0 +1,340 @@
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+.opfab-navbar-container {
+    padding-top: 20px;
+    min-height: 80px;
+    max-height: 80px;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    white-space: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 10px;
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-logo {
+    background-color: var(--opfab-bgcolor);
+    margin-left: 20px;
+    margin-top: -5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+}
+
+.opfab-navigation {
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+  
+.opfab-navigation-link {
+    cursor: pointer;
+    position: relative;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    color: var(--opfab-navbar-color);
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-navigation-link.active {
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+.opfab-icon-external-link {
+    color: var(--opfab-navbar-color);
+    text-decoration: none;
+    padding-left: 0.5rem;
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-navigation ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* NAVIGATION LINKS AS ICONS */
+
+.opfab-icons-menu-collapsed {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    background: var(--opfab-bgcolor);
+    padding-top: 5px;
+    cursor: pointer;
+}
+
+.opfab-icons-menu {
+    position: absolute;
+    right: 0;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding-top: 5px;
+    background: var(--opfab-bgcolor);
+}
+
+.opfab-icons-menu li {
+    padding-left:15px;
+}
+
+/* DROPDOWN MENUS */
+
+.opfab-navigation ul ul {
+    border : 1px solid var(--opfab-navbar-dropdown-menu-border-color);
+    position: absolute;
+    border-radius: 10px;
+    left: 0;
+    z-index: 1;
+    overflow:visible;
+    background-color: var(--opfab-navbar-right-menu-bgcolor);
+    display: none;
+    margin-top: 0;
+    padding-top: 10px;
+    padding-bottom: 15px; 
+    padding-right: 15px;
+  }
+
+.opfab-navigation li:hover  ul, 
+.opfab-navigation li:focus-within ul {
+    display: block;
+  }
+
+.opfab-navigation-dropdown-menu-link {
+    position: relative;
+    margin-left: 1rem;
+    margin-top: 5px;
+    color: var(--opfab-navbar-color);
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-navbar-info {
+    padding-left: 15px;
+    margin-top: -10px;
+    margin-right: 50px; /* space for environment name */
+}
+
+/* ENVIRONMENT NAME */ 
+
+.opfab-environment-name-container {
+    position: absolute;
+    right: 0;
+    width: 80px;
+    height: 87px;
+    overflow: hidden;
+    margin-top: -30px;
+    margin-bottom: -20px;
+}
+
+.opfab-environment-name {
+    font-size: 10px;
+    transform: rotate(45deg);
+    color: white;
+    margin-top: 33px;
+    margin-left: -57px;
+    width: 210px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* DROPDOWN RIGHT MENU */
+
+.opfab-dropdown-right-menu-link {
+    color: var(--opfab-navbar-color);
+}
+
+.opfab-right-menu {
+    color: var(--opfab-navbar-color);
+    border-top: 2px solid var(--opfab-navbar-color);
+    margin: -16px -12px -10px;
+    padding-top: 10px;
+    letter-spacing: normal;
+    padding-bottom: 20px;
+}
+
+.opfab-right-menu-item {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 16px;
+    line-height: 40px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-right-menu-link {
+    display: grid;
+    grid-template-columns: 30px auto;
+    color: var(--opfab-navbar-color);
+    align-items: center;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+
+/* ICONS */ 
+
+.opfab-menu-icon {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+    background: var(--opfab-navbar-color);
+    mask-size: cover;
+}
+
+.opfab-menu-icon-settings {
+    mask: url('../../../assets/images/icons/parameters.svg');
+}
+
+.opfab-menu-icon-realtimeusers {
+    mask: url('../../../assets/images/icons/clock.svg');
+}
+
+.opfab-menu-icon-activityarea {
+    mask: url('../../../assets/images/icons/user-gear.svg');
+}
+
+.opfab-menu-icon-externaldevicesconfiguration {
+    mask: url('../../../assets/images/icons/volume-high.svg');
+}
+
+.opfab-menu-icon-feedconfiguration {
+    mask: url('../../../assets/images/icons/notification.svg');
+}
+
+.opfab-menu-icon-useractionlogs {
+    mask: url('../../../assets/images/icons/logs.svg');
+}
+
+.opfab-menu-icon-about {
+    mask: url('../../../assets/images/icons/about.svg');
+}
+
+.opfab-menu-icon-changepassword {
+    mask: url('../../../assets/images/icons/change-password.svg');
+}
+
+.opfab-menu-icon-logout {
+    mask: url('../../../assets/images/icons/logout.svg');
+}
+
+.opfab-menu-icon-admin {
+    mask: url('../../../assets/images/icons/administration.svg');
+}
+
+.opfab-menu-icon-nightdaymode {
+    mask: url('../../../assets/images/icons/dark-light.svg');
+}
+
+.opfab-right-menu-item:hover .opfab-menu-icon-admin,
+.opfab-right-menu-item:hover .opfab-menu-icon-settings,
+.opfab-right-menu-item:hover .opfab-menu-icon-realtimeusers,
+.opfab-right-menu-item:hover .opfab-menu-icon-externaldevicesconfiguration,
+.opfab-right-menu-item:hover .opfab-menu-icon-activityarea,
+.opfab-right-menu-item:hover .opfab-menu-icon-feedconfiguration,
+.opfab-right-menu-item:hover .opfab-menu-icon-useractionlogs,
+.opfab-right-menu-item:hover .opfab-menu-icon-about,
+.opfab-right-menu-item:hover .opfab-menu-icon-nightdaymode,
+.opfab-right-menu-item:hover .opfab-menu-icon-changepassword,
+.opfab-right-menu-item:hover .opfab-menu-icon-logout {
+    background: var(--opfab-navbar-color-hover);
+}
+
+.opfab-menu-icon-newcard {
+    cursor: pointer;
+    display: inline-block;
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    margin-top: -5px;
+    background: var(--opfab-text-color);
+    mask: url('../../../assets/images/icons/newcard.svg');
+}
+
+.opfab-menu-icon-calendar {
+    cursor: pointer;
+    display: inline-block;
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    margin-top: -5px;
+    background: var(--opfab-text-color);
+    mask: url('../../../assets/images/icons/calendar.svg');
+}
+
+.opfab-menu-icon-calendar.active {
+    background: var(--opfab-navbar-color-active);
+}
+
+.opfab-menu-icon-newcard:hover,
+.opfab-menu-icon-calendar:hover {
+    background: var(--opfab-navbar-color-hover);
+}
+
+
+.opfab-about-logo {
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.opfab-about-title {
+    color: var(--opfab-text-color-stronger);
+}
+
+@media (width >= 1000px) {
+    .opfab-collapsed-navbar {
+        display: none;
+    }
+}
+
+@media (width <= 1000px) {
+    .opfab-full-navbar {
+        display: none;
+    }
+}

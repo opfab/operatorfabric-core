@@ -25,7 +25,7 @@ import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {NgIf} from '@angular/common';
-import {SpinnerComponent} from '../../../share/spinner/spinner.component';
+import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';

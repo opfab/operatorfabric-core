@@ -17,7 +17,7 @@ import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';
-import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 
 @Component({
     selector: 'of-activityarea',

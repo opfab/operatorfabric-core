@@ -18,7 +18,7 @@ import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-s
 import {SupervisedEntitiesService} from '@ofServices/admin/SupervisedEntitiesService';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {CrudUtilities} from '@ofServices/admin/CrudUtils';
 
 @Component({
