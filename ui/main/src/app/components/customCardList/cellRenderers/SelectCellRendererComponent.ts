@@ -12,7 +12,7 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MultiSelectComponent} from '../../share/multi-select/multi-select.component';
+import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponent';
 
 @Component({
     selector: 'of-select-cell-renderer',

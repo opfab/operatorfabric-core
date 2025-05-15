@@ -14,7 +14,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {NgIf, NgFor, NgStyle} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {CountDownComponent} from '../../../share/countdown/countdown.component';
+import {CountDownComponent} from '../../../share/countdown/CountDownComponent';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {Severity} from 'app/model/Severity';
 import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';

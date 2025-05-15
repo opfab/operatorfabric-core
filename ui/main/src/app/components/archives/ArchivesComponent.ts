@@ -28,7 +28,7 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
 import {Utilities} from '../../utils/Utilities';
 import {Card} from 'app/model/Card';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
-import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
+import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/ArchivesLoggingFiltersComponent';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
@@ -38,9 +38,9 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {SpinnerComponent} from '../share/spinner/spinner.component';
+import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {ArchivedCardDetailComponent} from './components/archived-card-detail/ArchivedCardDetailComponent';
-import {OpfabTitleCasePipe} from '../share/pipes/opfab-title-case.pipe';
+import {OpfabTitleCasePipe} from '../share/pipes/OpfabTitleCasePipe';
 import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

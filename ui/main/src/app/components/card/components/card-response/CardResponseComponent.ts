@@ -25,7 +25,7 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {MultiSelectComponent} from '../../../share/multi-select/multi-select.component';
+import {MultiSelectComponent} from '../../../share/multi-select/MultiSelectComponent';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
 import {ModalService} from '@ofServices/modal/ModalService';

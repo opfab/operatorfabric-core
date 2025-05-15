@@ -1,0 +1,63 @@
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+.opfab-pinned-cards {
+    display: flex;
+    margin-left: 38px;
+    justify-content: right;
+}
+
+#of-pinned-cards {
+    display: flex;
+}
+
+.opfab-pinned-card {
+    box-shadow: var(--opfab-card-shadow);
+    color: var(--opfab-lightcard-detail-textcolor);
+    background-color: var(--opfab-lightcard-detail-bgcolor);
+    margin-right: 10px;
+    padding-right: 5px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.opfab-hidden-pinned-card {
+    margin-top: 5px;
+}
+
+.opfab-bg-sev-alarm::before {
+    background-color: var(--opfab-color-severity-alarm);
+}
+
+.opfab-bg-sev-action::before {
+    background-color: var(--opfab-color-severity-action);
+}
+
+.opfab-bg-sev-compliant::before {
+    background-color: var(--opfab-color-severity-compliant);
+}
+
+.opfab-bg-sev-information::before {
+    background-color: var(--opfab-color-severity-information);
+}
+
+span {
+    white-space: nowrap;
+}
+
+span::before {
+    content: '';
+    display: inline-flex;
+    width: 5px;
+    height: 20px;
+    margin-bottom: 1.5px;
+    margin-right: 4px;
+    vertical-align: top;
+}

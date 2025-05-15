@@ -9,7 +9,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SpinnerComponent} from '../../../share/spinner/spinner.component';
+import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 

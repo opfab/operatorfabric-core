@@ -31,7 +31,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Observable, of} from 'rxjs';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {NgIf} from '@angular/common';
-import {MultiSelectComponent} from '../../../../share/multi-select/multi-select.component';
+import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {TagInputModule} from 'ngx-chips';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 

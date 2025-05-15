@@ -14,7 +14,7 @@ import {DisplayContext} from 'app/model/DisplayContext';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../utils/Utilities';
-import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/simplified-card-view.component';
+import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/SimplifiedCardViewComponent';
 import {NgIf} from '@angular/common';
 
 @Component({

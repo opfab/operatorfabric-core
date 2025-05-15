@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
-import {OpfabNgbModalComponent} from '../../../components/share/modal/opfabNgbModal.component';
+import {OpfabNgbModalComponent} from '../../../components/share/modal/OpfabNgbModalComponent';
 import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 
 @Injectable({

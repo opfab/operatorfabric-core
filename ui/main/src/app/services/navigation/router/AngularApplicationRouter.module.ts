@@ -10,10 +10,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../../../components/core/application-loading/login/LoginComponent';
-import {FeedComponent} from 'app/components/feed/feed.component';
+import {FeedComponent} from 'app/components/feed/FeedComponent';
 import {CardComponent} from 'app/components/card/CardComponent';
 import {CardBodyComponent} from 'app/components/card/components/card-body/CardBodyComponent';
-import {MapComponent} from 'app/components/feed/components/map/map.component';
+import {MapComponent} from 'app/components/feed/components/map/MapComponent';
 
 // !!! WARNING !!!
 //  WHEN MODIFYING THE CODE
@@ -59,21 +59,21 @@ const routes: Routes = [
     {
         path: 'monitoring',
         loadComponent: () =>
-            import('../../../components/monitoring/monitoring.component').then((m) => m.MonitoringComponent)
+            import('../../../components/monitoring/MonitoringComponent').then((m) => m.MonitoringComponent)
     },
     {
         path: 'dashboard',
         loadComponent: () =>
-            import('../../../components/dashboard/dashboard.component').then((m) => m.DashboardComponent)
+            import('../../../components/dashboard/DashboardComponent').then((m) => m.DashboardComponent)
     },
     {
         path: 'logging',
-        loadComponent: () => import('../../../components/logging/logging.component').then((m) => m.LoggingComponent)
+        loadComponent: () => import('../../../components/logging/LoggingComponent').then((m) => m.LoggingComponent)
     },
     {
         path: 'processmonitoring',
         loadComponent: () =>
-            import('../../../components/processmonitoring/processmonitoring.component').then(
+            import('../../../components/processmonitoring/ProcessmonitoringComponent').then(
                 (m) => m.ProcessMonitoringComponent
             )
     },
@@ -87,7 +87,7 @@ const routes: Routes = [
     },
     {
         path: 'settings',
-        loadChildren: () => import('../../../components/settings/settings-routing')
+        loadChildren: () => import('../../../components/settings/SettingsRouting')
     },
     {
         path: 'navbar',
@@ -100,7 +100,7 @@ const routes: Routes = [
     {
         path: 'realtimeusers',
         loadComponent: () =>
-            import('../../../components/realtimeusers/realtimeusers.component').then((m) => m.RealtimeusersComponent)
+            import('../../../components/realtimeusers/RealtimeUsersComponent').then((m) => m.RealtimeUsersComponent)
     },
     {
         path: 'activityarea',
@@ -108,7 +108,7 @@ const routes: Routes = [
     },
     {
         path: 'feedconfiguration',
-        loadChildren: () => import('../../../components/notificationconfiguration/notificationconfiguration-routing')
+        loadChildren: () => import('../../../components/notificationconfiguration/NotificationConfigurationRouting')
     },
     {
         path: 'changepassword',
@@ -118,12 +118,12 @@ const routes: Routes = [
     {
         path: 'externaldevicesconfiguration',
         loadChildren: () =>
-            import('../../../components/externaldevicesconfiguration/externaldevicesconfiguration-routing')
+            import('../../../components/externaldevicesconfiguration/ExternalDevicesConfigurationRouting')
     },
     {
         path: 'useractionlogs',
         loadComponent: () =>
-            import('../../../components/useractionlogs/useractionlogs.component').then((m) => m.UserActionLogsComponent)
+            import('../../../components/useractionlogs/UserActionLogsComponent').then((m) => m.UserActionLogsComponent)
     },
     {
         path: 'customscreen/:id',
@@ -133,7 +133,7 @@ const routes: Routes = [
     {
         path: 'devtools/richtext',
         loadComponent: () =>
-            import('../../../components/devtools/richtext/richtext.component').then((m) => m.RichTextComponent)
+            import('../../../components/devtools/richtext/RichTextComponent').then((m) => m.RichTextComponent)
     }
 ];
 const startIndex = 0;
