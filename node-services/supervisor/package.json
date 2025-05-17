@@ -18,7 +18,7 @@
         "amqp-connection-manager": "4.1.14",
         "amqplib": "0.10.8",
         "axios": "1.9.0",
-        "config": "3.3.12",
+        "config": "4.0.0",
         "express": "5.1.0",
         "express-jwt": "8.5.1",
         "js-yaml": "4.1.0",
