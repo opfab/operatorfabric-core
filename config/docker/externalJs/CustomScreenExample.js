@@ -22,7 +22,7 @@
             'taskAdvancedExample',
             'taskExample'
         ],
-        statesToExclude: [{processId: 'messageOrQuestionExample', stateIds: ['confirmationState']}],
+        statesToExclude: [{ processId: 'messageOrQuestionExample', stateIds: ['confirmationState'] }],
         headerFilters: [
             'PROCESS',
             'TYPE_OF_STATE',
@@ -30,6 +30,10 @@
             'RESPONSE_FROM_MY_ENTITIES',
             'RESPONSE_FROM_ALL_ENTITIES'
         ],
+        responseSeverityColumnLabelsForExportFile: {
+            COMPLIANT: 'yes',
+            ALARM: 'no'
+        },
         results: {
             columns: [
                 {
@@ -82,8 +86,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return {color: 'red', numericalValue: 20};
-                        return {color: 'green', numericalValue: 10};
+                        if (card.severity === 'ALARM') return { color: 'red', numericalValue: 20 };
+                        return { color: 'green', numericalValue: 10 };
                     },
                     flex: 0.5,
                     minWidth: 100
@@ -132,8 +136,8 @@
                     headerName: 'URGENCY',
                     fieldType: 'COLORED_CIRCLE',
                     getValue: (card) => {
-                        if (card.severity === 'ALARM') return {color: 'red', numericalValue: 20};
-                        return {color: 'green', numericalValue: 10};
+                        if (card.severity === 'ALARM') return { color: 'red', numericalValue: 20 };
+                        return { color: 'green', numericalValue: 10 };
                     },
                     flex: 0.25,
                     minWidth: 100
@@ -166,11 +170,11 @@
                     field: 'reason',
                     cardField: 'data.reason',
                     possibleValues: [
-                        {label: 'Time frame is too short to decide', value: 'Time frame is too short to decide'},
-                        {label: 'Constraints on the network', value: 'Constraints on the network'},
-                        {label: 'Low margin on the network', value: 'Low margin on the network'},
-                        {label: 'Critical situation', value: 'Critical situation'},
-                        {label: 'Other (Please specify)', value: 'Other'}
+                        { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
+                        { label: 'Constraints on the network', value: 'Constraints on the network' },
+                        { label: 'Low margin on the network', value: 'Low margin on the network' },
+                        { label: 'Critical situation', value: 'Critical situation' },
+                        { label: 'Other (Please specify)', value: 'Other' }
                     ],
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',
@@ -198,10 +202,10 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
-                        const responseData = {propositionRefused: false, comment: comment};
-                        responseCards.push({data: responseData, severity: 'COMPLIANT'});
+                        const responseData = { propositionRefused: false, comment: comment };
+                        responseCards.push({ data: responseData, severity: 'COMPLIANT' });
                     });
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             },
             {
@@ -217,13 +221,13 @@
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = {propositionRefused: true, comment: comment, reason: reason};
-                        responseCards.push({data: responseData, severity: 'ALARM'});
+                        const responseData = { propositionRefused: true, comment: comment, reason: reason };
+                        responseCards.push({ data: responseData, severity: 'ALARM' });
                     });
                     if (!hasAlwaysComment) {
-                        return {valid: false, errorMsg: 'Please fill in the comment field for all cards'};
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
                     }
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             }
         ]
@@ -277,11 +281,11 @@
                     field: 'reason',
                     cardField: 'data.reason',
                     possibleValues: [
-                        {label: 'Time frame is too short to decide', value: 'Time frame is too short to decide'},
-                        {label: 'Constraints on the network', value: 'Constraints on the network'},
-                        {label: 'Low margin on the network', value: 'Low margin on the network'},
-                        {label: 'Critical situation', value: 'Critical situation'},
-                        {label: 'Other (Please specify)', value: 'Other'}
+                        { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
+                        { label: 'Constraints on the network', value: 'Constraints on the network' },
+                        { label: 'Low margin on the network', value: 'Low margin on the network' },
+                        { label: 'Critical situation', value: 'Critical situation' },
+                        { label: 'Other (Please specify)', value: 'Other' }
                     ],
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',
@@ -309,10 +313,10 @@
                     selectedCards.forEach((card) => {
                         const userInput = userInputs.get(card.id);
                         const comment = userInput?.comment ?? '';
-                        const responseData = {propositionRefused: false, comment: comment};
-                        responseCards.push({data: responseData, severity: 'COMPLIANT'});
+                        const responseData = { propositionRefused: false, comment: comment };
+                        responseCards.push({ data: responseData, severity: 'COMPLIANT' });
                     });
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             },
             {
@@ -328,13 +332,13 @@
                         if (comment === '') {
                             hasAlwaysComment = false;
                         }
-                        const responseData = {propositionRefused: true, comment: comment, reason: reason};
-                        responseCards.push({data: responseData, severity: 'ALARM'});
+                        const responseData = { propositionRefused: true, comment: comment, reason: reason };
+                        responseCards.push({ data: responseData, severity: 'ALARM' });
                     });
                     if (!hasAlwaysComment) {
-                        return {valid: false, errorMsg: 'Please fill in the comment field for all cards'};
+                        return { valid: false, errorMsg: 'Please fill in the comment field for all cards' };
                     }
-                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                    return { valid: true, errorMsg: '', responseCards: responseCards };
                 }
             }
         ]

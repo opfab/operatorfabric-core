@@ -413,7 +413,9 @@
         "viewResultOnMap": "Afficher les Résultats sur une Carte Géographique"
     },
     "customCardList" :{
-        "acknowledge": "ACQUITTER LA SÉLECTION"
+        "acknowledge": "ACQUITTER LA SÉLECTION",
+        "notAnswered": "NON REPONDU",
+        "answer": "REPONSE"
     },
     "button": {
         "ok": "OK",

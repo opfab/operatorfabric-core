@@ -21,6 +21,7 @@ export class CustomScreenDefinition {
     responseButtons?: ResponseButton[];
     responseOnlyAllowedForEntitiesRequiredToRespond?: boolean;
     showAcknowledgmentButton?: boolean;
+    responseSeverityColumnLabelsForExportFile?: {[key: string]: string};
 }
 
 export class Column {
