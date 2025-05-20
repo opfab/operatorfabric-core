@@ -66,11 +66,11 @@ export class SettingsView {
         const sendCardsByEmail: boolean = Boolean(
             this.newSettings?.sendCardsByEmail ?? this.getSetting('sendCardsByEmail')
         );
-        const disableCardContentInEmails: boolean = Boolean(
-            this.newSettings?.disableCardContentInEmails ?? this.getSetting('disableCardContentInEmails')
+        const enableCardContentInEmails: boolean = Boolean(
+            this.newSettings?.enableCardContentInEmails ?? this.getSetting('enableCardContentInEmails')
         );
 
-        return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail || disableCardContentInEmails;
+        return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail || enableCardContentInEmails;
     }
 
     private isEmailFilled(): boolean {

@@ -77,8 +77,8 @@ export default class CardsDiffusionControl {
         return userWithPerimeters?.emailToPlainText ?? false;
     }
 
-    protected shouldEmailTemplateBeDisabled(userWithPerimeters: any): boolean {
-        return userWithPerimeters?.disableCardContentInEmails ?? false;
+    protected shouldEmailTemplateBeEnabled(userWithPerimeters: any): boolean {
+        return userWithPerimeters?.enableCardContentInEmails ?? false;
     }
 
     protected removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {

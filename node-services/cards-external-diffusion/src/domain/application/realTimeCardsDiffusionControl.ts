@@ -106,7 +106,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         if (resp.isValid()) {
             const userWithPerimeters: UserWithPerimeters = resp.getData();
             const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
-            const templateDisabled = this.shouldEmailTemplateBeDisabled(userWithPerimeters);
+            const templateEnabled = this.shouldEmailTemplateBeEnabled(userWithPerimeters);
             const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
@@ -123,7 +123,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         userWithPerimeters.email,
                         emailToPlainText,
                         timezoneForEmails,
-                        templateDisabled
+                        templateEnabled
                     );
                 }
             }
@@ -135,14 +135,14 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         userEmail: string | undefined,
         emailToPlainText: boolean,
         timezoneForEmails: string,
-        templateDisabled: boolean
+        templateEnabled: boolean
     ): Promise<void> {
         if (userEmail == null) return;
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(card, userEmail, emailToPlainText, timezoneForEmails, templateDisabled);
+                    await this.sendMail(card, userEmail, emailToPlainText, timezoneForEmails, templateEnabled);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
                     await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
@@ -182,7 +182,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         to: string,
         emailToPlainText: boolean,
         timezoneForEmails: string,
-        templateDisabled: boolean
+        templateEnabled: boolean
     ): Promise<void> {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
         let subject =
@@ -195,7 +195,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails);
         if (card.endDate != null)
             subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails);
-        const body = await this.processCardTemplate(card, timezoneForEmails, templateDisabled);
+        const body = await this.processCardTemplate(card, timezoneForEmails, templateEnabled);
         try {
             await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
             this.registerNewSending(to);
@@ -217,7 +217,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    async processCardTemplate(card: Card, timezoneForEmails: string, templateDisabled: boolean): Promise<string> {
+    async processCardTemplate(card: Card, timezoneForEmails: string, templateEnabled: boolean): Promise<string> {
         let cardBodyHtml =
             this.bodyPrefix +
             ' <a href=" ' +
@@ -239,7 +239,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 card.processVersion
             );
             const stateName = card.state;
-            if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null && templateDisabled === false) {
+            if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null && templateEnabled) {
                 const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
                 if (cardContentResponse.isValid()) {
                     const cardContent = cardContentResponse.getData();

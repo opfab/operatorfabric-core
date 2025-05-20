@@ -56,7 +56,8 @@ Feature: Cards external diffusion
     "sendDailyEmail": true,
     "sendWeeklyEmail": true,
     "email" : "operator1_fr@opfab.com",
-    "processesStatesNotifiedByEmail": {"api_test": ["mailState"]}
+    "processesStatesNotifiedByEmail": {"api_test": ["mailState"]},
+    "enableCardContentInEmails" : true
     }
     """
 
@@ -67,7 +68,8 @@ Feature: Cards external diffusion
     "sendCardsByEmail": true,
     "emailToPlainText": true,
     "email" : "operator2_fr@opfab.com",
-    "processesStatesNotifiedByEmail": {"api_test": ["mailState"]}
+    "processesStatesNotifiedByEmail": {"api_test": ["mailState"]},
+    "enableCardContentInEmails" : true
     }
     """
 

@@ -121,7 +121,8 @@ describe('Cards external diffusion', function () {
                 sendCardsByEmail: true,
                 email: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
-                computedPerimeters: perimeters
+                computedPerimeters: perimeters,
+                enableCardContentInEmails: true
             }
         ];
 
@@ -168,7 +169,7 @@ describe('Cards external diffusion', function () {
         );
     });
 
-    it('Body of email should not show card content when disableCardContentInEmails is true', async function () {
+    it('Body of email should not show card content when enableCardContentInEmails is false', async function () {
         const publishDate = Date.now();
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
@@ -177,7 +178,7 @@ describe('Cards external diffusion', function () {
             {
                 userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
-                disableCardContentInEmails: true,
+                enableCardContentInEmails: false,
                 email: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
@@ -232,7 +233,8 @@ describe('Cards external diffusion', function () {
                 sendCardsByEmail: true,
                 email: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
-                computedPerimeters: perimeters
+                computedPerimeters: perimeters,
+                enableCardContentInEmails: true
             }
         ];
 
@@ -290,7 +292,8 @@ describe('Cards external diffusion', function () {
                 sendCardsByEmail: true,
                 email: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
-                computedPerimeters: perimeters
+                computedPerimeters: perimeters,
+                enableCardContentInEmails: true
             }
         ];
 

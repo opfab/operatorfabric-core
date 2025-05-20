@@ -96,7 +96,7 @@ public class UserSettingsService {
                 || (userSettingsPatch.getEntitiesDisconnected() != null)
                 || (userSettingsPatch.getSendCardsByEmail() != null)
                 || (userSettingsPatch.getEmailToPlainText() != null)
-                || (userSettingsPatch.getDisableCardContentInEmails() != null)
+                || (userSettingsPatch.getEnableCardContentInEmails() != null)
                 || (userSettingsPatch.getSendDailyEmail() != null)
                 || (userSettingsPatch.getSendWeeklyEmail() != null)
                 || (userSettingsPatch.getEmail() != null)
