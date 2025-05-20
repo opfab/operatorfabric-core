@@ -1,6 +1,6 @@
 {
     "name": "opfab-cli",
-    "version": "4.7.1.RELEASE",
+    "version": "4.7.2.RELEASE",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
