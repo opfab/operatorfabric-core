@@ -38,6 +38,7 @@ describe('Card response service', () => {
         card = getOneCard({
             process: 'testProcess',
             publisherType: 'ENTITY',
+            publisher: 'ENTITY2',
             processVersion: '1',
             state: 'state1',
             entitiesAllowedToRespond: ['ENTITY2', 'ENTITY1'],
@@ -116,9 +117,9 @@ describe('Card response service', () => {
         expect(exceptionThrow).toBeFalse();
     });
 
-    it('Should add publisher to entity recipients if not already present', async () => {
+    it('Should add parent card publisher to entity recipients if not already present', async () => {
         await CardResponseService.sendResponse(card, {publisher: 'ENTITY1'});
-        expect(cardServerMock.cardsPosted[0].entityRecipients).toContain('ENTITY1');
+        expect(cardServerMock.cardsPosted[0].entityRecipients).toContain('ENTITY2');
     });
 
     it("Should set publisher to first entity user allowed to respond if publisher isn't provided", async () => {
