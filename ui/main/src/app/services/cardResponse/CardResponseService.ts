@@ -30,7 +30,7 @@ export class CardResponseService {
             );
         }
         const entityRecipients = parentCard.entityRecipients ? [...parentCard.entityRecipients] : [];
-        this.addPublisherToEntityRecipientsIfNotAlreadyPresent(publisherEntity, entityRecipients);
+        this.addToEntityRecipientsIfNotAlreadyPresent(parentCard.publisher, entityRecipients);
 
         const stateDef = ProcessesService.getProcess(parentCard.process).states.get(parentCard.state);
 
@@ -88,10 +88,7 @@ export class CardResponseService {
         return entities.includes(publisherEntity);
     }
 
-    private static addPublisherToEntityRecipientsIfNotAlreadyPresent(
-        publisher: string,
-        entityRecipients: Array<string>
-    ) {
+    private static addToEntityRecipientsIfNotAlreadyPresent(publisher: string, entityRecipients: Array<string>) {
         if (!entityRecipients?.includes(publisher)) {
             entityRecipients.push(publisher);
         }
