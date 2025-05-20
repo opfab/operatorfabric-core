@@ -412,7 +412,9 @@
         "viewResultOnMap": "View Results on a Geographical Map"
     },
     "customCardList" :{
-        "acknowledge": "ACKNOWLEDGE SELECTED"
+        "acknowledge": "ACKNOWLEDGE SELECTED",
+        "notAnswered": "NOT ANSWERED",
+        "answer": "ANSWER"
     },
     "button": {
         "ok": "OK",

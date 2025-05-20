@@ -412,7 +412,9 @@
         "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"
     },
     "customCardList" :{
-        "acknowledge": "Bevestigen selectie"
+        "acknowledge": "BEVESTIGEN SELECTIE",
+        "notAnswered": "NIET BEANTWOORD",
+        "answer": "BEANTWOORD"
     },
     "button": {
         "ok": "OK",

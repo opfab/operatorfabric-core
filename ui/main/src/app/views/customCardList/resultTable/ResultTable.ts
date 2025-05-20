@@ -12,6 +12,7 @@ import {Card} from 'app/model/Card';
 import {TableRowBuilder} from './TableRowBuilder';
 import {FilterValues} from '../FilterValues';
 import {CardFilter} from './CardFilter';
+import {ResultTableExport} from './ResultTableExport';
 
 export class ResultTable {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -119,36 +120,9 @@ export class ResultTable {
     }
 
     public getDataForExport(): Array<any> {
-        return this.results.map((line) => {
-            const row = {};
-            this.getColumnsDefinitionForAgGrid().forEach((column) => {
-                if (column.type !== 'responseFromMyEntities') {
-                    let cellValue = line[column.field];
-                    switch (column.type) {
-                        case 'responses':
-                            cellValue = this.getResponseFieldForExport(cellValue);
-                            break;
-                        case 'coloredCircle':
-                            cellValue = cellValue?.numericalValue;
-                            break;
-                        default:
-                            if (cellValue?.text) cellValue = cellValue.text;
-                    }
-                    row[column.headerName] = cellValue;
-                }
-            });
-            return row;
-        });
-    }
-
-    private getResponseFieldForExport(cellValue: any[]): string {
-        if (!cellValue?.length) return '';
-        return (
-            cellValue
-                // exclude grey color which represents the absence of response
-                .filter((response) => response.color !== 'grey')
-                .map((response) => response.name)
-                .join(', ')
-        );
+        return new ResultTableExport(
+            this.customScreenDefinition,
+            this.getColumnsDefinitionForAgGrid()
+        ).getDataForExport(this.results);
     }
 }

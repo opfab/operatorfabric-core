@@ -16,10 +16,11 @@ import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Proce
 import {Severity} from 'app/model/Severity';
 
 describe('CustomScreenView - ResultTable - Export', () => {
-    const getResultTable = (customScreenDefinitionResults: any) => {
+    const getResultTable = (customScreenDefinitionResults: any, responseSeverityColumnLabelsForExportFile?) => {
         const customScreenDefinition = new CustomScreenDefinition();
         customScreenDefinition.id = 'testId';
         customScreenDefinition.name = 'testName';
+        customScreenDefinition.responseSeverityColumnLabelsForExportFile = responseSeverityColumnLabelsForExportFile;
         customScreenDefinition.results = customScreenDefinitionResults;
         return new ResultTable(customScreenDefinition);
     };
@@ -43,6 +44,12 @@ describe('CustomScreenView - ResultTable - Export', () => {
                 id: 'entity3',
                 name: 'entity3 name',
                 roles: [RoleEnum.CARD_SENDER]
+            },
+            {
+                id: 'entity4',
+                name: 'entity4 name',
+                roles: [RoleEnum.CARD_SENDER],
+                parents: []
             },
             {
                 id: 'child_entity',
@@ -175,7 +182,7 @@ describe('CustomScreenView - ResultTable - Export', () => {
         expect(dataForExport).toEqual([{ColorCircle: 12}]);
     });
 
-    it('Should contain list of entity names that have responded', () => {
+    it('Should contain list of entity names that have responded and not responded', () => {
         const resultTable = getResultTable({
             columns: [
                 {
@@ -211,7 +218,42 @@ describe('CustomScreenView - ResultTable - Export', () => {
         const dataForExport = resultTable.getDataForExport();
         expect(dataForExport).toEqual([
             {
-                Responses: 'entity1 name, entity2 name'
+                Responses: 'entity1 name, entity2 name',
+                'Translation (en) of customCardList.notAnswered': 'child entity, entity3 name'
+            }
+        ]);
+    });
+
+    it('Should export per response type and not responded if responseSeverityColumnLabelsForExportFile is defined', () => {
+        const responseSeverityColumnLabelsForExportFile = {COMPLIANT: 'yes', ALARM: 'no'};
+        const resultTable = getResultTable(
+            {
+                columns: [{headerName: 'ANSWERS', fieldType: FieldType.RESPONSES}]
+            },
+            responseSeverityColumnLabelsForExportFile
+        );
+        const cards = [
+            getOneLightCard({
+                id: 'card1',
+                publisher: 'entity1',
+                publisherType: 'ENTITY',
+                entitiesAllowedToRespond: ['entity1', 'entity2', 'entity3', 'entity4']
+            })
+        ];
+        const childCards = new Map<string, Array<Card>>();
+        childCards.set('card1', [
+            getOneLightCard({publisher: 'entity1', publisherType: 'ENTITY', severity: Severity.COMPLIANT}),
+            getOneLightCard({publisher: 'entity2', publisherType: 'ENTITY', severity: Severity.ALARM}),
+            getOneLightCard({publisher: 'entity3', publisherType: 'ENTITY', severity: Severity.ALARM})
+        ]);
+        resultTable.getDataArrayFromCards(cards, childCards);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([
+            {
+                'Translation (en) of customCardList.answer:yes': 'entity1 name',
+                'Translation (en) of customCardList.answer:no': 'entity2 name, entity3 name',
+                'Translation (en) of customCardList.notAnswered': 'entity4 name',
+                ANSWERS: 'entity1 name, entity2 name, entity3 name'
             }
         ]);
     });
