@@ -8,8 +8,6 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivityAreaView} from 'app/views/activityarea/ActivityAreaView';
 import {ActivityAreaPage} from 'app/views/activityarea/ActivityAreaPage';
@@ -18,6 +16,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
+import {I18n} from '../../model/I18n';
 
 @Component({
     selector: 'of-activityarea',
@@ -38,15 +37,11 @@ export class ActivityAreaComponent implements OnInit, OnDestroy {
     displaySendResultError = false;
     isScreenLoaded = false;
 
-    confirmationPopup: NgbModalRef;
-
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
 
     private readonly canDeactivateSubject = new Subject<boolean>();
     private readonly ngUnsubscribe$ = new Subject<void>();
-
-    constructor(private readonly modalService: NgbModal) {}
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView();
@@ -102,10 +97,6 @@ export class ActivityAreaComponent implements OnInit, OnDestroy {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
-        if (this.confirmationPopup) {
-            this.confirmationPopup.close();
-        }
-
         const resp = await firstValueFrom(this.activityAreaView.saveActivityArea());
         this.saveSettingsInProgress = false;
         this.messageAfterSavingSettings = '';
@@ -113,26 +104,19 @@ export class ActivityAreaComponent implements OnInit, OnDestroy {
             this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
             this.displaySendResultError = true;
         }
-        if (this.confirmationPopup) {
-            this.confirmationPopup.close();
-        }
         this.confirm.emit();
     }
 
-    doNotConfirmSaveSettings() {
-        // The modal must not be closed until the settings have been saved in the back
-        // If not, with slow network, when user goes to the feed before the end of the request
-        // it results with nothing in the feed
-        // This happens because the method this.LightCardsStoreService.removeAllLightCards();
-        // is called too late (in activityAreaView)
-        if (!this.saveSettingsInProgress) {
-            this.confirmationPopup.close();
-        }
-    }
-
-    openConfirmSaveSettingsModal(content) {
+    openConfirmSaveSettingsModal() {
         if (this.askConfirmation && this.activityAreaView.doesActivityAreasNeedToBeSaved()) {
-            this.confirmationPopup = this.modalService.open(content, {centered: true, backdrop: 'static'});
+            ModalService.openConfirmationModal(
+                new I18n('shared.popup.title'),
+                new I18n('shared.popup.areYouSure')
+            ).then((confirm) => {
+                if (confirm) {
+                    this.confirmSaveSettings();
+                }
+            });
         } else {
             this.confirmSaveSettings();
         }

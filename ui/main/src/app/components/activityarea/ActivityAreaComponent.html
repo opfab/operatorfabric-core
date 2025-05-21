@@ -89,7 +89,7 @@
                 id="opfab-activityarea-btn-confirm"
                 type="button"
                 class="opfab-btn"
-                (click)="openConfirmSaveSettingsModal(confirmationPopup)"
+                (click)="openConfirmSaveSettingsModal()"
                 style="text-align: center; min-width: 243px"
                 translate>
                 shared.confirmSettings
@@ -99,31 +99,6 @@
 </div>
 
 <div class="my-3">
-    <ng-template #confirmationPopup let-modal>
-        <div class="modal-header">
-            <div translate>shared.popup.title</div>
-        </div>
-        <div class="modal-body text-center">
-            <p translate>shared.popup.areYouSure</p>
-            <button
-                id="opfab-activityarea-btn-no"
-                type="button"
-                class="opfab-btn-cancel"
-                (click)="doNotConfirmSaveSettings()"
-                translate>
-                button.cancel
-            </button>
-            <button
-                id="opfab-activityarea-btn-yes"
-                type="button"
-                class="opfab-btn"
-                (click)="confirmSaveSettings()"
-                translate>
-                button.yes
-            </button>
-        </div>
-    </ng-template>
-
     <of-spinner *ngIf="saveSettingsInProgress" [seeInModal]="true" loadingText="activityArea.savingInProgress">
     </of-spinner>
 </div>
