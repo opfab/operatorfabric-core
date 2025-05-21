@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ export class ActivityAreaCommands extends OpfabCommands {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.intercept('GET', '/users/CurrentUserWithPerimeters').as('reloadPerimeter');
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.get('#opfab-btn-ok').should('exist').click(); // and click yes on the confirmation popup
         cy.wait('@saved'); // wait for settings to be saved
         cy.wait('@reloadPerimeter'); // wait for user perimeter to be updated
 

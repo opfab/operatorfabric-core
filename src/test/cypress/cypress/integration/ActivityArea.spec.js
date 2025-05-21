@@ -235,7 +235,7 @@ describe('ActivityAreaPage', () => {
         // We disconnect operator1_fr from 'Control Center FR North'
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
+        cy.get('#opfab-btn-ok').should('exist').click(); // click yes on the confirmation popup
         cy.waitDefaultTime();
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
@@ -244,7 +244,7 @@ describe('ActivityAreaPage', () => {
         opfab.navigateToActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
+        cy.get('#opfab-btn-ok').should('exist').click(); // click yes on the confirmation popup
     });
 
     it('Check message is displayed when user has no activity area', function() {
