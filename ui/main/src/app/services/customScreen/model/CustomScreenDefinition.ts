@@ -34,6 +34,7 @@ export class Column {
     getValue?: (card: Card) => string;
     getHTMLValue?: (card: Card) => string;
     possibleValues?: {value: string; label: string}[];
+    allowNewOptionForSelect?: boolean;
     minWidth?: number;
     showTooltips?: boolean;
     multiLinesInCell?: boolean;

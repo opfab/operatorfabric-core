@@ -6,16 +6,31 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div [hidden]="!isInputFieldVisible" style="margin: 3px; align-items: center">
+<div [hidden]="!isInputFieldVisible" style="margin: 1px; align-items: center">
     <select
+        [hidden]="showOtherInput"
         id="opfab-customcardlist-select"
         [formControl]="cardSelectControl"
-        (keydown)="onKeyDown($event)"
-        (click)="onClick($event)"
+        (change)="onSelectChange($event)"
+        (keydown)="$event.stopPropagation()"
+        (click)="$event.stopPropagation()"
         class="opfab-select"
         style="height: 35px; width: 80%">
         <option *ngFor="let option of selectOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngIf="allowNewOptionForSelect" value="__other__">{{ otherOptionLabel }}</option>
     </select>
+    <input
+        #otherInput
+        *ngIf="showOtherInput"
+        type="text"
+        [formControl]="otherInputControl"
+        (blur)="addOtherOption()"
+        (keydown.enter)="addOtherOption()"
+        (keydown.esc)="cancelOtherInput()"
+        (click)="$event.stopPropagation()"
+        placeholder="{{ otherOptionPlaceholder }}"
+        class="opfab-input"
+        style="height: 35px; width: 80%" />
 </div>
 
-<div *ngIf="!isInputFieldVisible" style="margin: 3px; align-items: center">{{ fieldLabel }}</div>
+<div *ngIf="!isInputFieldVisible" style="margin: 0px; align-items: center">{{ fieldLabel }}</div>

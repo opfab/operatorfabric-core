@@ -414,7 +414,11 @@
     "customCardList" :{
         "acknowledge": "BEVESTIGEN SELECTIE",
         "notAnswered": "NIET BEANTWOORD",
-        "answer": "BEANTWOORD"
+        "answer": "BEANTWOORD",
+        "select" :{
+            "otherOptionLabel" : "Andere...",
+            "otherOptionPlaceholder" : "Ingestelde waarde"
+        }
     },
     "button": {
         "ok": "OK",

@@ -414,7 +414,11 @@
     "customCardList" :{
         "acknowledge": "ACKNOWLEDGE SELECTED",
         "notAnswered": "NOT ANSWERED",
-        "answer": "ANSWER"
+        "answer": "ANSWER",
+        "select" :{
+            "otherOptionLabel" : "Other...",
+            "otherOptionPlaceholder" : "Set value"
+        }
     },
     "button": {
         "ok": "OK",
