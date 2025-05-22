@@ -17,7 +17,7 @@ export class NotificationDecision {
      */
     static readonly RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
     static readonly ERROR_MARGIN = 4000; // in milliseconds
-    static readonly CLEAN_CARDS_PERIOD: number = 60 * 1000;
+    static readonly CLEAN_CARDS_PERIOD: number = 60 * 1000; // in milliseconds, 1 minute
 
     private static soundEnabled: Map<Severity, boolean>;
     private static systemNotificationEnabled: Map<Severity, boolean>;
@@ -25,6 +25,8 @@ export class NotificationDecision {
 
     private static lastSentCards: Map<string, number> = new Map();
     private static lastUserAction: number;
+
+    private static cleanTask;
 
     public static init() {
         NotificationDecision.soundEnabled = new Map<Severity, boolean>();
@@ -40,7 +42,17 @@ export class NotificationDecision {
         NotificationDecision.systemNotificationEnabled.set(Severity.INFORMATION, false);
         NotificationDecision.lastSentCards = new Map();
         NotificationDecision.lastUserAction = new Date().valueOf();
-        NotificationDecision.cleanSentCards();
+
+        // Avoid having multiple intervals running in parallel
+        // in unit tests.In production, this is not a problem as the
+        // init is only called once
+        if (NotificationDecision.cleanTask) {
+            clearInterval(NotificationDecision.cleanTask);
+        }
+
+        NotificationDecision.cleanTask = setInterval(() => {
+            NotificationDecision.cleanSentCards();
+        }, NotificationDecision.CLEAN_CARDS_PERIOD);
     }
 
     public static setLastUserAction(lastUserActionDate: number) {
@@ -147,9 +159,6 @@ export class NotificationDecision {
             if (timestamp <= now - NotificationDecision.RECENT_THRESHOLD) toRemove.push(cardId);
         });
         toRemove.forEach((cardId) => NotificationDecision.lastSentCards.delete(cardId));
-        setTimeout(() => {
-            this.cleanSentCards();
-        }, this.CLEAN_CARDS_PERIOD);
     }
 
     private static shouldCardBeNotified(card: Card): boolean {
