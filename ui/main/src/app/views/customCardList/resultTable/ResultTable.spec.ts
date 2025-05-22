@@ -943,7 +943,8 @@ describe('CustomScreenView - ResultTable', () => {
                         possibleValues: [
                             {value: 'option1', label: 'Label option1'},
                             {value: 'option2', label: 'Label option2'}
-                        ]
+                        ],
+                        allowNewOptionForSelect: true
                     }
                 ]
             });
@@ -968,7 +969,8 @@ describe('CustomScreenView - ResultTable', () => {
                         possibleValues: [
                             {value: 'option1', label: 'Label option1'},
                             {value: 'option2', label: 'Label option2'}
-                        ]
+                        ],
+                        allowNewOptionForSelect: true
                     }
                 }
             ]);
@@ -986,7 +988,8 @@ describe('CustomScreenView - ResultTable', () => {
                         possibleValues: [
                             {value: 'option1', label: 'Label option1'},
                             {value: 'option2', label: 'Label option2'}
-                        ]
+                        ],
+                        allowNewOptionForSelect: true
                     }
                 }
             ]);

@@ -575,11 +575,16 @@ It is possible instead of using an input field to use a select field by setting 
         { value: 'on', label: 'Accept' },
         { value: 'off', label: 'Refuse' }
     ],
+    allowNewOptionForSelect: true,
     flex: 1
 }
 ----
 
+The option `allowNewOptionForSelect` allows the user to enter a new value that is not in the list of possible values. If set to `false`, the user will only be able to select from the list of possible values.
+
+
 It is possible to restrict the possibility to respond to entities that are defined as required (field `entitiesRequiredToRespond` in the card). To do this, you need to set `responseOnlyAllowedForEntitiesRequiredToRespond` to `true` in the custom screen definition.
+
 
 === Card data fields
 

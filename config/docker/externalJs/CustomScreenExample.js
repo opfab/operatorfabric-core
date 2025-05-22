@@ -173,9 +173,9 @@
                         { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
                         { label: 'Constraints on the network', value: 'Constraints on the network' },
                         { label: 'Low margin on the network', value: 'Low margin on the network' },
-                        { label: 'Critical situation', value: 'Critical situation' },
-                        { label: 'Other (Please specify)', value: 'Other' }
+                        { label: 'Critical situation', value: 'Critical situation' }
                     ],
+                    allowNewOptionForSelect: true,
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',
                     minWidth: 300
@@ -284,8 +284,7 @@
                         { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
                         { label: 'Constraints on the network', value: 'Constraints on the network' },
                         { label: 'Low margin on the network', value: 'Low margin on the network' },
-                        { label: 'Critical situation', value: 'Critical situation' },
-                        { label: 'Other (Please specify)', value: 'Other' }
+                        { label: 'Critical situation', value: 'Critical situation' }
                     ],
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',

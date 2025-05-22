@@ -126,7 +126,8 @@ export class TableRowBuilder {
         if (column.fieldType === FieldType.SELECT) {
             return {
                 value: fieldValue,
-                possibleValues: column.possibleValues
+                possibleValues: column.possibleValues,
+                allowNewOptionForSelect: column.allowNewOptionForSelect
             };
         }
         return fieldValue;
