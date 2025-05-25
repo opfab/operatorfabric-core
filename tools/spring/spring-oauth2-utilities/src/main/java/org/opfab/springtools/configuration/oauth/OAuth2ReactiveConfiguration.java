@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,6 @@
 package org.opfab.springtools.configuration.oauth;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +29,8 @@ import reactor.core.publisher.Mono;
 public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
 
     
-    public OAuth2ReactiveConfiguration(UserServiceCache userServiceCache,GroupsProperties groupsProperties,JwtProperties jwtProperties, GroupsUtils groupsUtils) {
-        super(userServiceCache, groupsProperties,jwtProperties,groupsUtils);
+    public OAuth2ReactiveConfiguration(UserServiceCache userServiceCache,JwtProperties jwtProperties) {
+        super(userServiceCache,jwtProperties);
     }
 
     /**
