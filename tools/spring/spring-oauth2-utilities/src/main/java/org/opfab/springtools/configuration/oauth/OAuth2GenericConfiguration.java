@@ -10,9 +10,6 @@
 package org.opfab.springtools.configuration.oauth;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
 import org.springframework.cache.annotation.EnableCaching;
@@ -34,22 +31,18 @@ import java.util.List;
  */
 @Configuration
 @EnableCaching
-@Import({ UpdateUserListenerConfiguration.class, GroupsProperties.class, GroupsUtils.class, JwtProperties.class })
+@Import({ UpdateUserListenerConfiguration.class, JwtProperties.class })
 public class OAuth2GenericConfiguration {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OAuth2GenericConfiguration.class);
 
     protected UserServiceCache userServiceCache;
-    protected GroupsProperties groupsProperties;
     protected JwtProperties jwtProperties;
-    protected GroupsUtils groupsUtils;
 
-    public OAuth2GenericConfiguration(UserServiceCache userServiceCache, GroupsProperties groupsProperties,
-            JwtProperties jwtProperties, GroupsUtils groupsUtils) {
+    public OAuth2GenericConfiguration(UserServiceCache userServiceCache,
+            JwtProperties jwtProperties) {
         this.userServiceCache = userServiceCache;
-        this.groupsProperties = groupsProperties;
         this.jwtProperties = jwtProperties;
-        this.groupsUtils = groupsUtils;
     }
 
     /**
@@ -82,15 +75,8 @@ public class OAuth2GenericConfiguration {
                 User user = currentUserWithPerimeters.getUserData();
 
                 if (user != null) {
-                    // override the groups list from JWT mode, otherwise, default mode is
-                    // OPERATOR_FABRIC
-                    if (groupsProperties.getMode() == GroupsMode.JWT)
-                        user.setGroups(getGroupsList(jwt));
-
                     List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities
                             .computeAuthorities(currentUserWithPerimeters.getPermissions());
-                    log.debug("user [{}] has these roles '{}' through the {} mode and entities {}", principalId,
-                            authorities, groupsProperties.getMode(), user.getEntities());
                     return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
                 }
             }
@@ -103,17 +89,6 @@ public class OAuth2GenericConfiguration {
             throw new IllegalArgumentException("Error getting user information (Interrupted Exception)", e);
         }
         return null;
-    }
-
-    /**
-     * Creates group list from a jwt
-     * 
-     * @param jwt user's token
-     * @return a group list
-     */
-    public List<String> getGroupsList(Jwt jwt) {
-        return groupsUtils.createGroupsList(jwt);
-
     }
 
 }

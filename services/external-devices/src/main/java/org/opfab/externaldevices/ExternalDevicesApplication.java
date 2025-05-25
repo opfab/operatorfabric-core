@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,8 @@
 
 package org.opfab.externaldevices;
 
-
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
+import org.opfab.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
@@ -22,14 +21,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-
 @SpringBootApplication
-@EnableOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @EnableMongoRepositories
 @EnableConfigurationProperties
 @EnableScheduling
-@Import({RabbitEventBus.class,UserServiceCacheImpl.class})
+@Import({ RabbitEventBus.class, UserServiceCacheImpl.class, OAuth2GenericConfiguration.class })
 public class ExternalDevicesApplication {
 
     public static void main(String[] args) {

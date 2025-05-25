@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,17 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.cards.publication;
-
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.cards.publication.mongo.CardRepositoryImpl;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
+import org.opfab.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,11 +22,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-
 @SpringBootApplication
-@EnableOperatorFabricOAuth2
 @EnableOperatorFabricMongo
-@Import({ UserActionLogsConfiguration.class,RabbitEventBus.class,CardRepositoryImpl.class,UserActionLogRepositoryImpl.class,UserServiceCacheImpl.class })
+@Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
+        UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, OAuth2GenericConfiguration.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {
