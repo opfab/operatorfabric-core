@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -126,6 +126,7 @@ public class UsersServiceShould {
         u1.setLogin("user1");
         u1.setFirstName("user1FirstName");
         u1.setLastName("user1LastName");
+        u1.setEmail("user1FirstName.user1LastName@test.fr");
         u1.setComment("comment");
         u1.addGroup("group1");
         u1.addGroup("group2");
@@ -173,6 +174,7 @@ public class UsersServiceShould {
             assertThat(user.getResult().getLogin()).isEqualTo("user1");
             assertThat(user.getResult().getFirstName()).isEqualTo("user1FirstName");
             assertThat(user.getResult().getLastName()).isEqualTo("user1LastName");
+            assertThat(user.getResult().getEmail()).isEqualTo("user1FirstName.user1LastName@test.fr");
 
         }
 
@@ -188,6 +190,7 @@ public class UsersServiceShould {
             user.setLogin("newuser");
             user.setFirstName("firstName");
             user.setLastName("user1LastName");
+            user.setEmail("firstName.user1LastName@test.fr");
             user.addGroup("group1");
             user.addGroup("group2");
 
@@ -198,6 +201,7 @@ public class UsersServiceShould {
             assertThat(result.getResult().getEntity().getFirstName()).isEqualTo("firstName");
             assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
             assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getEmail()).isEqualTo("firstName.user1LastName@test.fr");
         }
 
         @Test

@@ -34,6 +34,8 @@ definitions:
         type: string
       lastName:
         type: string
+      email:
+        type: string
       comment:
         type: string
       groups:

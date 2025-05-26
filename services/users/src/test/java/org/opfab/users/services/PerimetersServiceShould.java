@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -103,10 +103,10 @@ public class PerimetersServiceShould {
         userRepositoryStub.deleteAll();
         Set<String> groupForUser1 = new HashSet<>();
         groupForUser1.add("group1");
-        userRepositoryStub.insert(new User("user1", "test", null, null, null, groupForUser1));
+        userRepositoryStub.insert(new User("user1", "test", null, null, null, null, groupForUser1));
         Set<String> groupForUser2 = new HashSet<>();
         groupForUser2.add("group1");
-        userRepositoryStub.insert(new User("user2", "test", null, null, null, groupForUser2));
+        userRepositoryStub.insert(new User("user2", "test", null, null, null, null, groupForUser2));
 
     }
  

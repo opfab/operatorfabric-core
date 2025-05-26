@@ -24,6 +24,10 @@ export class SettingsView {
         return !ConfigService.getConfigValue('settingsScreen.hiddenSettings', []).includes(setting);
     }
 
+    public isEmailFromUserInsteadOfSettings(): boolean {
+        return ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false);
+    }
+
     public getSetting(setting: string): string | boolean | number {
         switch (setting) {
             case 'replayInterval':
@@ -32,6 +36,12 @@ export class SettingsView {
             case 'timezoneForEmails':
                 return ConfigService.getConfigValue('settings.timezoneForEmails', 'Europe/Paris');
 
+            case 'email':
+                if (this.isEmailFromUserInsteadOfSettings()) {
+                    return UsersService.getCurrentUserWithPerimeters().email;
+                } else {
+                    return ConfigService.getConfigValue('settings.' + setting);
+                }
             default:
                 return ConfigService.getConfigValue('settings.' + setting);
         }

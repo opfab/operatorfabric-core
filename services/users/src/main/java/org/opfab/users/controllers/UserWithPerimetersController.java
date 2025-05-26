@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,8 @@ public class UserWithPerimetersController {
                     PerimeterRepository perimeterRepository, EntityRepository entityRepository,
                     UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
                     EventBus eventBus,
-                    @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
+                    @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
+                    @Value("${operatorfabric.users.getEmailFromUserInsteadOfSettings:false}") boolean getEmailFromUserInsteadOfSettings) {
 
             NotificationService notificationService = new NotificationService(userRepository, eventBus);
             UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
@@ -52,7 +53,8 @@ public class UserWithPerimetersController {
                             notificationService, userActionLogService, userActionLogActivated);
             this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService,
                             userSettingsService,
-                            entityRepository);
+                            entityRepository,
+                            getEmailFromUserInsteadOfSettings);
     }
 
     @GetMapping(value = "/{login}", produces = { "application/json" })

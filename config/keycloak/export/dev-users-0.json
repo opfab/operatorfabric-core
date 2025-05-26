@@ -217,6 +217,7 @@
     "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "email" : "operator2_fr@test.com",
     "attributes" : {
       "groups" : [ "Planner;Maintainer;Manager" ],
       "entitiesId" : [ "ENTITY2_FR;IT_SUPERVISOR_ENTITY" ]

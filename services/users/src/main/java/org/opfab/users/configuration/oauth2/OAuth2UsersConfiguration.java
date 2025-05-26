@@ -122,11 +122,12 @@ public class OAuth2UsersConfiguration {
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
                 String name = extractClaimAsStringOrNull(jwt, jwtProperties.getNameClaim());
+                String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
 
                 if (givenName == null && familyName == null)
                     familyName = name;
 
-                return new User(principalId, givenName, familyName, null, null, null);
+                return new User(principalId, givenName, familyName, email, null, null, null);
             }
 
             /**

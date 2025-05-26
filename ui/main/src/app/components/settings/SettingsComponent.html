@@ -127,7 +127,19 @@
         <div class="opfab-settings-item" *ngIf="settingsView.isSettingVisible('sendCardsByEmail')">
             <div class="opfab-input">
                 <label for="opfab-setting-email" translate>settings.email</label>
-                <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off" />
+                <input
+                    *ngIf="settingsView.isEmailFromUserInsteadOfSettings()"
+                    id="opfab-setting-input-email"
+                    type="email"
+                    formControlName="email"
+                    autocomplete="off"
+                    readonly />
+                <input
+                    *ngIf="!settingsView.isEmailFromUserInsteadOfSettings()"
+                    id="opfab-setting-input-email"
+                    type="email"
+                    formControlName="email"
+                    autocomplete="off" />
             </div>
             <div *ngIf="email.invalid" class="opfab-input-invalid" style="margin-top: 0px">
                 <div *ngIf="email.errors.email" translate>settings.input.errors.invalidEmail</div>
