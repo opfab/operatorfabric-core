@@ -25,33 +25,28 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Common configuration (MVC and Webflux)
- *
- *
+ * Common JWT configuration for services
+ * The aim of the converter is to convert the JWT default object to a new
+ * OpFabJwtAuthenticationToken that contains the user information
+ * and the permissions of the user. These information are fetched from the
+ * UserServiceCache that is a cache of the user information populated
+ * by the user service.
  */
 @Configuration
-@EnableCaching
 @Import({ UpdateUserListenerConfiguration.class, JwtProperties.class })
-public class OAuth2GenericConfiguration {
+public class JwtConfiguration {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OAuth2GenericConfiguration.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JwtConfiguration.class);
 
     protected UserServiceCache userServiceCache;
     protected JwtProperties jwtProperties;
 
-    public OAuth2GenericConfiguration(UserServiceCache userServiceCache,
+    public JwtConfiguration(UserServiceCache userServiceCache,
             JwtProperties jwtProperties) {
         this.userServiceCache = userServiceCache;
         this.jwtProperties = jwtProperties;
     }
 
-    /**
-     * Generates a converter that converts {@link Jwt} to
-     * {@link OpFabJwtAuthenticationToken} whose principal is a
-     * {@link User} model object
-     *
-     * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
-     */
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter() {
 
@@ -63,7 +58,7 @@ public class OAuth2GenericConfiguration {
         };
     }
 
-    public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) throws IllegalArgumentException {
+    protected AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) throws IllegalArgumentException {
 
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
         userServiceCache.setTokenForUserRequest(principalId, jwt.getTokenValue());
@@ -75,7 +70,7 @@ public class OAuth2GenericConfiguration {
                 User user = currentUserWithPerimeters.getUserData();
 
                 if (user != null) {
-                    List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities
+                    List<GrantedAuthority> authorities = PermissionConverter
                             .computeAuthorities(currentUserWithPerimeters.getPermissions());
                     return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
                 }

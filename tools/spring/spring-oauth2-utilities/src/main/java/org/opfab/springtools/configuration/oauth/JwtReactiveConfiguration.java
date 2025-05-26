@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.springtools.configuration.oauth;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
@@ -22,32 +20,29 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import reactor.core.publisher.Mono;
 
 /**
- * <p>Authentication configuration for webflux</p>
+ * JWT configuration for cards consultation service which is a reactive service
+ *
+ * It extends the generic JwtConfiguration to adjust the converter to the
+ * reactive library
  *
  */
 @Configuration
-public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
+public class JwtReactiveConfiguration extends JwtConfiguration {
 
-    
-    public OAuth2ReactiveConfiguration(UserServiceCache userServiceCache,JwtProperties jwtProperties) {
-        super(userServiceCache,jwtProperties);
+    public JwtReactiveConfiguration(UserServiceCache userServiceCache, JwtProperties jwtProperties) {
+        super(userServiceCache, jwtProperties);
     }
 
-    /**
-     * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
-     * {@link User} model object
-     * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
-     */
     @Bean
-    public Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter() throws IllegalArgumentException {
-        return new Converter<Jwt, Mono<AbstractAuthenticationToken>>(){
+    public Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter()
+            throws IllegalArgumentException {
+        return new Converter<Jwt, Mono<AbstractAuthenticationToken>>() {
             @Override
             public Mono<AbstractAuthenticationToken> convert(Jwt jwt) throws IllegalArgumentException {
-            	AbstractAuthenticationToken authenticationToken = generateOpFabJwtAuthenticationToken(jwt);
+                AbstractAuthenticationToken authenticationToken = generateOpFabJwtAuthenticationToken(jwt);
                 return Mono.just(authenticationToken);
             }
         };
     }
-
 
 }

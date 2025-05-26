@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
+import org.opfab.springtools.configuration.oauth.PermissionConverter;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -54,7 +54,7 @@ public class WithMockOpFabUserSecurityContextFactoryReactive implements WithSecu
         headers.put("dummyHeaderKey","dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
         claim.put("sub",customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getPermissions());
+        Collection<GrantedAuthority> authorities = PermissionConverter.computeAuthorities(principal.getPermissions());
 
         Authentication auth = new OpFabJwtAuthenticationToken( 
                 new Jwt(tokenValue, issuedAt,expiresAt,headers,claim
