@@ -233,6 +233,9 @@ export class TableRowBuilder {
         if (!card) {
             return false;
         }
+        if (!this.isResponsePossibleForProcessState(card)) {
+            return false;
+        }
         const isUserAllowed = UserPermissionsService.isUserEnabledToRespond(
             UsersService.getCurrentUserWithPerimeters(),
             card,
@@ -248,5 +251,16 @@ export class TableRowBuilder {
         }
 
         return isUserAllowed;
+    }
+
+    private isResponsePossibleForProcessState(card: Card): boolean {
+        if (!this.customScreenDefinition.responsePossibleOnlyForProcessStates) return true;
+
+        const processStates = this.customScreenDefinition.responsePossibleOnlyForProcessStates.find(
+            (item) => item.process === card.process
+        );
+        if (!processStates) return false;
+
+        return processStates.states.includes(card.state);
     }
 }
