@@ -20,6 +20,7 @@ export class CustomScreenDefinition {
     };
     responseButtons?: ResponseButton[];
     responseOnlyAllowedForEntitiesRequiredToRespond?: boolean;
+    responsePossibleOnlyForProcessStates?: {process: string; states: string[]}[];
     showAcknowledgmentButton?: boolean;
     responseSeverityColumnLabelsForExportFile?: {[key: string]: string};
 }

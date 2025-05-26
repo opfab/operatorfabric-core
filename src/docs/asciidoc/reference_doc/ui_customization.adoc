@@ -551,6 +551,9 @@ const customScreenExample = {
 
 ----
 
+
+==== Input fields 
+
 The input fields are to be defined in the columns definition with fieldType set to `INPUT` , for example :  
 
 ----
@@ -562,6 +565,9 @@ The input fields are to be defined in the columns definition with fieldType set 
 }
 ----
 If you want the input to be restricted to a certain number of characters, you can set the `maxInputLength` field in the column definition.
+
+
+==== Select fields 
 
 It is possible instead of using an input field to use a select field by setting the fieldType to `SELECT` and defining the options in the column definition, for example : 
 
@@ -582,9 +588,26 @@ It is possible instead of using an input field to use a select field by setting 
 
 The option `allowNewOptionForSelect` allows the user to enter a new value that is not in the list of possible values. If set to `false`, the user will only be able to select from the list of possible values.
 
+==== Response restrictions
 
 It is possible to restrict the possibility to respond to entities that are defined as required (field `entitiesRequiredToRespond` in the card). To do this, you need to set `responseOnlyAllowedForEntitiesRequiredToRespond` to `true` in the custom screen definition.
 
+It is also possible to restrict the possibility to respond to certain process states. To do this, you need to set the `responsePossibleOnlyForProcessStates` field in the custom screen definition. This field is an array of objects containing the `process` and an array of `states` to include. For example:
+
+----
+responsePossibleOnlyForProcessStates: [
+    {
+        process: 'processId0',
+        states: ['stateId0', 'stateId1']
+    },
+    {
+        process: 'processId1',
+        states: ['stateId2']
+    }
+]
+----
+
+If the `responsePossibleOnlyForProcessStates` field is not defined, the response will be possible for all process states (provided that the user is allowed to respond to the card).
 
 === Card data fields
 

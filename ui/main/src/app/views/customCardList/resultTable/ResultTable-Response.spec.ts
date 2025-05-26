@@ -21,7 +21,10 @@ describe('CustomCardListView - Result array - Response possible', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();
     let card: Card;
 
-    const getResultTable = (responseOnlyAllowedForEntitiesRequiredToRespond?: boolean) => {
+    const getResultTable = (
+        responseOnlyAllowedForEntitiesRequiredToRespond?: boolean,
+        responsePossibleOnlyForProcessStates?: any
+    ) => {
         return new ResultTable({
             id: 'testId',
             name: 'name',
@@ -42,9 +45,15 @@ describe('CustomCardListView - Result array - Response possible', () => {
                     id: 'button1',
                     label: 'label1',
                     getUserResponses: undefined
+                },
+                {
+                    id: 'button2',
+                    label: 'label2',
+                    getUserResponses: undefined
                 }
             ],
-            responseOnlyAllowedForEntitiesRequiredToRespond: responseOnlyAllowedForEntitiesRequiredToRespond
+            responseOnlyAllowedForEntitiesRequiredToRespond: responseOnlyAllowedForEntitiesRequiredToRespond,
+            responsePossibleOnlyForProcessStates: responsePossibleOnlyForProcessStates
         });
     };
 
@@ -141,6 +150,34 @@ describe('CustomCardListView - Result array - Response possible', () => {
             const resultTable = getResultTable(true);
             const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: true}]);
+        });
+    });
+    describe('responsePossibleOnlyForProcessStates', () => {
+        beforeEach(async () => {
+            await setUserPerimeter({
+                computedPerimeters: [
+                    new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite),
+                    new ComputedPerimeter('myProcess', 'otherState', RightEnum.ReceiveAndWrite)
+                ],
+                userData: {
+                    login: 'test',
+                    firstName: 'firstName',
+                    lastName: 'lastName',
+                    entities: ['entity1']
+                }
+            });
+        });
+        it('should be true if user is allowed to respond and process state matches', async () => {
+            const responsePossibleOnlyForProcessStates = [{process: 'myProcess', states: ['myState', 'otherState']}];
+            const resultTable = getResultTable(false, responsePossibleOnlyForProcessStates);
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: true}]);
+        });
+        it('should be false if user is allowed to respond but process state does not match', async () => {
+            const responsePossibleOnlyForProcessStates = [{process: 'myProcess', states: ['otherState']}];
+            const resultTable = getResultTable(false, responsePossibleOnlyForProcessStates);
+            const dataArray = resultTable.getDataArrayFromCards([card], emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'id1', testField: 'myProcess', isResponsePossible: false}]);
         });
     });
 });

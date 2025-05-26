@@ -192,6 +192,12 @@
             ]
         },
         responseOnlyAllowedForEntitiesRequiredToRespond: false,
+        responsePossibleOnlyForProcessStates: [
+            {
+                process: 'defaultProcess',
+                states: ['questionState']
+            }
+        ],
         responseButtons: [
             {
                 id: 'button1',
