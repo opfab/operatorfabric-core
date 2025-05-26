@@ -23,6 +23,7 @@ public class JwtProperties {
     private String givenNameClaim = "given_name";
     private String familyNameClaim = "family_name";
     private String nameClaim = "name";
+    private String emailClaim = "email";
 
     private String entitiesIdClaim = "entitiesId";
     private boolean gettingEntitiesFromToken = false;
@@ -41,6 +42,10 @@ public class JwtProperties {
 
     public String getNameClaim() {
         return nameClaim;
+    }
+
+    public String getEmailClaim() {
+        return emailClaim;
     }
 
     public String getEntitiesIdClaim() {
@@ -75,6 +80,10 @@ public class JwtProperties {
 
     public void setNameClaim(String nameClaim) {
         this.nameClaim = nameClaim;
+    }
+
+    public void setEmailClaim(String emailClaim) {
+        this.emailClaim = emailClaim;
     }
 
     public void setEntitiesIdClaim(String entitiesIdClaim) {

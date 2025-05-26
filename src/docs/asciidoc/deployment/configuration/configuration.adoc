@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -116,6 +116,8 @@ The user service has these specific properties :
 |operatorfabric.users.default.groups|null| Array of group objects to create upon startup if they don't exist
 |operatorfabric.users.default.entities|null| Array of entity objects to create upon startup if they don't exist
 |operatorfabric.users.daysBeforeLogExpiration|61| Duration beyond which user action logs get automatically deleted
+|operatorfabric.users.getEmailFromUserInsteadOfSettings|false| If set to true, the email address used to notify the user
+is fetched from the token, otherwise the user must fill the field on the settings screen
 
 |===
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -12,7 +12,11 @@ OpFab can send card notifications via email. These notifications are sent when a
 
 == Configuring Email Notifications
 
-Users can enable email notifications in their user settings. They must provide an email address for receiving notifications and select the processes/states they want to be notified about.
+Users can enable email notifications in their user settings. If the parameter
+`operatorfabric.users.getEmailFromUserInsteadOfSettingsThey` is set to true, the email address is fetched from the token.
+The email address is displayed in the settings screen but the field is readonly.
+If the parameter is absent or set to false, the user must provide an email address (in the settings screen) for receiving
+notifications and select the processes/states they want to be notified about.
 Users can specify the desired timezone for displaying dates and times in emails. To do this, they must fill in
 the "timezone for mails" field in the user settings screen.
 

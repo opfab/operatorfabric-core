@@ -128,7 +128,8 @@
     "dateFormat": "dd/MM/yyyy",
     "styleWhenNightDayModeDesactivated": "NIGHT",
     "replayInterval": 10,
-    "replayEnabled": true
+    "replayEnabled": true,
+    "getEmailFromUserInsteadOfSettings": false
   },
   "settingsScreen": {
     "hiddenSettings": []

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ public class User {
     private String login;
     private String firstName;
     private String lastName;
+    private String email;
     private String comment;
     private Set<String> entities;
 
@@ -36,11 +37,12 @@ public class User {
 
     
 
-    public User(@NotNull String login, String firstName, String lastName, String comment, Set<String> entities,
+    public User(@NotNull String login, String firstName, String lastName, String email, String comment, Set<String> entities,
             Set<String> groupSet) {
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.comment = comment;
         this.entities = entities;
         this.groupSet = groupSet;
@@ -69,6 +71,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getComment() {
@@ -134,6 +144,7 @@ public class User {
         result = prime * result + ((login == null) ? 0 : login.hashCode());
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((comment == null) ? 0 : comment.hashCode());
         result = prime * result + ((entities == null) ? 0 : entities.hashCode());
         result = prime * result + ((groupSet == null) ? 0 : groupSet.hashCode());
@@ -164,6 +175,11 @@ public class User {
             if (other.lastName != null)
                 return false;
         } else if (!lastName.equals(other.lastName))
+            return false;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
             return false;
         if (comment == null) {
             if (other.comment != null)

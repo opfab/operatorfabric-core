@@ -54,9 +54,9 @@ class EntitiesServiceShould {
 
         Set<String> entitiesForUser1 = new HashSet<>(Arrays.asList("entity1", "entity2"));
         Set<String> entitiesForUser2 = new HashSet<>(Arrays.asList("entity2"));
-        userRepositoryStub.insert(new User("user1", "test", null, null, entitiesForUser1, null));
-        userRepositoryStub.insert(new User("user2", "test", null, null, entitiesForUser2, null));
-        userRepositoryStub.insert(new User("user3", "test", null, null, null, null));
+        userRepositoryStub.insert(new User("user1", "test", null, null, null, entitiesForUser1, null));
+        userRepositoryStub.insert(new User("user2", "test", null, null, null, entitiesForUser2, null));
+        userRepositoryStub.insert(new User("user3", "test", null, null, null, null, null));
 
     }
 

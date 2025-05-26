@@ -94,9 +94,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         const formGroupConfig = {};
         settings.forEach((setting) => {
-            if (setting === 'email')
+            if (setting === 'email') {
                 formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting), Validators.email);
-            else formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
+            } else {
+                formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
+            }
         });
         this.settingsForm = new FormGroup(formGroupConfig, {updateOn: 'change'});
         this.initLocaleMultiselect();
