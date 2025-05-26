@@ -10,7 +10,7 @@
 package org.opfab.externaldevices;
 
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.opfab.springtools.configuration.oauth.OAuth2GenericConfiguration;
+import org.opfab.springtools.configuration.oauth.JwtConfiguration;
 import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +26,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableMongoRepositories
 @EnableConfigurationProperties
 @EnableScheduling
-@Import({ RabbitEventBus.class, UserServiceCacheImpl.class, OAuth2GenericConfiguration.class })
+@Import({ RabbitEventBus.class, UserServiceCacheImpl.class, JwtConfiguration.class })
 public class ExternalDevicesApplication {
 
     public static void main(String[] args) {

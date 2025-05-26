@@ -9,7 +9,7 @@
 
 package org.opfab.businessconfig;
 
-import org.opfab.springtools.configuration.oauth.OAuth2GenericConfiguration;
+import org.opfab.springtools.configuration.oauth.JwtConfiguration;
 import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({ RabbitEventBus.class, UserServiceCacheImpl.class, OAuth2GenericConfiguration.class })
+@Import({ RabbitEventBus.class, UserServiceCacheImpl.class, JwtConfiguration.class })
 
 public class BusinessconfigApplication {
 

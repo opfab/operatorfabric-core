@@ -10,7 +10,7 @@
 package org.opfab.springtools.configuration.test;
 
 import jakarta.servlet.*;
-import org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
+import org.opfab.springtools.configuration.oauth.PermissionConverter;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,7 +68,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         headers.put("dummyHeaderKey", "dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
         claim.put("sub", customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities
+        Collection<GrantedAuthority> authorities = PermissionConverter
                 .computeAuthorities(principal.getPermissions());
 
         Authentication auth = new MockAuthenticationWithDetails(

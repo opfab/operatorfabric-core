@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtilities.computeAuthorities;
+import static org.opfab.springtools.configuration.oauth.PermissionConverter.computeAuthorities;
 
 /**
  * This class extends the OperatorFabric custom {@link User} and implements Spring Security's {@link UserDetails} to serve as a mock in tests (see {@link WithMockOpFabUser})
