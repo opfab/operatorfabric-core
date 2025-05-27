@@ -10,12 +10,12 @@
 package org.opfab.users.controllers;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
+import org.opfab.users.configuration.jwt.groups.GroupsMode;
+import org.opfab.users.configuration.jwt.groups.GroupsProperties;
 import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;

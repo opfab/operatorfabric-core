@@ -10,9 +10,9 @@
 package org.opfab.users.configuration.oauth2;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.opfab.users.configuration.jwt.groups.GroupsMode;
+import org.opfab.users.configuration.jwt.groups.GroupsProperties;
+import org.opfab.users.configuration.jwt.groups.GroupsUtils;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.User;
