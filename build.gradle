@@ -234,8 +234,8 @@ asciidoctor {
 
 subprojects {
 
-    group operatorfabric.group
-    version operatorfabric.version
+    group = operatorfabric.group
+    version = operatorfabric.version
 
 
 
@@ -247,8 +247,8 @@ subprojects {
 
             test {
                 testLogging {
-                    events "passed", "skipped", "failed"
-                    exceptionFormat "full"
+                    events = ["passed", "skipped", "failed"]
+                    exceptionFormat = "full"
                 }
             }
 
