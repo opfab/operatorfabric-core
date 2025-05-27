@@ -1,10 +1,20 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'org.hidetake.swagger.generator'
+    id "com.vanniktech.maven.publish" version "0.32.0"
+}
+
 subprojects {
 
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'org.hidetake.swagger.generator'
+    apply plugin: "com.vanniktech.maven.publish"
 
     /////// COMPILATION
 
@@ -73,7 +83,7 @@ subprojects {
     /*Task that copies all the dependencies under build/support_libs so Sonar
     can make sense of the Lombok annotations for example */
     task copyDependencies(type: Copy) {
-        description 'copy dependencies to build/support_libs'
+        description = 'copy dependencies to build/support_libs'
         from configurations.compileClasspath
         into 'build/support_libs'
     }
@@ -100,70 +110,49 @@ subprojects {
         from javadoc.destinationDir
     }
 
-    publishing{
-        publications{
-            clientLibraryMaven(MavenPublication){
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
+    mavenPublishing {
 
-                pom {
-                    name="${longName}"
-                    description="${description}"
-                    version="${operatorfabric.version}"
-                    url="${operatorfabric.url}"
-                    licenses{
-                        license{
-                            name = 'Mozilla Public License Version 2.0'
-                            url = 'https://www.mozilla.org/en-US/MPL/'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'freddidierRTE'
-                            name = 'Frédéric Didier'
-                            email = 'frederic-f.didier@rte-france.com'
-                        }
-                        developer {
-                            id = 'AlexGuironnetRTE'
-                            name = 'Alexandra Guironnet'
-                            email = 'alexandra.guironnet@rte-france.com'
-                        }
-                    }
-                    scm {
-                        url = 'https://github.com/opfab/operatorfabric-core'
-                        connection = 'scm:git:git://github.com:opfab/operatorfabric-core.git'
-                        developerConnection = 'scm:git:ssh://github.com:opfab/operatorfabric-core.git'
-                    }
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+        signAllPublications()
+
+        pom {
+            name = project.provider { project.longName }
+            description = project.provider { project.description }
+            version="${operatorfabric.version}"
+            url="${operatorfabric.url}"
+            licenses{
+                license{
+                    name = 'Mozilla Public License Version 2.0'
+                    url = 'https://www.mozilla.org/en-US/MPL/'
                 }
             }
-        }
-
-        repositories{
-
-            maven{
-
-                name = 'ossrh' //The name serves as prefix for the username and password properties taken from the gradle.properties file as credentials
-
-                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-                def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
-
-                // The Sonatype staging repo doesn't accept snapshot versions so when executing the publishing task on
-                // a snapshot version the produced artifacts will appear in the build directory (see path above).
-                if (project.version.toUpperCase().equals("SNAPSHOT")) {
-                    url snapshotsRepoUrl
-                } else {
-                    url releasesRepoUrl
-                    credentials(PasswordCredentials)
+            developers {
+                developer {
+                    id = 'freddidierRTE'
+                    name = 'Frédéric Didier'
+                    email = 'frederic-f.didier@rte-france.com'
                 }
-
+                developer {
+                    id = 'vlo-rte'
+                    name = 'Valérie Longa'
+                    email = 'valerie.longa@rte-france.com'
+                }
+                developer {
+                    id = 'ClementBouvierN'
+                    name = 'Clément Bouvier'
+                    email = 'clement.bouvierneveu@rte-france.com'
+                }
+            }
+            scm {
+                url = 'https://github.com/opfab/operatorfabric-core'
+                connection = 'scm:git:git://github.com:opfab/operatorfabric-core.git'
+                developerConnection = 'scm:git:ssh://github.com:opfab/operatorfabric-core.git'
             }
         }
-
     }
 
     signing {
         useGpgCmd() //These is needed to work with GPG2 See https://github.com/gradle/gradle/issues/888#issuecomment-708439524
-        sign publishing.publications.clientLibraryMaven
     }
 }
