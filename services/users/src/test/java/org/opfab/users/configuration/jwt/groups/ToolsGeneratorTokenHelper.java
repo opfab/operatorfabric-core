@@ -28,8 +28,7 @@ public class ToolsGeneratorTokenHelper {
 
     public static String getTokenEncoded(String header, String payload) {
         String signature = hmacSha256(encode(header.getBytes()) + "." + encode(payload.getBytes()), "app-secret");
-        String jwtToken = encode(header.getBytes()) + "." + encode(payload.getBytes()) + "." + signature;
-        return jwtToken;
+        return encode(header.getBytes()) + "." + encode(payload.getBytes()) + "." + signature;
     }
 
     private static String encode(byte[] bytes) {

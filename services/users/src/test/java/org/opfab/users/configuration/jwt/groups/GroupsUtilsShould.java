@@ -316,8 +316,6 @@ class GroupsUtilsShould {
 
         // Result
         assertThat(listGrantedAuthorityActual, hasSize(12));
-        // Result
-        assertThat(listGrantedAuthorityActual, hasSize(12));
         // check Standard claims
         assertThat("must contains the ROLE_RoleClaimValue",
                 listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimValue")));

@@ -39,7 +39,7 @@ class GroupsUtilsWithApplicationFileConfigShould {
     public String tokenEncoded = null;
 
     @BeforeEach
-    public void before() {
+    void before() {
         String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
         String jwtBody = """
                 {
