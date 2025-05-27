@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.springtools.configuration.oauth.jwt.groups;
+package org.opfab.users.configuration.jwt.groups;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaimCheckExistPath;
-import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaimStandard;
-import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaimStandardArray;
-import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaimStandardList;
+import org.opfab.users.configuration.jwt.groups.roles.RoleClaimCheckExistPath;
+import org.opfab.users.configuration.jwt.groups.roles.RoleClaimStandard;
+import org.opfab.users.configuration.jwt.groups.roles.RoleClaimStandardArray;
+import org.opfab.users.configuration.jwt.groups.roles.RoleClaimStandardList;
 
 public class RolesClaim {
 

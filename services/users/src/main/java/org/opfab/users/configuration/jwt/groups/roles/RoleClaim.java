@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.springtools.configuration.oauth.jwt.groups.roles;
+package org.opfab.users.configuration.jwt.groups.roles;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

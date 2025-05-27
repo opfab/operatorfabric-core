@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.springtools.configuration.oauth.jwt.groups;
+package org.opfab.users.configuration.jwt.groups;
 
-import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
+import org.opfab.users.configuration.jwt.groups.roles.RoleClaim;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

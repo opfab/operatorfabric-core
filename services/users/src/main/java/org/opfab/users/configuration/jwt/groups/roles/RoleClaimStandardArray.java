@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.springtools.configuration.oauth.jwt.groups.roles;
+package org.opfab.users.configuration.jwt.groups.roles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,34 +15,38 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Define the structure of the RoleClaimStandard, the most common use case,
- * which is a key/value system.
+ * Define the structure of the RoleClaimStandardArray, the common use case which
+ * deals with the case of an array value.
  *
  */
-public class RoleClaimStandard extends RoleClaim {
+public class RoleClaimStandardArray extends RoleClaimStandard {
 
-    public RoleClaimStandard() {
+    public RoleClaimStandardArray() {
         super();
     }
 
-    public RoleClaimStandard(String path) {
+    public RoleClaimStandardArray(String path) {
         super(path);
     }
 
     /**
-     * Retrieve the value of the node element
+     * Get each element of the JSON array as a role
      */
     @Override
     public List<String> computeNodeElementRole(JsonNode jsonNodeElement) {
         List<String> listGroupsResult = new ArrayList<>();
-        listGroupsResult.add(jsonNodeElement.asText());
+        if (jsonNodeElement.isArray()) {
+            for (final JsonNode roleElement : jsonNodeElement) {
+                listGroupsResult.add(roleElement.asText());
+            }
+        }
         return listGroupsResult;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("RoleClaimStandard(path=").append(getPath()).append(")");
+        sb.append("RoleClaimStandardArray(path=").append(getPath()).append(")");
         return sb.toString();
     }
 
@@ -52,7 +56,7 @@ public class RoleClaimStandard extends RoleClaim {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        RoleClaimStandard that = (RoleClaimStandard) o;
+        RoleClaimStandardArray that = (RoleClaimStandardArray) o;
         return getPath().equals(that.getPath());
     }
 
