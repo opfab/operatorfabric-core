@@ -12,7 +12,6 @@ package org.opfab.springtools.configuration.oauth;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -35,8 +34,6 @@ import java.util.List;
 @Configuration
 @Import({ UpdateUserListenerConfiguration.class, JwtProperties.class })
 public class JwtConfiguration {
-
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JwtConfiguration.class);
 
     protected UserServiceCache userServiceCache;
     protected JwtProperties jwtProperties;
@@ -76,11 +73,9 @@ public class JwtConfiguration {
                 }
             }
         } catch (IOException e) {
-            log.error("Error getting user information", e);
             throw new IllegalArgumentException("Error getting user information", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Error getting user information (Interrupted Exception)", e);
             throw new IllegalArgumentException("Error getting user information (Interrupted Exception)", e);
         }
         return null;

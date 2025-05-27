@@ -22,6 +22,11 @@ import java.util.List;
  *
  */
 public class PermissionConverter {
+
+    private PermissionConverter() {
+        // Utility class, no instantiation
+    }
+
     public static List<GrantedAuthority> computeAuthorities(List<PermissionEnum> permissions) {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
