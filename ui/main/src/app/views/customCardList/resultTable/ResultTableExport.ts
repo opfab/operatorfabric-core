@@ -73,7 +73,11 @@ export class ResultTableExport {
         });
     }
 
-    private addResponseFieldsToRow(responseFieldName: string, responses: {color: string; name: string}[], row: {}) {
+    private addResponseFieldsToRow(
+        responseFieldName: string,
+        responses: {color: string; entityName: string}[],
+        row: {}
+    ) {
         const responseColumnLabels = this.customScreenDefinition.responseSeverityColumnLabelsForExportFile;
         const respondedByType = {};
         const responded = [];
@@ -86,12 +90,12 @@ export class ResultTableExport {
         responses?.forEach((response) => {
             if (response.color === 'grey') {
                 // If the response is grey, it means that the entity has not responded
-                notResponded.push(response.name);
+                notResponded.push(response.entityName);
             } else {
-                responded.push(response.name);
+                responded.push(response.entityName);
                 const severity = this.colorToSeverity[response.color];
                 if (severity && responseColumnLabels?.[severity]) {
-                    respondedByType[severity].push(response.name);
+                    respondedByType[severity].push(response.entityName);
                 }
             }
         });

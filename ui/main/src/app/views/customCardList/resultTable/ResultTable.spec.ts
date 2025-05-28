@@ -633,8 +633,8 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     responses: [
-                        {name: 'entity1 name', color: 'grey'},
-                        {name: 'entity3 name', color: 'grey'}
+                        {entityName: 'entity1 name', color: 'grey'},
+                        {entityName: 'entity3 name', color: 'grey'}
                     ]
                 }
             ]);
@@ -662,9 +662,9 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     responses: [
-                        {name: 'entity1 name', color: 'grey'},
-                        {name: 'entity2 name', color: 'grey'},
-                        {name: 'entity3 name', color: 'grey'}
+                        {entityName: 'entity1 name', color: 'grey'},
+                        {entityName: 'entity2 name', color: 'grey'},
+                        {entityName: 'entity3 name', color: 'grey'}
                     ]
                 }
             ]);
@@ -713,7 +713,7 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([
                 {
                     cardId: 'card1',
-                    responses: [{name: 'child entity', color: 'grey'}]
+                    responses: [{entityName: 'child entity', color: 'grey'}]
                 }
             ]);
         });
@@ -763,10 +763,10 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     responses: [
-                        {name: 'child entity', color: 'blue'},
-                        {name: 'entity1 name', color: 'red'},
-                        {name: 'entity2 name', color: 'orange'},
-                        {name: 'entity3 name', color: 'green'}
+                        {entityName: 'child entity', color: 'blue'},
+                        {entityName: 'entity1 name', color: 'red'},
+                        {entityName: 'entity2 name', color: 'orange'},
+                        {entityName: 'entity3 name', color: 'green'}
                     ]
                 }
             ]);

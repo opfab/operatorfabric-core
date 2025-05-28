@@ -180,11 +180,11 @@ export class TableRowBuilder {
             }
 
             entities.push({
-                name: entity.name,
+                entityName: entity.name,
                 color
             });
         });
-        entities.sort((a, b) => a.name?.localeCompare(b.name));
+        entities.sort((a, b) => a.entityName?.localeCompare(b.entityName));
         return entities;
     }
 

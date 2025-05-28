@@ -6,16 +6,16 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<span *ngIf="entities.length === 1" id="opfab-entities-dropdown">
+<span *ngIf="responses.length === 1" id="opfab-entities-dropdown">
     <span
-        *ngFor="let entity of entities"
-        [ngStyle]="{color: 'var(--opfab-color-' + entity.color +')' , 'text-align': 'center'}">
-        &nbsp; {{ entity.name }} &nbsp;
+        *ngFor="let response of responses"
+        [ngStyle]="{color: 'var(--opfab-color-' + response.color +')' , 'text-align': 'center'}">
+        &nbsp; {{ response.entityName }} &nbsp;
     </span>
 </span>
 
 <span
-    *ngIf="entities.length > 1"
+    *ngIf="responses.length > 1"
     id="opfab-entities-dropdown"
     placement="bottom-left"
     [ngbPopover]="entitiesDropdown"
@@ -24,16 +24,16 @@
     triggers="mouseenter:mouseleave"
     popoverClass="opfab-popover-no-arrow">
     <span
-        *ngFor="let entity of entities"
-        [ngStyle]="{color: 'var(--opfab-color-' + entity.color +')' , 'text-align': 'center'}">
-        &nbsp; {{ entity.name }} &nbsp;
+        *ngFor="let response of responses"
+        [ngStyle]="{color: 'var(--opfab-color-' + response.color +')' , 'text-align': 'center'}">
+        &nbsp; {{ response.entityName }} &nbsp;
     </span>
 </span>
 
 <ng-template #entitiesDropdown>
     <div
-        *ngFor="let entity of entities"
-        [ngStyle]="{color: 'var(--opfab-color-' + entity.color +')' , 'text-align': 'left'}">
-        &nbsp; {{ entity.name }} &nbsp;
+        *ngFor="let response of responses"
+        [ngStyle]="{color: 'var(--opfab-color-' + response.color +')' , 'text-align': 'left'}">
+        &nbsp; {{ response.entityName }} &nbsp;
     </div>
 </ng-template>

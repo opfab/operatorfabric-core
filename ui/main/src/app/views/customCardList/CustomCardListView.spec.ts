@@ -263,7 +263,7 @@ describe('CustomCardListView', () => {
                 {
                     cardId: 'id1',
                     testField: 'process1',
-                    responses: [{name: 'entity1 name', color: 'green'}]
+                    responses: [{entityName: 'entity1 name', color: 'green'}]
                 }
             ]);
             // Prevent occasional error: "An error was thrown in afterAll Error: executing a cancelled action"
