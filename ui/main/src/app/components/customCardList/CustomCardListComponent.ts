@@ -343,8 +343,22 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     }
                 },
                 responses: {
-                    sortable: false,
-                    filter: false,
+                    sortable: true,
+                    comparator: (valueA: any, valueB: any) => {
+                        const responseA = valueA.map((response) => response.entityName).join(' ');
+                        const responseB = valueB.map((response) => response.entityName).join(' ');
+                        if (responseA < responseB) {
+                            return -1;
+                        }
+                        if (responseA > responseB) {
+                            return 1;
+                        }
+                        return 0;
+                    },
+                    filter: true,
+                    filterValueGetter: (params: any) => {
+                        return params.data[params.column.colId].map((response) => response.entityName).join(' ');
+                    },
                     resizable: false,
                     wrapText: false,
                     cellRenderer: 'responsesCellRenderer'

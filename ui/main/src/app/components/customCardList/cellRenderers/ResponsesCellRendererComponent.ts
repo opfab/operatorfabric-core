@@ -21,10 +21,10 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
     imports: [TranslateModule, NgIf, NgbPopover, NgFor, NgStyle]
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp {
-    public entities: any[];
+    public responses: any[];
 
     agInit(params: any): void {
-        this.entities = params.data.responses;
+        this.responses = params.data.responses;
     }
 
     // noinspection JSUnusedLocalSymbols
