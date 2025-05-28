@@ -22,4 +22,8 @@
     </div>
 </div>
 
-<div *ngIf="!isInputFieldVisible" style="margin: 0px; align-items: center">{{ fieldValue }}</div>
+<div
+    *ngIf="!isInputFieldVisible"
+    style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
+    {{ fieldValue }}
+</div>

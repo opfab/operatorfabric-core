@@ -33,4 +33,8 @@
         style="height: 35px; width: 80%" />
 </div>
 
-<div *ngIf="!isInputFieldVisible" style="margin: 0px; align-items: center">{{ fieldLabel }}</div>
+<div
+    *ngIf="!isInputFieldVisible"
+    style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
+    {{ fieldLabel }}
+</div>
