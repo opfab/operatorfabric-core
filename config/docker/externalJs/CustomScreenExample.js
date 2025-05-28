@@ -178,7 +178,9 @@
                     allowNewOptionForSelect: true,
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',
-                    minWidth: 300
+                    minWidth: 300,
+                    showTooltips: true
+
                 },
                 {
                     fieldType: 'INPUT',
@@ -187,7 +189,8 @@
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'COMMENT',
                     minWidth: 256,
-                    maxInputLength: 256
+                    maxInputLength: 256,
+                    showTooltips: true
                 }
             ]
         },

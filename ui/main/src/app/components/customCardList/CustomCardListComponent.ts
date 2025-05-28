@@ -433,9 +433,22 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         return this.customCardListView.getColumnsDefinitionForAgGrid().map((columnDef) => {
             if (columnDef.customParams.showTooltips) {
                 columnDef.tooltipComponent = CustomTooltipComponent;
-                columnDef.tooltipValueGetter = (params: ITooltipParams) => {
-                    return params.value;
-                };
+                if (columnDef.type === 'select') {
+                    // If the column is a select type, the value for the tooltip is the label of the selected options
+                    // or the value
+                    //    -  if no label is defined
+                    //    -  or if the selected value is not in the possible values
+                    columnDef.tooltipValueGetter = (params: ITooltipParams) => {
+                        const tooltipText =
+                            params.value?.possibleValues?.find((value: any) => value.value === params.value?.value) // find selected value label
+                                ?.label ?? params.value?.value;
+                        return tooltipText;
+                    };
+                } else {
+                    columnDef.tooltipValueGetter = (params: ITooltipParams) => {
+                        return params.value;
+                    };
+                }
             }
             return columnDef;
         });
