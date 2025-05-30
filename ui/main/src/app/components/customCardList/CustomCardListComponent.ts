@@ -184,6 +184,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
         this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
         this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
+        this.typeOfStateSelected = this.customCardListView.getDefaultSelectedTypeOfState();
 
         const savedPageSize = UserPreferencesService.getPreference('opfab.customScreens.page.size');
         if (savedPageSize) this.pageSize = parseInt(savedPageSize);

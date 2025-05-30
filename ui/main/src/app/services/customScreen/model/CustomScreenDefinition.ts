@@ -23,6 +23,7 @@ export class CustomScreenDefinition {
     responsePossibleOnlyForProcessStates?: {process: string; states: string[]}[];
     showAcknowledgmentButton?: boolean;
     responseSeverityColumnLabelsForExportFile?: {[key: string]: string};
+    defaultSelectedTypeOfState?: string[];
 }
 
 export class Column {

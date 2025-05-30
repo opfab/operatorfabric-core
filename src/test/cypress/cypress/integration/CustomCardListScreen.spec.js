@@ -49,7 +49,7 @@ describe('Custom Card List Screen', function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
             numberOfColumsShouldBe(11);
-            numberOfRowsShouldBe(6);
+            numberOfRowsShouldBe(4);
 
             // Filter on "External recipient" process
             cy.get('#opfab-process').click();
@@ -77,11 +77,11 @@ describe('Custom Card List Screen', function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen1();
 
-            cy.get('.ag-row[row-id="1"]')
+            cy.get('.ag-row[row-id="0"]')
                 .should('exist')
                 .within(() => {
                     // Check that 'chart line' is contained inside <i> </i>
-                    cy.get('of-html-renderer').find('i').should('contain', 'chart line');
+                    cy.get('of-html-renderer').find('i').should('contain', 'contingencies');
                 });
         });
     });

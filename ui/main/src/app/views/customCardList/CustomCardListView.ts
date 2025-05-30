@@ -122,6 +122,10 @@ export class CustomCardListView {
         return Array.from(processes.values());
     }
 
+    public getDefaultSelectedTypeOfState(): string[] {
+        return this.customScreenDefinition?.defaultSelectedTypeOfState ?? [];
+    }
+
     private isProcessIdInTheListOfCustomScreenDefinition(processId: string): boolean {
         return (
             !this.customScreenDefinition?.processIds ||

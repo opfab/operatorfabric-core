@@ -55,7 +55,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     exportModalRef: NgbModalRef;
     displayedResults: LineOfMonitoringResult[];
     exportInProgress = false;
-    exportCancelled = false;
+    exportCanceled = false;
     exportProgress: number;
 
     // ag-grid configuration objects
@@ -337,7 +337,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     export(): void {
-        this.exportCancelled = false;
+        this.exportCanceled = false;
         // if monitoring has a specific configuration
         if (this.monitoringConfig?.export?.fields) {
             this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
@@ -359,11 +359,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     cancelExport() {
-        this.exportCancelled = true;
+        this.exportCanceled = true;
     }
 
     processMonitoringForExport(lineNumber: number) {
-        if (!this.exportCancelled) {
+        if (!this.exportCanceled) {
             // round by ten to slow progressbar updates
             this.exportProgress = 10 * Math.round(lineNumber / 10);
 

@@ -266,7 +266,7 @@ describe('CustomCardListView', () => {
                     responses: [{name: 'entity1 name', color: 'green'}]
                 }
             ]);
-            // Prevent occasional error: "An error was thrown in afterAll Error: executing a cancelled action"
+            // Prevent occasional error: "An error was thrown in afterAll Error: executing a canceled action"
             // Ensure the observable is properly closed to avoid lingering subscriptions
             customScreenView.destroy();
         });
@@ -311,7 +311,7 @@ describe('CustomCardListView', () => {
                     testField: 'process1'
                 }
             ]);
-            // Prevent occasional error: "An error was thrown in afterAll Error: executing a cancelled action"
+            // Prevent occasional error: "An error was thrown in afterAll Error: executing a canceled action"
             // Ensure the observable is properly closed to avoid lingering subscriptions
             customScreenView.destroy();
         });
