@@ -344,6 +344,10 @@ const customScreenExample = {
     statesToExclude: [{processId: 'processId0', stateIds: ['stateId0', 'stateId1']}],
     headerFilters: ['PROCESS', 'TYPE_OF_STATE'],
     showAcknowledgmentButton: false,
+    defaultSelectedTypeOfState: [
+        'INPROGRESS',
+        'FINISHED'
+    ],
     results: {
         columns: [
             {
@@ -416,6 +420,9 @@ It is possible to exclude specific states from being display by adding them to t
 
 You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`, `READ_ACK`, `RESPONSE_FROM_MY_ENTITIES` and `RESPONSE_FROM_ALL_ENTITIES`.
 
+You can define pre-selected values for the type of state multiselect by setting the field `defaultSelectedTypeOfState`.
+The possible values are `INPROGRESS`, `FINISHED`, `CANCELED`.
+
 For each field you want to display in the result table, define a column object. The following field types are available:
 
 - `COLORED_CIRCLE`: Displays a colored circle. The value is to be defined with a custom method `getValue` that shall contain two fields:
@@ -432,13 +439,13 @@ For each field you want to display in the result table, define a column object. 
 - `SEVERITY`: Displays the severity as a color rectangle.
 - `STRING`: Displays a string value.
 - `HTML`: Renders the HTML contained in the `getValue` method.
-- `TYPE_OF_STATE`: Displays the name of the type of state (`INPROGRESS`, `FINISHED`, `CANCELLED`) with a corresponding color. The color is defined as follows:
+- `TYPE_OF_STATE`: Displays the name of the type of state (`INPROGRESS`, `FINISHED`, `CANCELED`) with a corresponding color. The color is defined as follows:
   * `INPROGRESS`: orange
   * `FINISHED`: 
     ** orange if not all entities required to respond have responded
     ** red if one or more entities responded with a severity of `ALARM`
     ** green otherwise
-  * `CANCELLED`: red
+  * `CANCELED`: red
   * none: grey
 
 You can define the column header text using the `headerName` field.

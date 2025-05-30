@@ -34,6 +34,10 @@
             COMPLIANT: 'yes',
             ALARM: 'no'
         },
+        defaultSelectedTypeOfState: [
+            'INPROGRESS',
+            'FINISHED'
+        ],
         results: {
             columns: [
                 {
