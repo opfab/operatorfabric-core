@@ -348,6 +348,7 @@ const customScreenExample = {
         'INPROGRESS',
         'FINISHED'
     ],
+    includeOnlyCardsEmittedByCurrentUserEntities: false,
     results: {
         columns: [
             {
@@ -417,6 +418,8 @@ opfab.businessconfig.registerCustomScreen(customScreenExample);
 In this example, the custom screen is accessible via the URL `#/customscreen/testId`.
 
 It is possible to exclude specific states from being display by adding them to the `statesToExclude` array. State ids are not unique and should be associated to their process id.
+
+It is possible to include only cards emitted by the entities of the current user by setting the `includeOnlyCardsEmittedByCurrentUserEntities` field to `true`. 
 
 You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`, `READ_ACK`, `RESPONSE_FROM_MY_ENTITIES` and `RESPONSE_FROM_ALL_ENTITIES`.
 

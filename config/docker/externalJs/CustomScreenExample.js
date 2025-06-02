@@ -38,6 +38,7 @@
             'INPROGRESS',
             'FINISHED'
         ],
+        includeOnlyCardsEmittedByCurrentUserEntities: false,
         results: {
             columns: [
                 {

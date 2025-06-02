@@ -24,6 +24,7 @@ export class CustomScreenDefinition {
     showAcknowledgmentButton?: boolean;
     responseSeverityColumnLabelsForExportFile?: {[key: string]: string};
     defaultSelectedTypeOfState?: string[];
+    includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
 }
 
 export class Column {
