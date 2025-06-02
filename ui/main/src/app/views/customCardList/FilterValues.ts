@@ -18,4 +18,5 @@ export class FilterValues {
     public readAndAckFilter: string[];
     public includeCardsWithResponseFromMyEntities: boolean;
     public includeCardsWithResponsesFromAllEntities: boolean;
+    public includeOnlyCardsEmittedByCurrentUserEntities: boolean;
 }

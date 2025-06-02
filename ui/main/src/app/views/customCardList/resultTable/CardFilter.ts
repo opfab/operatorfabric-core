@@ -12,6 +12,8 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from 'app/model/Card';
 import {FilterValues} from '../FilterValues';
 import {StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {UsersService} from '@ofServices/users/UsersService';
+import {PublisherType} from 'app/model/PublisherType';
 
 export class CardFilter {
     private startDate: number;
@@ -23,6 +25,7 @@ export class CardFilter {
     private includeCardsWithResponsesFromAllEntities = true;
     private readFilter: boolean = undefined;
     private ackFilter: boolean = undefined;
+    private includeOnlyCardsEmittedByCurrentUserEntities = false;
 
     public setFilters(filterValues: FilterValues) {
         this.startDate = filterValues.startDate;
@@ -33,6 +36,7 @@ export class CardFilter {
         this.setReadAndAckFilter(filterValues.readAndAckFilter);
         this.includeCardsWithResponsesFromAllEntities = filterValues.includeCardsWithResponsesFromAllEntities;
         this.includeCardsWithResponseFromMyEntities = filterValues.includeCardsWithResponseFromMyEntities;
+        this.includeOnlyCardsEmittedByCurrentUserEntities = filterValues.includeOnlyCardsEmittedByCurrentUserEntities;
     }
 
     private setReadAndAckFilter(readAndAck: string[]) {
@@ -63,6 +67,8 @@ export class CardFilter {
         if (this.isCardFilteredByAck(card)) return true;
         if (!this.includeCardsWithResponseFromMyEntities && card.hasChildCardFromCurrentUserEntity) return true;
         if (!this.includeCardsWithResponsesFromAllEntities && this.haveAllEntitiesResponded(card, childCards))
+            return true;
+        if (this.includeOnlyCardsEmittedByCurrentUserEntities && !this.isCardEmittedByCurrentUserEntity(card))
             return true;
         return false;
     }
@@ -121,5 +127,11 @@ export class CardFilter {
         if (entitiesToRespond.size === 0) return false;
         const respondedEntities = new Set(childCards.get(card.id)?.map((card) => card.publisher) ?? []);
         return Array.from(entitiesToRespond).every((entity) => respondedEntities.has(entity));
+    }
+
+    private isCardEmittedByCurrentUserEntity(card: Card): boolean {
+        if (card.publisherType === PublisherType.ENTITY)
+            return UsersService.getCurrentUserWithPerimeters().userData.entities.includes(card.publisher);
+        return false;
     }
 }

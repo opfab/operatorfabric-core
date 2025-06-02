@@ -7,20 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {CustomScreenDefinition, FieldType, StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
-import {getOneLightCard, mockTranslation, setEntities, setProcessConfiguration} from '@tests/helpers';
+import {getOneLightCard, mockTranslation, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {Process, ReadAndAckEnum, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
 import {FilterValues} from '../FilterValues';
+import {PublisherType} from 'app/model/PublisherType';
 
 describe('CustomScreenView - ResultTable - Should Filter card', () => {
-    const getResultTable = () => {
+    const getResultTable = (options?: {
+        statesToExcludeFilter?: StateExclusion[];
+        includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
+    }) => {
         const customScreenDefinition = new CustomScreenDefinition();
         customScreenDefinition.id = 'testId';
         customScreenDefinition.name = 'testName';
+        if (options?.statesToExcludeFilter) {
+            customScreenDefinition.statesToExclude = options.statesToExcludeFilter;
+        }
+        if (options?.includeOnlyCardsEmittedByCurrentUserEntities !== undefined) {
+            customScreenDefinition.includeOnlyCardsEmittedByCurrentUserEntities =
+                options.includeOnlyCardsEmittedByCurrentUserEntities;
+        }
         customScreenDefinition.results = {
             columns: [
                 {
@@ -325,7 +336,9 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
         ]);
     });
     it('by excluded states', async () => {
-        const resultTable = getResultTable();
+        const resultTable = getResultTable({
+            statesToExcludeFilter: [{processId: 'processId0', stateIds: ['state1.0']}]
+        });
         const states = new Map<string, State>();
         states.set('state1.0', {});
         states.set('state1.1', {});
@@ -359,7 +372,6 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             })
         ];
         const filterValues = new FilterValues();
-        filterValues.statesToExcludeFilter = [{processId: 'processId0', stateIds: ['state1.0']}];
         resultTable.setFilters(filterValues);
 
         const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
@@ -368,6 +380,42 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
             {cardId: 'id2', testField: 'processId1'}
         ]);
     });
+    it('by current user entities if includeOnlyCardsEmittedByCurrentUserEntities is set to true', async () => {
+        const resultTable = getResultTable({includeOnlyCardsEmittedByCurrentUserEntities: true});
+        const cards = [
+            getOneLightCard({
+                publisher: 'entity1',
+                publisherType: PublisherType.ENTITY,
+                process: 'processId0',
+                state: 'state1.0',
+                id: 'id0'
+            }),
+            getOneLightCard({
+                publisher: 'entity2',
+                publisherType: PublisherType.ENTITY,
+                process: 'processId0',
+                state: 'state1.1',
+                startDate: 100,
+                id: 'id1'
+            })
+        ];
+
+        await setUserPerimeter({
+            computedPerimeters: [],
+            userData: {
+                login: 'test',
+                firstName: 'firstName',
+                lastName: 'lastName',
+                entities: ['entity1']
+            }
+        });
+
+        const filterValues = new FilterValues();
+        resultTable.setFilters(filterValues);
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([{cardId: 'id0', testField: 'processId0'}]);
+    });
+
     it('that have responses from my entities if excludeCardsWithResponseFromMyEntities is called', () => {
         const resultTable = getResultTable();
         const cards = [

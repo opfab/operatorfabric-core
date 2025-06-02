@@ -100,6 +100,11 @@ export class ResultTable {
     }
 
     public setFilters(filtersValue: FilterValues) {
+        // statesToExcludeFilter and includeOnlyCardsEmittedByCurrentUserEntities are not set by the user
+        //  but by the custom screen definition
+        filtersValue.statesToExcludeFilter = this.customScreenDefinition?.statesToExclude;
+        filtersValue.includeOnlyCardsEmittedByCurrentUserEntities =
+            this.customScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
         this.cardFilter.setFilters(filtersValue);
     }
 
