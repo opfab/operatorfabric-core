@@ -218,13 +218,13 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     async processCardTemplate(card: Card, timezoneForEmails: string, templateDisabled: boolean): Promise<string> {
+        const urlOfCard =
+            '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
+
         let cardBodyHtml =
             this.bodyPrefix +
-            ' <a href=" ' +
-            this.opfabUrlInMailContent +
-            '/#/feed/cards/' +
-            this.base64urlEncode(card.id) +
-            ' ">' +
+            ' ' +
+            (this.showCardUrls ? urlOfCard : '') +
             this.escapeHtml(card.titleTranslated) +
             ' - ' +
             this.escapeHtml(card.summaryTranslated) +
@@ -232,7 +232,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) +
             ' - ' +
             this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails) +
-            '</a>';
+            (this.showCardUrls ? '</a>' : '');
         try {
             const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
                 card.process,

@@ -63,7 +63,8 @@ describe('Cards external diffusion', function () {
             .setOpfabUrlInMailContent('http://localhost')
             .setWindowInSecondsForCardSearch(120)
             .setDefaultTimeZone('Europe/Paris')
-            .setCustomConfig({customParam1: 'Param1'});
+            .setCustomConfig({customParam1: 'Param1'})
+            .setShowCardUrls(true);
     }
 
     it('Should send card when publishDate is after configured period', async function () {
@@ -332,6 +333,63 @@ describe('Cards external diffusion', function () {
                 'Summary1 &lt;br&gt; - ' +
                 startDateString +
                 ' - </a> <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
+        );
+    });
+
+    it('Body of email should not contain url of the card when showCardUrls is set to false', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                email: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    emailBodyTemplate: 'testTemplateMail'
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+        const startDateString = getFormattedDateAndTimeFromEpochDate(publishDate);
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(
+            `Prefix Title1 &amp; &lt;br&gt; - &quot; ` +
+                'Summary1 &lt;br&gt; - ' +
+                startDateString +
+                ' -  <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
         );
     });
 

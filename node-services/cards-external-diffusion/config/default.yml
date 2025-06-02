@@ -55,6 +55,7 @@ operatorfabric:
       sendRateLimit: 100
       sendRateLimitPeriodInSec : 3600
       defaultTimeZone: 'Europe/Paris'
+      showCardUrls: true
       customConfig: 
         customParam1 : 'myValue1'
         customParam2 : 'myValue2'
