@@ -91,7 +91,7 @@ public class CardValidationService {
 
         if (!checkRRuleDurationInMinutesIsNotNegative(c))
             throw new ConstraintViolationException(
-                    "constraint violation : RRule.durationInMinutes: must be greater than or equal to 0", null);
+                    "Impossible to publish card because rrule.durationInMinutes must be >= 0", null);
 
         if (!checkSecondsBeforeTimeSpanForReminderIsNotNegative(c))
             throw new ConstraintViolationException(
