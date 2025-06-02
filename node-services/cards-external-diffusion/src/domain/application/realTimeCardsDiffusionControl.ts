@@ -173,10 +173,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.email;
     }
 
-    shouldEmailBePlainText(userWithPerimeters: any): boolean {
-        return userWithPerimeters.emailToPlainText ?? false;
-    }
-
     async sendMail(
         card: Card,
         to: string,

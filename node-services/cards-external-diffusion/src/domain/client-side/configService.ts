@@ -46,6 +46,7 @@ export default class ConfigService {
                 this.config.sendRateLimitPeriodInSec = defaultConfig.sendRateLimitPeriodInSec;
                 this.config.customConfig = defaultConfig.customConfig;
                 this.config.showCardUrls = defaultConfig.showCardUrls;
+                this.config.forceEmailsInPlainText = defaultConfig.forceEmailsInPlainText;
                 this.save();
             }
         } catch (err) {

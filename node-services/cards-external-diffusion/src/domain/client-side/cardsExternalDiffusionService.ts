@@ -57,7 +57,8 @@ export default class CardsExternalDiffusionService {
             .setBodyPostfix(serviceConfig.bodyPostfix as string)
             .setFrom(serviceConfig.mailFrom as string)
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
-            .setShowCardUrls(serviceConfig.showCardUrls ?? true);
+            .setShowCardUrls(serviceConfig.showCardUrls ?? true)
+            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false);
 
         this.realTimeCardsDiffusionControl = new RealTimeCardsDiffusionControl()
             .setLogger(logger)
@@ -74,7 +75,8 @@ export default class CardsExternalDiffusionService {
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
             .setCustomConfig(serviceConfig.customConfig)
-            .setShowCardUrls(serviceConfig.showCardUrls ?? true);
+            .setShowCardUrls(serviceConfig.showCardUrls ?? true)
+            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false);
 
         if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()

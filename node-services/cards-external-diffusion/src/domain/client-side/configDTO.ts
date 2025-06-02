@@ -29,4 +29,5 @@ export default class ConfigDTO {
     public defaultTimeZone: string;
     public customConfig: any;
     public showCardUrls: boolean;
+    public forceEmailsInPlainText: boolean;
 }
