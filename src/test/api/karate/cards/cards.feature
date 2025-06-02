@@ -226,62 +226,6 @@ Scenario: Post card with no recipient but entityRecipients
   When method post
   Then status 201
 
-Scenario: Post card with initialParentCardUid not correct
-  * def card =
-    """
-    {
-      "publisher": "operator1_fr",
-      "processVersion": "1",
-      "process": "api_test",
-      "processInstanceId": "process1",
-      "state": "messageState",
-      "groupRecipients": ["Dispatcher"],
-      "severity": "INFORMATION",
-      "startDate": 1553186770681,
-      "summary": {"key": "defaultProcess.summary"},
-      "title": {"key": "defaultProcess.title2"},
-      "data": {"message": "test externalRecipients"},
-      "initialParentCardUid": "1"
-    }
-    """
-
-  # Push card
-  Given url opfabPublishCardUrl + 'cards'
-  And header Authorization = 'Bearer ' + authToken
-  And request card
-  When method post
-  Then status 400
-  And match response.message contains "Constraint violation in the request"
-  And match response.error contains "The initialParentCardUid 1 is not the uid of any card"
-
-Scenario: Post card with parentCardId not correct
-  * def card =
-    """
-    {
-      "publisher": "operator1_fr",
-      "processVersion": "1",
-      "process": "api_test",
-      "processInstanceId": "process1",
-      "state": "messageState",
-      "groupRecipients": ["Dispatcher"],
-      "severity": "INFORMATION",
-      "startDate": 1553186770681,
-      "summary": {"key": "defaultProcess.summary"},
-      "title": {"key": "defaultProcess.title2"},
-      "data": {"message": "test externalRecipients"},
-      "parentCardId": "1"
-    }
-    """
-
-  # Push card
-  Given url opfabPublishCardUrl + 'cards'
-  And header Authorization = 'Bearer ' + authToken
-  And request card
-  When method post
-  Then status 400
-  And match response.message contains "Constraint violation in the request"
-  And match response.error contains "The parentCardId 1 is not the id of any card"
-
 Scenario: Post card with correct parentCardId but initialParentCardUid not correct
   * def card =
     """

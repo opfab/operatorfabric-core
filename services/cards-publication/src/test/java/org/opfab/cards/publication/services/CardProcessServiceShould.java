@@ -21,6 +21,7 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.CardActionEnum;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
+import org.opfab.cards.publication.model.RRule;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.model.TimeSpan;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -832,6 +833,16 @@ class CardProcessServiceShould {
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage("Impossible to publish card because secondsBeforeTimeSpanForReminder must be >= 0");
 
+    }
+
+    @Test
+    void GIVEN_a_card_with_rrule_durationInMinutes_inferior_to_zero_WHEN_sending_card_THEN_card_is_rejected() {
+        Card card = TestHelpers.generateOneCard("entity2");
+        card.rRule = new RRule(null, null, null, null, null, null, null, null, null, null, null, -10);
+        Assertions.assertThatThrownBy(
+                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                .isInstanceOf(ConstraintViolationException.class)
+                .hasMessage("Impossible to publish card because rrule.durationInMinutes must be >= 0");
     }
 
     @Test
