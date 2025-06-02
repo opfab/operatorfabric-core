@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,7 +56,8 @@ export default class CardsExternalDiffusionService {
             .setWeeklyEmailBodyPrefix(serviceConfig.weeklyEmailBodyPrefix as string)
             .setBodyPostfix(serviceConfig.bodyPostfix as string)
             .setFrom(serviceConfig.mailFrom as string)
-            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris');
+            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
+            .setShowCardUrls(serviceConfig.showCardUrls ?? true);
 
         this.realTimeCardsDiffusionControl = new RealTimeCardsDiffusionControl()
             .setLogger(logger)
@@ -72,7 +73,8 @@ export default class CardsExternalDiffusionService {
             .setPublisherEntityPrefix(serviceConfig.publisherEntityPrefix as string)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
-            .setCustomConfig(serviceConfig.customConfig);
+            .setCustomConfig(serviceConfig.customConfig)
+            .setShowCardUrls(serviceConfig.showCardUrls ?? true);
 
         if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()

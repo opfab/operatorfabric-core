@@ -22,6 +22,7 @@ export default class CardsDiffusionControl {
     protected mailService: SendMailService;
     protected from: string;
     protected defaultTimeZone: string;
+    protected showCardUrls: boolean;
 
     public setOpfabUrlInMailContent(opfabUrlInMailContent: any): this {
         this.opfabUrlInMailContent = opfabUrlInMailContent;
@@ -66,6 +67,11 @@ export default class CardsDiffusionControl {
 
     public setDefaultTimeZone(defaultTimeZone: string): this {
         this.defaultTimeZone = defaultTimeZone;
+        return this;
+    }
+
+    public setShowCardUrls(showCardUrls: boolean): this {
+        this.showCardUrls = showCardUrls;
         return this;
     }
 

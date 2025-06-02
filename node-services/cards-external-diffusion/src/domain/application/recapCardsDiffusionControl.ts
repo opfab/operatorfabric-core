@@ -145,20 +145,23 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         let body = emailBodyPrefix + '<br><br>\n';
         for (const card of cards) {
             body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';
-            if (card.endDate != null)
+
+            if (card.endDate != null) {
                 body += this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails) + ' - ';
+            }
+
+            const urlOfCard =
+                '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
+
             body +=
                 card.severity +
                 ' - ' +
-                '<a href=" ' +
-                this.opfabUrlInMailContent +
-                '/#/feed/cards/' +
-                this.base64urlEncode(card.id) +
-                ' ">' +
+                (this.showCardUrls ? urlOfCard : '') +
                 this.escapeHtml(card.titleTranslated) +
                 ' - ' +
                 this.escapeHtml(card.summaryTranslated) +
-                '</a><br><br>\n';
+                (this.showCardUrls ? '</a>' : '') +
+                '<br><br>\n';
         }
         if (this.bodyPostfix != null) {
             body += ' <br>' + this.bodyPostfix;
