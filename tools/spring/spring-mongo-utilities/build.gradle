@@ -1,5 +1,4 @@
 dependencies{
     implementation misc.jsonSmart
     implementation boot.starterMongo, boot.starterMongoR, boot.starterValidation
-    implementation project(':tools:generic:utilities')
 }

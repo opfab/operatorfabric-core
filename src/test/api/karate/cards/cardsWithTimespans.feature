@@ -113,28 +113,6 @@ Feature: Cards with timespans
 """
 
 
-    * def cardToTestBadRequest5 =
-"""
-{
-	"publisher" : "operator1_fr",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "processTimeSpan",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "INFORMATION",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message"},
-	"secondsBeforeTimeSpanForReminder" :-1000,
-	"timeSpans" : [
-		{"start" : 1553186770681 ,"end" :1553186770682},
-		{"start" : 1553186770681 ,"end" :1553186770682},
-		{"start" : 1553186770678}
-		]
-}
-"""
 
   Scenario: Post a card with timepans
 
@@ -198,20 +176,6 @@ Feature: Cards with timespans
     When method delete
     Then status 200
 
-
-  Scenario Outline: Bad request with constraint violation on TimeSpan object
-    Given url opfabPublishCardUrl + 'cards'
-    And header Authorization = 'Bearer ' + authToken
-    And request <cardToTestBadRequest>
-    When method post
-    Then status 400
-    And match response.status == "BAD_REQUEST"
-    And match response.message contains "Constraint violation in the request"
-    And match response.error contains  <expectedMessage>
-
-    Examples:
-      | cardToTestBadRequest  | expectedMessage                                                                                 |
-      | cardToTestBadRequest5 | "secondsBeforeTimeSpanForReminder: must be greater than or equal to 0" |
 
 
   Scenario: delete perimeter created previously

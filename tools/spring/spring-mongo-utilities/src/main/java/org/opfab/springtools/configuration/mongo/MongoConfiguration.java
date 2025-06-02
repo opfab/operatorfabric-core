@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.springtools.configuration.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
@@ -23,15 +20,17 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
 
 @Configuration
 public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
     private MongoProperties mongoProperties;
 
+    /**
+     * The mongo properties are injected by the Spring Boot auto-configuration.
+     * it is taken from the application.yml file with the prefix
+     * "spring.data.mongodb".
+     */
     public MongoConfiguration(MongoProperties mongoProperties) {
         this.mongoProperties = mongoProperties;
     }
@@ -42,37 +41,30 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
                 .build();
     }
 
-    /**
-     * @return database name from configuration
-     */
+    @Override
     protected String getDatabaseName() {
         return mongoProperties.getDatabase();
     }
 
     /**
-     * Called before entities are persisted to mongo, triggers bean validation
-     *
-     * @param localValidatorFactoryBean
-     *    spring bean validation main component
-     * @return Mongo lifecycle listener that triggers validation
-     */
-    @Bean
-    public ValidatingMongoEventListener validatingMongoEventListener(@Autowired LocalValidatorFactoryBean
-                                                                        localValidatorFactoryBean) {
-        return new ValidatingMongoEventListener(localValidatorFactoryBean);
-    }
-
-
-    // This method is necessary to avoid having field _class for each object in mongoDB 
+     * This method is necessary to avoid having field _class for each object in
+     * collections.
+     **/
     @Override
     public MappingMongoConverter mappingMongoConverter(ReactiveMongoDatabaseFactory databaseFactory,
-                                                       MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
-        MappingMongoConverter converter=super.mappingMongoConverter(databaseFactory,customConversions,mappingContext);
+            MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
+        MappingMongoConverter converter = super.mappingMongoConverter(databaseFactory, customConversions,
+                mappingContext);
         DefaultMongoTypeMapper typeMapper = new DefaultMongoTypeMapper(null);
         converter.setTypeMapper(typeMapper);
         return converter;
     }
 
+    /**
+     * This method is used to automatically create indexes on the collections when
+     * the application starts.
+     * for parameters with the @Indexed annotation.
+     */
     @Override
     protected boolean autoIndexCreation() {
         return true;

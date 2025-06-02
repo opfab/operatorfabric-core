@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.Min;
 import org.opfab.utilities.ObjectUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -129,7 +128,6 @@ public class Card {
     public String wktGeometry;
     public String wktProjection;
 
-    @Min(0)
     public Integer secondsBeforeTimeSpanForReminder;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
