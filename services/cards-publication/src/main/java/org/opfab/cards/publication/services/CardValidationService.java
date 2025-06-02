@@ -93,6 +93,10 @@ public class CardValidationService {
             throw new ConstraintViolationException(
                     "constraint violation : RRule.durationInMinutes: must be greater than or equal to 0", null);
 
+        if (!checkSecondsBeforeTimeSpanForReminderIsNotNegative(c))
+            throw new ConstraintViolationException(
+                    "Impossible to publish card because secondsBeforeTimeSpanForReminder must be >= 0", null);
+
         // constraint check : process and state must not contain "." (because we use it
         // as a separator)
         if (!checkIsDotCharacterNotInProcessAndState(c))
@@ -226,5 +230,9 @@ public class CardValidationService {
                 return false;
         }
         return true;
+    }
+
+    boolean checkSecondsBeforeTimeSpanForReminderIsNotNegative(Card c) {
+        return c.secondsBeforeTimeSpanForReminder == null || c.secondsBeforeTimeSpanForReminder >= 0;
     }
 }

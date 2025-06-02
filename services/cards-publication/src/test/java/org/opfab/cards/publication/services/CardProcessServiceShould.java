@@ -824,6 +824,17 @@ class CardProcessServiceShould {
     }
 
     @Test
+    void GIVEN_a_card_with_secondsBeforeTimeSpanForReminder_inferior_to_zero_WHEN_sending_card_THEN_card_is_rejected() {
+        Card card = TestHelpers.generateOneCard("entity2");
+        card.secondsBeforeTimeSpanForReminder = -1;
+        Assertions.assertThatThrownBy(
+                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                .isInstanceOf(ConstraintViolationException.class)
+                .hasMessage("Impossible to publish card because secondsBeforeTimeSpanForReminder must be >= 0");
+
+    }
+
+    @Test
     void GIVEN_a_user_with_not_the_write_right_in_perimeter_for_state1_WHEN_sending_card_with_state1_THEN_card_is_rejected() {
 
         User testuser = new User();

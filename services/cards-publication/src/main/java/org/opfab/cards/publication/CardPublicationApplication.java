@@ -13,7 +13,7 @@ import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.cards.publication.mongo.CardRepositoryImpl;
-import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.opfab.springtools.configuration.mongo.MongoConfiguration;
 import org.opfab.springtools.configuration.oauth.JwtConfiguration;
 import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +23,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @SpringBootApplication
-@EnableOperatorFabricMongo
 @Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
-        UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class })
+        UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {
