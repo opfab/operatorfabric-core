@@ -41,3 +41,4 @@ operatorfabric:
       sendRateLimitPeriodInSec : 3600
       defaultTimeZone: 'Europe/Paris'
       showCardUrls: true
+      forceEmailsInPlainText: false

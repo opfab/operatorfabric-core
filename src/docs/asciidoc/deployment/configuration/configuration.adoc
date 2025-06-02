@@ -415,6 +415,7 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.cardsExternalDiffusion.defaultConfig.sendRateLimitPeriodInSec|3600|no|Time period for rate limiting control
 |operatorfabric.cardsExternalDiffusion.defaultConfig.defaultTimeZone|Europe/Paris|no|Default timezone used to display dates and times for email notifications if user has not set the timezone for mail in his settings
 |operatorfabric.cardsExternalDiffusion.defaultConfig.showCardUrls|true|no|Flag to set whether the URL of the card should be displayed in email notifications
+|operatorfabric.cardsExternalDiffusion.defaultConfig.forceEmailsInPlainText|false|no|Flag to set whether the emails must be sent in plain text (regardless of user configuration in settings)
 |===
 
 The parameters in "operatorfabric.cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.

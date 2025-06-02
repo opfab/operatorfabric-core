@@ -23,6 +23,7 @@ export default class CardsDiffusionControl {
     protected from: string;
     protected defaultTimeZone: string;
     protected showCardUrls: boolean;
+    protected forceEmailsInPlainText: boolean = false;
 
     public setOpfabUrlInMailContent(opfabUrlInMailContent: any): this {
         this.opfabUrlInMailContent = opfabUrlInMailContent;
@@ -75,12 +76,21 @@ export default class CardsDiffusionControl {
         return this;
     }
 
+    public setForceEmailsInPlainText(forceEmailsInPlainText: boolean): this {
+        this.forceEmailsInPlainText = forceEmailsInPlainText;
+        return this;
+    }
+
     protected isEmailSettingEnabled(userWithPerimeters: any): boolean {
         return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.email;
     }
 
     protected shouldEmailBePlainText(userWithPerimeters: any): boolean {
-        return userWithPerimeters?.emailToPlainText ?? false;
+        if (this.forceEmailsInPlainText) {
+            return true;
+        } else {
+            return userWithPerimeters?.emailToPlainText ?? false;
+        }
     }
 
     protected shouldEmailTemplateBeDisabled(userWithPerimeters: any): boolean {

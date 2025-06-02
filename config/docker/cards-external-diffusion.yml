@@ -14,5 +14,6 @@ operatorfabric:
       publisherEntityPrefix: 'The card has been sent by '
       opfabUrlInMailContent: http://localhost:2002
       showCardUrls: true
+      forceEmailsInPlainText: false
 #  logConfig:
 #    logLevel: debug
