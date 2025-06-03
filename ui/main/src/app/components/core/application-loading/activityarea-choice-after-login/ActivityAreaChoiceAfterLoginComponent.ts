@@ -19,7 +19,6 @@ import {ActivityAreaComponent} from '../../../activityarea/ActivityAreaComponent
 @Component({
     selector: 'of-activityarea-choice-after-login',
     templateUrl: './ActivityAreaChoiceAfterLoginComponent.html',
-    standalone: true,
     imports: [ActivityAreaComponent]
 })
 export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingComponent {

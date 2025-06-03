@@ -16,7 +16,6 @@ import {TranslateModule} from '@ngx-translate/core';
 @Component({
     selector: 'of-loading-in-progress',
     templateUrl: './LoadingInProgressComponent.html',
-    standalone: true,
     imports: [SpinnerComponent, NgIf, TranslateModule]
 })
 export class LoadingInProgressComponent implements OnInit, OnDestroy {

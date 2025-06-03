@@ -24,7 +24,6 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-users-table',
     styleUrls: ['AdminTableDirective.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, AgGridAngular, NgbPagination, NgForOf]
 })
 export class UsersTableComponent extends AdminTableDirective implements OnInit {

@@ -31,7 +31,6 @@ import {CardComponent} from '../card/CardComponent';
     selector: 'of-calendar',
     templateUrl: './CalendarComponent.html',
     styleUrls: ['./CalendarComponent.scss'],
-    standalone: true,
     imports: [NgIf, FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy {

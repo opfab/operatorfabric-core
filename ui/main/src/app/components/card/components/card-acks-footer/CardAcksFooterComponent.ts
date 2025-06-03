@@ -24,7 +24,6 @@ import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
     selector: 'of-card-acks-footer',
     templateUrl: './CardAcksFooterComponent.html',
     styleUrls: ['./CardAcksFooterComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, NgFor, NgStyle, NgbPopover]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {

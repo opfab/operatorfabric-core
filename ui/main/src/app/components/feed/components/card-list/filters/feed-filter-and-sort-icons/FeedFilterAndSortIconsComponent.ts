@@ -15,7 +15,6 @@ import {NgClass} from '@angular/common';
     selector: 'of-feed-filter-icon',
     templateUrl: './FeedFilterAndSortIconsComponent.html',
     styleUrls: ['./FeedFilterAndSortIconsComponent.scss'],
-    standalone: true,
     imports: [NgClass]
 })
 export class FeedFilterAndSortIconsComponent implements OnChanges {

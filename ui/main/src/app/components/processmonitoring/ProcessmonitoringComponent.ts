@@ -56,7 +56,6 @@ import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
     templateUrl: './ProcessMonitoringComponent.html',
     styleUrls: ['./ProcessMonitoringComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         TranslateModule,
         NgIf,

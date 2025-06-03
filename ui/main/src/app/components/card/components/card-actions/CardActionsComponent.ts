@@ -44,7 +44,6 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     selector: 'of-card-actions',
     templateUrl: './CardActionsComponent.html',
     styleUrls: ['./CardActionsComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, UserCardComponent, SpinnerComponent]
 })
 export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {

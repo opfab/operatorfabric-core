@@ -28,7 +28,6 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     templateUrl: './EditUserModalComponent.html',
     styleUrls: ['./EditUserModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditUserModalComponent implements OnInit {

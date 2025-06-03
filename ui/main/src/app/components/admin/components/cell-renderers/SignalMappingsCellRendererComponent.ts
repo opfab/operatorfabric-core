@@ -16,7 +16,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-signal-mappings-cell-renderer',
     templateUrl: './SignalMappingsCellRendererComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [TranslateModule]
 })
 export class SignalMappingsCellRendererComponent implements ICellRendererAngularComp {

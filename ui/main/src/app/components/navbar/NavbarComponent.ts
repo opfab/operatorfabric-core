@@ -27,7 +27,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     templateUrl: './NavbarComponent.html',
     styleUrls: ['./NavbarComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         NgClass,
         NgTemplateOutlet,

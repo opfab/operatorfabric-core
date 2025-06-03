@@ -34,7 +34,6 @@ import {CardComponent} from '../../../card/CardComponent';
     selector: 'of-monitoring-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
-    standalone: true,
     imports: [NgFor, CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {

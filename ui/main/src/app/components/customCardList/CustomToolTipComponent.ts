@@ -12,7 +12,6 @@ import {Component} from '@angular/core';
 import type {ITooltipAngularComp} from 'ag-grid-angular';
 
 @Component({
-    standalone: true,
     template: `
         <span *ngIf="plainText"> {{ value }}</span>
         <span *ngIf="!plainText" [innerHTML]="value"></span>

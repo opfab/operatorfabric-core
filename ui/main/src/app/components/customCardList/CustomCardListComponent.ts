@@ -50,7 +50,6 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
     selector: 'of-custom-card-list-screen',
     templateUrl: './CustomCardListComponent.html',
     styleUrls: ['./CustomCardListComponent.scss'],
-    standalone: true,
     imports: [
         TranslateModule,
         NgIf,

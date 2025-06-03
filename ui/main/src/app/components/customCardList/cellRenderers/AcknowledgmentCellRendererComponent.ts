@@ -17,7 +17,6 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'of-acknowledgment-cell-renderer',
     templateUrl: './AcknowledgmentCellRendererComponent.html',
-    standalone: true,
     imports: [TranslateModule, NgIf, NgbPopover]
 })
 export class AcknowledgmentCellRendererComponent implements ICellRendererAngularComp {

@@ -22,7 +22,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-pinned-cards',
     templateUrl: './PinnedCardsComponent.html',
     styleUrls: ['./PinnedCardsComponent.scss'],
-    standalone: true,
     imports: [NgFor, NgIf, NgbPopover, TranslateModule, LowerCasePipe]
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {

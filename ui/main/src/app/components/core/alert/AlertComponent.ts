@@ -17,7 +17,6 @@ import {NgIf} from '@angular/common';
     selector: 'of-alert',
     styleUrls: ['./AlertComponent.scss'],
     templateUrl: './AlertComponent.html',
-    standalone: true,
     imports: [NgIf]
 })
 export class AlertComponent {

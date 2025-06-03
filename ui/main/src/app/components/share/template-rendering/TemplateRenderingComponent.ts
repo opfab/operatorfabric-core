@@ -47,7 +47,6 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     styleUrls: ['./TemplateRenderingComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, SpinnerComponent]
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
@@ -184,8 +183,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private loadTemplateJSScripts(): void {
-        //bug eslint/prettier
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script'); // eslint-disable-line
+        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];

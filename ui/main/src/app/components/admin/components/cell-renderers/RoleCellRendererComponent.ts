@@ -22,7 +22,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './RoleCellRendererComponent.html',
     styleUrls: ['./RoleCellRendererComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgFor]
 })
 export class RoleCellRendererComponent implements ICellRendererAngularComp {

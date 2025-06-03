@@ -23,7 +23,6 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     selector: 'of-realtimeusers',
     templateUrl: './RealtimeUsersComponent.html',
     styleUrls: ['./RealtimeUsersComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, SpinnerComponent, MultiSelectComponent, NgFor]
 })
 export class RealtimeUsersComponent implements OnInit, OnDestroy {

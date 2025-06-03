@@ -19,7 +19,6 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './OpfabNgbModalComponent.html',
     styleUrls: ['./OpfabNgbModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgClass, NgFor, TranslateModule]
 })
 export class OpfabNgbModalComponent {

@@ -48,7 +48,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     styleUrls: ['./CustomTimeLineChartComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [ChartCommonModule, MouseWheelDirective, NgFor, NgIf, AxesModule, NgbPopover, AsyncPipe]
 })
 export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {

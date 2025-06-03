@@ -37,7 +37,6 @@ import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermis
     selector: 'of-card-list',
     templateUrl: './CardListComponent.html',
     styleUrls: ['./CardListComponent.scss'],
-    standalone: true,
     imports: [FiltersComponent, FeedFilterComponent, NgIf, NgFor, LightCardModule, TranslateModule, AsyncPipe]
 })
 export class CardListComponent implements AfterViewChecked, OnInit {

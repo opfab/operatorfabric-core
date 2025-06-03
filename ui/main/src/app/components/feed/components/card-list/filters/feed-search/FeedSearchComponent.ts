@@ -19,7 +19,6 @@ import {NgIf} from '@angular/common';
     selector: 'of-feed-search',
     templateUrl: './FeedSearchComponent.html',
     styleUrls: ['./FeedSearchComponent.scss'],
-    standalone: true,
     imports: [NgIf, FormsModule, ReactiveFormsModule]
 })
 export class FeedSearchComponent implements OnInit {

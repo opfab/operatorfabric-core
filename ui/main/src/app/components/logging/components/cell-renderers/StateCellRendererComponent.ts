@@ -15,7 +15,6 @@ import {NgStyle} from '@angular/common';
 @Component({
     selector: 'of-state-cell-renderer',
     templateUrl: './StateCellRendererComponent.html',
-    standalone: true,
     imports: [NgStyle]
 })
 export class StateCellRendererComponent implements ICellRendererAngularComp {

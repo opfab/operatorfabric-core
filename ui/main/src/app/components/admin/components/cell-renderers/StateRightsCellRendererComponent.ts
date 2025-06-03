@@ -22,7 +22,6 @@ import {NgFor, LowerCasePipe} from '@angular/common';
     templateUrl: './StateRightsCellRendererComponent.html',
     styleUrls: ['./StateRightsCellRendererComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgFor, LowerCasePipe]
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {

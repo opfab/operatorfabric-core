@@ -22,7 +22,6 @@ import {I18n} from '../../model/I18n';
     selector: 'of-activityarea',
     templateUrl: './ActivityAreaComponent.html',
     styleUrls: ['./ActivityAreaComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, NgIf, SpinnerComponent, FormsModule, ReactiveFormsModule, NgFor]
 })
 export class ActivityAreaComponent implements OnInit, OnDestroy {

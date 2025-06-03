@@ -20,7 +20,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-timeline-buttons',
     templateUrl: './TimelineButtonsComponent.html',
     styleUrls: ['./TimelineButtonsComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, NgFor, NgClass]
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {

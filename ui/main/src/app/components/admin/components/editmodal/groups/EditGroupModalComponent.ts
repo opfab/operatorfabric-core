@@ -40,7 +40,6 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     templateUrl: './EditGroupModalComponent.html',
     styleUrls: ['./EditGroupModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditGroupModalComponent implements OnInit {

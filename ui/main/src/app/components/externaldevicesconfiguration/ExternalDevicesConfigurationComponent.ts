@@ -15,7 +15,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-externaldevices',
     templateUrl: './ExternalDevicesConfigurationComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationComponent.scss'],
-    standalone: true,
     imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet]
 })
 export class ExternalDevicesConfigurationComponent {}

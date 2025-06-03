@@ -17,7 +17,6 @@ import {FormsModule} from '@angular/forms';
     selector: 'of-action-cell-renderer',
     templateUrl: './ActionCellRendererComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, FormsModule]
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {

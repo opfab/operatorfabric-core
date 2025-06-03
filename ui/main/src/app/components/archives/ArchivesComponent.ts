@@ -49,7 +49,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './ArchivesComponent.html',
     styleUrls: ['./ArchivesComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

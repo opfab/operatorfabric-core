@@ -41,7 +41,6 @@ const enum AckI18nKeys {
 @Component({
     selector: 'of-card-ack',
     templateUrl: './CardAckComponent.html',
-    standalone: true,
     imports: [NgIf, SpinnerComponent, TranslateModule]
 })
 export class CardAckComponent implements OnInit, OnChanges, OnDestroy {

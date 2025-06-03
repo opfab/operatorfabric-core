@@ -28,7 +28,12 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
 @Component({
     selector: 'of-light-card',
     templateUrl: './LightCardComponent.html',
-    styleUrls: ['./LightCardComponent.scss']
+    styleUrls: ['./LightCardComponent.scss'],
+    // The component is not standalone to avoid circular dependencies
+    // LightCardComponent is used in GroupedCardListComponent which is used in LightCardComponent
+    // Solve this would require a lot of refactoring
+    /* eslint-disable-next-line @angular-eslint/prefer-standalone */
+    standalone: false
 })
 export class LightCardComponent implements OnInit, OnDestroy {
     @Input() public open = false;

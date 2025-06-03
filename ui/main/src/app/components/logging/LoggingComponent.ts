@@ -46,7 +46,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './LoggingComponent.html',
     styleUrls: ['./LoggingComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         FormsModule,
         ReactiveFormsModule,

@@ -36,7 +36,6 @@ import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/
     templateUrl: './UserActionLogsComponent.html',
     styleUrls: ['./UserActionLogsComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         NgIf,
         MultiSelectComponent,

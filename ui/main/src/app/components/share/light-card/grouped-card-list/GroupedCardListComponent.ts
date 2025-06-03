@@ -15,7 +15,12 @@ import {Observable} from 'rxjs';
 @Component({
     selector: 'of-grouped-card-list',
     templateUrl: './GroupedCardListComponent.html',
-    styleUrls: ['./GroupedCardListComponent.scss']
+    styleUrls: ['./GroupedCardListComponent.scss'],
+    // The component is not standalone to avoid circular dependencies
+    // LightCardComponent is used in GroupedCardListComponent which is used in LightCardComponent
+    // Solve this would require a lot of refactoring
+    /* eslint-disable-next-line @angular-eslint/prefer-standalone */
+    standalone: false
 })
 export class GroupedCardListComponent implements OnInit {
     @Input() public lightCards: Card[];

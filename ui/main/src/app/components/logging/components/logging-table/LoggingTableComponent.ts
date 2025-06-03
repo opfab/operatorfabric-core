@@ -26,7 +26,6 @@ import {AgGrid} from 'app/utils/AgGrid';
 @Component({
     selector: 'of-logging-table',
     templateUrl: './LoggingTableComponent.html',
-    standalone: true,
     imports: [AgGridAngular, NgIf, NgFor, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {

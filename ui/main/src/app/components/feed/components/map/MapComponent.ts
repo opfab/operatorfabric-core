@@ -26,7 +26,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
-    standalone: true,
     imports: [NgFor]
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {

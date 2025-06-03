@@ -32,7 +32,6 @@ import {AgGrid} from 'app/utils/AgGrid';
     selector: 'of-processmonitoring-table',
     templateUrl: './ProcessMonitoringTableComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent]
 })
 export class ProcessmonitoringTableComponent {

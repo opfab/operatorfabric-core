@@ -20,7 +20,6 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
     selector: 'of-filters',
     templateUrl: './FiltersComponent.html',
     styleUrls: ['./FiltersComponent.scss'],
-    standalone: true,
     imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule]
 })
 export class FiltersComponent implements OnInit, OnDestroy {

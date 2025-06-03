@@ -22,7 +22,6 @@ import {NgIf} from '@angular/common';
     templateUrl: './ArchivedCardDetailComponent.html',
     styleUrls: ['./ArchivedCardDetailComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [SimplifiedCardViewComponent, TranslateModule, NgIf]
 })
 export class ArchivedCardDetailComponent implements OnInit {

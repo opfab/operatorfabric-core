@@ -30,7 +30,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-app-loaded-in-another-tab',
     styleUrls: ['./AppLoadedInAnotherTabComponent.scss'],
     templateUrl: './AppLoadedInAnotherTabComponent.html',
-    standalone: true,
     imports: [NgIf, TranslateModule]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {

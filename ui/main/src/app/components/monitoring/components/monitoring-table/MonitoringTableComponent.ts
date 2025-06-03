@@ -39,7 +39,6 @@ import {AgGrid} from '../../../../utils/AgGrid';
     selector: 'of-monitoring-table',
     templateUrl: './MonitoringTableComponent.html',
     styleUrls: ['./MonitoringTableComponent.scss'],
-    standalone: true,
     imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent, NgbProgressbar, AsyncPipe]
 })
 export class MonitoringTableComponent implements OnChanges, OnDestroy {

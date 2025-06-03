@@ -18,7 +18,6 @@ declare const VirtualSelect: any;
 @Component({
     selector: 'of-multi-select ',
     templateUrl: './MultiSelectComponent.html',
-    standalone: true,
     imports: [TranslateModule]
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
