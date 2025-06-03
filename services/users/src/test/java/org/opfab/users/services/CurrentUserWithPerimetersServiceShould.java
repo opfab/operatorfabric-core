@@ -155,7 +155,6 @@ class CurrentUserWithPerimetersServiceShould {
                 userSettings.setOpenNextCardOnAcknowledgment(false);
                 userSettings.setSendCardsByEmail(false);
                 userSettings.setEmailToPlainText(false);
-                userSettings.setDisableCardContentInEmails(false);
                 userSettings.setSendDailyEmail(false);
                 userSettings.setSendWeeklyEmail(false);
                 userSettings.setProcessesStatesNotNotified(processesStatesNotNotified);

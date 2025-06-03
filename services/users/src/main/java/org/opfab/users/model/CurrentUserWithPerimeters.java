@@ -31,7 +31,6 @@ public class CurrentUserWithPerimeters {
 
     private Boolean sendCardsByEmail;
     private Boolean emailToPlainText;
-    private Boolean disableCardContentInEmails;
     private Boolean sendDailyEmail;
     private Boolean sendWeeklyEmail;
     private String email;
@@ -70,14 +69,6 @@ public class CurrentUserWithPerimeters {
 
     public void setEmailToPlainText(Boolean emailToPlainText) {
         this.emailToPlainText = emailToPlainText;
-    }
-
-    public Boolean getDisableCardContentInEmails() {
-        return disableCardContentInEmails;
-    }
-
-    public void setDisableCardContentInEmails(Boolean templateDisabled) {
-        this.disableCardContentInEmails = templateDisabled;
     }
 
     public Boolean getSendDailyEmail() {

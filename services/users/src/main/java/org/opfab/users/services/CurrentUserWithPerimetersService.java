@@ -87,8 +87,6 @@ public class CurrentUserWithPerimetersService {
                     .setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
             userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
-            userWithPerimeterData
-                    .setDisableCardContentInEmails(operationResult.getResult().getDisableCardContentInEmails());
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setSendWeeklyEmail(operationResult.getResult().getSendWeeklyEmail());
             if (this.getEmailFromUserInsteadOfSettings) {
