@@ -29,7 +29,6 @@ class EntityForCardHeader {
     selector: 'of-card-header',
     templateUrl: './CardHeaderComponent.html',
     styleUrls: ['./CardHeaderComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, CountDownComponent, NgbPopover, NgFor, NgStyle]
 })
 export class CardHeaderComponent implements OnChanges {

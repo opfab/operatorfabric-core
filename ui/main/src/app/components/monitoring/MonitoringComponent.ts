@@ -31,7 +31,6 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
     selector: 'of-monitoring',
     templateUrl: './MonitoringComponent.html',
     styleUrls: ['./MonitoringComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, NgIf, MonitoringFiltersComponent, NgbPopover, MonitoringTableComponent]
 })
 export class MonitoringComponent implements OnInit, OnDestroy {

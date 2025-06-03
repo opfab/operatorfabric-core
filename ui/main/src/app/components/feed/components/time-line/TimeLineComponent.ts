@@ -17,7 +17,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-time-line',
     templateUrl: './TimeLineComponent.html',
     styleUrls: ['./TimeLineComponent.scss'],
-    standalone: true,
     imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, NgIf, TranslateModule]
 })
 export class TimeLineComponent {

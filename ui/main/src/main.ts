@@ -1,3 +1,5 @@
+/// <reference types="@angular/localize" />
+
 /* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public

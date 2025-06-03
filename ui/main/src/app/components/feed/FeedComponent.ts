@@ -26,7 +26,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-cards',
     templateUrl: './FeedComponent.html',
     styleUrls: ['./FeedComponent.scss'],
-    standalone: true,
     imports: [TimeLineComponent, NgIf, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
 export class FeedComponent implements OnInit, OnDestroy {

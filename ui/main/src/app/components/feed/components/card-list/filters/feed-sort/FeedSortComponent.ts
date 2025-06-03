@@ -20,7 +20,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-feed-sort',
     templateUrl: './FeedSortComponent.html',
     styleUrls: ['./FeedSortComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, FormsModule, ReactiveFormsModule]
 })
 export class FeedSortComponent implements OnInit, OnDestroy {

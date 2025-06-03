@@ -40,7 +40,6 @@ const enum ResponseI18nKeys {
 @Component({
     selector: 'of-card-response',
     templateUrl: './CardResponseComponent.html',
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class CardResponseComponent implements OnChanges, OnInit {

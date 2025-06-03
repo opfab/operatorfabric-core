@@ -42,7 +42,6 @@ import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
     templateUrl: './ArchivesLoggingFiltersComponent.html',
     styleUrls: ['./ArchivesLoggingFiltersComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         TranslateModule,
         NgIf,

@@ -26,7 +26,6 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     selector: 'of-root',
     templateUrl: './AppComponent.html',
     styleUrls: ['./AppComponent.scss'],
-    standalone: true,
     imports: [
         ApplicationLoadingComponent,
         NgIf,

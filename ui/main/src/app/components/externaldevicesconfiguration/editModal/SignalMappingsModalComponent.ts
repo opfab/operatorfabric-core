@@ -30,7 +30,6 @@ import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
     selector: 'of-signal-mappings-modal',
     templateUrl: './SignalMappingsModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class SignalMappingsModalComponent implements OnInit {

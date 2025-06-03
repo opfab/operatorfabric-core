@@ -17,7 +17,6 @@ import {TranslateModule} from '@ngx-translate/core';
     styleUrls: ['./ConnectionLostComponent.scss'],
     templateUrl: './ConnectionLostComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule]
 })
 export class ConnectionLostComponent implements OnInit {

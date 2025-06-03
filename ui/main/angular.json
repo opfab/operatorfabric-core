@@ -15,12 +15,16 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "build/distribution/",
+            "outputPath": {
+              "base": "build/distribution/"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts",
+              "@angular/localize/init"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -54,12 +58,11 @@
               "xlsx",
               "file-saver"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -79,9 +82,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "extractLicenses": true
             },
             "productionDebug": {
               "budgets": [
@@ -106,13 +107,13 @@
           "options": {},
           "configurations": {
             "production": {
-              "browserTarget": "ui-home:build:production"
+              "buildTarget": "ui-home:build:production"
             },
             "productionDebug": {
-              "browserTarget": "ui-home:build:productionDebug"
+              "buildTarget": "ui-home:build:productionDebug"
             },
             "development": {
-              "browserTarget": "ui-home:build:development"
+              "buildTarget": "ui-home:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -120,14 +121,17 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ui-home:build"
+            "buildTarget": "ui-home:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts",
+              "@angular/localize/init"
+            ],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "scripts": [

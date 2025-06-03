@@ -30,7 +30,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-card',
     templateUrl: './CardComponent.html',
     styleUrls: ['./CardComponent.scss'],
-    standalone: true,
     imports: [NgIf, CardBodyComponent, SpinnerComponent, TranslateModule]
 })
 export class CardComponent implements OnInit, OnDestroy {

@@ -26,7 +26,6 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './SpinnerComponent.html',
     styleUrls: ['./SpinnerComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule]
 })
 export class SpinnerComponent implements OnInit, OnDestroy {

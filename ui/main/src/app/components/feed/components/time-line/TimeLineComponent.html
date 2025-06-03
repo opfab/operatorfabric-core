@@ -12,11 +12,14 @@
             <of-timeline-buttons [isMonitoringScreen]="false" #timelineButtons> </of-timeline-buttons>
         </div>
 
-        <div class="opfab-timeline-grid" [hidden]="this.timelineButtons.hideTimeLine">
+        <div class="opfab-timeline-grid" [hidden]="this.timelineButtons?.hideTimeLine">
             <div class="opfab-move-domain">
                 <a id="opfab-timeline-link-move-left" (click)="this.timelineButtons.moveDomain(false)"> &lt;&lt; </a>
             </div>
+            <!-- Use ngIf to ensure timelineButtons component is build before using it,
+                 necessary starting from angular 19 -->
             <of-custom-timeline-chart
+                *ngIf="this.timelineButtons"
                 class="of-custom-timeline-chart"
                 [domainId]="this.timelineButtons.currentDomainId"
                 [valueDomain]="this.timelineButtons.currentDomain"
@@ -32,13 +35,13 @@
     <div class="opfab-showhide-timeline">
         <of-pinned-cards style="width: 88%"></of-pinned-cards>
 
-        <div id="opfab-timeline-link-hide-timeline" style="width: 12%" *ngIf="!this.timelineButtons.hideTimeLine">
+        <div id="opfab-timeline-link-hide-timeline" style="width: 12%" *ngIf="!this.timelineButtons?.hideTimeLine">
             <a (click)="this.timelineButtons.showOrHideTimeline()"
                 >˄ &nbsp;&nbsp; <span translate> timeline.hideTimeline </span></a
             >
         </div>
 
-        <div id="opfab-timeline-link-show-timeline" style="width: 12%" *ngIf="this.timelineButtons.hideTimeLine">
+        <div id="opfab-timeline-link-show-timeline" style="width: 12%" *ngIf="this.timelineButtons?.hideTimeLine">
             <a (click)="this.timelineButtons.showOrHideTimeline()"
                 >˅ &nbsp;&nbsp; <span translate> timeline.showTimeline </span></a
             >

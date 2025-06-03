@@ -23,7 +23,6 @@ import {MultiSelectComponent} from '../../../share/multi-select/MultiSelectCompo
     selector: 'of-monitoring-filters',
     templateUrl: './MonitoringFiltersComponent.html',
     styleUrls: ['./MonitoringFiltersComponent.scss'],
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule, TimelineButtonsComponent, NgIf, MultiSelectComponent, TranslateModule]
 })
 export class MonitoringFiltersComponent implements OnInit {

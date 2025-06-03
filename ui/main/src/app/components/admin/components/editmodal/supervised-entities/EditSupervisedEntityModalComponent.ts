@@ -25,7 +25,6 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     selector: 'of-edit-supervised-entity-modal',
     templateUrl: './EditSupervisedEntityModalComponent.html',
     styleUrls: ['./EditSupervisedEntityModalComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditSupervisedEntityModalComponent implements OnInit {

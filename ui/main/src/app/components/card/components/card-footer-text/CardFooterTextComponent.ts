@@ -26,7 +26,6 @@ import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
     selector: 'of-card-footer-text',
     templateUrl: './CardFooterTextComponent.html',
     styleUrls: ['./CardFooterTextComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, NgIf, NgFor]
 })
 export class CardFooterTextComponent implements OnChanges, OnInit {

@@ -24,7 +24,6 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-users-modal',
     templateUrl: './UsersConfigurationModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class UsersconfigurationModalComponent implements OnInit {

@@ -27,7 +27,6 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     selector: 'of-simplified-card-view',
     templateUrl: './SimplifiedCardViewComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, SpinnerComponent, TemplateRenderingComponent]
 })
 export class SimplifiedCardViewComponent implements OnInit, OnDestroy {

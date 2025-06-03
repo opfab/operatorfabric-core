@@ -20,7 +20,6 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'of-responses-cell-renderer',
     templateUrl: './ResponsesCellRendererComponent.html',
-    standalone: true,
     imports: [NgIf, NgFor, NgStyle, NgbPopover]
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {

@@ -22,7 +22,6 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-signal-mappings',
     templateUrl: './ExternalDevicesConfigurationDirective.html',
     styleUrls: ['../ExternalDevicesConfigurationComponent.scss'],
-    standalone: true,
     imports: [NgIf, TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class SignalMappingsTableComponent extends ExternalDevicesConfigurationDirective {

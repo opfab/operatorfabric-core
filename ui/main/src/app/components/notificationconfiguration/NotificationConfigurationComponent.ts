@@ -18,7 +18,6 @@ import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
     templateUrl: './NotificationConfigurationComponent.html',
     styleUrls: ['./NotificationConfigurationComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [TranslateModule, NgIf, NgFor, NgTemplateOutlet]
 })
 export class NotificationConfigurationComponent implements OnInit, AfterViewInit {

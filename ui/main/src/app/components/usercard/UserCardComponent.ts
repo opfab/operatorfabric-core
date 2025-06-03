@@ -35,7 +35,6 @@ import {Entity} from '@ofServices/entities/model/Entity';
     selector: 'of-usercard',
     templateUrl: './UserCardComponent.html',
     styleUrls: ['./UserCardComponent.scss'],
-    standalone: true,
     imports: [
         NgIf,
         TranslateModule,

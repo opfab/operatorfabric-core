@@ -56,7 +56,6 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     templateUrl: './CardBodyComponent.html',
     styleUrls: ['./CardBodyComponent.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         NgIf,
         CardActionsComponent,

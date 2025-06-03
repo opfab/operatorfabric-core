@@ -35,7 +35,6 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     templateUrl: './EditPerimeterModalComponent.html',
     styleUrls: ['./EditPerimeterModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, NgFor]
 })
 export class EditPerimeterModalComponent implements OnInit {

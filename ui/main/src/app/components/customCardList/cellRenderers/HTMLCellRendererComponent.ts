@@ -17,7 +17,6 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'of-html-renderer',
     templateUrl: './HTMLCellRendererComponent.html',
-    standalone: true,
     imports: [TranslateModule, NgIf, NgbPopover, NgFor, NgStyle]
 })
 export class HTMLCellRendererComponent implements ICellRendererAngularComp {

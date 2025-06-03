@@ -17,7 +17,6 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-reload-required',
     styleUrls: ['./ReloadRequiredComponent.scss'],
     templateUrl: './ReloadRequiredComponent.html',
-    standalone: true,
     imports: [NgIf, TranslateModule]
 })
 export class ReloadRequiredComponent implements OnInit {

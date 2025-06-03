@@ -17,7 +17,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     selector: 'of-richtext-helper',
     templateUrl: './RichTextComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [TranslateModule]
 })
 export class RichTextComponent implements OnInit {

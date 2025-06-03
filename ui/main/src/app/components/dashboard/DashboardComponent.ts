@@ -25,7 +25,6 @@ declare const opfab: any;
     selector: 'of-dashboard',
     templateUrl: './DashboardComponent.html',
     styleUrls: ['./DashboardComponent.scss'],
-    standalone: true,
     imports: [TimelineButtonsComponent, TranslateModule, NgIf, NgFor, NgClass, NgbPopover, CardComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {

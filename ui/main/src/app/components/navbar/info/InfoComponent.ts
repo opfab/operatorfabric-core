@@ -22,7 +22,6 @@ import {NgIf, NgFor} from '@angular/common';
     templateUrl: './InfoComponent.html',
     styleUrls: ['./InfoComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgFor]
 })
 export class InfoComponent implements OnInit {

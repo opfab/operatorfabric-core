@@ -16,8 +16,7 @@ import {AboutView} from 'app/views/core/about/AboutView';
     styleUrls: ['./AboutComponent.scss'],
     templateUrl: './AboutComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor],
-    standalone: true
+    imports: [NgFor]
 })
 export class AboutComponent {
     aboutElements = [];

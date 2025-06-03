@@ -19,7 +19,6 @@ import {FormsModule} from '@angular/forms';
     templateUrl: './AdminComponent.html',
     styleUrls: ['./AdminComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet, NgFor, FormsModule]
 })
 export class AdminComponent {

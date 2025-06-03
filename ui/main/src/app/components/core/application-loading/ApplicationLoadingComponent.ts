@@ -48,7 +48,6 @@ import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
     selector: 'of-application-loading',
     styleUrls: ['./ApplicationLoadingComponent.scss'],
     templateUrl: './ApplicationLoadingComponent.html',
-    standalone: true,
     imports: [
         NgIf,
         LoadingInProgressComponent,

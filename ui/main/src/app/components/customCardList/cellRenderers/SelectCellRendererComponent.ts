@@ -18,7 +18,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
 @Component({
     selector: 'of-select-cell-renderer',
     templateUrl: './SelectCellRendererComponent.html',
-    standalone: true,
     imports: [NgIf, NgForOf, ReactiveFormsModule, MultiSelectComponent]
 })
 export class SelectCellRendererComponent implements ICellRendererAngularComp {

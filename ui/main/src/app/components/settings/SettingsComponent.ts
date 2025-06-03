@@ -27,7 +27,6 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     templateUrl: './SettingsComponent.html',
     styleUrls: ['./SettingsComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, MultiSelectComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {

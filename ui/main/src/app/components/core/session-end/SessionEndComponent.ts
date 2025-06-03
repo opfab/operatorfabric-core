@@ -19,7 +19,6 @@ import {TranslateModule} from '@ngx-translate/core';
     styleUrls: ['./SessionEndComponent.scss'],
     templateUrl: './SessionEndComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule]
 })
 export class SessionEndComponent implements OnInit {

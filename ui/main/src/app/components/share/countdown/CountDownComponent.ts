@@ -17,7 +17,6 @@ import {NgIf} from '@angular/common';
     selector: 'of-countdown',
     templateUrl: './CountDownComponent.html',
     styleUrls: ['./CountDownComponent.scss'],
-    standalone: true,
     imports: [TranslateModule, NgIf]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {

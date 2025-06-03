@@ -20,7 +20,6 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './LoginComponent.html',
     styles: ['.btn-primary {margin-right: 8px;}'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule, NgIf]
 })
 export class LoginComponent implements OnInit {

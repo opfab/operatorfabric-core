@@ -16,7 +16,6 @@ import {CustomCardListComponent} from './CustomCardListComponent';
 @Component({
     selector: 'of-custom-screen',
     templateUrl: './CustomScreenComponent.html',
-    standalone: true,
     imports: [NgIf, CustomCardListComponent]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {

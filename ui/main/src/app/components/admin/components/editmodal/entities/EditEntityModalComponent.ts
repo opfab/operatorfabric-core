@@ -40,7 +40,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './EditEntityModalComponent.html',
     styleUrls: ['./EditEntityModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, TagInputModule]
 })
 export class EditEntityModalComponent implements OnInit {

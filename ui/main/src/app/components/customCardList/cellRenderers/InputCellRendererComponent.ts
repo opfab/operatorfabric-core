@@ -17,7 +17,6 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
     selector: 'of-input-cell-renderer',
     templateUrl: './InputCellRendererComponent.html',
     styleUrls: ['./InputCellRendererComponent.scss'],
-    standalone: true,
     imports: [NgIf, ReactiveFormsModule]
 })
 export class InputCellRendererComponent implements ICellRendererAngularComp {

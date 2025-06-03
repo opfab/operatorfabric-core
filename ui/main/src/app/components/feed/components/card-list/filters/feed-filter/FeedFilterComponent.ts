@@ -32,7 +32,6 @@ import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelec
     templateUrl: './FeedFilterComponent.html',
     styleUrls: ['./FeedFilterComponent.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule, TranslateModule, NgIf, FeedSortComponent, MultiSelectComponent]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
