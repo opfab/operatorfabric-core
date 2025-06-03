@@ -161,10 +161,18 @@ export class NavbarMenuView {
             .pipe(takeUntil(this.destroy$))
             .subscribe((route) => {
                 const currentRouteWithoutParams = route.split('?')[0];
-                if (currentRouteWithoutParams.split('/')[1] === 'businessconfigparty')
+                if (
+                    currentRouteWithoutParams.split('/')[1] === 'businessconfigparty' ||
+                    currentRouteWithoutParams.split('/')[1] === 'customscreen'
+                ) {
                     func(currentRouteWithoutParams.split('/')[2]);
-                else if (currentRouteWithoutParams === '/') func('feed');
-                else func(currentRouteWithoutParams.split('/')[1]);
+                    return;
+                }
+                if (currentRouteWithoutParams === '/') {
+                    func('feed');
+                    return;
+                }
+                func(currentRouteWithoutParams.split('/')[1]);
             });
     }
 
