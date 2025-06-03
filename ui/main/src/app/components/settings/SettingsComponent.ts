@@ -85,7 +85,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
             'sendWeeklyEmail',
             'email',
             'timezoneForEmails',
-            'disableCardContentInEmails',
             'hallwayMode',
             'showAcknowledgmentFooter',
             'openNextCardOnAcknowledgment',

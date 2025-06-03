@@ -93,10 +93,6 @@ export default class CardsDiffusionControl {
         }
     }
 
-    protected shouldEmailTemplateBeDisabled(userWithPerimeters: any): boolean {
-        return userWithPerimeters?.disableCardContentInEmails ?? false;
-    }
-
     protected removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
         if (arrayToDelete != null && arrayToDelete.length > 0) {
             const elementsToDeleteSet = new Set(arrayToDelete);
