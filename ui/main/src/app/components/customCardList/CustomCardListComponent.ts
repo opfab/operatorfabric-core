@@ -267,12 +267,16 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 acknowledgmentCellRenderer: AcknowledgmentCellRendererComponent,
                 inputCellRenderer: InputCellRendererComponent,
                 htmlCellRenderer: HTMLCellRendererComponent,
-                selectCellRenderer: SelectCellRendererComponent
+                selectCellRenderer: SelectCellRendererComponent,
+                tooltipComponent: CustomTooltipComponent
             },
 
             defaultColDef: {
                 editable: false,
-                wrapHeaderText: true
+                wrapHeaderText: true,
+                valueFormatter: (params: {value: any}) => {
+                    return params.value;
+                }
             },
             columnTypes: {
                 default: {
@@ -446,7 +450,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
             suppressColumnVirtualisation: true, // This is necessary to avoid the input field to disappear when scrolling horizontally (see issue #8187)
             tooltipShowDelay: 1000,
             tooltipHideDelay: 2000,
-            tooltipComponent: CustomTooltipComponent,
             onRowSelected: (event) => this.onRowSelected(event)
         };
     }
@@ -462,7 +465,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private getColumnDefs() {
         return this.customCardListView.getColumnsDefinitionForAgGrid().map((columnDef) => {
-            if (columnDef.customParams.showTooltips) {
+            if (columnDef.context.showTooltips) {
                 columnDef.tooltipComponent = CustomTooltipComponent;
                 if (columnDef.type === 'select') {
                     // If the column is a select type, the value for the tooltip is the label of the selected options

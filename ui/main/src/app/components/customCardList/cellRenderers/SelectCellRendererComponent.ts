@@ -44,7 +44,7 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
         this.params = params;
         this.fieldValue = params.getValue().value;
         this.allowNewOptionForSelect = params.getValue().allowNewOptionForSelect;
-        this.maxLength = params.colDef.customParams.maxInputLength;
+        this.maxLength = params.colDef.context.maxInputLength;
         this.charCount = `0/${this.maxLength}`;
 
         this.selectOptions = params.getValue().possibleValues.map((value: any) => ({
