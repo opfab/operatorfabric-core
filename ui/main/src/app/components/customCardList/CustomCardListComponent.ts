@@ -45,6 +45,7 @@ import {CustomTooltipComponent} from './CustomToolTipComponent';
 import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
 import {AcknowledgmentCellRendererComponent} from './cellRenderers/AcknowledgmentCellRendererComponent';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
+import {Utilities} from '../../utils/Utilities';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -279,7 +280,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     sortable: true,
                     filter: true,
                     resizable: false,
-                    wrapText: false
+                    wrapText: false,
+                    comparator: function (valueA: any, valueB: any) {
+                        return Utilities.compareObj(valueA, valueB);
+                    }
                 },
                 html: {
                     sortable: true,
@@ -293,13 +297,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     comparator: (valueA: any, valueB: any) => {
                         const rowValueA = valueA.rowValue ?? '';
                         const rowValueB = valueB.rowValue ?? '';
-                        if (rowValueA < rowValueB) {
-                            return -1;
-                        }
-                        if (rowValueA > rowValueB) {
-                            return 1;
-                        }
-                        return 0;
+                        return Utilities.compareObj(rowValueA, rowValueB);
                     }
                 },
                 severity: {
