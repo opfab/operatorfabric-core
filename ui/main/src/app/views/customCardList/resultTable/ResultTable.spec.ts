@@ -60,6 +60,7 @@ describe('CustomScreenView - ResultTable', () => {
             }
         ]);
     });
+
     describe('Should get columns definition for ag-grid', () => {
         it('columDefinitions', () => {
             const resultTable = getResultTable({
@@ -123,18 +124,21 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'testField', headerName: 'Process', type: 'default', flex: 2, customParams: {}},
-                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1, customParams: {}},
-                {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1, customParams: {}},
-                {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2, customParams: {}},
-                {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities', customParams: {}},
-                {field: 'hasBeenAcknowledged', headerName: '', type: 'acknowledgment', customParams: {}},
-                {field: 'stateName', headerName: 'State Name', type: 'stateName', customParams: {}},
-                {field: 'processName', headerName: 'Process Name', type: 'processName', customParams: {}},
-                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', customParams: {}},
-                {field: 'comment', headerName: 'Comment', type: 'input', customParams: {}},
-                {field: 'select', headerName: 'Select', type: 'select', customParams: {}}
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+
+            expect(columnDefs).toEqual([
+                {field: 'testField', headerName: 'Process', type: 'default', flex: 2, context: {}},
+                {field: 'testField2', headerName: 'Start Date', type: 'dateAndTime', flex: 1, context: {}},
+                {field: 'testField3', headerName: 'keywords', type: 'html', flex: 1, context: {}},
+                {field: 'responses', headerName: 'Responses', type: 'responses', flex: 2, context: {}},
+                {field: 'responseFromMyEntities', headerName: '', type: 'responseFromMyEntities', context: {}},
+                {field: 'hasBeenAcknowledged', headerName: '', type: 'acknowledgment', context: {}},
+                {field: 'stateName', headerName: 'State Name', type: 'stateName', context: {}},
+                {field: 'processName', headerName: 'Process Name', type: 'processName', context: {}},
+                {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', context: {}},
+                {field: 'comment', headerName: 'Comment', type: 'input', context: {}},
+                {field: 'select', headerName: 'Select', type: 'select', context: {}}
             ]);
         });
 
@@ -149,10 +153,10 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
 
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'severity', headerName: '', type: 'severity', customParams: {}}
-            ]);
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([{field: 'severity', headerName: '', type: 'severity', context: {}}]);
         });
+
         it('specific columDefinition with type_of_state', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -162,10 +166,13 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', customParams: {}}
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([
+                {field: 'typeOfState', headerName: 'Status', type: 'typeOfState', context: {}}
             ]);
         });
+
         it('specific columDefinition with showTooltips', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -177,10 +184,18 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'test', headerName: 'Status', type: 'default', customParams: {showTooltips: true}}
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([
+                {
+                    field: 'test',
+                    headerName: 'Status',
+                    type: 'default',
+                    context: {showTooltips: true}
+                }
             ]);
         });
+
         it('specify minWidth if defined in column definition', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -198,11 +213,14 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
-                {field: 'testField', headerName: 'Process', type: 'default', customParams: {}, minWidth: 200},
-                {field: 'testField2', headerName: 'test2', type: 'default', customParams: {}}
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([
+                {field: 'testField', headerName: 'Process', type: 'default', context: {}, minWidth: 200},
+                {field: 'testField2', headerName: 'test2', type: 'default', context: {}}
             ]);
         });
+
         it('specific columDefinition with autoHeight and wrapText when mutliLineText is true', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -213,17 +231,20 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([
                 {
                     field: 'typeOfState',
                     headerName: 'Status',
                     type: 'typeOfState',
                     autoHeight: true,
                     wrapText: true,
-                    customParams: {}
+                    context: {}
                 }
             ]);
         });
+
         it('specific columDefinition with maxInputLenght custom params when maxInputLenght is set', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -234,16 +255,19 @@ describe('CustomScreenView - ResultTable', () => {
                     }
                 ]
             });
-            expect(resultTable.getColumnsDefinitionForAgGrid()).toEqual([
+
+            const columnDefs = resultTable.getColumnsDefinitionForAgGrid();
+            expect(columnDefs).toEqual([
                 {
                     field: 'typeOfState',
                     headerName: 'Status',
                     type: 'typeOfState',
-                    customParams: {maxInputLength: 200}
+                    context: {maxInputLength: 200}
                 }
             ]);
         });
     });
+
     describe('Should get data array from cards', () => {
         it('with only card fields defined in state screen definition + cardId', () => {
             const resultTable = getResultTable({
@@ -309,6 +333,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'id1', nestedField: 'testData'}]);
         });
+
         it('with the entity name if field type is publisher', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -329,6 +354,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name'}]);
         });
+
         it('with the publisher field if field type is publisher and publisher type is not ENTITY', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -349,6 +375,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1'}]);
         });
+
         it('with the representative user if representative user is defined', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -393,6 +420,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', publisher: 'entity1 name (entity2 name)'}]);
         });
+
         it('with formatted date if field type is DATE_AND_TIME', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -516,6 +544,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {cardId: 'id1', testField: {rowValue: 'processId1', htmlValue: '<i>processId1</i>'}}
             ]);
         });
+
         it('with get row value with getValue if exist and if fieldType is HTML', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -576,6 +605,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {cardId: 'card2', myfield: 'blue'}
             ]);
         });
+
         it('with state name and process name', async () => {
             const state = new State();
             state.name = 'State Name';
@@ -608,6 +638,7 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([{cardId: 'card1', processName: 'Process Name', stateName: 'State Name'}]);
         });
     });
+
     describe('Should get responses in data array', () => {
         it('with entities required to reponse in alphabetical order and in grey if there is no responses', () => {
             const resultTable = getResultTable({
@@ -639,6 +670,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('with entities allowed to reponse in alphabetical order if there is no entities required to respond', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -691,6 +723,7 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', responses: []}]);
         });
+
         it('with child entity if parent entity is not allowed to send card', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -717,6 +750,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('with color entity according to child card severity if child card if present for entity', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -771,6 +805,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('with response from my entities set to true if a response from my entities exists', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -804,6 +839,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('with acknowledgment set to true if card has been acknowledged', () => {
             const resultTable = getResultTable({
                 columns: [
@@ -865,6 +901,7 @@ describe('CustomScreenView - ResultTable', () => {
                 })
             ];
         });
+
         it('get custom data field', () => {
             const childCards = new Map<string, Array<Card>>();
             childCards.set('card1', [
@@ -890,6 +927,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('get empty value if no child card for current user', () => {
             const childCards = new Map<string, Array<Card>>();
             childCards.set('card1', [
@@ -910,6 +948,7 @@ describe('CustomScreenView - ResultTable', () => {
             ]);
         });
     });
+
     describe('Should get select field', () => {
         const cards = [
             getOneLightCard({
@@ -949,6 +988,7 @@ describe('CustomScreenView - ResultTable', () => {
                 ]
             });
         });
+
         it('get field actual value with possibles values', async () => {
             const childCards = new Map<string, Array<Card>>();
             childCards.set('card1', [
@@ -975,6 +1015,7 @@ describe('CustomScreenView - ResultTable', () => {
                 }
             ]);
         });
+
         it('get empty value if no child card', async () => {
             const childCards = new Map<string, Array<Card>>();
 

@@ -30,7 +30,7 @@ export class InputCellRendererComponent implements ICellRendererAngularComp {
     agInit(params: any): void {
         this.params = params;
         this.fieldValue = params.getValue() ?? '';
-        this.maxLength = params.colDef.customParams.maxInputLength;
+        this.maxLength = params.colDef.context.maxInputLength;
         this.charCount = `${this.fieldValue.length}/${this.maxLength}`;
         this.cardInputControl.setValue(this.fieldValue);
     }

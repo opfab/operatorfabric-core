@@ -35,12 +35,12 @@ export class ResultTable {
                     field: column.field,
                     headerName: column.headerName,
                     type: 'default',
-                    customParams: {}
+                    context: {}
                 };
                 if (column.minWidth) col['minWidth'] = column.minWidth;
                 if (column.flex) col['flex'] = column.flex;
-                if (column.showTooltips) col.customParams['showTooltips'] = true;
-                if (column.maxInputLength) col.customParams['maxInputLength'] = column.maxInputLength;
+                if (column.showTooltips) col.context['showTooltips'] = true;
+                if (column.maxInputLength) col.context['maxInputLength'] = column.maxInputLength;
                 if (column.multiLinesInCell) {
                     col['autoHeight'] = true;
                     col['wrapText'] = true;
