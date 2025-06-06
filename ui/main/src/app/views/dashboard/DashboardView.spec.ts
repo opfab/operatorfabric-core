@@ -55,6 +55,12 @@ describe('Dashboard', () => {
                     ['state3', {name: 'State 3'}],
                     ['childState', {name: 'child state', isOnlyAChildState: true}]
                 ])
+            },
+            {
+                id: 'processWithOnlyChildState',
+                version: 'v3',
+                name: 'process with only child state',
+                states: new Map<string, State>([['state1', {name: 'Child state', isOnlyAChildState: true}]])
             }
         ]);
     }
@@ -142,6 +148,73 @@ describe('Dashboard', () => {
         expect(result.processes[0].customScreenLinks[0].customScreenId).toEqual('testId');
         expect(result.processes[0].customScreenLinks[1].label).toEqual('My Link 2');
         expect(result.processes[0].customScreenLinks[1].customScreenId).toEqual('testId2');
+    });
+
+    // Special case: sometimes we want to show custom screen links even if there is no process state visible to the user.
+    // However, these links should still be displayed based on the user's permissions.
+    //
+    // To achieve this, we use a workaround: we add a process with a single child state that is not visible to the user.
+    // This process includes custom screen links in its configuration, and we control link visibility by defining access rights for the user to the child state.
+    //
+    // The two following tests verify that this behavior works as intended.
+
+    it('GIVEN a process with custom screen links in config and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains links', async () => {
+        await loadWebUIConf({
+            dashboard: {
+                processCustomLinks: [
+                    {
+                        processId: 'processWithOnlyChildState',
+                        customLinks: [
+                            {
+                                customScreenId: 'testId',
+                                label: 'My link'
+                            },
+                            {
+                                customScreenId: 'testId2',
+                                label: 'My Link 2'
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        await initProcesses();
+
+        const computedPerimeters = [
+            new ComputedPerimeter('processWithOnlyChildState', 'state1', RightEnum.Receive, true)
+        ];
+
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboard = new Dashboard();
+
+        const result = await firstValueFrom(dashboard.getDashboardPage());
+        expect(result.processes[0].id).toEqual('processWithOnlyChildState');
+        expect(result.processes[0].name).toEqual('process with only child state');
+        expect(result.processes[0].customScreenLinks[0].label).toEqual('My link');
+        expect(result.processes[0].customScreenLinks[0].customScreenId).toEqual('testId');
+        expect(result.processes[0].customScreenLinks[1].label).toEqual('My Link 2');
+        expect(result.processes[0].customScreenLinks[1].customScreenId).toEqual('testId2');
+    });
+
+    it('Given a process with no custom screen links and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains no process', async () => {
+        await loadWebUIConf({
+            dashboard: {
+                processCustomLinks: []
+            }
+        });
+        await initProcesses();
+        const computedPerimeters = [
+            new ComputedPerimeter('processWithOnlyChildState', 'state1', RightEnum.Receive, true)
+        ];
+
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+        dashboard = new Dashboard();
+        const result = await firstValueFrom(dashboard.getDashboardPage());
+        expect(result.processes.length).toEqual(0);
     });
 
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
