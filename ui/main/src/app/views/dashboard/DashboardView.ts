@@ -46,23 +46,27 @@ export class Dashboard {
         this.dashboardPage.processes = new Array();
         ProcessesService.getAllProcesses().forEach((process) => {
             const statesContent = new Array<StateContent>();
+            let hasChildstate = false;
             process.states.forEach((state, key) => {
                 if (
                     UsersService.isReceiveRightsForProcessAndState(process.id, key) &&
-                    this.isStateNotified(process.id, key) &&
-                    !state.isOnlyAChildState
+                    this.isStateNotified(process.id, key)
                 ) {
-                    const stateContent = new StateContent();
-                    stateContent.id = key;
-                    stateContent.circles = new Array();
-                    stateContent.name = state.name;
+                    if (state.isOnlyAChildState) {
+                        hasChildstate = true;
+                    } else {
+                        const stateContent = new StateContent();
+                        stateContent.id = key;
+                        stateContent.circles = new Array();
+                        stateContent.name = state.name;
 
-                    const circle = new DashboardCircle();
-                    circle.color = this.noSeverityColor;
-                    circle.numberOfCards = 0;
-                    circle.width = 10;
-                    stateContent.circles.push(circle);
-                    statesContent.push(stateContent);
+                        const circle = new DashboardCircle();
+                        circle.color = this.noSeverityColor;
+                        circle.numberOfCards = 0;
+                        circle.width = 10;
+                        stateContent.circles.push(circle);
+                        statesContent.push(stateContent);
+                    }
                 }
             });
             const processContent = new ProcessContent();
@@ -72,7 +76,10 @@ export class Dashboard {
             processContent.states = statesContent;
             this.addCustomScreenLinks(processContent);
 
-            if (processContent.states.length > 0) this.dashboardPage.processes.push(processContent);
+            // Show the process if it has visible states,
+            // or if it only has only child states but includes custom screen links (Special case: we want to show custom screen links even if there are no visible states)
+            if (processContent.states.length > 0 || (hasChildstate && processContent.customScreenLinks?.length > 0))
+                this.dashboardPage.processes.push(processContent);
         });
         this.dashboardPage.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
     }
