@@ -14,11 +14,11 @@
             "CANCELED": "ANNULÉ"
         },
         "readAndAck": {
-            "readAndAck": "LU ET ACQUITTÉ",
-            "READ": "LU",
-            "NOT_READ": "NON LU",
-            "ACKNOWLEDGED": "ACQUITTÉ",
-            "NOT_ACKNOWLEDGED": "NON ACQUITTÉ"
+            "readAndAck": "LUE ET ACQUITTÉE",
+            "READ": "LUE",
+            "NOT_READ": "NON LUE",
+            "ACKNOWLEDGED": "ACQUITTÉE",
+            "NOT_ACKNOWLEDGED": "NON ACQUITTÉE"
         },
         "filters": {
             "activeFrom": "ACTIF DEPUIS",
