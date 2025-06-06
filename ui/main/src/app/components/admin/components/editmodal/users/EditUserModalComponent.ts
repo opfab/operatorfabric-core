@@ -114,7 +114,7 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        UsersService.update(this.userForm.value).subscribe(() => {
+        UsersService.update({...this.userForm.value, email: this.row?.email}).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
             // user chose to perform an action (here, update the selected item).
