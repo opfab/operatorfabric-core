@@ -63,8 +63,14 @@ export class ResultTableExport {
                             cellValue = cellValue?.numericalValue;
                             row[column.headerName] = cellValue;
                             break;
+                        case 'html':
+                            cellValue = cellValue?.rowValue;
+                            row[column.headerName] = cellValue;
+                            break;
                         default:
-                            if (cellValue?.text) cellValue = cellValue.text;
+                            if (cellValue?.text) {
+                                cellValue = cellValue.text;
+                            }
                             row[column.headerName] = cellValue;
                     }
                 }
