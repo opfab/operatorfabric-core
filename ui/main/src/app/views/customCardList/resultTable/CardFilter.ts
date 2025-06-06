@@ -111,11 +111,37 @@ export class CardFilter {
     }
 
     private isCardFilteredByRead(card: Card) {
-        return this.readFilter !== undefined && card.hasBeenRead !== this.readFilter;
+        // No read filter applied
+        if (this.readFilter === undefined) return false;
+
+        if (this.readFilter) {
+            // Only read cards are visible
+            // so we return true if the card has not been read
+            // as unread card shall be filtered out
+            return !card.hasBeenRead;
+        } else {
+            // Only unread cards are visible
+            // so we return true if the card has been read
+            // as read card shall be filtered out
+            return card.hasBeenRead;
+        }
     }
 
-    private isCardFilteredByAck(card: Card) {
-        return this.ackFilter !== undefined && card.hasBeenAcknowledged !== this.ackFilter;
+    private isCardFilteredByAck(card: Card): boolean {
+        // No ack filter applied
+        if (this.ackFilter === undefined) return false;
+
+        if (this.ackFilter) {
+            // Only acknowledged cards are visible
+            // so we return true if the card has not been acknowledged
+            // as unacknowledged card shall be filtered out
+            return !card.hasBeenAcknowledged;
+        } else {
+            // Only unacknowledged cards are visible
+            // so we return true if the card has been acknowledged
+            // as acknowledged card shall be filtered out
+            return !!card.hasBeenAcknowledged;
+        }
     }
 
     private haveAllEntitiesResponded(card: Card, childCards: Map<string, Array<Card>>): boolean {
