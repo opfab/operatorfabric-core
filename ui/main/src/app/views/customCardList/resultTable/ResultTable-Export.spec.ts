@@ -155,6 +155,7 @@ describe('CustomScreenView - ResultTable - Export', () => {
         const dataForExport = resultTable.getDataForExport();
         expect(dataForExport).toEqual([{'Type of state': 'Translation (en) of shared.typeOfState.INPROGRESS'}]);
     });
+
     it('Should contain numerical value for colored circle', () => {
         const resultTable = getResultTable({
             columns: [
@@ -180,6 +181,33 @@ describe('CustomScreenView - ResultTable - Export', () => {
         resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
         const dataForExport = resultTable.getDataForExport();
         expect(dataForExport).toEqual([{ColorCircle: 12}]);
+    });
+
+    it('Should export string value for HTML field type', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'html Field',
+                    fieldType: FieldType.HTML,
+                    getValue: () => {
+                        return 'contingencies';
+                    }
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date(),
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([{'html Field': 'contingencies'}]);
     });
 
     it('Should contain list of entity names that have responded and not responded', () => {
