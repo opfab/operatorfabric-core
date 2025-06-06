@@ -96,6 +96,13 @@ public class OAuth2UsersConfiguration {
 
                 if (jwtProperties.isGettingEntitiesFromToken())
                     user.setEntities(getEntitiesFromToken(jwt));
+                // User email is always taken from the JWT; it is not set via the Opfab user
+                // administration feature.
+                // This may evolve in the future to allow user administration to set the email
+                // via the UI.
+                String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
+                if (email != null)
+                    user.setEmail(email);
 
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 
@@ -122,12 +129,11 @@ public class OAuth2UsersConfiguration {
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
                 String name = extractClaimAsStringOrNull(jwt, jwtProperties.getNameClaim());
-                String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
 
                 if (givenName == null && familyName == null)
                     familyName = name;
 
-                return new User(principalId, givenName, familyName, email, null, null, null);
+                return new User(principalId, givenName, familyName, null, null, null, null);
             }
 
             /**
