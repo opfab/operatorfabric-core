@@ -93,13 +93,15 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
         beforeEach(() => {
             resultTable = getResultTable();
             cards = [
+                // IMPORTANT : we need to test false AND undefined for hasBeenRead and hasBeenAcknowledged
+                // When receiving card from the back, these values may be undefined
                 getOneLightCard({
                     process: 'processId0',
                     state: 'state1.0',
                     startDate: 5,
                     publishDate: 5,
-                    hasBeenRead: false,
-                    hasBeenAcknowledged: false,
+                    hasBeenRead: undefined,
+                    hasBeenAcknowledged: undefined,
                     id: 'id0'
                 }),
                 getOneLightCard({
