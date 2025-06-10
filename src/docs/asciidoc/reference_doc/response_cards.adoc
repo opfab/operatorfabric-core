@@ -78,7 +78,9 @@ appropriate configuration in the config.json of the concerned process. Here is a
       "color": "#8bcdcd",
       "response": {
         "state": "responseState",
-        "externalRecipients":["externalRecipient1", "externalRecipient2"]
+        "externalRecipients":["externalRecipient1", "externalRecipient2"],
+        "showConfirmationPopup": false,
+        "emittingEntityAllowedToRespond": true
       },
       "templateName": "question",
       "styles": [
@@ -101,6 +103,7 @@ and state "questionState", the user will have the possibility to respond if he h
 - The field "state" in the response field is used to define the state to use for the response (the child card).
 - The field "externalRecipients" define the recipients of the response card. These recipients are the ids of the objects referenced in
 the config file of cards-publication service, in "external-recipients" element. This field is optional.
+- The field "showConfirmationPopup" is used to display a confirmation popup before sending the response. The default value is false.
 - The field "emittingEntityAllowedToRespond" in the response field is used to allow the emitting entity to respond to a card. To be able to respond, however, the emitting entity has to be one of the recipients of the card. Default value is false.
 - The field "showDetailCardHeader" permits to display the card header or not. This header contains the list of entities
 that have already responded or not, and a countdown indicating the time remaining to respond, if necessary.
