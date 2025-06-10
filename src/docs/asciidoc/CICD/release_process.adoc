@@ -89,7 +89,7 @@ git push --set-upstream origin X.X.X-RC.release.draft
 +
 . Create a pull request from the `X.X.X-RC.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
-. Once the pull request is approved and merge, create the tag for the release candidate:
+. Once the pull request is approved and merged, create the tag for the release candidate:
 +
 ----
 git checkout X.X.release
@@ -142,39 +142,18 @@ ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#client_lib_p
 ./gradlew publish
 ----
 +
-. After a while you should be prompted to enter the passphrase for the GPG key.
+. You should be prompted to enter the passphrase for the GPG key.
 
-. Once the task has completed, log in to the https://s01.oss.sonatype.org/[OSSRH Repository] using the same credentials
+. Once the task has completed, log in to the https://central.sonatype.com/[Maven Central Repository] using the same credentials
 as for the Sonatype JIRA.
 +
-image::ossrh_repo_welcome.png[Welcome page for the OSSRH repository manager]
+image::Maven_Central_Repository.png[Welcome page for the Maven Central repository manager]
 
-. Click on `Staging repositories` link on the left. After a while (and maybe after clicking the refresh button), you
-should see a repository with the name orgopfab-XXXX (where XXXX is a Sonatype-generated id, not related to the
-release number).
-+
-image::ossrh_staging_repos.png[Staging repositories]
+. Top right of the screen, click on the https://central.sonatype.com/publishing/deployments[deployment menu]. You should see the staged jars ready for publishing.
 
-. Click on the repository then on the "content" tab below to check its content and metadata.
-+
-image::check_staging_repo.png[Check staging repository]
+. Click on publish, this operation takes around 15 minutes 
 
-. If there is an issue with the repository, click on the "Drop" button and start the process again after making the
-necessary changes. If everything looks in order, click on the "Close" button and add a small comment when prompted to
-confirm.
-+
-image::close_staging_repo.png[Close staging repository]
-
-. This will trigger validation of the https://central.sonatype.org/publish/requirements/[Sonatype requirements] (for
-example, making sure that the pom file contains the required information), as you can see from the Activity tab below
-(Refresh might be needed).
-+
-image::closing_and_validation_of_repo.png[Closing and validation of the staging repository]
-
-. If all the validations pass, the "Release" button will become available. Click it to send the jars to Maven Central.
-When prompted, write a comment then confirm (keeping the "Automatically Drop" option checked).
-+
-image::confirm_release_to_maven_central.png[Release to Maven Central]
+image::Published_Release_Central.png[Published jars]
 
 . The jars for the release should then be available on the https://repo1.maven.org/maven2/org/opfab/[project space in the Maven repository] within 10 minutes.
 
@@ -318,7 +297,7 @@ git push --set-upstream origin X.X.X.release.draft
 +
 . Create a pull request from the 'X.X.X.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
-. Once the pull request is approved and merge, create the tag for the release :
+. Once the pull request is approved and merged, create the tag for the release :
 +
 ----
 git checkout X.X.release
@@ -501,7 +480,7 @@ git push --set-upstream origin X.X.X.release.draft
 +
 . Create a pull request from the 'X.X.X.release.draft` branch to the `X.X.release` branch and ask for a review.
 +
-. Once the pull request is approved and merge, create the tag for the release candidate:
+. Once the pull request is approved and merged, create the tag for the release candidate:
 +
 ----
 git checkout X.X.release
