@@ -474,17 +474,8 @@ class CardProcessServiceShould {
     @Test
     void GIVEN_a_child_card_with_none_existent_parentCardId_WHEN_sending_card_THEN_card_is_rejected() {
 
-        Card childCard = new Card();
+        Card childCard = TestHelpers.generateOneCard("PUBLISHER_1");
         childCard.parentCardId = "id_1";
-        childCard.publisher = "PUBLISHER_1";
-        childCard.processVersion = "0";
-        childCard.process = "PROCESS_1";
-        childCard.processInstanceId = "PROCESS_1";
-        childCard.severity = SeverityEnum.ALARM;
-        childCard.title = new I18n("title", null);
-        childCard.summary = new I18n("summary", null);
-        childCard.startDate = Instant.now();
-        childCard.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochSecond(123l), null));
 
         Assertions.assertThatThrownBy(
                 () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
@@ -497,40 +488,55 @@ class CardProcessServiceShould {
     @Test
     void GIVEN_a_child_card_with_none_existent_initialParentCardUid_WHEN_sending_card_THEN_card_is_rejected() {
 
-        Card card = new Card();
+        Card card = TestHelpers.generateOneCard("PUBLISHER_1");
         card.uid = "uid_1";
-        card.publisher = "PUBLISHER_1";
-        card.processVersion = "0";
-        card.process = "process1";
-        card.processInstanceId = "PROCESS_1";
-        card.severity = SeverityEnum.ALARM;
-        card.title = new I18n("title", null);
-        card.summary = new I18n("summary", null);
-        card.startDate = Instant.now();
-        card.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochSecond(123l), null));
-        card.state = "state1";
+        card.processInstanceId = "parent";
 
         cardProcessingService.processCard(card);
 
-        Card childCard = new Card();
-        childCard.parentCardId = "process1.PROCESS_1";
+        Card childCard = TestHelpers.generateOneCard("PUBLISHER_1");
+        childCard.parentCardId = card.id;
         childCard.initialParentCardUid = "initialParentCardUidNotExisting";
-        childCard.publisher = "PUBLISHER_1";
-        childCard.processVersion = "0";
-        childCard.process = "process2";
-        childCard.processInstanceId = "PROCESS_1";
-        childCard.severity = SeverityEnum.ALARM;
-        childCard.title = new I18n("title", null);
-        childCard.summary = new I18n("summary", null);
-        childCard.startDate = Instant.now();
-        childCard.timeSpans = Arrays.asList(new TimeSpan(Instant.ofEpochSecond(123l), null));
-        childCard.state = "state2";
+        childCard.processInstanceId = "child";
+
         Assertions.assertThatThrownBy(
                 () -> cardProcessingService.processUserCard(childCard, currentUserWithPerimeters,
                         token))
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessage("The initialParentCardUid " + childCard.initialParentCardUid
                         + " is not the uid of any card");
+
+    }
+
+    @Test
+    void GIVEN_a_child_card_with_parent_card_is_a_child_card_WHEN_sending_card_THEN_card_is_rejected() {
+
+        Card card = TestHelpers.generateOneCard("PUBLISHER_1");
+        card.uid = "uid_1";
+        card.id = "parentId";
+        card.processInstanceId = "parentProcessId";
+        cardProcessingService.processCard(card);
+
+        // Create a child card with the first card as parent
+
+        Card childCard = TestHelpers.generateOneCard("newPublisherId");
+        childCard.uid = "uidChild";
+        childCard.id = "childCardId";
+        childCard.processInstanceId = "childProcessId";
+        childCard.parentCardId = card.id;
+        childCard.initialParentCardUid = card.uid;
+        cardProcessingService.processUserCard(childCard, currentUserWithPerimeters, token);
+
+        Card childOfChildCard = TestHelpers.generateOneCard("newPublisherId");
+        childOfChildCard.processInstanceId = "childOfChildProcessId";
+        childOfChildCard.parentCardId = childCard.id;
+        childOfChildCard.initialParentCardUid = childCard.uid;
+
+        Assertions.assertThatThrownBy(
+                () -> cardProcessingService.processUserCard(childOfChildCard, currentUserWithPerimeters,
+                        token))
+                .isInstanceOf(ConstraintViolationException.class)
+                .hasMessage("The parentCardId PROCESS_CARD_USER.childProcessId is a child card");
 
     }
 
