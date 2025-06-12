@@ -222,6 +222,75 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });
 
+    it('Should send email with body as plain text if emailInPlainText is configured', async function () {
+        const time = Date.now();
+        const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
+        setup();
+        initConfig();
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                email: 'operator_1@opfab.com',
+                computedPerimeters: perimeters
+            },
+            {
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
+                sendCardsByEmail: true,
+                sendDailyEmail: true,
+                email: 'operator_2@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1000',
+                id: 'defaultProcess.process1',
+                severity: 'INFORMATION',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            },
+            {
+                uid: '1001',
+                id: 'defaultProcess.process2',
+                severity: 'ALARM',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            }
+        ];
+        recapCardsDiffusionControl.setForceEmailsInPlainText(true);
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
+        expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
+        expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
+        expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1 - Summary1`);
+        expect(mailService.sent[0].body).toMatch(
+            `http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS1}`
+        );
+        expect(mailService.sent[0].body).toMatch(`ALARM - Title1 - Summary1`);
+        expect(mailService.sent[0].body).toMatch(
+            `http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS2}`
+        );
+        expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
+    });
+
     it('Should send email without url of the card when showCardUrls is set to false', async function () {
         const time = Date.now();
         const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;

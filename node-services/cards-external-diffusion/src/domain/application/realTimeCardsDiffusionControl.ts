@@ -14,6 +14,7 @@ import CardsDiffusionControl from './cardsDiffusionControl';
 import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
 import {formatInTimeZone} from 'date-fns-tz';
+import {htmlToText} from 'html-to-text';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
     private windowInSecondsForCardSearch: number;
@@ -182,7 +183,8 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails);
         if (card.endDate != null)
             subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails);
-        const body = await this.processCardTemplate(card, timezoneForEmails);
+        let body = await this.processCardTemplate(card, timezoneForEmails);
+        if (emailToPlainText) body = htmlToText(body, {wordwrap: false});
         try {
             await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
             this.registerNewSending(to);

@@ -8,12 +8,12 @@
  */
 
 import Handlebars from 'handlebars';
-import {HandlebarsHelper} from './handlebarsHelpers';
+import {HandlebarsHelper} from '../application/handlebarsHelpers';
 import GetResponse from '../../common/server-side/getResponse';
 import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
-import {MailHandlebarsHelper} from './mailHandlebarsHelpers';
+import {MailHandlebarsHelper} from '../application/mailHandlebarsHelpers';
 
 export default class BusinessConfigOpfabServicesInterface extends OpfabServicesInterface implements EventListener {
     private static configCache = new Map<string, any>();

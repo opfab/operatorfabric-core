@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,13 @@
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'fs';
+
+/**
+ * Handlebars helpers specific to the mail service.
+ *
+ * The other Handlebars helpers are the same as for the frontend.
+ *  and defined in the handlebarsHelpers.ts file.
+ **/
 
 export class MailHandlebarsHelper {
     private static quill: any;
