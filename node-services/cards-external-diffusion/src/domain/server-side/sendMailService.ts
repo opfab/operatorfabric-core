@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 import nodemailer, {TransportOptions, Transporter} from 'nodemailer';
-import {htmlToText} from 'html-to-text';
 
 export default class SendMailService {
     logger: any;
@@ -23,19 +22,13 @@ export default class SendMailService {
         return this;
     }
 
-    public async sendMail(
-        subject: string,
-        body: string,
-        from: string,
-        to: string,
-        emailToPlainText: boolean
-    ): Promise<any> {
-        if (emailToPlainText) {
+    public async sendMail(subject: string, body: string, from: string, to: string, plainText: boolean): Promise<any> {
+        if (plainText) {
             return await this.transporter.sendMail({
                 from,
                 to,
                 subject,
-                text: htmlToText(body)
+                text: body
             });
         } else {
             return await this.transporter.sendMail({
