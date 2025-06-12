@@ -12,6 +12,7 @@ import ConfigDTO from '../client-side/configDTO';
 import CardsDiffusionControl from './cardsDiffusionControl';
 import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
+import {htmlToText} from 'html-to-text';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
@@ -137,7 +138,8 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         timezoneForEmails: string
     ): Promise<void> {
         if (userEmailAddress == null) return;
-        const emailBody = this.recapFormat(cards, emailBodyPrefix, timezoneForEmails);
+        let emailBody = this.recapFormat(cards, emailBodyPrefix, timezoneForEmails);
+        if (emailToPlainText) emailBody = htmlToText(emailBody, {wordwrap: false});
         await this.mailService.sendMail(emailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
     }
 

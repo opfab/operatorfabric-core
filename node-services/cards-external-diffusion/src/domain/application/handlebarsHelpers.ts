@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,14 @@ import * as fs from 'fs';
 import {format, FormatOptions} from 'date-fns';
 import {enUS, fr, nl} from 'date-fns/locale';
 
+/**
+ *  Handlebars helpers are similar to the ones used on the frontend
+ *  so this is a copy of the Handlebars helpers used in the frontend.
+ *
+ *  Helpers specific to the external diffusion service are to be found
+ *  in the mailHandlebarsHelpers.ts file.
+ *
+ **/
 export class HandlebarsHelper {
     public static init(): void {
         HandlebarsHelper.registerPreserveSpace();
