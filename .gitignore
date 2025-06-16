@@ -126,20 +126,15 @@ ui/main/reports
 ui/main/report.html
 ui/main/.angular
 
-# Bundles for docker and dev mode
-config/docker/businessconfig-storage/**
-config/dev/businessconfig-storage/**
+# Bundle storage
+config/businessconfig-storage/**
 
-# Web UI config
-config/cypress/ui-config/**
-config/dev/ui-config/**
-
-# now script generated
-config/dev/nginx.conf
+# script generated
+config/web-ui/nginx.conf
+config/web-ui/ui-config/web-ui.json
 
 # Back up of the test config
-config/dev/mongodump/**
-config/docker/mongodump/**
+config/mongodump/**
 
 # MacOS metadata files
 **/.DS_Store

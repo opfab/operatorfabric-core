@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -85,16 +85,33 @@ Example :
 npm config set https-proxy http://LOGIN:PWD@PROXY_URL:PORT
 ```
 
-== Deploy needed docker containers
+== Start Opfab 
 
-`OperatorFabric` development needs docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` running.
 
 For this, use:
 [source,shell]
 ----
-cd ${OF_HOME}/config/dev
-./docker-compose.sh
+cd bin
+./startOpfab.sh [mode]
 ----
+
+This will download and start Opfab by loading the Docker images needed to run the application.
+
+Opfab can be started in three different modes:
+
+1. **Development mode** (`dev`): This is the default mode. It is CORS permissive and suitable for development.
+2. **Production mode** (`prod`): This mode is more restrictive, suitable for production and used for CI/CD pipeline tests.
+3. **Java mode** (`java`): This mode is similar to development mode, but executes the Java services directly on the host machine instead of using Docker containers. This mode provides an easier environment for Java service development.
+
+To start Opfab in a specific mode, use `./startOpfab.sh [mode]` where `[mode]` can be `dev`, `prod`, or `java`.
+
+In java mode, you can start and stop each service individually using the `run_all.sh` script located in the `bin` directory. For example, to start all services, you can run:
+
+[source,shell]
+----
+${OF_HOME}/bin/run_all.sh start
+----
+
 
 == Build OperatorFabric with Gradle
 
@@ -124,15 +141,6 @@ cd ${OF_HOME}
 cd ${OF_HOME}
 ./gradlew build
 ----
-
-== Run OperatorFabric Services using the `run_all.sh` script
-[source,shell]
-----
-cd ${OF_HOME}
-bin/run_all.sh -w start
-----
-
-TIP: See `bin/run_all.sh -h` for details.
 
 
 == Log into the UI

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -87,7 +87,7 @@ It is also possible to monitor the health status of cards-external-diffusion, ca
 
 === Logging configuration 
 
-Log levels can be defined either globally in the YAML configuration file or individually for each service. You will find a commented configuration for each service within the directory config/docker.
+Log levels can be defined either globally in the YAML configuration file or individually for each service. You will find a commented configuration for each service within the directory config/services.
 
 Services are designed to write logs to two primary destinations: standard output and log files within the Docker containers.
 

@@ -90,7 +90,7 @@ The services require knowledge of the URL to retrieve the account's token, and t
 
 Each service can have a specific yaml configuration file that can override the default configuration
 
-Examples of configuration of each service can be found under config/docker or config/dev . 
+Examples of configuration of each service can be found under config/services. 
 
 ==== Businessconfig service
 
