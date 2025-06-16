@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -32,51 +32,30 @@ The `commands.js` file under `cypress/cypress/support` is used to create custom 
 
 === Commands
 
-You can launch the OpFab instance for Cypress tests either in dev or docker mode. The following commands launch the
-instance in docker mode, just substitute `dev` for `docker` to launch it in dev mode.
+You can launch the OpFab instance for Cypress tests either in dev or in java mode.
 
 [source,bash]
 ----
-cd config/docker
-docker compose down <1>
-./startOpfabForCypress.sh <2>
+cd bin
+./startOpfab.sh
 ----
-<1> Remove existing config/docker containers to avoid conflicts
-<2> Start "Cypress-flavoured" containers
 
 After you're done with your tests, you can stop and destroy containers (as it is better to start with fresh containers to avoid
 side-effects from previous tests) with the following commands:
 
 [source,bash]
 ----
-cd config/docker
-docker compose down
+cd bin
+./stopOpfab.sh
 ----
 
-=== Explanation
 
-The Cypress tests rely on a running OpFab instance that is an adaptation from the config/docker docker compose file
-(environment name, shorter time before lttd clock display, etc.).
+=== UI Configuration
 
-The `generateUIConfigForCypress.sh` script performs this adaptation to create this base Cypress configuration.
-
-This will create the following files under `config/cypress/ui-config`:
-
-* ui-menu.json
-* web-ui.json
-* web-ui-base.json
-
-Where `XXX-base.json` and `XXX.json` are created by copying the corresponding `XXX.json` file for standard docker
-configuration (found under `config/docker/ui-config`) and making the necessary adaptations needed for the cypress instance to
-work well for the tests (changing the authentication mode, making all features visible, etc.).
-
-Then, during the course of the cypress tests, the `web-ui.json` file will be modified to test specific features
-(for example, hiding a feature, defining a new menu, etc.). It is reset with the content of `web-ui-base.json`
+During the course of the cypress tests, the `config/web-ui/ui-config/web-ui.json` file will be modified to test specific features
+(for example, hiding a feature, defining a new menu, etc.). It is reset with the content of `config/web-ui/ui-config/web-ui-base.json`
 before each test or series of test.
 
-The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.
-
-For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `startOpfabForCypress.sh` scripts.
 
 == Running existing tests
 
@@ -145,10 +124,6 @@ db.cards.remove({})
 db.archivedCards.remove({})
 ----
 
-== Current status of tests
-
-All tests should be passing when run alone (i.e. not with run all specs) against empty card/archived cards collections.
-However, tests in the "Flaky" folder can sometimes fail because they involve dates (round up errors for example).
 
 == Creating new tests
 

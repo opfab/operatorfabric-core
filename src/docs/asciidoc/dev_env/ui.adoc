@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -45,9 +45,8 @@ on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma
 
 === Test during UI development
 
-. if the RabbitMQ, MongoDB and Keycloak docker containers are not running, launch them;
 . set your environment variables with `source ${OF_HOME}/bin/load_environment_light.sh`;
-. run the micro services using the same command as earlier: `${OF_HOME}/bin/run_all.sh start`;
+. start opfab in dev mode: `${OF_HOME}/bin/startOpfab.sh`;
 . launch an angular server with the command: `ng serve`;
 . test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.
 

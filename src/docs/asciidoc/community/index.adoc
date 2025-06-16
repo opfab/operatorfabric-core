@@ -168,6 +168,7 @@ The manual testing process should include, at a minimum, the following areas tha
 - Validation of system notifications
 - Testing the remote logging feature
 - Ensuring no exceptions or errors are present in the browser console logs
+- Check behavior when checkIfUrlIsLocked is set to true in web-ui.json
 
 == Project Governance
 

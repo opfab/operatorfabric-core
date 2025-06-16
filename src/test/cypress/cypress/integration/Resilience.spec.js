@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {FeedCommands} from '../support/feedCommands';
-import {ScriptCommands} from "../support/scriptCommands";
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('Resilience tests', function () {
     const opfab = new OpfabGeneralCommands();
@@ -45,7 +45,6 @@ describe('Resilience tests', function () {
         feed.checkNumberOfDisplayedCardsIs(6);
     });
 
-
     it('Check card reception after mongoDB restart ', function () {
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(0);
@@ -55,8 +54,8 @@ describe('Resilience tests', function () {
     });
 
     it('Check card reception when cards-consultation service is restarted ', function () {
-    // WARNING : the following test will only be relevant if using docker mode
-    // in dev mode it will execute but the cards-consultation services will not be restart
+        // WARNING : the following test will only be relevant if using docker mode
+        // in dev mode it will execute but the cards-consultation services will not be restart
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(0);
         cy.wait(5000); // wait for subscription to be fully working
@@ -64,7 +63,7 @@ describe('Resilience tests', function () {
         cy.exec('docker stop cards-consultation', {failOnNonZeroExit: false}).then((result) => {
             // only if docker stop works, so it will not be executed in dev mode
             if (result.code === 0) {
-                script.send6TestCards();  // Send 6 cards when cards-consultation service is down
+                script.send6TestCards(); // Send 6 cards when cards-consultation service is down
                 checkLoadingSpinnerIsVisible();
                 restartCardsConsultationService();
                 feed.checkNumberOfDisplayedCardsIs(6);
@@ -96,7 +95,7 @@ describe('Resilience tests', function () {
     }
 
     function restartMongoDB() {
-        cy.exec('docker restart docker-mongodb-1');
+        cy.exec('docker restart mongodb');
         cy.wait(25000); // Wait for mongoDB to be fully up
     }
 
@@ -104,6 +103,5 @@ describe('Resilience tests', function () {
         cy.exec('docker start cards-consultation');
         script.waitForOpfabToStart();
         cy.wait(20000); // wait for subscription to be fully restored
-
     }
 });

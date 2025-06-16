@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -13,7 +13,7 @@
 Configure the security concern throughout several files:
 
 * `nginx.conf` of the nginx server
-* `config/docker/common.yml` the common configuration file for back services
+* `config/common.yml` the common configuration file for back services
 * `web-ui.json` served by the `web-ui` service;
 
 

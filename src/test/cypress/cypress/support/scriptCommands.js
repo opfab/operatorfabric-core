@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 import {OpfabCommands} from './opfabCommands';
 
 export class ScriptCommands extends OpfabCommands {
-
     constructor() {
         super();
         super.init('SCRIPT');
@@ -19,101 +18,101 @@ export class ScriptCommands extends OpfabCommands {
     loadTestConf = function () {
         // This clears existing processGroups, bundles and perimeters and load the test configuration
         cy.exec('cd .. && ./resources/loadTestConf.sh ' + Cypress.env('host'));
-    }
+    };
 
     loadRealTimeScreensConf = function () {
         // This clears existing realtimescreens.json and loads a new one
         cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json');
-    }
+    };
 
     loadEmptyProcessGroups = function () {
         // This load a process groups file without any process group
         cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json');
-    }
+    };
 
     loadProcessGroupsNotTotallyConfigured = function () {
         // This load a process groups file without any process group
         cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json');
-    }
+    };
 
     loadProcessGroups = function () {
         cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroups.json');
-    }
-
+    };
 
     send6TestCards = function () {
         cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host') + ' 2002');
-    }
+    };
 
     sendCard = function (cardFile, cardCustomization = {}) {
         cy.exec(
             'cd ../resources/cards/ && ./sendCard.sh ' +
-            cardFile +
-            ' ' +
-            Cypress.env('host') +
-            ' ' +
-            '2002' +
-            ' ' +
-            JSON.stringify(JSON.stringify(cardCustomization))
+                cardFile +
+                ' ' +
+                Cypress.env('host') +
+                ' ' +
+                '2002' +
+                ' ' +
+                JSON.stringify(JSON.stringify(cardCustomization))
         );
-    }
+    };
 
     delete6TestCards = function () {
         cy.exec('cd .. && ./resources/delete6TestCards.sh ' + Cypress.env('host'));
-    }
+    };
 
     deleteCard = function (cardId) {
         cy.exec('cd ../resources/cards/ && ./deleteCard.sh ' + cardId + ' ' + Cypress.env('host'));
-    }
+    };
 
     sendAckForCard = function (user, cardUid, entitiesAcks) {
         cy.exec('cd ../resources/cards/ && ./sendAckForCard.sh ' + user + ' ' + cardUid + ' ' + entitiesAcks);
-    }
+    };
 
     resetUIConfigurationFiles = function () {
-        cy.exec('cp ../../../config/cypress/ui-config/web-ui-base.json ../../../config/cypress/ui-config/web-ui.json');
-    }
+        cy.exec('cp ../../../config/web-ui/ui-config/web-ui-base.json ../../../config/web-ui/ui-config/web-ui.json');
+    };
 
     removePropertyInConf = function (property) {
-        const filePath = `./config/cypress/ui-config/web-ui.json`;
+        const filePath = `./config/web-ui/ui-config/web-ui.json`;
         cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/removePropertyInJson.sh ${filePath} ${property}`);
-    }
+    };
 
     setPropertyInConf = function (property, value) {
-        const filePath = `./config/cypress/ui-config/web-ui.json`;
-        cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/updatePropertyInJson.sh ${filePath} ${property} ${value}`);
-    }
+        const filePath = `./config/web-ui/ui-config/web-ui.json`;
+        cy.exec(
+            `cd ../../.. && ./src/test/resources/uiConfig/updatePropertyInJson.sh ${filePath} ${property} ${value}`
+        );
+    };
 
     deleteAllArchivedCards = function () {
         cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh ' + Cypress.env('host'));
-    }
+    };
 
     deleteAllCards = function () {
         cy.exec('cd .. && ./resources/deleteAllCards.sh ' + Cypress.env('host'));
-    }
+    };
 
     deleteAllSettings = function () {
         cy.exec('cd .. && ./resources/deleteAllSettings.sh ' + Cypress.env('host'));
-    }
+    };
 
     deleteAllUserActionLogs = function () {
         cy.exec('cd .. && ./resources/deleteAllUserActionLogs.sh ' + Cypress.env('host'));
-    }
+    };
 
     waitForOpfabToStart = function () {
         cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
-    }
+    };
 
     loadMonitoringConfig = function (config) {
         cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
-    }
+    };
 
     sendMessageToSubscriptions = function (message) {
         cy.exec('cd .. && ./resources/sendMessageToSubscriptions.sh ' + message);
-    }
+    };
 
     cleanDownloadsDir = function () {
         cy.exec('./cypress/scripts/cleanDownloadsDir.sh');
-    }
+    };
 }
-

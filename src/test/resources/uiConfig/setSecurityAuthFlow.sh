@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ display_usage() {
 	echo "Usage : setSecurityAuthFlow.sh flow"
 	echo "flow : (CODE, IMPLICIT, PASSWORD)"
 	echo "Example : setSecurityAuthFlow.sh CODE sets the authorization flow to CODE in the web-ui.json."
-	echo "Warning : The configuration is version-controlled, so make sure not to commit the changes."
 }
 
 flow=$1
@@ -26,13 +25,9 @@ else
 	(
 	  [[ $flow == 'CODE' || $flow == 'IMPLICIT' || $flow == 'PASSWORD' ]] || { echo "Unrecognized flow $flow. No changes made."; exit 1; }
 
-    pathToConfigFile="../../../../config/docker/ui-config/web-ui.json"
+    pathToConfigFile="../../../../config/web-ui/ui-config/web-ui.json"
     pathToSnippetFile="./security-$flow-flow.json"
     ./updatePropertyInJsonWithSnippet.sh $pathToConfigFile security $pathToSnippetFile
 
-    pathToScriptUpdatingDevEnv="../../../../config/dev/"
-    cd $pathToScriptUpdatingDevEnv
-    ./generateUIConfigForDev.sh
-    cd -
 	)
 fi

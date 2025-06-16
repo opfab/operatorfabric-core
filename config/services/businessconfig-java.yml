@@ -1,5 +1,7 @@
 # This file contains only parameters that need to be overridden from the docker configuration
+# when running the businessconfig service outside of Docker.
+# (Java mode)
 
 operatorfabric.businessconfig:
   storage:
-    path: "config/dev/businessconfig-storage"
+    path: "config/businessconfig-storage"
