@@ -569,8 +569,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         if (selectedRows.length === 0) {
             return;
         }
+        this.responseButtonDisabled = true;
         this.customCardListView.clickOnButton(buttonId, this.getResponsesData()).then((success) => {
             if (success) this.gridApi.deselectAll();
+            else this.responseButtonDisabled = false;
         });
     }
 
