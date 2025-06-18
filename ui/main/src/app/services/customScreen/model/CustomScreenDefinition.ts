@@ -25,6 +25,7 @@ export class CustomScreenDefinition {
     responseSeverityColumnLabelsForExportFile?: {[key: string]: string};
     defaultSelectedTypeOfState?: string[];
     includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
+    excludeCardsEmittedByCurrentUserEntities?: boolean;
 }
 
 export class Column {
