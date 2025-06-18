@@ -26,6 +26,7 @@ export class CustomScreenDefinition {
     defaultSelectedTypeOfState?: string[];
     defaultSelectedReadAndAck?: string[];
     includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
+    excludeCardsEmittedByCurrentUserEntities?: boolean;
 }
 
 export class Column {

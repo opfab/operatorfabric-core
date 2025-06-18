@@ -105,6 +105,8 @@ export class ResultTable {
         filtersValue.statesToExcludeFilter = this.customScreenDefinition?.statesToExclude;
         filtersValue.includeOnlyCardsEmittedByCurrentUserEntities =
             this.customScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
+        filtersValue.excludeCardsEmittedByCurrentUserEntities =
+            this.customScreenDefinition?.excludeCardsEmittedByCurrentUserEntities;
         this.cardFilter.setFilters(filtersValue);
     }
 
